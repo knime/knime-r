@@ -26,15 +26,15 @@
  */
 package de.unikn.knime.r.node;
 
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeModel;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodedialog.DialogComponentPasswordField;
 import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 
-import de.unikn.knime.core.node.InvalidSettingsException;
-import de.unikn.knime.core.node.NodeLogger;
-import de.unikn.knime.core.node.NodeModel;
-import de.unikn.knime.core.node.NodeSettingsRO;
-import de.unikn.knime.core.node.NodeSettingsWO;
-import de.unikn.knime.core.node.defaultnodedialog.DialogComponentPasswordField;
 
 /**
  * R model to save and load login information for the R server.

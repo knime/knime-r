@@ -26,11 +26,11 @@
  */
 package de.unikn.knime.r.node;
 
-import de.unikn.knime.core.data.DataTableSpec;
-import de.unikn.knime.core.node.InvalidSettingsException;
-import de.unikn.knime.core.node.NodeSettingsRO;
-import de.unikn.knime.core.node.NodeSettingsWO;
-import de.unikn.knime.core.node.NotConfigurableException;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
 
 /**
  * <code>NodeDialogPane</code> for R Console.

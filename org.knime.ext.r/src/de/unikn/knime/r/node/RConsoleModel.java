@@ -30,29 +30,29 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 
+import org.knime.core.data.DataColumnSpec;
+import org.knime.core.data.DataColumnSpecCreator;
+import org.knime.core.data.DataRow;
+import org.knime.core.data.DataTable;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.container.DataContainer;
+import org.knime.core.data.def.DefaultRow;
+import org.knime.core.data.def.DefaultTable;
+import org.knime.core.data.def.DoubleCell;
+import org.knime.core.data.def.IntCell;
+import org.knime.core.data.def.StringCell;
+import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
 import org.rosuda.JRclient.RBool;
 import org.rosuda.JRclient.REXP;
 import org.rosuda.JRclient.Rconnection;
 
-import de.unikn.knime.core.data.DataColumnSpec;
-import de.unikn.knime.core.data.DataColumnSpecCreator;
-import de.unikn.knime.core.data.DataRow;
-import de.unikn.knime.core.data.DataTable;
-import de.unikn.knime.core.data.DataTableSpec;
-import de.unikn.knime.core.data.container.DataContainer;
-import de.unikn.knime.core.data.def.DefaultRow;
-import de.unikn.knime.core.data.def.DefaultTable;
-import de.unikn.knime.core.data.def.DoubleCell;
-import de.unikn.knime.core.data.def.IntCell;
-import de.unikn.knime.core.data.def.StringCell;
-import de.unikn.knime.core.node.BufferedDataTable;
-import de.unikn.knime.core.node.CanceledExecutionException;
-import de.unikn.knime.core.node.ExecutionContext;
-import de.unikn.knime.core.node.ExecutionMonitor;
-import de.unikn.knime.core.node.InvalidSettingsException;
-import de.unikn.knime.core.node.NodeLogger;
-import de.unikn.knime.core.node.NodeSettingsRO;
-import de.unikn.knime.core.node.NodeSettingsWO;
 
 /**
  * Executes R command and returns the result of the variable R as output.
@@ -75,7 +75,7 @@ public class RConsoleModel extends RNodeModel {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeModel
+     * @see org.knime.core.node.NodeModel
      *      #execute(BufferedDataTable[],
      *      ExecutionContext)
      */
@@ -295,15 +295,15 @@ public class RConsoleModel extends RNodeModel {
 
 
     /**
-     * @see de.unikn.knime.core.node.NodeModel#reset()
+     * @see org.knime.core.node.NodeModel#reset()
      */
     @Override
     protected void reset() {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeModel
-     *      #configure(de.unikn.knime.core.data.DataTableSpec[])
+     * @see org.knime.core.node.NodeModel
+     *      #configure(org.knime.core.data.DataTableSpec[])
      */
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
@@ -327,7 +327,7 @@ public class RConsoleModel extends RNodeModel {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeModel
+     * @see org.knime.core.node.NodeModel
      *      #saveSettingsTo(NodeSettingsWO)
      */
     @Override
@@ -337,7 +337,7 @@ public class RConsoleModel extends RNodeModel {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeModel
+     * @see org.knime.core.node.NodeModel
      *      #loadValidatedSettingsFrom(NodeSettingsRO)
      */
     @Override
@@ -348,7 +348,7 @@ public class RConsoleModel extends RNodeModel {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeModel
+     * @see org.knime.core.node.NodeModel
      *      #validateSettings(NodeSettingsRO)
      */
     @Override
@@ -359,7 +359,7 @@ public class RConsoleModel extends RNodeModel {
     }
     
     /**
-     * @see de.unikn.knime.core.node.NodeModel#loadInternals(
+     * @see org.knime.core.node.NodeModel#loadInternals(
      * File, ExecutionMonitor)
      */
     @Override
@@ -370,7 +370,7 @@ public class RConsoleModel extends RNodeModel {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeModel#saveInternals(
+     * @see org.knime.core.node.NodeModel#saveInternals(
      * File, ExecutionMonitor)
      */
     @Override

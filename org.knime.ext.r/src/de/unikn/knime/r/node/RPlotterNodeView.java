@@ -28,8 +28,9 @@ package de.unikn.knime.r.node;
 
 import java.awt.Image;
 
-import de.unikn.knime.core.node.NodeModel;
-import de.unikn.knime.core.node.NodeView;
+import org.knime.core.node.NodeModel;
+import org.knime.core.node.NodeView;
+
 
 /**
  * <code>NodeView</code> for the R plotter.
@@ -51,7 +52,7 @@ public class RPlotterNodeView extends NodeView {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeView#modelChanged()
+     * @see org.knime.core.node.NodeView#modelChanged()
      */
     @Override
     protected void modelChanged() {
@@ -61,7 +62,7 @@ public class RPlotterNodeView extends NodeView {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeView#onClose()
+     * @see org.knime.core.node.NodeView#onClose()
      */
     @Override
     protected void onClose() {
@@ -69,7 +70,7 @@ public class RPlotterNodeView extends NodeView {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeView#onOpen()
+     * @see org.knime.core.node.NodeView#onOpen()
      */
     @Override
     protected void onOpen() {

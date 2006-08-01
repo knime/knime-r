@@ -40,14 +40,15 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
-import de.unikn.knime.core.data.DataColumnSpec;
-import de.unikn.knime.core.data.DataColumnSpecCreator;
-import de.unikn.knime.core.data.DataTableSpec;
-import de.unikn.knime.core.data.DataType;
-import de.unikn.knime.core.data.DoubleValue;
-import de.unikn.knime.core.data.IntValue;
-import de.unikn.knime.core.data.StringValue;
-import de.unikn.knime.core.node.util.DataColumnSpecListCellRenderer;
+import org.knime.core.data.DataColumnSpec;
+import org.knime.core.data.DataColumnSpecCreator;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.DataType;
+import org.knime.core.data.DoubleValue;
+import org.knime.core.data.IntValue;
+import org.knime.core.data.StringValue;
+import org.knime.core.node.util.DataColumnSpecListCellRenderer;
+
 
 /**
  * Panel to enter R expressions.

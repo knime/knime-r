@@ -26,22 +26,22 @@
  */
 package de.unikn.knime.r.node;
 
+import org.knime.core.data.DataCell;
+import org.knime.core.data.DataColumnSpec;
+import org.knime.core.data.DataRow;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.DataType;
+import org.knime.core.data.DoubleValue;
+import org.knime.core.data.IntValue;
+import org.knime.core.data.StringValue;
+import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.NodeLogger;
 import org.rosuda.JRclient.REXP;
 import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 
-import de.unikn.knime.core.data.DataCell;
-import de.unikn.knime.core.data.DataColumnSpec;
-import de.unikn.knime.core.data.DataRow;
-import de.unikn.knime.core.data.DataTableSpec;
-import de.unikn.knime.core.data.DataType;
-import de.unikn.knime.core.data.DoubleValue;
-import de.unikn.knime.core.data.IntValue;
-import de.unikn.knime.core.data.StringValue;
-import de.unikn.knime.core.node.BufferedDataTable;
-import de.unikn.knime.core.node.CanceledExecutionException;
-import de.unikn.knime.core.node.ExecutionMonitor;
-import de.unikn.knime.core.node.NodeLogger;
 
 /**
  * Utility class for sending data to a R server.

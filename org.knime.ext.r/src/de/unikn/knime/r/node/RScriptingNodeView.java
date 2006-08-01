@@ -51,17 +51,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 
+import org.knime.core.data.DataColumnSpec;
+import org.knime.core.data.DataColumnSpecCreator;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeModel;
+import org.knime.core.node.NodeView;
+import org.knime.core.node.util.DataColumnSpecListCellRenderer;
 import org.rosuda.JRclient.REXP;
 import org.rosuda.JRclient.RFileInputStream;
 import org.rosuda.JRclient.RSrvException;
 
-import de.unikn.knime.core.data.DataColumnSpec;
-import de.unikn.knime.core.data.DataColumnSpecCreator;
-import de.unikn.knime.core.data.DataTableSpec;
-import de.unikn.knime.core.node.NodeLogger;
-import de.unikn.knime.core.node.NodeModel;
-import de.unikn.knime.core.node.NodeView;
-import de.unikn.knime.core.node.util.DataColumnSpecListCellRenderer;
 
 /**
  * <code>NodeView</code> and "RScripting" Node view.
@@ -187,7 +187,7 @@ public class RScriptingNodeView extends NodeView {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeView#modelChanged()
+     * @see org.knime.core.node.NodeView#modelChanged()
      */
     @Override
     protected void modelChanged() {
@@ -204,7 +204,7 @@ public class RScriptingNodeView extends NodeView {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeView#onClose()
+     * @see org.knime.core.node.NodeView#onClose()
      */
     @Override
     protected void onClose() {
@@ -212,7 +212,7 @@ public class RScriptingNodeView extends NodeView {
     }
 
     /**
-     * @see de.unikn.knime.core.node.NodeView#onOpen()
+     * @see org.knime.core.node.NodeView#onOpen()
      */
     @Override
     protected void onOpen() {

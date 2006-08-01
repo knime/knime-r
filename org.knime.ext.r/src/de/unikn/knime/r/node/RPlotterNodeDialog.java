@@ -28,13 +28,14 @@ package de.unikn.knime.r.node;
 
 import java.util.Set;
 
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.DoubleValue;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
+
 import de.unikn.knime.base.node.util.FilterColumnPanel;
-import de.unikn.knime.core.data.DataTableSpec;
-import de.unikn.knime.core.data.DoubleValue;
-import de.unikn.knime.core.node.InvalidSettingsException;
-import de.unikn.knime.core.node.NodeSettingsRO;
-import de.unikn.knime.core.node.NodeSettingsWO;
-import de.unikn.knime.core.node.NotConfigurableException;
 
 /**
  * Dialog of the R plotter to select two numeric columns.
@@ -78,7 +79,7 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
      * @param settings The <code>NodeSettings</code> to write into.
      * @throws InvalidSettingsException If column list does not contain two 
      *         items.
-     * @see de.unikn.knime.core.node.NodeDialogPane#saveSettingsTo(
+     * @see org.knime.core.node.NodeDialogPane#saveSettingsTo(
      * NodeSettingsWO)
      */
     @Override

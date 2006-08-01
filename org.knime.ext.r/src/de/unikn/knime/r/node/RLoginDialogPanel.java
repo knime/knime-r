@@ -30,13 +30,14 @@ import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
-import de.unikn.knime.core.data.DataTableSpec;
-import de.unikn.knime.core.node.InvalidSettingsException;
-import de.unikn.knime.core.node.NodeSettingsRO;
-import de.unikn.knime.core.node.NodeSettingsWO;
-import de.unikn.knime.core.node.defaultnodedialog.DialogComponentInteger;
-import de.unikn.knime.core.node.defaultnodedialog.DialogComponentPasswordField;
-import de.unikn.knime.core.node.defaultnodedialog.DialogComponentTextField;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodedialog.DialogComponentInteger;
+import org.knime.core.node.defaultnodedialog.DialogComponentPasswordField;
+import org.knime.core.node.defaultnodedialog.DialogComponentTextField;
+
 
 /**
  * Panel used to login to a R server providing user, password, host, and port.

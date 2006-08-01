@@ -28,8 +28,9 @@
  */
 package de.unikn.knime.r.node;
 
+import org.knime.core.node.Node;
+
 import de.unikn.knime.base.node.io.filereader.FileReaderNodeFactory;
-import de.unikn.knime.core.node.Node;
 
 /**
  * Tests the RScripting.
