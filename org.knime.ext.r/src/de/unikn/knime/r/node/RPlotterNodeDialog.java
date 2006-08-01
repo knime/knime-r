@@ -35,7 +35,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 
-import de.unikn.knime.base.node.util.FilterColumnPanel;
+import org.knime.base.node.util.FilterColumnPanel;
 
 /**
  * Dialog of the R plotter to select two numeric columns.
