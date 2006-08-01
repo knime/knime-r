@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KNIME R-Project plug-in
-Bundle-SymbolicName: de.unikn.knime.r; singleton:=true
+Bundle-SymbolicName: org.knime.ext.r; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Activator: de.unikn.knime.r.RCorePlugin
+Bundle-Activator: org.knime.ext.r.RCorePlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -14,6 +14,6 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-LazyStart: true
 Bundle-ClassPath: knime-r.jar,
  lib/JRclient.jar
-Export-Package: de.unikn.knime.r.node,
+Export-Package: org.knime.ext.r.node,
  org.rosuda.JRclient
 Bundle-Vendor: University of Konstanz, Germany

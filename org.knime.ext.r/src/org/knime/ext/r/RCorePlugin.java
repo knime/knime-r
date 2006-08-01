@@ -24,7 +24,7 @@
  * -------------------------------------------------------------------
  * 
  */
-package de.unikn.knime.r;
+package org.knime.ext.r;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

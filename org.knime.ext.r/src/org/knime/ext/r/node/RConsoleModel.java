@@ -24,7 +24,7 @@
  * -------------------------------------------------------------------
  *
  */
-package de.unikn.knime.r.node;
+package org.knime.ext.r.node;
 
 import java.io.File;
 import java.io.IOException;

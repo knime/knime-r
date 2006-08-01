@@ -24,36 +24,58 @@
  * -------------------------------------------------------------------
  * 
  */
-package de.unikn.knime.r.node;
+package org.knime.ext.r.node;
 
-import org.knime.core.node.Node;
-
-import org.knime.base.node.io.filereader.FileReaderNodeFactory;
+import org.knime.core.node.NodeDialogPane;
+import org.knime.core.node.NodeFactory;
+import org.knime.core.node.NodeModel;
+import org.knime.core.node.NodeView;
 
 /**
- * Tests the RPlotter.
+ * Factory for the R plotter.
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-final class RPlotterFlow {
-    
-    private RPlotterFlow(final String fileName) {
-        Node file = new Node(new FileReaderNodeFactory(fileName));
-        file.showDialog();
-        file.execute();
-        Node r = new Node(new RPlotterNodeFactory());
-        r.getInPort(0).connectPort(file.getOutPort(0));
-        r.showDialog();
-        r.execute();
-        r.showView(0);
+public class RPlotterNodeFactory extends NodeFactory {
+    /**
+     * @see org.knime.core.node.NodeFactory#createNodeModel()
+     */
+    @Override
+    public NodeModel createNodeModel() {
+        return new RPlotterNodeModel();
     }
 
     /**
-     * @param args
+     * @see org.knime.core.node.NodeFactory#getNrNodeViews()
      */
-    public static void main(final String[] args) {
-        new RPlotterFlow("../dataset/satimage/larrys_ocean_satimage.trn.xml");
-        //new RPlotterFlow("../dataset/iris/data.all.xml");
+    @Override
+    public int getNrNodeViews() {
+        return 1;
     }
 
+    /**
+     * @see org.knime.core.node.NodeFactory#createNodeView(int,
+     *      org.knime.core.node.NodeModel)
+     */
+    @Override
+    public NodeView createNodeView(final int viewIndex,
+            final NodeModel nodeModel) {
+        return new RPlotterNodeView(nodeModel);
+    }
+
+    /**
+     * @see org.knime.core.node.NodeFactory#hasDialog()
+     */
+    @Override
+    public boolean hasDialog() {
+        return true;
+    }
+
+    /**
+     * @see org.knime.core.node.NodeFactory#createNodeDialogPane()
+     */
+    @Override
+    public NodeDialogPane createNodeDialogPane() {
+        return new RPlotterNodeDialog();
+    }
 }

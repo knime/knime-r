@@ -26,7 +26,7 @@
  * History
  *   30.09.2005 (Florian Georg): created
  */
-package de.unikn.knime.r.node;
+package org.knime.ext.r.node;
 
 import java.awt.Image;
 import java.awt.Toolkit;

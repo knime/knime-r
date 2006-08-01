@@ -1,4 +1,4 @@
-/*
+/* 
  * -------------------------------------------------------------------
  * Copyright, 2003 - 2006
  * Universitaet Konstanz, Germany.
@@ -24,58 +24,56 @@
  * -------------------------------------------------------------------
  * 
  */
-package de.unikn.knime.r.node;
+package org.knime.ext.r.node;
 
-import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeModel;
-import org.knime.core.node.NodeView;
+import java.awt.GridLayout;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
- * <code>NodeFactory</code> for R Console.
+ * Displays the R result image.
  * 
- * @author Thomas Gabriel, Konstanz University
+ * @author Thomas Gabriel, University of Konstanz
  */
-public class RConsoleFactory extends NodeFactory {
+final class RPlotterViewPanel extends JPanel {
+
+    private final JLabel m_label;
+    
     /**
-     * @see org.knime.core.node.NodeFactory#createNodeModel()
+     * Creates a new panel with an empty label.
+     * @param image The content to show.
      */
-    @Override
-    public NodeModel createNodeModel() {
-        return new RConsoleModel();
+    protected RPlotterViewPanel(final Image image) {
+        m_label = new JLabel("<No Plot>");
+        super.setLayout(new GridLayout(1, 1));
+        super.add(m_label);
+        update(image);
     }
 
     /**
-     * @see org.knime.core.node.NodeFactory#getNrNodeViews()
+     * Creates a new panel with an empty label.
      */
-    @Override
-    public int getNrNodeViews() {
-        return 0;
+    protected RPlotterViewPanel() {
+        m_label = new JLabel("<No Plot>");
+        super.add(m_label);
     }
 
     /**
-     * @see org.knime.core.node.NodeFactory#createNodeView(int,
-     *      org.knime.core.node.NodeModel)
+     * @param image The new image or null to display.
      */
-    @Override
-    public NodeView createNodeView(final int viewIndex,
-            final NodeModel nodeModel) {
-        return null;
+    protected void update(final Image image) {
+        if (image == null) {
+            m_label.setIcon(null);
+            m_label.setText("<No Plot>");
+        } else {
+            m_label.setText(null);
+            m_label.setIcon(new ImageIcon(image));
+        }
+        super.repaint();
     }
 
-    /**
-     * @see org.knime.core.node.NodeFactory#hasDialog()
-     */
-    @Override
-    public boolean hasDialog() {
-        return true;
-    }
 
-    /**
-     * @see org.knime.core.node.NodeFactory#createNodeDialogPane()
-     */
-    @Override
-    public NodeDialogPane createNodeDialogPane() {
-        return new RConsoleDialogPane();
-    }
 }

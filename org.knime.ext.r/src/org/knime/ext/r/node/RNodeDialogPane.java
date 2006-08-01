@@ -1,4 +1,4 @@
-/* 
+/*
  * -------------------------------------------------------------------
  * Copyright, 2003 - 2006
  * Universitaet Konstanz, Germany.
@@ -24,56 +24,44 @@
  * -------------------------------------------------------------------
  * 
  */
-package de.unikn.knime.r.node;
+package org.knime.ext.r.node;
 
-import java.awt.Image;
-
-import org.knime.core.node.NodeModel;
-import org.knime.core.node.NodeView;
-
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeDialogPane;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
 
 /**
- * <code>NodeView</code> for the R plotter.
+ * Dialog pane holding the default login panel.
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RPlotterNodeView extends NodeView {
-    private final RPlotterViewPanel m_panel;
+class RNodeDialogPane extends NodeDialogPane {
+    
+    private final RLoginDialogPanel m_loginDialog;    
 
     /**
-     * Creates a new view.
-     * 
-     * @param nodeModel The model (class: <code>RPlotterNodeModel</code>)
+     * Creates a new pane with the login panel.
      */
-    protected RPlotterNodeView(final NodeModel nodeModel) {
-        super(nodeModel);
-        m_panel = new RPlotterViewPanel();
-        super.setComponent(m_panel);
+    RNodeDialogPane() {
+        super();
+        m_loginDialog = new RLoginDialogPanel();
     }
-
-    /**
-     * @see org.knime.core.node.NodeView#modelChanged()
-     */
+    
+    protected void addLoginTab() {
+        super.addTab("Login", m_loginDialog);
+    }
+    
     @Override
-    protected void modelChanged() {
-        RPlotterNodeModel model = (RPlotterNodeModel) super.getNodeModel();
-        Image image = model.getResultImage();        
-        m_panel.update(image);
+    protected void loadSettingsFrom(final NodeSettingsRO settings, final DataTableSpec[] specs) throws NotConfigurableException {
+        m_loginDialog.loadSettingsFrom(settings, specs);
     }
-
-    /**
-     * @see org.knime.core.node.NodeView#onClose()
-     */
+    
     @Override
-    protected void onClose() {
-
+    protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
+        m_loginDialog.saveSettingsTo(settings);
     }
-
-    /**
-     * @see org.knime.core.node.NodeView#onOpen()
-     */
-    @Override
-    protected void onOpen() {
-
-    }
+    
 }

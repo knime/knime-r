@@ -24,7 +24,7 @@
  * -------------------------------------------------------------------
  * 
  */
-package de.unikn.knime.r.node;
+package org.knime.ext.r.node;
 
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;

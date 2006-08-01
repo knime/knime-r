@@ -24,44 +24,58 @@
  * -------------------------------------------------------------------
  * 
  */
-package de.unikn.knime.r.node;
+package org.knime.ext.r.node;
 
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.NodeFactory;
+import org.knime.core.node.NodeModel;
+import org.knime.core.node.NodeView;
 
 /**
- * Dialog pane holding the default login panel.
+ * <code>NodeFactory</code> for R Console.
  * 
- * @author Thomas Gabriel, University of Konstanz
+ * @author Thomas Gabriel, Konstanz University
  */
-class RNodeDialogPane extends NodeDialogPane {
-    
-    private final RLoginDialogPanel m_loginDialog;    
+public class RConsoleFactory extends NodeFactory {
+    /**
+     * @see org.knime.core.node.NodeFactory#createNodeModel()
+     */
+    @Override
+    public NodeModel createNodeModel() {
+        return new RConsoleModel();
+    }
 
     /**
-     * Creates a new pane with the login panel.
+     * @see org.knime.core.node.NodeFactory#getNrNodeViews()
      */
-    RNodeDialogPane() {
-        super();
-        m_loginDialog = new RLoginDialogPanel();
-    }
-    
-    protected void addLoginTab() {
-        super.addTab("Login", m_loginDialog);
-    }
-    
     @Override
-    protected void loadSettingsFrom(final NodeSettingsRO settings, final DataTableSpec[] specs) throws NotConfigurableException {
-        m_loginDialog.loadSettingsFrom(settings, specs);
+    public int getNrNodeViews() {
+        return 0;
     }
-    
+
+    /**
+     * @see org.knime.core.node.NodeFactory#createNodeView(int,
+     *      org.knime.core.node.NodeModel)
+     */
     @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
-        m_loginDialog.saveSettingsTo(settings);
+    public NodeView createNodeView(final int viewIndex,
+            final NodeModel nodeModel) {
+        return null;
     }
-    
+
+    /**
+     * @see org.knime.core.node.NodeFactory#hasDialog()
+     */
+    @Override
+    public boolean hasDialog() {
+        return true;
+    }
+
+    /**
+     * @see org.knime.core.node.NodeFactory#createNodeDialogPane()
+     */
+    @Override
+    public NodeDialogPane createNodeDialogPane() {
+        return new RConsoleDialogPane();
+    }
 }

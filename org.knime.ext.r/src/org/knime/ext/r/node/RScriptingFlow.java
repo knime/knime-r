@@ -23,57 +23,38 @@
  * Or contact us: contact@knime.org.
  * -------------------------------------------------------------------
  * 
+ * History
+ *   27.10.2005 (gabriel): created
  */
-package de.unikn.knime.r.node;
+package org.knime.ext.r.node;
 
-import java.awt.GridLayout;
-import java.awt.Image;
+import org.knime.core.node.Node;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import org.knime.base.node.io.filereader.FileReaderNodeFactory;
 
 /**
- * Displays the R result image.
+ * Tests the RScripting.
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-final class RPlotterViewPanel extends JPanel {
-
-    private final JLabel m_label;
+final class RScriptingFlow {
     
-    /**
-     * Creates a new panel with an empty label.
-     * @param image The content to show.
-     */
-    protected RPlotterViewPanel(final Image image) {
-        m_label = new JLabel("<No Plot>");
-        super.setLayout(new GridLayout(1, 1));
-        super.add(m_label);
-        update(image);
+    private RScriptingFlow(final String fileName) {
+        Node file = new Node(new FileReaderNodeFactory(fileName));
+        file.showDialog();
+        file.execute();
+        Node r = new Node(new RScriptingNodeFactory());
+        r.getInPort(0).connectPort(file.getOutPort(0));
+        r.execute();
+        r.showView(0);
     }
 
     /**
-     * Creates a new panel with an empty label.
+     * @param args Cmd line args.
      */
-    protected RPlotterViewPanel() {
-        m_label = new JLabel("<No Plot>");
-        super.add(m_label);
+    public static void main(final String[] args) {
+        new RScriptingFlow("../dataset/satimage/larrys_ocean_satimage.trn.xml");
+        //new RPlotterFlow("../dataset/iris/data.all.xml");
     }
-
-    /**
-     * @param image The new image or null to display.
-     */
-    protected void update(final Image image) {
-        if (image == null) {
-            m_label.setIcon(null);
-            m_label.setText("<No Plot>");
-        } else {
-            m_label.setText(null);
-            m_label.setIcon(new ImageIcon(image));
-        }
-        super.repaint();
-    }
-
 
 }

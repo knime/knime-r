@@ -1,4 +1,4 @@
-/* 
+/*
  * -------------------------------------------------------------------
  * Copyright, 2003 - 2006
  * Universitaet Konstanz, Germany.
@@ -23,37 +23,36 @@
  * Or contact us: contact@knime.org.
  * -------------------------------------------------------------------
  * 
- * History
- *   27.10.2005 (gabriel): created
  */
-package de.unikn.knime.r.node;
+package org.knime.ext.r.node;
 
 import org.knime.core.node.Node;
 
 import org.knime.base.node.io.filereader.FileReaderNodeFactory;
 
 /**
- * Tests the RScripting.
+ * Tests the RPlotter.
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-final class RScriptingFlow {
+final class RPlotterFlow {
     
-    private RScriptingFlow(final String fileName) {
+    private RPlotterFlow(final String fileName) {
         Node file = new Node(new FileReaderNodeFactory(fileName));
         file.showDialog();
         file.execute();
-        Node r = new Node(new RScriptingNodeFactory());
+        Node r = new Node(new RPlotterNodeFactory());
         r.getInPort(0).connectPort(file.getOutPort(0));
+        r.showDialog();
         r.execute();
         r.showView(0);
     }
 
     /**
-     * @param args Cmd line args.
+     * @param args
      */
     public static void main(final String[] args) {
-        new RScriptingFlow("../dataset/satimage/larrys_ocean_satimage.trn.xml");
+        new RPlotterFlow("../dataset/satimage/larrys_ocean_satimage.trn.xml");
         //new RPlotterFlow("../dataset/iris/data.all.xml");
     }
 
