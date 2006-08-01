@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 1.0//EN" "http://www.inf.uni-konstanz.de/bioml/research/knime/Node.dtd">
+<knimeNode type="Other" icon="./r.png">
+	<name>R Console</name>
+	<shortDescription>
+	    Allows execution of R commands on an R Server. The result of these R
+	    commands is returned in the output table of this node. The final result
+	    table will have only one dimension, namely R.
+	</shortDescription>
+	<fullDescription>
+		<intro>
+			Allows execution of R commands on an R Server. The entire data is
+			transfered to the R Server which then executes a series of R commands
+			entered in the dialog. Each column can be accessed by the name provided
+			in the input data table. The output has to be assigned to a variable
+			named R.
+			<p><b>R installation:</b><br/>
+		    In order to get the R nodes running, you have to install the R-project 
+		    first, see <a href="http://www.r-project.org">www.r-project.org</a>.
+    	     Also the R Server which responds to R commands has to be installed 
+    	     and running, see <a href="http://stats.math.uni-augsburg.de/Rserve">
+    	     http://stats.math.uni-augsburg.de/Rserve</a>. Please note that in the
+		    current version the R Server needs to be restarted from time to time.
+		    If an R node hangs, interrupt the R Server and restart it. Warnings
+		    and errors are printed in the R Server window.
+	  	    </p>
+		</intro>
+		<option name="Execute">
+			Enter R commands here, for instance for computing the Covariance 
+			of two columns: <br/>
+			<i>R&lt;-var(cbind(var(Col0,Col1))</i>
+		</option>
+		<option name ="1. Host: ">
+			The IP of the computer where the R Server is running, for example
+			localhost with IP 127.0.0.1 
+		</option>
+		<option name ="2. Port: ">
+			The port id, default is 6311.
+		</option>
+		<option name ="3. User: ">
+			The login name can be empty.
+		</option>
+		<option name ="4. Password: ">
+			The password can be empty.
+		</option>
+	</fullDescription>
+	<ports>
+		<dataIn index="0">Data Input</dataIn>
+		<dataOut index="0">R Result</dataOut>
+	</ports>
+</knimeNode>

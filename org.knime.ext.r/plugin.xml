@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="de.unikn.knime.workbench.repository.nodes">
+      <node
+            category-path="/statistics/r"
+            factory-class="de.unikn.knime.r.node.RPlotterNodeFactory"
+            id="de.unikn.knime.r.node.RPlotterNodeFactory"/>
+      <node
+            category-path="/statistics/r"
+            factory-class="de.unikn.knime.r.node.RScriptingNodeFactory"
+            id="de.unikn.knime.r.node.RScriptingNodeFactory"/>
+      <node
+            category-path="/statistics/r"
+            factory-class="de.unikn.knime.r.node.RConsoleFactory"
+            id="de.unikn.knime.r.node.RConsoleFactory"/>
+   </extension>
+   <extension
+         point="de.unikn.knime.workbench.repository.categories">
+      <category
+            icon="icons/r.png"
+            level-id="r"
+            name="R"
+            path="/statistics"/>
+   </extension>
+
+</plugin>
