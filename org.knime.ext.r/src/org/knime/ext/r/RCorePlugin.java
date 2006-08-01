@@ -85,7 +85,7 @@ public class RCorePlugin extends AbstractUIPlugin {
      * @return the image descriptor
      */
     public static ImageDescriptor getImageDescriptor(final String path) {
-        return AbstractUIPlugin.imageDescriptorFromPlugin("de.unikn.knime.r",
+        return AbstractUIPlugin.imageDescriptorFromPlugin("org.knime.r",
                 path);
     }
 }
