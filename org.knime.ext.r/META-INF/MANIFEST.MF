@@ -7,8 +7,8 @@ Bundle-Activator: org.knime.ext.r.RCorePlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- de.unikn.knime.workbench.core,
- de.unikn.knime.workbench.repository,
+ org.knime.workbench.core,
+ org.knime.workbench.repository,
  org.knime.base,
  org.knime.dev
 Eclipse-LazyStart: true
