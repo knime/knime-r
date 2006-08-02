@@ -5,16 +5,16 @@
          point="org.knime.workbench.repository.nodes">
       <node
             category-path="/statistics/r"
-            factory-class="org.knime.r.node.RPlotterNodeFactory"
-            id="org.knime.r.node.RPlotterNodeFactory"/>
+            factory-class="org.knime.ext.r.node.RPlotterNodeFactory"
+            id="org.knime.ext.r.node.RPlotterNodeFactory"/>
       <node
             category-path="/statistics/r"
-            factory-class="org.knime.r.node.RScriptingNodeFactory"
-            id="org.knime.r.node.RScriptingNodeFactory"/>
+            factory-class="org.knime.ext.r.node.RScriptingNodeFactory"
+            id="org.knime.ext.r.node.RScriptingNodeFactory"/>
       <node
             category-path="/statistics/r"
-            factory-class="org.knime.r.node.RConsoleFactory"
-            id="org.knime.r.node.RConsoleFactory"/>
+            factory-class="org.knime.ext.r.node.RConsoleFactory"
+            id="org.knime.ext.r.node.RConsoleFactory"/>
    </extension>
    <extension
          point="org.knime.workbench.repository.categories">
@@ -24,5 +24,4 @@
             name="R"
             path="/statistics"/>
    </extension>
-
 </plugin>
