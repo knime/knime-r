@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KNIME R-Project plug-in
+Bundle-Name: KNIME R-Project nodes
 Bundle-SymbolicName: org.knime.ext.r; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.knime.ext.r.RCorePlugin
@@ -16,4 +16,4 @@ Bundle-ClassPath: knime-r.jar,
  lib/JRclient.jar
 Export-Package: org.knime.ext.r.node,
  org.rosuda.JRclient
-Bundle-Vendor: University of Konstanz, Germany
+Bundle-Vendor: Chair for Bioinformatics and Information Mining, University of Konstanz, Germany
