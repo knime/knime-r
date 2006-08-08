@@ -1,8 +1,8 @@
 /* 
  * -------------------------------------------------------------------
  * Copyright, 2003 - 2006
- * Universitaet Konstanz, Germany.
- * Lehrstuhl fuer Angewandte Informatik
+ * University of Konstanz, Germany.
+ * Chair for Bioinformatics and Information Mining
  * Prof. Dr. Michael R. Berthold
  *
  * This file is part of the R integration plugin for KNIME.
