@@ -43,7 +43,7 @@ import org.knime.core.node.NodeSettingsWO;
  * Executes R commands locally, the entire data is transfered to the R Server 
  * in the execute.
  * 
- * @author Thomas Gabriel, Konstanz University
+ * @author Thomas Gabriel, University of Konstanz
  */
 public class RScriptingNodeModel extends RNodeModel {
     private DataTableSpec m_spec = null;

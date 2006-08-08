@@ -66,7 +66,7 @@ import org.rosuda.JRclient.RSrvException;
 /**
  * <code>NodeView</code> and "RScripting" Node view.
  * 
- * @author Thomas Gabriel, Konstanz University
+ * @author Thomas Gabriel, University of Konstanz
  */
 public class RScriptingNodeView extends NodeView {
 

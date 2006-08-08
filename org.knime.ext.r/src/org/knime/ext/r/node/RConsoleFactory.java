@@ -34,7 +34,7 @@ import org.knime.core.node.NodeView;
 /**
  * <code>NodeFactory</code> for R Console.
  * 
- * @author Thomas Gabriel, Konstanz University
+ * @author Thomas Gabriel, University of Konstanz
  */
 public class RConsoleFactory extends NodeFactory {
     /**

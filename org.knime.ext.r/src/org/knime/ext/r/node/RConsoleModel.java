@@ -57,7 +57,7 @@ import org.rosuda.JRclient.Rconnection;
 /**
  * Executes R command and returns the result of the variable R as output.
  * 
- * @author Thomas Gabriel, Konstanz University
+ * @author Thomas Gabriel, University of Konstanz
  */
 public class RConsoleModel extends RNodeModel {
 
