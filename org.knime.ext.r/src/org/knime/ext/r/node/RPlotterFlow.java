@@ -49,7 +49,7 @@ final class RPlotterFlow {
     }
 
     /**
-     * @param args
+     * @param args the arguments to main
      */
     public static void main(final String[] args) {
         new RPlotterFlow("../dataset/satimage/larrys_ocean_satimage.trn.xml");

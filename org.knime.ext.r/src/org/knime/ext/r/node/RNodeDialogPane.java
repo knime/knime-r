@@ -50,17 +50,31 @@ class RNodeDialogPane extends NodeDialogPane {
         m_loginDialog = new RLoginDialogPanel();
     }
     
+    /**
+     * Adds the default login panel to the dialog. Useful for derived dialogs.
+     */
     protected void addLoginTab() {
         super.addTab("Login", m_loginDialog);
     }
     
+    /**
+     * @see org.knime.core.node.NodeDialogPane
+     *      #loadSettingsFrom(org.knime.core.node.NodeSettingsRO,
+     *      org.knime.core.data.DataTableSpec[])
+     */
     @Override
-    protected void loadSettingsFrom(final NodeSettingsRO settings, final DataTableSpec[] specs) throws NotConfigurableException {
+    protected void loadSettingsFrom(final NodeSettingsRO settings, 
+            final DataTableSpec[] specs) throws NotConfigurableException {
         m_loginDialog.loadSettingsFrom(settings, specs);
     }
     
+    /**
+     * @see org.knime.core.node.NodeDialogPane
+     *      #saveSettingsTo(org.knime.core.node.NodeSettingsWO)
+     */
     @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
+    protected void saveSettingsTo(final NodeSettingsWO settings)
+            throws InvalidSettingsException {
         m_loginDialog.saveSettingsTo(settings);
     }
     

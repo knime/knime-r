@@ -33,9 +33,13 @@ package org.knime.ext.r.node;
  */
 public final class RConstants {
     
+    /** key used to store settings. */
     static final String KEY_HOST = "host";
+    /** key used to store settings. */
     static final String KEY_PORT = "port";
+    /** key used to store settings. */
     static final String KEY_USER = "user";
+    /** key used to store settings. */
     static final String KEY_PASSWORD = "password";
     
     /** Default initalization for host: localhost. */
@@ -47,46 +51,74 @@ public final class RConstants {
     /** Default initalization for password: (none).*/
     public static final String DEFAULT_PASS = "";
     
-    private static String USER = DEFAULT_USER;
+    private static String userName = DEFAULT_USER;
     
-    private static String HOST = DEFAULT_HOST;
+    private static String hostAdr = DEFAULT_HOST;
     
-    private static int PORT = DEFAULT_PORT;
+    private static int portNo = DEFAULT_PORT;
     
-    private static String PASS = DEFAULT_PASS;
+    private static String pass = DEFAULT_PASS;
 
     private RConstants() {
     }
     
+    /**
+     * Sets the username to the specified string.
+     * @param user the new user name.
+     */
     public static void setUser(final String user) {
-        USER = user;
+        userName = user;
     }
     
+    /**
+     * @return the currently set username.
+     */
     public static String getUser() {
-        return USER;
+        return userName;
     }
     
+    /**
+     * Sets the host ip address to the specified string.
+     * @param host the new host IP address.
+     */
     public static void setHost(final String host) {
-        HOST = host;
+        hostAdr = host;
     }
     
+    /**
+     * @return the currently set host IP address as string.
+     */
     public static String getHost() {
-        return HOST;
+        return hostAdr;
     }
     
+    /**
+     * Sets the port address to the specified number.
+     * @param port the new port number.
+     */
     public static void setPort(final int port) {
-        PORT = port;
+        portNo = port;
     }
     
+    /**
+     * @return the currently set port number.
+     */
     public static int getPort() {
-        return PORT;
+        return portNo;
     }
     
+    /**
+     * Sets the passphrase to the specified string.
+     * @param password the new password.
+     */
     public static void setPassword(final String password) {
-        PASS = password;
+        pass = password;
     }
     
+    /**
+     * @return the currently set password.
+     */
     public static String getPassword() {
-        return PASS;
+        return pass;
     }
 }

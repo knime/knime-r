@@ -57,6 +57,14 @@ final class RConnection {
         
     }
     
+    /**
+     * Replaces illegal characters in the specified string. Legal characters are
+     * a-z, A-Z and 0-9. All others will be replaced by an underscore.
+     * 
+     * @param name the string to check and to replace illegal characters in.
+     * @return a string containing only a-z, A-Z, 0-9 and _. All other
+     *         characters got replaced by an underscore ('_').
+     */
     static final String formatColumn(final String name) {
         String newName = name.replaceAll("[^a-zA-Z0-9]", "_");
         if (!newName.equals(name)) {
@@ -104,39 +112,36 @@ final class RConnection {
             for (int i = 0; i < data.length; i++) { // columns
                 DataCell cell = row.getCell(i);
                 switch (types[i]) {
-                    case 1 : {
-                        int[] value;
+                    case 1 :
+                        int[] iValue;
                         if (data[i] == null) {
-                            value = new int[max];
-                            data[i] = value;
+                            iValue = new int[max];
+                            data[i] = iValue;
                         } else {
-                            value = (int[]) data[i];
+                            iValue = (int[]) data[i];
                         }
-                        value[z] = ((IntValue) cell).getIntValue();
+                        iValue[z] = ((IntValue) cell).getIntValue();
                         break;
-                    }
-                    case 2 : {
-                        double[] value;
+                    case 2 :
+                        double[] dValue;
                         if (data[i] == null) {
-                            value = new double[max];
-                            data[i] = value;
+                            dValue = new double[max];
+                            data[i] = dValue;
                         } else {
-                            value = (double[]) data[i];
+                            dValue = (double[]) data[i];
                         }
-                        value[z] = ((DoubleValue) cell).getDoubleValue();
+                        dValue[z] = ((DoubleValue) cell).getDoubleValue();
                         break;
-                    }
-                    case 3 : { 
-                        String[] value; 
+                    case 3 :
+                        String[] sValue; 
                         if (data[i] == null) {
-                            value = new String[max];
-                            data[i] = value;
+                            sValue = new String[max];
+                            data[i] = sValue;
                         } else {
-                            value = (String[]) data[i];
+                            sValue = (String[]) data[i];
                         }
-                        value[z] = ((StringValue) cell).getStringValue();
+                        sValue[z] = ((StringValue) cell).getStringValue();
                         break;
-                    }
                 }
             }
             z++;
@@ -145,20 +150,19 @@ final class RConnection {
                     String colName = formatColumn(
                             spec.getColumnSpec(i).getName());
                     switch (types[i]) {
-                        case 1 : {
+                        case 1 :
                             conn.assign("ColTmp" + i, (int[]) data[i]);
                             break;
-                        }
-                        case 2 : {
+                        case 2 :
                             conn.assign("ColTmp" + i, (double[]) data[i]);
                             break;
-                        }
-                        case 3 : {
-                            conn.assign("ColTmp" + i, new REXP((String[]) data[i]));
+                        case 3 :
+                            conn.assign("ColTmp" + i, 
+                                    new REXP((String[]) data[i]));
                             break;
-                        }
                     }
-                    conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i + ")");
+                    conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" 
+                            + i + ")");
                     data[i] = null;
                 }
                 z = 0;
@@ -171,26 +175,24 @@ final class RConnection {
                 String colName = formatColumn(
                         spec.getColumnSpec(i).getName());
                 switch (types[i]) {
-                    case 1 : {
-                        int[] copy = new int[z];
-                        System.arraycopy(data[i], 0, copy, 0, z);
-                        conn.assign("ColTmp" + i, copy); 
+                    case 1 :
+                        int[] iCopy = new int[z];
+                        System.arraycopy(data[i], 0, iCopy, 0, z);
+                        conn.assign("ColTmp" + i, iCopy); 
                         break;
-                    }
-                    case 2 : {
-                        double[] copy = new double[z];
-                        System.arraycopy(data[i], 0, copy, 0, z);
-                        conn.assign("ColTmp" + i, copy); 
+                    case 2 :
+                        double[] dCopy = new double[z];
+                        System.arraycopy(data[i], 0, dCopy, 0, z);
+                        conn.assign("ColTmp" + i, dCopy); 
                         break;
-                    }
-                    case 3 : {
-                        String[] copy = new String[z];
-                        System.arraycopy(data[i], 0, copy, 0, z);
-                        conn.assign("ColTmp" + i, new REXP(copy)); 
+                    case 3 :
+                        String[] sCopy = new String[z];
+                        System.arraycopy(data[i], 0, sCopy, 0, z);
+                        conn.assign("ColTmp" + i, new REXP(sCopy)); 
                         break;
-                    }
                 }
-                conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i + ")");
+                conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i 
+                        + ")");
                 data[i] = null;
             }
         }

@@ -48,6 +48,9 @@ import org.knime.core.node.NodeSettingsWO;
 public class RScriptingNodeModel extends RNodeModel {
     private DataTableSpec m_spec = null;
 
+    /**
+     * The constructor. Huh!
+     */
     protected RScriptingNodeModel() {
         super(1, 0);
     }

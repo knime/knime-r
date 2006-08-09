@@ -48,35 +48,58 @@ abstract class RNodeModel extends NodeModel {
         NodeLogger.getLogger(RNodeModel.class);
     
     /**
-     * 
-     * @param dataIns
-     * @param dataOuts
+     * Constructor. Specify the number of inputs and outputs required.
+     * @param dataIns number of inputs.
+     * @param dataOuts number of outputs.
      */
     RNodeModel(final int dataIns, final int dataOuts) {
         super(dataIns, dataOuts);
     }
 
+    /**
+     * @see org.knime.core.node.NodeModel
+     *      #validateSettings(org.knime.core.node.NodeSettingsRO)
+     */
     @Override
     protected void validateSettings(final NodeSettingsRO settings) 
         throws InvalidSettingsException {
         readSettings(settings, false);        
     }
-    
+
+    /**
+     * @see org.knime.core.node.NodeModel
+     *      #loadValidatedSettingsFrom(org.knime.core.node.NodeSettingsRO)
+     */
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) 
         throws InvalidSettingsException {
         readSettings(settings, true);
     }
     
+    /**
+     * Validates the settings in the specified settings object. If the write
+     * flag is set true, it takes them over (sets them in the internal
+     * variables).
+     * 
+     * @param settings the settings object to verify/read.
+     * @param write if true, settings are taken over, otherwise they are just
+     *            validated.
+     * @throws InvalidSettingsException if the settings in settings object are
+     *             not valid.
+     */
     void readSettings(final NodeSettingsRO settings, final boolean write) 
         throws InvalidSettingsException {
-        String host = settings.getString(RConstants.KEY_HOST, RConstants.DEFAULT_HOST);
-        int    port = settings.getInt(RConstants.KEY_PORT, RConstants.DEFAULT_PORT);
-        String user = settings.getString(RConstants.KEY_USER, RConstants.DEFAULT_USER);
+        String host = settings.getString(RConstants.KEY_HOST, 
+                RConstants.DEFAULT_HOST);
+        int    port = settings.getInt(RConstants.KEY_PORT, 
+                RConstants.DEFAULT_PORT);
+        String user = settings.getString(RConstants.KEY_USER, 
+                RConstants.DEFAULT_USER);
         String pw = "";
         try { 
             pw = DialogComponentPasswordField.decrypt(
-                    settings.getString(RConstants.KEY_PASSWORD, RConstants.DEFAULT_PASS));
+                    settings.getString(RConstants.KEY_PASSWORD, 
+                            RConstants.DEFAULT_PASS));
         } catch (Exception e) {
             throw new InvalidSettingsException(
                         "Could not decrypt password", e);
@@ -90,6 +113,10 @@ abstract class RNodeModel extends NodeModel {
         
     }
     
+    /**
+     * @see org.knime.core.node.NodeModel
+     *      #saveSettingsTo(org.knime.core.node.NodeSettingsWO)
+     */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         settings.addString(RConstants.KEY_HOST, RConstants.getHost());
@@ -106,9 +133,11 @@ abstract class RNodeModel extends NodeModel {
         if (m_rconn != null && m_rconn.isConnected()) {
             return m_rconn;
         }
-        LOGGER.info("Starting R evaluation on RServe (" + RConstants.getHost() + ") ...");
+        LOGGER.info("Starting R evaluation on RServe (" 
+                + RConstants.getHost() + ") ...");
         try {
-            m_rconn = new Rconnection(RConstants.getHost() + " " + RConstants.getPort());
+            m_rconn = new Rconnection(RConstants.getHost() + " " 
+                    + RConstants.getPort());
             if (m_rconn.needLogin()) {
                 m_rconn.login(RConstants.getUser(), RConstants.getPassword());
             }
@@ -126,6 +155,11 @@ abstract class RNodeModel extends NodeModel {
         return m_rconn;
     }
     
+    /**
+     * Trys to establish a connection to the R server with the current settings.
+     * 
+     * @throws InvalidSettingsException if it couldn't.
+     */
     static final void checkRconnection() throws InvalidSettingsException {
         try {
             getRconnection();

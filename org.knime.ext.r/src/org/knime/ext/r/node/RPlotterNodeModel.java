@@ -215,7 +215,8 @@ public class RPlotterNodeModel extends RNodeModel {
                 }
             }
         }
-        throw new InvalidSettingsException("Columns: " + m_first + "," + m_second);
+        throw new InvalidSettingsException("Columns: " + m_first + "," 
+                + m_second);
     }
 
     /**

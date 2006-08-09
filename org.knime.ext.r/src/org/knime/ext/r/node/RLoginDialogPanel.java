@@ -54,14 +54,19 @@ final class RLoginDialogPanel extends JPanel {
 
     private final DialogComponentPasswordField m_pass;
 
+    /**
+     * Default constructor.
+     */
     public RLoginDialogPanel() {
         super(new GridLayout(4, 1));
         m_host = new DialogComponentTextField(RConstants.KEY_HOST, "Host: ",
                 RConstants.DEFAULT_HOST);
         m_host.setSizeComponents(200, 25);
-        m_port = new DialogComponentInteger(RConstants.KEY_PORT, "Port: ", RConstants.DEFAULT_PORT);
+        m_port = new DialogComponentInteger(RConstants.KEY_PORT, "Port: ", 
+                RConstants.DEFAULT_PORT);
         m_port.setSizeComponents(200, 25);
-        m_user = new DialogComponentTextField(RConstants.KEY_USER, "User: ", RConstants.DEFAULT_USER);
+        m_user = new DialogComponentTextField(RConstants.KEY_USER, "User: ", 
+                RConstants.DEFAULT_USER);
         m_user.setSizeComponents(200, 25);
         m_pass = new DialogComponentPasswordField(RConstants.KEY_PASSWORD,
                 "Password: ");
@@ -72,6 +77,12 @@ final class RLoginDialogPanel extends JPanel {
         super.add(m_pass);
     }
 
+    /**
+     * Transfers the values from the specified settings object into the dialog
+     * components.   
+     * @param settings the new settings to display in the components.
+     * @param specs the table specs from the input ports.
+     */
     public void loadSettingsFrom(final NodeSettingsRO settings,
             final DataTableSpec[] specs) {
         m_host.loadSettingsFrom(settings, specs);
@@ -80,6 +91,12 @@ final class RLoginDialogPanel extends JPanel {
         // password is not loaded since it is not saved by the model
     }
 
+    /**
+     * Saves the current values in the dialog components into the specified
+     * settings object. 
+     * @param settings the object to write the current settings into.
+     * @throws InvalidSettingsException if the current values are invalid.
+     */
     public void saveSettingsTo(final NodeSettingsWO settings)
             throws InvalidSettingsException {
         m_host.saveSettingsTo(settings);

@@ -95,51 +95,39 @@ public class RConsoleModel extends RNodeModel {
         REXP rexp = rconn.eval("try(R)");
         LOGGER.debug("R: " + rexp.toString());
         switch (rexp.getType()) {
-            case REXP.XT_ARRAY_BOOL : {
-                BufferedDataTable out = readBooleanArray(rexp, exec);
-                return new BufferedDataTable[]{out};
-            }
-            case REXP.XT_ARRAY_INT : {
-                BufferedDataTable out = readIntArray(rexp, exec);
-                return new BufferedDataTable[]{out};
-            }
-            case REXP.XT_BOOL : {
-                BufferedDataTable out = readBoolean(rexp, exec);
-                return new BufferedDataTable[]{out};         
-            }
-            case REXP.XT_DOUBLE : {
-                BufferedDataTable out = readDouble(rexp, exec);
-                return new BufferedDataTable[]{out};   
-            }
-            case REXP.XT_INT : {
-                BufferedDataTable out = readInt(rexp, exec);
-                return new BufferedDataTable[]{out};
-            }
-            case REXP.XT_STR : {                
-                BufferedDataTable out = readString(rexp, exec);
-                return new BufferedDataTable[]{out};   
-            }
-            case REXP.XT_SYM : {
-                BufferedDataTable out = readString(rexp, exec);
-                return new BufferedDataTable[]{out}; 
-            }
-            case REXP.XT_UNKNOWN : {
+            case REXP.XT_ARRAY_BOOL :
+                BufferedDataTable boolArrayOut = readBooleanArray(rexp, exec);
+                return new BufferedDataTable[]{boolArrayOut};
+            case REXP.XT_ARRAY_INT :
+                BufferedDataTable intArrayOut = readIntArray(rexp, exec);
+                return new BufferedDataTable[]{intArrayOut};
+            case REXP.XT_BOOL :
+                BufferedDataTable boolOut = readBoolean(rexp, exec);
+                return new BufferedDataTable[]{boolOut};         
+            case REXP.XT_DOUBLE :
+                BufferedDataTable dblOut = readDouble(rexp, exec);
+                return new BufferedDataTable[]{dblOut};   
+            case REXP.XT_INT :
+                BufferedDataTable intOut = readInt(rexp, exec);
+                return new BufferedDataTable[]{intOut};
+            case REXP.XT_STR :
+                BufferedDataTable strOut = readString(rexp, exec);
+                return new BufferedDataTable[]{strOut};   
+            case REXP.XT_SYM :
+                BufferedDataTable symOut = readString(rexp, exec);
+                return new BufferedDataTable[]{symOut}; 
+            case REXP.XT_UNKNOWN :
                 return new BufferedDataTable[]{null};
-            }
-            case REXP.XT_VECTOR : {
-                BufferedDataTable out = readVector(rexp, exec);
-                return new BufferedDataTable[]{out};
-            }
-            case REXP.XT_NULL : {
+            case REXP.XT_VECTOR :
+                BufferedDataTable vecOut = readVector(rexp, exec);
+                return new BufferedDataTable[]{vecOut};
+            case REXP.XT_NULL :
                 return new BufferedDataTable[]{null};
-            }
-            case REXP.XT_ARRAY_DOUBLE : {
-                BufferedDataTable out = readDoubleArray(rexp, exec);
-                return new BufferedDataTable[]{out};
-            }
-            default: {
+            case REXP.XT_ARRAY_DOUBLE :
+                BufferedDataTable dblArrayOut = readDoubleArray(rexp, exec);
+                return new BufferedDataTable[]{dblArrayOut};
+            default:
                 throw new IllegalArgumentException("Unsupported type: " + rexp);
-            }
         }
     }
     
@@ -169,7 +157,8 @@ public class RConsoleModel extends RNodeModel {
                 new DataColumnSpecCreator("R", DoubleCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
-        DataRow row = new DefaultRow(new StringCell("Row1"), new double[]{matrix});
+        DataRow row = new DefaultRow(new StringCell("Row1"), 
+                new double[]{matrix});
         DataTable table = new DefaultTable(new DataRow[]{row}, 
                 new DataTableSpec(cspec));
         return exec.createBufferedDataTable(table, exec);
