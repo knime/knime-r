@@ -167,4 +167,12 @@ abstract class RNodeModel extends NodeModel {
             throw new InvalidSettingsException("Check R login settings", e);
         }   
     }
+    
+    @Override
+    protected void reset() {
+        if (m_rconn != null) {
+            m_rconn.close();
+            m_rconn = null;
+        }
+    }
 }

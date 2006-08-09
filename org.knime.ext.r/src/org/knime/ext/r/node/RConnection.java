@@ -50,6 +50,10 @@ import org.rosuda.JRclient.Rconnection;
  */
 final class RConnection {
     
+    /*
+     * TODO support missing values 
+     */
+    
     private static final NodeLogger LOGGER = 
         NodeLogger.getLogger(RConnection.class);
 
@@ -73,6 +77,15 @@ final class RConnection {
         return newName;
     }
    
+    /**
+     * Sends the entire table to the R server for types which are compatible
+     * to IntValue.class, DoubleValue.class, and StringValue.class.
+     * @param conn The connection to the R server.
+     * @param inData The data to send.
+     * @param exec Used to report progress.
+     * @throws RSrvException If the server throws an execption.
+     * @throws CanceledExecutionException If canceled.
+     */
     static final void sendData(
             final Rconnection conn, final BufferedDataTable inData,
             final ExecutionMonitor exec) 
@@ -111,6 +124,10 @@ final class RConnection {
             exec.setProgress(1.0 * rowCount++ / inData.getRowCount());
             for (int i = 0; i < data.length; i++) { // columns
                 DataCell cell = row.getCell(i);
+                if (cell.isMissing()) {
+                    throw new IllegalArgumentException(
+                            "Please filter missing values priour execution!");
+                }
                 switch (types[i]) {
                     case 1 :
                         int[] iValue;

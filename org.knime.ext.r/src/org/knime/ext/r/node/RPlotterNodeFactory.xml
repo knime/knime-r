@@ -9,7 +9,7 @@
 		<intro>
 			Shows a 2D R plot as a png view generated on an R Server. Select
 		   two numeric columns, which are then displayed in the classic
-		   x,y diagram.
+		   x,y diagram. Missing values are not supported yet.
 			<p><b>R installation:</b><br/>
 		    In order to get the R nodes running, you have to install the R-project 
 		    first, see <a href="http://www.r-project.org">www.r-project.org</a>.

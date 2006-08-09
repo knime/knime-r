@@ -289,7 +289,6 @@ public class RScriptingNodeView extends NodeView {
         // ... and close the file ... and remove it - we have what we need :)
         is.close();
         // TODO m_rConn.removeFile(fileName);
-        // TODO m_rConn.close();
 
         // now this is pretty boring AWT stuff, nothing to do with R ...
         return Toolkit.getDefaultToolkit().createImage(imgCode);
