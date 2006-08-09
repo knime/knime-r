@@ -106,12 +106,15 @@ public class RScriptingNodeView extends NodeView {
             public void keyTyped(final KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
                     String[] text = m_shell.getText().split("\n");
-                    if (text.length > 0) {
-                        String cmd = text[text.length - 1];
-                        cmd = cmd.replace('\n', ' ');
+                    //if (text.length > 0) {
+                    for (int i = text.length; --i >= 0; ) {
+                        String cmd = text[i];
                         cmd = cmd.replace('\r', ' ');
                         cmd = cmd.replace('\t', ' ');
                         cmd = cmd.trim();
+                        if (cmd.length() == 0) {
+                            continue; // try next line
+                        }
                         LOGGER.debug("eval: " + text[text.length - 1]);
                         try {
                             createPNG(); // has to be there before command is

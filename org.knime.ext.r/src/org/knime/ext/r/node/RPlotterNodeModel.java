@@ -46,19 +46,18 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.rosuda.JRclient.REXP;
 import org.rosuda.JRclient.RFileInputStream;
+import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 
-
 /**
- * This is the implementation of the R 2D plot.
+ * This is the implementation of the R 2D view ploting two columns in a
+ * Scatterplot.
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RPlotterNodeModel extends RNodeModel {
 
-    private String[] m_cells = new String[0];
-    private int m_first;
-    private int m_second;
+    private String[] m_cols = new String[0];
 
     private Image m_resultImage;
     
@@ -74,8 +73,6 @@ public class RPlotterNodeModel extends RNodeModel {
      */
     protected RPlotterNodeModel() {
         super(1, 0);
-        m_first = -1;
-        m_second = -1;
         m_resultImage = null;
     }
 
@@ -109,19 +106,9 @@ public class RPlotterNodeModel extends RNodeModel {
         }
         
         RConnection.sendData(c, inData[0], exec);
-        
-        //String x = spec.getColumnSpec(0).getName().toString();
-        //String y = spec.getColumnSpec(1).getName().toString();
-        //c.eval("plot(" + x + "," + y + ")");
-        //c.eval("plot(Col1,Col2)");
-        
-        DataTableSpec spec = inData[0].getDataTableSpec();
-        String firstCol  = 
-            RConnection.formatColumn(spec.getColumnSpec(m_first).getName());
-        String secondCol = 
-            RConnection.formatColumn(spec.getColumnSpec(m_second).getName());
-            
-        c.eval("plot(" + firstCol + "," + secondCol + ")");
+        String first = RConnection.formatColumn(m_cols[0]);
+        String second = RConnection.formatColumn(m_cols[1]);
+        c.eval("plot(" + first + "," + second + ")");
         c.voidEval("dev.off()");
         
 //        // ok, so the device should be fine - let's plot
@@ -173,8 +160,13 @@ public class RPlotterNodeModel extends RNodeModel {
 
         // ... and close the file ... and remove it - we have what we need :)
         is.close();
-        c.removeFile(fileName);
-        c.close();
+        try {
+            c.removeFile(fileName);
+        } catch (RSrvException e) {
+            
+        } finally {
+            c.close();
+        }
 
         // now this is pretty boring AWT stuff, nothing to do with R ...
         m_resultImage = Toolkit.getDefaultToolkit().createImage(imgCode);
@@ -199,24 +191,24 @@ public class RPlotterNodeModel extends RNodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
         checkRconnection();
-        if (m_cells == null) {
+        if (m_cols == null) {
             throw new InvalidSettingsException("No columns selected.");
         }
-        if (m_cells.length != 2) {
+        if (m_cols.length != 2) {
             throw new InvalidSettingsException("Two columns need to be "
-                    + "selected: " + m_cells.length);
+                    + "selected: " + m_cols.length);
         }
-        m_first = inSpecs[0].findColumnIndex(m_cells[0]);
-        m_second = inSpecs[0].findColumnIndex(m_cells[1]);
-        if (m_first > -1 && m_second > -1 && m_first != m_second) {
-            if (0 <= m_first && m_first < inSpecs[0].getNumColumns()) {
-                if (0 <= m_second && m_second < inSpecs[0].getNumColumns()) {
+        int first = inSpecs[0].findColumnIndex(m_cols[0]);
+        int second = inSpecs[0].findColumnIndex(m_cols[1]);
+        if (first > -1 && second > -1 && first != second) {
+            if (0 <= first && first < inSpecs[0].getNumColumns()) {
+                if (0 <= second && second < inSpecs[0].getNumColumns()) {
                     return new DataTableSpec[0];
                 }
             }
         }
-        throw new InvalidSettingsException("Columns: " + m_first + "," 
-                + m_second);
+        throw new InvalidSettingsException("Columns " + m_cols[0] + " and " 
+                + m_cols[1] + " not found.");
     }
 
     /**
@@ -226,7 +218,7 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         super.saveSettingsTo(settings);
-        settings.addStringArray("PLOT", m_cells);
+        settings.addStringArray("PLOT", m_cols);
     }
 
     /**
@@ -237,7 +229,7 @@ public class RPlotterNodeModel extends RNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_cells = settings.getStringArray("PLOT");
+        m_cols = settings.getStringArray("PLOT");
     }
 
     /**
@@ -286,6 +278,6 @@ public class RPlotterNodeModel extends RNodeModel {
     protected void saveInternals(final File nodeInternDir, 
             final ExecutionMonitor exec) 
             throws IOException, CanceledExecutionException {
-        
+
     }
 }

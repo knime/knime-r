@@ -31,6 +31,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JEditorPane;
@@ -104,8 +105,9 @@ class RDialogPanel extends JPanel {
         for (int i = 0; i < spec.getNumColumns(); i++) {
             DataColumnSpec oldSpec = spec.getColumnSpec(i);
             DataType type = oldSpec.getType();
+            String newName = RConnection.formatColumn(oldSpec.getName());
             DataColumnSpec cspec = new DataColumnSpecCreator(
-                    oldSpec.getName(), type).createSpec();
+                    newName, type).createSpec();
             if (type.isCompatible(IntValue.class)) {
                 m_listModel.addElement(cspec);                
             } else
@@ -124,12 +126,16 @@ class RDialogPanel extends JPanel {
      */
     String[] getExpression() {
         String[] exps = m_textExpression.getText().split("\n");
+        ArrayList<String> res = new ArrayList<String>();
         for (int i = 0; i < exps.length; i++) {
             exps[i] = exps[i].replace('\r', ' ');
             exps[i] = exps[i].replace('\t', ' ');
             exps[i] = exps[i].trim();
+            if (exps[i].length() > 0) {
+                res.add(exps[i]);
+            }
         }
-        return exps;
+        return res.toArray(new String[0]);
     }
 
     /**
