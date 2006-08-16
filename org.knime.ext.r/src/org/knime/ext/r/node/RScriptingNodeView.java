@@ -198,11 +198,14 @@ public class RScriptingNodeView extends NodeView {
         m_listModel.removeAllElements();
         RScriptingNodeModel model = (RScriptingNodeModel) super.getNodeModel();
         DataTableSpec spec = model.getDataTableSpec();
-        for (int i = 0; i < spec.getNumColumns(); i++) {
-            DataColumnSpec cspec = spec.getColumnSpec(i);
-            DataColumnSpecCreator create = new DataColumnSpecCreator(
-                    RConnection.formatColumn(cspec.getName()), cspec.getType());
-            m_listModel.addElement(create.createSpec());
+        if (spec != null) {
+            for (int i = 0; i < spec.getNumColumns(); i++) {
+                DataColumnSpec cspec = spec.getColumnSpec(i);
+                DataColumnSpecCreator create = new DataColumnSpecCreator(
+                        RConnection.formatColumn(cspec.getName()), 
+                        cspec.getType());
+                m_listModel.addElement(create.createSpec());
+            }
         }
     }
 

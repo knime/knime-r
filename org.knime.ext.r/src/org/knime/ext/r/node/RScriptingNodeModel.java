@@ -83,7 +83,6 @@ public class RScriptingNodeModel extends RNodeModel {
      * @return Input spec used in view show all columns.
      */
     final DataTableSpec getDataTableSpec() {
-        assert m_spec != null;
         return m_spec;
     }
 
