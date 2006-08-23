@@ -129,7 +129,7 @@ abstract class RNodeModel extends NodeModel {
     /**
      * @return The connection object to Rserve.
      */
-    static final Rconnection getRconnection() {
+    protected final Rconnection getRconnection() {
         if (m_rconn != null && m_rconn.isConnected()) {
             return m_rconn;
         }
@@ -160,7 +160,7 @@ abstract class RNodeModel extends NodeModel {
      * 
      * @throws InvalidSettingsException if it couldn't.
      */
-    static final void checkRconnection() throws InvalidSettingsException {
+    protected final void checkRconnection() throws InvalidSettingsException {
         try {
             getRconnection();
         } catch (Exception e) {

@@ -10,7 +10,6 @@ Require-Bundle: org.eclipse.ui,
  org.knime.workbench.repository,
  org.knime.base
 Eclipse-RegisterBuddy: org.knime.base
-Eclipse-AutoStart: true
 Bundle-ClassPath: knime-r.jar,
  lib/JRclient.jar
 Export-Package: org.knime.ext.r.node,

@@ -38,7 +38,6 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
-import org.rosuda.JRclient.REXP;
 import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 
@@ -49,11 +48,7 @@ import org.rosuda.JRclient.Rconnection;
  * @author Thomas Gabriel, University of Konstanz
  */
 final class RConnection {
-    
-    /*
-     * TODO support missing values 
-     */
-    
+        
     private static final NodeLogger LOGGER = 
         NodeLogger.getLogger(RConnection.class);
 
@@ -114,7 +109,7 @@ final class RConnection {
         }
 
         // transfere data chunkwise
-        Object[] data = new Object[types.length];
+        StringBuilder[] data = new StringBuilder[types.length]; // for each column
         int z = 0; // buffer size
         int max = 1000; // send data after max number of rows
         int nsend = 0; // number of max packets sent
@@ -124,40 +119,45 @@ final class RConnection {
             exec.setProgress(1.0 * rowCount++ / inData.getRowCount());
             for (int i = 0; i < data.length; i++) { // columns
                 DataCell cell = row.getCell(i);
-                if (cell.isMissing()) {
-                    throw new IllegalArgumentException(
-                            "Please filter missing values priour execution!");
-                }
                 switch (types[i]) {
-                    case 1 :
-                        int[] iValue;
+                    case 1 : // int
                         if (data[i] == null) {
-                            iValue = new int[max];
-                            data[i] = iValue;
+                            data[i] = new StringBuilder();
                         } else {
-                            iValue = (int[]) data[i];
+                            data[i].append(',');
                         }
-                        iValue[z] = ((IntValue) cell).getIntValue();
+                        if (cell.isMissing()) {
+                            data[i].append("NA");
+                        } else {
+                            data[i].append(((IntValue) cell).getIntValue());
+                        }
                         break;
-                    case 2 :
-                        double[] dValue;
+                    case 2 : // double
                         if (data[i] == null) {
-                            dValue = new double[max];
-                            data[i] = dValue;
+                            data[i] = new StringBuilder();
                         } else {
-                            dValue = (double[]) data[i];
+                            data[i].append(',');
                         }
-                        dValue[z] = ((DoubleValue) cell).getDoubleValue();
+                        if (cell.isMissing()) {
+                            data[i].append("NA");
+                        } else {
+                            data[i].append(
+                                    ((DoubleValue) cell).getDoubleValue());
+                        }
                         break;
-                    case 3 :
-                        String[] sValue; 
+                    case 3 : // String
                         if (data[i] == null) {
-                            sValue = new String[max];
-                            data[i] = sValue;
+                            data[i] = new StringBuilder();
                         } else {
-                            sValue = (String[]) data[i];
+                            data[i].append(',');
                         }
-                        sValue[z] = ((StringValue) cell).getStringValue();
+                        if (cell.isMissing()) {
+                            data[i].append("NA");
+                        } else {
+                            data[i].append("\""
+                                    + ((StringValue) cell).getStringValue() 
+                                    + "\"");
+                        }
                         break;
                 }
             }
@@ -166,18 +166,8 @@ final class RConnection {
                 for (int i = 0; i < data.length; i++) {
                     String colName = formatColumn(
                             spec.getColumnSpec(i).getName());
-                    switch (types[i]) {
-                        case 1 :
-                            conn.assign("ColTmp" + i, (int[]) data[i]);
-                            break;
-                        case 2 :
-                            conn.assign("ColTmp" + i, (double[]) data[i]);
-                            break;
-                        case 3 :
-                            conn.assign("ColTmp" + i, 
-                                    new REXP((String[]) data[i]));
-                            break;
-                    }
+                    conn.eval("ColTmp" + i + " <- c(" + data[i].toString() 
+                            + ")");
                     conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" 
                             + i + ")");
                     data[i] = null;
@@ -191,23 +181,7 @@ final class RConnection {
             for (int i = 0; i < data.length; i++) {
                 String colName = formatColumn(
                         spec.getColumnSpec(i).getName());
-                switch (types[i]) {
-                    case 1 :
-                        int[] iCopy = new int[z];
-                        System.arraycopy(data[i], 0, iCopy, 0, z);
-                        conn.assign("ColTmp" + i, iCopy); 
-                        break;
-                    case 2 :
-                        double[] dCopy = new double[z];
-                        System.arraycopy(data[i], 0, dCopy, 0, z);
-                        conn.assign("ColTmp" + i, dCopy); 
-                        break;
-                    case 3 :
-                        String[] sCopy = new String[z];
-                        System.arraycopy(data[i], 0, sCopy, 0, z);
-                        conn.assign("ColTmp" + i, new REXP(sCopy)); 
-                        break;
-                }
+                conn.eval("ColTmp" + i + " <- c(" + data[i].toString() + ")");
                 conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i 
                         + ")");
                 data[i] = null;

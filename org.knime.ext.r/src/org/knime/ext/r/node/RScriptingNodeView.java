@@ -83,6 +83,9 @@ public class RScriptingNodeView extends NodeView {
 
     private static final NodeLogger LOGGER = NodeLogger
             .getLogger(RScriptingNodeView.class);
+    
+    /** Underlying R model. */
+    private final RNodeModel m_rModel;
 
     /**
      * Creates a new view.
@@ -91,6 +94,7 @@ public class RScriptingNodeView extends NodeView {
      */
     protected RScriptingNodeView(final NodeModel nodeModel) {
         super(nodeModel);
+        m_rModel = (RNodeModel) nodeModel;
         // create output view
         m_output = new JTextArea();
         m_output.setFont(new Font("Courier", Font.PLAIN, 12));
@@ -119,17 +123,17 @@ public class RScriptingNodeView extends NodeView {
                         try {
                             createPNG(); // has to be there before command is
                                             // send
-                            REXP rexp = RNodeModel.getRconnection().eval(
+                            REXP rexp = m_rModel.getRconnection().eval(
                                     "try(" + cmd + ")");
                             print(rexp, cmd);
-                            // m_shell.replaceSelection("\n");
                         } catch (RSrvException rse) {
                             m_output.append(
-                                    RNodeModel.getRconnection().getLastError() 
+                                    m_rModel.getRconnection().getLastError() 
                                     + "\n");
                         } finally {
                             m_shell.requestFocus();
                         }
+                        break;
                     }
                 }
             }
@@ -186,7 +190,7 @@ public class RScriptingNodeView extends NodeView {
             f.pack();
             f.setVisible(true);
         }
-        m_output.append(rexp.toString());
+        m_output.append(rexp.toString() + "\n");
     }
 
     /**
@@ -228,7 +232,7 @@ public class RScriptingNodeView extends NodeView {
     private void createPNG() throws RSrvException {
         // we are careful here - not all R binaries support png
         // so we rather capture any failures
-        REXP xp = RNodeModel.getRconnection().eval(
+        REXP xp = m_rModel.getRconnection().eval(
                 "try(png(\"" + FILE_NAME + "\"))");
         if (xp.asString() != null) { // if there's a string then we have a
             // problem, R sent an error
@@ -236,7 +240,7 @@ public class RScriptingNodeView extends NodeView {
                     + xp.asString());
             // this is analogous to 'warnings', but for us it's sufficient to
             // get just the 1st warning
-            REXP w = RNodeModel.getRconnection().eval(
+            REXP w = m_rModel.getRconnection().eval(
                     "if (exists(\"last.warning\") && "
                             + "length(last.warning)>0) names(last.warning)[1] "
                             + "else 0");
@@ -247,7 +251,7 @@ public class RScriptingNodeView extends NodeView {
     }
 
     private final Image getImage() throws IOException, RSrvException {
-        RNodeModel.getRconnection().voidEval("dev.off()");
+        m_rModel.getRconnection().voidEval("dev.off()");
         // the file should be ready now, so let's read (ok this isn't pretty,
         // but hey, this ain't no beauty contest *grin* =)
         // we read in chunks of bufSize (64k by default) and store the resulting
@@ -255,7 +259,7 @@ public class RScriptingNodeView extends NodeView {
         // ... just in case the file gets really big ...
         // we don't know the size in advance, because it's just a stream.
         // also we can't rewind it, so we have to store it piece-by-piece
-        RFileInputStream is = RNodeModel.getRconnection().openFile(FILE_NAME);
+        RFileInputStream is = m_rModel.getRconnection().openFile(FILE_NAME);
         Vector<byte[]> buffers = new Vector<byte[]>();
         int bufSize = 65536;
         byte[] buf = new byte[bufSize];
