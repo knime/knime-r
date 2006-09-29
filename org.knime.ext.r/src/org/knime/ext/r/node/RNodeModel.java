@@ -124,35 +124,35 @@ abstract class RNodeModel extends NodeModel {
         settings.addString(RConstants.KEY_USER, RConstants.getUser());
     }
     
-    private static Rconnection m_rconn;
+    private static Rconnection mRCONN;
     
     /**
      * @return The connection object to Rserve.
      */
     protected final Rconnection getRconnection() {
-        if (m_rconn != null && m_rconn.isConnected()) {
-            return m_rconn;
+        if (mRCONN != null && mRCONN.isConnected()) {
+            return mRCONN;
         }
         LOGGER.info("Starting R evaluation on RServe (" 
                 + RConstants.getHost() + ") ...");
         try {
-            m_rconn = new Rconnection(RConstants.getHost() + " " 
+            mRCONN = new Rconnection(RConstants.getHost() + " " 
                     + RConstants.getPort());
-            if (m_rconn.needLogin()) {
-                m_rconn.login(RConstants.getUser(), RConstants.getPassword());
+            if (mRCONN.needLogin()) {
+                mRCONN.login(RConstants.getUser(), RConstants.getPassword());
             }
         } catch (RSrvException rse) {
             LOGGER.error("Can't connect to server");
             throw new IllegalStateException("Make sure R Server is "
                     + "available before executing this node");
         }
-        if ((m_rconn == null) || (!m_rconn.isConnected())) {
+        if ((mRCONN == null) || (!mRCONN.isConnected())) {
             LOGGER.error("Can't connect to server");
             throw new IllegalStateException("Make sure R Server is "
                     + "available before executing this node");
         }
         LOGGER.debug("R connection opened");
-        return m_rconn;
+        return mRCONN;
     }
     
     /**
@@ -168,11 +168,14 @@ abstract class RNodeModel extends NodeModel {
         }   
     }
     
+    /**
+     * Reset R connection.
+     */
     @Override
     protected void reset() {
-        if (m_rconn != null) {
-            m_rconn.close();
-            m_rconn = null;
+        if (mRCONN != null) {
+            mRCONN.close();
+            mRCONN = null;
         }
     }
 }

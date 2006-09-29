@@ -158,12 +158,12 @@ public class RPlotterNodeModel extends RNodeModel {
             System.arraycopy(buf, 0, imgCode, imgPos, n);
         }
 
-        // ... and close the file ... and remove it - we have what we need :)
+        // close the file and remove it
         is.close();
         try {
             c.removeFile(fileName);
         } catch (RSrvException e) {
-            
+            // ignore
         } finally {
             c.close();
         }

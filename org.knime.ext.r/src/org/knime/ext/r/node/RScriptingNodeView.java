@@ -111,7 +111,7 @@ public class RScriptingNodeView extends NodeView {
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
                     String[] text = m_shell.getText().split("\n");
                     //if (text.length > 0) {
-                    for (int i = text.length; --i >= 0; ) {
+                    for (int i = text.length; --i >= 0;) {
                         String cmd = text[i];
                         cmd = cmd.replace('\r', ' ');
                         cmd = cmd.replace('\t', ' ');

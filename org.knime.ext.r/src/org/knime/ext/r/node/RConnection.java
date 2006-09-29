@@ -108,8 +108,8 @@ final class RConnection {
             conn.eval(cmd);
         }
 
-        // transfere data chunkwise
-        StringBuilder[] data = new StringBuilder[types.length]; // for each column
+        // transfere data chunkwise; one builder per column
+        StringBuilder[] data = new StringBuilder[types.length];
         int z = 0; // buffer size
         int max = 1000; // send data after max number of rows
         int nsend = 0; // number of max packets sent
