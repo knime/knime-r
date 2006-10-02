@@ -35,7 +35,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 
-import org.knime.base.node.util.FilterColumnPanel;
+import org.knime.base.node.util.ColumnFilterPanel;
 
 /**
  * Dialog of the R plotter to select two numeric columns.
@@ -43,14 +43,14 @@ import org.knime.base.node.util.FilterColumnPanel;
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RPlotterNodeDialog extends RNodeDialogPane {
-    private final FilterColumnPanel m_dialogPanel;
+    private final ColumnFilterPanel m_dialogPanel;
     
     /**
      * New pane for configuring REvaluator node dialog.
      */
     protected RPlotterNodeDialog() {
         super();
-        m_dialogPanel = new FilterColumnPanel(DoubleValue.class);
+        m_dialogPanel = new ColumnFilterPanel(DoubleValue.class);
         super.addTab("Options", m_dialogPanel);
         super.addLoginTab();
     }
