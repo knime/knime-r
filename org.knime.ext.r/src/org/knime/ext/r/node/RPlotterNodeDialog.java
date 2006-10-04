@@ -86,7 +86,7 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
     protected void saveSettingsTo(final NodeSettingsWO settings) 
             throws InvalidSettingsException {
         super.saveSettingsTo(settings);
-        Set<String> list = m_dialogPanel.getIncludedColumnList();
+        Set<String> list = m_dialogPanel.getIncludedColumnSet();
         if (list.size() != 2) {
             throw new InvalidSettingsException("Select two columns.");
         }
