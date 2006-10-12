@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 1.0//EN" "http://www.knime.org/Node.dtd">
 <knimeNode type="Other" icon="./r.png">
-	<name>R Scripting</name>
+	<name>R Console</name>
 	<shortDescription>
 	    Allows execution of R commands on an R Server within this node's view.
 	   The results are also displayed in the view.
@@ -43,7 +43,7 @@
 		<dataIn index="0">Data Input</dataIn>
 	</ports>
 		<views>
-		<view index="0" name="R Shell">
+		<view index="0" name="R Console">
 			Shell for executing R commands.
 		</view>
 	</views>
