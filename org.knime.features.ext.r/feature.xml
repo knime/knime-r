@@ -381,7 +381,12 @@ Public License instead of this License.
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.knime.workbench.repository"/>
       <import plugin="org.knime.base"/>
+      <import plugin="org.eclipse.ui"/>
    </requires>
+   
+   <url>
+      <update label="KNIME Update Site" url="http://www.knime.org/update"/>
+   </url>
 
    <plugin
          id="org.knime.ext.r"
