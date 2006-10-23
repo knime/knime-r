@@ -30,11 +30,11 @@ import java.util.Set;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DoubleValue;
-import org.knime.core.data.util.ColumnFilterPanel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.util.ColumnFilterPanel;
 
 
 /**
