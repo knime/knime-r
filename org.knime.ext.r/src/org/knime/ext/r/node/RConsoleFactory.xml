@@ -46,7 +46,7 @@
 		</option>
 	</fullDescription>
 	<ports>
-		<dataIn index="0">Data Input</dataIn>
-		<dataOut index="0">R Result</dataOut>
+		<dataIn name="Data Input" index="0">Data Input</dataIn>
+		<dataOut name="R Result" index="0">R Result</dataOut>
 	</ports>
 </knimeNode>

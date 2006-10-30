@@ -40,7 +40,7 @@
 		</option>
 	</fullDescription>
 	<ports>
-		<dataIn index="0">Data Input</dataIn>
+		<dataIn name="Data Input" index="0">Data Input</dataIn>
 	</ports>
 		<views>
 		<view index="0" name="R Console">
