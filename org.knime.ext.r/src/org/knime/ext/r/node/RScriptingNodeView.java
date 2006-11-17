@@ -48,6 +48,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 
@@ -163,8 +164,9 @@ public class RScriptingNodeView extends NodeView {
         panel.add(shellScroll, BorderLayout.CENTER);
         JScrollPane outputScroll = new JScrollPane(m_output);
         outputScroll.setPreferredSize(new Dimension(400, 150));
-        panel.add(outputScroll, BorderLayout.SOUTH);
-        super.setComponent(panel);
+        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panel,
+                outputScroll);
+        super.setComponent(split);
     }
 
     private void print(final REXP rexp, final String cmd) {

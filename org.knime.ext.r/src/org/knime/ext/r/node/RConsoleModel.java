@@ -33,14 +33,13 @@ import java.util.Vector;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
-import org.knime.core.data.DataTable;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.container.DataContainer;
 import org.knime.core.data.def.DefaultRow;
-import org.knime.core.data.def.DefaultTable;
 import org.knime.core.data.def.DoubleCell;
 import org.knime.core.data.def.IntCell;
 import org.knime.core.data.def.StringCell;
+import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -132,8 +131,7 @@ public class RConsoleModel extends RNodeModel {
     }
     
     private BufferedDataTable readString(
-            final REXP rexp, final ExecutionContext exec) 
-            throws CanceledExecutionException {
+            final REXP rexp, final ExecutionContext exec) {
         String matrix = rexp.asString();
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
@@ -142,14 +140,15 @@ public class RConsoleModel extends RNodeModel {
             cspec[i] = colspeccreator.createSpec();
         }
         DataRow row = new DefaultRow(new StringCell("Row1"), matrix);
-        DataTable table = new DefaultTable(new DataRow[]{row}, 
-                new DataTableSpec(cspec));
-        return exec.createBufferedDataTable(table, exec);
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
+        dc.addRowToTable(row);
+        dc.close();
+        return dc.getTable();
     }
     
     private BufferedDataTable readDouble(
-            final REXP rexp, final ExecutionContext exec) 
-            throws CanceledExecutionException {
+            final REXP rexp, final ExecutionContext exec) {
         double matrix = rexp.asDouble();
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
@@ -159,14 +158,15 @@ public class RConsoleModel extends RNodeModel {
         }
         DataRow row = new DefaultRow(new StringCell("Row1"), 
                 new double[]{matrix});
-        DataTable table = new DefaultTable(new DataRow[]{row}, 
-                new DataTableSpec(cspec));
-        return exec.createBufferedDataTable(table, exec);
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
+        dc.addRowToTable(row);
+        dc.close();
+        return dc.getTable();
     }
     
     private BufferedDataTable readInt(
-            final REXP rexp, final ExecutionContext exec) 
-            throws CanceledExecutionException {
+            final REXP rexp, final ExecutionContext exec) {
         int matrix = rexp.asInt();
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
@@ -175,14 +175,15 @@ public class RConsoleModel extends RNodeModel {
             cspec[i] = colspeccreator.createSpec();
         }
         DataRow row = new DefaultRow(new StringCell("Row1"), new int[]{matrix});
-        DataTable table = new DefaultTable(new DataRow[]{row}, 
-                new DataTableSpec(cspec));
-        return exec.createBufferedDataTable(table, exec);
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
+        dc.addRowToTable(row);
+        dc.close();
+        return dc.getTable();
     }
     
     private BufferedDataTable readBoolean(
-            final REXP rexp, final ExecutionContext exec) 
-            throws CanceledExecutionException {
+            final REXP rexp, final ExecutionContext exec) {
         RBool matrix = rexp.asBool();
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
@@ -191,9 +192,11 @@ public class RConsoleModel extends RNodeModel {
             cspec[i] = colspeccreator.createSpec();
         }
         DataRow row = new DefaultRow(new StringCell("Row1"), matrix.toString());
-        DataTable table = new DefaultTable(new DataRow[]{row}, 
-                new DataTableSpec(cspec));
-        return exec.createBufferedDataTable(table, exec);
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
+        dc.addRowToTable(row);
+        dc.close();
+        return dc.getTable();
     }
     
     private BufferedDataTable readBooleanArray(
