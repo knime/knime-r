@@ -2,7 +2,7 @@
 <feature
       id="org.knime.features.ext.r"
       label="KNIME R Statistic Scripting node"
-      version="1.1.0"
+      version="1.2.0"
       provider-name="Chair for Bioinformatics and Information Mining, Prof. Berthold, University of Konstanz, Germany"
       plugin="org.knime.ext.r">
 
@@ -377,21 +377,21 @@ library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License.
    </license>
 
+   <url>
+      <update label="KNIME Update Site" url="http://www.knime.org/update"/>
+   </url>
+
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.knime.workbench.repository"/>
       <import plugin="org.knime.base"/>
       <import plugin="org.eclipse.ui"/>
    </requires>
-   
-   <url>
-      <update label="KNIME Update Site" url="http://www.knime.org/update"/>
-   </url>
 
    <plugin
          id="org.knime.ext.r"
          download-size="0"
          install-size="0"
-         version="1.1.0"/>
+         version="1.2.0"/>
 
 </feature>
