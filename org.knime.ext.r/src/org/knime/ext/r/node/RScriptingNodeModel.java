@@ -38,18 +38,18 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 
-
 /**
  * Executes R commands locally, the entire data is transfered to the R Server 
- * in the execute.
+ * during execution.
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RScriptingNodeModel extends RNodeModel {
-    private DataTableSpec m_spec = null;
+    
+    private DataTableSpec m_spec;
 
     /**
-     * The constructor. Huh!
+     * The constructor.
      */
     protected RScriptingNodeModel() {
         super(1, 0);
@@ -80,7 +80,7 @@ public class RScriptingNodeModel extends RNodeModel {
     }
     
     /**
-     * @return Input spec used in view show all columns.
+     * @return input spec used in view show all columns
      */
     final DataTableSpec getDataTableSpec() {
         return m_spec;
@@ -135,7 +135,7 @@ public class RScriptingNodeModel extends RNodeModel {
     protected void loadInternals(final File nodeInternDir, 
             final ExecutionMonitor exec) 
             throws IOException, CanceledExecutionException {
-        
+        throw new IOException("re-execute node to send data to R server");
     }
 
     /**

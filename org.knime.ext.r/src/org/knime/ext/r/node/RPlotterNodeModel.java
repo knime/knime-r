@@ -31,7 +31,10 @@ package org.knime.ext.r.node;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -44,13 +47,13 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.util.FileUtil;
 import org.rosuda.JRclient.REXP;
-import org.rosuda.JRclient.RFileInputStream;
 import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 
 /**
- * This is the implementation of the R 2D view ploting two columns in a
+ * This is the implementation of the R 2D view plotting two columns in a
  * Scatterplot.
  * 
  * @author Thomas Gabriel, University of Konstanz
@@ -60,6 +63,7 @@ public class RPlotterNodeModel extends RNodeModel {
     private String[] m_cols = new String[0];
 
     private Image m_resultImage;
+    private File m_imageFile;
     
     private static final String FILE_NAME = "Rplot";
 
@@ -68,8 +72,7 @@ public class RPlotterNodeModel extends RNodeModel {
             .getLogger(RPlotterNodeModel.class);
 
     /**
-     * 
-     * 
+     * Creates a new plotter with one data input. 
      */
     protected RPlotterNodeModel() {
         super(1, 0);
@@ -88,7 +91,7 @@ public class RPlotterNodeModel extends RNodeModel {
         // so we rather capture any failures
         Rconnection c = getRconnection();
         String fileName = FILE_NAME + "_" + c.hashCode() + ".png";
-        LOGGER.debug("File: " + fileName);
+        LOGGER.info("The image name: " + fileName);
         REXP xp = c.eval("try(png(\"" + fileName + "\"))");
 
         if (xp.asString() != null) { // if there's a string then we have a
@@ -111,21 +114,27 @@ public class RPlotterNodeModel extends RNodeModel {
         c.eval("plot(" + first + "," + second + ")");
         c.voidEval("dev.off()");
         
-//        // ok, so the device should be fine - let's plot
-//        String[] lines = m_expression.split("\n");
-//        for (int i = 0; i < lines.length; i++) {
-//            LOGGER.debug("eval: " + lines[i]);
-//            xp = c.eval(lines[i]);
-//        }
-        
-        // the file should be ready now, so let's read (ok this isn't pretty,
-        // but hey, this ain't no beauty contest *grin* =)
-        // we read in chunks of bufSize (64k by default) and store the resulting
-        // byte arrays in a vector
-        // ... just in case the file gets really big ...
-        // we don't know the size in advance, because it's just a stream.
-        // also we can't rewind it, so we have to store it piece-by-piece
-        RFileInputStream is = c.openFile(fileName);
+        InputStream ris = c.openFile(fileName);
+        m_imageFile = File.createTempFile(FILE_NAME, ".png");
+        FileOutputStream copy = new FileOutputStream(m_imageFile);
+        FileUtil.copy(ris, copy);
+        FileInputStream in = new FileInputStream(m_imageFile);
+        try {
+            m_resultImage = createImage(in);
+            // close stream and remove it at the server
+            in.close();
+            c.removeFile(fileName);
+        } catch (RSrvException e) {
+            // ignore
+        } finally {
+            c.close();
+        }
+
+        // nothing
+        return new BufferedDataTable[0];
+    }
+    
+    private Image createImage(final InputStream is) throws IOException {
         Vector<byte[]> buffers = new Vector<byte[]>();
         int bufSize = 65536;
         byte[] buf = new byte[bufSize];
@@ -144,9 +153,7 @@ public class RPlotterNodeModel extends RNodeModel {
                 break;
             }
         }
-        LOGGER.info("The image " + fileName + " has " + imgLength + " bytes.");
-
-        // now let's join all the chunks into one, big array ...
+        LOGGER.info("The image has " + imgLength + " bytes.");  
         byte[] imgCode = new byte[imgLength];
         int imgPos = 0;
         for (Enumeration e = buffers.elements(); e.hasMoreElements();) {
@@ -158,21 +165,8 @@ public class RPlotterNodeModel extends RNodeModel {
             System.arraycopy(buf, 0, imgCode, imgPos, n);
         }
 
-        // close the file and remove it
-        is.close();
-        try {
-            c.removeFile(fileName);
-        } catch (RSrvException e) {
-            // ignore
-        } finally {
-            c.close();
-        }
-
-        // now this is pretty boring AWT stuff, nothing to do with R ...
-        m_resultImage = Toolkit.getDefaultToolkit().createImage(imgCode);
-
-        // nothing
-        return new BufferedDataTable[0];
+        // create image based on image code
+        return Toolkit.getDefaultToolkit().createImage(imgCode);
     }
 
     /**
@@ -180,7 +174,15 @@ public class RPlotterNodeModel extends RNodeModel {
      */
     @Override
     protected void reset() {
-        m_resultImage = null;
+        if (m_resultImage != null) {
+            m_resultImage.flush();
+            m_resultImage = null;
+        } 
+        if (m_imageFile != null) {
+            m_imageFile.deleteOnExit();
+            m_imageFile.delete();
+            m_imageFile = null;
+        }
     }
 
     /**
@@ -267,7 +269,10 @@ public class RPlotterNodeModel extends RNodeModel {
     protected void loadInternals(final File nodeInternDir, 
             final ExecutionMonitor exec) 
             throws IOException, CanceledExecutionException {
-        
+        File file = new File(nodeInternDir, FILE_NAME + ".png");
+        m_imageFile = File.createTempFile(FILE_NAME, ".png");
+        FileUtil.copy(file, m_imageFile);
+        m_resultImage = createImage(new FileInputStream(m_imageFile));
     }
 
     /**
@@ -278,6 +283,8 @@ public class RPlotterNodeModel extends RNodeModel {
     protected void saveInternals(final File nodeInternDir, 
             final ExecutionMonitor exec) 
             throws IOException, CanceledExecutionException {
-
+        File file = new File(nodeInternDir, FILE_NAME + ".png");
+        FileUtil.copy(m_imageFile, file);
     }
+    
 }
