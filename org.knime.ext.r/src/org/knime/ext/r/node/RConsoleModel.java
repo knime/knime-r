@@ -50,6 +50,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.rosuda.JRclient.RBool;
 import org.rosuda.JRclient.REXP;
+import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 
 
@@ -291,6 +292,13 @@ public class RConsoleModel extends RNodeModel {
      */
     @Override
     protected void reset() {
+        Rconnection rconn = getRconnection();
+        // remove R variable
+        try {
+            rconn.voidEval("try(rm(R))");
+        } catch (RSrvException re) {
+            LOGGER.debug("Could not remove R:", re);
+        }
     }
 
     /**
@@ -309,7 +317,7 @@ public class RConsoleModel extends RNodeModel {
             throws InvalidSettingsException {
         for (int i = 0; i < rexps.length; i++) {
             String test = rexps[i].replace(" ", "");
-            if (test.startsWith("R<-")) {
+            if (test.contains("R<-")) {
                 // ok, we have an result in R
                 return;
             }

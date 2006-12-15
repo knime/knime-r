@@ -31,10 +31,9 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodedialog.DialogComponentPasswordField;
+import org.knime.core.node.defaultnodesettings.DialogComponentPasswordField;
 import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
-
 
 /**
  * R model to save and load login information for the R server.
