@@ -3,9 +3,12 @@
 <knimeNode type="Other" icon="./r.png">
 	<name>R Snippet</name>
 	<shortDescription>
-	    Allows execution of R commands on an R Server. The result of these R
-	    commands is returned in the output table of this node. The final result
-	    table will have only one dimension, namely R.
+		Allows execution of R commands on an R Server. The result of these R 
+		commands is returned in the output table of this node. The final result 
+		table will have only one column, named "R". Currently integers, 
+		doubles, and strings are supported held in lists, one-dimensional 
+		arrays, and single elements. (Matrix support will follow in a future 
+		version of KNIME.)
 	</shortDescription>
 	<fullDescription>
 		<intro>
@@ -19,11 +22,16 @@
 		    In order to get the R nodes running, you have to install the R-project 
 		    first, see <a href="http://www.r-project.org">www.r-project.org</a>.
     	     Also the R Server which responds to R commands has to be installed 
-    	     and running, see <a href="http://stats.math.uni-augsburg.de/Rserve">
-    	     http://stats.math.uni-augsburg.de/Rserve</a>. Please note that in the
-		    current version the R Server needs to be restarted from time to time.
-		    If an R node hangs, interrupt the R Server and restart it. Warnings
-		    and errors are printed in the R Server window.
+    	     and running, see <a href="http://www.rosuda.org/Rserve">
+    	     http://stats.math.uni-augsburg.de/Rserve</a><br/>. 
+    	    Also make sure that you have the lastest available and compatible 
+    	    R-project version at hand, currently Rserve 2.4.0 only works 
+    	    together with R-project 2.4.0. We offer downloads of current 
+    	    versions of R and R-Serve that are compatible with KNIME on our 
+    	    website. Please note that in the current version the R Server needs
+    	    to be restarted from time to time. If an R node hangs, interrupt 
+    	    the R Server and restart it. Warnings and errors are printed in the
+    	    R Server window.
 	  	    </p>
 		</intro>
 		<option name="Execute">
