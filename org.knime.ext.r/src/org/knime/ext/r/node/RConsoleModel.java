@@ -50,7 +50,6 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.rosuda.JRclient.RBool;
 import org.rosuda.JRclient.REXP;
-import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 
 
@@ -292,12 +291,12 @@ public class RConsoleModel extends RNodeModel {
      */
     @Override
     protected void reset() {
-        Rconnection rconn = getRconnection();
         // remove R variable
         try {
+            Rconnection rconn = getRconnection();
             rconn.voidEval("try(rm(R))");
-        } catch (RSrvException re) {
-            LOGGER.debug("Could not remove R:", re);
+        } catch (Throwable t) {
+            LOGGER.debug("Could not remove variable R: ", t);
         }
     }
 
