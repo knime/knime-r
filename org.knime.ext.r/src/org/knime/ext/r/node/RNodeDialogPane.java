@@ -1,6 +1,6 @@
 /*
  * -------------------------------------------------------------------
- * Copyright, 2003 - 2006
+ * Copyright, 2003 - 2007
  * University of Konstanz, Germany.
  * Chair for Bioinformatics and Information Mining
  * Prof. Dr. Michael R. Berthold
