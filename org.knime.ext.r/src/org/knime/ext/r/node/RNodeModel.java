@@ -31,7 +31,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.DialogComponentPasswordField;
+import org.knime.core.node.defaultnodedialog.DialogComponentPasswordField;
 import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 
@@ -96,9 +96,9 @@ abstract class RNodeModel extends NodeModel {
                 RConstants.DEFAULT_USER);
         String pw = "";
         try { 
-            pw = DialogComponentPasswordField.decrypt(
-                    settings.getString(RConstants.KEY_PASSWORD, 
-                            RConstants.DEFAULT_PASS));
+            pw = settings.getString(RConstants.KEY_PASSWORD, 
+                    RConstants.DEFAULT_PASS);
+            pw = DialogComponentPasswordField.decrypt(pw);
         } catch (Exception e) {
             throw new InvalidSettingsException(
                         "Could not decrypt password", e);
