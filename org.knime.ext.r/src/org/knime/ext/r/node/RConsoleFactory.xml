@@ -24,9 +24,11 @@
     	     Also the R Server which responds to R commands has to be installed 
     	     and running, see <a href="http://www.rosuda.org/Rserve">
     	     http://stats.math.uni-augsburg.de/Rserve</a><br/>. 
-    	    Also make sure that you have the lastest available and compatible 
-    	    R-project version at hand, currently Rserve 2.4.0 only works 
-    	    together with R-project 2.4.0. We offer downloads of current 
+    	    Also make sure that you have the lastest available or compatible 
+    	    R-project version at hand. For Windows you may download an R Server 
+    	    for your R-project version. All other operating systems require the 
+    	    most recent clients (R-project installation).
+    	    We offer downloads of current 
     	    versions of R and R-Serve that are compatible with KNIME on our 
     	    website. Please note that in the current version the R Server needs
     	    to be restarted from time to time. If an R node hangs, interrupt 
