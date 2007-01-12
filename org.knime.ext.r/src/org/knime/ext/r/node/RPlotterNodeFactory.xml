@@ -28,11 +28,6 @@
     	    R Server window.
 	  	    </p>
 		</intro>
-		<option name="Execute">
-			Enter R commands here, for instance for computing the Covariance 
-			of two columns: <br/>
-			<i>R&lt;-var(cbind(var(Col0,Col1))</i>
-		</option>
 		<option name ="1. Host: ">
 			The IP of the computer where the R Server is running, for example
 			localhost with IP 127.0.0.1 
