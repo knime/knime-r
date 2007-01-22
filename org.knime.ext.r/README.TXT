@@ -1,5 +1,4 @@
-This directory contains the R integration for the Konstanz Information Miner
-as Eclipse plugin.
+This directory contains the R integration for KNIME as Eclipse plugin.
 
 It is released under the GPL (see the file LICENSE.TXT, which should be located
 in the same directory as this file). If you didn't recieve a copy of the license
