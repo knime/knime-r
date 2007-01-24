@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.knime.features.ext.r"
-      label="KNIME R Statistic Scripting node"
+      label="KNIME R Statistics Integration"
       version="1.2.0"
       provider-name="Chair for Bioinformatics and Information Mining, Prof. Berthold, University of Konstanz, Germany"
       plugin="org.knime.ext.r">
