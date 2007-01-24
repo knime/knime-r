@@ -12,12 +12,3 @@ http://stats.math.uni-augsburg.de/Rserve
 The R project has its home page at http://www.r-project.org/. 
 
 Eclipse is TM of the Eclipse Foundation ("http://www.eclipse.org").
-
-Quickstart guide:
-- Extract the archive (you did already when you read this)
-- Copy the plugins/org.knime.ext.r_1.0.0 folder to your KNIME
-  installation's plugins directory.
-- Download and install the R Server, http://stats.math.uni-augsburg.de/Rserve
-- Download and install the http://www.r-project.org
-- Restart eclipse to register the newly added plugin.
-
