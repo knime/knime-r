@@ -2,7 +2,7 @@
 <feature
       id="org.knime.features.ext.r"
       label="KNIME R Statistics Integration"
-      version="1.2.0"
+      version="1.2.0.BETA"
       provider-name="Chair for Bioinformatics and Information Mining, Prof. Berthold, University of Konstanz, Germany"
       plugin="org.knime.ext.r">
 
@@ -376,6 +376,6 @@ Public License instead of this License.
          id="org.knime.ext.r"
          download-size="0"
          install-size="0"
-         version="1.2.0"/>
+         version="1.2.0.BETA"/>
 
 </feature>
