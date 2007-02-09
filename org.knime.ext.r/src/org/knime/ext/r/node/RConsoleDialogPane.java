@@ -63,6 +63,9 @@ public class RConsoleDialogPane extends RNodeDialogPane {
             final NodeSettingsRO settings, final DataTableSpec[] specs) 
             throws NotConfigurableException {
         super.loadSettingsFrom(settings, specs);
+        if (specs[0].getNumColumns() == 0) {
+            throw new NotConfigurableException("No input data available.");
+        }
         m_dialogPanel.update(specs[0]);
         String[] exps = settings.getStringArray("EXPRESSION", new String[0]);
         m_dialogPanel.setExpression(exps);

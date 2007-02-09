@@ -69,8 +69,19 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
             final NodeSettingsRO settings, final DataTableSpec[] specs) 
             throws NotConfigurableException {
         super.loadSettingsFrom(settings, specs);
+        int doubleCount = 0;
+        for (int i = 0; i < specs[0].getNumColumns() && doubleCount < 2; i++) {
+            if (specs[0].getColumnSpec(i).getType().isCompatible(
+                    DoubleValue.class)) {
+                doubleCount += 1;
+            }
+        }
+        if (doubleCount < 2) {
+            throw new NotConfigurableException("Input data must contain at "
+                    + "least two numeric columns!");
+        }
         String[] columns = settings.getStringArray(
-                "PLOT", new String[0]); 
+                "PLOT", new String[0]);
         m_dialogPanel.update(specs[0], false, columns);
     } 
     
