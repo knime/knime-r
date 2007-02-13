@@ -12,6 +12,7 @@
 	</shortDescription>
 	<fullDescription>
 		<intro>
+			<p>
 			Allows execution of R commands on an R Server. The entire data 
 			(compatible to int, double, and String types) is
 			transfered to the R Server which then executes a series of R commands
@@ -21,13 +22,14 @@
 	 	    values in numeric columns are transfered as <tt>NaN</tt> (Not a 
 		    Number) to the R server while missing values in all other types of 
 		    columns are sent as <tt>NA</tt>.
+			</p>
 			<p><b>R installation:</b><br/>
 		    In order to get the R nodes running, you have to install the R-project 
 		    first, see <a href="http://www.r-project.org">www.r-project.org</a>.
     	     Also the R Server which responds to R commands has to be installed 
     	     and running, see <a href="http://www.rosuda.org/Rserve">
-    	     http://stats.math.uni-augsburg.de/Rserve</a><br/>. 
-    	    Also make sure that you have the lastest available or compatible 
+    	     http://www.rosuda.org/Rserve</a>.<br/> 
+    	    Also make sure that you have the latest available or compatible 
     	    R-project version at hand. For Windows you may download an R Server 
     	    for your R-project version. All other operating systems require the 
     	    most recent clients (R-project installation).
