@@ -13,7 +13,10 @@
 		   (compatible to int, double, and String types) is
 		   transfered to the R Server which then reacts to R commands entered 
 		   in the view. Each column can be accessed by the name provided in
-		   the input data table. Missing values are not supported yet.
+		   the input data table. Missing values are supported, that is, missing
+		   values in numeric columns are transfered as <tt>NaN</tt> (Not a 
+		   Number) to the R server while missing values in all other types of 
+		   columns are sent as <tt>NA</tt>.
 			<p><b>R installation:</b><br/>
 		    In order to get the R nodes running, you have to install the R-project 
 		    first, see <a href="http://www.r-project.org">www.r-project.org</a>.
