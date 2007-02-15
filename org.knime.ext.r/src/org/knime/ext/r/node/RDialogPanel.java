@@ -83,9 +83,9 @@ class RDialogPanel extends JPanel {
                 Object o = m_list.getSelectedValue();
                 if (o != null) {
                     DataColumnSpec cspec = (DataColumnSpec) o;
-                    String curText = m_textExpression.getText();
-                    m_textExpression.setText(curText + cspec.getName());
-                    m_textExpression.transferFocus();
+                    m_textExpression.replaceSelection(cspec.getName());
+                    m_list.clearSelection();
+                    m_textExpression.requestFocus();
                 }
             }
         });
