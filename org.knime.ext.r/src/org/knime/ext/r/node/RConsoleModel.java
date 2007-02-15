@@ -116,18 +116,31 @@ public class RConsoleModel extends RNodeModel {
                 BufferedDataTable symOut = readString(rexp, exec);
                 return new BufferedDataTable[]{symOut}; 
             case REXP.XT_UNKNOWN :
-                return new BufferedDataTable[]{null};
+                return new BufferedDataTable[]{readNothing(exec)};
             case REXP.XT_VECTOR :
                 BufferedDataTable vecOut = readVector(rexp, exec);
                 return new BufferedDataTable[]{vecOut};
             case REXP.XT_NULL :
-                return new BufferedDataTable[]{null};
+                return new BufferedDataTable[]{readNothing(exec)};
             case REXP.XT_ARRAY_DOUBLE :
                 BufferedDataTable dblArrayOut = readDoubleArray(rexp, exec);
                 return new BufferedDataTable[]{dblArrayOut};
             default:
                 throw new IllegalArgumentException("Unsupported type: " + rexp);
         }
+    }
+    
+    /**
+     * Creates any empty BufferedDataTable in cases the <code>R</code> is 
+     * <code>null</code> or unknown.
+     * @param exec used to create the table
+     * @return an empty table
+     */
+    private BufferedDataTable readNothing(final ExecutionContext exec) {
+        BufferedDataContainer buf = 
+            exec.createDataContainer(new DataTableSpec());
+        buf.close();
+        return buf.getTable();
     }
     
     private BufferedDataTable readString(
