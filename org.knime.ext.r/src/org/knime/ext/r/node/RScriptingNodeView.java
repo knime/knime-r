@@ -151,6 +151,7 @@ public class RScriptingNodeView extends NodeView {
                 if (o != null) {
                     DataColumnSpec cspec = (DataColumnSpec) o;
                     m_shell.replaceSelection(cspec.getName());
+                    m_list.clearSelection();
                     m_shell.requestFocus();
                 }
             }
