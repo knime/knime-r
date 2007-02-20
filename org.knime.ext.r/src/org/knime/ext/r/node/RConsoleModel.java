@@ -50,7 +50,6 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.rosuda.JRclient.RBool;
 import org.rosuda.JRclient.REXP;
-import org.rosuda.JRclient.Rconnection;
 
 
 /**
@@ -82,52 +81,62 @@ public class RConsoleModel extends RNodeModel {
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws CanceledExecutionException,
             Exception {
-        Rconnection rconn = getRconnection();
+        createRconnection();
         // send data to R Server
-        RConnection.sendData(rconn, inData[0], exec);
+        RConnection.sendData(getRconnection(), inData[0], exec);
         // send expression to R Server
         for (int i = 0; i < m_expression.length; i++) {
             LOGGER.debug("eval: " + m_expression[i]);
-            rconn.voidEval("try(" + m_expression[i] + ")");
-            LOGGER.debug("sucessful");
+            getRconnection().voidEval("try(" + m_expression[i] + ")");
+            LOGGER.debug("successful");
         }
-        REXP rexp = rconn.eval("try(R)");
+        REXP rexp = getRconnection().eval("try(R)");
         LOGGER.debug("R: " + rexp.toString());
-        switch (rexp.getType()) {
-            case REXP.XT_ARRAY_BOOL :
-                BufferedDataTable boolArrayOut = readBooleanArray(rexp, exec);
-                return new BufferedDataTable[]{boolArrayOut};
-            case REXP.XT_ARRAY_INT :
-                BufferedDataTable intArrayOut = readIntArray(rexp, exec);
-                return new BufferedDataTable[]{intArrayOut};
-            case REXP.XT_BOOL :
-                BufferedDataTable boolOut = readBoolean(rexp, exec);
-                return new BufferedDataTable[]{boolOut};         
-            case REXP.XT_DOUBLE :
-                BufferedDataTable dblOut = readDouble(rexp, exec);
-                return new BufferedDataTable[]{dblOut};   
-            case REXP.XT_INT :
-                BufferedDataTable intOut = readInt(rexp, exec);
-                return new BufferedDataTable[]{intOut};
-            case REXP.XT_STR :
-                BufferedDataTable strOut = readString(rexp, exec);
-                return new BufferedDataTable[]{strOut};   
-            case REXP.XT_SYM :
-                BufferedDataTable symOut = readString(rexp, exec);
-                return new BufferedDataTable[]{symOut}; 
-            case REXP.XT_UNKNOWN :
-                return new BufferedDataTable[]{readNothing(exec)};
-            case REXP.XT_VECTOR :
-                BufferedDataTable vecOut = readVector(rexp, exec);
-                return new BufferedDataTable[]{vecOut};
-            case REXP.XT_NULL :
-                return new BufferedDataTable[]{readNothing(exec)};
-            case REXP.XT_ARRAY_DOUBLE :
-                BufferedDataTable dblArrayOut = readDoubleArray(rexp, exec);
-                return new BufferedDataTable[]{dblArrayOut};
-            default:
-                throw new IllegalArgumentException("Unsupported type: " + rexp);
+        try {
+            switch (rexp.getType()) {
+                case REXP.XT_ARRAY_BOOL :
+                    BufferedDataTable boolArrayOut = readBooleanArray(rexp, exec);
+                    return new BufferedDataTable[]{boolArrayOut};
+                case REXP.XT_ARRAY_INT :
+                    BufferedDataTable intArrayOut = readIntArray(rexp, exec);
+                    return new BufferedDataTable[]{intArrayOut};
+                case REXP.XT_BOOL :
+                    BufferedDataTable boolOut = readBoolean(rexp, exec);
+                    return new BufferedDataTable[]{boolOut};         
+                case REXP.XT_DOUBLE :
+                    BufferedDataTable dblOut = readDouble(rexp, exec);
+                    return new BufferedDataTable[]{dblOut};   
+                case REXP.XT_INT :
+                    BufferedDataTable intOut = readInt(rexp, exec);
+                    return new BufferedDataTable[]{intOut};
+                case REXP.XT_STR :
+                    BufferedDataTable strOut = readString(rexp, exec);
+                    return new BufferedDataTable[]{strOut};   
+                case REXP.XT_SYM :
+                    BufferedDataTable symOut = readString(rexp, exec);
+                    return new BufferedDataTable[]{symOut}; 
+                case REXP.XT_UNKNOWN :
+                    return new BufferedDataTable[]{readNothing(exec)};
+                case REXP.XT_VECTOR :
+                    BufferedDataTable vecOut = readVector(rexp, exec);
+                    return new BufferedDataTable[]{vecOut};
+                case REXP.XT_NULL :
+                    return new BufferedDataTable[]{readNothing(exec)};
+                case REXP.XT_ARRAY_DOUBLE :
+                    BufferedDataTable dblArrayOut = readDoubleArray(rexp, exec);
+                    return new BufferedDataTable[]{dblArrayOut};
+                default:
+                    throw new IllegalArgumentException("Unsupported type: " 
+                            + rexp);
+            }
+        } finally {
+            getRconnection().voidEval("try(rm(R))");
         }
+    }
+    
+    @Override
+    protected void reset() {
+        
     }
     
     /**
@@ -297,22 +306,6 @@ public class RConsoleModel extends RNodeModel {
         return exec.createBufferedDataTable(dc.getTable(), exec);
     }
 
-
-
-    /**
-     * @see org.knime.core.node.NodeModel#reset()
-     */
-    @Override
-    protected void reset() {
-        // remove R variable
-        try {
-            Rconnection rconn = getRconnection();
-            rconn.voidEval("try(rm(R))");
-        } catch (Throwable t) {
-            LOGGER.debug("Could not remove variable R: ", t);
-        }
-    }
-
     /**
      * @see org.knime.core.node.NodeModel
      *      #configure(org.knime.core.data.DataTableSpec[])
@@ -321,7 +314,6 @@ public class RConsoleModel extends RNodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
         testExpressions(m_expression);
-        checkRconnection();
         return new DataTableSpec[1];
     }
 

@@ -78,7 +78,7 @@ final class RConnection {
      * @param conn The connection to the R server.
      * @param inData The data to send.
      * @param exec Used to report progress.
-     * @throws RSrvException If the server throws an execption.
+     * @throws RSrvException If the server throws an exception.
      * @throws CanceledExecutionException If canceled.
      */
     static final void sendData(

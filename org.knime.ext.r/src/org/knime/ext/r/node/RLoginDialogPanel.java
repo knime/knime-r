@@ -88,7 +88,7 @@ final class RLoginDialogPanel extends JPanel {
         m_host.loadSettingsFrom(settings, specs);
         m_port.loadSettingsFrom(settings, specs);
         m_user.loadSettingsFrom(settings, specs);
-        // password is not loaded since it is not saved by the model
+        m_pass.loadSettingsFrom(settings, specs);
     }
 
     /**
