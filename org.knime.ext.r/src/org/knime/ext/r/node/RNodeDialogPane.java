@@ -58,9 +58,7 @@ class RNodeDialogPane extends NodeDialogPane {
     }
     
     /**
-     * @see org.knime.core.node.NodeDialogPane
-     *      #loadSettingsFrom(org.knime.core.node.NodeSettingsRO,
-     *      org.knime.core.data.DataTableSpec[])
+     * {@inheritDoc}
      */
     @Override
     protected void loadSettingsFrom(final NodeSettingsRO settings, 
@@ -69,8 +67,7 @@ class RNodeDialogPane extends NodeDialogPane {
     }
     
     /**
-     * @see org.knime.core.node.NodeDialogPane
-     *      #saveSettingsTo(org.knime.core.node.NodeSettingsWO)
+     * {@inheritDoc}
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings)
