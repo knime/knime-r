@@ -192,7 +192,7 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
-        checkRconnection();
+        //checkRconnection();
         if (m_cols == null) {
             throw new InvalidSettingsException("No columns selected.");
         }

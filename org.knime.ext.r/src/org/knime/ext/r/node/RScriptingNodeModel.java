@@ -93,7 +93,7 @@ public class RScriptingNodeModel extends RNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
-        checkRconnection();
+        //checkRconnection();
         m_spec = inSpecs[0];
         return new DataTableSpec[0];
     }
