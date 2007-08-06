@@ -34,6 +34,7 @@ import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.DataType;
 import org.knime.core.data.container.DataContainer;
 import org.knime.core.data.def.DefaultRow;
 import org.knime.core.data.def.DoubleCell;
@@ -50,6 +51,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.rosuda.JRclient.RBool;
 import org.rosuda.JRclient.REXP;
+import org.rosuda.JRclient.Rconnection;
 
 
 /**
@@ -79,62 +81,79 @@ public class RConsoleModel extends RNodeModel {
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws CanceledExecutionException,
             Exception {
-        createRconnection();
+        Rconnection rconn = getRconnection();
         // send data to R Server
-        RConnection.sendData(getRconnection(), inData[0], exec);
+        RConnection.sendData(rconn, inData[0], exec);
         // send expression to R Server
         for (int i = 0; i < m_expression.length; i++) {
             LOGGER.debug("eval: " + m_expression[i]);
-            getRconnection().voidEval("try(" + m_expression[i] + ")");
+            rconn.voidEval("try(" + m_expression[i] + ")");
             LOGGER.debug("successful");
         }
-        REXP rexp = getRconnection().eval("try(R)");
+        REXP rexp = rconn.eval("try(R)");
         LOGGER.debug("R: " + rexp.toString());
-        try {
-            switch (rexp.getType()) {
-                case REXP.XT_ARRAY_BOOL :
-                    BufferedDataTable boolArrayOut = readBooleanArray(rexp, exec);
-                    return new BufferedDataTable[]{boolArrayOut};
-                case REXP.XT_ARRAY_INT :
-                    BufferedDataTable intArrayOut = readIntArray(rexp, exec);
-                    return new BufferedDataTable[]{intArrayOut};
-                case REXP.XT_BOOL :
-                    BufferedDataTable boolOut = readBoolean(rexp, exec);
-                    return new BufferedDataTable[]{boolOut};         
-                case REXP.XT_DOUBLE :
-                    BufferedDataTable dblOut = readDouble(rexp, exec);
-                    return new BufferedDataTable[]{dblOut};   
-                case REXP.XT_INT :
-                    BufferedDataTable intOut = readInt(rexp, exec);
-                    return new BufferedDataTable[]{intOut};
-                case REXP.XT_STR :
-                    BufferedDataTable strOut = readString(rexp, exec);
-                    return new BufferedDataTable[]{strOut};   
-                case REXP.XT_SYM :
-                    BufferedDataTable symOut = readString(rexp, exec);
-                    return new BufferedDataTable[]{symOut}; 
-                case REXP.XT_UNKNOWN :
-                    return new BufferedDataTable[]{readNothing(exec)};
-                case REXP.XT_VECTOR :
-                    BufferedDataTable vecOut = readVector(rexp, exec);
-                    return new BufferedDataTable[]{vecOut};
-                case REXP.XT_NULL :
-                    return new BufferedDataTable[]{readNothing(exec)};
-                case REXP.XT_ARRAY_DOUBLE :
-                    BufferedDataTable dblArrayOut = readDoubleArray(rexp, exec);
-                    return new BufferedDataTable[]{dblArrayOut};
-                default:
-                    throw new IllegalArgumentException("Unsupported type: " 
-                            + rexp);
-            }
-        } finally {
-            getRconnection().voidEval("try(rm(R))");
+        switch (rexp.getType()) {
+            case REXP.XT_ARRAY_BOOL :
+                BufferedDataTable boolArrayOut = readBooleanArray(rexp, exec);
+                return new BufferedDataTable[]{boolArrayOut};
+            case REXP.XT_ARRAY_INT :
+                BufferedDataTable intArrayOut = readIntArray(rexp, exec);
+                return new BufferedDataTable[]{intArrayOut};
+            case REXP.XT_BOOL :
+                BufferedDataTable boolOut = readBoolean(rexp, exec);
+                return new BufferedDataTable[]{boolOut};         
+            case REXP.XT_DOUBLE :
+                BufferedDataTable dblOut = readDouble(rexp, exec);
+                return new BufferedDataTable[]{dblOut};   
+            case REXP.XT_INT :
+                BufferedDataTable intOut = readInt(rexp, exec);
+                return new BufferedDataTable[]{intOut};
+            case REXP.XT_STR :
+                BufferedDataTable strOut = readString(rexp, exec);
+                return new BufferedDataTable[]{strOut};   
+            case REXP.XT_SYM :
+                BufferedDataTable symOut = readString(rexp, exec);
+                return new BufferedDataTable[]{symOut}; 
+            case REXP.XT_UNKNOWN :
+                return new BufferedDataTable[]{readNothing(exec)};
+            case REXP.XT_VECTOR :
+                BufferedDataTable vecOut = readVector(rexp, exec);
+                return new BufferedDataTable[]{vecOut};
+            case REXP.XT_NULL :
+                return new BufferedDataTable[]{readNothing(exec)};
+            case REXP.XT_ARRAY_DOUBLE :
+                BufferedDataTable dblArrayOut = readDoubleArray(rexp, exec);
+                return new BufferedDataTable[]{dblArrayOut};
+            default:
+                throw new IllegalArgumentException("Unsupported type: " + rexp);
         }
     }
-    
-    @Override
-    protected void reset() {
-        
+
+    private DataColumnSpec createColumnSpec(final String columnName,
+            final DataType columnType) {
+        return new DataColumnSpecCreator(columnName, columnType).createSpec();
+    }
+     
+    private BufferedDataTable readVector(
+            final REXP rexp, final ExecutionContext exec) 
+            throws CanceledExecutionException {
+        Vector matrix = rexp.asVector();
+        DataColumnSpec[] cspec = new DataColumnSpec[1];
+        for (int i = 0; i < cspec.length; i++) {
+            DataColumnSpecCreator colspeccreator = 
+                new DataColumnSpecCreator("R", 
+                        StringCell.TYPE);
+            cspec[i] = colspeccreator.createSpec();
+        }
+        DataContainer dc = new DataContainer(new DataTableSpec(cspec));
+        for (int i = 0; i < matrix.size(); i++) {
+            exec.checkCanceled();
+            exec.setProgress(1.0 * i / matrix.size());
+            dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
+                    ((REXP) matrix.get(i)).asString()));
+        }
+        dc.close();
+        return exec.createBufferedDataTable(dc.getTable(), exec);
     }
     
     /**
@@ -152,17 +171,21 @@ public class RConsoleModel extends RNodeModel {
     
     private BufferedDataTable readString(
             final REXP rexp, final ExecutionContext exec) {
-        String matrix = rexp.asString();
-        DataColumnSpec[] cspec = new DataColumnSpec[1];
-        for (int i = 0; i < cspec.length; i++) {
-            DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R", StringCell.TYPE);
-            cspec[i] = colspeccreator.createSpec();
-        }
-        DataRow row = new DefaultRow(new StringCell("Row1"), matrix);
+        Vector list = rexp.asVector();
+        DataColumnSpec cspec = createColumnSpec("R", StringCell.TYPE);
         BufferedDataContainer dc = 
             exec.createDataContainer(new DataTableSpec(cspec));
-        dc.addRowToTable(row);
+        for (int i = 0; i < list.size(); i++) {
+            DataRow row;
+            if (list.get(i) == null) {
+                row = new DefaultRow(new StringCell("Row"  + i), 
+                     DataType.getMissingCell());
+            } else {
+                row = new DefaultRow(new StringCell("Row"  + i), 
+                        new StringCell(list.get(i).toString()));
+            }
+            dc.addRowToTable(row);
+        }
         dc.close();
         return dc.getTable();
     }
@@ -204,16 +227,18 @@ public class RConsoleModel extends RNodeModel {
     
     private BufferedDataTable readBoolean(
             final REXP rexp, final ExecutionContext exec) {
-        RBool matrix = rexp.asBool();
-        DataColumnSpec[] cspec = new DataColumnSpec[1];
-        for (int i = 0; i < cspec.length; i++) {
-            DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R", StringCell.TYPE);
-            cspec[i] = colspeccreator.createSpec();
-        }
-        DataRow row = new DefaultRow(new StringCell("Row1"), matrix.toString());
+        RBool bool = rexp.asBool();
+        DataColumnSpec cspec = createColumnSpec("R", IntCell.TYPE);
         BufferedDataContainer dc = 
             exec.createDataContainer(new DataTableSpec(cspec));
+        DataRow row;
+        if (bool == null || bool.isNA()) {
+            row = new DefaultRow(new StringCell("Row1"), 
+                    DataType.getMissingCell());
+        } else {
+            row = new DefaultRow(new StringCell("Row1"), 
+                    new IntCell(bool.isTRUE() ? 1 : 0));
+        }
         dc.addRowToTable(row);
         dc.close();
         return dc.getTable();
@@ -222,7 +247,7 @@ public class RConsoleModel extends RNodeModel {
     private BufferedDataTable readBooleanArray(
             final REXP rexp, final ExecutionContext exec) 
             throws CanceledExecutionException {
-        RBool[] matrix = (RBool[]) rexp.getContent();
+        Vector list = rexp.asVector();
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
             DataColumnSpecCreator colspeccreator = 
@@ -230,11 +255,11 @@ public class RConsoleModel extends RNodeModel {
             cspec[i] = colspeccreator.createSpec();
         }
         DataContainer dc = new DataContainer(new DataTableSpec(cspec));
-        for (int i = 0; i < matrix.length; i++) {
+        for (int i = 0; i < list.size(); i++) {
             exec.checkCanceled();
-            exec.setProgress(1.0 * i / matrix.length);
+            exec.setProgress(1.0 * i / list.size());
             dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
-                    matrix[i].toString()));
+                    list.get(i).toString()));
         }
         dc.close();
         return exec.createBufferedDataTable(dc.getTable(), exec);
@@ -261,28 +286,6 @@ public class RConsoleModel extends RNodeModel {
         return exec.createBufferedDataTable(dc.getTable(), exec);
     }
     
-    private BufferedDataTable readVector(
-            final REXP rexp, final ExecutionContext exec) 
-            throws CanceledExecutionException {
-        Vector matrix = rexp.asVector();
-        DataColumnSpec[] cspec = new DataColumnSpec[1];
-        for (int i = 0; i < cspec.length; i++) {
-            DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R", 
-                        StringCell.TYPE);
-            cspec[i] = colspeccreator.createSpec();
-        }
-        DataContainer dc = new DataContainer(new DataTableSpec(cspec));
-        for (int i = 0; i < matrix.size(); i++) {
-            exec.checkCanceled();
-            exec.setProgress(1.0 * i / matrix.size());
-            dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
-                    ((REXP) matrix.get(i)).asString()));
-        }
-        dc.close();
-        return exec.createBufferedDataTable(dc.getTable(), exec);
-    }
-    
     private BufferedDataTable readIntArray(
             final REXP rexp, final ExecutionContext exec) 
             throws CanceledExecutionException {
@@ -304,6 +307,22 @@ public class RConsoleModel extends RNodeModel {
         return exec.createBufferedDataTable(dc.getTable(), exec);
     }
 
+
+
+    /**
+     * @see org.knime.core.node.NodeModel#reset()
+     */
+    @Override
+    protected void reset() {
+        // remove R variable
+        try {
+            Rconnection rconn = getRconnection();
+            rconn.voidEval("try(rm(R))");
+        } catch (Throwable t) {
+            LOGGER.debug("Could not remove variable R: ", t);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -311,6 +330,7 @@ public class RConsoleModel extends RNodeModel {
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
         testExpressions(m_expression);
+        //checkRconnection();
         return new DataTableSpec[1];
     }
 

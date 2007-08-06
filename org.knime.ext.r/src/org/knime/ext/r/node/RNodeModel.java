@@ -31,7 +31,6 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.util.KnimeEncryption;
 import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 
@@ -41,6 +40,19 @@ import org.rosuda.JRclient.Rconnection;
  * @author Thomas Gabriel, University of Konstanz
  */
 abstract class RNodeModel extends NodeModel {
+    
+    /** 
+     * Used only in cases where Rserve runs on local host and windows in order
+     * to overcome the problem that only one connection can be open at the 
+     * time. 
+     */ 
+    private static Rconnection STATIC_RCONN;
+    
+    /**
+     * R connection for all non-windows machines.
+     */
+    private Rconnection m_rconn;
+    private final RLoginSettings m_login = new RLoginSettings();
     
     /** R Logger. */
     private static final NodeLogger LOGGER = 
@@ -54,50 +66,63 @@ abstract class RNodeModel extends NodeModel {
     RNodeModel(final int dataIns, final int dataOuts) {
         super(dataIns, dataOuts);
     }
-
+    
     /**
-     * {@inheritDoc}
+     * @return The connection object to Rserve.
      */
-    @Override
-    protected void validateSettings(final NodeSettingsRO settings) 
-        throws InvalidSettingsException {
-        readSettings(settings, false);        
+    protected final Rconnection getRconnection() {
+        if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0
+                && m_login.getHost().equals(RLoginSettings.DEFAULT_HOST)) {
+            return STATIC_RCONN = createConnection(STATIC_RCONN);
+        } else {
+            return m_rconn = createConnection(m_rconn);
+        }
+        
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) 
-        throws InvalidSettingsException {
-        readSettings(settings, true);
+    
+    private Rconnection createConnection(final Rconnection checkR) {
+        if (checkR != null && checkR.isConnected()) {
+            try {
+                checkR.eval("try()");
+                return checkR;
+            } catch (RSrvException e) {
+                LOGGER.debug("Exception during try(): ", e);
+            }
+        }
+        if (checkR != null) {
+            checkR.close();
+        }
+        LOGGER.info("Starting R evaluation on RServe (" 
+                + m_login.getHost() + ":" + m_login.getPort() + ") ...");
+        Rconnection rconn;
+        try {
+            rconn = new Rconnection(m_login.getHost(), m_login.getPort());
+            if (rconn.needLogin()) {
+                rconn.login(m_login.getUser(), m_login.getPassword());
+            }
+        } catch (RSrvException rse) {
+            LOGGER.error("Can't connect to server");
+            throw new IllegalStateException("Make sure R Server is "
+                    + "available before executing this node");
+        }
+        if ((rconn == null) || (!rconn.isConnected())) {
+            LOGGER.error("Can't connect to server");
+            throw new IllegalStateException("Make sure R Server is "
+                    + "available before executing this node");
+        }
+        LOGGER.debug("R connection opened");
+        return rconn;
     }
     
     /**
-     * Validates the settings in the specified settings object. If the write
-     * flag is set true, it takes them over (sets them in the internal
-     * variables).
-     * 
-     * @param settings the settings object to verify/read.
-     * @param write if true, settings are taken over, otherwise they are just
-     *            validated.
+     * Reset R connection.
      */
-    void readSettings(final NodeSettingsRO settings, final boolean write) {
-        String host = settings.getString(RConstants.KEY_HOST, 
-                RConstants.DEFAULT_HOST);
-        int port = settings.getInt(RConstants.KEY_PORT, 
-                RConstants.DEFAULT_PORT);
-        String user = settings.getString(RConstants.KEY_USER, 
-                RConstants.DEFAULT_USER);
-        String pw = settings.getString(RConstants.KEY_PASSWORD, 
-                    RConstants.DEFAULT_PASS);
-        if (write) {
-            RConstants.setHost(host);
-            RConstants.setPort(port);
-            RConstants.setUser(user);
-            RConstants.setPassword(pw);
+    @Override
+    protected void reset() {
+        if (STATIC_RCONN != null) {
+            STATIC_RCONN.close();
+            STATIC_RCONN = null;
         }
-        
     }
     
     /**
@@ -105,66 +130,24 @@ abstract class RNodeModel extends NodeModel {
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
-        settings.addString(RConstants.KEY_HOST, RConstants.getHost());
-        settings.addInt(RConstants.KEY_PORT, RConstants.getPort());
-        settings.addString(RConstants.KEY_USER, RConstants.getUser());
-        settings.addString(RConstants.KEY_PASSWORD, RConstants.getPassword());
+        m_login.saveSettingsTo(settings);
     }
-    
-    private static Rconnection mRCONN;
-    
-    private static final String RCONNECTION_ERROR
-        = new String("Can't connect to Rserve. Make sure R server is "
-                + "available before running this node.");
-    
-    
+
     /**
-     * @return a new R connection
+     * {@inheritDoc}
      */
-    protected final Rconnection createRconnection() {
-        mRCONN = null;
-        return getRconnection();
+    @Override
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
+            throws InvalidSettingsException {
+        m_login.loadValidatedSettingsFrom(settings);
     }
     
     /**
-     * @return the current R connection; if not available, a new (static) one 
-     *         will be created
+     * {@inheritDoc}
      */
-    protected final Rconnection getRconnection() {
-        if (mRCONN != null && mRCONN.isConnected()) {
-            return mRCONN;
-        }
-        LOGGER.info("Starting R evaluation on Rserve (user=" 
-                + RConstants.getUser() + ",host="
-                + RConstants.getHost() + ",port="
-                + RConstants.getPort() + ")...");
-        try {
-            mRCONN = new Rconnection(RConstants.getHost() + " " 
-                    + RConstants.getPort());
-            if (mRCONN.needLogin()) {
-                String pw = "";
-                try {
-                    KnimeEncryption.decrypt(RConstants.getPassword());
-                } catch (Exception e) {
-                    LOGGER.warn("Could not encrypt password.");
-                } finally {
-                    mRCONN.login(RConstants.getUser(), pw);
-                }
-            }
-        } catch (RSrvException rse) {
-            setWarningMessage(RCONNECTION_ERROR);
-            mRCONN = null;
-            IllegalStateException e = 
-                new IllegalStateException(RCONNECTION_ERROR);
-            e.initCause(rse);
-            throw e;
-        }
-        if ((mRCONN == null) || (!mRCONN.isConnected())) {
-            setWarningMessage(RCONNECTION_ERROR);
-            throw new IllegalStateException(RCONNECTION_ERROR);
-        }
-        LOGGER.debug("R connection opened");
-        return mRCONN;
+    @Override
+    protected void validateSettings(final NodeSettingsRO settings) 
+            throws InvalidSettingsException {
+        m_login.validateSettings(settings);
     }
-    
 }

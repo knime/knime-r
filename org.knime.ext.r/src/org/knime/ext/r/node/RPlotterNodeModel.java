@@ -50,6 +50,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.util.FileUtil;
 import org.rosuda.JRclient.REXP;
 import org.rosuda.JRclient.RSrvException;
+import org.rosuda.JRclient.Rconnection;
 
 /**
  * This is the implementation of the R 2D view plotting two columns in a
@@ -84,11 +85,12 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws Exception {
-        createRconnection();
-        String fileName = FILE_NAME + "_" + getRconnection().hashCode() 
-            + ".png";
+        // we are careful here - not all R binaries support png
+        // so we rather capture any failures
+        Rconnection c = getRconnection();
+        String fileName = FILE_NAME + "_" + c.hashCode() + ".png";
         LOGGER.info("The image name: " + fileName);
-        REXP xp = getRconnection().eval("try(png(\"" + fileName + "\"))");
+        REXP xp = c.eval("try(png(\"" + fileName + "\"))");
 
         if (xp.asString() != null) { // if there's a string then we have a
             // problem, R sent an error
@@ -96,7 +98,7 @@ public class RPlotterNodeModel extends RNodeModel {
                     + xp.asString());
             // this is analogous to 'warnings', but for us it's sufficient to
             // get just the 1st warning
-            REXP w = getRconnection().eval("if (exists(\"last.warning\") && "
+            REXP w = c.eval("if (exists(\"last.warning\") && "
                     + "length(last.warning)>0) names(last.warning)[1] "
                     + "else 0");
             if (w.asString() != null) {
@@ -104,13 +106,13 @@ public class RPlotterNodeModel extends RNodeModel {
             }
         }
         
-        RConnection.sendData(getRconnection(), inData[0], exec);
+        RConnection.sendData(c, inData[0], exec);
         String first = RConnection.formatColumn(m_cols[0]);
         String second = RConnection.formatColumn(m_cols[1]);
-        getRconnection().eval("plot(" + first + "," + second + ")");
-        getRconnection().voidEval("dev.off()");
+        c.eval("plot(" + first + "," + second + ")");
+        c.voidEval("dev.off()");
         
-        InputStream ris = getRconnection().openFile(fileName);
+        InputStream ris = c.openFile(fileName);
         m_imageFile = File.createTempFile(FILE_NAME, ".png");
         FileOutputStream copy = new FileOutputStream(m_imageFile);
         FileUtil.copy(ris, copy);
@@ -119,13 +121,11 @@ public class RPlotterNodeModel extends RNodeModel {
             m_resultImage = createImage(in);
             // close stream and remove it at the server
             in.close();
-            getRconnection().removeFile(fileName);
+            c.removeFile(fileName);
         } catch (RSrvException e) {
             // ignore
         } finally {
-            getRconnection().voidEval("try(rm(" + first + "))");
-            getRconnection().voidEval("try(rm(" + second + "))");
-            getRconnection().close();
+            c.close();
         }
 
         // nothing
@@ -168,7 +168,7 @@ public class RPlotterNodeModel extends RNodeModel {
     }
 
     /**
-     * {@inheritDoc}
+     * @see org.knime.core.node.NodeModel#reset()
      */
     @Override
     protected void reset() {
@@ -189,6 +189,7 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
+        //checkRconnection();
         if (m_cols == null) {
             throw new InvalidSettingsException("No columns selected.");
         }

@@ -38,7 +38,6 @@ import org.knime.core.node.defaultnodedialog.DialogComponentInteger;
 import org.knime.core.node.defaultnodedialog.DialogComponentPasswordField;
 import org.knime.core.node.defaultnodedialog.DialogComponentTextField;
 
-
 /**
  * Panel used to login to a R server providing user, password, host, and port.
  * 
@@ -59,16 +58,16 @@ final class RLoginDialogPanel extends JPanel {
      */
     public RLoginDialogPanel() {
         super(new GridLayout(4, 1));
-        m_host = new DialogComponentTextField(RConstants.KEY_HOST, "Host: ",
-                RConstants.DEFAULT_HOST);
+        m_host = new DialogComponentTextField(RLoginSettings.KEY_HOST, "Host: ",
+                RLoginSettings.DEFAULT_HOST);
         m_host.setSizeComponents(200, 25);
-        m_port = new DialogComponentInteger(RConstants.KEY_PORT, "Port: ", 
-                RConstants.DEFAULT_PORT);
+        m_port = new DialogComponentInteger(RLoginSettings.KEY_PORT, "Port: ", 
+                RLoginSettings.DEFAULT_PORT);
         m_port.setSizeComponents(200, 25);
-        m_user = new DialogComponentTextField(RConstants.KEY_USER, "User: ", 
-                RConstants.DEFAULT_USER);
+        m_user = new DialogComponentTextField(RLoginSettings.KEY_USER, "User: ",
+                RLoginSettings.DEFAULT_USER);
         m_user.setSizeComponents(200, 25);
-        m_pass = new DialogComponentPasswordField(RConstants.KEY_PASSWORD,
+        m_pass = new DialogComponentPasswordField(RLoginSettings.KEY_PASSWORD,
                 "Password: ");
         m_pass.setSizeComponents(200, 25);
         super.add(m_host);

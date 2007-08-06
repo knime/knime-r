@@ -62,7 +62,6 @@ public class RScriptingNodeModel extends RNodeModel {
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws CanceledExecutionException,
             Exception {
-        createRconnection();
         m_spec = inData[0].getDataTableSpec();
         // create first a connection object
         RConnection.sendData(getRconnection(), inData[0], exec);
@@ -71,7 +70,7 @@ public class RScriptingNodeModel extends RNodeModel {
     }
     
     /**
-     * {@inheritDoc}
+     * @see org.knime.core.node.NodeModel#reset()
      */
     @Override
     protected void reset() {
@@ -91,6 +90,7 @@ public class RScriptingNodeModel extends RNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
+        //checkRconnection();
         m_spec = inSpecs[0];
         return new DataTableSpec[0];
     }
@@ -128,7 +128,7 @@ public class RScriptingNodeModel extends RNodeModel {
     protected void loadInternals(final File nodeInternDir, 
             final ExecutionMonitor exec) 
             throws IOException, CanceledExecutionException {
-        throw new IOException("re-execute node to send data to Rserve.");
+        throw new IOException("re-execute node to send data to R server");
     }
 
     /**
