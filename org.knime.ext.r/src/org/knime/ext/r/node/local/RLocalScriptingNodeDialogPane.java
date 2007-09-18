@@ -1,5 +1,4 @@
-/* 
- * ------------------------------------------------------------------
+/* ------------------------------------------------------------------
  * This source code, its documentation and all appendant files
  * are protected by copyright law. All rights reserved.
  *
@@ -17,42 +16,37 @@
  * If you have any questions please contact the copyright holder:
  * website: www.knime.org
  * email: contact@knime.org
- * --------------------------------------------------------------------- *
+ * ---------------------------------------------------------------------
  * 
  * History
- *   17.09.2007 (gabriel): created
+ *   17.09.2007 (thiel): created
  */
 package org.knime.ext.r.node.local;
 
-import javax.swing.JFileChooser;
-
-import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
-import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
+import org.knime.core.node.defaultnodesettings.DialogComponentMultiLineString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
  * 
- * @author Thomas Gabriel, University of Konstanz
  * @author Kilian Thiel, University of Konstanz
  */
-public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
+public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
 
     /**
      * @return Returns a <code>SettingsModelString</code> instance containing
-     * the path the R executable file.
+     * the R command to execute.
      */
-    static final SettingsModelString createRBinaryFile() {
-        return new SettingsModelString("R_binary_file", null);
+    static final SettingsModelString createCommandSettingsModel() {
+        return new SettingsModelString("R_command", null);
     }
     
     /**
-     * Constructor of <code>RLocalNodeDialogPane</code> which provides a
-     * default dialog component to specify the R executable file.  
+     * 
      */
-    public RLocalNodeDialogPane() {
-        super.addDialogComponent(new DialogComponentFileChooser(
-                createRBinaryFile(), "R_binarys", JFileChooser.OPEN_DIALOG, 
-                false, new String[]{"", "exe"}));
+    public RLocalScriptingNodeDialogPane() {
+        super();
+        
+        addDialogComponent(new DialogComponentMultiLineString(
+                createCommandSettingsModel(), "R command: ", true, 10, 10));
     }
-    
 }

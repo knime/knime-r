@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 1.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode type="Other" icon="./r.png">
+	<name>R Console</name>
+	<shortDescription>
+	    Allows execution of R commands.
+	</shortDescription>
+	<fullDescription>
+		<intro>
+		   <p>
+			Bla ...
+		    </p>
+		</intro>
+		<option name ="4. Password: ">
+			The R executable.
+		</option>
+		<option name ="4. Password: ">
+			The R commands to run.
+		</option>
+	</fullDescription>
+	<ports>
+		<dataIn name="Data Input" index="0">Data Input</dataIn>
+		<dataOut name="Data Output" index="0">Data Output</dataOut>
+	</ports>
+</knimeNode>
