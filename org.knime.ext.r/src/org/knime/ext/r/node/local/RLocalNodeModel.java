@@ -27,12 +27,18 @@ package org.knime.ext.r.node.local;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.knime.base.node.io.csvwriter.CSVWriter;
 import org.knime.base.node.io.csvwriter.FileWriterSettings;
 import org.knime.base.node.io.filereader.FileAnalyzer;
 import org.knime.base.node.io.filereader.FileReaderNodeSettings;
 import org.knime.base.node.io.filereader.FileTable;
+import org.knime.base.node.misc.externaltool.CommandExecution;
+import org.knime.base.node.misc.externaltool.StdOutBufferedNodeModel;
+import org.knime.base.node.misc.externaltool.ViewUpdateNotice;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -40,26 +46,20 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
-import org.knime.core.util.MutableBoolean;
 
 /**
  * 
  * @author Thomas Gabriel, University of Konstanz
  * @author Kilian Thiel, University of Konstanz
  */
-public abstract class RLocalNodeModel extends NodeModel {
+public abstract class RLocalNodeModel extends StdOutBufferedNodeModel 
+implements Observer {
 
     private static final NodeLogger LOGGER = 
         NodeLogger.getLogger(RLocalNodeModel.class);
-    
-    /**
-     * time (millisec) between two calls to checkCancel.
-     */
-    private static final int CANCEL_CHECK_INTERVAL = 1000;    
     
     /**
      * The temp directory.
@@ -70,7 +70,7 @@ public abstract class RLocalNodeModel extends NodeModel {
     /**
      * The delimiter used for creation of csv files.
      */
-    protected static final String DELIMITER = "\t";
+    protected static final String DELIMITER = ",";
     
     private SettingsModelString m_rbinaryFileSettingsModel =
         RLocalNodeDialogPane.createRBinaryFile();
@@ -90,13 +90,12 @@ public abstract class RLocalNodeModel extends NodeModel {
     private String m_writeDataCmdSuffix = "\", row.names = FALSE);\n";
     
     
-    
     /**
      * Constructor of <code>RLocalNodeModel</code> creating a model with one
      * data in port an one data out port.
      */
     public RLocalNodeModel() {
-        super(1, 1);
+        super();
     }
     
     /**
@@ -149,7 +148,7 @@ public abstract class RLocalNodeModel extends NodeModel {
                 replace('\\', '/'));
         completeCmd.append(m_readDataCmdSufffix);
         
-        completeCmd.append(getCommand());
+        completeCmd.append(getCommand().trim());
         completeCmd.append("\n");
         
         File tempOutData = 
@@ -172,59 +171,29 @@ public abstract class RLocalNodeModel extends NodeModel {
         
         
         // execute shell command
-        int exitVal;
         String shcmd = shellCmd.toString();
         LOGGER.info("Shell command: \n" + shcmd);
+
+        CommandExecution cmdExec = new CommandExecution(shcmd);
+        cmdExec.addObserver(this);
+        int exitVal = cmdExec.execute(exec);
         
-        //
-        //---------------------------------------------------------------------
-        /// Put all this code into a new class remaining to the exttool package
-        /// which should be moved into base !
-        //
-        final Process proc = Runtime.getRuntime().exec(shcmd);
+        setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));
+        setExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
         
-        // create a thread that periodically checks for user cancellation
-        final MutableBoolean procDone = new MutableBoolean(false);
-        new Thread(new Runnable() {
-            public void run() {
-                synchronized (procDone) {
-                    while (!procDone.booleanValue()) {
-                        try {
-                            exec.checkCanceled();
-                        } catch (CanceledExecutionException cee) {
-                            // blow away the running external process
-                            // doesn't kill sub processes though!
-                            proc.destroy();
-                            return;
-                        }
-                        try {
-                            procDone.wait(CANCEL_CHECK_INTERVAL);
-                        } catch (InterruptedException e) {
-                            // do nothing
-                        }
-                    }
-                }
+        if (exitVal != 0) {
+            // before we return, we save the output in the failing list
+            synchronized (cmdExec) {
+                setFailedExternalOutput(new LinkedList<String>(
+                        cmdExec.getStdOutput()));
             }
-
-        }).start();        
-        
-        // wait until the external process finishes.
-        exitVal = proc.waitFor();
-
-        synchronized (procDone) {
-            // this should terminate the check cancel thread
-            procDone.setValue(true);
-        }
-
-        exec.checkCanceled();
-        exec.setProgress("Wrapping up");
-        LOGGER.info("External executable 'R' terminated with exit code: " 
-                + exitVal);
-        //
-        /// End of the code passage.
-        //---------------------------------------------------------------------
-        //
-        
+            synchronized (cmdExec) {
+                setFailedExternalErrorOutput(new LinkedList<String>(
+                        cmdExec.getStdErr()));
+            }
+            throw new IllegalStateException("Execution failed (error code "
+                    + exitVal + ")");
+        }        
         
         
         // read data from R output csv into a buffered data table.
@@ -283,7 +252,8 @@ public abstract class RLocalNodeModel extends NodeModel {
         FileWriterSettings fws = new FileWriterSettings();
         fws.setColSeparator(DELIMITER);
         fws.setWriteColumnHeader(true);
-        CSVWriter writer = new CSVWriter(fw);
+        
+        CSVWriter writer = new CSVWriter(fw, fws);
         writer.write(inData, exec);
         writer.close();
         return tempInDataFile;
@@ -329,7 +299,7 @@ public abstract class RLocalNodeModel extends NodeModel {
      */
     @Override
     protected void reset() {
-        // Nothing to reset ...
+        super.reset();
     }
 
     /**
@@ -374,7 +344,7 @@ public abstract class RLocalNodeModel extends NodeModel {
     protected void saveInternals(final File nodeInternDir, 
             final ExecutionMonitor exec) throws IOException, 
             CanceledExecutionException {
-        // No internals to save ...
+        super.saveInternals(nodeInternDir, exec);
     }
     
     /**
@@ -384,6 +354,16 @@ public abstract class RLocalNodeModel extends NodeModel {
     protected void loadInternals(final File nodeInternDir, 
             final ExecutionMonitor exec) throws IOException, 
             CanceledExecutionException {
-        // No internals to load ...
+        super.loadInternals(nodeInternDir, exec);
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void update(final Observable o, final Object arg) {
+        if (arg instanceof ViewUpdateNotice) {
+            notifyViews(arg);
+        }
     }
 }

@@ -47,6 +47,6 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
         super();
         
         addDialogComponent(new DialogComponentMultiLineString(
-                createCommandSettingsModel(), "R command: ", true, 10, 10));
+                createCommandSettingsModel(), "R command: ", true, 5, 4));
     }
 }
