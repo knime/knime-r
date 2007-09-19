@@ -19,38 +19,42 @@
  * ---------------------------------------------------------------------
  * 
  * History
- *   17.09.2007 (thiel): created
+ *   19.09.2007 (thiel): created
  */
-package org.knime.ext.r.node.local;
+package org.knime.ext.r.preferences;
 
-import org.knime.core.node.defaultnodesettings.DialogComponentMultiLineString;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.knime.ext.r.RCorePlugin;
 
 /**
  * 
  * @author Kilian Thiel, University of Konstanz
  */
-public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
+public class RPreferenceInitializer extends AbstractPreferenceInitializer {
 
-    /**
-     * @return Returns a <code>SettingsModelString</code> instance containing
-     * the R command to execute.
-     */
-    static final SettingsModelString createCommandSettingsModel() {
-        return new SettingsModelString("R_command", null);
-    }
+    /** Preference key for the path to the R executable setting. */
+    public static final String PREF_R_PATH = "knime.r.path";    
     
     /**
-     * 
+     * {@inheritDoc}
      */
-    public RLocalScriptingNodeDialogPane() {
-        super();
-        
-        createNewGroup("R command");
-        
-        addDialogComponent(new DialogComponentMultiLineString(
-                createCommandSettingsModel(), "", true, 5, 4));
-        
-        closeCurrentGroup();
+    @Override
+    public void initializeDefaultPreferences() {
+        IPreferenceStore store = RCorePlugin.getDefault().getPreferenceStore();
+
+        //set default values
+        store.setDefault(PREF_R_PATH, "");
+    }
+
+    /**
+     * Returns the path to the R executable.
+     * 
+     * @return the path
+     */
+    public static String getRPath() {
+        final IPreferenceStore pStore = 
+            RCorePlugin.getDefault().getPreferenceStore();
+        return pStore.getString(PREF_R_PATH);
     }
 }

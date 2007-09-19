@@ -58,12 +58,12 @@ public class RLocalViewsNodeFactory extends NodeFactory {
     @Override
     public NodeView createNodeView(final int viewIndex, 
             final NodeModel nodeModel) {
-        if (viewIndex == 0) { 
-            return new ExtToolStdoutNodeView(nodeModel);
+        if (viewIndex == 0) {
+            return new RLocalViewsNodeView(nodeModel);
         } else if (viewIndex == 1) {
             return new ExtToolStderrNodeView(nodeModel);
         } else if (viewIndex == 2) {
-            return new RLocalViewsNodeView(nodeModel);
+            return new ExtToolStdoutNodeView(nodeModel);
         } else {
             return null;
         }

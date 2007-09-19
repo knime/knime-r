@@ -16,3 +16,4 @@ Bundle-ClassPath: knime-r.jar,
 Export-Package: org.knime.ext.r.node,
  org.rosuda.JRclient
 Bundle-Vendor: Chair for Bioinformatics and Information Mining, University of Konstanz, Germany
+Eclipse-LazyStart: true

@@ -40,4 +40,19 @@
             path="/r">
       </category>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.knime.workbench.ui.preferences"
+            class="org.knime.ext.r.preferences.RPreferencePage"
+            id="org.knime.ext.r.preferences.RPreferencePage"
+            name="R">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.knime.ext.r.preferences.RPreferenceInitializer">
+      </initializer>
+   </extension>
 </plugin>

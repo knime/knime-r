@@ -100,7 +100,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
         String tempCommandString = tempCommand.getStringValue();
         
         // if command not valid throw exception
-        if (tempCommandString.length() < 1) {
+        if (tempCommandString == null || tempCommandString.length() < 1) {
             throw new InvalidSettingsException("R command is not valid !");
         }
         

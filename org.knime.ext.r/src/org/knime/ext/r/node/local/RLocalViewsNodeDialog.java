@@ -47,7 +47,9 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
      * the R view to show.
      */
     static final SettingsModelString createViewSettingsModel() {
-        return new SettingsModelString("R_View", null);
+        return new SettingsModelString("R_View", 
+                RViewScriptingConstants.LABEL2COMMAND.keySet()
+                .toArray()[0].toString());
     }
     
     /**
@@ -63,7 +65,10 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
      * containing the R view command.
      */
     static final SettingsModelString createRViewCmdSettingsModel() {
-        return new SettingsModelString("R-View_command", "");
+        return new SettingsModelString("R-View_command", 
+                RViewScriptingConstants.LABEL2COMMAND.get(
+                        RLocalViewsNodeDialog.createViewSettingsModel()
+                        .getStringValue()));
     }
     
     private SettingsModelString m_viewCommandModel;

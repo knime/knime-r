@@ -64,8 +64,8 @@ public class RCorePlugin extends AbstractUIPlugin {
      */
     @Override
     public void stop(final BundleContext context) throws Exception {
-        super.stop(context);
         plugin = null;
+        super.stop(context);
     }
 
     /**

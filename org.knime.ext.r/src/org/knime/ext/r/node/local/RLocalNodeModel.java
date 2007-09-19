@@ -48,7 +48,9 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  * 
@@ -75,6 +77,9 @@ implements Observer {
     private SettingsModelString m_rbinaryFileSettingsModel =
         RLocalNodeDialogPane.createRBinaryFile();
     
+    private SettingsModelBoolean m_useSpecifiedModel = 
+        RLocalNodeDialogPane.createUseSpecifiedFileModel();
+    
     
     private String m_setWorkingDirCmd = 
         "setwd(\"" + TEMP_PATH + "\");\n";
@@ -97,6 +102,7 @@ implements Observer {
     public RLocalNodeModel() {
         super();
     }
+     
     
     /**
      * Constructor of <code>RLocalNodeModel</code> with given numbers of
@@ -214,7 +220,14 @@ implements Observer {
         
         // create shell command
         StringBuffer shellCmd = new StringBuffer();
-        shellCmd.append(m_rbinaryFileSettingsModel.getStringValue());
+        
+        String rBinaryFile = RPreferenceInitializer.getRPath();
+        if (m_useSpecifiedModel.isEnabled()) {
+            rBinaryFile = m_rbinaryFileSettingsModel.getStringValue();
+        }
+        shellCmd.append(rBinaryFile);
+        
+        
         shellCmd.append(" CMD BATCH ");
         shellCmd.append(rCommandFile.getAbsolutePath());
         
@@ -240,8 +253,7 @@ implements Observer {
                 setFailedExternalErrorOutput(new LinkedList<String>(
                         cmdExec.getStdErr()));
             }
-            throw new IllegalStateException("Execution failed (error code "
-                    + exitVal + ")");
+            throw new IllegalStateException("Execution of R script failed !");
         }        
         
         
@@ -371,6 +383,7 @@ implements Observer {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         m_rbinaryFileSettingsModel.saveSettingsTo(settings);
+        m_useSpecifiedModel.saveSettingsTo(settings);
     }
 
     /**
@@ -396,6 +409,7 @@ implements Observer {
         
         if (!validateOnly) {
             m_rbinaryFileSettingsModel.loadSettingsFrom(settings);
+            m_useSpecifiedModel.loadSettingsFrom(settings);
         }
     }
     

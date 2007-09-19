@@ -103,8 +103,10 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
             throws CanceledExecutionException, Exception {
         
         // create image after execution.
-        m_resultImage = RPlotterNodeModel.createImage(
-                new FileInputStream(new File(m_filename)));
+        File imgFile = new File(m_filename);
+        FileInputStream fis = new FileInputStream(imgFile);
+        m_resultImage = RPlotterNodeModel.createImage(fis);
+        fis.close();
         
         return new BufferedDataTable[]{};
     } 
@@ -131,6 +133,18 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         return new BufferedDataTable[]{dataTableToUse};
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void reset() {
+        super.reset();
+        
+        if (m_filename != null) {
+            File imgFile = new File(m_filename);
+            imgFile.delete();
+        }
+    }    
     
     /**
      * {@inheritDoc}
