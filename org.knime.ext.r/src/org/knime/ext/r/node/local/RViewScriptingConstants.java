@@ -33,6 +33,9 @@ import java.util.LinkedHashMap;
  */
 public final class RViewScriptingConstants {
     
+    /**
+     * List of view function along with their R command structure.
+     */
     public static final HashMap<String, String> LABEL2COMMAND
         = new LinkedHashMap<String, String>();
     
@@ -46,6 +49,19 @@ public final class RViewScriptingConstants {
         LABEL2COMMAND.put("Display Contours", "contour(x, ...)");
         LABEL2COMMAND.put("Conditioning Plots", "coplot(formula, data, ...)");
         LABEL2COMMAND.put("Draw Function Plots", "curve(expr, from, to, ...)");
+        LABEL2COMMAND.put("Fourfold Plots", "fourfoldplot(x, ...)");
+        LABEL2COMMAND.put("Histograms", "hist(x, ...)");
+        LABEL2COMMAND.put("Plot Columns of Matrices", "matplot(x, y, ...)");
+        LABEL2COMMAND.put("Mosaic Plots", "mosaicplot(x, ...)");
+        LABEL2COMMAND.put("Scatterplot Matrices", "pairs(x, ...)");
+        LABEL2COMMAND.put("Perspective Plots", "persp(x, ...)");
+        LABEL2COMMAND.put("Pie Charts", "pie(x, ...)");
+        LABEL2COMMAND.put("Polygon Drawing", "polygon(x, ...)");
+        LABEL2COMMAND.put("Spine Plots and Spinograms", "spineplot(x, ...)");
+        LABEL2COMMAND.put("Star (Spider/Radar) Plots and Segment Diagrams", 
+                "stars(x, ...)");
+        LABEL2COMMAND.put("Sunflower Scatter Plot", "sunflowerplot(x, ...)");
+        LABEL2COMMAND.put("1-D Scatter Plots", "stripchart(x, ...)");
     }
 
     private RViewScriptingConstants() {
