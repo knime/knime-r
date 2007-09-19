@@ -38,7 +38,14 @@ public final class RViewScriptingConstants {
     
     static {
         LABEL2COMMAND.put("Generic X-Y Plotting", "plot(x, y, ...)");
-                
+        LABEL2COMMAND.put("Box Plots", "boxplot(x, ...)");
+        LABEL2COMMAND.put("Bar Plots", "barplot(height, ...)");
+        LABEL2COMMAND.put("Cleveland Dot Plots", "dotchart(x, ...)");
+        LABEL2COMMAND.put("Association Plots", "assocplot(x, ...)");
+        LABEL2COMMAND.put("Conditional Density Plots", "cdplot(x, ...)");
+        LABEL2COMMAND.put("Display Contours", "contour(x, ...)");
+        LABEL2COMMAND.put("Conditioning Plots", "coplot(formula, data, ...)");
+        LABEL2COMMAND.put("Draw Function Plots", "curve(expr, from, to, ...)");
     }
 
     private RViewScriptingConstants() {
