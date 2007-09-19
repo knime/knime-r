@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 1.0//EN" "http://www.knime.org/Node.dtd">
-<knimeNode type="Other" icon="./r.png">
-	<name>R Console</name>
+<knimeNode type="Other" icon="../r.png">
+	<name>R Scripting</name>
 	<shortDescription>
-	    Allows execution of R commands.
+	    Allows execution of R commands in a local R installation.
 	</shortDescription>
 	<fullDescription>
 		<intro>
-		   <p>
-			Bla ...
-		    </p>
+		Allows execution of R commands in a local R installation. The result of 
+		these R commands is returned in the output table of this node. All
+		input data is written to a CVS file which is the executed together
+		with the R commands.
 		</intro>
 		<option name ="R executable">
-			The R executable.
+			Path to the local R executable.
 		</option>
 		<option name ="R command">
 			The R commands to run.
@@ -23,17 +24,17 @@
 		<dataOut name="Data Output" index="0">Data Output</dataOut>
 	</ports>
 	<views>
-		<view index="0" name="Tool output">
-			The text sent to standard out during the execution of the external tool.
-			(If it appears in gray, it's the output of a previously failing run
-			which is preserved for your trouble shooting.)<br />
+		<view index="0" name="Standard Out">
+			The text sent to standard out during the execution of the external 
+			tool. (If it appears in gray, it's the output of a previously
+			failing run which is preserved for your trouble shooting.)<br />
 			NOTE: Keeping the view open may slow down the process significantly,
 			if it produces a lot of output in a short amount of time.
 	    </view>
-		<view index="1" name="Tool error output">
-			The text sent to standard err during the execution of the external tool.
-			(If it appears in gray, it's the output of a previously failing run
-			which is preserved for your trouble shooting.)
+		<view index="1" name="Error Out">
+			The text sent to standard err during the execution of the external 
+			tool. (If it appears in gray, it's the output of a previously 
+			failing run which is preserved for your trouble shooting.)
 	    </view>
 	</views>
 </knimeNode>
