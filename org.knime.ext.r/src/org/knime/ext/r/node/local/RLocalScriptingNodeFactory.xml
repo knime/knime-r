@@ -9,8 +9,9 @@
 		<intro>
 		Allows execution of R commands in a local R installation. The result of 
 		these R commands is returned in the output table of this node. All
-		input data is written to a CVS file which is the executed together
-		with the R commands.
+		input data is written to a CVS file which is then processed together
+		with the R commands. The result likewise in the variable R is written
+		to CVS file again and then passed into KNIME.
 		</intro>
 		<option name ="R executable">
 			Path to the local R executable.
