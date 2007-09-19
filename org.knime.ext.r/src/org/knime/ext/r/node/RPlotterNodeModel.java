@@ -132,7 +132,16 @@ public class RPlotterNodeModel extends RNodeModel {
         return new BufferedDataTable[0];
     }
     
-    private Image createImage(final InputStream is) throws IOException {
+    /**
+     * Creates an image instance out of the given <code>InputStream</code>.
+     * This stream can for instance a <code>FileInputStream</code> holding
+     * a image file, such as a .png and so on. 
+     * 
+     * @param is The stream reading the image file.
+     * @return The image instance.
+     * @throws IOException If image file can no be red.
+     */
+    public static Image createImage(final InputStream is) throws IOException {
         Vector<byte[]> buffers = new Vector<byte[]>();
         int bufSize = 65536;
         byte[] buf = new byte[bufSize];

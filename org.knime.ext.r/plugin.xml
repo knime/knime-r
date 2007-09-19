@@ -16,9 +16,14 @@
             factory-class="org.knime.ext.r.node.RConsoleFactory"
             id="org.knime.ext.r.node.RConsoleFactory"/>
       <node
-            category-path="/r-local"
+            category-path="/r/r-local"
             factory-class="org.knime.ext.r.node.local.RLocalScriptingNodeFactory"
             id="org.knime.ext.r.node.local.RLocalScriptingNodeFactory">
+      </node>
+      <node
+            category-path="/r/r-local"
+            factory-class="org.knime.ext.r.node.local.RLocalViewsNodeFactory"
+            id="org.knime.ext.r.node.local.RLocalViewsNodeFactory">
       </node>
    </extension>
    <extension
@@ -32,7 +37,7 @@
             icon="icons/r.png"
             level-id="r-local"
             name="R-Local"
-            path="/">
+            path="/r">
       </category>
    </extension>
 </plugin>

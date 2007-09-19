@@ -38,7 +38,7 @@ import javax.swing.JPanel;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-final class RPlotterViewPanel extends JPanel {
+public final class RPlotterViewPanel extends JPanel {
 
     private final JLabel m_label;
     
@@ -46,7 +46,7 @@ final class RPlotterViewPanel extends JPanel {
      * Creates a new panel with an empty label.
      * @param image The content to show.
      */
-    protected RPlotterViewPanel(final Image image) {
+    public RPlotterViewPanel(final Image image) {
         m_label = new JLabel("<No Plot>");
         super.setLayout(new GridLayout(1, 1));
         super.add(m_label);
@@ -56,7 +56,7 @@ final class RPlotterViewPanel extends JPanel {
     /**
      * Creates a new panel with an empty label.
      */
-    protected RPlotterViewPanel() {
+    public RPlotterViewPanel() {
         m_label = new JLabel("<No Plot>");
         super.add(m_label);
     }
@@ -64,7 +64,7 @@ final class RPlotterViewPanel extends JPanel {
     /**
      * @param image The new image or null to display.
      */
-    protected void update(final Image image) {
+    public void update(final Image image) {
         if (image == null) {
             m_label.setIcon(null);
             m_label.setText("<No Plot>");

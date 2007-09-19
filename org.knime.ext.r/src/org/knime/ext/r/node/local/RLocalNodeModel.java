@@ -64,8 +64,8 @@ implements Observer {
     /**
      * The temp directory.
      */
-    protected static final File TEMP_PATH = 
-        new File(System.getProperty("java.io.tmpdir"));
+    protected static final String TEMP_PATH = 
+        System.getProperty("java.io.tmpdir").replace('\\', '/');
     
     /**
      * The delimiter used for creation of csv files.
@@ -77,7 +77,7 @@ implements Observer {
     
     
     private String m_setWorkingDirCmd = 
-        "setwd(\"" + TEMP_PATH.getParent().replace('\\', '/') + "\");\n";
+        "setwd(\"" + TEMP_PATH + "\");\n";
     
     
     private String m_readDataCmdPrefix = "R <- read.csv(\"";
@@ -130,6 +130,51 @@ implements Observer {
     protected abstract String getCommand(); 
     
     /**
+     * The method enables one to do preprocess the data before the execution
+     * of the R command. This method is called before the R commands are 
+     * executed. All the processing which have to be done before have to be
+     * implemented here.
+     * This implementation is a dummy implementation which only passes 
+     * through the unmodified inData, so one is not forced to implement this
+     * method.
+     * 
+     * @param inData The in data to preprocess.
+     * @param exec To monitor the status of processing.
+     * @return The preprocessed in data.
+     * @throws CanceledExecutionException If preprocessing was canceled.
+     * @throws Exception If any other problem occurs.
+     */
+    @SuppressWarnings("unused")
+    protected BufferedDataTable[] preprocessDataTable(
+            final BufferedDataTable[] inData, final ExecutionContext exec)
+    throws CanceledExecutionException, Exception {
+        return inData;
+    }
+    
+    /**
+     * The method enables one to do postprocess the data modified by the 
+     * execution of the R command. This method is called after the R commands 
+     * are executed. All the processing which have to be done after this have 
+     * to be implemented here.
+     * This implementation is a dummy implementation which only passes 
+     * through the unmodified outData, so one is not forced to implement this
+     * method.
+     * 
+     * @param outData The in data to postprocess.
+     * @param exec To monitor the status of processing.
+     * @return The postprocessed out data.
+     * @throws CanceledExecutionException If postprocessing was canceled.
+     * @throws Exception If any other problem occurs.
+     */
+    @SuppressWarnings("unused")
+    protected BufferedDataTable[] postprocessDataTable(
+            final BufferedDataTable[] outData, final ExecutionContext exec)
+    throws CanceledExecutionException, Exception {
+        return outData;
+    }
+    
+    
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -137,8 +182,12 @@ implements Observer {
             final ExecutionContext exec) throws CanceledExecutionException,
             Exception {
         
+        // preprocess data in in DataTable.
+        BufferedDataTable[] inDataTables = preprocessDataTable(inData, exec);
+        
+        
         // write data to csv
-        File inDataCsvFile = writeInDataCsvFile(inData[0], exec);
+        File inDataCsvFile = writeInDataCsvFile(inDataTables[0], exec);
         
         // execute R cmd
         StringBuffer completeCmd = new StringBuffer();
@@ -151,8 +200,8 @@ implements Observer {
         completeCmd.append(getCommand().trim());
         completeCmd.append("\n");
         
-        File tempOutData = 
-            File.createTempFile("R-outDataTempFile-", ".csv", TEMP_PATH);
+        File tempOutData = File.createTempFile("R-outDataTempFile-", ".csv", 
+                    new File(TEMP_PATH));
         completeCmd.append(m_writeDataCmdPrefix);
         completeCmd.append(tempOutData.getAbsolutePath().replace('\\', '/'));
         completeCmd.append(m_writeDataCmdSuffix);
@@ -196,8 +245,22 @@ implements Observer {
         }        
         
         
+        
+        
         // read data from R output csv into a buffered data table.
         BufferedDataTable dt = readOutData(tempOutData, exec);
+        
+        // postprocess data in out DataTable.
+        BufferedDataTable[] dts = postprocessDataTable(
+                new BufferedDataTable[]{dt}, exec);
+        
+        
+        
+        // !!! What a mess !!!
+        // It is possible that there are still open streams around
+        // holding the temp files. Therefore these streams has to be collected
+        // by the GC.
+        System.gc();
         
         // delete all temp files
         if (inDataCsvFile.exists()) {
@@ -226,14 +289,14 @@ implements Observer {
         }
         
         // return this table
-        return new BufferedDataTable[]{dt};
+        return dts;
     }
     
     
     
     private File writeRcommandFile(final String cmd) throws IOException {
-        File tempCommandFile = 
-            File.createTempFile("R-inDataTempFile-", ".r", TEMP_PATH);
+        File tempCommandFile = File.createTempFile("R-inDataTempFile-", ".r", 
+                    new File(TEMP_PATH));
         FileWriter fw = new FileWriter(tempCommandFile);
         fw.write(cmd);
         fw.close();
@@ -244,8 +307,8 @@ implements Observer {
             final ExecutionContext exec) throws IOException, 
             CanceledExecutionException {
         // create Temp file
-        File tempInDataFile = 
-            File.createTempFile("R-inDataTempFile-", ".csv", TEMP_PATH);
+        File tempInDataFile = File.createTempFile("R-inDataTempFile-", ".csv", 
+                    new File(TEMP_PATH));
             
         // write data to file
         FileWriter fw = new FileWriter(tempInDataFile);

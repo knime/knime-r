@@ -59,9 +59,6 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
-        
-        // Check something ... ???
-        
         return new DataTableSpec[1];
     }
     
