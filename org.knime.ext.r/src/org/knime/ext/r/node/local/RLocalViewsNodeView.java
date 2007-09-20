@@ -30,6 +30,9 @@ import org.knime.core.node.NodeView;
 import org.knime.ext.r.node.RPlotterViewPanel;
 
 /**
+ * The view of the <code>RLocalViewsNodeModel</code> which is able to display
+ * an image created by a certain R command. To display the image 
+ * {@link org.knime.ext.r.node.RPlotterViewPanel} is used.
  * 
  * @author Kilian Thiel, University of Konstanz
  */
@@ -38,7 +41,8 @@ public class RLocalViewsNodeView extends NodeView {
     private final RPlotterViewPanel m_panel;
     
     /**
-     * The constructor.
+     * Creates a new instance of <code>RLocalViewsNodeView</code> which displays
+     * a certain image instance.
      * 
      * @param nodeModel the model associated with this view.
      */
@@ -50,6 +54,8 @@ public class RLocalViewsNodeView extends NodeView {
     }
     
     /**
+     * Updates the image to display.
+     * 
      * {@inheritDoc}
      */
     @Override
@@ -64,8 +70,6 @@ public class RLocalViewsNodeView extends NodeView {
      */
     @Override
     protected void onClose() {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -73,7 +77,5 @@ public class RLocalViewsNodeView extends NodeView {
      */
     @Override
     protected void onOpen() {
-        // TODO Auto-generated method stub
-
     }
 }

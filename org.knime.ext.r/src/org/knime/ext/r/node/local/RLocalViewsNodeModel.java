@@ -44,6 +44,9 @@ import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RPlotterNodeModel;
 
 /**
+ * The <code>RLocalViewsNodeModel</code> provides functionality to create
+ * a R script with user defined R code calling R plots, run it and display
+ * the generated plot in the nodes view.
  * 
  * @author Kilian Thiel, University of Konstanz
  */
@@ -67,24 +70,27 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     
     
     /**
-     * Creates new instance of <code>RLocalViewsNodeModel</code>. 
+     * Creates new instance of <code>RLocalViewsNodeModel</code> with one data
+     * in port and no data out port.
      */
     public RLocalViewsNodeModel() {
-        super(1, 0);
-     
+        super(false);
         m_resultImage = null;
     }
    
-    
     /**
      * @return result image for the view, only available after successful
-     *         evaluation
+     *         execution of the node model.
      */
     Image getResultImage() {
         return m_resultImage;
     }    
     
     /**
+     * Provides the R code to run, consisting of the "png()" command
+     * to create a new png file, the plot command specified by the user and
+     * the "dev.off()" command to shut down the standard graphic device.
+     * 
      * {@inheritDoc}
      */
     @Override
@@ -95,6 +101,9 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     }
 
     /**
+     * After execution of the R code and image instance is created which can
+     * be displayed by the nodes view.
+     * 
      * {@inheritDoc}
      */
     @Override
@@ -103,8 +112,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
             throws CanceledExecutionException, Exception {
         
         // create image after execution.
-        File imgFile = new File(m_filename);
-        FileInputStream fis = new FileInputStream(imgFile);
+        FileInputStream fis = new FileInputStream(new File(m_filename));
         m_resultImage = RPlotterNodeModel.createImage(fis);
         fis.close();
         
@@ -112,6 +120,8 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     } 
     
     /**
+     * Before execution of the R code the column filtering is done.
+     * 
      * {@inheritDoc}
      */
     @Override
@@ -124,6 +134,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
                
         List<String> includeList = m_colFilterModel.getIncludeList();
         
+        // Filter columns before processing
         ColumnRearranger cr = new ColumnRearranger(
                 inData[0].getDataTableSpec());
         cr.keepOnly(includeList.toArray(new String[includeList.size()]));
@@ -139,11 +150,6 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     @Override
     protected void reset() {
         super.reset();
-        
-        if (m_filename != null) {
-            File imgFile = new File(m_filename);
-            imgFile.delete();
-        }
     }    
     
     /**
@@ -206,6 +212,8 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     
     
     /**
+     * The saved image is loaded.
+     * 
      * {@inheritDoc}
      */
     @Override
@@ -223,6 +231,8 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     }
 
     /**
+     * The created image is saved.
+     * 
      * {@inheritDoc}
      */
     @Override

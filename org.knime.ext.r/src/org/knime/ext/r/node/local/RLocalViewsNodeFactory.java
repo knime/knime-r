@@ -31,6 +31,7 @@ import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeView;
 
 /**
+ * Factory of the <code>RLocalViewsNodeModel</code>.
  * 
  * @author Kilian Thiel, University of Konstanz
  */

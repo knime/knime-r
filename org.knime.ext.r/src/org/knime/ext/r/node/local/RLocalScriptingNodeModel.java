@@ -30,6 +30,8 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
+ * The <code>RLocalScriptingNodeModel</code> provides functionality to create
+ * a R script with user defined R code and run it.
  * 
  * @author Kilian Thiel, University of Konstanz
  */
@@ -39,7 +41,8 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
         RLocalScriptingNodeDialogPane.createCommandSettingsModel(); 
     
     /**
-     * Creates new instance of <code>RLocalScriptingNodeModel</code>. 
+     * Creates new instance of <code>RLocalScriptingNodeModel</code> with one
+     * data in and data one out port.
      */
     public RLocalScriptingNodeModel() {
         super();

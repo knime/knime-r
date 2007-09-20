@@ -27,6 +27,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentMultiLineString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
+ * A dialog containing a multi line text field to specify the R code to run.
  * 
  * @author Kilian Thiel, University of Konstanz
  */
@@ -34,14 +35,16 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
 
     /**
      * @return Returns a <code>SettingsModelString</code> instance containing
-     * the R command to execute.
+     * the R command to run.
      */
     static final SettingsModelString createCommandSettingsModel() {
         return new SettingsModelString("R_command", null);
     }
     
     /**
-     * 
+     * Constructor which creates a new instance of 
+     * <code>RLocalScriptingNodeDialogPane</code>. A dialog component is added
+     * which allows users to enter R code. 
      */
     public RLocalScriptingNodeDialogPane() {
         super();

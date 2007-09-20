@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
+ * Provides a set of names of R plots as well as dummy code templates of these
+ * plots.
  * 
  * @author gabriel, University of Konstanz
  */

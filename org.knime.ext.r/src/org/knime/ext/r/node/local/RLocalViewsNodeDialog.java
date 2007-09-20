@@ -37,6 +37,12 @@ import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
+ * The dialog of the <code>RLocalViewsNodeDialog</code> which provides a
+ * drop down menu containing a set of names of R plots and a multi line text 
+ * field to specify R code for the usage of plots. When a certain R plot
+ * is specified by usage of the drop down menu a dummy R code template is
+ * shown up in the multi line text field. Additionally a column chooser is
+ * provided to specify column to use and import into R.
  * 
  * @author Kilian Thiel, University of Konstanz
  */
@@ -44,7 +50,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
 
     /**
      * @return Returns a <code>SettingsModelString</code> instance containing
-     * the R view to show.
+     * a set of names of R views.
      */
     static final SettingsModelString createViewSettingsModel() {
         return new SettingsModelString("R_View", 
@@ -62,7 +68,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
     
     /**
      * @return Returns a <code>SettingsModelString</code> instance 
-     * containing the R view command.
+     * containing the R plot code.
      */
     static final SettingsModelString createRViewCmdSettingsModel() {
         return new SettingsModelString("R-View_command", 
@@ -70,6 +76,8 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
                         RLocalViewsNodeDialog.createViewSettingsModel()
                         .getStringValue()));
     }
+    
+    
     
     private SettingsModelString m_viewCommandModel;
     
@@ -103,12 +111,17 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
     }
     
     /**
+     * Listener to react on selection changes made in the drop down menu.
      * 
      * @author Kilian Thiel, University of Konstanz
      */
     class ViewChangeListener implements ChangeListener {
 
         /**
+         * Shows up the related dummy code of the chosen R view 
+         * in the multi line text field when the selection of drop down menu 
+         * changes. 
+         * 
          * {@inheritDoc}
          */
         public void stateChanged(final ChangeEvent e) {

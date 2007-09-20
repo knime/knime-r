@@ -53,6 +53,36 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
+ * <code>RLocalNodeModel</code> is an abstract <code>NodeModel</code> which can
+ * be extended to implement a R node using a local R software. This abstract
+ * node model provides functionality to write incoming data of a 
+ * <code>DataTable</code> into a csv file and read this data into R. The 
+ * R variable containing the data is named "R". Additional
+ * R commands to modify and process this data can be specified by a class 
+ * extending <code>RLocalNodeModel</code>, by implementing the abstract 
+ * {@link RLocalNodeModel#getCommand()} method. To access i.e. the first
+ * three columns of a table and reference them by another variable "a" the R 
+ * command "a <- R[1:3]" can be used.<br/> 
+ * Further this class writes the data referenced by the R variable "R" after 
+ * execution of the additional commands into a csv file and generates an 
+ * outgoing <code>DataTable</code> out of it, which is returned by the node.
+ * This means the user has to take care that the processed data have to be 
+ * referenced by the variable "R". 
+ * 
+ * Note that the number of input data tables is one and can not be modified
+ * when extending this node model. The number of output data tables can be
+ * specified but only one or zero will make any sense since only the data
+ * referenced by the "R" variable will be exported as output data table if the
+ * number of output tables is greater than zero.
+ * 
+ * Additionally this class provides a preprocessing method 
+ * {@link RLocalNodeModel#preprocessDataTable(BufferedDataTable[], ExecutionContext)}
+ * which can be overwritten to preprocess that input data, as well as a 
+ * postprocess method 
+ * {@link RLocalNodeModel#postprocessDataTable(BufferedDataTable[], ExecutionContext)}
+ * which can be overwritten to process that data after the R script execution.
+ * If these methods are not overwritten the data will not be modified.
+ * 
  * 
  * @author Thomas Gabriel, University of Konstanz
  * @author Kilian Thiel, University of Konstanz
@@ -64,7 +94,7 @@ implements Observer {
         NodeLogger.getLogger(RLocalNodeModel.class);
     
     /**
-     * The temp directory.
+     * The temp directory used to save csv, script R output files temporarily.
      */
     protected static final String TEMP_PATH = 
         System.getProperty("java.io.tmpdir").replace('\\', '/');
@@ -81,14 +111,13 @@ implements Observer {
         RLocalNodeDialogPane.createUseSpecifiedFileModel();
     
     
+    // R commands to set working dir, write and reads csv files.
     private String m_setWorkingDirCmd = 
         "setwd(\"" + TEMP_PATH + "\");\n";
-    
     
     private String m_readDataCmdPrefix = "R <- read.csv(\"";
     
     private String m_readDataCmdSufffix = "\", header = TRUE);\n";
-    
     
     private String m_writeDataCmdPrefix = "write.csv(R, \"";
     
@@ -101,45 +130,49 @@ implements Observer {
      */
     public RLocalNodeModel() {
         super();
-    }
-     
+    }   
     
     /**
-     * Constructor of <code>RLocalNodeModel</code> with given numbers of
-     * input data tables and output data tables. 
+     * Constructor of <code>RLocalNodeModel</code> creating a model with one
+     * data in port and one data out port if and only if <code>hasOutput</code>
+     * is set <code>true</code>. Otherwise the node will not have any 
+     * data out port.
      * 
-     * @param nrDataIns The number of input data tables.
-     * @param nrDataOuts The number of output data tables.
+     * @param hasOutput If set <code>true</code> the node is instantiated 
+     * with one data out port if <code>false</code> with none. 
      */
-    public RLocalNodeModel(final int nrDataIns, final int nrDataOuts) {
-        super(nrDataIns, nrDataOuts);
+    public RLocalNodeModel(final boolean hasOutput) {
+        super(1, numberOfOuts(hasOutput));
     }
 
-    /**
-     * Constructor of <code>RLocalNodeModel</code> with given numbers of
-     * input data tables and output data tables as well as the numbers of
-     * input and output predictor parameters. 
-     * 
-     * @param nrDataIns The number of input data tables.
-     * @param nrDataOuts The number of output data tables.
-     * @param nrModelIns The number of input predictor parameters.
-     * @param nrModelOuts The number of output predictor parameters.
-     */
-    public RLocalNodeModel(final int nrDataIns, final int nrDataOuts, 
-            final int nrModelIns, final int nrModelOuts) {
-        super(nrDataIns, nrDataOuts, nrModelIns, nrModelOuts);
+    private static int numberOfOuts(final boolean hasOutput) {
+        if (hasOutput) {
+            return 1;
+        }
+        return 0;
     }
+
+    
     
     /**
+     * Implement this method to specify certain R code to run. Be aware that
+     * this R code has to be valid, otherwise the node will not execute
+     * properly. To access the input data of the node via R use the variable
+     * "R". To access i.e. the first three columns of a table and reference 
+     * them by another variable "a" the R command "a <- R[1:3];" can be used.
+     * End all R command lines with a semicolon and a line break. The data
+     * which has to be returned be the node as out data has to be stored in
+     * the "R" variable again, so take care to reference your data by "R".
+     * 
      * @return The R command to execute.
      */
     protected abstract String getCommand(); 
     
     /**
-     * The method enables one to do preprocess the data before the execution
+     * The method enables one to preprocess the data before the execution
      * of the R command. This method is called before the R commands are 
-     * executed. All the processing which have to be done before have to be
-     * implemented here.
+     * executed. All the processing which has to be done before has to be
+     * implemented here, i.e. column filtering and so on.
      * This implementation is a dummy implementation which only passes 
      * through the unmodified inData, so one is not forced to implement this
      * method.
@@ -148,7 +181,7 @@ implements Observer {
      * @param exec To monitor the status of processing.
      * @return The preprocessed in data.
      * @throws CanceledExecutionException If preprocessing was canceled.
-     * @throws Exception If any other problem occurs.
+     * @throws Exception If other problems occur.
      */
     @SuppressWarnings("unused")
     protected BufferedDataTable[] preprocessDataTable(
@@ -158,9 +191,9 @@ implements Observer {
     }
     
     /**
-     * The method enables one to do postprocess the data modified by the 
+     * The method enables one to postprocess the data modified by the 
      * execution of the R command. This method is called after the R commands 
-     * are executed. All the processing which have to be done after this have 
+     * are executed. All the processing which has to be done after this have 
      * to be implemented here.
      * This implementation is a dummy implementation which only passes 
      * through the unmodified outData, so one is not forced to implement this
@@ -170,7 +203,7 @@ implements Observer {
      * @param exec To monitor the status of processing.
      * @return The postprocessed out data.
      * @throws CanceledExecutionException If postprocessing was canceled.
-     * @throws Exception If any other problem occurs.
+     * @throws Exception If other problems occur.
      */
     @SuppressWarnings("unused")
     protected BufferedDataTable[] postprocessDataTable(
@@ -181,6 +214,13 @@ implements Observer {
     
     
     /**
+     * First the {@link RLocalNodeModel#preprocessDataTable(BufferedDataTable[], ExecutionContext)}
+     * method is called to preprocess that input data. Further a csv file
+     * is written containing the input data. Next a R script is created 
+     * consisting of R commands to import the data of the csv file, the R code 
+     * specified in the command string and the export of the modified data into
+     * a output table. This table is returned at the end.   
+     * 
      * {@inheritDoc}
      */
     @Override
@@ -253,10 +293,15 @@ implements Observer {
                 setFailedExternalErrorOutput(new LinkedList<String>(
                         cmdExec.getStdErr()));
             }
+            
+            // delete all temp files
+            deleteFile(inDataCsvFile);
+            deleteFile(tempOutData);
+            deleteFile(rCommandFile);
+            deleteFile(rOutFile);
+            
             throw new IllegalStateException("Execution of R script failed !");
         }        
-        
-        
         
         
         // read data from R output csv into a buffered data table.
@@ -266,44 +311,35 @@ implements Observer {
         BufferedDataTable[] dts = postprocessDataTable(
                 new BufferedDataTable[]{dt}, exec);
         
-        
-        
-        // !!! What a mess !!!
-        // It is possible that there are still open streams around
-        // holding the temp files. Therefore these streams has to be collected
-        // by the GC.
-        System.gc();
-        
         // delete all temp files
-        if (inDataCsvFile.exists()) {
-            if (inDataCsvFile.delete()) {
-                LOGGER.debug(inDataCsvFile.getAbsoluteFile() 
-                        + " could not be deleted !");
-            }
-        }
-        if (tempOutData.exists()) {
-            if (tempOutData.delete()) {
-                LOGGER.debug(tempOutData.getAbsoluteFile() 
-                        + " could not be deleted !");
-            }
-        }
-        if (rCommandFile.exists()) {
-            if (rCommandFile.delete()) {
-                LOGGER.debug(rCommandFile.getAbsoluteFile() 
-                        + " could not be deleted !");
-            }
-        }
-        if (rOutFile.exists()) {
-            if (rOutFile.delete()) {
-                LOGGER.debug(rOutFile.getAbsoluteFile() 
-                        + " could not be deleted !");
-            }
-        }
+        deleteFile(inDataCsvFile);
+        deleteFile(tempOutData);
+        deleteFile(rCommandFile);
+        deleteFile(rOutFile);
         
         // return this table
         return dts;
     }
     
+    
+    private boolean deleteFile(final File file) {
+        boolean del = false;
+        if (file != null && file.exists()) {
+            
+            // !!! What a mess !!!
+            // It is possible that there are still open streams around
+            // holding the file. Therefore these streams, actually belonging 
+            // to the garbage, has to be collected by the GC.
+            System.gc();
+            
+            del = file.delete();
+            if (!del) {
+                LOGGER.debug(file.getAbsoluteFile() 
+                        + " could not be deleted !");
+            }
+        }
+        return del;
+    }
     
     
     private File writeRcommandFile(final String cmd) throws IOException {

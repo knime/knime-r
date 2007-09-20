@@ -39,6 +39,15 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
+ * The <code>RLocalNodeDialogPane</code> is a
+ * dialog pane providing a file chooser to select the R executable, as well
+ * as a checkbox to specify which R executable will be used to execute the
+ * R script. If the checkbox is <u>not</u> checked, the R executable file
+ * specified in the KNIME-R preferences is used, if the checkbox <u>is</is>
+ * checked the specified file of the file chooser dialog is used. 
+ * This dialog can be extended to take use of this functionality but be aware
+ * to call the super constructor when extending 
+ * <code>RLocalNodeDialogPane</code>.
  * 
  * @author Thomas Gabriel, University of Konstanz
  * @author Kilian Thiel, University of Konstanz
@@ -68,24 +77,35 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
     
     /**
      * Constructor of <code>RLocalNodeDialogPane</code> which provides a
-     * default dialog component to specify the R executable file.  
+     * default dialog component to specify the R executable file and a checkbox
+     * to specify which R executable is used.
      */
     public RLocalNodeDialogPane() {
         super();
         
+        // create setting models and add listener to model of checkbox.
         m_fileModel = createRBinaryFile();
         m_smb = createUseSpecifiedFileModel();
         m_smb.addChangeListener(new CheckBoxChangeListener());
         
+        // create file chooser component.
         DialogComponentFileChooser fileChooser = new DialogComponentFileChooser(
                 m_fileModel, "R_binarys", JFileChooser.OPEN_DIALOG, 
                 false, new String[]{"", "exe"});
 
         setHorizontalPlacement(true);
-        createNewGroup("R binary");
-        addDialogComponent(new DialogComponentBoolean(m_smb, 
-                "R path"));
+        createNewGroup("R binary path");
+        
+        // create check box component
+        DialogComponentBoolean checkbox = new DialogComponentBoolean(
+                m_smb, "Use selected");
+        checkbox.setToolTipText("If checked, the specified file is used " 
+                + "as R binary. If not checked the file specified in " 
+                + "the KNIME-R preferences is used.");
+        
+        addDialogComponent(checkbox);
         addDialogComponent(fileChooser);
+        
         closeCurrentGroup();
         setHorizontalPlacement(false);
         
@@ -93,6 +113,8 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
     }
     
     /**
+     * Enable or disable file chooser model.
+     * 
      * {@inheritDoc}
      */
     @Override
@@ -117,6 +139,10 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         }
     }
     
+    /**
+     * Enables the file chooser model if checkbox is checked and disables it
+     * when the checkbox is not checked.
+     */
     private void enableFileChooser() {
         if (!m_smb.getBooleanValue()) {
             m_fileModel.setEnabled(false);
