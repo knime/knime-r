@@ -43,7 +43,7 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  * dialog pane providing a file chooser to select the R executable, as well
  * as a checkbox to specify which R executable will be used to execute the
  * R script. If the checkbox is <u>not</u> checked, the R executable file
- * specified in the KNIME-R preferences is used, if the checkbox <u>is</is>
+ * specified in the KNIME-R preferences is used, if the checkbox <u>is</u>
  * checked the specified file of the file chooser dialog is used. 
  * This dialog can be extended to take use of this functionality but be aware
  * to call the super constructor when extending 
@@ -71,9 +71,9 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         return new SettingsModelBoolean("R_use_specified_file", false);
     }
     
-    private SettingsModelBoolean m_smb; 
+    private final SettingsModelBoolean m_smb; 
     
-    private SettingsModelString m_fileModel;
+    private final SettingsModelString m_fileModel;
     
     /**
      * Constructor of <code>RLocalNodeDialogPane</code> which provides a
@@ -101,7 +101,7 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
                 m_smb, "Use selected");
         checkbox.setToolTipText("If checked, the specified file is used " 
                 + "as R binary. If not checked the file specified in " 
-                + "the KNIME-R preferences is used.");
+                + "the KNIME's R preferences is used.");
         
         addDialogComponent(checkbox);
         addDialogComponent(fileChooser);

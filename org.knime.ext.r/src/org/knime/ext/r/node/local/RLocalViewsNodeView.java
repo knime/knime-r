@@ -42,7 +42,7 @@ public class RLocalViewsNodeView extends NodeView {
     
     /**
      * Creates a new instance of <code>RLocalViewsNodeView</code> which displays
-     * a certain image instance.
+     * a certain image.
      * 
      * @param nodeModel the model associated with this view.
      */

@@ -34,7 +34,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
 
     /**
-     * @return Returns a <code>SettingsModelString</code> instance containing
+     * @return a <code>SettingsModelString</code> instance containing
      * the R command to run.
      */
     static final SettingsModelString createCommandSettingsModel() {

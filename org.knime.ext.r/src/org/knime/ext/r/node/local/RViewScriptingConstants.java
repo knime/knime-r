@@ -31,7 +31,8 @@ import java.util.LinkedHashMap;
  * Provides a set of names of R plots as well as dummy code templates of these
  * plots.
  * 
- * @author gabriel, University of Konstanz
+ * @author Thomas Gabriel, University of Konstanz
+ * @author Kilian Thiel, University of Konstanz
  */
 public final class RViewScriptingConstants {
     

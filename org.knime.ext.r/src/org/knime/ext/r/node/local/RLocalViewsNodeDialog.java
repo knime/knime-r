@@ -40,16 +40,16 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  * The dialog of the <code>RLocalViewsNodeDialog</code> which provides a
  * drop down menu containing a set of names of R plots and a multi line text 
  * field to specify R code for the usage of plots. When a certain R plot
- * is specified by usage of the drop down menu a dummy R code template is
- * shown up in the multi line text field. Additionally a column chooser is
- * provided to specify column to use and import into R.
+ * is specified using the drop down menu, a dummy R code template is
+ * shown up in the multi line text field. Additionally a column selection panel 
+ * is provided to specify columns to use and import into R.
  * 
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
 
     /**
-     * @return Returns a <code>SettingsModelString</code> instance containing
+     * @return a <code>SettingsModelString</code> instance containing
      * a set of names of R views.
      */
     static final SettingsModelString createViewSettingsModel() {
@@ -59,7 +59,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
     }
     
     /**
-     * @return Returns a <code>SettingsModelFilterString</code> instance 
+     * @return a <code>SettingsModelFilterString</code> instance 
      * containing the columns to use.
      */
     static final SettingsModelFilterString createColFilterSettingsModel() {
@@ -67,7 +67,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
     }
     
     /**
-     * @return Returns a <code>SettingsModelString</code> instance 
+     * @return a <code>SettingsModelString</code> instance 
      * containing the R plot code.
      */
     static final SettingsModelString createRViewCmdSettingsModel() {
@@ -79,9 +79,9 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
     
     
     
-    private SettingsModelString m_viewCommandModel;
+    private final SettingsModelString m_viewCommandModel;
     
-    private SettingsModelString m_viewSettingsModel;
+    private final SettingsModelString m_viewSettingsModel;
     
     /**
      * Creates new instance of <code>RLocalViewsNodeDialog</code>.

@@ -54,7 +54,6 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     
     private static final String INTERNAL_FILE_NAME = "Rplot";
     
-    
     private SettingsModelString m_viewModel = 
         RLocalViewsNodeDialog.createViewSettingsModel(); 
     
@@ -87,9 +86,10 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     }    
     
     /**
-     * Provides the R code to run, consisting of the "png()" command
+     * Provides the R code to run, consisting of the <code>png()</code> command
      * to create a new png file, the plot command specified by the user and
-     * the "dev.off()" command to shut down the standard graphic device.
+     * the <code>dev.off()</code> command to shut down the standard graphic 
+     * device.
      * 
      * {@inheritDoc}
      */
@@ -130,7 +130,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
             throws CanceledExecutionException, Exception {
         
         m_filename = TEMP_PATH + "/" + "R-View-" 
-        + System.identityHashCode(inData) + ".png";
+            + System.identityHashCode(inData) + ".png";
                
         List<String> includeList = m_colFilterModel.getIncludeList();
         
@@ -168,7 +168,9 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        readSettings(settings, false);
+        m_viewModel.loadSettingsFrom(settings);
+        m_colFilterModel.loadSettingsFrom(settings);
+        m_viewCmdModel.loadSettingsFrom(settings);
     }
 
     /**
@@ -189,11 +191,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        readSettings(settings, true);
-    }
 
-    private void readSettings(final NodeSettingsRO settings,
-            final boolean validateOnly) throws InvalidSettingsException {
         SettingsModelString tempView = 
             m_viewModel.createCloneWithValidatedValue(settings);
         String tempViewStr = tempView.getStringValue();
@@ -202,12 +200,10 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         if (tempViewStr.length() < 1) {
             throw new InvalidSettingsException("R View is not valid !");
         }
-        
-        if (!validateOnly) {
-            m_viewModel.loadSettingsFrom(settings);
-            m_colFilterModel.loadSettingsFrom(settings);
-            m_viewCmdModel.loadSettingsFrom(settings);
-        }
+
+        m_viewModel.validateSettings(settings);
+        m_colFilterModel.validateSettings(settings);
+        m_viewCmdModel.validateSettings(settings);
     }
     
     
@@ -227,7 +223,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         FileUtil.copy(file, pngFile);
         m_resultImage = RPlotterNodeModel.createImage(
                 new FileInputStream(pngFile));
-        m_filename = file.getAbsolutePath();
+        m_filename = pngFile.getAbsolutePath();
     }
 
     /**

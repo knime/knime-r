@@ -37,7 +37,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  */
 public class RLocalScriptingNodeModel extends RLocalNodeModel {
 
-    private SettingsModelString m_commandModel = 
+    private final SettingsModelString m_commandModel = 
         RLocalScriptingNodeDialogPane.createCommandSettingsModel(); 
     
     /**
@@ -74,7 +74,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        readSettings(settings, false);
+        m_commandModel.loadSettingsFrom(settings);
     }
 
     /**
@@ -93,22 +93,15 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        readSettings(settings, true);
-    }
-
-    private void readSettings(final NodeSettingsRO settings,
-            final boolean validateOnly) throws InvalidSettingsException {
+        
         SettingsModelString tempCommand = 
             m_commandModel.createCloneWithValidatedValue(settings);
         String tempCommandString = tempCommand.getStringValue();
         
         // if command not valid throw exception
         if (tempCommandString == null || tempCommandString.length() < 1) {
-            throw new InvalidSettingsException("R command is not valid !");
+            throw new InvalidSettingsException("R command is not valid!");
         }
-        
-        if (!validateOnly) {
-            m_commandModel.loadSettingsFrom(settings);
-        }
+        m_commandModel.validateSettings(settings);
     }
 }
