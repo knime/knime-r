@@ -13,6 +13,19 @@
 	    	which is then read into R and the entered commands are executed. The
 	    	resulting png file is passed into KNIME and is displayed in the
 	    	node's view.
+	    	
+	    	<p>
+			Examples using the iris data:<br/><br/>
+			A default conditional density plot:<br/>
+			<i>cdplot(R$"petal.length", R$"class", plot=TRUE);</i>
+			<br/><br/>
+			A customized conditional density plot:<br/>
+			<i>b = vector();<br/>
+			b[1] = "#FCBF17";<br/>
+			b[2] = "#F60400";<br/>
+			b[3] = "#000000";<br/>
+			cdplot(R$"petal.length", R$"class", plot=TRUE, col=b, bw=100);</i>
+	    	</p>
 		</intro>
 		<option name ="R executable">
 			Path to the local R executable.
