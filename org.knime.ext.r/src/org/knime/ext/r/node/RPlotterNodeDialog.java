@@ -26,15 +26,12 @@
  */
 package org.knime.ext.r.node;
 
-import java.util.Set;
-
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.DoubleValue;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.util.ColumnFilterPanel;
+import org.knime.ext.r.node.local.RViewsDialogPanel;
 
 
 /**
@@ -43,7 +40,7 @@ import org.knime.core.node.util.ColumnFilterPanel;
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RPlotterNodeDialog extends RNodeDialogPane {
-    private final ColumnFilterPanel m_dialogPanel;
+    private RViewsDialogPanel m_plotCommandPanel;
     
     /**
      * New pane for configuring REvaluator node dialog.
@@ -51,8 +48,8 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
     @SuppressWarnings("unchecked")
     protected RPlotterNodeDialog() {
         super();
-        m_dialogPanel = new ColumnFilterPanel(DoubleValue.class);
-        super.addTab("Options", m_dialogPanel);
+        m_plotCommandPanel = new RViewsDialogPanel(); 
+        super.addTab("View Script Settings", m_plotCommandPanel);
         super.addLoginTab();
     }
 
@@ -69,20 +66,7 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
             final NodeSettingsRO settings, final DataTableSpec[] specs) 
             throws NotConfigurableException {
         super.loadSettingsFrom(settings, specs);
-        int doubleCount = 0;
-        for (int i = 0; i < specs[0].getNumColumns() && doubleCount < 2; i++) {
-            if (specs[0].getColumnSpec(i).getType().isCompatible(
-                    DoubleValue.class)) {
-                doubleCount += 1;
-            }
-        }
-        if (doubleCount < 2) {
-            throw new NotConfigurableException("Input data must contain at "
-                    + "least two numeric columns!");
-        }
-        String[] columns = settings.getStringArray(
-                "PLOT", new String[0]);
-        m_dialogPanel.update(specs[0], false, columns);
+        m_plotCommandPanel.loadSettings(settings, specs);
     } 
     
     /**
@@ -98,10 +82,6 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
     protected void saveSettingsTo(final NodeSettingsWO settings) 
             throws InvalidSettingsException {
         super.saveSettingsTo(settings);
-        Set<String> list = m_dialogPanel.getIncludedColumnSet();
-        if (list.size() != 2) {
-            throw new InvalidSettingsException("Select two columns.");
-        }
-        settings.addStringArray("PLOT", list.toArray(new String[0]));
+        m_plotCommandPanel.saveSettings(settings);
     }
 }

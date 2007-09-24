@@ -36,9 +36,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.container.ColumnRearranger;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -47,7 +49,10 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.util.FileUtil;
+import org.knime.ext.r.node.local.RLocalViewsNodeDialog;
 import org.rosuda.JRclient.REXP;
 import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
@@ -71,6 +76,17 @@ public class RPlotterNodeModel extends RNodeModel {
     private static final NodeLogger LOGGER = NodeLogger
             .getLogger(RPlotterNodeModel.class);
 
+    
+    private SettingsModelString m_viewModel = 
+        RLocalViewsNodeDialog.createViewSettingsModel(); 
+    
+    private SettingsModelFilterString m_colFilterModel = 
+        RLocalViewsNodeDialog.createColFilterSettingsModel();
+    
+    private SettingsModelString m_viewCmdModel = 
+        RLocalViewsNodeDialog.createRViewCmdSettingsModel();    
+    
+    
     /**
      * Creates a new plotter with one data input. 
      */
@@ -85,6 +101,15 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws Exception {
+        
+        List<String> includeList = m_colFilterModel.getIncludeList();
+        // Filter columns before processing
+        ColumnRearranger cr = new ColumnRearranger(
+                inData[0].getDataTableSpec());
+        cr.keepOnly(includeList.toArray(new String[includeList.size()]));
+        BufferedDataTable dataTableToUse = exec.createColumnRearrangeTable(
+                inData[0], cr, exec);
+        
         // we are careful here - not all R binaries support png
         // so we rather capture any failures
         Rconnection c = getRconnection();
@@ -106,10 +131,11 @@ public class RPlotterNodeModel extends RNodeModel {
             }
         }
         
-        RConnection.sendData(c, inData[0], exec);
-        String first = RConnection.formatColumn(m_cols[0]);
-        String second = RConnection.formatColumn(m_cols[1]);
-        c.eval("plot(" + first + "," + second + ")");
+        RConnection.sendData(c, dataTableToUse, exec);
+        //String first = RConnection.formatColumn(m_cols[0]);
+        //String second = RConnection.formatColumn(m_cols[1]);
+        //c.eval("plot(" + first + "," + second + ")");
+        c.eval(m_viewCmdModel.getStringValue());
         c.voidEval("dev.off()");
         
         InputStream ris = c.openFile(fileName);
@@ -225,7 +251,9 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         super.saveSettingsTo(settings);
-        settings.addStringArray("PLOT", m_cols);
+        m_viewModel.saveSettingsTo(settings);
+        m_colFilterModel.saveSettingsTo(settings);
+        m_viewCmdModel.saveSettingsTo(settings);
     }
 
     /**
@@ -235,7 +263,9 @@ public class RPlotterNodeModel extends RNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_cols = settings.getStringArray("PLOT");
+        m_viewModel.loadSettingsFrom(settings);
+        m_colFilterModel.loadSettingsFrom(settings);
+        m_viewCmdModel.loadSettingsFrom(settings);
     }
 
     /**
@@ -245,15 +275,9 @@ public class RPlotterNodeModel extends RNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        String[] selCells = settings.getStringArray("PLOT");
-        if (selCells == null) {
-            throw new InvalidSettingsException("No columns selected.");
-        }
-        if (selCells.length != 2) {
-            throw new InvalidSettingsException("Two columns need to be "
-                    + "selected: " + selCells.length);
-        }
-
+        m_viewModel.validateSettings(settings);
+        m_colFilterModel.validateSettings(settings);
+        m_viewCmdModel.validateSettings(settings);
     }
 
     /**

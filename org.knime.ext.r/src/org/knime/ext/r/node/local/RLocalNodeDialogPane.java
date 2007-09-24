@@ -111,6 +111,7 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         
         enableFileChooser();
     }
+
     
     /**
      * Enable or disable file chooser model.
