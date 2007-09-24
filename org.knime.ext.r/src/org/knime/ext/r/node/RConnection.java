@@ -78,7 +78,7 @@ final class RConnection {
      * @param conn The connection to the R server.
      * @param inData The data to send.
      * @param exec Used to report progress.
-     * @throws RSrvException If the server throws an execption.
+     * @throws RSrvException If the server throws an exception.
      * @throws CanceledExecutionException If canceled.
      */
     static final void sendData(
@@ -187,6 +187,16 @@ final class RConnection {
                 data[i] = null;
             }
         }
+        
+        StringBuilder colList = new StringBuilder();
+        for (int i = 0; i < spec.getNumColumns(); i++) {
+            if (i > 0) {
+                colList.append(",");
+            }
+            colList.append(formatColumn(spec.getColumnSpec(i).getName()));
+        }
+        conn.eval("R <- data.frame(" + colList.toString() + ")");
+        
     }
     
 }

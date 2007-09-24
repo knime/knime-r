@@ -51,6 +51,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.rosuda.JRclient.RBool;
 import org.rosuda.JRclient.REXP;
+import org.rosuda.JRclient.RList;
 import org.rosuda.JRclient.Rconnection;
 
 
@@ -119,6 +120,9 @@ public class RConsoleModel extends RNodeModel {
             case REXP.XT_VECTOR :
                 BufferedDataTable vecOut = readVector(rexp, exec);
                 return new BufferedDataTable[]{vecOut};
+            case REXP.XT_LIST :
+                BufferedDataTable listOut = readList(rexp, exec);
+                return new BufferedDataTable[]{listOut};
             case REXP.XT_NULL :
                 return new BufferedDataTable[]{readNothing(exec)};
             case REXP.XT_ARRAY_DOUBLE :
@@ -132,6 +136,28 @@ public class RConsoleModel extends RNodeModel {
     private DataColumnSpec createColumnSpec(final String columnName,
             final DataType columnType) {
         return new DataColumnSpecCreator(columnName, columnType).createSpec();
+    }
+    
+    private BufferedDataTable readList(
+            final REXP rexp, final ExecutionContext exec) 
+            throws CanceledExecutionException {
+        RList matrix = rexp.asList();
+        DataColumnSpec[] cspec = new DataColumnSpec[1];
+        for (int i = 0; i < cspec.length; i++) {
+            DataColumnSpecCreator colspeccreator = 
+                new DataColumnSpecCreator("R", 
+                        StringCell.TYPE);
+            cspec[i] = colspeccreator.createSpec();
+        }
+        DataContainer dc = new DataContainer(new DataTableSpec(cspec));
+        for (int i = 0; i < matrix.keys().length; i++) {
+            exec.checkCanceled();
+            exec.setProgress(1.0 * i / matrix.keys().length);
+            dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
+                    ((REXP) matrix.at(i)).asString()));
+        }
+        dc.close();
+        return exec.createBufferedDataTable(dc.getTable(), exec);
     }
      
     private BufferedDataTable readVector(

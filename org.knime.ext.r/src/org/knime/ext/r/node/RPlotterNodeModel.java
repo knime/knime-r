@@ -58,14 +58,11 @@ import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 
 /**
- * This is the implementation of the R 2D view plotting two columns in a
- * Scatterplot.
+ * This is the implementation of the R view plotting.
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RPlotterNodeModel extends RNodeModel {
-
-    private String[] m_cols = new String[0];
 
     private Image m_resultImage;
     private File m_imageFile;
@@ -189,7 +186,7 @@ public class RPlotterNodeModel extends RNodeModel {
         LOGGER.info("The image has " + imgLength + " bytes.");  
         byte[] imgCode = new byte[imgLength];
         int imgPos = 0;
-        for (Enumeration e = buffers.elements(); e.hasMoreElements();) {
+        for (Enumeration<byte[]> e = buffers.elements(); e.hasMoreElements();) {
             byte[] b = (byte[]) e.nextElement();
             System.arraycopy(b, 0, imgCode, imgPos, bufSize);
             imgPos += bufSize;
@@ -224,25 +221,8 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
-        //checkRconnection();
-        if (m_cols == null) {
-            throw new InvalidSettingsException("No columns selected.");
-        }
-        if (m_cols.length != 2) {
-            throw new InvalidSettingsException("Two columns need to be "
-                    + "selected: " + m_cols.length);
-        }
-        int first = inSpecs[0].findColumnIndex(m_cols[0]);
-        int second = inSpecs[0].findColumnIndex(m_cols[1]);
-        if (first > -1 && second > -1 && first != second) {
-            if (0 <= first && first < inSpecs[0].getNumColumns()) {
-                if (0 <= second && second < inSpecs[0].getNumColumns()) {
-                    return new DataTableSpec[0];
-                }
-            }
-        }
-        throw new InvalidSettingsException("Columns " + m_cols[0] + " and " 
-                + m_cols[1] + " not found.");
+        //getRconnection();
+        return new DataTableSpec[0];
     }
 
     /**

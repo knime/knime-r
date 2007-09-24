@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 1.0//EN" "http://www.knime.org/Node.dtd">
 <knimeNode type="Visualizer" icon="../r.png">
-	<name>R View Scripting</name>
+	<name>R View (Local)</name>
 	<shortDescription>
 	    Enables the usage of R views using the local R installation.
 	</shortDescription>
@@ -13,19 +13,6 @@
 	    	which is then read into R and the entered commands are executed. The
 	    	resulting png file is passed into KNIME and is displayed in the
 	    	node's view.
-	    	
-	    	<p>
-			Examples using the iris data:<br/><br/>
-			A default conditional density plot:<br/>
-			<i>cdplot(R$"petal.length", R$"class", plot=TRUE);</i>
-			<br/><br/>
-			A customized conditional density plot:<br/>
-			<i>b = vector();<br/>
-			b[1] = "#FCBF17";<br/>
-			b[2] = "#F60400";<br/>
-			b[3] = "#000000";<br/>
-			cdplot(R$"petal.length", R$"class", plot=TRUE, col=b, bw=100);</i>
-	    	</p>
 		</intro>
 		<option name ="R executable">
 			Path to the local R executable.

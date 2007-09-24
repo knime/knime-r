@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 1.0//EN" "http://www.knime.org/Node.dtd">
-<knimeNode type="Other" icon="./r.png">
-	<name>R 2D Plot</name>
+<knimeNode type="Visualizer" icon="./r.png">
+	<name>R View (Remote)</name>
 	<shortDescription>
 	    Shows a 2D R plot as png view generated on an R Server. 
 	</shortDescription>

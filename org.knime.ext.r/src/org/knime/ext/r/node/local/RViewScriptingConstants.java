@@ -43,7 +43,9 @@ public final class RViewScriptingConstants {
         = new LinkedHashMap<String, String>();
     
     static {
-        LABEL2COMMAND.put("Generic X-Y Plotting", "plot(x, y, ...)");
+        LABEL2COMMAND.put("Generic X-Y Plotting", 
+                "# data(iris)\n# R <- iris\n# plot(R[1:2])\n"
+                + "plot(x, y, ...)");
         LABEL2COMMAND.put("Box Plots", "boxplot(x, ...)");
         LABEL2COMMAND.put("Bar Plots", "barplot(height, ...)");
         LABEL2COMMAND.put("Cleveland Dot Plots", "dotchart(x, ...)");

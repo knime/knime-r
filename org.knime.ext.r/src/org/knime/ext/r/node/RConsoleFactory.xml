@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 1.0//EN" "http://www.knime.org/Node.dtd">
-<knimeNode type="Other" icon="./r.png">
-	<name>R Snippet</name>
+<knimeNode type="Manipulator" icon="./r.png">
+	<name>R Snippet (Remote)</name>
 	<shortDescription>
 		Allows execution of R commands on an R Server. The result of these R 
 		commands is returned in the output table of this node. The final result 
