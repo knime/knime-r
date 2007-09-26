@@ -284,6 +284,8 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
             deleteFile(rCommandFile);
             deleteFile(rOutFile);
             
+            LOGGER.debug("Execution of R Script failed with exit code: " 
+                    + exitVal);            
             throw new IllegalStateException("Execution of R script failed!");
         }        
         
