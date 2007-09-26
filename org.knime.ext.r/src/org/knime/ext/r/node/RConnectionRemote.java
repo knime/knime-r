@@ -86,6 +86,7 @@ final class RConnectionRemote {
             final RConnection conn, final BufferedDataTable inData,
             final ExecutionMonitor exec) 
             throws RserveException, CanceledExecutionException {
+        exec.setMessage("Start sending data to R server...");
         // prepare data
         DataTableSpec spec = inData.getDataTableSpec();
         int[] types = new int[spec.getNumColumns()];
@@ -164,6 +165,10 @@ final class RConnectionRemote {
             }
             z++;
             if (z % max == 0) {
+                String msg = "Sending data chunk " + (nsend + 1) 
+                    + " (with " + max + " rows).";
+                LOGGER.info(msg);
+                exec.setMessage(msg);
                 for (int i = 0; i < data.length; i++) {
                     String colName = formatColumn(
                             spec.getColumnSpec(i).getName());

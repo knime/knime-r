@@ -35,7 +35,6 @@ import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
-import org.knime.core.data.container.DataContainer;
 import org.knime.core.data.def.DefaultRow;
 import org.knime.core.data.def.DoubleCell;
 import org.knime.core.data.def.IntCell;
@@ -88,10 +87,12 @@ public class RConsoleModel extends RNodeModel {
         RConnectionRemote.sendData(rconn, inData[0], exec);
         // send expression to R server
         for (int i = 0; i < m_expression.length; i++) {
+            exec.setMessage("Executing R command: " + m_expression[i]);
             LOGGER.debug("eval: " + m_expression[i]);
             rconn.voidEval("try(" + m_expression[i] + ")");
             LOGGER.debug("successful");
         }
+        exec.setMessage("Recieving R result...");
         REXP rexp = rconn.eval("try(R)");
         LOGGER.debug("R: " + rexp.toString());
         try {
@@ -163,7 +164,8 @@ public class RConsoleModel extends RNodeModel {
                 new DataColumnSpecCreator("R" + (i + 1), StringCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
-        DataContainer dc = new DataContainer(new DataTableSpec(cspec));
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
         for (int i = 0; i < bytes.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / bytes.length);
@@ -171,7 +173,7 @@ public class RConsoleModel extends RNodeModel {
                     String.valueOf(bytes[i])));
         }
         dc.close();
-        return exec.createBufferedDataTable(dc.getTable(), exec);
+        return dc.getTable();
         
     }
     
@@ -203,7 +205,8 @@ public class RConsoleModel extends RNodeModel {
                 new DataColumnSpecCreator(list.names.get(i).toString(), type);
             cspec[i] = colspeccreator.createSpec();
         }
-        final DataContainer dc = new DataContainer(new DataTableSpec(cspec));
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
         for (int i = 0; i < nrRows; i++) {
             exec.checkCanceled();
             DataCell[] row = new DataCell[object.length];
@@ -220,7 +223,7 @@ public class RConsoleModel extends RNodeModel {
                     row));
         }
         dc.close();
-        return exec.createBufferedDataTable(dc.getTable(), exec);
+        return dc.getTable();
     }
     
     private BufferedDataTable readFactor(
@@ -234,7 +237,8 @@ public class RConsoleModel extends RNodeModel {
                 new DataColumnSpecCreator("R" + (i + 1), StringCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
-        DataContainer dc = new DataContainer(new DataTableSpec(cspec));
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
         for (int i = 0; i < fac.size(); i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / strings.length);
@@ -242,7 +246,7 @@ public class RConsoleModel extends RNodeModel {
                     strings[fac.indexAt(i)]));
         }
         dc.close();
-        return exec.createBufferedDataTable(dc.getTable(), exec);
+        return dc.getTable();
     }
     
     private BufferedDataTable readString(
@@ -306,7 +310,8 @@ public class RConsoleModel extends RNodeModel {
                 new DataColumnSpecCreator("R" + (i + 1), DoubleCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
-        DataContainer dc = new DataContainer(new DataTableSpec(cspec));
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
@@ -314,7 +319,7 @@ public class RConsoleModel extends RNodeModel {
                     matrix[i]));
         }
         dc.close();
-        return exec.createBufferedDataTable(dc.getTable(), exec);
+        return dc.getTable();
     }
     
     private BufferedDataTable readStrings(
@@ -327,7 +332,8 @@ public class RConsoleModel extends RNodeModel {
                 new DataColumnSpecCreator("R" + (i + 1), StringCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
-        DataContainer dc = new DataContainer(new DataTableSpec(cspec));
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
@@ -335,7 +341,7 @@ public class RConsoleModel extends RNodeModel {
                     matrix[i]));
         }
         dc.close();
-        return exec.createBufferedDataTable(dc.getTable(), exec);
+        return dc.getTable();
     }
     
     private BufferedDataTable readDoubleMatrix(
@@ -353,7 +359,8 @@ public class RConsoleModel extends RNodeModel {
                 cspec[i] = colspeccreator.createSpec();
             }
         }
-        DataContainer dc = new DataContainer(new DataTableSpec(cspec));
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
@@ -361,7 +368,7 @@ public class RConsoleModel extends RNodeModel {
                     matrix[i]));
         }
         dc.close();
-        return exec.createBufferedDataTable(dc.getTable(), exec);
+        return dc.getTable();
     }
     
     private BufferedDataTable readIntegers(
@@ -374,7 +381,8 @@ public class RConsoleModel extends RNodeModel {
                 new DataColumnSpecCreator("R" + (i + 1), IntCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
-        DataContainer dc = new DataContainer(new DataTableSpec(cspec));
+        BufferedDataContainer dc = 
+            exec.createDataContainer(new DataTableSpec(cspec));
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
@@ -382,7 +390,7 @@ public class RConsoleModel extends RNodeModel {
                     new int[]{matrix[i]}));
         }
         dc.close();
-        return exec.createBufferedDataTable(dc.getTable(), exec);
+        return dc.getTable();
     }
 
 
