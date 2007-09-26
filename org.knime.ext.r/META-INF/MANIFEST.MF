@@ -12,8 +12,12 @@ Require-Bundle: org.eclipse.ui,
  org.knime.base.extTool
 Eclipse-RegisterBuddy: org.knime.base
 Bundle-ClassPath: knime-r.jar,
- lib/JRclient.jar
-Export-Package: org.knime.ext.r.node,
- org.rosuda.JRclient
+ lib/Rserve-0.5-0.jar
+Export-Package: org.knime.ext.r,
+ org.knime.ext.r.node,
+ org.knime.ext.r.node.local,
+ org.rosuda.REngine,
+ org.rosuda.REngine.Rserve,
+ org.rosuda.REngine.Rserve.protocol
 Bundle-Vendor: Chair for Bioinformatics and Information Mining, University of Konstanz, Germany
 Eclipse-LazyStart: true

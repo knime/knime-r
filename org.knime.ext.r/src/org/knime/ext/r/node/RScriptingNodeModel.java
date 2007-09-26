@@ -64,7 +64,7 @@ public class RScriptingNodeModel extends RNodeModel {
             Exception {
         m_spec = inData[0].getDataTableSpec();
         // create first a connection object
-        RConnection.sendData(getRconnection(), inData[0], exec);
+        RConnectionRemote.sendData(getRconnection(), inData[0], exec);
         // nothing
         return new BufferedDataTable[0];
     }

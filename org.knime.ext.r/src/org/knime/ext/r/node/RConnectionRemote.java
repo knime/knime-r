@@ -38,8 +38,8 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
-import org.rosuda.JRclient.RSrvException;
-import org.rosuda.JRclient.Rconnection;
+import org.rosuda.REngine.Rserve.RConnection;
+import org.rosuda.REngine.Rserve.RserveException;
 
 
 /**
@@ -47,12 +47,12 @@ import org.rosuda.JRclient.Rconnection;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-final class RConnection {
+final class RConnectionRemote {
         
     private static final NodeLogger LOGGER = 
-        NodeLogger.getLogger(RConnection.class);
+        NodeLogger.getLogger(RConnectionRemote.class);
 
-    private RConnection() {
+    private RConnectionRemote() {
         
     }
     
@@ -67,7 +67,8 @@ final class RConnection {
     static final String formatColumn(final String name) {
         String newName = name.replaceAll("[^a-zA-Z0-9]", "_");
         if (!newName.equals(name)) {
-            LOGGER.warn("Column name changed: " + name + " -> " + newName);
+            LOGGER.info("Column name \"" + name + "\" changed into " 
+                    + "\"" + newName + "\".");
         }
         return newName;
     }
@@ -78,13 +79,13 @@ final class RConnection {
      * @param conn The connection to the R server.
      * @param inData The data to send.
      * @param exec Used to report progress.
-     * @throws RSrvException If the server throws an exception.
+     * @throws RserveException If the server throws an exception.
      * @throws CanceledExecutionException If canceled.
      */
     static final void sendData(
-            final Rconnection conn, final BufferedDataTable inData,
+            final RConnection conn, final BufferedDataTable inData,
             final ExecutionMonitor exec) 
-            throws RSrvException, CanceledExecutionException {
+            throws RserveException, CanceledExecutionException {
         // prepare data
         DataTableSpec spec = inData.getDataTableSpec();
         int[] types = new int[spec.getNumColumns()];

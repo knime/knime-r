@@ -105,7 +105,7 @@ class RDialogPanel extends JPanel {
         for (int i = 0; i < spec.getNumColumns(); i++) {
             DataColumnSpec oldSpec = spec.getColumnSpec(i);
             DataType type = oldSpec.getType();
-            String newName = RConnection.formatColumn(oldSpec.getName());
+            String newName = RConnectionRemote.formatColumn(oldSpec.getName());
             DataColumnSpec cspec = new DataColumnSpecCreator(
                     newName, type).createSpec();
             if (type.isCompatible(IntValue.class)) {

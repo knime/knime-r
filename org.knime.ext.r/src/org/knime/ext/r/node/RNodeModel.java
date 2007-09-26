@@ -31,8 +31,8 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.rosuda.JRclient.RSrvException;
-import org.rosuda.JRclient.Rconnection;
+import org.rosuda.REngine.Rserve.RConnection;
+import org.rosuda.REngine.Rserve.RserveException;
 
 /**
  * R model to save and load login information for the R server.
@@ -46,12 +46,12 @@ abstract class RNodeModel extends NodeModel {
      * to overcome the problem that only one connection can be open at the 
      * time. 
      */ 
-    private static Rconnection STATIC_RCONN;
+    private static RConnection STATIC_RCONN;
     
     /**
      * R connection for all non-windows machines.
      */
-    private Rconnection m_rconn;
+    private RConnection m_rconn;
     private final RLoginSettings m_login = new RLoginSettings();
     
     /** R Logger. */
@@ -70,7 +70,7 @@ abstract class RNodeModel extends NodeModel {
     /**
      * @return The connection object to Rserve.
      */
-    protected final Rconnection getRconnection() {
+    protected final RConnection getRconnection() {
         if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0
                 && m_login.getHost().equals(RLoginSettings.DEFAULT_HOST)) {
             return STATIC_RCONN = createConnection(STATIC_RCONN);
@@ -80,12 +80,12 @@ abstract class RNodeModel extends NodeModel {
         
     }
     
-    private Rconnection createConnection(final Rconnection checkR) {
+    private RConnection createConnection(final RConnection checkR) {
         if (checkR != null && checkR.isConnected()) {
             try {
                 checkR.eval("try()");
                 return checkR;
-            } catch (RSrvException e) {
+            } catch (RserveException e) {
                 LOGGER.debug("Exception during try(): ", e);
             }
         }
@@ -94,13 +94,13 @@ abstract class RNodeModel extends NodeModel {
         }
         LOGGER.info("Starting R evaluation on RServe (" 
                 + m_login.getHost() + ":" + m_login.getPort() + ") ...");
-        Rconnection rconn;
+        RConnection rconn;
         try {
-            rconn = new Rconnection(m_login.getHost(), m_login.getPort());
+            rconn = new RConnection(m_login.getHost(), m_login.getPort());
             if (rconn.needLogin()) {
                 rconn.login(m_login.getUser(), m_login.getPassword());
             }
-        } catch (RSrvException rse) {
+        } catch (RserveException rse) {
             LOGGER.error("Can't connect to server");
             throw new IllegalStateException("Make sure R Server is "
                     + "available before executing this node");

@@ -53,9 +53,8 @@ import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.local.RLocalViewsNodeDialog;
-import org.rosuda.JRclient.REXP;
-import org.rosuda.JRclient.RSrvException;
-import org.rosuda.JRclient.Rconnection;
+import org.rosuda.REngine.Rserve.RConnection;
+import org.rosuda.REngine.Rserve.RserveException;
 
 /**
  * This is the implementation of the R view plotting.
@@ -106,35 +105,22 @@ public class RPlotterNodeModel extends RNodeModel {
         cr.keepOnly(includeList.toArray(new String[includeList.size()]));
         BufferedDataTable dataTableToUse = exec.createColumnRearrangeTable(
                 inData[0], cr, exec);
-        
-        // we are careful here - not all R binaries support png
-        // so we rather capture any failures
-        Rconnection c = getRconnection();
-        String fileName = FILE_NAME + "_" + c.hashCode() + ".png";
+        // create unique png file
+        RConnection c = getRconnection();
+        String fileName = FILE_NAME + "_" + System.identityHashCode(cr) 
+            + ".png";
         LOGGER.info("The image name: " + fileName);
-        REXP xp = c.eval("try(png(\"" + fileName + "\"))");
-
-        if (xp.asString() != null) { // if there's a string then we have a
-            // problem, R sent an error
-            LOGGER.warn("Can't open png graphics device:\n"
-                    + xp.asString());
-            // this is analogous to 'warnings', but for us it's sufficient to
-            // get just the 1st warning
-            REXP w = c.eval("if (exists(\"last.warning\") && "
-                    + "length(last.warning)>0) names(last.warning)[1] "
-                    + "else 0");
-            if (w.asString() != null) {
-                LOGGER.warn(w.asString());
-            }
-        }
+        c.eval("try(png(\"" + fileName + "\"))");
         
-        RConnection.sendData(c, dataTableToUse, exec);
-        //String first = RConnection.formatColumn(m_cols[0]);
-        //String second = RConnection.formatColumn(m_cols[1]);
-        //c.eval("plot(" + first + "," + second + ")");
-        c.eval(m_viewCmdModel.getStringValue());
+        // send data to R server
+        RConnectionRemote.sendData(c, dataTableToUse, exec);
+
+        // execute view command on server
+        LOGGER.info(m_viewCmdModel.getStringValue());
+        c.eval("try(" + m_viewCmdModel.getStringValue() + ")");
         c.voidEval("dev.off()");
         
+        // read png back from server
         InputStream ris = c.openFile(fileName);
         m_imageFile = File.createTempFile(FILE_NAME, ".png");
         FileOutputStream copy = new FileOutputStream(m_imageFile);
@@ -145,7 +131,7 @@ public class RPlotterNodeModel extends RNodeModel {
             // close stream and remove it at the server
             in.close();
             c.removeFile(fileName);
-        } catch (RSrvException e) {
+        } catch (RserveException e) {
             // ignore
         } finally {
             c.close();

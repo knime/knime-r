@@ -59,9 +59,10 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeView;
 import org.knime.core.node.util.DataColumnSpecListCellRenderer;
-import org.rosuda.JRclient.REXP;
-import org.rosuda.JRclient.RFileInputStream;
-import org.rosuda.JRclient.RSrvException;
+import org.rosuda.REngine.REXP;
+import org.rosuda.REngine.REXPMismatchException;
+import org.rosuda.REngine.Rserve.RFileInputStream;
+import org.rosuda.REngine.Rserve.RserveException;
 
 
 /**
@@ -127,7 +128,7 @@ public class RScriptingNodeView extends NodeView {
                             REXP rexp = m_rModel.getRconnection().eval(
                                     "try(" + cmd + ")");
                             print(rexp, cmd);
-                        } catch (RSrvException rse) {
+                        } catch (Exception exc) {
                             m_output.append(
                                     m_rModel.getRconnection().getLastError() 
                                     + "\n");
@@ -209,7 +210,7 @@ public class RScriptingNodeView extends NodeView {
             for (int i = 0; i < spec.getNumColumns(); i++) {
                 DataColumnSpec cspec = spec.getColumnSpec(i);
                 DataColumnSpecCreator create = new DataColumnSpecCreator(
-                        RConnection.formatColumn(cspec.getName()), 
+                        RConnectionRemote.formatColumn(cspec.getName()), 
                         cspec.getType());
                 m_listModel.addElement(create.createSpec());
             }
@@ -232,7 +233,7 @@ public class RScriptingNodeView extends NodeView {
 
     }
 
-    private void createPNG() throws RSrvException {
+    private void createPNG() throws RserveException, REXPMismatchException {
         // we are careful here - not all R binaries support png
         // so we rather capture any failures
         REXP xp = m_rModel.getRconnection().eval(
@@ -253,7 +254,7 @@ public class RScriptingNodeView extends NodeView {
         }
     }
 
-    private final Image getImage() throws IOException, RSrvException {
+    private final Image getImage() throws IOException, RserveException {
         m_rModel.getRconnection().voidEval("dev.off()");
         // the file should be ready now, so let's read (ok this isn't pretty,
         // but hey, this ain't no beauty contest *grin* =)
@@ -290,7 +291,7 @@ public class RScriptingNodeView extends NodeView {
         // now let's join all the chunks into one, big array ...
         byte[] imgCode = new byte[imgLength];
         int imgPos = 0;
-        for (Enumeration e = buffers.elements(); e.hasMoreElements();) {
+        for (Enumeration<byte[]> e = buffers.elements(); e.hasMoreElements();) {
             byte[] b = (byte[])e.nextElement();
             System.arraycopy(b, 0, imgCode, imgPos, bufSize);
             imgPos += bufSize;

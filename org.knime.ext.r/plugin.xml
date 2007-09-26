@@ -9,10 +9,6 @@
             id="org.knime.ext.r.node.RPlotterNodeFactory"/>
       <node
             category-path="/r/remote"
-            factory-class="org.knime.ext.r.node.RScriptingNodeFactory"
-            id="org.knime.ext.r.node.RScriptingNodeFactory"/>
-      <node
-            category-path="/r/remote"
             factory-class="org.knime.ext.r.node.RConsoleFactory"
             id="org.knime.ext.r.node.RConsoleFactory"/>
       <node
