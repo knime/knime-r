@@ -102,12 +102,12 @@ abstract class RNodeModel extends NodeModel {
             }
         } catch (RserveException rse) {
             LOGGER.error("Can't connect to server");
-            throw new IllegalStateException("Make sure R Server is "
+            throw new IllegalStateException("Make sure R server is "
                     + "available before executing this node");
         }
         if ((rconn == null) || (!rconn.isConnected())) {
             LOGGER.error("Can't connect to server");
-            throw new IllegalStateException("Make sure R Server is "
+            throw new IllegalStateException("Make sure R server is "
                     + "available before executing this node");
         }
         LOGGER.debug("R connection opened");

@@ -39,7 +39,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 
 /**
- * Executes R commands locally, the entire data is transfered to the R Server 
+ * Executes R commands locally, the entire data is transfered to the R server 
  * during execution.
  * 
  * @author Thomas Gabriel, University of Konstanz

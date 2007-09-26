@@ -14,9 +14,6 @@
 	    	resulting png file is passed into KNIME and is displayed in the
 	    	node's view.
 		</intro>
-		<option name ="R executable">
-			Path to the local R executable.
-		</option>
 		<option name ="View type">Choose a R view from the list of
 			predefined view command and adapt the parameter list in the R
 			command panel.
@@ -45,6 +42,9 @@
 	    <option name ="R command">
 		    Adapt the R view command's parameter list and enter arbitrary R
 		    scripting commands on the variable R by using all selected columns.
+		</option>
+	    <option name ="R binary path">
+			Path to the local R executable.
 		</option>
 	</fullDescription>
 	<ports>

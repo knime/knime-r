@@ -33,6 +33,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JEditorPane;
 import javax.swing.JList;
@@ -68,6 +69,7 @@ class RDialogPanel extends JPanel {
      */
     RDialogPanel() {
         super(new BorderLayout());
+        super.setBorder(BorderFactory.createTitledBorder("R command"));
         // init editor pane
         m_textExpression = new JEditorPane();
         m_textExpression.setFont(new Font("Courier", Font.PLAIN, 12));
@@ -92,7 +94,7 @@ class RDialogPanel extends JPanel {
         JScrollPane scroll = new JScrollPane(m_list, 
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scroll.setMinimumSize(new Dimension(200, 300));
+        scroll.setMinimumSize(new Dimension(400, 300));
         super.add(scroll, BorderLayout.WEST);
     }
     

@@ -13,7 +13,7 @@
 		with the R commands. The result likewise in the variable R is written
 		to CVS file again and then passed into KNIME.
 		</intro>
-		<option name ="R executable">
+		<option name ="R binary path">
 			Path to the local R executable.
 		</option>
 		<option name ="R command">
@@ -22,7 +22,7 @@
 	</fullDescription>
 	<ports>
 		<dataIn name="Data Input" index="0">Data Input</dataIn>
-		<dataOut name="Data Output" index="0">Data Output</dataOut>
+		<dataOut name="Data Output" index="0">R Result Data</dataOut>
 	</ports>
 	<views>
 		<view index="0" name="Standard Out">

@@ -108,7 +108,7 @@ public class RViewsDialogPanel extends JPanel {
         
         m_viewCommandModel = createRViewCmdSettingsModel();
         m_viewCommandComponent = new DialogComponentMultiLineString(
-                m_viewCommandModel, "R command", true, 10, 10);
+                m_viewCommandModel, null, true, 10, 10);
         
         m_colSettingsModel = createColFilterSettingsModel();
         m_colFilterComponent = new DialogComponentColumnFilter(
@@ -116,7 +116,7 @@ public class RViewsDialogPanel extends JPanel {
         
         JPanel commandPanel = new JPanel();
         commandPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-                .createEtchedBorder(), "R binary path"));
+                .createEtchedBorder(), "R command"));
         commandPanel.setLayout(new BorderLayout());
         
         commandPanel.add(m_viewSelectionComponent.getComponentPanel(), 
@@ -136,7 +136,7 @@ public class RViewsDialogPanel extends JPanel {
     
     /**
      * Loads settings into dialog components.
-     * @param settings The settinsg to load.
+     * @param settings The settings to load.
      * @param specs The specs of the input data table.
      * @throws NotConfigurableException If components could not be configured
      * and settings not be set. 

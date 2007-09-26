@@ -84,9 +84,9 @@ public class RConsoleModel extends RNodeModel {
             final ExecutionContext exec) throws CanceledExecutionException,
             Exception {
         RConnection rconn = super.getRconnection();
-        // send data to R Server
+        // send data to R server
         RConnectionRemote.sendData(rconn, inData[0], exec);
-        // send expression to R Server
+        // send expression to R server
         for (int i = 0; i < m_expression.length; i++) {
             LOGGER.debug("eval: " + m_expression[i]);
             rconn.voidEval("try(" + m_expression[i] + ")");
