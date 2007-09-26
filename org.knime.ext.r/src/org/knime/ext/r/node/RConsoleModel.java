@@ -94,72 +94,55 @@ public class RConsoleModel extends RNodeModel {
         }
         REXP rexp = rconn.eval("try(R)");
         LOGGER.debug("R: " + rexp.toString());
-//        if (rexp.isEnvironment()) {
-//        } else if (rexp.isExpression()) {
-//        } else if (rexp.isFactor()) {
-//        } else if (rexp.isInteger()) {
-//        } else if (rexp.isLanguage()) {
-//        } else if (rexp.isList()) {
-//        } else if (rexp.isLogical()) {
-//        } else if (rexp.isNull()) {
-//        } else if (rexp.isNumeric()) {
-//        } else if (rexp.isRaw()) {
-//        } else if (rexp.isString()) {
-//        } else if (rexp.isSymbol()) {
-//        } else if (rexp.isVector()) {           
-//        } else {
-//            throw new IllegalStateException("REXP type " + rexp.toString() 
-//                    + " not supported.");
-//        }
         try {
             return new BufferedDataTable[]{readDoubleMatrix(rexp, exec)};
         } catch (REXPMismatchException rexc) {
-            LOGGER.error("Could not parse R result!", rexc);
+            // ignore
         }
         try {
             return new BufferedDataTable[]{readIntegers(rexp, exec)};
         } catch (REXPMismatchException rexc) {
-            LOGGER.error("Could not parse R result!", rexc);
+            // ignore
         }
         try {
             return new BufferedDataTable[]{readInteger(rexp, exec)};
         } catch (REXPMismatchException rexc) {
-            LOGGER.error("Could not parse R result!", rexc);
+            // ignore
         }
         try {
             return new BufferedDataTable[]{readDoubles(rexp, exec)};
         } catch (REXPMismatchException rexc) {
-            LOGGER.error("Could not parse R result!", rexc);
+            // ignore
         }
         try {
             return new BufferedDataTable[]{readDouble(rexp, exec)};
         } catch (REXPMismatchException rexc) {
-            LOGGER.error("Could not parse R result!", rexc);
+            // ignore
         }
         try {
             return new BufferedDataTable[]{readFactor(rexp, exec)};
         } catch (REXPMismatchException rexc) {
-            LOGGER.error("Could not parse R result!", rexc);
+            // ignore
         }
         try {
             return new BufferedDataTable[]{readList(rexp, exec)};
         } catch (REXPMismatchException rexc) {
-            LOGGER.error("Could not parse R result!", rexc);
+            // ignore
         }
         try {
             return new BufferedDataTable[]{readString(rexp, exec)};
         } catch (REXPMismatchException rexc) {
-            LOGGER.error("Could not parse R result!", rexc);
+            // ignore
         }
         try {
             return new BufferedDataTable[]{readBytes(rexp, exec)};
         } catch (REXPMismatchException rexc) {
-            LOGGER.error("Could not parse R result!", rexc);
+            // ignore
         }
         try {
             return new BufferedDataTable[]{readStrings(rexp, exec)};
         } catch (REXPMismatchException rexc) {
-            LOGGER.error("Could not parse R result!", rexc);
+            // ignore
         }
         throw new IllegalStateException("REXP type " + rexp.toString() 
                 + " not supported!");
@@ -177,8 +160,7 @@ public class RConsoleModel extends RNodeModel {
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
             DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R-bytes", 
-                        StringCell.TYPE);
+                new DataColumnSpecCreator("R" + (i + 1), StringCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
         DataContainer dc = new DataContainer(new DataTableSpec(cspec));
@@ -249,8 +231,7 @@ public class RConsoleModel extends RNodeModel {
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
             DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R-factor", 
-                        StringCell.TYPE);
+                new DataColumnSpecCreator("R" + (i + 1), StringCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
         DataContainer dc = new DataContainer(new DataTableSpec(cspec));
@@ -268,7 +249,7 @@ public class RConsoleModel extends RNodeModel {
             final REXP rexp, final ExecutionContext exec) 
             throws REXPMismatchException {
         String string = rexp.asString();
-        DataColumnSpec cspec = createColumnSpec("R-string", StringCell.TYPE);
+        DataColumnSpec cspec = createColumnSpec("R1", StringCell.TYPE);
         BufferedDataContainer dc = 
             exec.createDataContainer(new DataTableSpec(cspec));
         DataRow row = new DefaultRow(new StringCell("Row1"), 
@@ -285,7 +266,7 @@ public class RConsoleModel extends RNodeModel {
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
             DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R-double", DoubleCell.TYPE);
+                new DataColumnSpecCreator("R" + (i + 1), DoubleCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
         DataRow row = new DefaultRow(new StringCell("Row1"), 
@@ -304,7 +285,7 @@ public class RConsoleModel extends RNodeModel {
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
             DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R", IntCell.TYPE);
+                new DataColumnSpecCreator("R" + (i + 1), IntCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
         DataRow row = new DefaultRow(new StringCell("Row1"), new int[]{matrix});
@@ -322,7 +303,7 @@ public class RConsoleModel extends RNodeModel {
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
             DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R-doubles", DoubleCell.TYPE);
+                new DataColumnSpecCreator("R" + (i + 1), DoubleCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
         DataContainer dc = new DataContainer(new DataTableSpec(cspec));
@@ -343,7 +324,7 @@ public class RConsoleModel extends RNodeModel {
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
             DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R-strings", StringCell.TYPE);
+                new DataColumnSpecCreator("R" + (i + 1), StringCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
         DataContainer dc = new DataContainer(new DataTableSpec(cspec));
@@ -368,8 +349,7 @@ public class RConsoleModel extends RNodeModel {
             cspec = new DataColumnSpec[matrix[0].length];
             for (int i = 0; i < cspec.length; i++) {
                 DataColumnSpecCreator colspeccreator = 
-                    new DataColumnSpecCreator("R" + i + "-doublematrix", 
-                            DoubleCell.TYPE);
+                    new DataColumnSpecCreator("R" + (i + 1), DoubleCell.TYPE);
                 cspec[i] = colspeccreator.createSpec();
             }
         }
@@ -391,7 +371,7 @@ public class RConsoleModel extends RNodeModel {
         DataColumnSpec[] cspec = new DataColumnSpec[1];
         for (int i = 0; i < cspec.length; i++) {
             DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R-integers", IntCell.TYPE);
+                new DataColumnSpecCreator("R" + (i + 1), IntCell.TYPE);
             cspec[i] = colspeccreator.createSpec();
         }
         DataContainer dc = new DataContainer(new DataTableSpec(cspec));

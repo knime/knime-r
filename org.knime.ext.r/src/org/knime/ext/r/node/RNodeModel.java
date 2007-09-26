@@ -46,7 +46,7 @@ abstract class RNodeModel extends NodeModel {
      * to overcome the problem that only one connection can be open at the 
      * time. 
      */ 
-    private static RConnection STATIC_RCONN;
+    private static RConnection mSTATICRCONN;
     
     /**
      * R connection for all non-windows machines.
@@ -73,7 +73,7 @@ abstract class RNodeModel extends NodeModel {
     protected final RConnection getRconnection() {
         if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0
                 && m_login.getHost().equals(RLoginSettings.DEFAULT_HOST)) {
-            return STATIC_RCONN = createConnection(STATIC_RCONN);
+            return mSTATICRCONN = createConnection(mSTATICRCONN);
         } else {
             return m_rconn = createConnection(m_rconn);
         }
@@ -92,7 +92,7 @@ abstract class RNodeModel extends NodeModel {
         if (checkR != null) {
             checkR.close();
         }
-        LOGGER.info("Starting R evaluation on RServe (" 
+        LOGGER.info("Starting R evaluation on Rserve (" 
                 + m_login.getHost() + ":" + m_login.getPort() + ") ...");
         RConnection rconn;
         try {
@@ -119,9 +119,9 @@ abstract class RNodeModel extends NodeModel {
      */
     @Override
     protected void reset() {
-        if (STATIC_RCONN != null) {
-            STATIC_RCONN.close();
-            STATIC_RCONN = null;
+        if (mSTATICRCONN != null) {
+            mSTATICRCONN.close();
+            mSTATICRCONN = null;
         }
     }
     

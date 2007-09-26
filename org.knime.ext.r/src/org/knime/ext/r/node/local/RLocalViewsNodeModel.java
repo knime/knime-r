@@ -158,6 +158,13 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
+        List<String> cols = m_colFilterModel.getIncludeList();
+        for (String colName : cols) {
+            if (!inSpecs[0].containsName(colName)) {
+                throw new InvalidSettingsException("Selected columns don't "
+                        + "match with input spec, re-configure node.");
+            }
+        }
         return new DataTableSpec[0];
     }
 

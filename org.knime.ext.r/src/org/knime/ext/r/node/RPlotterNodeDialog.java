@@ -40,7 +40,8 @@ import org.knime.ext.r.node.local.RViewsDialogPanel;
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RPlotterNodeDialog extends RNodeDialogPane {
-    private RViewsDialogPanel m_plotCommandPanel;
+    
+    private final RViewsDialogPanel m_plotCommandPanel;
     
     /**
      * New pane for configuring REvaluator node dialog.
@@ -49,7 +50,7 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
     protected RPlotterNodeDialog() {
         super();
         m_plotCommandPanel = new RViewsDialogPanel(); 
-        super.addTab("View Script Settings", m_plotCommandPanel);
+        super.addTab("View Command", m_plotCommandPanel);
         super.addLoginTab();
     }
 

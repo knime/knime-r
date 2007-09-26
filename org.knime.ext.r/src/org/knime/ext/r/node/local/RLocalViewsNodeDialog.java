@@ -77,7 +77,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
         return new RViewsDialogPanel();
     }
     
-    private static final String TAB_TITLE = "View Script Settings";
+    private static final String TAB_TITLE = "View Command";
     
     private static final String TAB_R_BINARY = "R binary";
     
