@@ -40,6 +40,7 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -218,90 +219,95 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
         // preprocess data in in DataTable.
         BufferedDataTable[] inDataTables = preprocessDataTable(inData, exec);
         
-        // write data to csv
-        File inDataCsvFile = writeInDataCsvFile(inDataTables[0], exec);
+        File tempOutData = null;
+        File inDataCsvFile = null;
+        File rCommandFile = null;
+        File rOutFile = null;
+        BufferedDataTable[] dts = null;
         
-        // execute R cmd
-        StringBuffer completeCmd = new StringBuffer();
-        completeCmd.append(m_setWorkingDirCmd);
-        completeCmd.append(READ_DATA_CMD_PREFIX);
-        completeCmd.append(inDataCsvFile.getAbsolutePath().
-                replace('\\', '/'));
-        completeCmd.append(READ_DATA_CMD_SUFFIX);
-        
-        completeCmd.append(getCommand().trim());
-        completeCmd.append("\n");
-        
-        File tempOutData = File.createTempFile("R-outDataTempFile-", ".csv", 
-                    new File(TEMP_PATH));
-        completeCmd.append(WRITE_DATA_CMD_PREFIX);
-        completeCmd.append(tempOutData.getAbsolutePath().replace('\\', '/'));
-        completeCmd.append(WRITE_DATA_CMD_SUFFIX);
-        
-        // write R command
-        String rCmd = completeCmd.toString();
-        LOGGER.info("R command: \n" + rCmd);
-        File rCommandFile = writeRcommandFile(rCmd);
-        File rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
-        
-        // create shell command
-        StringBuffer shellCmd = new StringBuffer();
-        
-        String rBinaryFile = RPreferenceInitializer.getRPath();
-        if (m_useSpecifiedModel.isEnabled()) {
-            rBinaryFile = m_rbinaryFileSettingsModel.getStringValue();
-        }
-        shellCmd.append(rBinaryFile);
-        
-        shellCmd.append(" CMD BATCH ");
-        shellCmd.append(rCommandFile.getAbsolutePath());
-        
-        // execute shell command
-        String shcmd = shellCmd.toString();
-        LOGGER.info("Shell command: \n" + shcmd);
+        try {
+            // write data to csv
+            ExecutionMonitor subExec = exec.createSubProgress(0.5);
+            inDataCsvFile = writeInDataCsvFile(inDataTables[0], subExec);
 
-        CommandExecution cmdExec = new CommandExecution(shcmd);
-        cmdExec.addObserver(this);
-        int exitVal = cmdExec.execute(exec);
-        
-        setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));
-        setExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
-        
-        if (exitVal != 0) {
-            // before we return, we save the output in the failing list
-            synchronized (cmdExec) {
-                setFailedExternalOutput(new LinkedList<String>(
-                        cmdExec.getStdOutput()));
+            // execute R cmd
+            StringBuffer completeCmd = new StringBuffer();
+            completeCmd.append(m_setWorkingDirCmd);
+            completeCmd.append(READ_DATA_CMD_PREFIX);
+            completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\',
+                    '/'));
+            completeCmd.append(READ_DATA_CMD_SUFFIX);
+
+            completeCmd.append(getCommand().trim());
+            completeCmd.append("\n");
+
+            tempOutData = File.createTempFile("R-outDataTempFile-", ".csv", 
+                    new File(TEMP_PATH));
+            completeCmd.append(WRITE_DATA_CMD_PREFIX);
+            completeCmd
+                    .append(tempOutData.getAbsolutePath().replace('\\', '/'));
+            completeCmd.append(WRITE_DATA_CMD_SUFFIX);
+
+            // write R command
+            String rCmd = completeCmd.toString();
+            LOGGER.info("R command: \n" + rCmd);
+            rCommandFile = writeRcommandFile(rCmd);
+            rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
+
+            // create shell command
+            StringBuffer shellCmd = new StringBuffer();
+
+            String rBinaryFile = RPreferenceInitializer.getRPath();
+            if (m_useSpecifiedModel.isEnabled()) {
+                rBinaryFile = m_rbinaryFileSettingsModel.getStringValue();
             }
-            synchronized (cmdExec) {
-                setFailedExternalErrorOutput(new LinkedList<String>(
-                        cmdExec.getStdErr()));
+            shellCmd.append(rBinaryFile);
+
+            shellCmd.append(" CMD BATCH ");
+            shellCmd.append(rCommandFile.getAbsolutePath());
+
+            // execute shell command
+            String shcmd = shellCmd.toString();
+            LOGGER.info("Shell command: \n" + shcmd);
+
+            CommandExecution cmdExec = new CommandExecution(shcmd);
+            cmdExec.addObserver(this);
+            int exitVal = cmdExec.execute(exec);
+
+            setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));
+            setExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
+
+            if (exitVal != 0) {
+                // before we return, we save the output in the failing list
+                synchronized (cmdExec) {
+                    setFailedExternalOutput(new LinkedList<String>(cmdExec
+                            .getStdOutput()));
+                }
+                synchronized (cmdExec) {
+                    setFailedExternalErrorOutput(new LinkedList<String>(cmdExec
+                            .getStdErr()));
+                }
+                
+                LOGGER.debug("Execution of R Script failed with exit code: "
+                        + exitVal);
+                throw new IllegalStateException(
+                        "Execution of R script failed!");
             }
-            
+
+            // read data from R output csv into a buffered data table.
+            ExecutionContext subExecCon = exec.createSubExecutionContext(1.0);
+            BufferedDataTable dt = readOutData(tempOutData, subExecCon);
+
+            // postprocess data in out DataTable.
+            dts = postprocessDataTable(new BufferedDataTable[]{dt}, exec);
+
+        } finally {
             // delete all temp files
             deleteFile(inDataCsvFile);
             deleteFile(tempOutData);
             deleteFile(rCommandFile);
             deleteFile(rOutFile);
-            
-            LOGGER.debug("Execution of R Script failed with exit code: " 
-                    + exitVal);            
-            throw new IllegalStateException("Execution of R script failed!");
-        }        
-        
-        
-        // read data from R output csv into a buffered data table.
-        BufferedDataTable dt = readOutData(tempOutData, exec);
-        
-        // postprocess data in out DataTable.
-        BufferedDataTable[] dts = postprocessDataTable(
-                new BufferedDataTable[]{dt}, exec);
-        
-        // delete all temp files
-        deleteFile(inDataCsvFile);
-        deleteFile(tempOutData);
-        deleteFile(rCommandFile);
-        deleteFile(rOutFile);
+        }
         
         // return this table
         return dts;
@@ -337,7 +343,7 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
     }
     
     private File writeInDataCsvFile(final BufferedDataTable inData, 
-            final ExecutionContext exec) throws IOException, 
+            final ExecutionMonitor exec) throws IOException, 
             CanceledExecutionException {
         // create Temp file
         File tempInDataFile = File.createTempFile("R-inDataTempFile-", ".csv", 
