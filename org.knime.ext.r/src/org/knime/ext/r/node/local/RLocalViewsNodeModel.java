@@ -95,7 +95,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
      */
     @Override
     protected String getCommand() {
-        return "png(\"" + m_filename + "\");\n" 
+        return "png(\"" + m_filename + "\", width=800, height=800);\n" 
               + m_viewCmdModel.getStringValue() 
               + "\ndev.off();";
     }

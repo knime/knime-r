@@ -27,7 +27,6 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
  * The <code>RLocalScriptingNodeModel</code> provides functionality to create
@@ -36,9 +35,8 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalScriptingNodeModel extends RLocalNodeModel {
-
-    private final SettingsModelString m_commandModel = 
-        RLocalScriptingNodeDialogPane.createCommandSettingsModel(); 
+    
+    private String m_rCommand = new String();
     
     /**
      * Creates new instance of <code>RLocalScriptingNodeModel</code> with one
@@ -53,7 +51,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
      */
     @Override
     protected String getCommand() {
-        return m_commandModel.getStringValue();
+        return m_rCommand;
     }
 
     /**
@@ -74,7 +72,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_commandModel.loadSettingsFrom(settings);
+        m_rCommand = settings.getString("EXPRESSION");
     }
 
     /**
@@ -83,7 +81,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         super.saveSettingsTo(settings);
-        m_commandModel.saveSettingsTo(settings);
+        settings.addString("EXPRESSION", m_rCommand);
     }
 
     /**
@@ -93,15 +91,17 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        
-        SettingsModelString tempCommand = 
-            m_commandModel.createCloneWithValidatedValue(settings);
-        String tempCommandString = tempCommand.getStringValue();
-        
-        // if command not valid throw exception
-        if (tempCommandString == null || tempCommandString.length() < 1) {
-            throw new InvalidSettingsException("R command is not valid!");
+        testExpressions(settings.getString("EXPRESSION"));
+    }
+    
+    
+    private void testExpressions(final String str)
+            throws InvalidSettingsException {
+        if (str.contains("R<-")) {
+            // ok, we have an result in R
+            return;
         }
-        m_commandModel.validateSettings(settings);
+        throw new InvalidSettingsException("The result has to be provided"
+                + " inside the variable R");
     }
 }

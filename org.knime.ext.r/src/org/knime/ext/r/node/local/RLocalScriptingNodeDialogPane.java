@@ -23,8 +23,15 @@
  */
 package org.knime.ext.r.node.local;
 
-import org.knime.core.node.defaultnodesettings.DialogComponentMultiLineString;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import java.awt.event.MouseListener;
+
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
+import org.knime.ext.r.node.RDialogPanel;
+
 
 /**
  * A dialog containing a multi line text field to specify the R code to run.
@@ -33,13 +40,9 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  */
 public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
 
-    /**
-     * @return a <code>SettingsModelString</code> instance containing
-     * the R command to run.
-     */
-    static final SettingsModelString createCommandSettingsModel() {
-        return new SettingsModelString("R_command", null);
-    }
+    private final RDialogPanel m_dialogPanel;
+    
+    private static final String TAB_R_BINARY = "R Binary";
     
     /**
      * Constructor which creates a new instance of 
@@ -48,12 +51,39 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
      */
     public RLocalScriptingNodeDialogPane() {
         super();
+        m_dialogPanel = new RDialogPanel(null);
         
-        createNewGroup("R command");
+        MouseListener ml = new RLocalDialogPaneMouseAdapter(
+                m_dialogPanel.getColumnList(), m_dialogPanel.getEditorPane());
+        m_dialogPanel.getColumnList().addMouseListener(ml);
         
-        addDialogComponent(new DialogComponentMultiLineString(
-                createCommandSettingsModel(), "", true, 5, 4));
+        addTab("R command", m_dialogPanel);
         
-        closeCurrentGroup();
+        setDefaultTabTitle(TAB_R_BINARY);
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
+            final DataTableSpec[] specs) throws NotConfigurableException {
+        super.loadAdditionalSettingsFrom(settings, specs);
+        if (specs[0].getNumColumns() == 0) {
+            throw new NotConfigurableException("No input data available.");
+        }
+        m_dialogPanel.update(specs[0], false);
+        String str = settings.getString("EXPRESSION", new String());
+        m_dialogPanel.setText(str);
+    } 
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
+        throws InvalidSettingsException {
+        super.saveAdditionalSettingsTo(settings);
+        settings.addString("EXPRESSION", m_dialogPanel.getText());
+    }    
 }

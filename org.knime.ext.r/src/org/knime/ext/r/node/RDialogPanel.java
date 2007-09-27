@@ -31,6 +31,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -57,7 +58,7 @@ import org.knime.core.node.util.DataColumnSpecListCellRenderer;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-class RDialogPanel extends JPanel {
+public class RDialogPanel extends JPanel {
 
     private final JEditorPane m_textExpression;
     
@@ -65,11 +66,22 @@ class RDialogPanel extends JPanel {
     private final DefaultListModel m_listModel;
     
     /**
-     * Creates a new dialog to enter R expressions. 
+     * Creates a new dialog to enter R expressions with a default 
+     * mouse listener.
      */
-    RDialogPanel() {
+    public RDialogPanel() {
+        this(null);
+        m_list.addMouseListener(new DefaultMouseAdapter());
+    }
+    
+    /**
+     * Creates a new dialog to enter R expressions. 
+     * @param mouseListener the listener to add to the column list.
+     */
+    public RDialogPanel(final MouseListener mouseListener) {
         super(new BorderLayout());
         super.setBorder(BorderFactory.createTitledBorder("R command"));
+        
         // init editor pane
         m_textExpression = new JEditorPane();
         m_textExpression.setFont(new Font("Courier", Font.PLAIN, 12));
@@ -79,18 +91,11 @@ class RDialogPanel extends JPanel {
         m_list = new JList(m_listModel);
         m_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         m_list.setCellRenderer(new DataColumnSpecListCellRenderer());
-        m_list.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(final MouseEvent e) {
-                Object o = m_list.getSelectedValue();
-                if (o != null) {
-                    DataColumnSpec cspec = (DataColumnSpec) o;
-                    m_textExpression.replaceSelection(cspec.getName());
-                    m_list.clearSelection();
-                    m_textExpression.requestFocus();
-                }
-            }
-        });
+        
+        if (mouseListener != null) {
+            m_list.addMouseListener(mouseListener);
+        }
+        
         JScrollPane scroll = new JScrollPane(m_list, 
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -99,17 +104,36 @@ class RDialogPanel extends JPanel {
     }
     
     /**
-     * Updates the list of columns based on the given table spec.
+     * Updates the list of columns based on the given table spec by usage of
+     * {@link RDialogPanel#update(DataTableSpec, boolean)} with rename set
+     * true be default.
      * @param spec The spec to get columns from.
      */
-    final void update(final DataTableSpec spec) {
+    public final void update(final DataTableSpec spec) {
+        update(spec, true);
+    }
+    
+    /**
+     * Updates the list of columns based on the given table spec.
+     * @param spec The spec to get columns from.
+     * @param rename if true columns are formatted in a way that they are 
+     * compatible with the Rserv implementation.
+     */
+    public final void update(final DataTableSpec spec, final boolean rename) {
         m_listModel.removeAllElements();
         for (int i = 0; i < spec.getNumColumns(); i++) {
             DataColumnSpec oldSpec = spec.getColumnSpec(i);
             DataType type = oldSpec.getType();
-            String newName = RConnectionRemote.formatColumn(oldSpec.getName());
-            DataColumnSpec cspec = new DataColumnSpecCreator(
-                    newName, type).createSpec();
+            
+            DataColumnSpec cspec;
+            if (rename) {
+                String newName = RConnectionRemote.formatColumn(
+                        oldSpec.getName());
+                cspec = new DataColumnSpecCreator(newName, type).createSpec();
+            } else {
+                cspec = oldSpec;
+            }
+            
             if (type.isCompatible(IntValue.class)) {
                 m_listModel.addElement(cspec);                
             } else
@@ -124,9 +148,28 @@ class RDialogPanel extends JPanel {
     }
     
     /**
+     * @return complete text as string.
+     */
+    public String getText() {
+        return m_textExpression.getText();
+    }
+    
+    /**
+     * @param str sets the given string as text. 
+     */
+    public void setText(final String str) {
+        String text = str.trim();
+        if (text.length() <= 0) {
+            text = "R<-";
+        }
+        m_textExpression.setText(text);
+        m_textExpression.setCaretPosition(text.length());
+    }
+    
+    /**
      * @return expression text
      */
-    String[] getExpression() {
+    public String[] getExpression() {
         String[] exps = m_textExpression.getText().split("\n");
         ArrayList<String> res = new ArrayList<String>();
         for (int i = 0; i < exps.length; i++) {
@@ -143,7 +186,7 @@ class RDialogPanel extends JPanel {
     /**
      * @param exp The expression to set
      */
-    void setExpression(final String[] exp) {
+    public void setExpression(final String[] exp) {
         m_textExpression.setText("");
         for (int i = exp.length; --i >= 0;) {
             m_textExpression.replaceSelection(exp[i] + "\n");
@@ -153,4 +196,39 @@ class RDialogPanel extends JPanel {
         }
     }
 
+    /**
+     * @return the pane containing the R command to execute.
+     */
+    public final JEditorPane getEditorPane() {
+        return m_textExpression;
+    }
+    
+    /**
+     * @return the list containing the column names.
+     */
+    public final JList getColumnList() {
+        return m_list; 
+    }
+            
+    
+    /**
+     * 
+     * @author Kilian Thiel, University of Konstanz
+     */
+    class DefaultMouseAdapter extends MouseAdapter {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void mouseClicked(final MouseEvent e) {
+            Object o = m_list.getSelectedValue();
+            if (o != null) {
+                DataColumnSpec cspec = (DataColumnSpec) o;
+                m_textExpression.replaceSelection(cspec.getName());
+                m_list.clearSelection();
+                m_textExpression.requestFocus();
+            }
+        }
+    }
 }
