@@ -66,8 +66,7 @@ public class RLocalDialogPaneMouseAdapter extends MouseAdapter {
         Object o = m_list.getSelectedValue();
         if (o != null) {
             DataColumnSpec cspec = (DataColumnSpec) o;
-            m_pane.replaceSelection("R$\"" 
-                    + cspec.getName().replace(' ', '.') + "\"");
+            m_pane.replaceSelection("R$\"" + cspec.getName() + "\"");
             m_list.clearSelection();
             m_pane.requestFocus();
         }

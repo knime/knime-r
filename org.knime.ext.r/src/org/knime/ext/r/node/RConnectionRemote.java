@@ -65,7 +65,7 @@ final class RConnectionRemote {
      *         characters got replaced by an underscore ('_').
      */
     static final String formatColumn(final String name) {
-        String newName = name.replaceAll("[^a-zA-Z0-9]", "_");
+        String newName = name.replaceAll("[^a-zA-Z0-9]", ".");
         if (!newName.equals(name)) {
             LOGGER.info("Column name \"" + name + "\" changed into " 
                     + "\"" + newName + "\".");

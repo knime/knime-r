@@ -72,7 +72,7 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
         if (specs[0].getNumColumns() == 0) {
             throw new NotConfigurableException("No input data available.");
         }
-        m_dialogPanel.update(specs[0], false);
+        m_dialogPanel.update(specs[0]);
         String str = settings.getString("EXPRESSION", new String());
         m_dialogPanel.setText(str);
     } 
