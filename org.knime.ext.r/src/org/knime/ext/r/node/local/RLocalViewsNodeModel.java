@@ -258,11 +258,13 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         super.loadInternals(nodeInternDir, exec);
         
         File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
-        File pngFile = File.createTempFile(INTERNAL_FILE_NAME, ".png");
-        FileUtil.copy(file, pngFile);
-        m_resultImage = RPlotterNodeModel.createImage(
-                new FileInputStream(pngFile));
-        m_filename = pngFile.getAbsolutePath();
+        if (file != null && file.exists()) {
+            File pngFile = File.createTempFile(INTERNAL_FILE_NAME, ".png");
+            FileUtil.copy(file, pngFile);
+            m_resultImage = RPlotterNodeModel.createImage(
+                    new FileInputStream(pngFile));
+            m_filename = pngFile.getAbsolutePath();
+        }
     }
 
     /**
@@ -276,7 +278,10 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
             throws IOException, CanceledExecutionException {
         super.saveInternals(nodeInternDir, exec);
         
-        File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
-        FileUtil.copy(new File(m_filename), file);
+        File imgFile = new File(m_filename);
+        if (imgFile != null && imgFile.exists()) {
+            File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
+            FileUtil.copy(imgFile, file);
+        }
     }   
 }

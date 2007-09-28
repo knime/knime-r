@@ -219,6 +219,10 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
         // preprocess data in in DataTable.
         BufferedDataTable[] inDataTables = preprocessDataTable(inData, exec);
         
+        if (inDataTables[0].getRowCount() < 1) {
+            return new BufferedDataTable[]{};
+        }
+        
         File tempOutData = null;
         File inDataCsvFile = null;
         File rCommandFile = null;
