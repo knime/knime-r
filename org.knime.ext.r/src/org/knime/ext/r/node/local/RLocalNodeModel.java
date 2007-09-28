@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------
  * This source code, its documentation and all appendant files
  * are protected by copyright law. All rights reserved.
@@ -18,7 +18,7 @@
  * website: www.knime.org
  * email: contact@knime.org
  * --------------------------------------------------------------------- *
- * 
+ *
  * History
  *   17.09.2007 (gabriel): created
  */
@@ -34,8 +34,8 @@ import org.knime.base.node.io.csvwriter.FileWriterSettings;
 import org.knime.base.node.io.filereader.FileAnalyzer;
 import org.knime.base.node.io.filereader.FileReaderNodeSettings;
 import org.knime.base.node.io.filereader.FileTable;
-import org.knime.base.node.misc.externaltool.CommandExecution;
-import org.knime.base.node.misc.externaltool.StdOutBufferedNodeModel;
+import org.knime.base.node.util.exttool.CommandExecution;
+import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -60,11 +60,11 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  * by a class extending <code>RLocalNodeModel</code>, by implementing the
  * abstract {@link RLocalNodeModel#getCommand()} method. To access i.e. the
  * first three columns of a table and reference them by another variable "a" the
- * R command "a <- R[1:3]" can be used.<br/> 
+ * R command "a <- R[1:3]" can be used.<br/>
  * Further, this class writes the data
  * referenced by the R variable "R" after execution of the additional commands
  * into a csv file and generates an outgoing <code>DataTable</code> out of it,
- * which is returned by this node. This means, the user has to take care that 
+ * which is returned by this node. This means, the user has to take care that
  * the processed data have to be referenced by the variable "R".
  * <br />
  * Note that the number of input data tables is one and can not be modified when
@@ -80,61 +80,61 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  * {@link RLocalNodeModel#postprocessDataTable(BufferedDataTable[], ExecutionContext)}
  * which can be overwritten to process that data after the R script execution.
  * If these methods are not overwritten the data will not be modified.
- * 
+ *
  * @author Kilian Thiel, University of Konstanz
  * @author Thomas Gabriel, University of Konstanz
  */
-public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
+public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
 
-    private static final NodeLogger LOGGER = 
+    private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RLocalNodeModel.class);
-    
+
     /**
      * The temp directory used to save csv, script R output files temporarily.
      */
-    protected static final String TEMP_PATH = 
+    protected static final String TEMP_PATH =
         System.getProperty("java.io.tmpdir").replace('\\', '/');
-    
+
     /**
      * The delimiter used for creation of csv files.
      */
     protected static final String DELIMITER = ",";
-    
+
     private final SettingsModelString m_rbinaryFileSettingsModel =
         RLocalNodeDialogPane.createRBinaryFile();
-    
-    private final SettingsModelBoolean m_useSpecifiedModel = 
+
+    private final SettingsModelBoolean m_useSpecifiedModel =
         RLocalNodeDialogPane.createUseSpecifiedFileModel();
-    
+
     /** R commands to set working dir, write and reads csv files. */
-    private final String m_setWorkingDirCmd = 
+    private final String m_setWorkingDirCmd =
         "setwd(\"" + TEMP_PATH + "\");\n";
-    
+
     private static final String READ_DATA_CMD_PREFIX = "R <- read.csv(\"";
-    
+
     private static final String READ_DATA_CMD_SUFFIX = "\", header = TRUE);\n";
-    
+
     private static final String WRITE_DATA_CMD_PREFIX = "write.csv(R, \"";
-    
-    private static final String WRITE_DATA_CMD_SUFFIX = 
+
+    private static final String WRITE_DATA_CMD_SUFFIX =
         "\", row.names = FALSE);\n";
-     
+
     /**
      * Constructor of <code>RLocalNodeModel</code> creating a model with one
      * data in port an one data out port.
      */
     public RLocalNodeModel() {
-        super();
-    }   
-    
+        super(1, 1);
+    }
+
     /**
      * Constructor of <code>RLocalNodeModel</code> creating a model with one
      * data in port and one data out port if and only if <code>hasOutput</code>
-     * is set <code>true</code>. Otherwise the node will not have any 
+     * is set <code>true</code>. Otherwise the node will not have any
      * data out port.
-     * 
-     * @param hasOutput If set <code>true</code> the node is instantiated 
-     * with one data out port if <code>false</code> with none. 
+     *
+     * @param hasOutput If set <code>true</code> the node is instantiated
+     * with one data out port if <code>false</code> with none.
      */
     public RLocalNodeModel(final boolean hasOutput) {
         super(1, numberOfOuts(hasOutput));
@@ -151,24 +151,24 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
      * Implement this method to specify certain R code to run. Be aware that
      * this R code has to be valid, otherwise the node will not execute
      * properly. To access the input data of the node via R use the variable
-     * "R". To access i.e. the first three columns of a table and reference 
+     * "R". To access i.e. the first three columns of a table and reference
      * them by another variable "a" the R command "a <- R[1:3];" can be used.
      * End all R command lines with a semicolon and a line break. The data
      * which has to be returned be the node as out data has to be stored in
      * the "R" variable again, so take care to reference your data by "R".
-     * 
+     *
      * @return The R command to execute.
      */
-    protected abstract String getCommand(); 
-    
+    protected abstract String getCommand();
+
     /**
      * The method enables one to preprocess the data before the execution
-     * of the R command. This method is called before the R commands are 
+     * of the R command. This method is called before the R commands are
      * executed. All the processing which has to be done before has to be
      * implemented here, i.e. column filtering and so on.
-     * This implementation is a dummy implementation which only passes 
+     * This implementation is a dummy implementation which only passes
      * through the unmodified inData.
-     * 
+     *
      * @param inData The in data to preprocess.
      * @param exec To monitor the status of processing.
      * @return The preprocessed in data.
@@ -179,15 +179,15 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
             throws Exception {
         return inData;
     }
-    
+
     /**
-     * The method enables one to postprocess the data modified by the 
-     * execution of the R command. This method is called after the R commands 
-     * are executed. All the processing which has to be done after this have 
+     * The method enables one to postprocess the data modified by the
+     * execution of the R command. This method is called after the R commands
+     * are executed. All the processing which has to be done after this have
      * to be implemented here.
-     * This implementation is a dummy implementation which only passes 
+     * This implementation is a dummy implementation which only passes
      * through the unmodified outData.
-     * 
+     *
      * @param outData The in data to postprocess.
      * @param exec To monitor the status of processing.
      * @return The postprocessed out data.
@@ -198,37 +198,37 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
             throws Exception {
         return outData;
     }
-    
-    
+
+
     /**
-     * First the 
+     * First the
      * {@link RLocalNodeModel#preprocessDataTable(BufferedDataTable[], ExecutionContext)}
      * method is called to preprocess that input data. Further a csv file
-     * is written containing the input data. Next a R script is created 
-     * consisting of R commands to import the data of the csv file, the R code 
+     * is written containing the input data. Next a R script is created
+     * consisting of R commands to import the data of the csv file, the R code
      * specified in the command string and the export of the modified data into
-     * a output table. This table is returned at the end.   
-     * 
+     * a output table. This table is returned at the end.
+     *
      * {@inheritDoc}
      */
     @Override
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws CanceledExecutionException,
             Exception {
-        
+
         // preprocess data in in DataTable.
         BufferedDataTable[] inDataTables = preprocessDataTable(inData, exec);
-        
+
         if (inDataTables[0].getRowCount() < 1) {
             return new BufferedDataTable[]{};
         }
-        
+
         File tempOutData = null;
         File inDataCsvFile = null;
         File rCommandFile = null;
         File rOutFile = null;
         BufferedDataTable[] dts = null;
-        
+
         try {
             // write data to csv
             ExecutionMonitor subExec = exec.createSubProgress(0.5);
@@ -245,7 +245,7 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
             completeCmd.append(getCommand().trim());
             completeCmd.append("\n");
 
-            tempOutData = File.createTempFile("R-outDataTempFile-", ".csv", 
+            tempOutData = File.createTempFile("R-outDataTempFile-", ".csv",
                     new File(TEMP_PATH));
             completeCmd.append(WRITE_DATA_CMD_PREFIX);
             completeCmd
@@ -291,7 +291,7 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
                     setFailedExternalErrorOutput(new LinkedList<String>(cmdExec
                             .getStdErr()));
                 }
-                
+
                 LOGGER.debug("Execution of R Script failed with exit code: "
                         + exitVal);
                 throw new IllegalStateException(
@@ -312,61 +312,61 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
             deleteFile(rCommandFile);
             deleteFile(rOutFile);
         }
-        
+
         // return this table
         return dts;
     }
-    
-    
+
+
     private boolean deleteFile(final File file) {
         boolean del = false;
         if (file != null && file.exists()) {
-            
+
             // !!! What a mess !!!
             // It is possible that there are still open streams around
-            // holding the file. Therefore these streams, actually belonging 
+            // holding the file. Therefore these streams, actually belonging
             // to the garbage, has to be collected by the GC.
             System.gc();
-            
+
             del = FileUtil.deleteRecursively(file);
             if (!del) {
-                LOGGER.debug(file.getAbsoluteFile() 
+                LOGGER.debug(file.getAbsoluteFile()
                         + " could not be deleted !");
             }
         }
         return del;
     }
-    
+
     private File writeRcommandFile(final String cmd) throws IOException {
-        File tempCommandFile = File.createTempFile("R-inDataTempFile-", ".r", 
+        File tempCommandFile = File.createTempFile("R-inDataTempFile-", ".r",
                     new File(TEMP_PATH));
         FileWriter fw = new FileWriter(tempCommandFile);
         fw.write(cmd);
         fw.close();
         return tempCommandFile;
     }
-    
-    private File writeInDataCsvFile(final BufferedDataTable inData, 
-            final ExecutionMonitor exec) throws IOException, 
+
+    private File writeInDataCsvFile(final BufferedDataTable inData,
+            final ExecutionMonitor exec) throws IOException,
             CanceledExecutionException {
         // create Temp file
-        File tempInDataFile = File.createTempFile("R-inDataTempFile-", ".csv", 
+        File tempInDataFile = File.createTempFile("R-inDataTempFile-", ".csv",
                     new File(TEMP_PATH));
-            
+
         // write data to file
         FileWriter fw = new FileWriter(tempInDataFile);
         FileWriterSettings fws = new FileWriterSettings();
         fws.setColSeparator(DELIMITER);
         fws.setWriteColumnHeader(true);
-        
+
         CSVWriter writer = new CSVWriter(fw, fws);
         writer.write(inData, exec);
         writer.close();
         return tempInDataFile;
     }
-    
-    private BufferedDataTable readOutData(final File outData, 
-            final ExecutionContext exec) throws IOException, 
+
+    private BufferedDataTable readOutData(final File outData,
+            final ExecutionContext exec) throws IOException,
             CanceledExecutionException {
         FileReaderNodeSettings settings = new FileReaderNodeSettings();
         settings.setDataFileLocationAndUpdateTableName(
@@ -382,15 +382,15 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
         settings.setQuoteUserSet(true);
         settings.setWhiteSpaceUserSet(true);
         settings = FileAnalyzer.analyze(settings);
-        
+
         DataTableSpec tSpec = settings.createDataTableSpec();
         FileTable fTable = new FileTable(tSpec, settings, settings
                     .getSkippedColumns(), exec);
-        
+
         return exec.createBufferedDataTable(fTable, exec);
     }
-    
-    
+
+
     /**
      * {@inheritDoc}
      */
@@ -416,18 +416,18 @@ public abstract class RLocalNodeModel extends StdOutBufferedNodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        
-        SettingsModelString tempBinaryFileModel = 
+
+        SettingsModelString tempBinaryFileModel =
             m_rbinaryFileSettingsModel.createCloneWithValidatedValue(settings);
         File binaryFile = new File(tempBinaryFileModel.getStringValue());
-        if (!binaryFile.exists() || !binaryFile.isFile() 
+        if (!binaryFile.exists() || !binaryFile.isFile()
                 || !binaryFile.canExecute()) {
             throw new InvalidSettingsException("File: "
                     + tempBinaryFileModel.getStringValue()
                     + " is not a valid R executable file!");
         }
-        
+
         m_rbinaryFileSettingsModel.loadSettingsFrom(settings);
         m_useSpecifiedModel.loadSettingsFrom(settings);
-    }        
+    }
 }

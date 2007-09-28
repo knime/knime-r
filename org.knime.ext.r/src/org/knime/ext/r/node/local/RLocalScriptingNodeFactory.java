@@ -17,14 +17,14 @@
  * website: www.knime.org
  * email: contact@knime.org
  * ---------------------------------------------------------------------
- * 
+ *
  * History
  *   17.09.2007 (thiel): created
  */
 package org.knime.ext.r.node.local;
 
-import org.knime.base.node.misc.externaltool.ExtToolStderrNodeView;
-import org.knime.base.node.misc.externaltool.ExtToolStdoutNodeView;
+import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
+import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeModel;
@@ -32,7 +32,7 @@ import org.knime.core.node.NodeView;
 
 /**
  * Factory for the <code>RLocalScriptingNodeFactory</code> node.
- * 
+ *
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalScriptingNodeFactory extends NodeFactory {
@@ -57,9 +57,9 @@ public class RLocalScriptingNodeFactory extends NodeFactory {
      * {@inheritDoc}
      */
     @Override
-    public NodeView createNodeView(final int viewIndex, 
+    public NodeView createNodeView(final int viewIndex,
             final NodeModel nodeModel) {
-        if (viewIndex == 0) { 
+        if (viewIndex == 0) {
             return new ExtToolStdoutNodeView(nodeModel);
         } else if (viewIndex == 1) {
             return new ExtToolStderrNodeView(nodeModel);
