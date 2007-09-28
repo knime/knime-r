@@ -13,8 +13,8 @@
 	    	which is then read into R and the entered commands are executed. The
 	    	resulting png file is passed into KNIME and is displayed in the
 	    	node's view.<br/>
-			Be aware that if you use commands like <code>png()</code> or 
-			<code>bmp()</code> etc. you will open a new graphic device to draw 
+			Be aware that if you use commands like <i>png()</i> or 
+			<i>bmp()</i> etc. you will open a new graphic device to draw 
 			the plot to. This means that the graphic device used by this node 
 			to display the plot is not used anymore and the view will show a 
 			white empty image. 	    	
