@@ -79,7 +79,7 @@ public class RViewsPngDialogPanel extends JLabel {
      * containing the background color of the png image to create by R.
      */
     static final SettingsModelString createBgModel() {
-        return new SettingsModelString("R-bg-col", "white");
+        return new SettingsModelString("R-bg-col", "#FFFFFF");
     }    
     
     
