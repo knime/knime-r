@@ -9,12 +9,19 @@
 		<intro>
 		Allows execution of R commands in a local R installation. The result of 
 		these R commands is returned in the output table of this node. All
-		input data is written to a CVS file which is then processed together
+		input data is written to a CSV file which is then processed together
 		with the R commands. The result likewise in the variable R is written
-		to CVS file again and then passed into KNIME.
+		to CSV file again and then passed into KNIME.<br/>
+		Be aware that if you use commands like <code>png()</code> or 
+		<code>bmp()</code> etc. you will open a new graphic device to draw 
+		the plot to. This means that the graphic device used by this node 
+		to display the plot is not used anymore and the view will show a 
+		white empty image. 
 		</intro>
 		<option name ="R binary path">
-			Path to the local R executable.
+			Path to the local R executable. Note that it is possible to specify
+			the path to the local R executable also in the R section of the 
+			KNIME preferences.
 		</option>
 		<option name ="R command">
 			The R commands to run.
