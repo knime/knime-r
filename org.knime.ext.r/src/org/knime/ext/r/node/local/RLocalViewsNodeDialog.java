@@ -78,10 +78,11 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
     }
     
     private static final String TAB_TITLE = "View";
-    
     private static final String TAB_R_BINARY = "R Binary";
+    private static final String TAB_PNG_TITLE = "Png Settings";
     
     private final RViewsDialogPanel m_viewScriptPanel;
+    private final RViewsPngDialogPanel m_viewPngPanel;
     
     /**
      * Creates new instance of <code>RLocalViewsNodeDialog</code>.
@@ -90,6 +91,9 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
         super();
         m_viewScriptPanel = createCommandTab();
         addTab(TAB_TITLE, m_viewScriptPanel);
+        
+        m_viewPngPanel = new RViewsPngDialogPanel();
+        addTab(TAB_PNG_TITLE, m_viewPngPanel);
         
         setDefaultTabTitle(TAB_R_BINARY);
     }
@@ -102,6 +106,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
             final DataTableSpec[] specs) throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
         m_viewScriptPanel.loadSettings(settings, specs);
+        m_viewPngPanel.loadSettings(settings, specs);
     }
     
     /**
@@ -112,5 +117,6 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
         throws InvalidSettingsException {
         super.saveAdditionalSettingsTo(settings);
         m_viewScriptPanel.saveSettings(settings);
+        m_viewPngPanel.saveSettings(settings);
     }
 }

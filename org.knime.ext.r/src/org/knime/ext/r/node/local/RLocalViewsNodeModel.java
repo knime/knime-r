@@ -39,6 +39,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
+import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RPlotterNodeModel;
@@ -62,6 +63,18 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     
     private SettingsModelString m_viewCmdModel = 
         RLocalViewsNodeDialog.createRViewCmdSettingsModel();
+    
+    private SettingsModelIntegerBounded m_heightModel = 
+        RViewsPngDialogPanel.createHeightModel();
+    
+    private SettingsModelIntegerBounded m_widthModel = 
+        RViewsPngDialogPanel.createWidthModel();
+    
+    private SettingsModelIntegerBounded m_pointSizeModel = 
+        RViewsPngDialogPanel.createPointSizeModel();
+    
+    private SettingsModelString m_bgModel = 
+        RViewsPngDialogPanel.createBgModel();
     
     private Image m_resultImage;
     
@@ -95,9 +108,13 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
      */
     @Override
     protected String getCommand() {
-        return "png(\"" + m_filename + "\", width=800, height=800);\n" 
-              + m_viewCmdModel.getStringValue() 
-              + "\ndev.off();";
+        return "png(\"" + m_filename + "\", width=" 
+            + m_widthModel.getIntValue() + ", height=" 
+            + m_heightModel.getIntValue() + ", pointsize=" 
+            + m_pointSizeModel.getIntValue() + ", bg=\"" 
+            + m_bgModel.getStringValue() + "\");\n" 
+            + m_viewCmdModel.getStringValue()
+            + "\ndev.off();";
     }
 
     /**
@@ -178,6 +195,11 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         m_viewModel.loadSettingsFrom(settings);
         m_colFilterModel.loadSettingsFrom(settings);
         m_viewCmdModel.loadSettingsFrom(settings);
+        
+        m_heightModel.loadSettingsFrom(settings);
+        m_widthModel.loadSettingsFrom(settings);
+        m_pointSizeModel.loadSettingsFrom(settings);
+        m_bgModel.loadSettingsFrom(settings);
     }
 
     /**
@@ -189,6 +211,11 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         m_viewModel.saveSettingsTo(settings);
         m_colFilterModel.saveSettingsTo(settings);
         m_viewCmdModel.saveSettingsTo(settings);
+        
+        m_heightModel.saveSettingsTo(settings);
+        m_widthModel.saveSettingsTo(settings);
+        m_pointSizeModel.saveSettingsTo(settings);
+        m_bgModel.saveSettingsTo(settings);
     }
 
     /**
@@ -211,6 +238,11 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         m_viewModel.validateSettings(settings);
         m_colFilterModel.validateSettings(settings);
         m_viewCmdModel.validateSettings(settings);
+        
+        m_heightModel.validateSettings(settings);
+        m_widthModel.validateSettings(settings);
+        m_pointSizeModel.validateSettings(settings);
+        m_bgModel.validateSettings(settings);
     }
     
     
