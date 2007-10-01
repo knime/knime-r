@@ -32,6 +32,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.ext.r.node.local.RViewsDialogPanel;
+import org.knime.ext.r.node.local.RViewsPngDialogPanel;
 
 
 /**
@@ -43,6 +44,8 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
     
     private final RViewsDialogPanel m_plotCommandPanel;
     
+    private final RViewsPngDialogPanel m_viewPngPanel;
+    
     /**
      * New pane for configuring REvaluator node dialog.
      */
@@ -52,6 +55,8 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
         m_plotCommandPanel = new RViewsDialogPanel(); 
         super.addTab("View", m_plotCommandPanel);
         super.addLoginTab();
+        m_viewPngPanel = new RViewsPngDialogPanel();
+        super.addTab(RViewsPngDialogPanel.TAB_PNG_TITLE, m_viewPngPanel);
     }
 
     /**
@@ -68,6 +73,7 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
             throws NotConfigurableException {
         super.loadSettingsFrom(settings, specs);
         m_plotCommandPanel.loadSettings(settings, specs);
+        m_viewPngPanel.loadSettings(settings, specs);
     } 
     
     /**
@@ -84,5 +90,6 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
             throws InvalidSettingsException {
         super.saveSettingsTo(settings);
         m_plotCommandPanel.saveSettings(settings);
+        m_viewPngPanel.saveSettings(settings);
     }
 }

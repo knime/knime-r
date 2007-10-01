@@ -45,13 +45,15 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RViewsPngDialogPanel extends JLabel {
-
+    
+    /** Default tab title for this panel. */
+    public static final String TAB_PNG_TITLE = "PNG Settings";
     
     /**
      * @return a <code>SettingsModelIntegerBounded</code> instance 
      * containing the height of the png image to create by R.
      */
-    static final SettingsModelIntegerBounded createHeightModel() {
+    public static final SettingsModelIntegerBounded createHeightModel() {
         return new SettingsModelIntegerBounded("R-png-height", 640, 
                 50, Integer.MAX_VALUE);
     }
@@ -60,7 +62,7 @@ public class RViewsPngDialogPanel extends JLabel {
      * @return a <code>SettingsModelIntegerBounded</code> instance 
      * containing the width of the png image to create by R.
      */
-    static final SettingsModelIntegerBounded createWidthModel() {
+    public static final SettingsModelIntegerBounded createWidthModel() {
         return new SettingsModelIntegerBounded("R-png-width", 640, 
                 50, Integer.MAX_VALUE);
     }
@@ -69,7 +71,7 @@ public class RViewsPngDialogPanel extends JLabel {
      * @return a <code>SettingsModelIntegerBounded</code> instance 
      * containing the point size of the png image to create by R.
      */
-    static final SettingsModelIntegerBounded createPointSizeModel() {
+    public static final SettingsModelIntegerBounded createPointSizeModel() {
         return new SettingsModelIntegerBounded("R-png-pointSize", 12, 1, 
                 Integer.MAX_VALUE);
     }
@@ -78,7 +80,7 @@ public class RViewsPngDialogPanel extends JLabel {
      * @return a <code>SettingsModelString</code> instance 
      * containing the background color of the png image to create by R.
      */
-    static final SettingsModelString createBgModel() {
+    public static final SettingsModelString createBgModel() {
         return new SettingsModelString("R-bg-col", "#FFFFFF");
     }    
     

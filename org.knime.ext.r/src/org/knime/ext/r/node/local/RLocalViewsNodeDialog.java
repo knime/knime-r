@@ -79,7 +79,6 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
     
     private static final String TAB_TITLE = "View";
     private static final String TAB_R_BINARY = "R Binary";
-    private static final String TAB_PNG_TITLE = "Png Settings";
     
     private final RViewsDialogPanel m_viewScriptPanel;
     private final RViewsPngDialogPanel m_viewPngPanel;
@@ -93,7 +92,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
         addTab(TAB_TITLE, m_viewScriptPanel);
         
         m_viewPngPanel = new RViewsPngDialogPanel();
-        addTab(TAB_PNG_TITLE, m_viewPngPanel);
+        addTab(RViewsPngDialogPanel.TAB_PNG_TITLE, m_viewPngPanel);
         
         setDefaultTabTitle(TAB_R_BINARY);
     }

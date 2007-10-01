@@ -65,6 +65,18 @@
 		    Adapt the R view command's parameter list and enter arbitrary R
 		    scripting commands on the variable R by using all selected columns.
 		</option>
+				<option name ="Image height">
+			The height of the image to create and display in pixels
+		</option>
+		<option name ="Image width">
+			The width of the image to create and display in pixels
+		</option>
+		<option name ="Point size">
+			The point size of plotted text. One point is approximately one pixel.
+		</option>
+		<option name ="Background color">
+			The background color encoded in RGB Hex. 
+		</option>
 		<option name ="1. Host: ">
 			The IP of the computer where the R server is running, for example
 			localhost with IP 127.0.0.1 

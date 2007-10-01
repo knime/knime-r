@@ -50,10 +50,13 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
+import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.local.RLocalViewsNodeDialog;
+import org.knime.ext.r.node.local.RViewsPngDialogPanel;
 import org.rosuda.REngine.Rserve.RConnection;
+import org.rosuda.REngine.Rserve.RFileInputStream;
 import org.rosuda.REngine.Rserve.RserveException;
 
 /**
@@ -82,6 +85,17 @@ public class RPlotterNodeModel extends RNodeModel {
     private SettingsModelString m_viewCmdModel = 
         RLocalViewsNodeDialog.createRViewCmdSettingsModel();    
     
+    private SettingsModelIntegerBounded m_heightModel = 
+        RViewsPngDialogPanel.createHeightModel();
+    
+    private SettingsModelIntegerBounded m_widthModel = 
+        RViewsPngDialogPanel.createWidthModel();
+    
+    private SettingsModelIntegerBounded m_pointSizeModel = 
+        RViewsPngDialogPanel.createPointSizeModel();
+    
+    private SettingsModelString m_bgModel = 
+        RViewsPngDialogPanel.createBgModel();
     
     /**
      * Creates a new plotter with one data input. 
@@ -110,7 +124,12 @@ public class RPlotterNodeModel extends RNodeModel {
         String fileName = FILE_NAME + "_" + System.identityHashCode(cr) 
             + ".png";
         LOGGER.info("The image name: " + fileName);
-        c.eval("try(png(\"" + fileName + "\"))");
+        String pngCommand = "png(\"" + fileName + "\", width=" 
+            + m_widthModel.getIntValue() + ", height=" 
+            + m_heightModel.getIntValue() + ", pointsize=" 
+            + m_pointSizeModel.getIntValue() + ", bg=\"" 
+            + m_bgModel.getStringValue() + "\")";
+        c.eval("try(" + pngCommand + ")");
         
         // send data to R server
         RConnectionRemote.sendData(c, dataTableToUse, exec);
@@ -122,10 +141,13 @@ public class RPlotterNodeModel extends RNodeModel {
         c.voidEval("dev.off()");
         
         // read png back from server
-        InputStream ris = c.openFile(fileName);
+        RFileInputStream ris = c.openFile(fileName);
         m_imageFile = File.createTempFile(FILE_NAME, ".png");
         FileOutputStream copy = new FileOutputStream(m_imageFile);
-        FileUtil.copy(ris, copy);
+        // FIXME: #readAll() has been added by KNIME, since 
+        // #read(byte[],int,int) causes an exception when the returned file as 
+        // more bytes then the actual length of the byte array to write into
+        copy.write(ris.readAll());
         FileInputStream in = new FileInputStream(m_imageFile);
         try {
             m_resultImage = createImage(in);
@@ -138,14 +160,14 @@ public class RPlotterNodeModel extends RNodeModel {
             c.close();
         }
 
-        // nothing
+        // nothing, has no outport
         return new BufferedDataTable[0];
     }
     
     /**
      * Creates an image instance out of the given <code>InputStream</code>.
      * This stream can for instance a <code>FileInputStream</code> holding
-     * a image file, such as a .png and so on. 
+     * a image file, such as a png and so on. 
      * 
      * @param is The stream reading the image file.
      * @return The image instance.
@@ -228,6 +250,11 @@ public class RPlotterNodeModel extends RNodeModel {
         m_viewModel.saveSettingsTo(settings);
         m_colFilterModel.saveSettingsTo(settings);
         m_viewCmdModel.saveSettingsTo(settings);
+        
+        m_heightModel.saveSettingsTo(settings);
+        m_widthModel.saveSettingsTo(settings);
+        m_pointSizeModel.saveSettingsTo(settings);
+        m_bgModel.saveSettingsTo(settings);
     }
 
     /**
@@ -240,6 +267,11 @@ public class RPlotterNodeModel extends RNodeModel {
         m_viewModel.loadSettingsFrom(settings);
         m_colFilterModel.loadSettingsFrom(settings);
         m_viewCmdModel.loadSettingsFrom(settings);
+        
+        m_heightModel.loadSettingsFrom(settings);
+        m_widthModel.loadSettingsFrom(settings);
+        m_pointSizeModel.loadSettingsFrom(settings);
+        m_bgModel.loadSettingsFrom(settings);
     }
 
     /**
@@ -252,6 +284,11 @@ public class RPlotterNodeModel extends RNodeModel {
         m_viewModel.validateSettings(settings);
         m_colFilterModel.validateSettings(settings);
         m_viewCmdModel.validateSettings(settings);
+        
+        m_heightModel.validateSettings(settings);
+        m_widthModel.validateSettings(settings);
+        m_pointSizeModel.validateSettings(settings);
+        m_bgModel.validateSettings(settings);
     }
 
     /**
