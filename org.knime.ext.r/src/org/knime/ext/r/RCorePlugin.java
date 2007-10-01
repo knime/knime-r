@@ -28,6 +28,8 @@ package org.knime.ext.r;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.knime.core.node.NodeFactory;
+import org.knime.ext.r.node.RScriptingNodeFactory;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -55,6 +57,7 @@ public class RCorePlugin extends AbstractUIPlugin {
     @Override
     public void start(final BundleContext context) throws Exception {
         super.start(context);
+        NodeFactory.addLoadedFactory(RScriptingNodeFactory.class);
     }
 
     /**

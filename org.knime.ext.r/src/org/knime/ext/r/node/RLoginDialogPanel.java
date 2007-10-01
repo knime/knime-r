@@ -34,9 +34,10 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodedialog.DialogComponentInteger;
-import org.knime.core.node.defaultnodedialog.DialogComponentPasswordField;
-import org.knime.core.node.defaultnodedialog.DialogComponentTextField;
+import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
+import org.knime.core.node.defaultnodesettings.DialogComponentPasswordField;
+import org.knime.core.node.defaultnodesettings.DialogComponentString;
 
 /**
  * Panel used to login to a R server providing user, password, host, and port.
@@ -45,35 +46,27 @@ import org.knime.core.node.defaultnodedialog.DialogComponentTextField;
  */
 final class RLoginDialogPanel extends JPanel {
 
-    private final DialogComponentTextField m_host;
+    private final DialogComponentString m_host = new DialogComponentString(
+            RLoginSettings.HOST, "Host: ");
 
-    private final DialogComponentInteger m_port;
+    private final DialogComponentNumber m_port = new DialogComponentNumber(
+            RLoginSettings.PORT, "Port: ", 1);
 
-    private final DialogComponentTextField m_user;
+    private final DialogComponentString m_user = new DialogComponentString(
+            RLoginSettings.USER, "User: ");;
 
-    private final DialogComponentPasswordField m_pass;
+    private final DialogComponentPasswordField m_pass = 
+        new DialogComponentPasswordField(RLoginSettings.PASS, "Password: ");;
 
     /**
      * Default constructor.
      */
     public RLoginDialogPanel() {
         super(new GridLayout(4, 1));
-        m_host = new DialogComponentTextField(RLoginSettings.KEY_HOST, "Host: ",
-                RLoginSettings.DEFAULT_HOST);
-        m_host.setSizeComponents(200, 25);
-        m_port = new DialogComponentInteger(RLoginSettings.KEY_PORT, "Port: ", 
-                RLoginSettings.DEFAULT_PORT);
-        m_port.setSizeComponents(200, 25);
-        m_user = new DialogComponentTextField(RLoginSettings.KEY_USER, "User: ",
-                RLoginSettings.DEFAULT_USER);
-        m_user.setSizeComponents(200, 25);
-        m_pass = new DialogComponentPasswordField(RLoginSettings.KEY_PASSWORD,
-                "Password: ");
-        m_pass.setSizeComponents(200, 25);
-        super.add(m_host);
-        super.add(m_port);
-        super.add(m_user);
-        super.add(m_pass);
+        super.add(m_host.getComponentPanel());
+        super.add(m_port.getComponentPanel());
+        super.add(m_user.getComponentPanel());
+        super.add(m_pass.getComponentPanel());
     }
 
     /**
@@ -81,9 +74,10 @@ final class RLoginDialogPanel extends JPanel {
      * components.   
      * @param settings the new settings to display in the components.
      * @param specs the table specs from the input ports.
+     * @throws NotConfigurableException if settings can't be loaded
      */
     public void loadSettingsFrom(final NodeSettingsRO settings,
-            final DataTableSpec[] specs) {
+            final DataTableSpec[] specs) throws NotConfigurableException {
         m_host.loadSettingsFrom(settings, specs);
         m_port.loadSettingsFrom(settings, specs);
         m_user.loadSettingsFrom(settings, specs);

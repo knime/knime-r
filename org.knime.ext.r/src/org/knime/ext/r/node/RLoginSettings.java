@@ -26,10 +26,11 @@
  */
 package org.knime.ext.r.node;
 
-import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodedialog.DialogComponentPasswordField;
+import org.knime.core.node.defaultnodesettings.DialogComponentPasswordField;
+import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
  * Defines variables to create a connection to a R server. 
@@ -39,35 +40,42 @@ import org.knime.core.node.defaultnodedialog.DialogComponentPasswordField;
 public final class RLoginSettings {
     
     /** key used to store settings. */
-    static final String KEY_HOST = "host";
+    private static final String KEY_HOST = "host";
     /** key used to store settings. */
-    static final String KEY_PORT = "port";
+    private static final String KEY_PORT = "port";
     /** key used to store settings. */
-    static final String KEY_USER = "user";
+    private static final String KEY_USER = "user";
     /** key used to store settings. */
     static final String KEY_PASSWORD = "password";
     
-    /** Default initalization for host: localhost. */
+    /** Default initialization for host: localhost. */
     public static final String DEFAULT_HOST = "127.0.0.1";
-    /** Default initalization for port: . */
-    public static final int DEFAULT_PORT = 6311;
-    /** Default initalization for user: (none).*/
+    /** Default initialization for port: . */
+    public static final int DEFAULT_PORT = 6311; // [0..65536]
+    /** Default initialization for user: (none).*/
     public static final String DEFAULT_USER = "";
-    /** Default initalization for password: (none).*/
+    /** Default initialization for password: (none).*/
     public static final String DEFAULT_PASS = "";
     
-    private String m_user = DEFAULT_USER;
+    /** Settings model for user name. */
+    static final SettingsModelString USER = new SettingsModelString(
+            KEY_USER, DEFAULT_USER);
     
-    private String m_host = DEFAULT_HOST;
+    /** Settings model for host name. */
+    static final SettingsModelString HOST = new SettingsModelString(
+            KEY_HOST, DEFAULT_HOST);
     
-    private int m_port = DEFAULT_PORT;
+    /** Settings model for port number. */
+    static final SettingsModelIntegerBounded PORT = 
+        new SettingsModelIntegerBounded(KEY_PORT, DEFAULT_PORT, 0, 65536);
     
-    private String m_pass = DEFAULT_PASS;
-
+    /** Settings model for enrypted password field. */
+    static final SettingsModelString PASS = new SettingsModelString(
+            KEY_PASSWORD, DEFAULT_PASS);
     /**
      * Create new empty R login settings object.
      */
-    RLoginSettings() {
+    private RLoginSettings() {
         
     }
     
@@ -75,111 +83,108 @@ public final class RLoginSettings {
      * Sets the user name to the specified string.
      * @param user the new user name.
      */
-    public void setUser(final String user) {
-        m_user = user;
+    static void setUser(final String user) {
+        USER.setStringValue(user);
     }
     
     /**
      * @return the currently set user name.
      */
-    public String getUser() {
-        return m_user;
+    static String getUser() {
+        return USER.getStringValue();
     }
     
     /**
      * Sets the host ip address to the specified string.
      * @param host the new host IP address.
      */
-    public void setHost(final String host) {
-        m_host = host;
+    static void setHost(final String host) {
+        HOST.setStringValue(host);
     }
     
     /**
      * @return the currently set host IP address as string.
      */
-    public String getHost() {
-        return m_host;
+    static String getHost() {
+        return HOST.getStringValue();
     }
     
     /**
      * Sets the port address to the specified number.
      * @param port the new port number.
      */
-    public void setPort(final int port) {
-        m_port = port;
+    static void setPort(final int port) {
+        PORT.setIntValue(port);
     }
     
     /**
      * @return the currently set port number.
      */
-    public int getPort() {
-        return m_port;
+    static int getPort() {
+        return PORT.getIntValue();
     }
     
     /**
      * Sets the pass phrase to the specified string.
      * @param password the new password.
      */
-    public void setPassword(final String password) {
-        m_pass = password;
+    static void setPassword(final String password) {
+        String pw = "";
+        try {
+            pw = DialogComponentPasswordField.encrypt(password.toCharArray());
+        } catch (Exception e) {
+            // ignored
+        }
+        PASS.setStringValue(pw);
     }
     
     /**
      * @return the currently set password.
      */
-    public String getPassword() {
-        return m_pass;
+    static String getPassword() {
+        String pw = PASS.getStringValue();
+        try {
+            return DialogComponentPasswordField.decrypt(pw);
+        } catch (Exception e) {
+            return "";
+        }
     }
     
     /**
      * Validate settings.
      * @param settings to validate
-     * @throws InvalidSettingsException if settings are not valid
      */
-    protected void validateSettings(final NodeSettingsRO settings) 
-        throws InvalidSettingsException {
+    static void validateSettings(final NodeSettingsRO settings) {
             readSettings(settings, false);        
     }
 
     /**
      * Load validated settings.
      * @param settings to load
-     * @throws InvalidSettingsException if settings could not be loaded
      */
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) 
-        throws InvalidSettingsException {
+    static void loadValidatedSettingsFrom(final NodeSettingsRO settings) {
         readSettings(settings, true);
     }
     
-    private void readSettings(final NodeSettingsRO settings, 
-            final boolean write) 
-        throws InvalidSettingsException {
+    private static void readSettings(final NodeSettingsRO settings, 
+            final boolean write) {
         String host = settings.getString(KEY_HOST, DEFAULT_HOST);
         int port = settings.getInt(KEY_PORT, DEFAULT_PORT);
         String user = settings.getString(KEY_USER, DEFAULT_USER);
-        String pw = "";
-        try { 
-            pw = settings.getString(KEY_PASSWORD, DEFAULT_PASS);
-            pw = DialogComponentPasswordField.decrypt(pw);
-        } catch (Exception e) {
-            throw new InvalidSettingsException(
-                        "Could not decrypt password", e);
-        } 
+        String pw = settings.getString(KEY_PASSWORD, DEFAULT_PASS);
         if (write) {
-            setHost(host);
-            setPort(port);
-            setUser(user);
-            setPassword(pw);
+            PASS.setStringValue(pw);
+            HOST.setStringValue(host);
+            PORT.setIntValue(port);
+            USER.setStringValue(user);
         }
-        
-    }
-    
+    }   
     
     /**
      * Save settings.
      * @param settings saved into
      */
-    protected void saveSettingsTo(final NodeSettingsWO settings) {
+    static void saveSettingsTo(final NodeSettingsWO settings) {
         settings.addString(KEY_HOST, getHost());
         settings.addInt(KEY_PORT, getPort());
         settings.addString(KEY_USER, getUser());

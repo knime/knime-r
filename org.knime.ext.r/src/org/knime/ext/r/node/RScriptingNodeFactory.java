@@ -35,6 +35,7 @@ import org.knime.core.node.NodeView;
  * <code>NodeFactory</code> for the "RScripting" Node.
  * 
  * @author Thomas Gabriel, University of Konstanz
+ * @deprecated not supported anymore, since 1.3
  */
 public class RScriptingNodeFactory extends NodeFactory {
     /**

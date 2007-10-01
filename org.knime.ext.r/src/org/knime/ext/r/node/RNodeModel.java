@@ -52,7 +52,9 @@ abstract class RNodeModel extends NodeModel {
      * R connection for all non-windows machines.
      */
     private RConnection m_rconn;
-    private final RLoginSettings m_login = new RLoginSettings();
+    
+    private static final String R_CONNECTION_ERROR = 
+        "Can't connect to R server; make sure the R server is running...";
     
     /** R Logger. */
     private static final NodeLogger LOGGER = 
@@ -72,7 +74,7 @@ abstract class RNodeModel extends NodeModel {
      */
     protected final RConnection getRconnection() {
         if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0
-                && m_login.getHost().equals(RLoginSettings.DEFAULT_HOST)) {
+              && RLoginSettings.getHost().equals(RLoginSettings.DEFAULT_HOST)) {
             return mSTATICRCONN = createConnection(mSTATICRCONN);
         } else {
             return m_rconn = createConnection(m_rconn);
@@ -93,24 +95,22 @@ abstract class RNodeModel extends NodeModel {
             checkR.close();
         }
         LOGGER.info("Starting R evaluation on Rserve (" 
-                + m_login.getHost() + ":" + m_login.getPort() + ") ...");
+         + RLoginSettings.getHost() + ":" + RLoginSettings.getPort() + ") ...");
         RConnection rconn;
         try {
-            rconn = new RConnection(m_login.getHost(), m_login.getPort());
+            rconn = new RConnection(RLoginSettings.getHost(), 
+                    RLoginSettings.getPort());
             if (rconn.needLogin()) {
-                rconn.login(m_login.getUser(), m_login.getPassword());
+                rconn.login(RLoginSettings.getUser(), 
+                        RLoginSettings.getPassword());
             }
         } catch (RserveException rse) {
-            LOGGER.error("Can't connect to server");
-            throw new IllegalStateException("Make sure R server is "
-                    + "available before executing this node");
+            throw new IllegalStateException(R_CONNECTION_ERROR);
         }
         if ((rconn == null) || (!rconn.isConnected())) {
-            LOGGER.error("Can't connect to server");
-            throw new IllegalStateException("Make sure R server is "
-                    + "available before executing this node");
+            throw new IllegalStateException(R_CONNECTION_ERROR);
         }
-        LOGGER.debug("R connection opened");
+        LOGGER.debug("R connection opened.");
         return rconn;
     }
     
@@ -130,7 +130,7 @@ abstract class RNodeModel extends NodeModel {
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
-        m_login.saveSettingsTo(settings);
+        RLoginSettings.saveSettingsTo(settings);
     }
 
     /**
@@ -139,7 +139,7 @@ abstract class RNodeModel extends NodeModel {
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        m_login.loadValidatedSettingsFrom(settings);
+        RLoginSettings.loadValidatedSettingsFrom(settings);
     }
     
     /**
@@ -148,6 +148,6 @@ abstract class RNodeModel extends NodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings) 
             throws InvalidSettingsException {
-        m_login.validateSettings(settings);
+        RLoginSettings.validateSettings(settings);
     }
 }
