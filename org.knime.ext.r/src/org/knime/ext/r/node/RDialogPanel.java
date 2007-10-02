@@ -84,6 +84,8 @@ public class RDialogPanel extends JPanel {
         
         // init editor pane
         m_textExpression = new JEditorPane();
+        m_textExpression.setPreferredSize(new Dimension(400, 150));
+        
         m_textExpression.setFont(new Font("Courier", Font.PLAIN, 12));
         super.add(new JScrollPane(m_textExpression), BorderLayout.CENTER);
         // init column list
