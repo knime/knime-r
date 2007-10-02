@@ -170,7 +170,17 @@ public class RDialogPanel extends JPanel {
      * @return expression text
      */
     public String[] getExpression() {
-        String[] exps = m_textExpression.getText().split("\n");
+        return parseExpression(m_textExpression.getText());
+    }
+    
+    /**
+     * Parse the given string into expressions line-by-line replacing "\r" 
+     * and "\t" by white spaces.
+     * @param parse string to parse
+     * @return an array of expressions for each line
+     */
+    static final String[] parseExpression(final String parse) {
+        String[] exps = parse.split("\n");
         ArrayList<String> res = new ArrayList<String>();
         for (int i = 0; i < exps.length; i++) {
             exps[i] = exps[i].replace('\r', ' ');
@@ -181,6 +191,7 @@ public class RDialogPanel extends JPanel {
             }
         }
         return res.toArray(new String[0]);
+        
     }
 
     /**
