@@ -32,7 +32,6 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -59,6 +58,9 @@ import org.knime.core.node.util.DataColumnSpecListCellRenderer;
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RDialogPanel extends JPanel {
+    
+    /** Key for the R expression command. */
+    public static final String CFG_EXPRESSION = "EXPRESSION";
 
     private final JEditorPane m_textExpression;
     
@@ -172,30 +174,9 @@ public class RDialogPanel extends JPanel {
      * @return expression text
      */
     public String[] getExpression() {
-        return parseExpression(m_textExpression.getText());
+        return m_textExpression.getText().split("\n");
     }
     
-    /**
-     * Parse the given string into expressions line-by-line replacing "\r" 
-     * and "\t" by white spaces.
-     * @param parse string to parse
-     * @return an array of expressions for each line
-     */
-    static final String[] parseExpression(final String parse) {
-        String[] exps = parse.split("\n");
-        ArrayList<String> res = new ArrayList<String>();
-        for (int i = 0; i < exps.length; i++) {
-            exps[i] = exps[i].replace('\r', ' ');
-            exps[i] = exps[i].replace('\t', ' ');
-            exps[i] = exps[i].trim();
-            if (exps[i].length() > 0) {
-                res.add(exps[i]);
-            }
-        }
-        return res.toArray(new String[0]);
-        
-    }
-
     /**
      * @param exp The expression to set
      */

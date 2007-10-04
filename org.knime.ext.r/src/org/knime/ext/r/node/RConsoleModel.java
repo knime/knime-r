@@ -86,11 +86,11 @@ public class RConsoleModel extends RNodeModel {
         // send data to R server
         RConnectionRemote.sendData(rconn, inData[0], exec);
         // send expression to R server
-        for (int i = 0; i < m_expression.length; i++) {
-            exec.setMessage("Executing R command: " + m_expression[i]);
-            LOGGER.debug("eval: " + m_expression[i]);
-            rconn.voidEval("try(" + m_expression[i] + ")");
-            LOGGER.debug("successful");
+        String[] expression = parseExpression(m_expression);
+        for (String e : expression) {
+            exec.setMessage("Executing R command: " + e);
+            LOGGER.debug("voidEval: try(" + e + ")");
+            rconn.voidEval("try(" + e + ")");
         }
         exec.setMessage("Recieving R result...");
         REXP rexp = rconn.eval("try(R)");
@@ -386,7 +386,7 @@ public class RConsoleModel extends RNodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         super.saveSettingsTo(settings);
-        settings.addStringArray("EXPRESSION", m_expression);
+        settings.addStringArray(RDialogPanel.CFG_EXPRESSION, m_expression);
     }
 
     /**
@@ -396,7 +396,7 @@ public class RConsoleModel extends RNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_expression = settings.getStringArray("EXPRESSION");
+        m_expression = settings.getStringArray(RDialogPanel.CFG_EXPRESSION);
     }
 
     /**
@@ -406,7 +406,7 @@ public class RConsoleModel extends RNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        testExpressions(settings.getStringArray("EXPRESSION"));
+        testExpressions(settings.getStringArray(RDialogPanel.CFG_EXPRESSION));
     }
     
     /**

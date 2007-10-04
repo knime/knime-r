@@ -73,7 +73,8 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
             throw new NotConfigurableException("No input data available.");
         }
         m_dialogPanel.update(specs[0]);
-        String str = settings.getString("EXPRESSION", new String());
+        String str = settings.getString(RDialogPanel.CFG_EXPRESSION, 
+                new String());
         m_dialogPanel.setText(str);
     } 
     
@@ -84,6 +85,7 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
     public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
         throws InvalidSettingsException {
         super.saveAdditionalSettingsTo(settings);
-        settings.addString("EXPRESSION", m_dialogPanel.getText());
+        settings.addString(RDialogPanel.CFG_EXPRESSION, 
+                m_dialogPanel.getText());
     }    
 }

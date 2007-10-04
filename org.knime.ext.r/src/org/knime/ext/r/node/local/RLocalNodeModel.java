@@ -74,10 +74,12 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  * output tables is greater than zero.
  * <br/>
  * Additionally this class provides a preprocessing method
- * {@link RLocalNodeModel#preprocessDataTable(BufferedDataTable[], ExecutionContext)}
+ * {@link RLocalNodeModel#preprocessDataTable(BufferedDataTable[], 
+ * ExecutionContext)}
  * which can be overwritten to preprocess that input data, as well as a
  * postprocess method
- * {@link RLocalNodeModel#postprocessDataTable(BufferedDataTable[], ExecutionContext)}
+ * {@link RLocalNodeModel#postprocessDataTable(
+ * BufferedDataTable[], ExecutionContext)}
  * which can be overwritten to process that data after the R script execution.
  * If these methods are not overwritten the data will not be modified.
  *
@@ -202,7 +204,8 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
 
     /**
      * First the
-     * {@link RLocalNodeModel#preprocessDataTable(BufferedDataTable[], ExecutionContext)}
+     * {@link RLocalNodeModel#preprocessDataTable(
+     * BufferedDataTable[], ExecutionContext)}
      * method is called to preprocess that input data. Further a csv file
      * is written containing the input data. Next a R script is created
      * consisting of R commands to import the data of the csv file, the R code

@@ -137,10 +137,11 @@ public class RPlotterNodeModel extends RNodeModel {
         // execute view command on server
         LOGGER.info(m_viewCmdModel.getStringValue());
         exec.setMessage("Executing view R commands...");
-        String[] expression = RDialogPanel.parseExpression(
-                m_viewCmdModel.getStringValue());
+        String[] expression = parseExpression(
+                m_viewCmdModel.getStringValue().split("\n"));
         for (String e : expression) {
-            c.eval("try(" + e + ")");
+            LOGGER.debug("voidEval: try(" + e + ")");
+            c.voidEval("try(" + e + ")");
         }
         c.voidEval("dev.off()");
         

@@ -26,6 +26,8 @@
  */
 package org.knime.ext.r.node;
 
+import java.util.ArrayList;
+
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
@@ -112,6 +114,62 @@ abstract class RNodeModel extends NodeModel {
         }
         LOGGER.debug("R connection opened.");
         return rconn;
+    }
+    
+    /**
+     * Parse the given string into expressions line-by-line replacing "\r" 
+     * and "\t" by white spaces.
+     * @param exps string commands to parse
+     * @return an array of expressions for each line
+     */
+    static final String[] parseExpression(final String[] exps) {
+        ArrayList<String> res = new ArrayList<String>();
+        for (int i = 0; i < exps.length; i++) {
+            exps[i] = exps[i].replace('\r', ' ');
+            exps[i] = exps[i].replace('\t', ' ');
+            exps[i] = exps[i].trim();
+            String help = parseLine(exps[i]);
+            if (help.length() > 0) {
+                res.add(help);
+            }
+        }
+        return res.toArray(new String[0]);   
+    }
+    
+    private static String parseLine(final String str) {
+        StringBuilder b = new StringBuilder();
+        boolean isIgnoreNextChar = false;
+        boolean isInQuote = false;
+        for (int i = 0; i < str.length(); i++) {
+            if (isIgnoreNextChar) {
+                isIgnoreNextChar = false;
+                b.append((char)str.charAt(i));
+                continue;
+            }
+            switch (str.charAt(i)) {
+            case '"':
+                isInQuote = !isInQuote;
+                b.append((char)str.charAt(i));
+                break;
+            case '\\':
+                isIgnoreNextChar = true;
+                b.append((char)str.charAt(i));
+                break;
+            case '#':
+                if (!isInQuote) {
+                    i = str.length();
+                } else {
+                    b.append((char)str.charAt(i));
+                }
+                break;
+            default:
+                b.append((char)str.charAt(i));
+            }
+        }
+        if (isInQuote) {
+            return "";
+        }
+        return b.toString().trim();
     }
     
     /**

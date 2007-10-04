@@ -67,7 +67,8 @@ public class RConsoleDialogPane extends RNodeDialogPane {
             throw new NotConfigurableException("No input data available.");
         }
         m_dialogPanel.update(specs[0]);
-        String[] exps = settings.getStringArray("EXPRESSION", new String[0]);
+        String[] exps = settings.getStringArray(RDialogPanel.CFG_EXPRESSION, 
+                new String[0]);
         m_dialogPanel.setExpression(exps);
     } 
     
@@ -81,6 +82,7 @@ public class RConsoleDialogPane extends RNodeDialogPane {
     protected void saveSettingsTo(final NodeSettingsWO settings) 
             throws InvalidSettingsException {
         super.saveSettingsTo(settings);
-        settings.addStringArray("EXPRESSION", m_dialogPanel.getExpression());
+        settings.addStringArray(RDialogPanel.CFG_EXPRESSION, 
+                m_dialogPanel.getExpression());
     }
 }

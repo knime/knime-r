@@ -27,6 +27,7 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.ext.r.node.RDialogPanel;
 
 /**
  * The <code>RLocalScriptingNodeModel</code> provides functionality to create
@@ -72,7 +73,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_rCommand = settings.getString("EXPRESSION");
+        m_rCommand = settings.getString(RDialogPanel.CFG_EXPRESSION);
     }
 
     /**
@@ -81,7 +82,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         super.saveSettingsTo(settings);
-        settings.addString("EXPRESSION", m_rCommand);
+        settings.addString(RDialogPanel.CFG_EXPRESSION, m_rCommand);
     }
 
     /**
@@ -91,7 +92,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        testExpressions(settings.getString("EXPRESSION"));
+        testExpressions(settings.getString(RDialogPanel.CFG_EXPRESSION));
     }
     
     
