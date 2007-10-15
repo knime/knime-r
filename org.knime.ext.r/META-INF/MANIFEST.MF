@@ -8,8 +8,7 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.knime.workbench.repository,
- org.knime.base,
- org.knime.base.extTool
+ org.knime.base
 Eclipse-RegisterBuddy: org.knime.base
 Bundle-ClassPath: knime-r.jar,
  lib/Rserve-0.5-0.jar
