@@ -36,6 +36,10 @@
     	    the R server and restart it. Warnings and errors are printed in the
     	    R server window.
     	    </p>
+			<br />
+			More details about R:<br />
+			<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
+			<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
 		<option name="R command">
 			Enter R commands here, for instance for computing the Covariance 

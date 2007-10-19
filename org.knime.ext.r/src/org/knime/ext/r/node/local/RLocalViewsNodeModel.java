@@ -128,7 +128,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
             final BufferedDataTable[] outData, final ExecutionContext exec)
             throws CanceledExecutionException, Exception {
         
-        // create image after execution.
+        // create image after execution.        
         FileInputStream fis = new FileInputStream(new File(m_filename));
         m_resultImage = RPlotterNodeModel.createImage(fis);
         fis.close();
@@ -145,9 +145,9 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     protected final BufferedDataTable[] preprocessDataTable(
             final BufferedDataTable[] inData, final ExecutionContext exec)
             throws CanceledExecutionException, Exception {
-        
-        m_filename = TEMP_PATH + "/" + "R-View-" 
-            + System.identityHashCode(inData) + ".png";
+        m_filename = 
+            FileUtil.createTempDir("R_").getAbsolutePath().replace('\\', '/')
+            + "/" + "R-View-" + System.identityHashCode(inData) + ".png";
                
         List<String> includeList = m_colFilterModel.getIncludeList();
         
@@ -258,7 +258,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         super.loadInternals(nodeInternDir, exec);
         
         File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
-        if (file != null && file.exists()) {
+        if (checkFile(file)) {
             File pngFile = File.createTempFile(INTERNAL_FILE_NAME, ".png");
             FileUtil.copy(file, pngFile);
             m_resultImage = RPlotterNodeModel.createImage(
@@ -279,9 +279,16 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         super.saveInternals(nodeInternDir, exec);
         
         File imgFile = new File(m_filename);
-        if (imgFile != null && imgFile.exists()) {
+        if (checkFile(imgFile)) {
             File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
             FileUtil.copy(imgFile, file);
         }
-    }   
+    }
+    
+    private boolean checkFile(final File file) {
+        if (file != null && file.exists()) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -58,7 +58,6 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
         m_dialogPanel.getColumnList().addMouseListener(ml);
         
         addTab("R command", m_dialogPanel);
-        
         setDefaultTabTitle(TAB_R_BINARY);
     }
     

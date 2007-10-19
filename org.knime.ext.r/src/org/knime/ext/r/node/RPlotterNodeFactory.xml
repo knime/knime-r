@@ -35,6 +35,10 @@
     	    the R server and restart it. Warnings and errors are printed in the
     	    R server window.
     	    </p>
+			<br />
+			More details about R:<br />
+			<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
+			<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
 		<option name ="View type">Choose a R view from the list of
 			predefined view command and adapt the parameter list in the R

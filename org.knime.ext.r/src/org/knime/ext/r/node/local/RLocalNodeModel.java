@@ -24,7 +24,9 @@
  */
 package org.knime.ext.r.node.local;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -96,6 +98,7 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
      */
     protected static final String TEMP_PATH =
         System.getProperty("java.io.tmpdir").replace('\\', '/');
+        
 
     /**
      * The delimiter used for creation of csv files.
@@ -222,10 +225,6 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         // preprocess data in in DataTable.
         BufferedDataTable[] inDataTables = preprocessDataTable(inData, exec);
 
-        if (inDataTables[0].getRowCount() < 1) {
-            return new BufferedDataTable[]{};
-        }
-
         File tempOutData = null;
         File inDataCsvFile = null;
         File rCommandFile = null;
@@ -238,7 +237,7 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
             inDataCsvFile = writeInDataCsvFile(inDataTables[0], subExec);
 
             // execute R cmd
-            StringBuffer completeCmd = new StringBuffer();
+            StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(m_setWorkingDirCmd);
             completeCmd.append(READ_DATA_CMD_PREFIX);
             completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\',
@@ -257,12 +256,12 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
 
             // write R command
             String rCmd = completeCmd.toString();
-            LOGGER.info("R command: \n" + rCmd);
+            LOGGER.debug("R command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
 
             // create shell command
-            StringBuffer shellCmd = new StringBuffer();
+            StringBuilder shellCmd = new StringBuilder();
 
             String rBinaryFile = RPreferenceInitializer.getRPath();
             if (m_useSpecifiedModel.isEnabled()) {
@@ -272,10 +271,11 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
 
             shellCmd.append(" CMD BATCH ");
             shellCmd.append(rCommandFile.getAbsolutePath());
+            shellCmd.append(" " + rOutFile.getAbsolutePath());
 
             // execute shell command
             String shcmd = shellCmd.toString();
-            LOGGER.info("Shell command: \n" + shcmd);
+            LOGGER.debug("Shell command: \n" + shcmd);
 
             CommandExecution cmdExec = new CommandExecution(shcmd);
             cmdExec.addObserver(this);
@@ -285,20 +285,45 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
             setExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
 
             if (exitVal != 0) {
+                String rErr = "";
+                
                 // before we return, we save the output in the failing list
                 synchronized (cmdExec) {
                     setFailedExternalOutput(new LinkedList<String>(cmdExec
                             .getStdOutput()));
                 }
                 synchronized (cmdExec) {
-                    setFailedExternalErrorOutput(new LinkedList<String>(cmdExec
-                            .getStdErr()));
-                }
-
+                    
+                    // save error description of the Rout file to the ErrorOut
+                    LinkedList<String> list = new LinkedList<String>(
+                            cmdExec.getStdErr());
+                    
+                    list.add("#############################################");
+                    list.add("#");
+                    list.add("# Content of .Rout file: ");
+                    list.add("#");
+                    list.add("#############################################");
+                    list.add(" ");
+                    BufferedReader bfr = new BufferedReader(
+                            new FileReader(rOutFile));
+                    String line;
+                    while ((line = bfr.readLine()) != null) {
+                        list.add(line);
+                    }
+                    bfr.close();
+                    
+                    // use row before last as R error. 
+                    int index = list.size() - 2;
+                    if (index >= 0) {
+                        rErr = list.get(index);
+                    }
+                    setFailedExternalErrorOutput(list);
+                }                
+                
                 LOGGER.debug("Execution of R Script failed with exit code: "
                         + exitVal);
                 throw new IllegalStateException(
-                        "Execution of R script failed!");
+                        "Execution of R script failed: " + rErr);
             }
 
             // read data from R output csv into a buffered data table.
@@ -324,17 +349,23 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
     private boolean deleteFile(final File file) {
         boolean del = false;
         if (file != null && file.exists()) {
-
-            // !!! What a mess !!!
-            // It is possible that there are still open streams around
-            // holding the file. Therefore these streams, actually belonging
-            // to the garbage, has to be collected by the GC.
-            System.gc();
-
             del = FileUtil.deleteRecursively(file);
-            if (!del) {
-                LOGGER.debug(file.getAbsoluteFile()
-                        + " could not be deleted !");
+            
+            // if file could not be deleted call GC and try again
+            if (!del) {    
+                // !!! What a mess !!!
+                // It is possible that there are still open streams around
+                // holding the file. Therefore these streams, actually belonging
+                // to the garbage, has to be collected by the GC.
+                System.gc();
+                
+                // try to delete again ....
+                del = FileUtil.deleteRecursively(file);
+                if (!del) {
+                    // ok that's it no trials anymore ... 
+                    LOGGER.debug(file.getAbsoluteFile()
+                            + " could not be deleted !");
+                }
             }
         }
         return del;
@@ -384,9 +415,11 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         settings.setFileHasRowHeadersUserSet(true);
         settings.setQuoteUserSet(true);
         settings.setWhiteSpaceUserSet(true);
+        settings.setGlobalMissingValuePattern("NA");
         settings = FileAnalyzer.analyze(settings);
-
+        
         DataTableSpec tSpec = settings.createDataTableSpec();
+        
         FileTable fTable = new FileTable(tSpec, settings, settings
                     .getSkippedColumns(), exec);
 
@@ -426,8 +459,8 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         if (!binaryFile.exists() || !binaryFile.isFile()
                 || !binaryFile.canExecute()) {
             throw new InvalidSettingsException("File: "
-                    + tempBinaryFileModel.getStringValue()
-                    + " is not a valid R executable file!");
+                        + tempBinaryFileModel.getStringValue()
+                        + " is not a valid R executable file!");
         }
 
         m_rbinaryFileSettingsModel.loadSettingsFrom(settings);

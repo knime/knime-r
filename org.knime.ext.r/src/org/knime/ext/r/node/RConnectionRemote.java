@@ -67,7 +67,7 @@ final class RConnectionRemote {
     static final String formatColumn(final String name) {
         String newName = name.replaceAll("[^a-zA-Z0-9]", ".");
         if (!newName.equals(name)) {
-            LOGGER.info("Column name \"" + name + "\" changed into " 
+            LOGGER.debug("Column name \"" + name + "\" changed into " 
                     + "\"" + newName + "\".");
         }
         return newName;

@@ -62,6 +62,8 @@ public class RDialogPanel extends JPanel {
     /** Key for the R expression command. */
     public static final String CFG_EXPRESSION = "EXPRESSION";
 
+    private static final String DEFAULT_R_COMMAND = "R<-R";
+    
     private final JEditorPane m_textExpression;
     
     private final JList m_list;
@@ -164,7 +166,7 @@ public class RDialogPanel extends JPanel {
     public void setText(final String str) {
         String text = str.trim();
         if (text.length() <= 0) {
-            text = "R<-";
+            text = DEFAULT_R_COMMAND;
         }
         m_textExpression.setText(text);
         m_textExpression.setCaretPosition(text.length());
@@ -186,7 +188,7 @@ public class RDialogPanel extends JPanel {
             m_textExpression.replaceSelection(exp[i] + "\n");
         }
         if (m_textExpression.getText().trim().length() == 0) {
-            m_textExpression.setText("R<-");
+            m_textExpression.setText(DEFAULT_R_COMMAND);
         }
     }
 

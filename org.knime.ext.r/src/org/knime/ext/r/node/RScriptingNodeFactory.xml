@@ -35,6 +35,10 @@
     	    the R server and restart it. Warnings and errors are printed in the
     	    R server window.
     	    </p>
+			<br />
+			More details about R:<br />
+			<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
+			<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
 		<option name ="1. Host: ">
 			The IP of the computer where the R server is running, for example
