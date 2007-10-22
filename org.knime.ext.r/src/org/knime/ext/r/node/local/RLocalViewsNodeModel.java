@@ -258,7 +258,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         super.loadInternals(nodeInternDir, exec);
         
         File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
-        if (checkFile(file)) {
+        if (file.exists() && file.canRead()) {
             File pngFile = File.createTempFile(INTERNAL_FILE_NAME, ".png");
             FileUtil.copy(file, pngFile);
             m_resultImage = RPlotterNodeModel.createImage(
@@ -279,16 +279,9 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         super.saveInternals(nodeInternDir, exec);
         
         File imgFile = new File(m_filename);
-        if (checkFile(imgFile)) {
+        if (imgFile.exists() && imgFile.canWrite()) {
             File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
             FileUtil.copy(imgFile, file);
         }
-    }
-    
-    private boolean checkFile(final File file) {
-        if (file != null && file.exists()) {
-            return true;
-        }
-        return false;
     }
 }
