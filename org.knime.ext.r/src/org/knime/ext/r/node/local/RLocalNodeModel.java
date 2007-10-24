@@ -458,9 +458,9 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         File binaryFile = new File(tempBinaryFileModel.getStringValue());
         if (!binaryFile.exists() || !binaryFile.isFile()
                 || !binaryFile.canExecute()) {
-            throw new InvalidSettingsException("File: "
+            throw new InvalidSettingsException("R Binary \"" 
                         + tempBinaryFileModel.getStringValue()
-                        + " is not a valid R executable file!");
+                        + "\" not correctly specified.");
         }
 
         m_rbinaryFileSettingsModel.loadSettingsFrom(settings);
