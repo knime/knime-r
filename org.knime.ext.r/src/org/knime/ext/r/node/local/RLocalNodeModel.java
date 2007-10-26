@@ -456,8 +456,7 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         SettingsModelString tempBinaryFileModel =
             m_rbinaryFileSettingsModel.createCloneWithValidatedValue(settings);
         File binaryFile = new File(tempBinaryFileModel.getStringValue());
-        if (!binaryFile.exists() || !binaryFile.isFile()
-                || !binaryFile.canExecute()) {
+        if (!binaryFile.exists() || !binaryFile.isFile()) {
             throw new InvalidSettingsException("R Binary \"" 
                         + tempBinaryFileModel.getStringValue()
                         + "\" not correctly specified.");
