@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<feature id="org.knime.features.ext.r" label="KNIME R Statistics Integration" plugin="org.knime.ext.r" provider-name="Chair for Bioinformatics and Information Mining, Prof. Berthold, University of Konstanz, Germany" version="1.3.0.ALPHA">
+<feature id="org.knime.features.ext.r" label="KNIME R Statistics Integration" plugin="org.knime.ext.r" provider-name="Chair for Bioinformatics and Information Mining, Prof. Berthold, University of Konstanz, Germany" version="1.3.0.BETA">
 
    <description url="http://www.knime.org/download_extensions.html">
       This plugin contains the R integration for the Konstanz Information
