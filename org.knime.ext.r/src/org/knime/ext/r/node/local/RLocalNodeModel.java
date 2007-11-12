@@ -476,7 +476,7 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
     }
     
     /**
-     * Checks if R executable exists and is a file, otherwise an excapetion will
+     * Checks if R executable exists and is a file, otherwise an exception will
      * be thrown.
      * 
      * @throws InvalidSettingsException If the R executable is not a valid file
