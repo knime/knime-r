@@ -23,8 +23,6 @@
  */
 package org.knime.ext.r.node.local;
 
-import java.awt.event.MouseListener;
-
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
@@ -51,11 +49,7 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
      */
     public RLocalScriptingNodeDialogPane() {
         super();
-        m_dialogPanel = new RDialogPanel(null);
-        
-        MouseListener ml = new RLocalDialogPaneMouseAdapter(
-                m_dialogPanel.getColumnList(), m_dialogPanel.getEditorPane());
-        m_dialogPanel.getColumnList().addMouseListener(ml);
+        m_dialogPanel = new RDialogPanel();
         
         addTab("R command", m_dialogPanel);
         setDefaultTabTitle(TAB_R_BINARY);
@@ -68,13 +62,7 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
             final DataTableSpec[] specs) throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
-        if (specs[0].getNumColumns() == 0) {
-            throw new NotConfigurableException("No input data available.");
-        }
-        m_dialogPanel.update(specs[0]);
-        String str = settings.getString(RDialogPanel.CFG_EXPRESSION, 
-                new String());
-        m_dialogPanel.setText(str);
+        m_dialogPanel.loadSettingsFrom(settings, specs);
     } 
     
     /**
@@ -84,7 +72,6 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
     public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
         throws InvalidSettingsException {
         super.saveAdditionalSettingsTo(settings);
-        settings.addString(RDialogPanel.CFG_EXPRESSION, 
-                m_dialogPanel.getText());
+        m_dialogPanel.saveSettingsTo(settings);
     }    
 }

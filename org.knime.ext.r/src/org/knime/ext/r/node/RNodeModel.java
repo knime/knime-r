@@ -77,11 +77,11 @@ abstract class RNodeModel extends NodeModel {
     protected final RConnection getRconnection() {
         if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0
               && RLoginSettings.getHost().equals(RLoginSettings.DEFAULT_HOST)) {
-            return mSTATICRCONN = createConnection(mSTATICRCONN);
-        } else {
-            return m_rconn = createConnection(m_rconn);
+            mSTATICRCONN = createConnection(mSTATICRCONN);
+            return mSTATICRCONN;
         }
-        
+        m_rconn = createConnection(m_rconn);
+        return m_rconn;
     }
     
     private RConnection createConnection(final RConnection checkR) {
@@ -96,7 +96,7 @@ abstract class RNodeModel extends NodeModel {
         if (checkR != null) {
             checkR.close();
         }
-        LOGGER.info("Starting R evaluation on Rserve (" 
+        LOGGER.debug("Starting R evaluation on Rserve (" 
          + RLoginSettings.getHost() + ":" + RLoginSettings.getPort() + ") ...");
         RConnection rconn;
         try {
@@ -109,7 +109,7 @@ abstract class RNodeModel extends NodeModel {
         } catch (RserveException rse) {
             throw new IllegalStateException(R_CONNECTION_ERROR);
         }
-        if ((rconn == null) || (!rconn.isConnected())) {
+        if (!rconn.isConnected()) {
             throw new IllegalStateException(R_CONNECTION_ERROR);
         }
         LOGGER.debug("R connection opened.");
@@ -143,27 +143,27 @@ abstract class RNodeModel extends NodeModel {
         for (int i = 0; i < str.length(); i++) {
             if (isIgnoreNextChar) {
                 isIgnoreNextChar = false;
-                b.append((char)str.charAt(i));
+                b.append(str.charAt(i));
                 continue;
             }
             switch (str.charAt(i)) {
             case '"':
                 isInQuote = !isInQuote;
-                b.append((char)str.charAt(i));
+                b.append(str.charAt(i));
                 break;
             case '\\':
                 isIgnoreNextChar = true;
-                b.append((char)str.charAt(i));
+                b.append(str.charAt(i));
                 break;
             case '#':
                 if (!isInQuote) {
                     i = str.length();
                 } else {
-                    b.append((char)str.charAt(i));
+                    b.append(str.charAt(i));
                 }
                 break;
             default:
-                b.append((char)str.charAt(i));
+                b.append(str.charAt(i));
             }
         }
         if (isInQuote) {

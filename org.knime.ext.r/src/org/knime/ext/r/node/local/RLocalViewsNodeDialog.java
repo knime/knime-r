@@ -28,8 +28,6 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
-import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
  * The dialog of the <code>RLocalViewsNodeDialog</code> which provides a
@@ -42,40 +40,6 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
-
-    /**
-     * @return a <code>SettingsModelString</code> instance containing
-     * a set of names of R views.
-     */
-    public static final SettingsModelString createViewSettingsModel() {
-        return new SettingsModelString("R_View", 
-                RViewScriptingConstants.LABEL2COMMAND.keySet()
-                .toArray()[0].toString());
-    }
-    
-    /**
-     * @return a <code>SettingsModelFilterString</code> instance 
-     * containing the columns to use.
-     */
-    public static final SettingsModelFilterString createColFilterSettingsModel()
-    {
-        return new SettingsModelFilterString("R_Cols");
-    }
-    
-    /**
-     * @return a <code>SettingsModelString</code> instance 
-     * containing the R plot code.
-     */
-    public static final SettingsModelString createRViewCmdSettingsModel() {
-        return new SettingsModelString("R-View_command", 
-                RViewScriptingConstants.LABEL2COMMAND.get(
-                        RLocalViewsNodeDialog.createViewSettingsModel()
-                        .getStringValue()));
-    }
-    
-    private static RViewsDialogPanel createCommandTab() {
-        return new RViewsDialogPanel();
-    }
     
     private static final String TAB_TITLE = "View";
     private static final String TAB_R_BINARY = "R Binary";
@@ -88,7 +52,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
      */
     public RLocalViewsNodeDialog() {
         super();
-        m_viewScriptPanel = createCommandTab();
+        m_viewScriptPanel = new RViewsDialogPanel();
         addTab(TAB_TITLE, m_viewScriptPanel);
         
         m_viewPngPanel = new RViewsPngDialogPanel();

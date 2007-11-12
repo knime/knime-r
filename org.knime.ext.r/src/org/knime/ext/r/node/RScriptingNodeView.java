@@ -292,7 +292,7 @@ public class RScriptingNodeView extends NodeView {
         byte[] imgCode = new byte[imgLength];
         int imgPos = 0;
         for (Enumeration<byte[]> e = buffers.elements(); e.hasMoreElements();) {
-            byte[] b = (byte[])e.nextElement();
+            byte[] b = e.nextElement();
             System.arraycopy(b, 0, imgCode, imgPos, bufSize);
             imgPos += bufSize;
         }

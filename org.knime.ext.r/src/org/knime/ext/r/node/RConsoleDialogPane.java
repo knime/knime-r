@@ -63,13 +63,7 @@ public class RConsoleDialogPane extends RNodeDialogPane {
             final NodeSettingsRO settings, final DataTableSpec[] specs) 
             throws NotConfigurableException {
         super.loadSettingsFrom(settings, specs);
-        if (specs[0].getNumColumns() == 0) {
-            throw new NotConfigurableException("No input data available.");
-        }
-        m_dialogPanel.update(specs[0]);
-        String[] exps = settings.getStringArray(RDialogPanel.CFG_EXPRESSION, 
-                new String[0]);
-        m_dialogPanel.setExpression(exps);
+        m_dialogPanel.loadSettingsFrom(settings, specs);
     } 
     
     /**
@@ -82,7 +76,6 @@ public class RConsoleDialogPane extends RNodeDialogPane {
     protected void saveSettingsTo(final NodeSettingsWO settings) 
             throws InvalidSettingsException {
         super.saveSettingsTo(settings);
-        settings.addStringArray(RDialogPanel.CFG_EXPRESSION, 
-                m_dialogPanel.getExpression());
+        m_dialogPanel.saveSettingsTo(settings);
     }
 }

@@ -29,7 +29,6 @@ package org.knime.ext.r.node;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -49,6 +48,9 @@ import org.knime.core.data.DataType;
 import org.knime.core.data.DoubleValue;
 import org.knime.core.data.IntValue;
 import org.knime.core.data.StringValue;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.util.DataColumnSpecListCellRenderer;
 
 
@@ -57,12 +59,15 @@ import org.knime.core.node.util.DataColumnSpecListCellRenderer;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RDialogPanel extends JPanel {
+public class RDialogPanel extends JPanel implements MouseListener {
     
     /** Key for the R expression command. */
-    public static final String CFG_EXPRESSION = "EXPRESSION";
+    private static final String CFG_EXPRESSION = "EXPRESSION";
 
-    private static final String DEFAULT_R_COMMAND = "R<-R";
+    /**
+     * The default R command.
+     */
+    public static final String DEFAULT_R_COMMAND = "R<-R";
     
     private final JEditorPane m_textExpression;
     
@@ -74,15 +79,7 @@ public class RDialogPanel extends JPanel {
      * mouse listener.
      */
     public RDialogPanel() {
-        this(null);
-        m_list.addMouseListener(new DefaultMouseAdapter());
-    }
-    
-    /**
-     * Creates a new dialog to enter R expressions. 
-     * @param mouseListener the listener to add to the column list.
-     */
-    public RDialogPanel(final MouseListener mouseListener) {
+
         super(new BorderLayout());
         super.setBorder(BorderFactory.createTitledBorder("R command"));
         
@@ -98,9 +95,7 @@ public class RDialogPanel extends JPanel {
         m_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         m_list.setCellRenderer(new DataColumnSpecListCellRenderer());
         
-        if (mouseListener != null) {
-            m_list.addMouseListener(mouseListener);
-        }
+        m_list.addMouseListener(this);
         
         JScrollPane scroll = new JScrollPane(m_list, 
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -110,35 +105,20 @@ public class RDialogPanel extends JPanel {
     }
     
     /**
-     * Updates the list of columns based on the given table spec by usage of
-     * {@link RDialogPanel#update(DataTableSpec, boolean)} with rename set
-     * true be default.
-     * @param spec The spec to get columns from.
-     */
-    public final void update(final DataTableSpec spec) {
-        update(spec, true);
-    }
-    
-    /**
      * Updates the list of columns based on the given table spec.
      * @param spec The spec to get columns from.
-     * @param rename if true columns are formatted in a way that they are 
      * compatible with the Rserv implementation.
      */
-    public final void update(final DataTableSpec spec, final boolean rename) {
+    private final void update(final DataTableSpec spec) 
+            throws NotConfigurableException {
         m_listModel.removeAllElements();
         for (int i = 0; i < spec.getNumColumns(); i++) {
             DataColumnSpec oldSpec = spec.getColumnSpec(i);
             DataType type = oldSpec.getType();
             
-            DataColumnSpec cspec;
-            if (rename) {
-                String newName = RConnectionRemote.formatColumn(
-                        oldSpec.getName());
-                cspec = new DataColumnSpecCreator(newName, type).createSpec();
-            } else {
-                cspec = oldSpec;
-            }
+            String newName = RConnectionRemote.formatColumn(oldSpec.getName());
+            DataColumnSpec cspec = 
+                new DataColumnSpecCreator(newName, type).createSpec();
             
             if (type.isCompatible(IntValue.class)) {
                 m_listModel.addElement(cspec);                
@@ -150,81 +130,177 @@ public class RDialogPanel extends JPanel {
                 m_listModel.addElement(cspec);
             }
         }
+        if (m_listModel.size() <= 0) {
+            throw new NotConfigurableException("No valid columns " 
+                    + "(Integer, Double, String) are available!");
+        }
         repaint();
     }
     
     /**
      * @return complete text as string.
      */
-    public String getText() {
+    public final String getText() {
         return m_textExpression.getText();
     }
     
     /**
      * @param str sets the given string as text. 
      */
-    public void setText(final String str) {
-        String text = str.trim();
-        if (text.length() <= 0) {
-            text = DEFAULT_R_COMMAND;
-        }
-        m_textExpression.setText(text);
-        m_textExpression.setCaretPosition(text.length());
+    public final void setText(final String str) {
+        m_textExpression.setText(str);
+        m_textExpression.setCaretPosition(str.length());
     }
     
     /**
-     * @return expression text
-     */
-    public String[] getExpression() {
-        return m_textExpression.getText().split("\n");
-    }
-    
-    /**
-     * @param exp The expression to set
-     */
-    public void setExpression(final String[] exp) {
-        m_textExpression.setText("");
-        for (int i = exp.length; --i >= 0;) {
-            m_textExpression.replaceSelection(exp[i] + "\n");
-        }
-        if (m_textExpression.getText().trim().length() == 0) {
-            m_textExpression.setText(DEFAULT_R_COMMAND);
-        }
-    }
-
-    /**
-     * @return the pane containing the R command to execute.
-     */
-    public final JEditorPane getEditorPane() {
-        return m_textExpression;
-    }
-    
-    /**
-     * @return the list containing the column names.
-     */
-    public final JList getColumnList() {
-        return m_list; 
-    }
-            
-    
-    /**
+     * Saves internal R command string to given settings instance.
      * 
-     * @author Kilian Thiel, University of Konstanz
+     * @param settings settings instance to write R command string to.
      */
-    class DefaultMouseAdapter extends MouseAdapter {
+    public void saveSettingsTo(final NodeSettingsWO settings) {
+        setExpressionTo(settings, getText());
+    }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void mouseClicked(final MouseEvent e) {
-            Object o = m_list.getSelectedValue();
-            if (o != null) {
-                DataColumnSpec cspec = (DataColumnSpec) o;
-                m_textExpression.replaceSelection(cspec.getName());
-                m_list.clearSelection();
-                m_textExpression.requestFocus();
+    /**
+     * Loads R command string out of given settings instance.
+     * 
+     * @param settings settings instance to load R command string from.
+     * @param specs input DataTable spec
+     * @throws NotConfigurableException if no columns are available.
+     */
+    public void loadSettingsFrom(final NodeSettingsRO settings, 
+            final DataTableSpec[] specs) throws NotConfigurableException {
+        update(specs[0]);
+        setText(getExpressionFrom(settings));
+    }
+    
+    /**
+     * Loads expression from given settings instance and returns it as string.
+     * 
+     * @param settings settings instance to load expression from.
+     * @return The expression loaded from settings instance.
+     */
+    public static final String getExpressionFrom(final NodeSettingsRO settings) 
+    {
+        return settings.getString(CFG_EXPRESSION, DEFAULT_R_COMMAND);
+    }
+    
+    /**
+     * Saves given expression to given settings instance.
+     * 
+     * @param settings settings instance to save expression to.
+     * @param expr expression to save.
+     */
+    public static final void setExpressionTo(final NodeSettingsWO settings, 
+            final String expr) {
+        settings.addString(CFG_EXPRESSION, expr);
+    }
+
+    /**
+     * Loads expression from given settings instance and returns it as string 
+     * array.
+     * 
+     * @param settings settings instance to load expression from.
+     * @return The expression loaded from settings instance.
+     */
+    public static final String[] getExpressionsFrom(
+            final NodeSettingsRO settings) {
+        String expr = settings.getString(CFG_EXPRESSION, DEFAULT_R_COMMAND);
+        return expr.split("\n");
+    }
+    
+    /**
+     * Saves given array of expressions to given settings instance.
+     * 
+     * @param settings settings instance to save expression to.
+     * @param exprs array of expressions to save.
+     */
+    public static final void setExpressionsTo(final NodeSettingsWO settings, 
+            final String[] exprs) {
+        StringBuilder expr = new StringBuilder();
+        if (exprs != null) {
+            for (int i = 0; i < exprs.length; i++) {
+                if (i > 0) {
+                    expr.append("\n");
+                }
+                expr.append(exprs[i]);
             }
+        } else {
+            expr.append(DEFAULT_R_COMMAND);
         }
+        settings.addString(CFG_EXPRESSION, expr.toString());
+    }
+    
+    /**
+     * Renames all column names by replacing all characters which are not 
+     * numeric or letters by ".".
+     * @param inSpec spec to replace column names
+     * @return new spec with replaced column names
+     */
+    public static final DataTableSpec getRenamedDataTableSpec(
+            final DataTableSpec inSpec) {
+        DataColumnSpec[] cspecs = new DataColumnSpec[inSpec.getNumColumns()];
+        for (int i = 0; i < cspecs.length; i++) {
+            DataColumnSpecCreator cr = 
+                new DataColumnSpecCreator(inSpec.getColumnSpec(i));
+            String oldName = inSpec.getColumnSpec(i).getName();
+            cr.setName(RConnectionRemote.formatColumn(oldName));
+            cspecs[i] = cr.createSpec();
+        }
+        return new DataTableSpec(cspecs);
+    }
+        
+
+    
+    /**
+     * {@inheritDoc}
+     */
+    public final void mouseClicked(final MouseEvent e) {
+        Object o = m_list.getSelectedValue();
+        if (o != null) {
+            DataColumnSpec cspec = (DataColumnSpec) o;
+            m_textExpression.replaceSelection(
+                    formatColumnName(cspec.getName()));
+            m_list.clearSelection();
+            m_textExpression.requestFocus();
+        }
+    }
+    
+    /**
+     * Formats the given string by attaching the String "R$".
+     * 
+     * @param name The name of the column to format.
+     * @return The formatted column name.
+     */
+    protected String formatColumnName(final String name) {
+        return "R$\"" + name + "\"";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void mouseEntered(final MouseEvent e) {
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void mouseExited(final MouseEvent e) {
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void mousePressed(final MouseEvent e) {
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void mouseReleased(final MouseEvent e) {
+        
     }
 }

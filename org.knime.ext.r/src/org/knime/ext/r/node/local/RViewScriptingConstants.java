@@ -137,5 +137,26 @@ public final class RViewScriptingConstants {
     private RViewScriptingConstants() {
         
     }
+
+    /**
+     * Default expression key (the name of the default plot).
+     */
+    public static final String DFT_EXPRESSION_KEY = 
+        LABEL2COMMAND.keySet().toArray()[0].toString();
     
+    /**
+     * @return the default expression command (the R code of the default 
+     * plot) as String.
+     */
+    public static final String[] getDefaultExpressionCommands() {
+        return getDefaultExpressionCommand().split("\n");
+    }
+    
+    /**
+     * @return the default expression command (the R code of the default 
+     * plot) as String array.
+     */
+    public static final String getDefaultExpressionCommand() {
+         return LABEL2COMMAND.get(DFT_EXPRESSION_KEY);
+    }
 }

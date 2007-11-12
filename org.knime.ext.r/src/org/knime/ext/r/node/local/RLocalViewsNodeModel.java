@@ -27,10 +27,8 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.container.ColumnRearranger;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -38,10 +36,10 @@ import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.util.FileUtil;
+import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.RPlotterNodeModel;
 
 /**
@@ -54,15 +52,6 @@ import org.knime.ext.r.node.RPlotterNodeModel;
 public class RLocalViewsNodeModel extends RLocalNodeModel {
     
     private static final String INTERNAL_FILE_NAME = "Rplot";
-    
-    private SettingsModelString m_viewModel = 
-        RLocalViewsNodeDialog.createViewSettingsModel(); 
-    
-    private SettingsModelFilterString m_colFilterModel = 
-        RLocalViewsNodeDialog.createColFilterSettingsModel();
-    
-    private SettingsModelString m_viewCmdModel = 
-        RLocalViewsNodeDialog.createRViewCmdSettingsModel();
     
     private SettingsModelIntegerBounded m_heightModel = 
         RViewsPngDialogPanel.createHeightModel();
@@ -79,6 +68,9 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     private Image m_resultImage;
     
     private String m_filename;
+    
+    private String m_viewCmd = 
+        RViewScriptingConstants.getDefaultExpressionCommand();
     
     
     /**
@@ -113,7 +105,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
             + m_heightModel.getIntValue() + ", pointsize=" 
             + m_pointSizeModel.getIntValue() + ", bg=\"" 
             + m_bgModel.getStringValue() + "\");\n" 
-            + m_viewCmdModel.getStringValue()
+            + m_viewCmd
             + "\ndev.off();";
     }
 
@@ -148,26 +140,9 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         m_filename = 
             FileUtil.createTempDir("R_").getAbsolutePath().replace('\\', '/')
             + "/" + "R-View-" + System.identityHashCode(inData) + ".png";
-               
-        List<String> includeList = m_colFilterModel.getIncludeList();
         
-        // Filter columns before processing
-        ColumnRearranger cr = new ColumnRearranger(
-                inData[0].getDataTableSpec());
-        cr.keepOnly(includeList.toArray(new String[includeList.size()]));
-        BufferedDataTable dataTableToUse = exec.createColumnRearrangeTable(
-                inData[0], cr, exec);
-        
-        return new BufferedDataTable[]{dataTableToUse};
+        return inData;
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        super.reset();
-    }    
     
     /**
      * {@inheritDoc}
@@ -175,13 +150,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
-        List<String> cols = m_colFilterModel.getIncludeList();
-        for (String colName : cols) {
-            if (!inSpecs[0].containsName(colName)) {
-                throw new InvalidSettingsException("Selected columns don't "
-                        + "match with input spec, re-configure node.");
-            }
-        }
+        checkRExecutable();
         return new DataTableSpec[0];
     }
 
@@ -192,14 +161,12 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_viewModel.loadSettingsFrom(settings);
-        m_colFilterModel.loadSettingsFrom(settings);
-        m_viewCmdModel.loadSettingsFrom(settings);
-        
         m_heightModel.loadSettingsFrom(settings);
         m_widthModel.loadSettingsFrom(settings);
         m_pointSizeModel.loadSettingsFrom(settings);
         m_bgModel.loadSettingsFrom(settings);
+        
+        m_viewCmd = RDialogPanel.getExpressionFrom(settings);
     }
 
     /**
@@ -208,14 +175,12 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         super.saveSettingsTo(settings);
-        m_viewModel.saveSettingsTo(settings);
-        m_colFilterModel.saveSettingsTo(settings);
-        m_viewCmdModel.saveSettingsTo(settings);
-        
         m_heightModel.saveSettingsTo(settings);
         m_widthModel.saveSettingsTo(settings);
         m_pointSizeModel.saveSettingsTo(settings);
         m_bgModel.saveSettingsTo(settings);
+        
+        RDialogPanel.setExpressionTo(settings, m_viewCmd);
     }
 
     /**
@@ -226,19 +191,13 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
             throws InvalidSettingsException {
         super.validateSettings(settings);
 
-        SettingsModelString tempView = 
-            m_viewModel.createCloneWithValidatedValue(settings);
-        String tempViewStr = tempView.getStringValue();
+        String viewCmd = RDialogPanel.getExpressionFrom(settings); 
         
         // if command not valid throw exception
-        if (tempViewStr.length() < 1) {
-            throw new InvalidSettingsException("R View is not valid !");
+        if (viewCmd == null || viewCmd.length() < 1) {
+            throw new InvalidSettingsException("R View command is empty!");
         }
-
-        m_viewModel.validateSettings(settings);
-        m_colFilterModel.validateSettings(settings);
-        m_viewCmdModel.validateSettings(settings);
-        
+       
         m_heightModel.validateSettings(settings);
         m_widthModel.validateSettings(settings);
         m_pointSizeModel.validateSettings(settings);

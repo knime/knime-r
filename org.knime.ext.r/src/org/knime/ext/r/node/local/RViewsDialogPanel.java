@@ -38,13 +38,14 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.defaultnodesettings.DialogComponentColumnFilter;
-import org.knime.core.node.defaultnodesettings.DialogComponentMultiLineString;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
-import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.ext.r.node.RDialogPanel;
 
 /**
+ * <code>RViewsDialogPanel</code> is a <code>JPanel</code> which provides
+ * a combo box containing names of available R plots and an editor pane to
+ * insert R code.
  * 
  * @author Kilian Thiel, University of Konstanz
  */
@@ -56,82 +57,36 @@ public class RViewsDialogPanel extends JPanel {
      */
     static final SettingsModelString createViewSettingsModel() {
         return new SettingsModelString("R_View", 
-                RViewScriptingConstants.LABEL2COMMAND.keySet()
-                .toArray()[0].toString());
+                RViewScriptingConstants.DFT_EXPRESSION_KEY);
     }
-    
-    /**
-     * @return a <code>SettingsModelFilterString</code> instance 
-     * containing the columns to use.
-     */
-    static final SettingsModelFilterString createColFilterSettingsModel() {
-        return new SettingsModelFilterString("R_Cols");
-    }
-    
-    /**
-     * @return a <code>SettingsModelString</code> instance 
-     * containing the R plot code.
-     */
-    static final SettingsModelString createRViewCmdSettingsModel() {
-        return new SettingsModelString("R-View_command", 
-                RViewScriptingConstants.LABEL2COMMAND.get(
-                        RLocalViewsNodeDialog.createViewSettingsModel()
-                        .getStringValue()));
-    }
-    
-    private final SettingsModelString m_viewCommandModel;
-    private final DialogComponentMultiLineString m_viewCommandComponent;
-    
+       
     private final SettingsModelString m_viewSettingsModel;
     private final DialogComponentStringSelection m_viewSelectionComponent;
+
+    private final RDialogPanel m_commandPanel;
     
-    private final SettingsModelFilterString m_colSettingsModel;
-    private final DialogComponentColumnFilter m_colFilterComponent;
-    
-    
+
     /**
-     * Constructor of <code>RLocalNodeDialogPane</code> which provides a
-     * default dialog component to specify the R executable file and a checkbox
-     * to specify which R executable is used.
+     * Creates new instance of <code>RViewsDialogPanel</code>.
      */
     public RViewsDialogPanel() {
-        super();
+        super(new BorderLayout());
         
         Set<String> keys = RViewScriptingConstants.LABEL2COMMAND.keySet();
         List<String> list = new ArrayList<String>(keys);
         
+        m_commandPanel = new RDialogPanel();
         
         m_viewSettingsModel = createViewSettingsModel();
         m_viewSettingsModel.addChangeListener(new ViewChangeListener());
         m_viewSelectionComponent = new DialogComponentStringSelection(
                 m_viewSettingsModel, "View type", list);
         
-        m_viewCommandModel = createRViewCmdSettingsModel();
-        m_viewCommandComponent = new DialogComponentMultiLineString(
-                m_viewCommandModel, null, true, 10, 10);
-        
-        m_colSettingsModel = createColFilterSettingsModel();
-        m_colFilterComponent = new DialogComponentColumnFilter(
-                m_colSettingsModel, 0);        
-        
-        JPanel commandPanel = new JPanel();
-        commandPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
+        this.setBorder(BorderFactory.createTitledBorder(BorderFactory
                 .createEtchedBorder(), "R command"));
-        commandPanel.setLayout(new BorderLayout());
-        
-        commandPanel.add(m_viewSelectionComponent.getComponentPanel(), 
-                BorderLayout.NORTH);
-        commandPanel.add(m_viewCommandComponent.getComponentPanel(), 
-                BorderLayout.CENTER);
-        
-        m_colFilterComponent.getComponentPanel().setBorder(
-                BorderFactory.createTitledBorder(
-                        BorderFactory.createEtchedBorder(), 
-                        "Column selection"));
-        
-        this.setLayout(new BorderLayout());
-        add(commandPanel, BorderLayout.NORTH);
-        add(m_colFilterComponent.getComponentPanel(), BorderLayout.CENTER);
+        this.add(m_viewSelectionComponent.getComponentPanel(), 
+                BorderLayout.NORTH);        
+        this.add(m_commandPanel, BorderLayout.CENTER);
     }
     
     /**
@@ -143,9 +98,8 @@ public class RViewsDialogPanel extends JPanel {
      */
     public void loadSettings(final NodeSettingsRO settings, 
             final DataTableSpec[] specs) throws NotConfigurableException {
-        m_colFilterComponent.loadSettingsFrom(settings, specs);
         m_viewSelectionComponent.loadSettingsFrom(settings, specs);
-        m_viewCommandComponent.loadSettingsFrom(settings, specs);
+        m_commandPanel.loadSettingsFrom(settings, specs);
     }
     
     /**
@@ -155,9 +109,8 @@ public class RViewsDialogPanel extends JPanel {
      */
     public void saveSettings(final NodeSettingsWO settings) 
         throws InvalidSettingsException {
-        m_viewCommandComponent.saveSettingsTo(settings);
         m_viewSelectionComponent.saveSettingsTo(settings);
-        m_colFilterComponent.saveSettingsTo(settings);
+        m_commandPanel.saveSettingsTo(settings);
     }
     
     
@@ -176,7 +129,7 @@ public class RViewsDialogPanel extends JPanel {
          * {@inheritDoc}
          */
         public void stateChanged(final ChangeEvent e) {
-            m_viewCommandModel.setStringValue(
+            m_commandPanel.setText(
                     RViewScriptingConstants.LABEL2COMMAND.get(
                             m_viewSettingsModel.getStringValue()));
         }

@@ -50,6 +50,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.util.FileUtil;
+import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
@@ -204,7 +205,6 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         return outData;
     }
 
-
     /**
      * First the
      * {@link RLocalNodeModel#preprocessDataTable(
@@ -233,8 +233,7 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
 
         try {
             // write data to csv
-            ExecutionMonitor subExec = exec.createSubProgress(0.5);
-            inDataCsvFile = writeInDataCsvFile(inDataTables[0], subExec);
+            inDataCsvFile = writeInDataCsvFile(inDataTables[0], exec);
 
             // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
@@ -381,7 +380,7 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
     }
 
     private File writeInDataCsvFile(final BufferedDataTable inData,
-            final ExecutionMonitor exec) throws IOException,
+            final ExecutionContext exec) throws IOException,
             CanceledExecutionException {
         // create Temp file
         File tempInDataFile = File.createTempFile("R-inDataTempFile-", ".csv",
@@ -394,7 +393,12 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         fws.setWriteColumnHeader(true);
 
         CSVWriter writer = new CSVWriter(fw, fws);
-        writer.write(inData, exec);
+        
+        BufferedDataTable newTable = exec.createSpecReplacerTable(inData, 
+               RDialogPanel.getRenamedDataTableSpec(inData.getDataTableSpec()));
+        ExecutionMonitor subExec = exec.createSubProgress(0.5);
+        writer.write(newTable, subExec);
+        
         writer.close();
         return tempInDataFile;
     }
@@ -455,15 +459,31 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
 
         SettingsModelString tempBinaryFileModel =
             m_rbinaryFileSettingsModel.createCloneWithValidatedValue(settings);
-        File binaryFile = new File(tempBinaryFileModel.getStringValue());
-        if (!binaryFile.exists() || !binaryFile.isFile()
-                || !binaryFile.canExecute()) {
-            throw new InvalidSettingsException("R Binary \"" 
-                        + tempBinaryFileModel.getStringValue()
-                        + "\" not correctly specified.");
-        }
+        checkRExecutable(tempBinaryFileModel.getStringValue());
 
         m_rbinaryFileSettingsModel.loadSettingsFrom(settings);
         m_useSpecifiedModel.loadSettingsFrom(settings);
     }
+    
+    private static void checkRExecutable(final String path) 
+            throws InvalidSettingsException {
+        File binaryFile = new File(path);
+        if (!binaryFile.exists() || !binaryFile.isFile() 
+                || !binaryFile.canExecute()) {
+            throw new InvalidSettingsException("R Binary \"" 
+                        + path + "\" not correctly specified.");
+        }
+    }
+    
+    /**
+     * Checks if R executable exists and is a file, otherwise an excapetion will
+     * be thrown.
+     * 
+     * @throws InvalidSettingsException If the R executable is not a valid file
+     * or does not exist.
+     */
+    protected void checkRExecutable() throws InvalidSettingsException {
+        checkRExecutable(m_rbinaryFileSettingsModel.getStringValue());
+    }
+    
 }
