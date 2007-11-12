@@ -27,6 +27,7 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 
 /**
@@ -37,7 +38,7 @@ import org.knime.ext.r.node.RDialogPanel;
  */
 public class RLocalScriptingNodeModel extends RLocalNodeModel {
     
-    private String m_rCommand = new String();
+    private String m_rCommand = RDialogPanel.DEFAULT_R_COMMAND;
     
     /**
      * Creates new instance of <code>RLocalScriptingNodeModel</code> with one
@@ -61,6 +62,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
+        checkRExecutable();
         return new DataTableSpec[1];
     }
     
@@ -73,7 +75,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_rCommand = settings.getString(RDialogPanel.CFG_EXPRESSION);
+        m_rCommand = RDialogPanel.getExpressionFrom(settings);
     }
 
     /**
@@ -82,7 +84,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         super.saveSettingsTo(settings);
-        settings.addString(RDialogPanel.CFG_EXPRESSION, m_rCommand);
+        RDialogPanel.setExpressionTo(settings, m_rCommand);
     }
 
     /**
@@ -92,17 +94,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        testExpressions(settings.getString(RDialogPanel.CFG_EXPRESSION));
-    }
-    
-    
-    private void testExpressions(final String str)
-            throws InvalidSettingsException {
-        if (str.contains("R<-")) {
-            // ok, we have an result in R
-            return;
-        }
-        throw new InvalidSettingsException("The result has to be provided"
-                + " inside the variable R");
+        String exp = RDialogPanel.getExpressionFrom(settings);
+        RConsoleModel.testExpressions(exp.split("\n"));
     }
 }

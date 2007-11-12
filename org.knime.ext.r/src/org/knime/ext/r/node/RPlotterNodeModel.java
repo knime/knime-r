@@ -35,12 +35,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Vector;
 
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.container.ColumnRearranger;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -49,11 +48,10 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.defaultnodesettings.SettingsModelFilterString;
 import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.util.FileUtil;
-import org.knime.ext.r.node.local.RLocalViewsNodeDialog;
+import org.knime.ext.r.node.local.RViewScriptingConstants;
 import org.knime.ext.r.node.local.RViewsPngDialogPanel;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RFileInputStream;
@@ -74,16 +72,6 @@ public class RPlotterNodeModel extends RNodeModel {
     // our LOGGER instance
     private static final NodeLogger LOGGER = NodeLogger
             .getLogger(RPlotterNodeModel.class);
-
-    
-    private SettingsModelString m_viewModel = 
-        RLocalViewsNodeDialog.createViewSettingsModel(); 
-    
-    private SettingsModelFilterString m_colFilterModel = 
-        RLocalViewsNodeDialog.createColFilterSettingsModel();
-    
-    private SettingsModelString m_viewCmdModel = 
-        RLocalViewsNodeDialog.createRViewCmdSettingsModel();    
     
     private SettingsModelIntegerBounded m_heightModel = 
         RViewsPngDialogPanel.createHeightModel();
@@ -96,6 +84,9 @@ public class RPlotterNodeModel extends RNodeModel {
     
     private SettingsModelString m_bgModel = 
         RViewsPngDialogPanel.createBgModel();
+    
+    private String[] m_viewCmds = 
+            RViewScriptingConstants.getDefaultExpressionCommands();
     
     /**
      * Creates a new plotter with one data input. 
@@ -112,16 +103,9 @@ public class RPlotterNodeModel extends RNodeModel {
     protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
             final ExecutionContext exec) throws Exception {
         
-        List<String> includeList = m_colFilterModel.getIncludeList();
-        // Filter columns before processing
-        ColumnRearranger cr = new ColumnRearranger(
-                inData[0].getDataTableSpec());
-        cr.keepOnly(includeList.toArray(new String[includeList.size()]));
-        BufferedDataTable dataTableToUse = exec.createColumnRearrangeTable(
-                inData[0], cr, exec);
         // create unique png file
         RConnection c = getRconnection();
-        String fileName = FILE_NAME + "_" + System.identityHashCode(cr) 
+        String fileName = FILE_NAME + "_" + System.identityHashCode(inData[0]) 
             + ".png";
         LOGGER.info("The image name: " + fileName);
         String pngCommand = "png(\"" + fileName + "\", width=" 
@@ -132,14 +116,13 @@ public class RPlotterNodeModel extends RNodeModel {
         c.eval("try(" + pngCommand + ")");
         
         // send data to R server
-        RConnectionRemote.sendData(c, dataTableToUse, exec);
+        RConnectionRemote.sendData(c, inData[0], exec);
 
         // execute view command on server
-        LOGGER.info(m_viewCmdModel.getStringValue());
+        LOGGER.debug(Arrays.toString(m_viewCmds));
         exec.setMessage("Executing view R commands...");
-        String[] expression = parseExpression(
-                m_viewCmdModel.getStringValue().split("\n"));
-        for (String e : expression) {
+        String[] parsedExp = parseExpression(m_viewCmds);
+        for (String e : parsedExp) {
             LOGGER.debug("voidEval: try(" + e + ")");
             c.voidEval("try(" + e + ")");
         }
@@ -201,7 +184,7 @@ public class RPlotterNodeModel extends RNodeModel {
         byte[] imgCode = new byte[imgLength];
         int imgPos = 0;
         for (Enumeration<byte[]> e = buffers.elements(); e.hasMoreElements();) {
-            byte[] b = (byte[]) e.nextElement();
+            byte[] b = e.nextElement();
             System.arraycopy(b, 0, imgCode, imgPos, bufSize);
             imgPos += bufSize;
         }
@@ -235,14 +218,6 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
-        //getRconnection();
-        List<String> cols = m_colFilterModel.getIncludeList();
-        for (String colName : cols) {
-            if (!inSpecs[0].containsName(colName)) {
-                throw new InvalidSettingsException("Selected columns don't "
-                        + "match with input spec, re-configure node.");
-            }
-        }
         return new DataTableSpec[0];
     }
 
@@ -252,14 +227,12 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         super.saveSettingsTo(settings);
-        m_viewModel.saveSettingsTo(settings);
-        m_colFilterModel.saveSettingsTo(settings);
-        m_viewCmdModel.saveSettingsTo(settings);
-        
         m_heightModel.saveSettingsTo(settings);
         m_widthModel.saveSettingsTo(settings);
         m_pointSizeModel.saveSettingsTo(settings);
         m_bgModel.saveSettingsTo(settings);
+        
+        RDialogPanel.setExpressionsTo(settings, m_viewCmds);
     }
 
     /**
@@ -269,14 +242,12 @@ public class RPlotterNodeModel extends RNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_viewModel.loadSettingsFrom(settings);
-        m_colFilterModel.loadSettingsFrom(settings);
-        m_viewCmdModel.loadSettingsFrom(settings);
-        
         m_heightModel.loadSettingsFrom(settings);
         m_widthModel.loadSettingsFrom(settings);
         m_pointSizeModel.loadSettingsFrom(settings);
         m_bgModel.loadSettingsFrom(settings);
+        
+        m_viewCmds = RDialogPanel.getExpressionsFrom(settings);
     }
 
     /**
@@ -286,9 +257,13 @@ public class RPlotterNodeModel extends RNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        m_viewModel.validateSettings(settings);
-        m_colFilterModel.validateSettings(settings);
-        m_viewCmdModel.validateSettings(settings);
+        
+        String[] viewCmd = RDialogPanel.getExpressionsFrom(settings); 
+        
+        // if command not valid throw exception
+        if (viewCmd == null || viewCmd.length == 0) {
+            throw new InvalidSettingsException("R View command is empty!");
+        }
         
         m_heightModel.validateSettings(settings);
         m_widthModel.validateSettings(settings);

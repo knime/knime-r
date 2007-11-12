@@ -62,7 +62,8 @@ import org.rosuda.REngine.Rserve.RConnection;
  */
 public class RConsoleModel extends RNodeModel {
 
-    private String[] m_expression = new String[0];
+    private String[] m_expression = 
+        new String[]{RDialogPanel.DEFAULT_R_COMMAND};
     
     private static final NodeLogger LOGGER = 
         NodeLogger.getLogger(RConsoleModel.class);
@@ -104,9 +105,8 @@ public class RConsoleModel extends RNodeModel {
             } catch (REXPMismatchException rme) {
                 if (rexp.isInteger()) {
                     return new BufferedDataTable[]{readIntegers(rexp, exec)};
-                } else {
-                    return new BufferedDataTable[]{readDoubles(rexp, exec)};
                 }
+                return new BufferedDataTable[]{readDoubles(rexp, exec)};
             }
         } else if (rexp.isNull()) {
             return new BufferedDataTable[]{readList(rexp.asList(), exec)};
@@ -199,9 +199,19 @@ public class RConsoleModel extends RNodeModel {
                 if (cspec[j].getType() == IntCell.TYPE) {
                     row[j] = new IntCell(((int[]) object[j])[i]);
                 } else if (cspec[j].getType() == DoubleCell.TYPE) {
-                    row[j] = new DoubleCell(((double[]) object[j])[i]);
+                    double dblValue = ((double[]) object[j])[i];
+                    if (Double.isNaN(dblValue)) {
+                        row[j] = DataType.getMissingCell();
+                    } else {
+                        row[j] = new DoubleCell(dblValue);
+                    }
                 } else {
-                    row[j] = new StringCell(((String[]) object[j])[i]);
+                    String strValue = ((String[]) object[j])[i];
+                    if (strValue == null) {
+                        row[j] = DataType.getMissingCell();
+                    } else {
+                        row[j] = new StringCell(strValue);
+                    }
                 }   
             }
             dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
@@ -226,8 +236,14 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < fac.size(); i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / strings.length);
-            dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
-                    strings[fac.indexAt(i)]));
+            StringCell rowKey = new StringCell("Row" + (i + 1));
+            String strValue = strings[fac.indexAt(i)];
+            if (strValue == null) {
+                dc.addRowToTable(
+                        new DefaultRow(rowKey, DataType.getMissingCell()));
+            } else {
+                dc.addRowToTable(new DefaultRow(rowKey, strValue));
+            }
         }
         dc.close();
         return dc.getTable();
@@ -240,8 +256,13 @@ public class RConsoleModel extends RNodeModel {
         DataColumnSpec cspec = createColumnSpec("R1", StringCell.TYPE);
         BufferedDataContainer dc = 
             exec.createDataContainer(new DataTableSpec(cspec));
-        DataRow row = new DefaultRow(new StringCell("Row1"), 
-                        new StringCell(string));
+        DataRow row;
+        if (string == null) {
+            row = new DefaultRow(new StringCell("Row1"), 
+                DataType.getMissingCell());
+        } else {
+            row = new DefaultRow(new StringCell("Row1"), string);
+        }
         dc.addRowToTable(row);
         dc.close();
         return dc.getTable();
@@ -284,8 +305,13 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
-            dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
-                    matrix[i]));
+            StringCell rowKey = new StringCell("Row" + (i + 1));
+            if (matrix[i] == null) {
+                dc.addRowToTable(new DefaultRow(rowKey, 
+                        DataType.getMissingCell()));
+            } else {
+                dc.addRowToTable(new DefaultRow(rowKey, matrix[i]));
+            }
         }
         dc.close();
         return dc.getTable();
@@ -362,12 +388,18 @@ public class RConsoleModel extends RNodeModel {
     @Override
     protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
             throws InvalidSettingsException {
-        testExpressions(m_expression);
-        //checkRconnection();
         return new DataTableSpec[1];
     }
 
-    private void testExpressions(final String[] rexps)
+    /**
+     * Tests the given expressions if they contain at least one statement
+     * where data is assigned to variable R. 
+     * 
+     * @param rexps a String array containing the expression to check.
+     * @throws InvalidSettingsException If the given statements do not contain
+     * at least one statement where data is assigned to variable R.
+     */
+    public static final void testExpressions(final String[] rexps)
             throws InvalidSettingsException {
         for (int i = 0; i < rexps.length; i++) {
             String test = rexps[i].replace(" ", "");
@@ -386,7 +418,7 @@ public class RConsoleModel extends RNodeModel {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
         super.saveSettingsTo(settings);
-        settings.addStringArray(RDialogPanel.CFG_EXPRESSION, m_expression);
+        RDialogPanel.setExpressionsTo(settings, m_expression);
     }
 
     /**
@@ -396,7 +428,7 @@ public class RConsoleModel extends RNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_expression = settings.getStringArray(RDialogPanel.CFG_EXPRESSION);
+        m_expression = RDialogPanel.getExpressionsFrom(settings);
     }
 
     /**
@@ -406,7 +438,7 @@ public class RConsoleModel extends RNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        testExpressions(settings.getStringArray(RDialogPanel.CFG_EXPRESSION));
+        testExpressions(RDialogPanel.getExpressionsFrom(settings));
     }
     
     /**

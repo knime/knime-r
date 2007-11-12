@@ -60,9 +60,8 @@ public class RLocalScriptingNodeFactory extends NodeFactory {
             final NodeModel nodeModel) {
         if (viewIndex == 0) {
             return new ExtToolStderrNodeView(nodeModel);
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
