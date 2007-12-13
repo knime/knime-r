@@ -91,7 +91,7 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         // create file chooser component.
         DialogComponentFileChooser fileChooser = new DialogComponentFileChooser(
                 m_fileModel, "R_binarys", JFileChooser.OPEN_DIALOG, 
-                false, new String[]{"", "exe"});
+                false, new String[]{"", ".exe"});
 
         setHorizontalPlacement(true);
         createNewGroup("R binary path");
