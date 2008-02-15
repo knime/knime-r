@@ -26,7 +26,6 @@ package org.knime.ext.r.node.local;
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeView;
 
 /**
@@ -34,7 +33,8 @@ import org.knime.core.node.NodeView;
  *
  * @author Kilian Thiel, University of Konstanz
  */
-public class RLocalScriptingNodeFactory extends NodeFactory {
+public class RLocalScriptingNodeFactory 
+        extends NodeFactory<RLocalScriptingNodeModel> {
 
     /**
      * {@inheritDoc}
@@ -48,7 +48,7 @@ public class RLocalScriptingNodeFactory extends NodeFactory {
      * {@inheritDoc}
      */
     @Override
-    public NodeModel createNodeModel() {
+    public RLocalScriptingNodeModel createNodeModel() {
         return new RLocalScriptingNodeModel();
     }
 
@@ -56,8 +56,9 @@ public class RLocalScriptingNodeFactory extends NodeFactory {
      * {@inheritDoc}
      */
     @Override
-    public NodeView createNodeView(final int viewIndex,
-            final NodeModel nodeModel) {
+    public NodeView<RLocalScriptingNodeModel> createNodeView(
+            final int viewIndex,
+            final RLocalScriptingNodeModel nodeModel) {
         if (viewIndex == 0) {
             return new ExtToolStderrNodeView(nodeModel);
         }

@@ -4,7 +4,6 @@ Bundle-Name: KNIME R-Project nodes
 Bundle-SymbolicName: org.knime.ext.r; singleton:=true
 Bundle-Version: 2.0.0.0014633
 Bundle-Activator: org.knime.ext.r.RCorePlugin
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.knime.workbench.repository,

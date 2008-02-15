@@ -25,7 +25,6 @@ package org.knime.ext.r.node.local;
 
 import java.awt.Image;
 
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeView;
 import org.knime.ext.r.node.RPlotterViewPanel;
 
@@ -36,7 +35,7 @@ import org.knime.ext.r.node.RPlotterViewPanel;
  * 
  * @author Kilian Thiel, University of Konstanz
  */
-public class RLocalViewsNodeView extends NodeView {
+public class RLocalViewsNodeView extends NodeView<RLocalViewsNodeModel> {
 
     private final RPlotterViewPanel m_panel;
     
@@ -46,7 +45,7 @@ public class RLocalViewsNodeView extends NodeView {
      * 
      * @param nodeModel the model associated with this view.
      */
-    public RLocalViewsNodeView(final NodeModel nodeModel) {
+    public RLocalViewsNodeView(final RLocalViewsNodeModel nodeModel) {
         super(nodeModel);
         setViewTitle("Local R View: ");
         m_panel = new RPlotterViewPanel();

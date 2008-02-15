@@ -28,7 +28,6 @@ package org.knime.ext.r.node;
 
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeView;
 
 /**
@@ -38,12 +37,12 @@ import org.knime.core.node.NodeView;
  * @deprecated not supported anymore, since 1.3
  */
 @Deprecated
-public class RScriptingNodeFactory extends NodeFactory {
+public class RScriptingNodeFactory extends NodeFactory<RScriptingNodeModel> {
     /**
      * {@inheritDoc}
      */
     @Override
-    public NodeModel createNodeModel() {
+    public RScriptingNodeModel createNodeModel() {
         return new RScriptingNodeModel();
     }
 
@@ -59,8 +58,8 @@ public class RScriptingNodeFactory extends NodeFactory {
      * {@inheritDoc}
      */
     @Override
-    public NodeView createNodeView(final int viewIndex,
-            final NodeModel nodeModel) {
+    public NodeView<RScriptingNodeModel> createNodeView(final int viewIndex,
+            final RScriptingNodeModel nodeModel) {
         return new RScriptingNodeView(nodeModel);
     }
 

@@ -28,7 +28,6 @@ package org.knime.ext.r.node;
 
 import java.awt.Image;
 
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeView;
 
 
@@ -37,7 +36,7 @@ import org.knime.core.node.NodeView;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RPlotterNodeView extends NodeView {
+public class RPlotterNodeView extends NodeView<RPlotterNodeModel> {
     private final RPlotterViewPanel m_panel;
 
     /**
@@ -45,7 +44,7 @@ public class RPlotterNodeView extends NodeView {
      * 
      * @param nodeModel The model (class: <code>RPlotterNodeModel</code>)
      */
-    protected RPlotterNodeView(final NodeModel nodeModel) {
+    protected RPlotterNodeView(final RPlotterNodeModel nodeModel) {
         super(nodeModel);
         m_panel = new RPlotterViewPanel();
         super.setComponent(m_panel);
