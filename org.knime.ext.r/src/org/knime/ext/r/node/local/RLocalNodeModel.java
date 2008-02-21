@@ -77,7 +77,7 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  * output tables is greater than zero.
  * <br/>
  * Additionally this class provides a preprocessing method
- * {@link RLocalNodeModel#preprocessDataTable(BufferedDataTable[], 
+ * {@link RLocalNodeModel#preprocessDataTable(BufferedDataTable[],
  * ExecutionContext)}
  * which can be overwritten to preprocess that input data, as well as a
  * postprocess method
@@ -99,7 +99,7 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
      */
     protected static final String TEMP_PATH =
         System.getProperty("java.io.tmpdir").replace('\\', '/');
-        
+
 
     /**
      * The delimiter used for creation of csv files.
@@ -285,18 +285,18 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
 
             if (exitVal != 0) {
                 String rErr = "";
-                
+
                 // before we return, we save the output in the failing list
                 synchronized (cmdExec) {
                     setFailedExternalOutput(new LinkedList<String>(cmdExec
                             .getStdOutput()));
                 }
                 synchronized (cmdExec) {
-                    
+
                     // save error description of the Rout file to the ErrorOut
                     LinkedList<String> list = new LinkedList<String>(
                             cmdExec.getStdErr());
-                    
+
                     list.add("#############################################");
                     list.add("#");
                     list.add("# Content of .Rout file: ");
@@ -310,15 +310,15 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
                         list.add(line);
                     }
                     bfr.close();
-                    
-                    // use row before last as R error. 
+
+                    // use row before last as R error.
                     int index = list.size() - 2;
                     if (index >= 0) {
                         rErr = list.get(index);
                     }
                     setFailedExternalErrorOutput(list);
-                }                
-                
+                }
+
                 LOGGER.debug("Execution of R Script failed with exit code: "
                         + exitVal);
                 throw new IllegalStateException(
@@ -349,19 +349,19 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         boolean del = false;
         if (file != null && file.exists()) {
             del = FileUtil.deleteRecursively(file);
-            
+
             // if file could not be deleted call GC and try again
-            if (!del) {    
+            if (!del) {
                 // !!! What a mess !!!
                 // It is possible that there are still open streams around
                 // holding the file. Therefore these streams, actually belonging
                 // to the garbage, has to be collected by the GC.
                 System.gc();
-                
+
                 // try to delete again ....
                 del = FileUtil.deleteRecursively(file);
                 if (!del) {
-                    // ok that's it no trials anymore ... 
+                    // ok that's it no trials anymore ...
                     LOGGER.debug(file.getAbsoluteFile()
                             + " could not be deleted !");
                 }
@@ -393,12 +393,12 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         fws.setWriteColumnHeader(true);
 
         CSVWriter writer = new CSVWriter(fw, fws);
-        
-        BufferedDataTable newTable = exec.createSpecReplacerTable(inData, 
+
+        BufferedDataTable newTable = exec.createSpecReplacerTable(inData,
                RDialogPanel.getRenamedDataTableSpec(inData.getDataTableSpec()));
         ExecutionMonitor subExec = exec.createSubProgress(0.5);
         writer.write(newTable, subExec);
-        
+
         writer.close();
         return tempInDataFile;
     }
@@ -420,10 +420,10 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         settings.setQuoteUserSet(true);
         settings.setWhiteSpaceUserSet(true);
         settings.setGlobalMissingValuePattern("NA");
-        settings = FileAnalyzer.analyze(settings);
-        
+        settings = FileAnalyzer.analyze(settings, null);
+
         DataTableSpec tSpec = settings.createDataTableSpec();
-        
+
         FileTable fTable = new FileTable(tSpec, settings, settings
                     .getSkippedColumns(), exec);
 
@@ -464,26 +464,26 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         m_rbinaryFileSettingsModel.loadSettingsFrom(settings);
         m_useSpecifiedModel.loadSettingsFrom(settings);
     }
-    
-    private static void checkRExecutable(final String path) 
+
+    private static void checkRExecutable(final String path)
             throws InvalidSettingsException {
         File binaryFile = new File(path);
-        if (!binaryFile.exists() || !binaryFile.isFile() 
+        if (!binaryFile.exists() || !binaryFile.isFile()
                 || !binaryFile.canExecute()) {
-            throw new InvalidSettingsException("R Binary \"" 
+            throw new InvalidSettingsException("R Binary \""
                         + path + "\" not correctly specified.");
         }
     }
-    
+
     /**
      * Checks if R executable exists and is a file, otherwise an exception will
      * be thrown.
-     * 
+     *
      * @throws InvalidSettingsException If the R executable is not a valid file
      * or does not exist.
      */
     protected void checkRExecutable() throws InvalidSettingsException {
         checkRExecutable(m_rbinaryFileSettingsModel.getStringValue());
     }
-    
+
 }
