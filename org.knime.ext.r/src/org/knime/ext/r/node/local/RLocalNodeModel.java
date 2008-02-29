@@ -456,13 +456,8 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-
-        SettingsModelString tempBinaryFileModel =
-            m_rbinaryFileSettingsModel.createCloneWithValidatedValue(settings);
-        checkRExecutable(tempBinaryFileModel.getStringValue());
-
-        m_rbinaryFileSettingsModel.loadSettingsFrom(settings);
-        m_useSpecifiedModel.loadSettingsFrom(settings);
+        m_rbinaryFileSettingsModel.validateSettings(settings);
+        m_useSpecifiedModel.validateSettings(settings);
     }
     
     private static void checkRExecutable(final String path) 
