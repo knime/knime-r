@@ -37,6 +37,9 @@ import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.PortObject;
+import org.knime.core.node.PortObjectSpec;
+import org.knime.core.node.PortType;
 
 /**
  * Executes R commands locally, the entire data is transfered to the R server 
@@ -52,19 +55,20 @@ public class RScriptingNodeModel extends RNodeModel {
      * The constructor.
      */
     protected RScriptingNodeModel() {
-        super(1, 0);
+        super(new PortType[]{BufferedDataTable.TYPE}, new PortType[0]);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
+    protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws CanceledExecutionException,
             Exception {
-        m_spec = inData[0].getDataTableSpec();
+        BufferedDataTable data = (BufferedDataTable) inData[0];
+        m_spec = data.getDataTableSpec();
         // create first a connection object
-        RConnectionRemote.sendData(getRconnection(), inData[0], exec);
+        RConnectionRemote.sendData(getRconnection(), data, exec);
         // nothing
         return new BufferedDataTable[0];
     }
@@ -88,10 +92,10 @@ public class RScriptingNodeModel extends RNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
         //checkRconnection();
-        m_spec = inSpecs[0];
+        m_spec = (DataTableSpec) inSpecs[0];
         return new DataTableSpec[0];
     }
 

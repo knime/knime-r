@@ -28,11 +28,12 @@ package org.knime.ext.r.node;
 
 import java.util.ArrayList;
 
+import org.knime.core.node.GenericNodeModel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeModel;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.PortType;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 
@@ -41,7 +42,7 @@ import org.rosuda.REngine.Rserve.RserveException;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-abstract class RNodeModel extends NodeModel {
+abstract class RNodeModel extends GenericNodeModel {
     
     /** 
      * Used only in cases where Rserve runs on local host and windows in order
@@ -64,11 +65,11 @@ abstract class RNodeModel extends NodeModel {
     
     /**
      * Constructor. Specify the number of inputs and outputs required.
-     * @param dataIns number of inputs.
-     * @param dataOuts number of outputs.
+     * @param ins number of inputs
+     * @param outs number of outputs
      */
-    RNodeModel(final int dataIns, final int dataOuts) {
-        super(dataIns, dataOuts);
+    RNodeModel(final PortType[] ins, final PortType[] outs) {
+        super(ins, outs);
     }
     
     /**

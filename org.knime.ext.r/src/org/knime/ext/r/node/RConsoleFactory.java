@@ -26,16 +26,17 @@
  */
 package org.knime.ext.r.node;
 
+import org.knime.core.node.GenericNodeFactory;
+import org.knime.core.node.GenericNodeView;
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeView;
 
 /**
  * <code>NodeFactory</code> for R Console.
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RConsoleFactory extends NodeFactory<RConsoleModel> {
+public class RConsoleFactory extends GenericNodeFactory<RConsoleModel> {
+    
     /**
      * {@inheritDoc}
      */
@@ -56,7 +57,7 @@ public class RConsoleFactory extends NodeFactory<RConsoleModel> {
      * {@inheritDoc}
      */
     @Override
-    public NodeView<RConsoleModel> createNodeView(final int viewIndex,
+    public GenericNodeView<RConsoleModel> createNodeView(final int viewIndex,
             final RConsoleModel nodeModel) {
         return null;
     }

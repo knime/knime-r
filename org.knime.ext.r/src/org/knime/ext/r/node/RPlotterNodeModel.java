@@ -48,6 +48,9 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.PortObject;
+import org.knime.core.node.PortObjectSpec;
+import org.knime.core.node.PortType;
 import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.util.FileUtil;
@@ -92,7 +95,7 @@ public class RPlotterNodeModel extends RNodeModel {
      * Creates a new plotter with one data input. 
      */
     protected RPlotterNodeModel() {
-        super(1, 0);
+        super(new PortType[]{BufferedDataTable.TYPE}, new PortType[0]);
         m_resultImage = null;
     }
 
@@ -100,7 +103,7 @@ public class RPlotterNodeModel extends RNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
+    protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
         
         // create unique png file
@@ -116,7 +119,7 @@ public class RPlotterNodeModel extends RNodeModel {
         c.eval("try(" + pngCommand + ")");
         
         // send data to R server
-        RConnectionRemote.sendData(c, inData[0], exec);
+        RConnectionRemote.sendData(c, (BufferedDataTable) inData[0], exec);
 
         // execute view command on server
         LOGGER.debug(Arrays.toString(m_viewCmds));
@@ -216,7 +219,7 @@ public class RPlotterNodeModel extends RNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
         return new DataTableSpec[0];
     }

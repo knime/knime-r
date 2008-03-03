@@ -55,8 +55,8 @@ import javax.swing.ListSelectionModel;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.GenericNodeView;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeView;
 import org.knime.core.node.util.DataColumnSpecListCellRenderer;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
@@ -69,7 +69,7 @@ import org.rosuda.REngine.Rserve.RserveException;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
+public class RScriptingNodeView extends GenericNodeView<RScriptingNodeModel> {
 
     private final JEditorPane m_shell;
     private final JTextArea m_output;

@@ -28,7 +28,7 @@ package org.knime.ext.r.node;
 
 import java.awt.Image;
 
-import org.knime.core.node.NodeView;
+import org.knime.core.node.GenericNodeView;
 
 
 /**
@@ -36,7 +36,7 @@ import org.knime.core.node.NodeView;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RPlotterNodeView extends NodeView<RPlotterNodeModel> {
+public class RPlotterNodeView extends GenericNodeView<RPlotterNodeModel> {
     private final RPlotterViewPanel m_panel;
 
     /**

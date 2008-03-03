@@ -48,6 +48,9 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.PortObject;
+import org.knime.core.node.PortObjectSpec;
+import org.knime.core.node.PortType;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.RFactor;
@@ -73,19 +76,20 @@ public class RConsoleModel extends RNodeModel {
      * 
      */
     protected RConsoleModel() {
-        super(1, 1);
+        super(new PortType[]{BufferedDataTable.TYPE}, new PortType[]{
+                BufferedDataTable.TYPE});
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
+    protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws CanceledExecutionException,
             Exception {
         RConnection rconn = super.getRconnection();
         // send data to R server
-        RConnectionRemote.sendData(rconn, inData[0], exec);
+        RConnectionRemote.sendData(rconn, (BufferedDataTable) inData[0], exec);
         // send expression to R server
         String[] expression = parseExpression(m_expression);
         for (String e : expression) {
@@ -386,7 +390,7 @@ public class RConsoleModel extends RNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
         return new DataTableSpec[1];
     }

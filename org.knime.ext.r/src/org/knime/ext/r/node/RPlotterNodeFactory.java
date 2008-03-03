@@ -26,16 +26,16 @@
  */
 package org.knime.ext.r.node;
 
+import org.knime.core.node.GenericNodeFactory;
+import org.knime.core.node.GenericNodeView;
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeView;
 
 /**
  * Factory for the R plotter.
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RPlotterNodeFactory extends NodeFactory<RPlotterNodeModel> {
+public class RPlotterNodeFactory extends GenericNodeFactory<RPlotterNodeModel> {
     /**
      * {@inheritDoc}
      */
@@ -56,8 +56,8 @@ public class RPlotterNodeFactory extends NodeFactory<RPlotterNodeModel> {
      * {@inheritDoc}
      */
     @Override
-    public NodeView<RPlotterNodeModel> createNodeView(final int viewIndex,
-            final RPlotterNodeModel nodeModel) {
+    public GenericNodeView<RPlotterNodeModel> createNodeView(
+            final int viewIndex, final RPlotterNodeModel nodeModel) {
         return new RPlotterNodeView(nodeModel);
     }
 
