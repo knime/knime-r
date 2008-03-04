@@ -24,16 +24,17 @@
 package org.knime.ext.r.node.local;
 
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
+import org.knime.core.node.GenericNodeFactory;
+import org.knime.core.node.GenericNodeView;
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeView;
 
 /**
  * Factory of the <code>RLocalViewsNodeModel</code>.
  *
  * @author Kilian Thiel, University of Konstanz
  */
-public class RLocalViewsNodeFactory extends NodeFactory<RLocalViewsNodeModel> {
+public class RLocalViewsNodeFactory extends
+        GenericNodeFactory<RLocalViewsNodeModel> {
 
     /**
      * {@inheritDoc}
@@ -55,12 +56,12 @@ public class RLocalViewsNodeFactory extends NodeFactory<RLocalViewsNodeModel> {
      * {@inheritDoc}
      */
     @Override
-    public NodeView<RLocalViewsNodeModel> createNodeView(final int viewIndex,
-            final RLocalViewsNodeModel nodeModel) {
+    public GenericNodeView<RLocalViewsNodeModel> createNodeView(
+            final int viewIndex, final RLocalViewsNodeModel nodeModel) {
         if (viewIndex == 0) {
             return new RLocalViewsNodeView(nodeModel);
         } else if (viewIndex == 1) {
-            return new ExtToolStderrNodeView(nodeModel);
+            return new ExtToolStderrNodeView<RLocalViewsNodeModel>(nodeModel);
         } else {
             return null;
         }

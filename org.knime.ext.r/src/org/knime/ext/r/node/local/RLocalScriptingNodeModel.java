@@ -17,7 +17,7 @@
  * website: www.knime.org
  * email: contact@knime.org
  * ---------------------------------------------------------------------
- * 
+ *
  * History
  *   17.09.2007 (thiel): created
  */
@@ -27,19 +27,20 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.PortObjectSpec;
 import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 
 /**
  * The <code>RLocalScriptingNodeModel</code> provides functionality to create
  * a R script with user defined R code and run it.
- * 
+ *
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalScriptingNodeModel extends RLocalNodeModel {
-    
+
     private String m_rCommand = RDialogPanel.DEFAULT_R_COMMAND;
-    
+
     /**
      * Creates new instance of <code>RLocalScriptingNodeModel</code> with one
      * data in and data one out port.
@@ -60,14 +61,14 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected DataTableSpec[] configure(final DataTableSpec[] inSpecs)
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
         checkRExecutable();
         return new DataTableSpec[1];
     }
-    
-    
-    
+
+
+
     /**
      * {@inheritDoc}
      */

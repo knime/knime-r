@@ -23,18 +23,18 @@
  */
 package org.knime.ext.r.node.local;
 
+import org.knime.base.node.util.exttool.ExtToolOutputNodeView;
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
+import org.knime.core.node.GenericNodeFactory;
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeView;
 
 /**
  * Factory for the <code>RLocalScriptingNodeFactory</code> node.
  *
  * @author Kilian Thiel, University of Konstanz
  */
-public class RLocalScriptingNodeFactory 
-        extends NodeFactory<RLocalScriptingNodeModel> {
+public class RLocalScriptingNodeFactory
+        extends GenericNodeFactory<RLocalScriptingNodeModel> {
 
     /**
      * {@inheritDoc}
@@ -56,11 +56,12 @@ public class RLocalScriptingNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public NodeView<RLocalScriptingNodeModel> createNodeView(
+    public ExtToolOutputNodeView<RLocalScriptingNodeModel> createNodeView(
             final int viewIndex,
             final RLocalScriptingNodeModel nodeModel) {
         if (viewIndex == 0) {
-            return new ExtToolStderrNodeView(nodeModel);
+            return
+                new ExtToolStderrNodeView<RLocalScriptingNodeModel>(nodeModel);
         }
         return null;
     }

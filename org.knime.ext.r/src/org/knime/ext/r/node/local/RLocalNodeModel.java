@@ -47,6 +47,8 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.PortObject;
+import org.knime.core.node.PortType;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.util.FileUtil;
@@ -77,8 +79,7 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  * output tables is greater than zero.
  * <br/>
  * Additionally this class provides a preprocessing method
- * {@link RLocalNodeModel#preprocessDataTable(BufferedDataTable[],
- * ExecutionContext)}
+ * {@link RLocalNodeModel#preprocessDataTable(PortObject[], ExecutionContext)}
  * which can be overwritten to preprocess that input data, as well as a
  * postprocess method
  * {@link RLocalNodeModel#postprocessDataTable(
@@ -130,7 +131,8 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
      * data in port an one data out port.
      */
     public RLocalNodeModel() {
-        super(1, 1);
+        super(new PortType[]{BufferedDataTable.TYPE},
+                new PortType[]{BufferedDataTable.TYPE});
     }
 
     /**
@@ -143,14 +145,15 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
      * with one data out port if <code>false</code> with none.
      */
     public RLocalNodeModel(final boolean hasOutput) {
-        super(1, numberOfOuts(hasOutput));
+        super(new PortType[]{BufferedDataTable.TYPE},
+                numberOfOuts(hasOutput));
     }
 
-    private static int numberOfOuts(final boolean hasOutput) {
+    private static PortType[] numberOfOuts(final boolean hasOutput) {
         if (hasOutput) {
-            return 1;
+            return new PortType[]{BufferedDataTable.TYPE};
         }
-        return 0;
+        return new PortType[0];
     }
 
     /**
@@ -180,8 +183,8 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
      * @return The preprocessed in data.
      * @throws Exception If other problems occur.
      */
-    protected BufferedDataTable[] preprocessDataTable(
-            final BufferedDataTable[] inData, final ExecutionContext exec)
+    protected PortObject[] preprocessDataTable(
+            final PortObject[] inData, final ExecutionContext exec)
             throws Exception {
         return inData;
     }
@@ -207,23 +210,23 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
 
     /**
      * First the
-     * {@link RLocalNodeModel#preprocessDataTable(
-     * BufferedDataTable[], ExecutionContext)}
-     * method is called to preprocess that input data. Further a csv file
-     * is written containing the input data. Next a R script is created
-     * consisting of R commands to import the data of the csv file, the R code
-     * specified in the command string and the export of the modified data into
-     * a output table. This table is returned at the end.
+     * {@link RLocalNodeModel#preprocessDataTable(PortObject[],
+     * ExecutionContext)}
+     * method is called to preprocess that input data. Further a csv file is
+     * written containing the input data. Next a R script is created consisting
+     * of R commands to import the data of the csv file, the R code specified in
+     * the command string and the export of the modified data into a output
+     * table. This table is returned at the end.
      *
      * {@inheritDoc}
      */
     @Override
-    protected BufferedDataTable[] execute(final BufferedDataTable[] inData,
+    protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws CanceledExecutionException,
             Exception {
 
         // preprocess data in in DataTable.
-        BufferedDataTable[] inDataTables = preprocessDataTable(inData, exec);
+        PortObject[] inDataTables = preprocessDataTable(inData, exec);
 
         File tempOutData = null;
         File inDataCsvFile = null;
@@ -233,7 +236,8 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
 
         try {
             // write data to csv
-            inDataCsvFile = writeInDataCsvFile(inDataTables[0], exec);
+            inDataCsvFile = writeInDataCsvFile(
+                    (BufferedDataTable)inDataTables[0], exec);
 
             // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
