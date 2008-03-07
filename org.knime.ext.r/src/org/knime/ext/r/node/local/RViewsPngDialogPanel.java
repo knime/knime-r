@@ -105,40 +105,39 @@ public class RViewsPngDialogPanel extends JLabel {
      */
     public RViewsPngDialogPanel() {
         super();
-        
-        // Image size
-        JPanel size = new JPanel();
-        size.setBorder(BorderFactory.createTitledBorder(BorderFactory
-                .createEtchedBorder(), "Image size"));
+        super.setLayout(new BorderLayout());
         
         m_heightModel = createHeightModel();
         m_heightComp = new DialogComponentNumberEdit(m_heightModel, 
-                "Image height");
+                "Height: ");
         
         m_widthModel = createWidthModel();
         m_widthComp = new DialogComponentNumberEdit(m_widthModel, 
-                "Image width");
+                "Width: ");
         
-        size.setLayout(new BorderLayout());
-        size.add(m_heightComp.getComponentPanel(), BorderLayout.NORTH);
-        size.add(m_widthComp.getComponentPanel(), BorderLayout.CENTER);
-        
+        // Image size
+        JPanel size = new JPanel(new BorderLayout());
+        size.setBorder(BorderFactory.createTitledBorder(BorderFactory
+                .createEtchedBorder(), " Image size "));
+        size.add(m_widthComp.getComponentPanel(), BorderLayout.WEST);
+        size.add(m_heightComp.getComponentPanel(), BorderLayout.CENTER);
+
         // Point size
         m_pointSizeModel = createPointSizeModel();
         m_pointSizeComp = new DialogComponentNumber(m_pointSizeModel, 
-                "Point size", 1);
+                "Point size: ", 1);
         
         // Bg col
         m_bgModel = createBgModel();
-        m_bgComp = new DialogComponentString(m_bgModel , "Background color");
-        
-        JPanel upperPanel = new JPanel();
-        upperPanel.setLayout(new BorderLayout());
+        m_bgComp = new DialogComponentString(m_bgModel , "Background color: ");
+
+        JPanel upperPanel = new JPanel(new BorderLayout());
+        upperPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
+                .createEtchedBorder(), " Appearance "));
         upperPanel.add(m_pointSizeComp.getComponentPanel(), BorderLayout.NORTH);
         upperPanel.add(m_bgComp.getComponentPanel(), BorderLayout.CENTER);
         
         // add all components
-        setLayout(new BorderLayout());
         add(size, BorderLayout.NORTH);
         add(upperPanel, BorderLayout.CENTER);
     }
