@@ -136,7 +136,7 @@ public class RPlotterNodeModel extends RNodeModel {
         m_imageFile = File.createTempFile(FILE_NAME, ".png");
         FileOutputStream copy = new FileOutputStream(m_imageFile);
         // FIXME: #readAll() has been added by KNIME, since 
-        // #read(byte[],int,int) causes an exception when the returned file as 
+        // #read(byte[],int,int) causes an exception when the returned file has 
         // more bytes then the actual length of the byte array to write into
         copy.write(ris.readAll());
         FileInputStream in = new FileInputStream(m_imageFile);
