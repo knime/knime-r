@@ -423,7 +423,7 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
         settings.setFileHasRowHeadersUserSet(true);
         settings.setQuoteUserSet(true);
         settings.setWhiteSpaceUserSet(true);
-        settings.setGlobalMissingValuePattern("NA");
+        settings.setMissValuePatternStrCols("NA");
         settings = FileAnalyzer.analyze(settings, null);
 
         DataTableSpec tSpec = settings.createDataTableSpec();
