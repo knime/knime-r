@@ -1,22 +1,26 @@
 /* 
  * ------------------------------------------------------------------
- * This source code, its documentation and all appendant files
- * are protected by copyright law. All rights reserved.
- *
  * Copyright, 2003 - 2008
- * University of Konstanz, Germany
- * Chair for Bioinformatics and Information Mining (Prof. M. Berthold)
- * and KNIME GmbH, Konstanz, Germany
+ * University of Konstanz, Germany.
+ * Chair for Bioinformatics and Information Mining
+ * Prof. Dr. Michael R. Berthold
  *
- * You may not modify, publish, transmit, transfer or sell, reproduce,
- * create derivative works from, distribute, perform, display, or in
- * any way exploit any of the content, in whole or in part, except as
- * otherwise expressly permitted in writing by the copyright owner or
- * as specified in the license file distributed with this product.
+ * This file is part of the R integration plugin for KNIME.
  *
- * If you have any questions please contact the copyright holder:
- * website: www.knime.org
- * email: contact@knime.org
+ * The R integration plugin is free software; you can redistribute 
+ * it and/or modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 of the 
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St., Fifth Floor, Boston, MA 02110-1301, USA.
+ * Or contact us: contact@knime.org.
  * --------------------------------------------------------------------- *
  * 
  * History
