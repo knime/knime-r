@@ -35,6 +35,7 @@ import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
+import org.knime.core.data.RowKey;
 import org.knime.core.data.def.DefaultRow;
 import org.knime.core.data.def.DoubleCell;
 import org.knime.core.data.def.IntCell;
@@ -159,7 +160,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < bytes.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / bytes.length);
-            dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
+            dc.addRowToTable(new DefaultRow(new RowKey("Row" + (i + 1)),
                     String.valueOf(bytes[i])));
         }
         dc.close();
@@ -218,7 +219,7 @@ public class RConsoleModel extends RNodeModel {
                     }
                 }   
             }
-            dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
+            dc.addRowToTable(new DefaultRow(new RowKey("Row" + (i + 1)),
                     row));
         }
         dc.close();
@@ -240,7 +241,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < fac.size(); i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / strings.length);
-            StringCell rowKey = new StringCell("Row" + (i + 1));
+            RowKey rowKey = new RowKey("Row" + (i + 1));
             String strValue = strings[fac.indexAt(i)];
             if (strValue == null) {
                 dc.addRowToTable(
@@ -262,10 +263,10 @@ public class RConsoleModel extends RNodeModel {
             exec.createDataContainer(new DataTableSpec(cspec));
         DataRow row;
         if (string == null) {
-            row = new DefaultRow(new StringCell("Row1"), 
+            row = new DefaultRow(new RowKey("Row1"), 
                 DataType.getMissingCell());
         } else {
-            row = new DefaultRow(new StringCell("Row1"), string);
+            row = new DefaultRow(new RowKey("Row1"), string);
         }
         dc.addRowToTable(row);
         dc.close();
@@ -287,7 +288,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
-            dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
+            dc.addRowToTable(new DefaultRow(new RowKey("Row" + (i + 1)),
                     matrix[i]));
         }
         dc.close();
@@ -309,7 +310,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
-            StringCell rowKey = new StringCell("Row" + (i + 1));
+            RowKey rowKey = new RowKey("Row" + (i + 1));
             if (matrix[i] == null) {
                 dc.addRowToTable(new DefaultRow(rowKey, 
                         DataType.getMissingCell()));
@@ -341,7 +342,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
-            dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
+            dc.addRowToTable(new DefaultRow(new RowKey("Row" + (i + 1)),
                     matrix[i]));
         }
         dc.close();
@@ -363,7 +364,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
-            dc.addRowToTable(new DefaultRow(new StringCell("Row" + (i + 1)),
+            dc.addRowToTable(new DefaultRow(new RowKey("Row" + (i + 1)),
                     new int[]{matrix[i]}));
         }
         dc.close();
