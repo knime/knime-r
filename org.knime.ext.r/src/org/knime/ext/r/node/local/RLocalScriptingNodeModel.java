@@ -32,7 +32,7 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.PortObjectSpec;
+import org.knime.core.node.port.PortObjectSpec;
 import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 
