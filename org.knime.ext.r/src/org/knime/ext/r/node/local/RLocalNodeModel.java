@@ -271,7 +271,7 @@ public abstract class RLocalNodeModel extends ExtToolOutputNodeModel {
             StringBuilder shellCmd = new StringBuilder();
 
             String rBinaryFile = RPreferenceInitializer.getRPath();
-            if (m_useSpecifiedModel.isEnabled()) {
+            if (m_useSpecifiedModel.getBooleanValue()) {
                 rBinaryFile = m_rbinaryFileSettingsModel.getStringValue();
             }
             shellCmd.append(rBinaryFile);
