@@ -160,7 +160,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < bytes.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / bytes.length);
-            dc.addRowToTable(new DefaultRow(new RowKey("Row" + (i + 1)),
+            dc.addRowToTable(new DefaultRow(RowKey.createRowKey(i),
                     String.valueOf(bytes[i])));
         }
         dc.close();
@@ -219,8 +219,7 @@ public class RConsoleModel extends RNodeModel {
                     }
                 }   
             }
-            dc.addRowToTable(new DefaultRow(new RowKey("Row" + (i + 1)),
-                    row));
+            dc.addRowToTable(new DefaultRow(RowKey.createRowKey(i), row));
         }
         dc.close();
         return dc.getTable();
@@ -241,7 +240,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < fac.size(); i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / strings.length);
-            RowKey rowKey = new RowKey("Row" + (i + 1));
+            RowKey rowKey = RowKey.createRowKey(i);
             String strValue = strings[fac.indexAt(i)];
             if (strValue == null) {
                 dc.addRowToTable(
@@ -288,7 +287,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
-            dc.addRowToTable(new DefaultRow(new RowKey("Row" + (i + 1)),
+            dc.addRowToTable(new DefaultRow(RowKey.createRowKey(i),
                     matrix[i]));
         }
         dc.close();
@@ -310,7 +309,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
-            RowKey rowKey = new RowKey("Row" + (i + 1));
+            RowKey rowKey = RowKey.createRowKey(i);
             if (matrix[i] == null) {
                 dc.addRowToTable(new DefaultRow(rowKey, 
                         DataType.getMissingCell()));
@@ -342,8 +341,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
-            dc.addRowToTable(new DefaultRow(new RowKey("Row" + (i + 1)),
-                    matrix[i]));
+            dc.addRowToTable(new DefaultRow(RowKey.createRowKey(i), matrix[i]));
         }
         dc.close();
         return dc.getTable();
@@ -364,7 +362,7 @@ public class RConsoleModel extends RNodeModel {
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
-            dc.addRowToTable(new DefaultRow(new RowKey("Row" + (i + 1)),
+            dc.addRowToTable(new DefaultRow(RowKey.createRowKey(i),
                     new int[]{matrix[i]}));
         }
         dc.close();
