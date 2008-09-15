@@ -92,6 +92,18 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
 
     static final String WRITE_DATA_CMD_SUFFIX =
         "\", row.names = FALSE);\n";
+    
+    static final String WRITE_MODEL_CMD_PREFIX = "save(R, file=\"";
+
+    static final String WRITE_MODEL_CMD_SUFFIX = "\");\n";
+    
+    static final String MODEL2PMML_CMD = "R<-pmml(R);\n";
+    
+    static final String LOAD_PMML_CMD = "library(pmml);\n";
+    
+    static final String LOAD_PMMLMODEL_CMD_PREFIX = "load(\"";
+    
+    static final String LOAD_PMMLMODEL_CMD_SUFFIX = "\");\n";
 
     /**
      * The temp directory used to save csv, script R output files temporarily.

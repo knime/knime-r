@@ -56,6 +56,10 @@ public class RPortObject implements PortObject {
         return "R Object";
     }
     
+    public File getPmmlFile() {
+        return m_pmmlR;
+    }
+    
     /**
      * Serializer used to save this port object.
      * @return a {@link RPortObject}

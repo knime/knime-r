@@ -26,6 +26,11 @@
             factory-class="org.knime.ext.r.node.local.RLocalLearnerNodeFactory"
             id="org.knime.ext.r.node.local.RLocalLearnerNodeFactory">
       </node>
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.ext.r.node.local.RLocalPredictorNodeFactory"
+            id="org.knime.ext.r.node.local.RLocalPredictorNodeFactory">
+      </node>
    </extension>
    <extension
          point="org.knime.workbench.repository.categories">

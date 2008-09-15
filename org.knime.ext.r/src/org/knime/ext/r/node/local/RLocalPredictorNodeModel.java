@@ -1,5 +1,4 @@
-/* 
- * ------------------------------------------------------------------
+/* ------------------------------------------------------------------
  * This source code, its documentation and all appendant files
  * are protected by copyright law. All rights reserved.
  *
@@ -17,10 +16,10 @@
  * If you have any questions please contact the copyright holder:
  * website: www.knime.org
  * email: contact@knime.org
- * --------------------------------------------------------------------- *
+ * ---------------------------------------------------------------------
  * 
  * History
- *   12.09.2008 (gabriel): created
+ *   15.09.2008 (thiel): created
  */
 package org.knime.ext.r.node.local;
 
@@ -30,40 +29,38 @@ import java.io.FileReader;
 import java.util.LinkedList;
 
 import org.knime.base.node.util.exttool.CommandExecution;
+import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.knime.core.node.port.pmml.PMMLPortObjectSpec;
-import org.knime.ext.r.node.RConsoleModel;
-import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
- *
+ * 
  * @author Kilian Thiel, University of Konstanz
- * @author Thomas Gabriel, University of Konstanz
  */
-public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
-    
-    private static final NodeLogger LOGGER =
-        NodeLogger.getLogger(RLocalLearnerNodeModel.class);
-    
-    private String m_rCommand = RDialogPanel.DEFAULT_R_COMMAND;
+public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
 
+    private static final NodeLogger LOGGER =
+        NodeLogger.getLogger(RLocalPredictorNodeModel.class);
+    
+    static final String PREDICTION_CMD = 
+        "R<-cbind(RDATA, predict(RMODEL, type=\"class\"), " +
+        "predict(RMODEL, type=\"prob\"))\n";
+    
     /**
-     *
+     * @param inPorts
+     * @param outPorts
      */
-    public RLocalLearnerNodeModel() {
-        super(new PortType[]{BufferedDataTable.TYPE}, 
-                new PortType[]{new PortType(RPortObject.class)});
+    public RLocalPredictorNodeModel() {
+        super(new PortType[]{BufferedDataTable.TYPE, 
+                new PortType(RPortObject.class)}, 
+                new PortType[]{BufferedDataTable.TYPE});
     }
 
     /**
@@ -72,17 +69,16 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-        return new PortObjectSpec[]{(PMMLPortObjectSpec) null};
+        return new DataTableSpec[1];
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec) throws CanceledExecutionException,
-            Exception {
-
+    protected PortObject[] execute(final PortObject[] inData, 
+            final ExecutionContext exec)
+            throws Exception {
         // preprocess data in in DataTable.
         PortObject[] inDataTables = preprocessDataTable(inData, exec);
 
@@ -90,7 +86,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
         File inDataCsvFile = null;
         File rCommandFile = null;
         File rOutFile = null;
-        RPortObject out;
+        BufferedDataTable[] dts = null;
 
         try {
             // write data to csv
@@ -104,17 +100,27 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\',
                     '/'));
             completeCmd.append(READ_DATA_CMD_SUFFIX);
+            completeCmd.append("RDATA<-R;\n");
 
-            //completeCmd.append(LOAD_PMML_CMD);
-            completeCmd.append(m_rCommand.trim());
-            completeCmd.append("\n");
-            //completeCmd.append(MODEL2PMML_CMD);
+            completeCmd.append(LOAD_PMML_CMD);
             
-            File pmmlFile = File.createTempFile("~knime_pmml", ".R");
-            pmmlFile.deleteOnExit();
-            completeCmd.append(WRITE_MODEL_CMD_PREFIX);
+            // load model
+            File pmmlFile = ((RPortObject)inData[1]).getPmmlFile();
+            completeCmd.append(LOAD_PMMLMODEL_CMD_PREFIX);
             completeCmd.append(pmmlFile.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(WRITE_MODEL_CMD_SUFFIX);            
+            completeCmd.append(LOAD_PMMLMODEL_CMD_SUFFIX);
+            
+            // predict data
+            completeCmd.append("RMODEL<-R;\n");
+            completeCmd.append(PREDICTION_CMD);
+            
+            // write predicted data to csv
+            tempOutData = File.createTempFile("R-outDataTempFile-", ".csv",
+                    new File(TEMP_PATH));
+            completeCmd.append(WRITE_DATA_CMD_PREFIX);
+            completeCmd
+                    .append(tempOutData.getAbsolutePath().replace('\\', '/'));
+            completeCmd.append(WRITE_DATA_CMD_SUFFIX);
 
             // write R command
             String rCmd = completeCmd.toString();
@@ -187,7 +193,14 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
                 throw new IllegalStateException(
                         "Execution of R script failed: " + rErr);
             }
-            out = new RPortObject(pmmlFile);
+            
+            // read data from R output csv into a buffered data table.
+            ExecutionContext subExecCon = exec.createSubExecutionContext(1.0);
+            BufferedDataTable dt = readOutData(tempOutData, subExecCon);
+
+            // postprocess data in out DataTable.
+            dts = postprocessDataTable(new BufferedDataTable[]{dt}, exec);
+
         } finally {
             // delete all temp files
             deleteFile(inDataCsvFile);
@@ -195,37 +208,9 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             deleteFile(rCommandFile);
             deleteFile(rOutFile);
         }
-        return new PortObject[]{out};
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
-        super.loadValidatedSettingsFrom(settings);
-        m_rCommand = RDialogPanel.getExpressionFrom(settings);
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings) {
-        super.saveSettingsTo(settings);
-        RDialogPanel.setExpressionTo(settings, m_rCommand);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
-        super.validateSettings(settings);
-        String exp = RDialogPanel.getExpressionFrom(settings);
-        RConsoleModel.testExpressions(exp.split("\n"));
+        // return this table
+        return dts;
     }
 
 }
