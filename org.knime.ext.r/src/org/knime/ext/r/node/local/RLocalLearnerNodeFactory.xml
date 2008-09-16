@@ -32,6 +32,10 @@
 			The R commands to run.
 		</option>
 	</fullDescription>
+	<ports>
+        <dataIn name="Data Input" index="0">Data Input</dataIn>
+        <modelOut name="Model Output" index="0">R Model</modelOut>
+    </ports>
     <views>
         <view index="0" name="R Error Output">
             The text sent to standard error during the execution of R executable 
@@ -40,8 +44,4 @@
             failing run which is preserved for your trouble shooting.)
         </view>
     </views>	
-	<ports>
-		<dataIn name="Data Input" index="0">Data Input</dataIn>
-		<modelOut name="Model Output" index="0">R Model</modelOut>
-	</ports>
 </knimeNode>
