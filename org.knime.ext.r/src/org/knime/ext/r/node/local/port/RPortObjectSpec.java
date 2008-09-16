@@ -31,19 +31,21 @@ import org.knime.core.node.port.PortObjectSpecZipInputStream;
 import org.knime.core.node.port.PortObjectSpecZipOutputStream;
 
 /**
+ * A port object spec for R model port.
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RPortObjectSpec implements PortObjectSpec {
     
+    /**
+     * The port object spec instance.
+     */
     public static final RPortObjectSpec INSTANCE = new RPortObjectSpec();
 
     /**
-     * 
+     * Creating a new instance of <code>RPortObjectSpec</code>.
      */
-    public RPortObjectSpec() {
-        
-    }
+    private RPortObjectSpec() { }
     
     /**
      * Serializer used to save this port object spec.

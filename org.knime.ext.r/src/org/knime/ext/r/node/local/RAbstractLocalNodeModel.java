@@ -84,26 +84,56 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RAbstractLocalNodeModel.class);
     
+    /**
+     * The R expression prefix to read data. 
+     */
     static final String READ_DATA_CMD_PREFIX = "R <- read.csv(\"";
 
+    /**
+     * The R expression suffix to read data.
+     */
     static final String READ_DATA_CMD_SUFFIX = "\", header = TRUE);\n";
 
+    /**
+     * The R expression prefix to write data.
+     */
     static final String WRITE_DATA_CMD_PREFIX = "write.csv(R, \"";
 
+    /**
+     * The R expression suffix to read data.
+     */
     static final String WRITE_DATA_CMD_SUFFIX =
         "\", row.names = FALSE);\n";
     
+    /**
+     * The R expression prefix to write a model.
+     */
     static final String WRITE_MODEL_CMD_PREFIX = "save(R, file=\"";
 
+    /**
+     * The R expression suffix to write a model.
+     */
     static final String WRITE_MODEL_CMD_SUFFIX = "\");\n";
     
+    /**
+     * The R expression prefix to convert a model into pmml.
+     */
     static final String MODEL2PMML_CMD = "R<-pmml(R);\n";
     
+    /**
+     * The R expression prefix to load the pmml libarary.
+     */
     static final String LOAD_PMML_CMD = "library(pmml);\n";
     
-    static final String LOAD_PMMLMODEL_CMD_PREFIX = "load(\"";
+    /**
+     * The R expression prefix to load a model.
+     */
+    static final String LOAD_MODEL_CMD_PREFIX = "load(\"";
     
-    static final String LOAD_PMMLMODEL_CMD_SUFFIX = "\");\n";
+    /**
+     * The R expression suffix to load a model.
+     */
+    static final String LOAD_MODEL_CMD_SUFFIX = "\");\n";
 
     /**
      * The temp directory used to save csv, script R output files temporarily.
@@ -112,7 +142,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         System.getProperty("java.io.tmpdir").replace('\\', '/');
     
     /** R commands to set working dir, write and reads csv files. */
-    static final String m_setWorkingDirCmd =
+    static final String SET_WORKINGDIR_CMD =
         "setwd(\"" + TEMP_PATH + "\");\n";
 
     /**
@@ -120,12 +150,25 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
      */
     protected static final String DELIMITER = ",";
 
+    /**
+     * Model saving the path to the R binary file.
+     */
     protected final SettingsModelString m_rbinaryFileSettingsModel =
         RLocalNodeDialogPane.createRBinaryFile();
 
+    /**
+     * Model specifying if specific R binary file have to be used.
+     */
     protected final SettingsModelBoolean m_useSpecifiedModel =
         RLocalNodeDialogPane.createUseSpecifiedFileModel();
 
+    /**
+     * Constructor of <code>RAbstractLocalNodeModel</code> with given in- and
+     * out-port specification.
+     * 
+     * @param inPorts in-port specification.
+     * @param outPorts out-port specification.
+     */
     protected RAbstractLocalNodeModel(final PortType[] inPorts,
             final PortType[] outPorts) {
         super(inPorts, outPorts);
@@ -220,6 +263,14 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
     }
     
 
+    /**
+     * Deletes the specified file. If the file is a directory the directory
+     * itself as well as its files and subdirectories are deleted.
+     * 
+     * @param file The file to delete.
+     * @return <code>true</code> if the file could be deleted, otherwise 
+     * <code>false</code>.
+     */
     static boolean deleteFile(final File file) {
         boolean del = false;
         if (file != null && file.exists()) {
@@ -245,6 +296,13 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         return del;
     }
 
+    /**
+     * Writes the given string into a file and returns it.
+     * 
+     * @param cmd The string to write into a file.
+     * @return The file containing the given string.
+     * @throws IOException If string could not be written to a file.
+     */
     static File writeRcommandFile(final String cmd) throws IOException {
         File tempCommandFile = File.createTempFile("R-inDataTempFile-", ".r",
                     new File(TEMP_PATH));
@@ -254,6 +312,17 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         return tempCommandFile;
     }
 
+    /**
+     * Writes the data contained in the given data table into a file as csv
+     * format.
+     * 
+     * @param inData The data table containing the data to write.
+     * @param exec The execution context to enable the user to cancel the 
+     * process.
+     * @return The csv file with the data.
+     * @throws IOException If the data could not be written into the file.
+     * @throws CanceledExecutionException If user canceled the process.
+     */
     static File writeInDataCsvFile(final BufferedDataTable inData,
             final ExecutionContext exec) throws IOException,
             CanceledExecutionException {
@@ -278,6 +347,15 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         return tempInDataFile;
     }
 
+    /**
+     * Reads data out of specified csv file and creates a data table.
+     * 
+     * @param outData The file containing the csv data.
+     * @param exec The execution context.
+     * @return The data table containing the data of the specified file.
+     * @throws IOException If file could not be opened or read.
+     * @throws CanceledExecutionException If user canceled the process.
+     */
     static BufferedDataTable readOutData(final File outData,
             final ExecutionContext exec) throws IOException,
             CanceledExecutionException {

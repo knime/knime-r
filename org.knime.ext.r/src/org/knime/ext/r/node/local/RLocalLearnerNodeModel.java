@@ -72,7 +72,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-        return new PortObjectSpec[]{(PMMLPortObjectSpec) null};
+        return new PortObjectSpec[]{(PMMLPortObjectSpec)null};
     }
 
     /**
@@ -99,7 +99,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
 
             // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
-            completeCmd.append(m_setWorkingDirCmd);
+            completeCmd.append(SET_WORKINGDIR_CMD);
             completeCmd.append(READ_DATA_CMD_PREFIX);
             completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\',
                     '/'));

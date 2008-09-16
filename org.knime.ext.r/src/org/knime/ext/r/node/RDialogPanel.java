@@ -73,6 +73,7 @@ public class RDialogPanel extends JPanel implements MouseListener {
     
     private final JList m_list;
     private final DefaultListModel m_listModel;
+    private String m_defaultCommand = DEFAULT_R_COMMAND;
     
     /**
      * Creates a new dialog to enter R expressions with a default 
@@ -184,6 +185,21 @@ public class RDialogPanel extends JPanel implements MouseListener {
     {
         return settings.getString(CFG_EXPRESSION, DEFAULT_R_COMMAND);
     }
+    
+    /**
+     * Loads expression from given settings instance and returns it as string.
+     * If no settings can be loaded, the given string is returned as default
+     * expression.
+     * 
+     * @param settings settings instance to load expression from.
+     * @param defaultExpr the default expression if no other can be loaded
+     * from settings.
+     * @return The expression loaded from settings instance.
+     */
+    public static final String getExpressionFrom(final NodeSettingsRO settings,
+            final String defaultExpr) {
+        return settings.getString(CFG_EXPRESSION, defaultExpr);
+    }    
     
     /**
      * Saves given expression to given settings instance.
@@ -302,5 +318,19 @@ public class RDialogPanel extends JPanel implements MouseListener {
      */
     public void mouseReleased(final MouseEvent e) {
         
+    }
+
+    /**
+     * @return the defaultCommand
+     */
+    public String getDefaultCommand() {
+        return m_defaultCommand;
+    }
+
+    /**
+     * @param defaultCommand the defaultCommand to set
+     */
+    public void setDefaultCommand(String defaultCommand) {
+        m_defaultCommand = defaultCommand;
     }
 }

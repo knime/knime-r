@@ -34,9 +34,13 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.ext.r.node.RConsoleModel;
+import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
@@ -49,13 +53,16 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RLocalPredictorNodeModel.class);
     
-    static final String PREDICTION_CMD = 
-        "R<-cbind(RDATA, predict(RMODEL, type=\"class\"), " +
-        "predict(RMODEL, type=\"prob\"))\n";
+    /**
+     * The default prediction command.
+     */
+    static final String PREDICTION_CMD = "R<-cbind(RDATA, predict(RMODEL));\n";
+    
+    private String m_rCommand = PREDICTION_CMD;
     
     /**
-     * @param inPorts
-     * @param outPorts
+     * Creates a new instance of <code>RLocalPredictorNodeModel</code> with
+     * given in- and out-port specification.
      */
     public RLocalPredictorNodeModel() {
         super(new PortType[]{BufferedDataTable.TYPE, 
@@ -95,7 +102,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
 
             // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
-            completeCmd.append(m_setWorkingDirCmd);
+            completeCmd.append(SET_WORKINGDIR_CMD);
             completeCmd.append(READ_DATA_CMD_PREFIX);
             completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\',
                     '/'));
@@ -106,13 +113,14 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
             
             // load model
             File pmmlFile = ((RPortObject)inData[1]).getPmmlFile();
-            completeCmd.append(LOAD_PMMLMODEL_CMD_PREFIX);
+            completeCmd.append(LOAD_MODEL_CMD_PREFIX);
             completeCmd.append(pmmlFile.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(LOAD_PMMLMODEL_CMD_SUFFIX);
+            completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
             
             // predict data
             completeCmd.append("RMODEL<-R;\n");
-            completeCmd.append(PREDICTION_CMD);
+            completeCmd.append(m_rCommand.trim());
+            completeCmd.append("\n");
             
             // write predicted data to csv
             tempOutData = File.createTempFile("R-outDataTempFile-", ".csv",
@@ -213,4 +221,33 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
         return dts;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
+            throws InvalidSettingsException {
+        super.loadValidatedSettingsFrom(settings);
+        m_rCommand = RDialogPanel.getExpressionFrom(settings, PREDICTION_CMD);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void saveSettingsTo(final NodeSettingsWO settings) {
+        super.saveSettingsTo(settings);
+        RDialogPanel.setExpressionTo(settings, m_rCommand);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void validateSettings(final NodeSettingsRO settings)
+            throws InvalidSettingsException {
+        super.validateSettings(settings);
+        String exp = RDialogPanel.getExpressionFrom(settings);
+        RConsoleModel.testExpressions(exp.split("\n"));
+    }    
 }

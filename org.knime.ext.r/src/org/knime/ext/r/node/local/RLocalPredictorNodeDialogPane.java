@@ -28,6 +28,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.ext.r.node.RDialogPanel;
 
 /**
  * 
@@ -35,12 +36,20 @@ import org.knime.core.node.NotConfigurableException;
  */
 public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
     
+    private final RDialogPanel m_dialogPanel;
+    
+    private static final String TAB_R_BINARY = "R Binary";    
+    
     /**
      * Constructor which creates a new instance of 
      * <code>RLocalPredictorNodeDialogPane</code>.
      */
     public RLocalPredictorNodeDialogPane() {
-        super();
+        m_dialogPanel = new RDialogPanel();
+        m_dialogPanel.setText(RLocalPredictorNodeModel.PREDICTION_CMD);
+        
+        addTab("R command", m_dialogPanel);
+        setDefaultTabTitle(TAB_R_BINARY);
     }
     
     /**
@@ -50,6 +59,7 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
             final DataTableSpec[] specs) throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
+        m_dialogPanel.loadSettingsFrom(settings, specs);
     } 
     
     /**
@@ -59,5 +69,6 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
     public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
         throws InvalidSettingsException {
         super.saveAdditionalSettingsTo(settings);
+        m_dialogPanel.saveSettingsTo(settings);
     } 
 }

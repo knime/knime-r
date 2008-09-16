@@ -38,24 +38,45 @@ import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.util.FileUtil;
 
+/**
+ * A port object for R model port providing a file containing a R model. 
+ * 
+ * @author Kilian Thiel, University of Konstanz
+ */
 public class RPortObject implements PortObject {
     
     private final File m_pmmlR;
     
+    /**
+     * Creates an instance of <code>RPortObject</code> with given file.
+     * 
+     * @param pmmlR The file containing a R model.
+     */
     public RPortObject(final File pmmlR) {
         m_pmmlR = pmmlR;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RPortObjectSpec getSpec() {
         return RPortObjectSpec.INSTANCE;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getSummary() {
         return "R Object";
     }
     
+    /**
+     * Returns the file containing the R model.
+     * 
+     * @return the file containing the R model.
+     */
     public File getPmmlFile() {
         return m_pmmlR;
     }
