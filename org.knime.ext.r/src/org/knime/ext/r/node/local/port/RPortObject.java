@@ -24,14 +24,23 @@
  */
 package org.knime.ext.r.node.local.port;
 
+import java.awt.BorderLayout;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 
+import javax.swing.JComponent;
+import javax.swing.JEditorPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
@@ -44,6 +53,9 @@ import org.knime.core.util.FileUtil;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RPortObject implements PortObject {
+    
+    private static final NodeLogger LOGGER =
+        NodeLogger.getLogger(RPortObject.class);    
     
     private final File m_pmmlR;
     
@@ -117,6 +129,37 @@ public class RPortObject implements PortObject {
                 return new RPortObject(pmmlR);
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JComponent[] getViews() {
+        JPanel panel = new JPanel(new BorderLayout());
+        if (m_pmmlR != null && m_pmmlR.exists() && m_pmmlR.canRead()) {
+            JEditorPane jep = new JEditorPane();
+            jep.setEditable(false);
+            
+            StringBuffer buf = new StringBuffer();
+            
+            try {
+                BufferedReader reader = new BufferedReader(
+                        new FileReader(m_pmmlR));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buf.append(line);
+                }
+            } catch (Exception e) {
+                LOGGER.warn("R model could not be read from file!");
+                buf.append("R model could no be read from file!");
+            }
+            
+            jep.setText(buf.toString());
+            panel.add(new JScrollPane(jep));
+        }
+        
+        return new JComponent[]{panel};
     }
 
 }

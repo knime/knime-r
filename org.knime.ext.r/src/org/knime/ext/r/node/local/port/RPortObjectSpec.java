@@ -26,6 +26,8 @@ package org.knime.ext.r.node.local.port;
 
 import java.io.IOException;
 
+import javax.swing.JComponent;
+
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectSpecZipInputStream;
 import org.knime.core.node.port.PortObjectSpecZipOutputStream;
@@ -69,6 +71,14 @@ public class RPortObjectSpec implements PortObjectSpec {
                 
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JComponent[] getViews() {
+        return new JComponent[]{};
     }
 
 }
