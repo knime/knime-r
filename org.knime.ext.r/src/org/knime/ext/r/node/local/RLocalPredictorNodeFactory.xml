@@ -33,9 +33,9 @@
 		</option>
 	</fullDescription>
 	<ports>
-		<dataIn index="0" name="Data Input">Data Input</dataIn>
-		<modelIn index="0" name="Model Input">R Model Input</modelIn>
-		<dataOut index="0" name="Data Output">Predicted data output</dataOut>
+	    <dataIn index="0" name="Data Input">Data Input</dataIn>
+        <dataOut index="0" name="Data Output">Predicted data output</dataOut>
+	    <modelIn index="0" name="Model Input">R Model Input</modelIn>
 	</ports>
 	<views>
 		<view index="0" name="R Error Output">
