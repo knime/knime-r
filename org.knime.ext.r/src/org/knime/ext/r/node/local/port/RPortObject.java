@@ -137,15 +137,34 @@ public class RPortObject implements PortObject {
     @Override
     public JComponent[] getViews() {
         JPanel panel = new JPanel(new BorderLayout());
+        JEditorPane jep = new JEditorPane();
+        jep.setEditable(false);
+        panel.setName("R Port View");
+        jep.setText("R model file:\n" + getFilePath());
+        panel.add(new JScrollPane(jep));
+        return new JComponent[]{panel};
+    }
+    
+    /**
+     * @return The path of the R model file if available, otherwise
+     * "No file available".
+     */
+    String getFilePath() {
+        if (m_pmmlR != null) {
+            return m_pmmlR.getAbsolutePath();
+        }
+        return "No file available";
+    }
+    
+    /**
+     * @return The input of the R model file.
+     */
+    String getModelData() {
+        StringBuffer buf = new StringBuffer();
         if (m_pmmlR != null && m_pmmlR.exists() && m_pmmlR.canRead()) {
-            JEditorPane jep = new JEditorPane();
-            jep.setEditable(false);
-            
-            StringBuffer buf = new StringBuffer();
-            
             try {
-                BufferedReader reader = new BufferedReader(
-                        new FileReader(m_pmmlR));
+                BufferedReader reader =
+                        new BufferedReader(new FileReader(m_pmmlR));
                 String line;
                 while ((line = reader.readLine()) != null) {
                     buf.append(line);
@@ -154,12 +173,7 @@ public class RPortObject implements PortObject {
                 LOGGER.warn("R model could not be read from file!");
                 buf.append("R model could no be read from file!");
             }
-            
-            jep.setText(buf.toString());
-            panel.add(new JScrollPane(jep));
         }
-        
-        return new JComponent[]{panel};
+        return buf.toString();
     }
-
 }

@@ -113,7 +113,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
     /**
      * The R expression suffix to write a model.
      */
-    static final String WRITE_MODEL_CMD_SUFFIX = "\");\n";
+    static final String WRITE_MODEL_CMD_SUFFIX = "\", ascii=TRUE);\n";
     
     /**
      * The R expression prefix to convert a model into pmml.

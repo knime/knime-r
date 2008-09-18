@@ -114,7 +114,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             pmmlFile.deleteOnExit();
             completeCmd.append(WRITE_MODEL_CMD_PREFIX);
             completeCmd.append(pmmlFile.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(WRITE_MODEL_CMD_SUFFIX);            
+            completeCmd.append(WRITE_MODEL_CMD_SUFFIX);
 
             // write R command
             String rCmd = completeCmd.toString();
