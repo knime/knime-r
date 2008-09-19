@@ -25,21 +25,21 @@ package org.knime.ext.r.node.local;
 
 import org.knime.base.node.util.exttool.ExtToolOutputNodeView;
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
-import org.knime.core.node.GenericNodeDialogPane;
-import org.knime.core.node.GenericNodeFactory;
+import org.knime.core.node.NodeDialogPane;
+import org.knime.core.node.NodeFactory;
 
 /**
  * 
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalPredictorNodeFactory 
-extends GenericNodeFactory<RLocalPredictorNodeModel> {
+extends NodeFactory<RLocalPredictorNodeModel> {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected GenericNodeDialogPane createNodeDialogPane() {
+    protected NodeDialogPane createNodeDialogPane() {
         return new RLocalPredictorNodeDialogPane();
     }
 

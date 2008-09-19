@@ -30,7 +30,7 @@ package org.knime.ext.r.node.local;
 
 import java.awt.Image;
 
-import org.knime.core.node.GenericNodeView;
+import org.knime.core.node.NodeView;
 import org.knime.ext.r.node.RPlotterViewPanel;
 
 /**
@@ -40,7 +40,7 @@ import org.knime.ext.r.node.RPlotterViewPanel;
  *
  * @author Kilian Thiel, University of Konstanz
  */
-public class RLocalViewsNodeView extends GenericNodeView<RLocalViewsNodeModel> {
+public class RLocalViewsNodeView extends NodeView<RLocalViewsNodeModel> {
 
     private final RPlotterViewPanel m_panel;
 

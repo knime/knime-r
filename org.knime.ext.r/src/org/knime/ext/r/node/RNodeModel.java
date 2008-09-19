@@ -28,7 +28,7 @@ package org.knime.ext.r.node;
 
 import java.util.ArrayList;
 
-import org.knime.core.node.GenericNodeModel;
+import org.knime.core.node.NodeModel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -42,7 +42,7 @@ import org.rosuda.REngine.Rserve.RserveException;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-abstract class RNodeModel extends GenericNodeModel {
+abstract class RNodeModel extends NodeModel {
     
     /** 
      * Used only in cases where Rserve runs on local host and windows in order

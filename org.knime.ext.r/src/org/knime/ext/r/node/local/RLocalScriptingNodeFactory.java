@@ -30,7 +30,7 @@ package org.knime.ext.r.node.local;
 
 import org.knime.base.node.util.exttool.ExtToolOutputNodeView;
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
-import org.knime.core.node.GenericNodeFactory;
+import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeDialogPane;
 
 /**
@@ -39,7 +39,7 @@ import org.knime.core.node.NodeDialogPane;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalScriptingNodeFactory
-        extends GenericNodeFactory<RLocalScriptingNodeModel> {
+        extends NodeFactory<RLocalScriptingNodeModel> {
 
     /**
      * {@inheritDoc}
