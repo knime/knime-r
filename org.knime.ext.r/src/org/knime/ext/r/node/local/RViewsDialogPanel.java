@@ -38,13 +38,13 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.port.PortObjectSpec;
 import org.knime.ext.r.node.RDialogPanel;
 
 /**
@@ -102,7 +102,7 @@ public class RViewsDialogPanel extends JPanel {
      * and settings not be set. 
      */
     public void loadSettings(final NodeSettingsRO settings, 
-            final DataTableSpec[] specs) throws NotConfigurableException {
+            final PortObjectSpec[] specs) throws NotConfigurableException {
         m_viewSelectionComponent.loadSettingsFrom(settings, specs);
         m_commandPanel.loadSettingsFrom(settings, specs);
     }

@@ -32,7 +32,6 @@ import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
@@ -40,6 +39,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.port.PortObjectSpec;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
@@ -124,7 +124,7 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
      */
     @Override
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
-            final DataTableSpec[] specs) throws NotConfigurableException {
+            final PortObjectSpec[] specs) throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
         enableFileChooser();
     }

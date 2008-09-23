@@ -51,6 +51,7 @@ import org.knime.core.data.StringValue;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.util.DataColumnSpecListCellRenderer;
 
 
@@ -170,8 +171,12 @@ public class RDialogPanel extends JPanel implements MouseListener {
      * @throws NotConfigurableException if no columns are available.
      */
     public void loadSettingsFrom(final NodeSettingsRO settings, 
-            final DataTableSpec[] specs) throws NotConfigurableException {
-        update(specs[0]);
+            final PortObjectSpec[] specs) throws NotConfigurableException {
+        if (!(specs[0] instanceof DataTableSpec)) {
+            throw new NotConfigurableException("Expected DataTableSpec at"
+                    + " port 0!");
+        }
+        update((DataTableSpec)specs[0]);
         setText(getExpressionFrom(settings));
     }
     

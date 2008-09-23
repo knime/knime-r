@@ -34,7 +34,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -44,6 +43,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentNumberEdit;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.SettingsModelIntegerBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
+import org.knime.core.node.port.PortObjectSpec;
 
 /**
  * 
@@ -156,7 +156,7 @@ public class RViewsPngDialogPanel extends JLabel {
      * and settings not be set. 
      */
     public void loadSettings(final NodeSettingsRO settings, 
-            final DataTableSpec[] specs) throws NotConfigurableException {
+            final PortObjectSpec[] specs) throws NotConfigurableException {
         m_heightComp.loadSettingsFrom(settings, specs);
         m_widthComp.loadSettingsFrom(settings, specs);
         m_pointSizeComp.loadSettingsFrom(settings, specs);
