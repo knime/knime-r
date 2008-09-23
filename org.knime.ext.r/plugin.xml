@@ -70,7 +70,7 @@
    <extension
          point="org.knime.product.splashExtension">
       <splashExtension
-            icon="icons/r.png"
+            icon="icons/R_splash.png"
             id="R"
             tooltip="R Project">
       </splashExtension>
