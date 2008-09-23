@@ -67,4 +67,12 @@
             class="org.knime.ext.r.preferences.RPreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.knime.product.splashExtension">
+      <splashExtension
+            icon="icons/r.png"
+            id="R"
+            tooltip="R Project">
+      </splashExtension>
+   </extension>
 </plugin>
