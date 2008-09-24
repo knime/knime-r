@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Bladder Cancer Recurrences</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for bladder {survival}"><tr><td>bladder {survival}</td><td align="right">R Documentation</td></tr></table>
+<h2>Bladder Cancer Recurrences</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Data on recurrences of bladder cancer, used by many people
+to demonstrate methodology for recurrent event modelling.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+bladder
+bladder2
+</pre>
+
+
+<h3>Format</h3>
+
+<p>
+bladder
+<table summary="Rd table">
+<tr>
+  <td align="left">id:</td>  <td align="left"> Patient id</td>
+</tr>
+<tr>
+  <td align="left"> rx:</td>  <td align="left"> Treatment 1=placebo  2=thiotepa</td>
+</tr>
+<tr>
+  <td align="left"> number:</td>  <td align="left"> Initial number of tumours (8=8 or more)</td>
+</tr>
+<tr>
+  <td align="left"> size:</td>  <td align="left"> size (cm) of largest initial tumour</td>
+</tr>
+<tr>
+  <td align="left"> stop:</td>  <td align="left"> recurrence or censoring time</td>
+</tr>
+<tr>
+  <td align="left"> enum:</td>  <td align="left"> which recurrence (up to 4)</td>
+</tr>
+</table>
+<p>
+bladder2 
+<table summary="Rd table">
+<tr>
+  <td align="left">id:</td>  <td align="left"> Patient id</td>
+</tr>
+<tr>
+  <td align="left"> rx:</td>  <td align="left"> Treatment 1=placebo  2=thiotepa</td>
+</tr>
+<tr>
+  <td align="left"> number:</td>  <td align="left"> Initial number of tumours (8=8 or more)</td>
+</tr>
+<tr>
+  <td align="left"> size:</td>  <td align="left"> size (cm) of largest initial tumour</td>
+</tr>
+<tr>
+  <td align="left"> start:</td>  <td align="left"> start of interval (0 or previous recurrence time)</td>
+</tr>
+<tr>
+  <td align="left"> stop:</td>  <td align="left"> recurrence or censoring time</td>
+</tr>
+<tr>
+  <td align="left"> enum:</td>  <td align="left"> which recurrence (up to 4)</td>
+</tr>
+</table>
+
+
+<h3>Source</h3>
+
+<p>
+LJ Wei, DY Lin, L Weissfeld (1989),
+Regression analysis of multivariate incomplete failure time data by
+modeling marginal distributions.
+<EM>Journal of the American Statistical Association</EM>,
+<B>84</B>.
+</p>
+
+
+
+<hr><div align="center">[Package <em>survival</em> version 2.34-1 <a href="00Index.html">Index]</a></div>
+
+</body></html>

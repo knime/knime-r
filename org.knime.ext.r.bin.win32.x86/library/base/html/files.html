@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: File and Directory Manipulation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for files {base}"><tr><td>files {base}</td><td align="right">R Documentation</td></tr></table>
+<h2>File and Directory Manipulation</h2>
+
+
+<h3>Description</h3>
+
+<p>
+These functions provide a low-level interface to the computer's
+file system.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+file.create(..., showWarnings = TRUE)
+file.exists(...)
+file.remove(...)
+file.rename(from, to)
+file.append(file1, file2)
+file.copy(from, to, overwrite = FALSE)
+file.symlink(from, to)
+dir.create(path, showWarnings = TRUE, recursive = FALSE,
+           mode = "0777")
+Sys.chmod(paths, mode = "0777")
+Sys.umask(mode = "0000")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>..., file1, file2, from, to, paths</code></td>
+<td>
+character vectors,
+containing file names or paths.</td></tr>
+<tr valign="top"><td><code>path</code></td>
+<td>
+a character vector containing a single path name.</td></tr>
+<tr valign="top"><td><code>overwrite</code></td>
+<td>
+logical; should the destination files be overwritten?</td></tr>
+<tr valign="top"><td><code>showWarnings</code></td>
+<td>
+logical; should the warnings on failure be shown?</td></tr>
+<tr valign="top"><td><code>recursive</code></td>
+<td>
+logical: should elements of the path other than the
+last be created?  If true, like Unix's <code>mkdir -p</code>.</td></tr>
+<tr valign="top"><td><code>mode</code></td>
+<td>
+the file mode to be used on Unix-alikes: it will be
+coerced by <code><a href="octmode.html">as.octmode</a></code>.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+The <code>...</code> arguments are concatenated to form one character
+string: you can specify the files separately or as one vector.
+All of these functions expand path names: see <code><a href="path.expand.html">path.expand</a></code>.
+</p>
+<p>
+<code>file.create</code> creates files with the given names if they do not
+already exist and truncates them if they do.  They are created with the
+maximal permissions allowed by the <code>umask</code> setting.
+</p>
+<p>
+<code>file.exists</code> returns a logical vector indicating whether
+the files named by its argument exist.  (Here &lsquo;exists&rsquo; is in the
+sense of the system's <code>stat</code> call: a file will be reported as
+existing only if you have the permissions needed by <code>stat</code>.
+Existence can also be checked by <code><a href="file.access.html">file.access</a></code>, which
+might use different permissions and so obtain a different result.
+Note that the existence of a file does not imply that it is readable:
+for that use <code><a href="file.access.html">file.access</a></code>.)
+</p>
+<p>
+<code>file.remove</code> attempts to remove the files named in its
+argument.
+Unlike on Unix-alikes, &lsquo;file&rsquo; here means a regular file and
+not, say, an empty directory.
+</p>
+<p>
+<code>file.rename</code> attempts to rename a single file.
+</p>
+<p>
+<code>file.append</code> attempts to append the files named by its
+second argument to those named by its first.  The <font face="Courier New,Courier" color="#666666"><b>R</b></font> subscript
+recycling rule is used to align names given in vectors
+of different lengths.
+</p>
+<p>
+<code>file.copy</code> works in a similar way to <code>file.append</code> but with
+the arguments in the natural order for copying.  Copying to existing
+destination files is skipped unless <code>overwrite = TRUE</code>.
+The <code>to</code> argument can specify a single existing directory.
+</p>
+<p>
+<code>file.symlink</code> makes symbolic links on those Unix-like platforms
+which support them.  The <code>to</code> argument can specify a single
+existing directory.
+(Windows Vista/Server 2008 have a version of symbolic links on NTFS
+filesystems, but this seems too limited to be worth implementing.)
+</p>
+<p>
+<code>dir.create</code> creates the last element of the path, unless
+<code>recursive = TRUE</code>.  Trailing path separators are removed.
+On Windows drives are allowed in the path specification and unless
+the path is rooted, it will be interpreted relative to the current
+directory on that drive.  <code>mode</code> is ignored on Windows.
+</p>
+<p>
+<code>Sys.chmod</code> sets the file permissions of one or more files.
+The interpretation of <code>mode</code> in the Windows system function is
+non-POSIX and only supports setting the read-only attribute of the
+file.  So <font face="Courier New,Courier" color="#666666"><b>R</b></font> interprets <code>mode</code> to mean set read-only if and only
+if <code>mode &amp; 0200 == 0</code> (interpreted in octal).  Windows has a much
+more extensive system of file permissions on some file systems
+(e.g. versions of NTFS) which are unrelated to this system call.
+</p>
+<p>
+<code>Sys.umask</code> sets the <code>umask</code>.
+All files on Windows are readable, and files being executable is not a
+Windows concept.  So <code>umask</code> only controls whether a file is
+writable: a setting of <code>"200"</code> makes files (but not directories)
+created subsequently read-only.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+<code>dir.create</code> and <code>file.rename</code> return a logical,
+true for success.
+<br>
+<code>Sys.umask</code> returns the previous value of the <code>umask</code>,
+invisibly, as a length-one object of class <code>"octmode"</code>.
+<br>
+The remaining functions return a logical vector indicating which
+operation succeeded for each of the files attempted.
+<br>
+<code>dir.create</code> will return failure if the directory already exists.
+<br>
+If <code>showWarnings = TRUE</code>, <code>file.create</code> and
+<code>dir.create</code> will give a warning for an unexpected failure
+(e.g. not for a missing value nor for an already existing component for
+<code>dir.create(recursive = TRUE)</code>).
+<br>
+Using a missing value for a file or path name will always be regarded
+as a failure.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Ross Ihaka, Brian Ripley
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="file.info.html">file.info</a></code>, <code><a href="file.access.html">file.access</a></code>, <code><a href="file.path.html">file.path</a></code>,
+<code><a href="file.show.html">file.show</a></code>, <code><a href="list.files.html">list.files</a></code>,
+<code><a href="unlink.html">unlink</a></code>, <code><a href="basename.html">basename</a></code>, <code><a href="path.expand.html">path.expand</a></code>.
+</p>
+<p>
+<code><a href="../../utils/html/filetest.html">file_test</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+cat("file A\n", file="A")
+cat("file B\n", file="B")
+file.append("A", "B")
+file.create("A")
+file.append("A", rep("B", 10))
+if(interactive()) file.show("A")
+file.copy("A", "C")
+dir.create("tmp")
+file.copy(c("A", "B"), "tmp")
+list.files("tmp")
+unlink("tmp", recursive=TRUE)
+file.remove("A", "B", "C")
+</pre>
+
+
+
+<hr><div align="center">[Package <em>base</em> version 2.7.2 <a href="00Index.html">Index]</a></div>
+
+</body></html>

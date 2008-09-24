@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Install Add-on Packages from Sources</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for INSTALL {utils}"><tr><td>INSTALL {utils}</td><td align="right">R Documentation</td></tr></table>
+<h2>Install Add-on Packages from Sources</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Utility for installing add-on source packages.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+R CMD INSTALL [options] [-l lib] pkgs
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>pkgs</code></td>
+<td>
+A space-separated list with the path names of the sources of the
+packages to be installed.</td></tr>
+<tr valign="top"><td><code>lib</code></td>
+<td>
+the path name of the <font face="Courier New,Courier" color="#666666"><b>R</b></font> library tree to install to.</td></tr>
+<tr valign="top"><td><code>options</code></td>
+<td>
+a space-separated list of options through which in
+particular the process for building the help files can be controlled.
+Options should only be given once, and paths including spaces should
+be quoted.
+Use <code>R CMD INSTALL --help</code> for the current list of options.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+If used as <code>R CMD INSTALL pkgs</code> without explicitly specifying
+<code>lib</code>, packages are installed into the library tree rooted at the
+first directory in the library path which would be used by <font face="Courier New,Courier" color="#666666"><b>R</b></font> run in
+the current environment.
+</p>
+<p>
+To install into the library tree <code>lib</code>, use
+<code>R CMD INSTALL -l lib pkgs</code>.  This prepends <code>lib</code> to
+<span class="env">R_LIBS</span> for duration of the install, so required packages in the
+installation directory will be found (and used in preference to those
+in other libraries).
+</p>
+<p>
+Windows Perl and the files for installing from source packages need to
+be installed.  It is possible that environment variable <span class="env">TMPDIR</span>
+will need to be set (although <code>R CMD</code> tries to set it suitably
+otherwise): use forward slashes and no spaces for the path to a
+writeable directory.
+</p>
+<p>
+Both <code>lib</code> and the elements of <code>pkgs</code> may be absolute or
+relative path names of directories.  <code>pkgs</code> may also contain
+names of package archive files of the form &lsquo;<span class="file">pkg_version.tar.gz</span>&rsquo;
+as obtained from CRAN&mdash;these are then extracted to a temporary
+directory &lsquo;<span class="file">R.INSTALL.????</span>&rsquo; of the current directory.
+</p>
+<p>
+Which forms of help are produced is controlled by the <span class="option">--docs</span>
+option which takes values <code>none</code> or <code>normal</code> (text and HTML)
+or <code>chm</code> (the default, text, HTML and CHTML).
+</p>
+<p>
+If the attempt to install the package fails, leftovers are removed.
+If the package was already installed, the old version is restored.
+This happens either if a command encounters an error or if the
+install is interrupted from the keyboard.
+</p>
+<p>
+Use <code>R CMD INSTALL --help</code> for more usage information.
+</p>
+
+
+<h3>Packages using the methods package</h3>
+
+<p>
+Packages that require the methods package and make use functions such
+as <code><a href="../../methods/html/setMethod.html">setMethod</a></code> or <code><a href="../../methods/html/setClass.html">setClass</a></code>, should be
+installed using lazy-loading (or, deprecated, by creating a binary
+image): use the field <code>LazyLoad</code> in the &lsquo;<span class="file">DESCRIPTION</span>&rsquo; file
+to ensure this.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="REMOVE.html">REMOVE</a></code> and <code><a href="../../base/html/library.html">library</a></code> for information on
+using several library trees;
+<code><a href="update.packages.html">update.packages</a></code> for automatic update of packages using
+the internet (or other <font face="Courier New,Courier" color="#666666"><b>R</b></font> level installation of packages, such as by
+<code>install.packages</code>).
+</p>
+<p>
+The section on &ldquo;Add-on packages&rdquo; in &ldquo;R Installation and
+Administration&rdquo; and the chapter on &ldquo;Creating R packages&rdquo; in
+&ldquo;Writing <font face="Courier New,Courier" color="#666666"><b>R</b></font> Extensions&rdquo; (see the Help menu in <code>RGui</code>,
+<code><a href="RShowDoc.html">RShowDoc</a></code> and the &lsquo;<span class="file">doc/manual</span>&rsquo; subdirectory of the
+<font face="Courier New,Courier" color="#666666"><b>R</b></font> source tree).
+</p>
+
+
+
+<hr><div align="center">[Package <em>utils</em> version 2.7.2 <a href="00Index.html">Index]</a></div>
+
+</body></html>

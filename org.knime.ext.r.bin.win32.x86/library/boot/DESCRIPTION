@@ -1,0 +1,19 @@
+Package: boot
+Priority: recommended
+Version: 1.2-33
+Date: 2008-05-05
+Author: S original <http://statwww.epfl.ch/davison/BMA/library.html> by
+        Angelo Canty <cantya@mcmaster.ca>. R port by Brian Ripley
+        <ripley@stats.ox.ac.uk>.
+Maintainer: Brian Ripley <ripley@stats.ox.ac.uk>
+Description: functions and datasets for bootstrapping from the book
+        "Bootstrap Methods and Their Applications" by A. C. Davison and
+        D. V. Hinkley (1997, CUP).
+Title: Bootstrap R (S-Plus) Functions (Canty)
+Depends: R (>= 2.4.0), graphics, stats
+Suggests: survival
+LazyLoad: yes
+LazyData: yes
+License: Unlimited
+Packaged: Mon May 5 08:17:04 2008; ripley
+Built: R 2.7.2; ; 2008-08-25 14:53:03; windows

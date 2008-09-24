@@ -1,0 +1,17 @@
+Title: Survival analysis, including penalised likelihood.
+Maintainer: Thomas Lumley <tlumley@u.washington.edu>
+Priority: recommended
+Package: survival
+Version: 2.34-1
+Date: 2008-03-31
+Depends: stats, utils, graphics, splines, R (>= 2.6.0)
+LazyData: Yes
+LazyLoad: Yes
+Author: S original by Terry Therneau, ported by Thomas Lumley
+Description: survival analysis: descriptive statistics, two-sample
+        tests, parametric accelerated failure models, Cox model.
+        Delayed entry (truncation) allowed for all models; interval
+        censoring for parametric models. Case-cohort designs.
+License: GPL-2
+Packaged: Wed Apr 2 09:02:54 2008; hornik
+Built: R 2.7.2; i386-pc-mingw32; 2008-08-25 14:57:42; windows

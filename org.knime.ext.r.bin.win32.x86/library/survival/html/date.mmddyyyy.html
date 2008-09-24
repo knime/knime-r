@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Format a Julian date</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for date.mmddyyyy {survival}"><tr><td>date.mmddyyyy {survival}</td><td align="right">R Documentation</td></tr></table>
+<h2>Format a Julian date</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Given a vector of Julian dates, this returns them in the form
+``10/11/1989'', ``28/7/1854'', etc.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+date.mmddyyyy(sdate, sep = "/")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>sdate</code></td>
+<td>
+A vector of Julian dates, e.g., as returned by
+<code>mdy.date()</code>.</td></tr>
+<tr valign="top"><td><code>sep</code></td>
+<td>
+Character string used to separate the month, day, and
+year portions of the returned string.</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A vector of character strings containing the formatted dates.</p>
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="date.mdy.html">date.mdy</a></code>,
+<code><a href="mdy.date.html">mdy.date</a></code>, 
+<code><a href="date.ddmmmyy.html">date.ddmmmyy</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+date.mmddyyyy(as.date(1:10))
+</pre>
+
+
+
+<hr><div align="center">[Package <em>survival</em> version 2.34-1 <a href="00Index.html">Index]</a></div>
+
+</body></html>

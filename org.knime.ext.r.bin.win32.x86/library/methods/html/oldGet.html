@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Old functions to access slots in a class definition</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for oldGet {methods}"><tr><td>oldGet {methods}</td><td align="right">R Documentation</td></tr></table>
+<h2>Old functions to access slots in a class definition</h2>
+
+
+<h3>Description</h3>
+
+<p>
+<B>These functions are deprecated.</B>
+</p>
+<p>
+They do nothing but access a slot in a class definition, and don't
+even do this consistently  with the right name (they date back to the
+early implementation of the <span class="pkg">methods</span> package).
+Higher-level functions for the useful operations (e.g.,
+<code><a href="is.html">extends</a></code> for <code>getExtends</code>) should be used instead.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+getAccess(ClassDef)
+
+getClassName(ClassDef)
+
+getClassPackage(ClassDef)
+
+getExtends(ClassDef)
+
+getProperties(ClassDef)
+
+getPrototype(ClassDef)
+
+getSubclasses(ClassDef)
+
+getVirtual(ClassDef)
+
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>ClassDef</code></td>
+<td>
+the class definition object </td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+The functions should be replaced by direct access to the slots, or
+by use of higher-level alternatives.
+</p>
+<p>
+The functions and corresponding slots are:
+<table summary="Rd table">
+<tr>
+  <td align="left"><code>getAccess</code> </td>  <td align="left"> <code>"access"</code> </td>
+</tr>
+<tr>
+  <td align="left"> <code>getClassName</code> </td>  <td align="left"> <code>"className"</code> </td>
+</tr>
+<tr>
+  <td align="left"> <code>getClassPackage</code> </td>  <td align="left"> <code>"package"</code> </td>
+</tr>
+<tr>
+  <td align="left"> <code>getExtends</code> </td>  <td align="left"> <code>"contains"</code> </td>
+</tr>
+<tr>
+  <td align="left"> <code>getProperties</code> </td>  <td align="left"> <code>"slots"</code> </td>
+</tr>
+<tr>
+  <td align="left"> <code>getPrototype</code> </td>  <td align="left"> <code>"prototype"</code> </td>
+</tr>
+<tr>
+  <td align="left"> <code>getSubclasses</code> </td>  <td align="left"> <code>"subclasses"</code> </td>
+</tr>
+<tr>
+  <td align="left"> <code>getVirtual</code> </td>  <td align="left"> <code>"virtual"</code> </td>
+</tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p>
+Class <code><a href="classRepresentation-class.html">classRepresentation</a></code>.
+</p>
+
+
+
+<hr><div align="center">[Package <em>methods</em> version 2.7.2 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,95 @@
+# ${R_HOME}/etc/Makeconf
+
+# Hand-edited version for gnuwin32.
+# Most of those commented out are set in MkRules
+
+RHOME=$(R_HOME) # for use in TCL_HOME
+include $(R_HOME)/src/gnuwin32/MkRules
+
+# AR = ar
+BLAS_LIBS = -L"$(R_HOME)/$(IMPDIR)" -lRblas
+C_VISIBILITY = 
+# CC = gcc
+CFLAGS = -O3 -Wall
+CPICFLAGS = 
+CPPFLAGS =
+# CXX = g++
+CXXCPP = $(CXX) -E
+CXXFLAGS = -O2 -Wall
+CXXPICFLAGS = 
+DYLIB_EXT = .dll
+DYLIB_LD = $(DLL)
+DYLIB_LDFLAGS = -shared
+DYLIB_LINK = $(DYLIB_LD) $(DYLIB_LDFLAGS) $(LDFLAGS)
+ECHO = echo
+ECHO_C = 
+ECHO_N = -n
+ECHO_T = 
+# F77 =
+F77_VISIBILITY = 
+# FC =
+# FCFLAGS = -O3
+FFLAGS = -O3
+# FLIBS =
+FCPICFLAGS =
+FPICFLAGS = 
+FOUNDATION_CPPFLAGS =
+FOUNDATION_LIBS =
+GRAPHAPP_LIB=-lgraphapp
+JAR =
+JAVA = 
+JAVAC = 
+JAVA_HOME = 
+JAVA_LD_LIBRARY_PATH = 
+JAVA_LIBS = -L"$(JAVA_HOME)/bin/client" -ljvm
+JAVA_CPPFLAGS = -I"$(JAVA_HOME)/../include" -I"$(JAVA_HOME)/../include/win32"
+LAPACK_LIBS = -L"$(R_HOME)/$(IMPDIR)" -lRlapack
+## we only need this is if it is external, as otherwise link to R
+LIBINTL=
+LIBM = -lm
+LIBR = -L"$(R_HOME)/$(IMPDIR)" -lR
+LIBS =  -lm
+## needed by R CMD config
+LIBnn = lib
+LIBTOOL =
+LDFLAGS =
+# OBJC =
+OBJCFLAGS = -O2
+OBJC_LIBS = -lobjc
+OBJCXX =
+R_ARCH = 
+# RANLIB = ranlib
+SAFE_FFLAGS = -O3 -ffloat-store
+# SED = sed
+## it seems some makes (but not ours) get upset if SHELL is set.
+# SHELL = /bin/sh
+SHLIB_CFLAGS = 
+SHLIB_CXXFLAGS = 
+SHLIB_CXXLD = $(CXX)
+SHLIB_CXXLDFLAGS = -shared
+SHLIB_EXT = .dll
+SHLIB_FCLD = $(FC)
+SHLIB_FCLDFLAGS = -shared
+SHLIB_FFLAGS = 
+SHLIB_LD = $(CC)
+SHLIB_LDFLAGS = -shared
+SHLIB_LIBADD = 
+SHLIB_LINK = $(SHLIB_LD) $(SHLIB_LDFLAGS) $(LDFLAGS)
+STRIP_LIBS =
+TCLTK_CPPFLAGS = -I "$(TCL_HOME)/include" -DWin32
+TCLTK_LIBS = -L"$(TCL_HOME)/bin" -ltcl$(TCL_VERSION) -ltk$(TCL_VERSION)
+
+STATIC_LIBR =
+
+R_XTRA_CFLAGS =
+R_XTRA_CPPFLAGS =
+R_XTRA_CXXFLAGS = 
+R_XTRA_FFLAGS = 
+
+ALL_CFLAGS = $(R_XTRA_CFLAGS) $(PKG_CFLAGS) $(CPICFLAGS) $(SHLIB_CFLAGS) $(CFLAGS)
+ALL_CPPFLAGS = $(R_XTRA_CPPFLAGS) $(PKG_CPPFLAGS) $(CPPFLAGS) $(CLINK_CPPFLAGS)
+ALL_CXXFLAGS = $(R_XTRA_CXXFLAGS) $(PKG_CXXFLAGS) $(CXXPICFLAGS) $(SHLIB_CXXFLAGS) $(CXXFLAGS)
+ALL_OBJCFLAGS = $(PKG_OBJCFLAGS) $(CPICFLAGS) $(SHLIB_CFLAGS) $(OBJCFLAGS)
+ALL_OBJCXXFLAGS = $(PKG_OBJCXXFLAGS) $(CXXPICFLAGS) $(SHLIB_CXXFLAGS) $(OBJCXXFLAGS)
+ALL_FFLAGS = $(R_XTRA_FFLAGS) $(PKG_FFLAGS) $(FPICFLAGS) $(SHLIB_FFLAGS) $(FFLAGS)
+ALL_LIBS = $(PKG_LIBS) $(SHLIB_LIBADD) $(LIBR)
