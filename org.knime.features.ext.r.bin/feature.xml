@@ -463,7 +463,7 @@ Public License instead of this License.
    </url>
 
    <requires>
-      <import feature="org.knime.features.ext.r" version="0.0.0"/>
+      <import feature="org.knime.features.ext.r" version="2.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
