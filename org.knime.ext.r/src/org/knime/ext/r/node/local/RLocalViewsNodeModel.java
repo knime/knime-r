@@ -7,16 +7,16 @@
  *
  * This file is part of the R integration plugin for KNIME.
  *
- * The R integration plugin is free software; you can redistribute 
- * it and/or modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 of the 
+ * The R integration plugin is free software; you can redistribute
+ * it and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St., Fifth Floor, Boston, MA 02110-1301, USA.
@@ -57,6 +57,31 @@ import org.knime.ext.r.node.RPlotterNodeModel;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalViewsNodeModel extends RLocalNodeModel {
+
+    /**
+     * Default image size.
+     */
+    public static final int IMG_DEF_SIZE = 640;
+
+    /**
+     * Minimum image width.
+     */
+    public static final int IMG_MIN_WIDTH = 50;
+
+    /**
+     * Maximum image width.
+     */
+    public static final int IMG_MAX_WIDTH = Integer.MAX_VALUE;
+
+    /**
+     * Minimum image height.
+     */
+    public static final int IMG_MIN_HEIGHT = 50;
+
+    /**
+     * Maximum image height.
+     */
+    public static final int IMG_MAX_HEIGHT = Integer.MAX_VALUE;
 
     private static final String INTERNAL_FILE_NAME = "Rplot";
 
@@ -209,6 +234,14 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         m_widthModel.validateSettings(settings);
         m_pointSizeModel.validateSettings(settings);
         m_bgModel.validateSettings(settings);
+
+        // validate background color code
+        String colorCode = ((SettingsModelString)m_bgModel.
+                createCloneWithValidatedValue(settings)).getStringValue();
+        if (!colorCode.matches("^#[0-9aAbBcCdDeEfF]{6}")) {
+            throw new InvalidSettingsException("Specified color code \""
+                    + colorCode + "\" is not valid!");
+        }
     }
 
 
