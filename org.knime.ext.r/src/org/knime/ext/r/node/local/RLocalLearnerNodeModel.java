@@ -72,7 +72,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-        return new PortObjectSpec[]{(RPortObjectSpec)null};
+        return new PortObjectSpec[]{RPortObjectSpec.INSTANCE};
     }
 
     /**
