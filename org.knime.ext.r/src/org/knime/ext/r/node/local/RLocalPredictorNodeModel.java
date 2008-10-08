@@ -65,9 +65,8 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
      * given in- and out-port specification.
      */
     public RLocalPredictorNodeModel() {
-        super(new PortType[]{BufferedDataTable.TYPE, 
-                new PortType(RPortObject.class)}, 
-                new PortType[]{BufferedDataTable.TYPE});
+        super(new PortType[]{new PortType(RPortObject.class), 
+              BufferedDataTable.TYPE}, new PortType[]{BufferedDataTable.TYPE});
     }
 
     /**
@@ -76,7 +75,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-        return new DataTableSpec[1];
+        return new DataTableSpec[]{null};
     }
 
     /**
@@ -98,7 +97,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
         try {
             // write data to csv
             inDataCsvFile = writeInDataCsvFile(
-                    (BufferedDataTable)inDataTables[0], exec);
+                    (BufferedDataTable)inDataTables[1], exec);
 
             // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
@@ -108,13 +107,11 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
                     '/'));
             completeCmd.append(READ_DATA_CMD_SUFFIX);
             completeCmd.append("RDATA<-R;\n");
-
-            completeCmd.append(LOAD_PMML_CMD);
             
             // load model
-            File pmmlFile = ((RPortObject)inData[1]).getPmmlFile();
+            File fileR = ((RPortObject)inData[0]).getFile();
             completeCmd.append(LOAD_MODEL_CMD_PREFIX);
-            completeCmd.append(pmmlFile.getAbsolutePath().replace('\\', '/'));
+            completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
             completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
             
             // predict data

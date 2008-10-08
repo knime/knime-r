@@ -23,6 +23,7 @@
  */
 package org.knime.ext.r.node.local;
 
+import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -59,7 +60,8 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
             final PortObjectSpec[] specs) throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
-        m_dialogPanel.loadSettingsFrom(settings, specs);
+        m_dialogPanel.loadSettingsFrom(settings, 
+                new DataTableSpec[]{(DataTableSpec) specs[1]});
     } 
     
     /**

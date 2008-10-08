@@ -40,10 +40,10 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.knime.core.node.port.pmml.PMMLPortObjectSpec;
 import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
+import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
@@ -72,7 +72,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-        return new PortObjectSpec[]{(PMMLPortObjectSpec)null};
+        return new PortObjectSpec[]{(RPortObjectSpec)null};
     }
 
     /**
@@ -105,15 +105,13 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
                     '/'));
             completeCmd.append(READ_DATA_CMD_SUFFIX);
 
-            //completeCmd.append(LOAD_PMML_CMD);
             completeCmd.append(m_rCommand.trim());
             completeCmd.append("\n");
-            //completeCmd.append(MODEL2PMML_CMD);
             
-            File pmmlFile = File.createTempFile("~knime_pmml", ".R");
-            pmmlFile.deleteOnExit();
+            File fileR = File.createTempFile("~knime", ".R");
+            fileR.deleteOnExit();
             completeCmd.append(WRITE_MODEL_CMD_PREFIX);
-            completeCmd.append(pmmlFile.getAbsolutePath().replace('\\', '/'));
+            completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
             completeCmd.append(WRITE_MODEL_CMD_SUFFIX);
 
             // write R command
@@ -187,7 +185,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
                 throw new IllegalStateException(
                         "Execution of R script failed: " + rErr);
             }
-            out = new RPortObject(pmmlFile);
+            out = new RPortObject(fileR);
         } finally {
             // delete all temp files
             deleteFile(inDataCsvFile);
