@@ -57,15 +57,15 @@ public class RPortObject implements PortObject {
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RPortObject.class);    
     
-    private final File m_pmmlR;
+    private final File m_fileR;
     
     /**
      * Creates an instance of <code>RPortObject</code> with given file.
      * 
-     * @param pmmlR The file containing a R model.
+     * @param fileR The file containing a R model.
      */
-    public RPortObject(final File pmmlR) {
-        m_pmmlR = pmmlR;
+    public RPortObject(final File fileR) {
+        m_fileR = fileR;
     }
 
     /**
@@ -89,8 +89,8 @@ public class RPortObject implements PortObject {
      * 
      * @return the file containing the R model.
      */
-    public File getPmmlFile() {
-        return m_pmmlR;
+    public File getFile() {
+        return m_fileR;
     }
     
     /**
@@ -106,8 +106,8 @@ public class RPortObject implements PortObject {
                     final PortObjectZipOutputStream out, 
                     final ExecutionMonitor exec)
                     throws IOException, CanceledExecutionException {
-                out.putNextEntry(new ZipEntry("pmml.R"));
-                FileInputStream fis = new FileInputStream(portObject.m_pmmlR);
+                out.putNextEntry(new ZipEntry("knime.R"));
+                FileInputStream fis = new FileInputStream(portObject.m_fileR);
                 FileUtil.copy(fis, out);
                 fis.close();
                 out.close();
@@ -121,12 +121,12 @@ public class RPortObject implements PortObject {
                     final ExecutionMonitor exec)
                     throws IOException, CanceledExecutionException {
                 in.getNextEntry();
-                File pmmlR = File.createTempFile("~knime_pmml", ".R");
-                FileOutputStream fos = new FileOutputStream(pmmlR);
+                File fileR = File.createTempFile("~knime", ".R");
+                FileOutputStream fos = new FileOutputStream(fileR);
                 FileUtil.copy(in, fos);
                 in.close();
                 fos.close();
-                return new RPortObject(pmmlR);
+                return new RPortObject(fileR);
             }
         };
     }
@@ -150,8 +150,8 @@ public class RPortObject implements PortObject {
      * "No file available".
      */
     String getFilePath() {
-        if (m_pmmlR != null) {
-            return m_pmmlR.getAbsolutePath();
+        if (m_fileR != null) {
+            return m_fileR.getAbsolutePath();
         }
         return "No file available";
     }
@@ -161,10 +161,10 @@ public class RPortObject implements PortObject {
      */
     String getModelData() {
         StringBuffer buf = new StringBuffer();
-        if (m_pmmlR != null && m_pmmlR.exists() && m_pmmlR.canRead()) {
+        if (m_fileR != null && m_fileR.exists() && m_fileR.canRead()) {
             try {
                 BufferedReader reader =
-                        new BufferedReader(new FileReader(m_pmmlR));
+                        new BufferedReader(new FileReader(m_fileR));
                 String line;
                 while ((line = reader.readLine()) != null) {
                     buf.append(line);
