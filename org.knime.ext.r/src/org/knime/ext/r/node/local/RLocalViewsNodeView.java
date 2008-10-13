@@ -54,7 +54,6 @@ public class RLocalViewsNodeView extends NodeView<RLocalViewsNodeModel> {
      */
     public RLocalViewsNodeView(final RLocalViewsNodeModel nodeModel) {
         super(nodeModel);
-        setViewTitle("Local R View: ");
         m_panel = new RPlotterViewPanel();
         super.setComponent(new JScrollPane(m_panel));
     }
