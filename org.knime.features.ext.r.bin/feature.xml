@@ -4,6 +4,7 @@
       label="Binaries for KNIME R Statistics Integration"
       version="2.0.0.0017855"
       provider-name="Chair for Bioinformatics and Information Mining, Prof. Berthold, University of Konstanz, Germany">
+   <install-handler library="knime-installhandler.jar" handler="org.knime.install.PermissionHandler"/>
 
    <description url="http://www.knime.org/download_extensions.html">
       This plugin contains the platform specific binaries of the R integration for the Konstanz Information
