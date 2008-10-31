@@ -176,4 +176,23 @@ public class RPortObject implements PortObject {
         }
         return buf.toString();
     }
+    
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof RPortObject)) {
+            return false;
+        }
+        RPortObject rPort = (RPortObject) obj;
+        return m_fileR.equals(rPort.m_fileR); 
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        return m_fileR.hashCode();
+    }
 }
