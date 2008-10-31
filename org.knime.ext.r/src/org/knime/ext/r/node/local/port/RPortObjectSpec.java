@@ -37,7 +37,7 @@ import org.knime.core.node.port.PortObjectSpecZipOutputStream;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RPortObjectSpec implements PortObjectSpec {
+public final class RPortObjectSpec implements PortObjectSpec {
     
     /**
      * The port object spec instance.
