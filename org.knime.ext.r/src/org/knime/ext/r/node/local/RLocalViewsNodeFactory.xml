@@ -78,7 +78,7 @@
 		</option>
 	</fullDescription>
 	<ports>
-		<dataIn name="Data Input" index="0">Data Input</dataIn>
+		<inPort name="Data Input" index="0">Data Input</inPort>
 	</ports>
 	<views>
 		<view index="0" name="R View">
