@@ -54,7 +54,7 @@ public final class RLoginSettings {
     public static final int DEFAULT_PORT = 6311; // [0..65536]
     /** Default initialization for user: (none).*/
     public static final String DEFAULT_USER = "";
-    /** Default initialization for password: (none).*/
+    /** Default initialization for password: (empty string).*/
     public static final String DEFAULT_PASS = "";
     
     /** Settings model for user name. */
@@ -129,13 +129,16 @@ public final class RLoginSettings {
      * @param password the new password.
      */
     static void setPassword(final String password) {
-        String pw = "";
-        try {
-            pw = DialogComponentPasswordField.encrypt(password.toCharArray());
-        } catch (Exception e) {
-            // ignored
+        if (password == null || password.length() == 0) {
+            PASS.setStringValue(DEFAULT_PASS);
+        } else {
+            try {
+                PASS.setStringValue(DialogComponentPasswordField.encrypt(
+                        password.toCharArray()));
+            } catch (Exception e) {
+                // ignored
+            }
         }
-        PASS.setStringValue(pw);
     }
     
     /**
@@ -143,10 +146,13 @@ public final class RLoginSettings {
      */
     static String getPassword() {
         String pw = PASS.getStringValue();
+        if (pw == null || pw.length() == 0) {
+            return DEFAULT_PASS;
+        }
         try {
             return DialogComponentPasswordField.decrypt(pw);
         } catch (Exception e) {
-            return "";
+            return DEFAULT_PASS;
         }
     }
     
@@ -189,9 +195,7 @@ public final class RLoginSettings {
         settings.addInt(KEY_PORT, getPort());
         settings.addString(KEY_USER, getUser());
         try {
-            settings.addString(KEY_PASSWORD, 
-                    DialogComponentPasswordField.encrypt(
-                            getPassword().toCharArray()));
+            settings.addString(KEY_PASSWORD, getPassword());
         } catch (Exception e) {
             settings.addString(KEY_PASSWORD, DEFAULT_PASS);
         }
