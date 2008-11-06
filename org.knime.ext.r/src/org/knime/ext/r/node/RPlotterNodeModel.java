@@ -58,6 +58,7 @@ import org.knime.ext.r.node.local.RViewScriptingConstants;
 import org.knime.ext.r.node.local.RViewsPngDialogPanel;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RFileInputStream;
+import org.rosuda.REngine.Rserve.RserveException;
 
 /**
  * This is the implementation of the R view plotting.
@@ -137,10 +138,13 @@ public class RPlotterNodeModel extends RNodeModel {
             FileUtil.copy(ris, out);
             FileInputStream in = new FileInputStream(m_imageFile);
             m_resultImage = createImage(in);
-            // close stream and remove it at the server
             in.close();
-            c.removeFile(fileName);
         } finally {
+            try {             
+                c.removeFile(fileName);
+            } catch (RserveException e) {
+                // ignore: file may not exist or is not removable
+            }
             c.close();
         }
         // nothing, has no out-port
