@@ -22,8 +22,8 @@
 		    In order to get the R nodes running, you have to install the R-project 
 		    first, see <a href="http://www.r-project.org">www.r-project.org</a>.
     	     Also the R server which responds to R commands has to be installed 
-    	     and running, see <a href="http://www.rosuda.org/Rserve">
-    	     http://www.rosuda.org/Rserve</a>.<br/>
+    	     and running, see <a href="http://www.rforge.net/Rserve/">
+    	     http://www.rforge.net/Rserve/</a>.<br/>
     	    Also make sure that you have the latest available or compatible 
     	    R-project version at hand. For Windows you may download an R server 
     	    for your R-project version. All other operating systems require the 
