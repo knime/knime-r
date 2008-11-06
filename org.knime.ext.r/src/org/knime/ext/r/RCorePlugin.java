@@ -80,7 +80,7 @@ public class RCorePlugin extends AbstractUIPlugin {
         }
         if (url != null) {
             try {
-                rExecutable = new File(FileLocator.toFileURL(url).toURI());
+                rExecutable = new File(FileLocator.toFileURL(url).getFile());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -119,6 +119,9 @@ public class RCorePlugin extends AbstractUIPlugin {
                 path);
     }
 
+    /**
+     * @return R executable
+     */
     public static File getRExecutable() {
         return rExecutable;
     }
