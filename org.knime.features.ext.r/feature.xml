@@ -357,7 +357,7 @@ Public License instead of this License.
    </license>
 
    <url>
-      <update label="KNIME Update Site" url="http://www.knime.org/update"/>
+      <update label="KNIME Update Site" url="http://www.knime.org/update_2.x"/>
    </url>
 
    <requires>
