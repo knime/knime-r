@@ -233,12 +233,18 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
 
     private static void checkRExecutable(final String path)
             throws InvalidSettingsException {
-        File binaryFile = new File(path);
-        if (!binaryFile.exists() || !binaryFile.isFile()
-                || !binaryFile.canExecute()) {
-            throw new InvalidSettingsException("R Binary \""
-                        + path + "\" not correctly specified.");
+        if (path == null || path.trim().length() == 0) {
+            throw new InvalidSettingsException("R Binary not specified.");
         }
+        File binaryFile = new File(path);
+        if (!binaryFile.exists()) {
+            throw new InvalidSettingsException("R Binary \""
+                        + path + "\" not found.");
+        }
+        if (!binaryFile.isFile() || !binaryFile.canExecute()) {
+            throw new InvalidSettingsException("R Binary \""
+                        + path + "\" not executable.");
+        }        
     }
 
     /**

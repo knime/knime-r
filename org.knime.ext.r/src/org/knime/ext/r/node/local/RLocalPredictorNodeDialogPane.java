@@ -39,8 +39,6 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
     
     private final RDialogPanel m_dialogPanel;
     
-    private static final String TAB_R_BINARY = "R Binary";    
-    
     /**
      * Constructor which creates a new instance of 
      * <code>RLocalPredictorNodeDialogPane</code>.
@@ -48,9 +46,8 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
     public RLocalPredictorNodeDialogPane() {
         m_dialogPanel = new RDialogPanel();
         m_dialogPanel.setText(RLocalPredictorNodeModel.PREDICTION_CMD);
-        
-        addTab("R command", m_dialogPanel);
-        setDefaultTabTitle(TAB_R_BINARY);
+        addTabAt(0, "R Command", m_dialogPanel);
+        setSelected("R Command");
     }
     
     /**

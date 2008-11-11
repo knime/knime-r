@@ -72,6 +72,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
+        checkRExecutable();
         return new PortObjectSpec[]{RPortObjectSpec.INSTANCE};
     }
 
@@ -116,7 +117,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
 
             // write R command
             String rCmd = completeCmd.toString();
-            LOGGER.debug("R command: \n" + rCmd);
+            LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
 

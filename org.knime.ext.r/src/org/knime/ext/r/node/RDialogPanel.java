@@ -83,7 +83,7 @@ public class RDialogPanel extends JPanel implements MouseListener {
     public RDialogPanel() {
 
         super(new BorderLayout());
-        super.setBorder(BorderFactory.createTitledBorder("R command"));
+        super.setBorder(BorderFactory.createTitledBorder("R Command"));
         
         // init editor pane
         m_textExpression = new JEditorPane();
@@ -335,7 +335,7 @@ public class RDialogPanel extends JPanel implements MouseListener {
     /**
      * @param defaultCommand the defaultCommand to set
      */
-    public void setDefaultCommand(String defaultCommand) {
+    public void setDefaultCommand(final String defaultCommand) {
         m_defaultCommand = defaultCommand;
     }
 }

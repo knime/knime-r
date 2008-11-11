@@ -41,7 +41,7 @@
 			<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 			<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-		<option name="R command">
+		<option name="R Command">
 			Enter R commands here, for instance for computing the Covariance 
 			of two columns: <br/>
 			<i>R&lt;-cov(Col0,Col1)</i>

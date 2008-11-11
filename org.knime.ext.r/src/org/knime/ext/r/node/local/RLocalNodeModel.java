@@ -176,7 +176,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
             // write R command
             String rCmd = completeCmd.toString();
-            LOGGER.debug("R command: \n" + rCmd);
+            LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
 

@@ -45,19 +45,16 @@ public class RLocalLearnerNodeDialogPane extends RLocalNodeDialogPane {
 
     private final RDialogPanel m_dialogPanel;
     
-    private static final String TAB_R_BINARY = "R Binary";
-    
     /**
      * Constructor which creates a new instance of 
-     * <code>RLocalScriptingNodeDialogPane</code>. A dialog component is added
+     * <code>RLocalLearnerNodeDialogPane</code>. A dialog component is added
      * which allows users to enter R code. 
      */
     public RLocalLearnerNodeDialogPane() {
         super();
         m_dialogPanel = new RDialogPanel();
-        
-        addTab("R command", m_dialogPanel);
-        setDefaultTabTitle(TAB_R_BINARY);
+        addTabAt(0, "R Command", m_dialogPanel);
+        setSelected("R Command");
     }
     
     /**

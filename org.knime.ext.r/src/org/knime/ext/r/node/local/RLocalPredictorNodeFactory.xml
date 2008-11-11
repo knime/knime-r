@@ -28,7 +28,7 @@
 			If checked, the specified file is used as R binary. If not checked, 
 			the file specified in the KNIME's R preferences is used.
 		</option>
-		<option name ="R command">
+		<option name ="R Command">
 			The R prediction commands to run.
 		</option>
 	</fullDescription>
