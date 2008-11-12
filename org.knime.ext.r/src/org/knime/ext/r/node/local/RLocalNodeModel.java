@@ -40,7 +40,6 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
-import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  * <code>RLocalNodeModel</code> is an abstract
@@ -183,10 +182,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             // create shell command
             StringBuilder shellCmd = new StringBuilder();
 
-            String rBinaryFile = RPreferenceInitializer.getRPath();
-            if (m_useSpecifiedModel.getBooleanValue()) {
-                rBinaryFile = m_rbinaryFileSettingsModel.getStringValue();
-            }
+            final String rBinaryFile = getRBinaryPath();
             shellCmd.append(rBinaryFile);
 
             shellCmd.append(" CMD BATCH ");

@@ -44,7 +44,6 @@ import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
-import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  *
@@ -124,10 +123,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             // create shell command
             StringBuilder shellCmd = new StringBuilder();
 
-            String rBinaryFile = RPreferenceInitializer.getRPath();
-            if (m_useSpecifiedModel.getBooleanValue()) {
-                rBinaryFile = m_rbinaryFileSettingsModel.getStringValue();
-            }
+            final String rBinaryFile = getRBinaryPath();
             shellCmd.append(rBinaryFile);
 
             shellCmd.append(" CMD BATCH ");

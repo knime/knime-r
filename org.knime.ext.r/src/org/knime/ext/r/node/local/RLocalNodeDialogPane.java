@@ -153,10 +153,11 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
      * when the checkbox is not checked.
      */
     private void enableFileChooser() {
-        if (!m_smb.getBooleanValue()) {
-            m_fileModel.setEnabled(false);
-        } else {
+        if (m_smb.getBooleanValue()) {
             m_fileModel.setEnabled(true);
+        } else {
+            m_fileModel.setEnabled(false);
+            m_fileModel.setStringValue(RPreferenceInitializer.getRPath());
         }
     }
     

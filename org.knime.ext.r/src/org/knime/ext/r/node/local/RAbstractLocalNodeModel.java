@@ -53,6 +53,7 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RDialogPanel;
+import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  * <code>RAbstractLocalNodeModel</code> is an abstract
@@ -135,21 +136,19 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
     static final String SET_WORKINGDIR_CMD =
         "setwd(\"" + TEMP_PATH + "\");\n";
 
-    /**
-     * The delimiter used for creation of csv files.
-     */
-    protected static final String DELIMITER = ",";
+    /** The delimiter used for creation of csv files. */
+    private static final String DELIMITER = ",";
 
     /**
      * Model saving the path to the R binary file.
      */
-    protected final SettingsModelString m_rbinaryFileSettingsModel =
+    private final SettingsModelString m_rbinaryFileSettingsModel =
         RLocalNodeDialogPane.createRBinaryFile();
 
     /**
      * Model specifying if specific R binary file have to be used.
      */
-    protected final SettingsModelBoolean m_useSpecifiedModel =
+    private final SettingsModelBoolean m_useSpecifiedModel =
         RLocalNodeDialogPane.createUseSpecifiedFileModel();
 
     /**
@@ -255,6 +254,10 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
      * or does not exist.
      */
     protected void checkRExecutable() throws InvalidSettingsException {
+        if (!m_useSpecifiedModel.getBooleanValue()) {
+            m_rbinaryFileSettingsModel.setStringValue(
+                    RPreferenceInitializer.getRPath());
+        }
         checkRExecutable(m_rbinaryFileSettingsModel.getStringValue());
     }
     
@@ -377,6 +380,18 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
                     .getSkippedColumns(), exec);
 
         return exec.createBufferedDataTable(fTable, exec);
+    }
+    
+    /**
+     * Path to R binary.
+     * @return R binaray path
+     */
+    protected final String getRBinaryPath() {
+        if (m_useSpecifiedModel.getBooleanValue()) {
+            return m_rbinaryFileSettingsModel.getStringValue();
+        } else {
+            return RPreferenceInitializer.getRPath();
+        }
     }
 
 }
