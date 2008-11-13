@@ -53,10 +53,10 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
     protected RPlotterNodeDialog() {
         super();
         m_plotCommandPanel = new RViewsDialogPanel(); 
-        super.addTab("View", m_plotCommandPanel);
-        super.addLoginTab();
+        super.addTab("R View Command", m_plotCommandPanel);
         m_viewPngPanel = new RViewsPngDialogPanel();
         super.addTab(RViewsPngDialogPanel.TAB_PNG_TITLE, m_viewPngPanel);
+        super.addLoginTab();
     }
 
     /**

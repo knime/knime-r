@@ -105,9 +105,8 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
-        
-        // create unique png file
         RConnection c = getRconnection();
+        // create unique png file name
         String fileName = FILE_NAME + "_" + System.identityHashCode(inData[0]) 
             + ".png";
         LOGGER.info("The image name: " + fileName);
@@ -131,27 +130,24 @@ public class RPlotterNodeModel extends RNodeModel {
         }
         c.voidEval("dev.off()");
         
-        // read png back from server
-        RFileInputStream ris = c.openFile(fileName);
-        m_imageFile = File.createTempFile(FILE_NAME, ".png");
-        FileOutputStream copy = new FileOutputStream(m_imageFile);
-        // FIXME: #readAll() has been added by KNIME, since 
-        // #read(byte[],int,int) causes an exception when the returned file has 
-        // more bytes then the actual length of the byte array to write into
-        copy.write(ris.readAll());
-        FileInputStream in = new FileInputStream(m_imageFile);
         try {
+            // read png back from server
+            RFileInputStream ris = c.openFile(fileName);
+            m_imageFile = File.createTempFile(FILE_NAME, ".png");
+            FileOutputStream out = new FileOutputStream(m_imageFile);
+            FileUtil.copy(ris, out);
+            FileInputStream in = new FileInputStream(m_imageFile);
             m_resultImage = createImage(in);
-            // close stream and remove it at the server
             in.close();
-            c.removeFile(fileName);
-        } catch (RserveException e) {
-            // ignore
         } finally {
+            try {             
+                c.removeFile(fileName);
+            } catch (RserveException e) {
+                // ignore: file may not exist or is not removable
+            }
             c.close();
         }
-
-        // nothing, has no outport
+        // nothing, has no out-port
         return new BufferedDataTable[0];
     }
     

@@ -27,13 +27,13 @@
 			If checked, the specified file is used as R binary. If not checked, 
 			the file specified in the KNIME's R preferences is used.
 		</option>
-		<option name ="R command">
+		<option name ="R Command">
 			The R commands to run.
 		</option>
 	</fullDescription>
 	<ports>
-		<dataIn name="Data Input" index="0">Data Input</dataIn>
-		<dataOut name="Data Output" index="0">R Result Data</dataOut>
+		<inPort name="Data Input" index="0">Data Input</inPort>
+		<outPort name="Data Output" index="0">R Result Data</outPort>
 	</ports>
 	<views>
 		<view index="0" name="R Error Output">

@@ -46,8 +46,7 @@ import org.knime.core.node.port.PortObjectSpec;
  */
 public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
     
-    private static final String TAB_TITLE = "View";
-    private static final String TAB_R_BINARY = "R Binary";
+    private static final String TAB_TITLE = "R View Command";
     
     private final RViewsDialogPanel m_viewScriptPanel;
     private final RViewsPngDialogPanel m_viewPngPanel;
@@ -58,12 +57,11 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
     public RLocalViewsNodeDialog() {
         super();
         m_viewScriptPanel = new RViewsDialogPanel();
-        addTab(TAB_TITLE, m_viewScriptPanel);
+        addTabAt(0, TAB_TITLE, m_viewScriptPanel);
+        setSelected(TAB_TITLE);
         
         m_viewPngPanel = new RViewsPngDialogPanel();
-        addTab(RViewsPngDialogPanel.TAB_PNG_TITLE, m_viewPngPanel);
-        
-        setDefaultTabTitle(TAB_R_BINARY);
+        addTabAt(1, RViewsPngDialogPanel.TAB_PNG_TITLE, m_viewPngPanel);
     }
     
     /**

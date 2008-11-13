@@ -55,7 +55,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.knime.workbench.ui.headless"
+            category="org.knime.workbench.ui.preferences"
             class="org.knime.ext.r.preferences.RPreferencePage"
             id="org.knime.ext.r.preferences.RPreferencePage"
             name="R">

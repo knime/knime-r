@@ -44,9 +44,7 @@ import org.knime.ext.r.node.RDialogPanel;
 public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
 
     private final RDialogPanel m_dialogPanel;
-    
-    private static final String TAB_R_BINARY = "R Binary";
-    
+
     /**
      * Constructor which creates a new instance of 
      * <code>RLocalScriptingNodeDialogPane</code>. A dialog component is added
@@ -55,9 +53,8 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
     public RLocalScriptingNodeDialogPane() {
         super();
         m_dialogPanel = new RDialogPanel();
-        
-        addTab("R command", m_dialogPanel);
-        setDefaultTabTitle(TAB_R_BINARY);
+        addTabAt(0, "R Command", m_dialogPanel);
+        setSelected("R Command");
     }
     
     /**

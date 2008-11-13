@@ -58,6 +58,9 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  */
 public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
     
+    /** Tab name for the R binary path. */
+    private static final String TAB_R_BINARY = "R Binary";
+    
     /**
      * @return Returns a <code>SettingsModelString</code> instance containing
      * the path the R executable file.
@@ -102,9 +105,9 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         
         // create check box component
         DialogComponentBoolean checkbox = new DialogComponentBoolean(
-                m_smb, "Use selected");
+                m_smb, "Override default:");
         checkbox.setToolTipText("If checked, the specified file is used " 
-                + "as R binary. If not checked the file specified in " 
+                + "as R Binary. If not checked, the file specified in " 
                 + "the KNIME's R preferences is used.");
         
         addDialogComponent(checkbox);
@@ -114,6 +117,7 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         setHorizontalPlacement(false);
         
         enableFileChooser();
+        setDefaultTabTitle(TAB_R_BINARY);
     }
 
     
@@ -149,10 +153,12 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
      * when the checkbox is not checked.
      */
     private void enableFileChooser() {
-        if (!m_smb.getBooleanValue()) {
-            m_fileModel.setEnabled(false);
-        } else {
+        if (m_smb.getBooleanValue()) {
             m_fileModel.setEnabled(true);
+        } else {
+            m_fileModel.setEnabled(false);
+            m_fileModel.setStringValue(RPreferenceInitializer.getRPath());
         }
     }
+    
 }

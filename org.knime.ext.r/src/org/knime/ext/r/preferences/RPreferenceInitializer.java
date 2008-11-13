@@ -50,9 +50,6 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
     public void initializeDefaultPreferences() {
         IPreferenceStore store = RCorePlugin.getDefault().getPreferenceStore();
 
-
-
-
         File rPath = RCorePlugin.getRExecutable();
         // set default values
         store.setDefault(PREF_R_PATH, rPath != null ? rPath.getAbsolutePath()

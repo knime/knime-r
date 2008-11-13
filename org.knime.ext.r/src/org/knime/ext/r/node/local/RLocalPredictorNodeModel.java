@@ -42,7 +42,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
-import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  * 
@@ -75,6 +74,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
+        checkRExecutable();
         return new DataTableSpec[]{null};
     }
 
@@ -129,17 +129,14 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
 
             // write R command
             String rCmd = completeCmd.toString();
-            LOGGER.debug("R command: \n" + rCmd);
+            LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
 
             // create shell command
             StringBuilder shellCmd = new StringBuilder();
 
-            String rBinaryFile = RPreferenceInitializer.getRPath();
-            if (m_useSpecifiedModel.getBooleanValue()) {
-                rBinaryFile = m_rbinaryFileSettingsModel.getStringValue();
-            }
+            final String rBinaryFile = getRBinaryPath();
             shellCmd.append(rBinaryFile);
 
             shellCmd.append(" CMD BATCH ");

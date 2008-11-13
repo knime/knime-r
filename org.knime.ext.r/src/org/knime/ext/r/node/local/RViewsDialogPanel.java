@@ -88,7 +88,7 @@ public class RViewsDialogPanel extends JPanel {
                 m_viewSettingsModel, "View type", list);
         
         this.setBorder(BorderFactory.createTitledBorder(BorderFactory
-                .createEtchedBorder(), "R command"));
+                .createEtchedBorder(), "R Command"));
         this.add(m_viewSelectionComponent.getComponentPanel(), 
                 BorderLayout.NORTH);        
         this.add(m_commandPanel, BorderLayout.CENTER);
