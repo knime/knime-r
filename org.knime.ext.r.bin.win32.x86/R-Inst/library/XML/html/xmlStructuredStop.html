@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Condition/error handler functions for XML parsing</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for xmlStructuredStop {XML}"><tr><td>xmlStructuredStop {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Condition/error handler functions for XML parsing</h2>
+
+
+<h3>Description</h3>
+
+<p>
+These functions provide basic error handling for the XML parser in
+R. They also illustrate the basics which will allow others to
+provide customized error handlers that make more use of the
+information provided in each error reported.
+</p>
+<p>
+The <code>xmlStructuredStop</code> function provides a simple R-level handler for errors
+raised by the XML parser.
+It collects the information provided by the XML parser and
+raises an R error.
+This is only used if <code>NULL</code> is specified for the
+<code>error</code> argument of <code><a href="xmlTreeParse.html">xmlTreeParse</a></code>,
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code> and <code><a href="xmlTreeParse.html">htmlTreeParse</a></code>.
+</p>
+<p>
+The default is to use the function returned by a call to 
+<code>xmlErrorCumulator</code> as the error handler.
+This, as the name suggests, cumulates errors.
+The idea is to catch each error and let the parser continue
+and then report them all.
+As each error is encountered, it is collected by the function.
+If <code>immediate</code> is <code>TRUE</code>, the error is also reported on
+the console.
+When the parsing is complete and has failed, this function is
+invoked again with a zero-length character vector as the 
+message (first argument) and then it raises an error.
+This function will then raise an R condition of class <code>class</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xmlStructuredStop(msg, code, domain, line, col, level, filename, 
+                    class = "XMLError") 
+xmlErrorCumulator(class = "XMLParserErrorList", immediate = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>msg</code></td>
+<td>
+character string, the text of the message being reported</td></tr>
+<tr valign="top"><td><code>code</code></td>
+<td>
+an integer code giving an identifier for the error (see
+xmlerror.h) for the moment,</td></tr>
+<tr valign="top"><td><code>domain</code></td>
+<td>
+an integer domain indicating in which "module" or part of the
+parsing the error occurred, e.g. name space, parser, tree, xinclude, etc.</td></tr>
+<tr valign="top"><td><code>line</code></td>
+<td>
+an integer giving the line number in the XML content
+being processed corresponding to the error,  </td></tr>
+<tr valign="top"><td><code>col</code></td>
+<td>
+an integer giving the column position of the error,  </td></tr>
+<tr valign="top"><td><code>level</code></td>
+<td>
+an integer giving the severity of the error ranging from 1 to 3 in
+increasing severity (warning, error, fatal),</td></tr>
+<tr valign="top"><td><code>filename</code></td>
+<td>
+character string,   the name of the document being processed, i.e. its file name or
+URL.</td></tr>
+<tr valign="top"><td><code>class</code></td>
+<td>
+character vector,  any classes to prepend to the class
+attribute to make the error/condition. These are prepended to those
+returned via <code><a href="../../base/html/simpleError.html">simpleError</a></code>.</td></tr>
+<tr valign="top"><td><code>immediate</code></td>
+<td>
+logical value,  if  <code>TRUE</code> errors are
+displayed on the R console as they are encountered. Otherwise, the
+errors are collected and displayed at the end of the XML parsing.</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+This calls <code><a href="../../base/html/stop.html">stop</a></code> and so does not return a value.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+libxml2 and its error handling facilities (<a href="http://xmlsoft.org">http://xmlsoft.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code>
+<code><a href="xmlTreeParse.html">xmlInternalTreeParse</a></code>
+<code><a href="xmlTreeParse.html">htmlTreeParse</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  tryCatch( xmlTreeParse("&lt;a&gt;&lt;b&gt;&lt;/a&gt;", asText = TRUE, error = NULL),
+                 XMLError = function(e) {
+                    cat("There was an error in the XML at line", 
+                          e$line, "column", e$col, "\n",
+                         e$message, "\n")
+                })
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

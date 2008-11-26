@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Get the list of attributes of an XML node.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for xmlAttrs {XML}"><tr><td>xmlAttrs {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Get the list of attributes of an XML node.</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This returns a named character vector giving the 
+name-value pairs of attributes of an XMLNode object which is part of
+an XML document.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ xmlAttrs(node, ...)
+ 'xmlAttrs&lt;-'(node, suppressNamespaceWarning = getOption("suppressXMLNamespaceWarning", FALSE), value)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>node</code></td>
+<td>
+The <code>XMLNode</code> object
+whose attributes are to be extracted. </td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+additional arguments for the specific methods, currently
+ignored but present for future extensions.</td></tr>
+<tr valign="top"><td><code>value</code></td>
+<td>
+a named character vector giving the new attributes to be
+added to the node.</td></tr>
+<tr valign="top"><td><code>suppressNamespaceWarning</code></td>
+<td>
+see <code><a href="addChildren.html">addChildren</a></code></td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A named character vector, where the names
+are the attribute names and the 
+elements are the corresponding values.
+This corresponds to the (attr&lt;i&gt;, "value&lt;i&gt;")
+pairs in the XML tag
+<code>&lt;tag attr1="value1"  attr2="value2"</code></p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org">http://www.w3.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlChildren.html">xmlChildren</a></code>, <code><a href="xmlSize.html">xmlSize</a></code>,
+<code><a href="xmlName.html">xmlName</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ fileName &lt;- system.file("exampleData", "mtcars.xml", package="XML") 
+ doc &lt;- xmlTreeParse(fileName)
+
+ xmlAttrs(xmlRoot(doc))
+
+ xmlAttrs(xmlRoot(doc)[["variables"]])
+
+ doc &lt;- xmlTreeParse(fileName, useInternalNodes = TRUE)
+ d = xmlRoot(doc)
+   # skip over the comment
+ d = XML:::getSibling(d)
+
+ xmlAttrs(d)
+ xmlAttrs(d) &lt;- c(name = "Motor Trend fuel consumption data",
+                  author = "Motor Trends")
+ xmlAttrs(d)
+
+   # clear all the attributes and then set new ones.
+ removeAttributes(d)
+ xmlAttrs(d) &lt;- c(name = "Motor Trend fuel consumption data",
+                  author = "Motor Trends")
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Determines which native XML parsers are being used.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for supportsExpat {XML}"><tr><td>supportsExpat {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Determines which native XML parsers are being used.</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Use of the Gnome libxml and Expat parsers is supported
+in this R/S XML package, but both need not be used when
+compiling the package. These functions determine whether
+each is available in the underlying native code.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+supportsExpat()
+supportsLibxml()
+</pre>
+
+
+<h3>Details</h3>
+
+<p>
+One might to use different parsers to test 
+validity of a document in different ways and
+to get different error messages. Additionally,
+one parser may be more efficient than the other.
+These methods allow one to write code in such
+a way that one parser is preferred and is used
+if it is available, but the other is used
+if the first is not available.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+Returns <code>TRUE</code> if the corresponding library
+has been linked into the package.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>, <a href="http://www.jclark.com/xml">http://www.jclark.com/xml</a>,
+<a href="http://www.omegahat.org">http://www.omegahat.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlEventParse.html">xmlEventParse</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+     # use Expat if possible, otherwise libxml
+  fileName &lt;- system.file("exampleData", "mtcars.xml", package="XML")
+  xmlEventParse(fileName, useExpat = supportsLibxml())
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

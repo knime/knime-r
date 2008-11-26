@@ -1,0 +1,51 @@
+pmml                  package:pmml                  R Documentation
+
+_G_e_n_e_r_a_t_e _P_M_M_L _f_o_r _a_n _R _o_b_j_e_c_t
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     'pmml' is a generic function implementing S3 methods used to
+     produce the PMML (Predictive Model Markup Language) representation
+     of an R model.  The PMML can then be imported into other systems
+     that accept PMML.
+
+_U_s_a_g_e:
+
+     pmml(model, model.name="Rattle_Model", app.name="Rattle/PMML",
+          description=NULL, copyright=NULL, ...)
+
+_A_r_g_u_m_e_n_t_s:
+
+   model: an object to be converted to PMML.
+
+model.name: a name to give to the model in the PMML.
+
+app.name: the name of the application that generated the PMML.
+
+description: a descriptive text for the header of the PMML.
+
+copyright: the copyright notice for the model.
+
+     ...: further arguments passed to or from other methods.
+
+_D_e_t_a_i_l_s:
+
+     The generated PMML can be imported into any PMML consuming
+     application, such as Teradata Warehouse Miner and DB2. Generally,
+     these applications convert the PMML into SQL for execution across
+     a database.
+
+_A_u_t_h_o_r(_s):
+
+     Graham.Williams@togaware.com
+
+_R_e_f_e_r_e_n_c_e_s:
+
+     Package home page: <URL: http://rattle.togaware.com>
+
+     PMML home page: <URL: http://www.dmg.org>
+
+_S_e_e _A_l_s_o:
+
+     'pmml.kmeans', 'pmml.rpart', 'pmml.rsf'.
+

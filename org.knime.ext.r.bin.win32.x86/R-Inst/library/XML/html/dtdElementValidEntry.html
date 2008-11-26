@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Determines whether an XML element allows a particular type of sub-element.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for dtdElementValidEntry {XML}"><tr><td>dtdElementValidEntry {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Determines whether an XML element allows a particular type of sub-element.</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This tests whether <code>name</code> is a legitimate tag to use as a
+direct sub-element of the <code>element</code> tag according to the
+definition of the <code>element</code> element in the specified DTD.  This
+is a generic function that dispatches on the element type, so that
+different version take effect for <code>XMLSequenceContent</code>,
+<code>XMLOrContent</code>, <code>XMLElementContent</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dtdElementValidEntry(element, name, pos=NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>element</code></td>
+<td>
+The <code>XMLElementDef</code> defining the tag
+in which we are asking whether the sub-element can be used. </td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+The name of the sub-element about which we are 
+querying the list of sub-tags within <code>element</code>.
+</td></tr>
+<tr valign="top"><td><code>pos</code></td>
+<td>
+An optional argument which, if supplied,
+queries whether the <code>name</code> sub-element is valid
+as the <code>pos</code>-th child of <code>element</code>.
+</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+This is not intended to be called directly, but
+indirectly by the 
+<code><a href="dtdValidElement.html">dtdValidElement</a></code> function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+Logical value indicating whether the sub-element
+can appear in an <code>element</code> tag or not.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>, <a href="http://www.jclark.com/xml">http://www.jclark.com/xml</a>,
+<a href="http://www.omegahat.org">http://www.omegahat.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="parseDTD.html">parseDTD</a></code>,
+<code><a href="dtdValidElement.html">dtdValidElement</a></code>,
+<code><a href="dtdElement.html">dtdElement</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ dtdFile &lt;- system.file("exampleData", "foo.dtd",package="XML")
+ dtd &lt;- parseDTD(dtdFile) 
+ 
+  dtdElementValidEntry(dtdElement("variables",dtd), "variable")
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

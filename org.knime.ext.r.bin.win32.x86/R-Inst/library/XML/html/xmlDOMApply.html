@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Apply function to nodes in an XML tree/DOM.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for xmlDOMApply {XML}"><tr><td>xmlDOMApply {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Apply function to nodes in an XML tree/DOM.</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This recursively applies the specified function to each node in an
+XML tree, creating a new tree,
+parallel to the original input tree.
+Each  element in the new tree is the return
+value obtained from invoking the specified function
+on the corresponding element
+of the original tree.
+The order in which the function is recursively applied
+is "bottom-up". In other words, 
+function is first applied to each of the children
+nodes first and then to the  parent node
+containing the newly computed results for the children.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xmlDOMApply(dom, func)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>dom</code></td>
+<td>
+a node in the XML tree or DOM on which to recursively
+apply the given function.
+This should not be the <code>XMLDocument</code>
+itself returned from
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code>
+but an object of class <code>XMLNode</code>.
+This is typically obtained by
+calling <code><a href="xmlRoot.html">xmlRoot</a></code> on the
+return value from <code><a href="xmlTreeParse.html">xmlTreeParse</a></code>.
+</td></tr>
+<tr valign="top"><td><code>func</code></td>
+<td>
+the function to be applied to each node in the XML tree.
+This is passed the node object for the and the return
+value is inserted into the new tree that is to be returned
+in the corresponding position as the node being processed.
+If the return value is <code>NULL</code>, this node is dropped from the tree.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+This is a native (C code) implementation that 
+understands the structure of an XML DOM returned
+from <code><a href="xmlTreeParse.html">xmlTreeParse</a></code> and iterates
+over the nodes in that tree.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+A tree that parallels the structure in the 
+<code>dom</code> object passed to it.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>, <a href="http://www.jclark.com/xml">http://www.jclark.com/xml</a>,
+<a href="http://www.omegahat.org">http://www.omegahat.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<a href="xmlTreeParse.html">xmlTreeParse</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ dom &lt;- xmlTreeParse(system.file("exampleData","mtcars.xml", package="XML"))
+ tagNames &lt;- function() {
+    tags &lt;- character(0)
+    add &lt;- function(x) {
+      if(inherits(x, "XMLNode")) {
+        if(is.na(match(xmlName(x), tags)))
+           tags &lt;&lt;- c(tags, xmlName(x))
+      }
+
+      NULL
+    }
+
+    return(list(add=add, tagNames = function() {return(tags)}))
+ }
+
+ h &lt;- tagNames()
+ xmlDOMApply(xmlRoot(dom), h$add) 
+ h$tagNames()
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

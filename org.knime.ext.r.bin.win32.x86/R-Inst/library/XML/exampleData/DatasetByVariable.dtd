@@ -1,0 +1,17 @@
+<!ELEMENT dataset ((variable)*, rownames)>
+<!ELEMENT variable (#PCDATA)*>
+<!ELEMENT name     (#PCDATA)>
+  
+<!ATTLIST dataset 
+     name        CDATA #REQUIRED
+     numRecords  CDATA #IMPLIED
+>
+
+
+<!ATTLIST  variable
+   name ID  #IMPLIED
+   type CDATA #IMPLIED
+   levels CDATA #IMPLIED
+>
+
+<!ELEMENT rownames (#PCDATA)*>

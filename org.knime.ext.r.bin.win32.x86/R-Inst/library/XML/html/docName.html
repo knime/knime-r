@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Accessors for name of XML document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for docName {XML}"><tr><td>docName {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Accessors for name of XML document</h2>
+
+
+<h3>Description</h3>
+
+<p>
+These functions and methods allow us to query and set the 
+&ldquo;name&rdquo; of an XML document. This is intended to be
+its URL or file name or a description of its origin if
+raw XML content provided as a string.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+docName(doc)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>doc</code></td>
+<td>
+the XML document object, of class
+<code>XMLInternalDocument</code> or <code>XMLDocument</code>.
+</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A character string giving the name.
+If the document was created from text, this is <code>NA</code>
+(of class character).
+<br>
+The assignment function returns the updated object,
+but the R assignment operation will return the value
+on the right of the assignment!</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code>
+<code><a href="xmlTreeParse.html">xmlInternalTreeParse</a></code>
+<code><a href="newXMLDoc.html">newXMLDoc</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  f = system.file("exampleData", "catalog.xml",  package = "XML")
+  doc = xmlInternalTreeParse(f)
+  docName(doc)
+
+  doc = xmlInternalTreeParse("&lt;a&gt;&lt;b/&gt;&lt;/a&gt;", asText = TRUE)
+      # an NA
+  docName(doc)
+  docName(doc) = "Simple XML example"
+  docName(doc)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Create internal XML node or document object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for newXMLDoc {XML}"><tr><td>newXMLDoc {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Create internal XML node or document object</h2>
+
+
+<h3>Description</h3>
+
+<p>
+These are used to create internal `libxml' nodes and top-level document objects 
+that are used to write XML trees.  While the functions are available,
+their direct use is not encouraged. Instead, use <code><a href="xmlTree.html">xmlTree</a></code>
+as the functions need to be used within a strict regime to avoid
+corrupting C level structures.
+</p>
+<p>
+<code>xmlDoc</code> creates a new XMLInternalDocument
+object by copying the given node and all of its
+descendants and putting them into a new document.
+This is useful when we want to work with sub-trees
+with general tools that work on documents, e.g. XPath queries.
+</p>
+<p>
+<code>newXMLDoc</code> allows one to create a regular XML node
+with a name and attributes.
+One can provide new namespace definitions via
+<code>namespaceDefinitions</code>. While these might also
+be given in the attributes in the slightly more verbose
+form of <code>c('xmlns:prefix' = 'http://...')</code>,
+the result is that the XML node does not interpret that
+as a namespace definition but merely an attribute with
+a name 'xmlns:prefix'.
+Instead, one should specify the namespace definitions via
+the <code>namespaceDefinitions</code> parameter.
+</p>
+<p>
+In addition to namespace definitions, a node name can also have a
+namespace definition.  This can be specified in the <code>name</code> argument
+as <code>prefix:name</code> and <code>newXMLDoc</code> will do the right thing in
+separating this into the namespace and regular name.  Alternatively, one
+can specify a namespace separately via the <code>namespace</code> argument.
+This can be either a simple name or an internal namespace object defined
+earlier.
+</p>
+<p>
+How do we define a default namespace?
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xmlDoc(node, addFinalizer = FALSE)
+newXMLDoc(dtd = NA, namespaces=NULL, addFinalizer = TRUE, 
+           name = character(), node = NULL)
+newXMLNode(name, ..., attrs = NULL, namespace="",
+            namespaceDefinitions = character(),
+             doc = NULL, .children = list(...), parent = NULL,
+             at = NA, cdata = FALSE,
+             suppressNamespaceWarning =
+                 getOption("suppressXMLNamespaceWarning", FALSE))
+newXMLTextNode(text, parent = NULL, doc = NULL, cdata = FALSE)
+newXMLCDataNode(text, parent = NULL, doc = NULL, at = NA)
+newXMLCommentNode(text, parent = NULL, doc = NULL, at = NA)
+newXMLPINode(name, text, parent = NULL, doc = NULL, at = NA)
+newXMLDTDNode(nodeName, externalID = character(), systemID = character(), doc = NULL)  
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>node</code></td>
+<td>
+a <code>XMLInternalNode</code> object that will be copied to
+create a subtree for a new document.</td></tr>
+<tr valign="top"><td><code>dtd</code></td>
+<td>
+the name of the DTD to use for the XML document.
+Currently ignored!</td></tr>
+<tr valign="top"><td><code>namespaces</code></td>
+<td>
+a named character vector
+with each element specifying a name space identifier and the
+corresponding URI for that namespace
+that are to be declared and used in the XML document, \
+e.g. <code>c(shelp = "http://www.omegahat.org/XML/SHelp")</code></td></tr>
+<tr valign="top"><td><code>addFinalizer</code></td>
+<td>
+a logical value indicating whether the
+default finalizer routine should be registered to
+free the internal xmlDoc when R no longer has a reference to this
+external pointer object.
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+the tag/element name for the XML node and
+the for a Processing Instruction (PI) node, this is the "target",
+e.g. the identifier for the system for whose attention this PI node is intended.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+the children of this node. These can be other nodes created
+earlier or R strings that are converted to text nodes and added as children
+to this newly created node.</td></tr>
+<tr valign="top"><td><code>attrs</code></td>
+<td>
+a named list of name-value pairs to be used as 
+attributes for the XML node.
+One should not use this argument to define namespaces,
+i.e. attributes of the form <code>xmlns:prefix='http:/...'</code>.
+Instead, such definitions should be specified
+ideally via the <code>namespaceDefinitions</code> argument,
+or even the <code>namespace</code> argument.
+The reason is that namespace definitions are special attributes
+that are shared across nodes wherease regular attributes are
+particular to a node. So a namespace needs to be explicitly defined
+so that the XML representation can recognize it as such.
+</td></tr>
+<tr valign="top"><td><code>namespace</code></td>
+<td>
+a character vector specifying the namespace for this
+new node.
+Typically this is used to specify  i) the prefix
+of the namespace to use, or ii) one or more namespace definitions,
+or iii) a combination of both.
+If this is a character vector with a) one element
+and b) with an empty <code>names</code> attribute
+and c) whose value does not start with <code>http:/</code> or
+<code>ftp:/</code>, then it is assumed that the value is a
+namespace prefix for a namespace defined in an ancestor node.
+To be able to resolve this prefix to a namespace definition,
+<code>parent</code> must be specified so that we can traverse the chain of ancestor nodes.
+However, if c) does not hold, i.e. the string starts with <code>http:/</code> or
+<code>ftp:/</code>,
+then we take this single element to be a namespace definition and
+the since it has no name b), this is the definition for the default namespace for this
+new node, i.e. corresponding to <code>xmlns='http:/...</code>.
+It is cumbersome to specify <code>""</code> as a  name for an element in a
+character vector (as <code>c('' = 'value') gives an unnecessary
+      error!</code>.
+Elements with names are expanded to namespace definitions
+with the name as the prefix and the value as the namespace URI.
+</td></tr>
+<tr valign="top"><td><code>doc</code></td>
+<td>
+the <code>XMLInternalDocument</code> object created with
+<code>newXMLDoc</code> that is used to root the node.</td></tr>
+<tr valign="top"><td><code>.children</code></td>
+<td>
+a list containing XML node elements or content.
+This is an alternative form of specifying the child nodes than ...
+which is useful for programmatic interaction when the "sub"-content is
+already in a list rather than a loose collection of values.</td></tr>
+<tr valign="top"><td><code>text</code></td>
+<td>
+the text content for the new XML node</td></tr>
+<tr valign="top"><td><code>nodeName</code></td>
+<td>
+the name of the node to put in the DOCTYPE element
+that will appear as the top-most node in the XML document.</td></tr>
+<tr valign="top"><td><code>externalID</code></td>
+<td>
+the PUBLIC identifier for the document type.
+This is a string of the form <code>A//B//C//D</code>.
+A is either + or -; B identifies the person or insitution that defined
+the format (i.e. the "creator");
+C is the name of the format; and language is an encoding for the
+language that comes from the ISO 639 document.</td></tr>
+<tr valign="top"><td><code>systemID</code></td>
+<td>
+the SYSTEM identifier for the DTD for the document.
+This is a URI</td></tr>
+<tr valign="top"><td><code>namespaceDefinitions</code></td>
+<td>
+a character vector or a list
+with each element being a string.
+These give the URIs identifying the namespaces uniquely.
+The elements should have names which are used as prefixes.
+A default namespace has "" as the name.
+This argument can be used to remove any ambiguity
+that arises when specifying a single string
+with no names attribute as the value for <code>namespace</code>.
+The values here are used only for defining new namespaces
+and not for determining the namespace to use for this
+particular node.
+</td></tr>
+<tr valign="top"><td><code>parent</code></td>
+<td>
+the node which will act as the parent of this newly
+created node. This need not be specified and one can add the new node
+to another node in a separate operation via
+<code><a href="addChildren.html">addChildren</a></code>.</td></tr>
+<tr valign="top"><td><code>cdata</code></td>
+<td>
+a logical value indicating whether to enclose the text
+within a CDATA node (<code>TRUE</code>) or not (<code>FALSE</code>). This is a
+convenience mechanism to avoid having to create the text node and
+then the CDATA node.  If one is not certain what characters are in
+the text,  it is useful to use <code>TRUE</code> to ensure that they are
+&ldquo;escaped&rdquo;.
+<br>
+It is an argument for <code>newXMLNode</code> as the child nodes can be
+given as simple strings and are converted to text nodes. This
+<code>cdata</code> value is passed to the calls to create these text nodes
+and so controls whether they are enclosed within CDATA nodes.
+<br>
+</td></tr>
+<tr valign="top"><td><code>suppressNamespaceWarning</code></td>
+<td>
+see <code><a href="addChildren.html">addChildren</a></code></td></tr>
+<tr valign="top"><td><code>at</code></td>
+<td>
+this allows one to control the position in the list of children at which the node should be
+added. The default means at the end and this can be any position
+from 0 to the current number of children.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+These create internal C level objects/structure instances
+that can be added to a libxml DOM and subsequently
+inserted into other document objects or ``serialized''
+to textual form.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+Each function returns an R object that points to the
+C-level structure instance.
+These are of class <code>XMLInternalDocument</code>
+and <code>XMLInternalNode</code>, respectively</p>
+
+<h3>Note</h3>
+
+<p>
+These functions are used to build up an internal XML tree.
+This can be used in the Sxslt package (<a href="http://www.omegahat.org/Sxslt">http://www.omegahat.org/Sxslt</a>)
+when creating content in R that is to be dynamically inserted into an XML
+document.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>, <a href="http://www.xmlsoft.org">http://www.xmlsoft.org</a>,
+<a href="http://www.omegahat.org">http://www.omegahat.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlTree.html">xmlTree</a></code>
+<code>saveXML</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+doc = newXMLDoc()
+
+ # Simple creation of an XML tree using these functions
+top = newXMLNode("a")
+newXMLNode("b", attrs = c(x = 1, y = 'abc'), parent = top)
+newXMLNode("c", "With some text", parent = top)
+d = newXMLNode("d", newXMLTextNode("With text as an explicit node"), parent = top)
+newXMLCDataNode("x &lt;- 1\n x &gt; 2", parent = d)
+
+newXMLPINode("R", "library(XML)", top)
+newXMLCommentNode("This is a comment", parent = top)
+
+o = newXMLNode("ol", parent = top)
+
+kids = lapply(letters[1:3],
+               function(x)
+                  newXMLNode("li", x))
+addChildren(o, kids)
+
+cat(saveXML(top))
+
+x = newXMLNode("block", "xyz", attrs = c(id = "bob"),
+                      namespace = "fo",
+                      namespaceDefinitions = c("fo" = "http://www.fo.org"))
+
+xmlName(x, TRUE) == "fo"
+
+  # a short cut to define a name space and make it the prefix for the
+  # node, thus avoiding repeating the prefix via the namespace argument.
+x = newXMLNode("block", "xyz", attrs = c(id = "bob"),
+                      namespace = c("fo" = "http://www.fo.org"))
+
+ # name space on the attribute
+x = newXMLNode("block", attrs = c("fo:id" = "bob"),
+                      namespaceDefinitions = c("fo" = "http://www.fo.org"))
+
+
+
+x = summary(rnorm(1000))
+d = xmlTree()
+d$addNode("table", close = FALSE)
+
+d$addNode("tr", .children = sapply(names(x), function(x) d$addNode("th", x)))
+d$addNode("tr", .children = sapply(x, function(x) d$addNode("td", format(x))))
+
+d$closeNode()
+
+# Just doctype
+z = xmlTree("people", dtd = "people")
+# no public element
+z = xmlTree("people", dtd = c("people", "", "http://www.omegahat.org/XML/types.dtd"))
+# public and system
+z = xmlTree("people", dtd = c("people", "//a//b//c//d", "http://www.omegahat.org/XML/types.dtd"))
+
+# Using a DTD node directly.
+dtd = newXMLDTDNode(c("people", "", "http://www.omegahat.org/XML/types.dtd"))
+z = xmlTree("people", dtd = dtd)
+
+x = rnorm(3)
+z = xmlTree("r:data", namespaces = c(r = "http://www.r-project.org"))
+z$addNode("numeric", attrs = c("r:length" = length(x)), close = FALSE)
+lapply(x, function(v) z$addNode("el", x))
+z$closeNode()
+# should give   &lt;r:data&gt;&lt;numeric r:length="3"/&gt;&lt;/r:data&gt;
+
+# shows namespace prefix on an attribute, and different from the one on the node.
+z = xmlTree()
+z$addNode("r:data",  namespace = c(r = "http://www.r-project.org", omg = "http://www.omegahat.org"), close = FALSE)
+x = rnorm(3)
+z$addNode("r:numeric", attrs = c("omg:length" = length(x)))
+
+z = xmlTree("people", namespaces = list(r = "http://www.r-project.org"))
+z$setNamespace("r")
+
+z$addNode("person", attrs = c(id = "123"), close = FALSE)
+z$addNode("firstname", "Duncan")
+z$addNode("surname", "Temple Lang")
+z$addNode("title", "Associate Professor")
+z$addNode("expertize", close = FALSE)
+z$addNode("topic", "Data Technologies")
+z$addNode("topic", "Programming Language Design")
+z$addNode("topic", "Parallel Computing")
+z$addNode("topic", "Data Visualization")
+z$closeTag()
+z$addNode("address", "4210 Mathematical Sciences Building, UC Davis")
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

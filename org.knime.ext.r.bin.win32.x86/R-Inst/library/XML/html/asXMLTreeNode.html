@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Convert a regular XML node to one for use in a "flat" tree</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for asXMLTreeNode {XML}"><tr><td>asXMLTreeNode {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Convert a regular XML node to one for use in a "flat" tree</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This coerces a regular R-based XML node (i.e. not an internal C-level
+node) to a form that can be inserted into a flat tree, i.e.
+one that stores the nodes in a non-hierarchical manner.
+It is thus used in conjunction with
+<code><a href="xmlFlatListTree.html">xmlHashTree</a></code>
+and
+<code><a href="xmlFlatListTree.html">xmlFlatListTree</a></code>.
+It adds <code>id</code> and <code>env</code> fields to the
+node and specializes the class by prefixing <code>className</code>
+to the class attribute.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+asXMLTreeNode(node, env, id = get(".nodeIdGenerator", env)(xmlName(node)), className = "XMLTreeNode")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>node</code></td>
+<td>
+the original XML node</td></tr>
+<tr valign="top"><td><code>env</code></td>
+<td>
+the <code>XMLFlatTree</code> object into which this node will be inserted.</td></tr>
+<tr valign="top"><td><code>id</code></td>
+<td>
+the identifier for the node in the flat tree. If this is not
+specified, we consult the tree itself and its built-in identifier
+generator.  By default, the name of the node is used as its
+identifier unless there is another node with that name.
+</td></tr>
+<tr valign="top"><td><code>className</code></td>
+<td>
+a vector of class names to be prefixed to the
+existing class vector of the node.</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+An object of class <code>className</code>, i.e. by default
+<code>"XMLTreeNode"</code>.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlFlatListTree.html">xmlHashTree</a></code>
+<code><a href="xmlFlatListTree.html">xmlFlatListTree</a></code>
+</p>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

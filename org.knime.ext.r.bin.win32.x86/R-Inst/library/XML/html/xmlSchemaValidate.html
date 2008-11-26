@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Validate an XML document relative to an XML schema</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for xmlSchemaValidate {XML}"><tr><td>xmlSchemaValidate {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Validate an XML document relative to an XML schema</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This function validates an XML document relative to an
+XML schema to ensure that it has the correct structure,
+i.e. valid sub-nodes, attributes, etc.
+</p>
+<p>
+The <code>xmlSchemaValidationErrorHandler</code> is a function
+that returns a list of functions which can be used to cumulate or
+collect the errors and warnings from the schema validation  operation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xmlSchemaValidate(schema, doc, 
+                                 errorHandler = xmlErrorFun(),
+                                  options = 0L)
+
+schemaValidationErrorHandler()
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>schema</code></td>
+<td>
+an object of class <code>xmlSchemaRef</code> which is
+usually the result of a call to <code><a href="xmlTreeParse.html">xmlInternalTreeParse</a></code>
+with <code>isSchema = TRUE</code>, or <code><a href="xmlTreeParse.html">xmlSchemaParse</a></code>.</td></tr>
+<tr valign="top"><td><code>doc</code></td>
+<td>
+an XML document which has already been parsed into
+a <code>XMLInternalDocument</code> or which is a file name or string
+which is coerced to an <code><a href="XMLInternalDocument.html">XMLInternalDocument-class</a></code> object</td></tr>
+<tr valign="top"><td><code>options</code></td>
+<td>
+an integer giving the options controlling the
+validation.  At present, this is either 0 or 1 and is essentially
+irrelevant to us. It may be of value in the future.
+</td></tr>
+<tr valign="top"><td><code>errorHandler</code></td>
+<td>
+a function or a list whose first element is a function
+which is then used as the collector for the warning and error
+messages reported during the validation. For each warning or error,
+this function is invoked and the class of the message is either
+<code>XMLSchemaWarning</code> or <code>XMLSchemaError</code> respectively.
+</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+Typically, a list with 3 elements:
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>status</code></td>
+<td>
+0 for validated, and non-zero for invalid</td></tr>
+<tr valign="top"><td><code>errors</code></td>
+<td>
+a character vector</td></tr>
+<tr valign="top"><td><code>warnings</code></td>
+<td>
+a character vector</td></tr>
+</table>
+<p>
+
+<br>
+If an empty error handler is provided (i.e. <code>NULL</code>)
+just an integer indicating the status of the validation
+is returned.  0 indicates everything was okay; a non-zero
+value indicates a validation error. (-1 indicates an internal error
+in libxml2)</p>
+
+<h3>References</h3>
+
+<p>
+libxml2 www.xmlsoft.org
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlTreeParse.html">xmlSchemaParse</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+xsd = xmlTreeParse(system.file("exampleData", "author.xsd", package = "XML"), isSchema =TRUE, useInternal = TRUE)
+doc = xmlInternalTreeParse(system.file("exampleData", "author.xml",  package = "XML"))
+xmlSchemaValidate(xsd, doc)
+
+xmlSchemaValidate(xsd, system.file("exampleData", "author2.xml",  package = "XML"))
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

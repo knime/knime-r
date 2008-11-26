@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Add child nodes to an XML node</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for addChildren {XML}"><tr><td>addChildren {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Add child nodes to an XML node</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This collection of functions
+allow us to add, remove and replace children from an XML node
+and also to and and remove attributes on an XML node.
+These are generic functions that work on
+both internal C-level <code>XMLInternalElementNode</code> objects
+and regular R-level  <code>XMLNode</code> objects.
+</p>
+<p>
+<code>addChildren</code> is similar to <code><a href="addNode.html">addNode</a></code>
+and the two may be consolidated into a single generic
+function and methods in the future.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+addChildren(node, ..., kids = list(...), at = NA, cdata = FALSE)
+removeChildren(node, ..., kids = list(...), free = FALSE)
+removeNodes(node, free = rep(FALSE, length(node)))
+replaceNodes(oldNode, newNode, ...)
+addAttributes(node, ..., .attrs = NULL, 
+                suppressNamespaceWarning = getOption("suppressXMLNamespaceWarning", FALSE))
+removeAttributes(node, ..., .attrs = NULL, .namespace = FALSE,
+                  .all = (length(list(...)) + length(.attrs)) == 0)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>node</code></td>
+<td>
+the XML node whose state is to be modified,
+i.e. to which the child nodes are to be added or whose attribute list
+is to be changed.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+This is for use in interactive settings when specifying a collection of
+values individuall. In programming contexts when one obtains the
+collection as a vector or list from another call, use the
+<code>kids</code> or <code>.attrs</code> parameter.
+</td></tr>
+<tr valign="top"><td><code>kids</code></td>
+<td>
+when adding children to a node, this is a list of
+children nodes which should be of
+the same "type" (i.e. internal or R-level nodes)
+as the <code>node</code> argument. However, they can also be
+regular strings in which case they are converted to
+XML text nodes.
+<br>
+For <code>removeChildren</code>, this is again a list
+which identifies the child nodes to be
+removed using 
+the integer identifier of the child, or
+the name of the XML node (but this will only remove the first such
+node and not necessarily do what you expect when there are
+multiple nodes with the same name),
+or the <code>XMLInternalNode</code> object itself.
+</td></tr>
+<tr valign="top"><td><code>at</code></td>
+<td>
+if specified, an integer identifying
+the position in the original
+list of children at which the new children should be added.
+The children are added after that child.
+This can also be a vector of indices which is as long
+as the number of children being added and specifies the position
+for each child being added. If the vector is shorter than the
+number of children being added, it is padded with NAs
+and so the corresponding children are added at the end of the
+list.
+<br>
+This parameter is only implemented for internal nodes at present.
+</td></tr>
+<tr valign="top"><td><code>cdata</code></td>
+<td>
+a logical value which controls whether children that
+are specified as strings/text are enclosed within a CDATA node
+when converted to actual nodes.  This value is passed on to the
+relevant function that creates the text nodes, e.g. 
+<code><a href="xmlNode.html">xmlTextNode</a></code> and <code><a href="newXMLDoc.html">newXMLTextNode</a></code>.
+</td></tr>
+<tr valign="top"><td><code>.attrs</code></td>
+<td>
+a character vector identifying the names of the
+attributes.  These strings can have name space prefixes,
+e.g. <code>r:length</code>
+and the namespaces will be resolved relative to the
+list supported by <code>node</code> to ensure those namespaces  are defined.
+</td></tr>
+<tr valign="top"><td><code>.namespace</code></td>
+<td>
+This is currently ignored and may never be
+supported.
+The intent is to identify on which set of attributes the operation is
+to perform  - the name space declarations or the regular
+node attributes.
+This is a logical value indicating
+if  <code>TRUE</code> that  the attributes of interested are name space declarations,
+i.e. of the form <code>xmlns:prefix</code> or <code>xmlns</code>.
+If a value of  <code>FALSE</code> is supplied this indicates that we
+are identifying regular attributes.
+Note that we can still identify attributes with a name space
+prefix as, e.g., <code>ns:attr</code> without this value
+</td></tr>
+<tr valign="top"><td><code>free</code></td>
+<td>
+a logical value indicating whether to free the C-level
+memory associated with the  child      nodes that were removed.
+<code>TRUE</code> means to free that memory.
+This is only applicable for the internal nodes created
+with <code>xmlTree</code> and <code>newXMLNode</code> and related functions.
+It is necessary as automated garbage collection is tricky in this
+tree-based context spanning both R and C data structures and
+memory managers. 
+</td></tr>
+<tr valign="top"><td><code>.all</code></td>
+<td>
+a logical value indicating whether to remove all of the
+attributes within the XML node without having to specify them by
+name.</td></tr>
+<tr valign="top"><td><code>oldNode</code></td>
+<td>
+the node which is to be replaced</td></tr>
+<tr valign="top"><td><code>newNode</code></td>
+<td>
+the node which is to take the place of
+<code>oldNode</code> in the list of children of the parent of
+<code>oldNode</code></td></tr>
+<tr valign="top"><td><code>suppressNamespaceWarning</code></td>
+<td>
+a logical value or a character string. 
+This is used to control the situation when an  XML node
+or attribute is created with a name space prefix that currently has no
+definition for that node. 
+This is not necessarily an error but can lead to one.
+This argument controls whether a warning is issued
+or if a separate function is called.
+A value of <code>FALSE</code> means not to suppress the warning and 
+so it is issued. A value of <code>TRUE</code> causes the potential
+problem to be ignored assuming that the namespace will be added
+to this node or one of its ancestors at a later point.
+And if this value is a character string, we search for a
+function of that name and invoke it. 
+</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+Each of these functions returns the modified node.
+For an internal node, this is the same R object   and
+only the C-level data structures have changed.
+For an R <code>XMLNode</code> object, this is is an entirely
+separate object from the original node.
+It must be inserted back into its parent "node" or context if the changes are to be
+seen in that wider context.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.xmlsoft.org">http://www.xmlsoft.org</a>{libxml2}
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlTree.html">xmlTree</a></code>
+<code><a href="newXMLDoc.html">newXMLNode</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+b = newXMLNode("bob", namespace = c(r = "http://www.r-project.org", omg = "http://www.omegahat.org"))
+
+cat(saveXML(b), "\n")
+
+addAttributes(b, a = 1, b = "xyz", "r:version" = "2.4.1", "omg:len" = 3)
+cat(saveXML(b), "\n")
+
+removeAttributes(b, "a", "r:version")
+cat(saveXML(b), "\n")
+
+removeAttributes(b, .attrs = names(xmlAttrs(b)))
+
+addChildren(b, newXMLNode("el", "Red", "Blue", "Green",
+                           attrs = c(lang ="en")))
+
+k = lapply(letters, newXMLNode)
+addChildren(b, kids = k)
+
+cat(saveXML(b), "\n")
+
+removeChildren(b, "a", "b", "c", "z")
+
+  # can mix numbers and names
+removeChildren(b, 2, "e")  # d and e
+
+cat(saveXML(b), "\n")
+
+i = xmlChildren(b)[[5]]
+xmlName(i)
+
+ # have the identifiers
+removeChildren(b, kids = c("m", "n", "q"))
+
+
+x &lt;- xmlNode("a", 
+               xmlNode("b", "1"),
+               xmlNode("c", "1"),
+               "some basic text")
+
+v = removeChildren(x, "b")
+
+  # remove c and b
+v = removeChildren(x, "c", "b")
+
+  # remove the text and "c" leaving just b
+v = removeChildren(x, 3, "c")
+
+## Not run: 
+    # this won't work as the 10 gets coerced to a 
+    # character vector element to be combined with 'w'
+    # and there is no node name 10.
+ removeChildren(b, kids = c(10, "w"))
+## End(Not run)
+
+ # for R-level nodes (not internal)
+
+z = xmlNode("arg", attrs = c(default="TRUE"),
+              xmlNode("name", "foo"), xmlNode("defaultValue","1:10"))
+
+o = addChildren(z,
+                "some text",
+                xmlNode("a", "a link", attrs = c(href = "http://www.omegahat.org/RSXML")))
+o
+
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>
