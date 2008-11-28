@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Generate PMML for an R object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for pmml {pmml}"><tr><td>pmml {pmml}</td><td align="right">R Documentation</td></tr></table>
+<h2>Generate PMML for an R object</h2>
+
+
+<h3>Description</h3>
+
+<p>
+'pmml' is a generic function implementing S3 methods used to produce
+the PMML (Predictive Model Markup Language) representation of an R
+model.  The PMML can then be imported into other systems that accept
+PMML.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+pmml(model, model.name="Rattle_Model", app.name="Rattle/PMML",
+     description=NULL, copyright=NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>model</code></td>
+<td>
+an object to be converted to PMML.</td></tr>
+<tr valign="top"><td><code>model.name</code></td>
+<td>
+a name to give to the model in the PMML.</td></tr>
+<tr valign="top"><td><code>app.name</code></td>
+<td>
+the name of the application that generated the PMML.</td></tr>
+<tr valign="top"><td><code>description</code></td>
+<td>
+a descriptive text for the header of the PMML.</td></tr>
+<tr valign="top"><td><code>copyright</code></td>
+<td>
+the copyright notice for the model.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+further arguments passed to or from other methods.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+The generated PMML can be imported into any PMML consuming
+application, such as Teradata Warehouse Miner and DB2. Generally,
+these applications convert the PMML into SQL for execution across a
+database.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+<a href="mailto:Graham.Williams@togaware.com">Graham.Williams@togaware.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>
+Package home page: <a href="http://rattle.togaware.com">http://rattle.togaware.com</a>
+</p>
+<p>
+PMML home page: <a href="http://www.dmg.org">http://www.dmg.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="pmml.kmeans.html">pmml.kmeans</a></code>,
+<code><a href="pmml.rpart.html">pmml.rpart</a></code>,
+<code><a href="pmml.rsf.html">pmml.rsf</a></code>.
+</p>
+
+
+
+<hr><div align="center">[Package <em>pmml</em> version 1.1.9 <a href="00Index.html">Index]</a></div>
+
+</body></html>

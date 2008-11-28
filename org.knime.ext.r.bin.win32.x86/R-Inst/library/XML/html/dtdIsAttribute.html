@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Query if a name is a valid attribute of a DTD element.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for dtdIsAttribute {XML}"><tr><td>dtdIsAttribute {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Query if a name is a valid attribute of a DTD element.</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Examines the definition of the DTD element definition identified
+by <code>element</code> to see if it supports an attribute named
+<code>name</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dtdIsAttribute(name, element, dtd)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>name</code></td>
+<td>
+The name of the attribute being queried</td></tr>
+<tr valign="top"><td><code>element</code></td>
+<td>
+The name of the element whose definition is to be used
+to obtain the list of valid attributes.</td></tr>
+<tr valign="top"><td><code>dtd</code></td>
+<td>
+The DTD containing the definition of the elements,
+specifically <code>element</code>.</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A logical value indicating if the
+list of attributes suppported by the 
+specified element has an entry named
+<code>name</code>.
+This does indicate what type of value
+that attribute has, whether it is required, implied,
+fixed, etc.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>, <a href="http://www.jclark.com/xml">http://www.jclark.com/xml</a>,
+<a href="http://www.omegahat.org">http://www.omegahat.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="parseDTD.html">parseDTD</a></code>,
+<code><a href="dtdElement.html">dtdElement</a></code>,
+<code><a href="xmlAttrs.html">xmlAttrs</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ dtdFile &lt;- system.file("exampleData", "foo.dtd", package="XML")
+ foo.dtd &lt;- parseDTD(dtdFile)
+
+    # true
+  dtdIsAttribute("numRecords", "dataset", foo.dtd)
+
+    # false
+  dtdIsAttribute("date", "dataset", foo.dtd)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

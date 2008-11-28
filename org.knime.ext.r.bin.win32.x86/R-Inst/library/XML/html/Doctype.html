@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Constructor for DTD reference</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for Doctype {XML}"><tr><td>Doctype {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Constructor for DTD reference</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This is a constructor for the <code>Doctype</code> class
+that can be provided at the top of an XML document
+to provide information about the class of document,
+i.e. its DTD or schema.
+Also, there is a method for converting such a <code>Doctype</code>
+object to a character string.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+Doctype(system = character(), public = character(), name = "")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>system</code></td>
+<td>
+the system URI that locates the DTD. </td></tr>
+<tr valign="top"><td><code>public</code></td>
+<td>
+the identifier for locating the DTD in a catalog, for
+example. This should be a character vector of length 2, giving
+the public identifier and a URI.  If just the public identifier
+is given and a string is given for <code>system</code> argument,
+the <code>system</code> value is used as the second element of
+<code>public</code>.
+The public identifer should be of the form
+<code>+//creator//name//language</code>
+where the first element is either + or -, and
+the language is described by a code in the ISO 639 document.
+</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+the name of the root element in the document.
+This should be the first parameter, but is left this way
+for backward compatability.  And </td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+An object of class <code>Doctype</code>.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>
+XML Elements of Style, Simon St. Laurent.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="saveXML.html">saveXML</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+  d = Doctype(name = "section", public = c("-//OASIS//DTD DocBook XML V4.2//EN", "http://oasis-open.org/docbook/xml/4.2/docbookx.dtd"))
+  as(d, "character")
+
+   # this call switches the system to the URI associated with the PUBLIC element.
+  d = Doctype(name = "section", public = c("-//OASIS//DTD DocBook XML V4.2//EN"), system = "http://oasis-open.org/docbook/xml/4.2/docbookx.dtd")
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

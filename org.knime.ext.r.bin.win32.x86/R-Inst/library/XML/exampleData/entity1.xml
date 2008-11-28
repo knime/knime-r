@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE doc [
+ <!ENTITY x "value for x">
+]>
+<doc>
+&x;
+</doc>

@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Look up an element via the XML catalog mechanism</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for catalogResolve {XML}"><tr><td>catalogResolve {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Look up an element via the XML catalog mechanism</h2>
+
+
+<h3>Description</h3>
+
+<p>
+XML parsers use a catalog to map generic system and public addresses
+to actual local files or potentially different remote files.
+We can use a catalog to map a reference such as
+<code>http://www.omegahat.org/XSL/</code> to a particular
+directory on our local machine and then not have to
+modify any of the documents if we move the local files to another
+directory, e.g. install a new version in an alternate directory.
+</p>
+<p>
+This function provides a mechanism to query the catalog to
+resolve a URI, PUBLIC or SYSTEM identifier.
+</p>
+<p>
+This is now vectorized, so accepts a character vector of
+URIs and recycles <code>type</code> to have the same length.
+</p>
+<p>
+If an entry is not resolved via the catalog system,
+a <code>NA</code> is returned for that element.
+To leave the value unaltered in this case, use <code>asIs = TRUE</code> .
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+catalogResolve(id, type = "uri", asIs = FALSE, debug = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>id</code></td>
+<td>
+the name of the (generic) element to be resolved</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+a string, specifying whether the lookup is for a uri,
+system or public element</td></tr>
+<tr valign="top"><td><code>asIs</code></td>
+<td>
+a logical. If <code>TRUE</code> any element of <code>id</code> which
+is not resolved by the catalog system will be left as given in the
+call. If <code>FALSE</code>, such unresolved elements are identified
+by <code>NA</code>.
+</td></tr>
+<tr valign="top"><td><code>debug</code></td>
+<td>
+logical value indicating whether to turn on debugging
+output written to the console (<code>TRUE</code>) or not (<code>FALSE</code>).</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A character vector. If the element was resolved,
+the single element is the resolved value.
+Otherwise, the character vector will contain no elements.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.xmlsoft.org">http://www.xmlsoft.org</a>
+<a href="http://www.sagehill.net/docbookxsl/Catalogs.html">http://www.sagehill.net/docbookxsl/Catalogs.html</a> provides a short, succinct tutorial on catalogs.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+if(!exists("Sys.setenv")) Sys.setenv = Sys.putenv
+
+Sys.setenv("XML_CATALOG_FILES" = system.file("exampleData", "catalog.xml", package = "XML"))
+
+
+catalogResolve("-//OASIS//DTD DocBook XML V4.4//EN", "public")
+
+catalogResolve("http://www.omegahat.org/XSL/foo.xsl")
+
+catalogResolve("http://www.omegahat.org/XSL/article.xsl", "uri")
+catalogResolve("http://www.omegahat.org/XSL/math.xsl", "uri")
+
+  # This one does not resolve anything, returning an empty value.
+catalogResolve("http://www.oasis-open.org/docbook/xml/4.1.2/foo.xsl", "uri")
+
+   # Vectorized and returns NA for the first and /tmp/html.xsl
+   # for the second.
+
+ catalogAdd("http://made.up.domain", "/tmp")
+ catalogResolve(c("ddas", "http://made.up.domain/html.xsl"), asIs = TRUE)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

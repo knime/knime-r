@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Generate PMML for a Random Survival Forest (rsf) object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for pmml.rsf {pmml}"><tr><td>pmml.rsf {pmml}</td><td align="right">R Documentation</td></tr></table>
+<h2>Generate PMML for a Random Survival Forest (rsf) object</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Generate the Predictive Model Markup Language (PMML) representation of
+a <span class="pkg">randomSurvivalForest</span> forest object.  In particular, this
+function gives the user the ability to save the geometry of a forest
+as a PMML XML document.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'rsf':
+pmml(model, model.name="rsfForest_Model", app.name="Rattle/PMML",
+     description="Random Survival Forest Tree Model", copyright, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>model</code></td>
+<td>
+the <code>forest</code> object contained in an object of class
+<span class="pkg">randomSurvivalForest</span>, as that contained in the object
+returned by the function <code>rsf</code> with the parameter
+&ldquo;forest=TRUE&rdquo;.</td></tr>
+<tr valign="top"><td><code>model.name</code></td>
+<td>
+a name to give to the model in the PMML.</td></tr>
+<tr valign="top"><td><code>app.name</code></td>
+<td>
+the name of the application that generated the PMML.</td></tr>
+<tr valign="top"><td><code>description</code></td>
+<td>
+a descriptive text for the header of the PMML.</td></tr>
+<tr valign="top"><td><code>copyright</code></td>
+<td>
+the copyright notice for the model.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+further arguments passed to or from other methods.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+The Predictive Model Markup Language is an XML based language which
+provides a way for applications to define statistical and data mining
+models and to share models between PMML compliant applications.  More
+information about PMML and the Data Mining Group can be found at
+http://www.dmg.org.  
+</p>
+<p>
+Use of PMML and <code>pmml.rsf</code> requires the <span class="pkg">XML</span> package.  Be
+aware that XML is a very verbose data format.  Reasonably sized trees
+and data sets can lead to extremely large text files.  XML, while
+achieving interoperability, is not an efficient data storage mechanism
+in this case.
+</p>
+<p>
+This function is used to export the geometry of the forest to other
+PMML compliant applications, including graphics packages that are
+capable of printing binary trees.  In addition, the user may wish to
+save the geometry of the forest for later retrieval and prediction on
+new data sets using <code>pmml.rsf</code> together with <code>pmml_to_rsf</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+An object of class <code>XMLNode</code> as that defined by the <span class="pkg">XML</span>
+package.  This represents the top level, or root node, of the XML
+document and is of type PMML. It can be written to file with
+<code>saveXML</code>.</p>
+
+<h3>Note</h3>
+
+<p>
+One cautionary note is in order.  The PMML representation of the
+<span class="pkg">randomSurvivalForest</span> forest object is incomplete, in that the
+object needs to be massaged in order for prediction to be possible.
+This will be clear in the examples.  This deficiency will be addressed
+in future releases of this package.  However, it was felt that the
+current functionality was important enough and mature enough to
+warrant release in this version of the product.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+Hemant Ishwaran <a href="mailto:hemant.ishwaran@gmail.com">hemant.ishwaran@gmail.com</a> and Udaya B. Kogalur
+<a href="mailto:ubk2101@columbia.edu">ubk2101@columbia.edu</a> with incorporation into the pmml package
+by <a href="mailto:Graham.Williams@togaware.com">Graham.Williams@togaware.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>
+H. Ishwaran and Udaya B. Kogalur (2006).  Random Survival Forests.
+<EM>Cleveland Clinic Technical Report</EM>.
+</p>
+<p>
+PMML home page: <a href="http://www.dmg.org">http://www.dmg.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="pmml.html">pmml</a></code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+library(randomSurvivalForest)
+data(veteran, package = "randomSurvivalForest")
+veteran.out &lt;- rsf(Survrsf(time, status)~.,
+        data = veteran,
+        ntree = 5,
+        forest = TRUE)
+veteran.forest &lt;- veteran.out$forest
+pmml(veteran.forest)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>pmml</em> version 1.1.9 <a href="00Index.html">Index]</a></div>
+
+</body></html>

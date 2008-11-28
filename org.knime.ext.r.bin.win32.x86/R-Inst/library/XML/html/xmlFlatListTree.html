@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Constructors for trees stored as flat list of nodes with
+information about parents and children.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for xmlFlatListTree {XML}"><tr><td>xmlFlatListTree {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Constructors for trees stored as flat list of nodes with
+information about parents and children.</h2>
+
+
+<h3>Description</h3>
+
+<p>
+These (and related internal) functions allow us to represent trees as
+a simple, non-hierarchical collection of nodes along with
+corresponding tables that identify the parent and child relationships.
+This is different from representing a tree as a list of lists of lists
+...  in which each node has a list of its own children. In a
+functional language like R, it is not possible then for the children
+to be able to identify their parents.
+</p>
+<p>
+We use an environment to represent these flat trees.  Since these are
+mutable without requiring the change to be reassigned, we can modify a
+part of the tree locally without having to reassign the top-level
+object.
+</p>
+<p>
+We can use either a list (with names) to store the nodes or a hash
+table/associative array that uses names. There is a non-trivial
+performance difference.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xmlHashTree(nodes = list(), parents = character(), children = list(), 
+             env = new.env(TRUE))
+xmlFlatListTree(nodes = list(), parents = character(), children = list(), env = new.env(), n = 200)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>nodes</code></td>
+<td>
+a collection of existing nodes that are to be added to
+the tree. These are used to initialize the tree. If this is
+specified, you must also specify <code>children</code> and <code>parents</code>.
+</td></tr>
+<tr valign="top"><td><code>parents</code></td>
+<td>
+the parent relationships for the nodes given by <code>nodes</code>.</td></tr>
+<tr valign="top"><td><code>children</code></td>
+<td>
+the children relationships for the nodes given by <code>nodes</code>.</td></tr>
+<tr valign="top"><td><code>env</code></td>
+<td>
+an environment in which the information for the tree  will
+be stored. This is essentially the tree object as it allows us to
+modify parts of the tree without having to reassign the top-level
+object.    Unlike most R data types, environments are mutable.
+</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+for <code>xmlFlatListTree</code>, this is used as the default size
+to allocate for the list containing the nodes</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+An object of class XMLFlatTree which is specialized
+to <code>XMLFlatListTree</code> by the <code>xmlFlatListTree</code>
+function and <code>XMLHashTree</code> by the <code>xmlHashTree</code> function.
+Both objects are simply the environment which contains information
+about the tree elements and functions to access this information.
+<br>
+An <code>xmlHashTree</code> object has an accessor method via
+<code>$</code> for accessing individual  nodes within the tree.
+One can use the node name/identifier in an expression such as
+<code>tt$myNode</code> to obtain the element.
+The name of a node is either its XML node name or if that is already
+present in the tree, a machine generated name.
+<br>
+One can find the names of all the nodes using the
+<code>objects</code> function since these trees are regular
+environments in R.
+Using the <code>all = TRUE</code> argument, one can also find the
+&ldquo;hidden&rdquo; elements that make define the tree's structure.
+These are <code>.children</code> and <code>.parents</code>.
+The former is an (hashed) environment. Each element is identified by the
+node in the tree by the node's identifier (corresponding to the
+name of the node in the tree's environment).
+The value of that element is simply a character vector giving the
+identifiers of all of the children of that node.
+<br>
+The <code>.parents</code> element is also an environemnt.
+Each element in this gives the pair of node and parent identifiers
+with the parent identifier being the value of the variable in the
+environment. In other words, we look up the parent of a node
+named 'kid' by retrieving the value of the variable 'kid' in the
+<code>.parents</code> environment of this hash tree.
+<br>
+The function <code>.addNode</code> is used to insert a new node into the
+tree.
+<br>
+The structure of this tree allows one to easily travers all nodes,
+navigate up the tree from a node via its parent.  Certain tasks are
+more complex as the hierarchy is not implicit within a node.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code>
+<code><a href="xmlTree.html">xmlTree</a></code>
+<code><a href="xmlOutput.html">xmlOutputBuffer</a></code>
+<code><a href="xmlOutput.html">xmlOutputDOM</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ f = system.file("exampleData", "dataframe.xml", package = "XML")
+ tr  = xmlHashTree()
+ xmlTreeParse(f, handlers = tr[[".addNode"]])
+
+ tr # print the tree on the screen
+
+  # Get the two child nodes of the dataframe node.
+ xmlChildren(tr$dataframe)
+
+  # Find the names of all the nodes.
+ objects(tr)
+  # Which nodes have children
+ objects(tr$.children)
+
+  # Which nodes are leaves, i.e. do not have children
+ setdiff(objects(tr), objects(tr$.children))
+
+  # find the class of each of these leaf nodes.
+ sapply(setdiff(objects(tr), objects(tr$.children)),
+         function(id) class(tr[[id]]))
+
+  # distribution of number of children
+ sapply(tr$.children, length)
+
+  # Get the first A node
+ tr$A
+
+  # Get is parent node.
+ xmlParent(tr$A)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,50 @@
+\HeaderA{pmml.arules}{Generate PMML for arules objects}{pmml.arules}
+\aliasA{pmml.itemsets}{pmml.arules}{pmml.itemsets}
+\aliasA{pmml.rules}{pmml.arules}{pmml.rules}
+\keyword{interface}{pmml.arules}
+\begin{Description}\relax
+Generate the PMML (Predictive Model Markup Language) representation of
+a rules or an itemset object from package \pkg{arules}. 
+The PMML can then be imported into other systems that accept PMML.
+\end{Description}
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'rules':
+pmml(model, model.name="arules_Model", 
+    app.name="Rattle/PMML",
+    description="arules association rules model", copyright=NULL, ...)
+## S3 method for class 'itemsets':
+pmml(model, model.name="arules_Model", 
+    app.name="Rattle/PMML",
+    description="arules frequent itemsets model", copyright=NULL, ...)
+\end{verbatim}
+\end{Usage}
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] an rules or itemsets object.
+\item[\code{model.name}] a name to give to the model in the PMML.
+\item[\code{app.name}] the name of the application that generated the PMML.
+\item[\code{description}] a descriptive text for the header of the PMML.
+\item[\code{copyright}] the copyright notice for the model.
+\item[\code{...}] further arguments passed to or from other methods.
+\end{ldescription}
+\end{Arguments}
+\begin{Details}\relax
+The generated PMML can be imported into any PMML consuming
+application.
+\end{Details}
+\begin{Author}\relax
+Michael Hahsler (\email{michael@hahsler.net})
+\end{Author}
+\begin{References}\relax
+Package \pkg{arules} home page: 
+\url{http://r-forge.r-project.org/projects/arules}
+
+Package home page: \url{http://rattle.togaware.com}
+
+PMML home page: \url{http://www.dmg.org}
+\end{References}
+\begin{SeeAlso}\relax
+\code{\LinkA{pmml}{pmml}}.
+\end{SeeAlso}
+

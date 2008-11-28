@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Creates string representation of XML node</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for toString.XMLNode {XML}"><tr><td>toString.XMLNode {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Creates string representation of XML node</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This creates a string from a hierarchical XML node and its children
+just as it prints on the console or one might see it in
+a document.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+toString.XMLNode(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+an object of class <code>XMLNode</code>.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+currently ignored</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+This uses a textConnection object using the name
+.tempXMLOutput. Since this is global, it will overwrite
+any existing object of that name! As a result, this
+function cannot be used recursively in its present form.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+A character vector with one element, that being the
+string corresponding to the XML node's contents.</p>
+
+<h3>Note</h3>
+
+<p>
+This requires the Expat XML parser to be installed.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>, <a href="http://www.jclark.com/xml">http://www.jclark.com/xml</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlNode.html">xmlNode</a></code>
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ x &lt;- xmlRoot(xmlTreeParse(system.file("exampleData", "gnumeric.xml",
+package = "XML")))
+
+ toString(x)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<!DOCTYPE HTML SYSTEM  "/home/duncan/Projects/S4/library/documentation/dtd/html32.dtd">
+<html> <head>
+<title>XML Output in Omegahat, R, S.</title>
+<link rel="stylesheet" href="../../../Docs/OmegaTech.css" />
+</head>
+
+<body>
+<h1>XML Output in  <a href="http://www.omegahat.org">Omegahat</a>, <a
+href="http://www.r-project.org">R</a>
+<a href="http://cm.bell-labs.com/stat/projects/s4">S4</a>/<a href="http://www.insightful.com">Splus5</a>.</h1>
+
+If we want to use XML as one mechanism to exchange data between
+applications and processes, we will have to be able to both parse it
+and also generate it.  Packages for parsing XML in R and S are
+described <a href="index.html">elsewhere</a>.
+Here we discuss how we might generate XML output and the associated
+tools needed to this generically.
+
+<h2>Basic Mechanism - object output.</h2>
+
+We define a method <code class="function">toXML()</code>.  This is a
+generic function.  The class-specific versions of this are responsible
+for returning a string containing the appropriate XML output.
+
+<h2>XML Streams</h2>
+
+A more challenging, and potentially flexible, facility is to have an
+object that acts as an XML filter. It takes objects as input at
+different times in the session and generates XML output appropriate
+for the object. Depending on how it is created, it then passes this
+new output to one or more listeners so that it can be rendered,
+stored, transmitted, etc. In this way, we may have the output appear
+in a browser as the object is displayed in the session.  The browser
+may mark up the XML in interesting ways to assist the user in, for
+example, displaying the session in outline mode, connecting variables
+as input to and output from different commands, clicking on an icon to
+activate the associated graphics device, etc.
+
+<pre>
+   filter$write(read.table())
+   filter$write(1:10)
+   filter$write(factor(rbinom(100)))
+</pre>
+
+
+<p/>
+
+<h1><a name="ReadingDTDs">Reading DTDs in R/S.</a></h1>
+
+A filter as described above needs to create well-formed and valid
+XML. To do this, it must have some knowledege of a DTD to use.  There
+two possible ways to do this. One is to create functions and data
+structures that have a particular DTD encoded in them.  The
+alternative is to have a general mechanism for reading DTDs and
+interpreting them. The former requires work to be done for each DTD
+and also causes potential problems regarding synchronization between
+the external description of the DTD and the local datastructures.
+Thus the second is preferred. This allows us to write some very
+general facilities which operate on arbitrary DTDs and validate
+content by reading the DTD description itself.
+This is simarl to the style used in the emacs mode -
+<a href="">PSGML</a>.
+
+ <p/>
+We can access the information within a DTD locally using the
+<code>parseDTD()</code> function and the argument of the same name to
+<code>xmlTreeParse()</code>.  The DTD elements returned by both are
+identical, so we describe the value returned by <code>parseDTD()</code>.
+Before this, we give a very brief overview of what is in a DTD
+and what we can expect to see in the user-level objects
+
+
+
+<h3><code>parseDTD()</code></h3>
+
+This function takes the name of a file which is expected to contain a
+Document Type Definition (DTD).  This file is parsed and the resulting
+tables of element and entity defintions are converted to lists of
+user-level objects.  The return value is a list containing two
+sub-lists, one for the elements and one for the entities.
+(In the case of a the DTD being returned via the function
+<code>xmlTreeParse</code>, both the internal and external DTD
+tables are returned. Each of these is as described here.)
+
+<h4>Entities</h4>
+
+There are two types of entities - internal and external/system
+entities. The former are used as simple text substitution or macro
+facilities.  They allow one to define a segment of text to be used in
+a document or elsewhere in the DTD (such as attribute lists) that are
+used in several places. Rather than repeating the text and having to
+modify multiple instances of it should it need to be changed, one uses
+entities to parameterize the segment.
+Internal entities are defined something like
+<pre>
+   &lt;!ENTITY % foo "my text to be repeated">
+</pre>
+
+<p />
+
+Internal entities of this form are converted to user-level objects of
+class <code>XMLEntity</code>.  Each of these has 3 fields. These are
+the <code>name</code> which is the identifier used to refer to the
+entity.  The <code>value</code> field is the expansion of the macro.
+The <code>orig</code> field is the unexpanded value which means that
+if the value contains references to other entities, these will not be
+expanded.
+For example, the entries in the DTD
+<pre>
+&lt;!ENTITY % bar "for R and S"&gt;
+&lt;!ENTITY testEnt "test entity &amp;bar;"&gt;
+</pre>
+produces the <code>XMLEntity</code> object
+<pre>
+$name
+[1] "testEnt"
+
+$value
+[1] "test entity for R and S"
+
+$original
+[1] "test entity %bar;"
+
+attr(,"class")
+[1] "XMLEntity"
+</pre>
+
+  <p/>
+
+The names  of the entities list uses the names of each the entities.
+
+<h4>External Entities</h4>
+
+External entities are similar to regular internal entities but refer
+to text expansions that reside outside of this file.  The location may
+be another file or a URL, etc.  These are returned with a class
+<code>XMLExternalEntity</code>.  This has the same fields as the class
+<code>XMLEntity</code> but the interpretation of the
+<code>value</code> field is left to the user-level software.
+One can use <code>scan()</code>, <code>url.scan</code>, and other
+functions for reading the value of the remote content.
+
+<h4>Elements</h4>
+
+While the entities usually appear at the start of the DTD and are
+important for building flexible, useful DTDs and documents, the most
+important aspect of a DTD is the collection of elements that define
+the structure of a document that "obeys" the DTD and how the different
+pieces (nodes) of the document fit together.  These are element
+definitions and each specifies firstly, the list of attributes that
+can be used within that element and their types, and secondly what
+other elements can be nested within this one and in what order.  We
+will not try to explain the structure of a DTD in this document.  See
+<a href="http://www.w3.org/xml">W3.org</a> for resources explaining
+the structure at various different levels.
+
+<p/>
+ A basicelement definition has the following components
+<pre>
+  &lt;!ELEMENT <i>name</i> <i>content</i>&gt;
+</pre>
+
+The name is the text used to introduce it in an XML document as in
+<pre>
+  &lt;name&gt;   &lt;/name&gt;
+  &lt;name /&gt;
+</pre>
+
+<p/>
+The content is the most complicated aspect of an element, but it is
+relatively simple to understand in most cases.
+It is used to indicate what are the possible combination of elements
+that can be nested within this element. It allows the author of the
+DTD to specify an ordering of the sub-elements as well limited control
+over the number of such elements one can use in any position.
+The three basic structures used in the content definition
+are
+<ol>
+  <li> another element,
+  </li>
+  <li> a set of elements of which one can be used, and
+  </li>      
+  <li> an ordered sequence of elements and composite structures,
+  </li>      
+</ol>
+Each of these three can be qualified by an occurance qualifier which
+controls the number of such types to expect in this position.
+<ul>
+  <li> by default, just one is expected.
+  </li>      
+  <li> <code>(content) +</code> means that at least one is expected, but there can
+      be any number of structures matching this content description
+      after the first one.
+  </li>      
+  <li>  <code>(content)*</code> means that there are 0 or more
+      expected.
+  </li>      
+  <li> <code>(content)?</code> means zero or one.
+  </li>      
+</ul>
+
+ <p/>
+The following example illustrates all of the basic features
+<a name="entry3"></a>
+<pre>
+ &lt;!ELEMENT entry3 ( (variables | (tmp, x)), (record)* , (a*, b,c,d, (e|f)) , (foo)+ ) &gt;
+</pre>
+
+Here we define an element named <code>entry3</code>.  This has 4 basic
+types that can be nested within in, and in a specific order.  First,
+we must have a <code>variables</code> element or the pair
+<code>tmp</code> followed by <code>x</code>.  There should be exactly
+one of either of these entries.
+This is followed optionally by any number of <code>record</code>
+element instances.
+After this, there must be a sequence of
+element instances
+<code>a</code>, <code>b,</code> <code>c</code>, <code>d</code>
+and either of <code>e</code> or <code>f</code>.
+And finally, we can have one or more <code>foo</code> entries, but at
+least one.
+
+ <p/>
+  
+
+The attributes an element supports are listed separately
+via a <code>ATTLIST</code> element
+<pre>
+ &lt;!ATTLIST <i>element-name</i>
+       <i>attributeId</i> <i>type</i>  <i>default</i>
+         ...
+ &gt;
+</pre>
+
+ <p/>
+
+The structure returned from parsing and converting a DTD to a
+user-level object is quite simple.  It is a list of length 2, one for
+the entities and the other for the elements within the DTD.  If the
+DTD object comes from a document, it separates the entities and
+elements defined locally or internally in the document and those in
+the external DTD if there is one.  This results in a list of length 2
+which contains the internal and external DTDs. Each of these is then a
+list of length 2 with the entities and elements.
+
+ <p/>
+
+The entities element in a DTD is a named list. The names are the
+identifiers for the entities.
+ Each entry in this list is an object of class
+<code>XMLEntity</code> or <code>XMLExternalEntity</code>.
+In either case, each has 3 fields. <code>name</code>,
+<code>content</code> and <code>original</code>.
+The name is the identifier of the entity.
+The value is the text used to substitute in place of the entity
+reference. The <code>original</code> field is for use when reproducing
+or analyzing the DTD. If the value contains references to other
+entities, this field reflects that and is the unexpanded or literal
+version of the entity definition as it appears in the DTD document.
+
+ <p/>
+ The elements list is also a named list, with the names being those of
+the elements. Each entry in the list is an object of class
+<code>XMLElementDef</code>.
+These contain 4 fields:
+<dl>
+  <dt>
+  <li><code>name</code></li></dt>
+  <dd> the name of the element.
+      </dd>
+  <dt>
+  <li> <code>type</code>          </li>        </dt>
+  <dd> this will almost always be <code>1</code> indicating an
+      ELEMENT_NODE. An explanatory string is used as the name for this
+      integer enumeration value.
+      </dd>      
+  <dt>
+  <li> <code>contents</code></li></dt>
+  <dd> This is an object defining the restriction on the sub-elements
+       that can be nested within this element.
+       This is of class <code>XMLElementContent</code> and has 3
+      fields:
+      <dl>
+	<dt>
+	<li> <code>type</code></li></dt>
+	<dd> named integer value (with name providing a description of
+	    the meaning) indicating what type of content. The usual
+	    ones are <code>PCData</code>, <code>Sequence</code>,
+	    <code>Element</code>, <code>Or</code>, and so on.
+</dd>	    
+	<dt>
+	<li> <code>ocur</code></li></dt>
+	<dd> named enumerated value indicating how many instances
+	     of this content are expected and admissable.
+	    These are <code>Once</code>, <code>Zero or One</code>,
+	    <code>Mult</code> and <code>One or More</code>.
+</dd>
+	<dt>
+	<li> <code>elements</code></li></dt>
+	<dd> A list of <code>XMLContent</code> objects
+	     that describe the feasible sub-elements within this
+	    element being defined.
+	    These are usually specializations of the class
+	     <code>XMLContent</code>: <code>XMLOrContent</code>, <code>XMLElementContent</code>,
+	    <code>XMLSequenceContent</code>.
+	    These have the same structure, just different meaning and semantics.
+      </dd>      
+      </dl>
+      </dd>
+  <dt>
+  <li> <code>attributes</code></li> </dt>      
+  <dd> a named list of <code>XMLAttributeDef</code> objects, with the
+      names being those of the attributes being defined for this
+      element.
+      </dd>
+</dl>
+
+
+
+The result of converting the definition of <a
+href="#entry3"><code>entry3</code></a> above is given below.  It is an
+object of class <code>XMLSequenceContent</code>.
+Hence, its <code>type </code> field is a named
+integer with value <code>3</code> and name <code>Sequence</code>.
+Since the entire content has no qualifier, the <code>ocur</code>
+field is <code>Once</code>.
+ <p/>
+Now we look at the sub-elements, accessible from the
+<code>elements</code> field.
+This is a list of length 4, one fore each term in the sequence.
+The classes of the objects may help to explain its structure.
+<pre>
+sapply(d$elements$entry3$content$elements,class)
+[1] "XMLOrContent"       "XMLElementContent"  "XMLSequenceContent"
+[4] "XMLElementContent" 
+</pre>
+Let's look at the third entry, the <code>XMLSequenceContent</code>
+object.
+<pre>
+r &lt;- d$elements$entry3$content$elements[[3]]
+</pre>
+
+Again, this is a sequence.  Its sub-entries are of diffrent content
+classes.
+<pre>
+sapply(r$elements, class)
+[1] "XMLElementContent" "XMLElementContent" "XMLElementContent"
+[4] "XMLElementContent" "XMLOrContent"     
+</pre>
+The first 4 are reasonably obvious. These identify single elements
+and are the primitive content types.
+<pre>
+> r$elements[[1]]
+$type
+Element 
+      2 
+
+$ocur
+Mult
+   2 
+
+$elements
+[1] "a"
+
+attr(,"class")
+[1] "XMLElementContent"
+</pre>
+We see that the expected type is <code>a</code> and that there can be
+zero or more of these.
+
+ <p/>
+The more interesting entry is the last one.
+Its primitive display is given below.
+<pre>
+$type
+Or 
+ 4 
+
+$ocur
+Once 
+   1 
+
+$elements
+$elements[[1]]
+$type
+Element 
+      2 
+
+$ocur
+Once 
+   1 
+
+$elements
+[1] "e"
+
+attr(,"class")
+[1] "XMLElementContent"
+
+
+$type
+Element 
+      2 
+
+$ocur
+Once 
+   1 
+
+$elements
+[1] "f"
+
+attr(,"class")
+[1] "XMLElementContent"
+
+
+attr(,"class")
+[1] "XMLOrContent"
+</pre>
+
+We see that it is of type <code>Or</code> and that we expect exactly
+one instance of it.  It is interpreted by expecting any of the content
+structures described in its <code>elements</code> list.  Each of these
+is a simple <code>XMLElementContent</code> object and so is a
+"primitive". 
+
+
+<h3>Back to the Filter</h3>
+
+Armed with contents of a DTD, generating XML output via a filter can
+now be validated easily.  Suppose the following command is
+issued via the filter.  (These will most likely be done indirectly via
+higher-level commands.)
+<pre>
+  filter$output("variable", c(unit="mpg"), value)
+</pre>
+Then, the filter will check its current state, specifically the
+last open/unfinished element,  and examine its content specification.
+If the previous command was something like
+<pre>
+  filter$open("variables", numRecords=nrow(data))
+</pre>
+then the filter will extract the list of possible entries for this
+tag. 
+<pre>
+     dtd$entries[["variables"]]$contents$elements 
+</pre>
+Then it determines whether the element  <code>variable</code>
+can be added.
+In the case of a dataset, this is a simple  lookup.
+The only acceptable value is a <code>variable</code> element.
+<pre>
+> d$elements$variables$contents
+$type
+Element 
+      2 
+
+$ocur
+Mult 
+   3 
+
+$elements
+[1] "variable"
+
+attr(,"class")
+[1] "XMLElementContent"
+</pre>
+
+
+<hr/>
+<address><a href="http://www.stat.ucdavis.edu/~duncan">Duncan Temple Lang</a>,
+<a href="mailto:duncan@wald.ucdavis.edu">duncan@wald.ucdavis.edu</a>
+</address>
+<!-- hhmts start -->
+Last modified: Mon Sep 30 10:46:17 EDT 2002
+<!-- hhmts end -->
+</body> </html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Converts non-XML node objects to XMLTextNode objects</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for asXMLNode {XML}"><tr><td>asXMLNode {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Converts non-XML node objects to XMLTextNode objects</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This function is used to convert S objects that
+are not already <code>XMLNode</code> objects
+into objects of that class. Specifically,
+it treats  the object as a string and creates
+an <code>XMLTextNode</code> object.
+</p>
+<p>
+Also, there is a method for converting an XMLInternalNode
+- the C-level libxml representation of a node - to 
+an explicit R-only object which contains the R values
+of the data in the internal node.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+asXMLNode(x)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+the object to be converted to an <code>XMLNode</code> object.
+This is typically alread an object that inherits from <code>XMLNode</code>
+or a string.</td></tr>
+</table>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>, <a href="http://www.jclark.com/xml">http://www.jclark.com/xml</a>,
+<a href="http://www.omegahat.org">http://www.omegahat.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlNode.html">xmlNode</a></code>
+<code><a href="xmlNode.html">xmlTextNode</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+   # creates an XMLTextNode.
+ asXMLNode("a text node")
+
+   # unaltered.
+ asXMLNode(xmlNode("p"))
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

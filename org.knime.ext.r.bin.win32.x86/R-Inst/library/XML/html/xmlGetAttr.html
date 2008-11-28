@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Get the value of an attribute in an XML node</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for xmlGetAttr {XML}"><tr><td>xmlGetAttr {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Get the value of an attribute in an XML node</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This is a convenience function that retrieves
+the value of a named attribute in an XML node,
+taking care of checking for its existence.
+It also allows the caller to provide a default
+value to use as the return value if the
+attribute is not present.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xmlGetAttr(node, name, default = NULL, converter = NULL,
+            namespaceDefinition = character())
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>node</code></td>
+<td>
+the XML node</td></tr>
+<tr valign="top"><td><code>name</code></td>
+<td>
+the name of the attribute</td></tr>
+<tr valign="top"><td><code>default</code></td>
+<td>
+a value to use as the default return if the attribute
+is not present in the XML node. </td></tr>
+<tr valign="top"><td><code>converter</code></td>
+<td>
+an optional function which if supplied is invoked
+with the attribute value and the value returned.
+This can be used to convert the string to an arbitrary
+value which is useful if it is, for example, a number.
+This is only called if the attribute exists within the node.
+In other words, it is not applied to the <code>default</code> value.</td></tr>
+<tr valign="top"><td><code>namespaceDefinition</code></td>
+<td>
+a named character vector giving
+name space prefixes and URIs to use when resolving for the
+the attribute with a namespace.
+The values are used to compare the name space prefix used in
+the <code>name</code> given by the user to the name space 
+definition in the node to ensure they match.
+This is important as we might ask for an attribute named
+<code>r:width</code> assuming that the prefix <code>r</code> corresponded to the
+URI <code>http://www.r-project.org</code>. However, there may 
+be a name space prefix <code>r</code> defined on the node that points
+to  a different URI and so this would be an erroneous match.
+</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+This just checks that the attribute list is
+non-NULL and that there is an element with
+the specified name.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+If the
+attribute is present,
+the return value is  a string which is the value of the attribute.
+Otherwise, the value of <code>default</code> is returned.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>, <a href="http://www.jclark.com/xml">http://www.jclark.com/xml</a>,
+<a href="http://www.omegahat.org">http://www.omegahat.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlAttrs.html">xmlAttrs</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ node &lt;- xmlNode("foo", attrs=c(a="1", b="my name"))
+
+ xmlGetAttr(node, "a")
+ xmlGetAttr(node, "doesn't exist", "My own default value")
+
+ xmlGetAttr(node, "b", "Just in case")
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

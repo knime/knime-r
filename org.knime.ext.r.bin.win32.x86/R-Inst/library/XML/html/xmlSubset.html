@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Convenience accessors for the children of XMLNode objects.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for [.XMLNode {XML}"><tr><td>[.XMLNode {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Convenience accessors for the children of XMLNode objects.</h2>
+
+
+<h3>Description</h3>
+
+<p>
+These provide a simplified syntax for extracting the children
+of an XML node.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+## S3 method for class 'XMLNode':
+x[..., all = FALSE]
+## S3 method for class 'XMLNode':
+x[[...]]
+## S3 method for class 'XMLDocumentContent':
+x[[...]]
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+the XML node or the top-level document content in which the children are to be accessed.
+The <code>XMLDocumentContent</code> is the container for the top-level node that also contains information
+such as the URI/filename and XML version. This accessor method is merely a convenience to get 
+access to children of the top-level node.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+the identifiers for the children to be retrieved,
+given as integer indices, names, etc. in the usual format for the
+generic <code>link{[}</code> and <code>link{[[}</code> operators</td></tr>
+<tr valign="top"><td><code>all</code></td>
+<td>
+logical value.  When ... is a character vector, a value
+of <code>TRUE</code> for <code>all</code> means to retrieve all of the
+nodes with those names rather than just the first one.
+<code>FALSE</code> gives the usual result of subsetting a list by name
+which gives just the first element.
+This allows us to avoid the  idiom
+<code>node[ names(node) == "bob" ]</code>
+which is complicated when node is the result of an inline
+computation
+and instead we use
+<code>node["bob", all = TRUE]</code>.
+</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A list or single element containing the
+children of the XML node given by <code>obj</code>
+and identified by ....</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>, <a href="http://www.omegahat.org/RSXML">http://www.omegahat.org/RSXML</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlAttrs.html">xmlAttrs</a></code>
+<code><a href="AssignXMLNode.html">[&lt;-.XMLNode</a></code>
+<code><a href="AssignXMLNode.html">[[&lt;-.XMLNode</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+ f = system.file("exampleData", "gnumeric.xml", package = "XML")
+
+ top = xmlRoot(xmlTreeParse(f))
+
+  # Get the first RowInfo element.
+ top[["Sheets"]][[1]][["Rows"]][["RowInfo"]]
+
+  # Get a list containing only the first row element
+ top[["Sheets"]][[1]][["Rows"]]["RowInfo"]
+ top[["Sheets"]][[1]][["Rows"]][1]
+
+  # Get all of the RowInfo elements by position
+ top[["Sheets"]][[1]][["Rows"]][1:xmlSize(top[["Sheets"]][[1]][["Rows"]])]
+
+  # But more succinctly and accurately, get all of the RowInfo elements
+ top[["Sheets"]][[1]][["Rows"]]["RowInfo", all = TRUE]
+
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

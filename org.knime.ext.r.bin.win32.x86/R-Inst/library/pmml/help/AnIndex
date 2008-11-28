@@ -1,0 +1,9 @@
+pmml	pmml
+pmml.itemsets	pmml.arules
+pmml.kmeans	pmml.kmeans
+pmml.ksvm	pmml.ksvm
+pmml.lm	pmml.lm
+pmml.nnet	pmml.nnet
+pmml.rpart	pmml.rpart
+pmml.rsf	pmml.rsf
+pmml.rules	pmml.arules

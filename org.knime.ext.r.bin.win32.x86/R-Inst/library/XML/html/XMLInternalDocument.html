@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Class to represent reference to C-level data structure for an XML
+document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for XMLInternalDocument-class {XML}"><tr><td>XMLInternalDocument-class {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Class to represent reference to C-level data structure for an XML
+document</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This class is used to provide a handle/reference to a C-level
+data structure that contains the information from parsing 
+parsing XML content.
+This leaves the nodes in the DOM or tree as C-level nodes
+rather than converting them to explicit R <code>XMLNode</code>
+objects.  One can then operate on this tree in much the same
+way as one can the <code>XMLNode</code> representations,
+but we a) avoid copying the nodes to R, and b) can navigate
+the tree both down and up using <code><a href="xmlParent.html">xmlParent</a></code>
+giving greater flexibility.
+Most importantly, one can use an <code>XMLInternalDocument</code>
+class object with an XPath expression to easily and relatively efficiently
+find nodes within a document that satisfy some criterion.
+See <code><a href="getNodeSet.html">getNodeSet</a></code>.
+</p>
+
+
+<h3>Objects from the Class</h3>
+
+<p>
+Objects of this type are created via
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code>
+and   <code><a href="xmlTreeParse.html">htmlTreeParse</a></code>
+with the argument  <code>useInternalNodes</code> given as <code>TRUE</code>.
+</p>
+
+
+<h3>Extends</h3>
+
+<p>
+Class <code><a href="../../methods/html/setOldClass.html">oldClass</a></code>, directly.
+</p>
+
+
+<h3>Methods</h3>
+
+<p>
+There are methods to serialize (dump) a document to a file or as a
+string, and to coerce it to a node by finding the top-level node of
+the document.
+There are functions to search the document for nodes specified by
+an XPath expression.
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/TR/xpath">http://www.w3.org/TR/xpath</a>{XPath}
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code>
+<code><a href="xmlTreeParse.html">htmlTreeParse</a></code>
+<code><a href="getNodeSet.html">getNodeSet</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+ f = system.file("exampleData", "mtcars.xml", package="XML")
+ doc = xmlTreeParse(f, useInternalNodes = TRUE)
+ getNodeSet(doc, "//variables[@count]")
+ getNodeSet(doc, "//record")
+
+ getNodeSet(doc, "//record[@id='Mazda RX4']")
+
+ # free(doc)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,91 @@
+\HeaderA{pmml.rsf}{Generate PMML for a Random Survival Forest (rsf) object}{pmml.rsf}
+\keyword{interface}{pmml.rsf}
+\keyword{survival}{pmml.rsf}
+\keyword{tree}{pmml.rsf}
+\begin{Description}\relax
+Generate the Predictive Model Markup Language (PMML) representation of
+a \pkg{randomSurvivalForest} forest object.  In particular, this
+function gives the user the ability to save the geometry of a forest
+as a PMML XML document.
+\end{Description}
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'rsf':
+pmml(model, model.name="rsfForest_Model", app.name="Rattle/PMML",
+     description="Random Survival Forest Tree Model", copyright, ...)
+\end{verbatim}
+\end{Usage}
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] the \code{forest} object contained in an object of class
+\pkg{randomSurvivalForest}, as that contained in the object
+returned by the function \code{rsf} with the parameter
+\dQuote{forest=TRUE}.
+\item[\code{model.name}] a name to give to the model in the PMML.
+\item[\code{app.name}] the name of the application that generated the PMML.
+\item[\code{description}] a descriptive text for the header of the PMML.
+\item[\code{copyright}] the copyright notice for the model.
+\item[\code{...}] further arguments passed to or from other methods.
+\end{ldescription}
+\end{Arguments}
+\begin{Details}\relax
+The Predictive Model Markup Language is an XML based language which
+provides a way for applications to define statistical and data mining
+models and to share models between PMML compliant applications.  More
+information about PMML and the Data Mining Group can be found at
+http://www.dmg.org.  
+
+Use of PMML and \code{pmml.rsf} requires the \pkg{XML} package.  Be
+aware that XML is a very verbose data format.  Reasonably sized trees
+and data sets can lead to extremely large text files.  XML, while
+achieving interoperability, is not an efficient data storage mechanism
+in this case.
+
+This function is used to export the geometry of the forest to other
+PMML compliant applications, including graphics packages that are
+capable of printing binary trees.  In addition, the user may wish to
+save the geometry of the forest for later retrieval and prediction on
+new data sets using \code{pmml.rsf} together with \code{pmml\_to\_rsf}.
+\end{Details}
+\begin{Value}
+An object of class \code{XMLNode} as that defined by the \pkg{XML}
+package.  This represents the top level, or root node, of the XML
+document and is of type PMML. It can be written to file with
+\code{saveXML}.
+\end{Value}
+\begin{Note}\relax
+One cautionary note is in order.  The PMML representation of the
+\pkg{randomSurvivalForest} forest object is incomplete, in that the
+object needs to be massaged in order for prediction to be possible.
+This will be clear in the examples.  This deficiency will be addressed
+in future releases of this package.  However, it was felt that the
+current functionality was important enough and mature enough to
+warrant release in this version of the product.
+\end{Note}
+\begin{Author}\relax
+Hemant Ishwaran \email{hemant.ishwaran@gmail.com} and Udaya B. Kogalur
+\email{ubk2101@columbia.edu} with incorporation into the pmml package
+by \email{Graham.Williams@togaware.com}
+\end{Author}
+\begin{References}\relax
+H. Ishwaran and Udaya B. Kogalur (2006).  Random Survival Forests.
+\emph{Cleveland Clinic Technical Report}.
+
+PMML home page: \url{http://www.dmg.org}
+\end{References}
+\begin{SeeAlso}\relax
+\code{\LinkA{pmml}{pmml}}.
+\end{SeeAlso}
+\begin{Examples}
+\begin{ExampleCode}
+library(randomSurvivalForest)
+data(veteran, package = "randomSurvivalForest")
+veteran.out <- rsf(Survrsf(time, status)~.,
+        data = veteran,
+        ntree = 5,
+        forest = TRUE)
+veteran.forest <- veteran.out$forest
+pmml(veteran.forest)
+\end{ExampleCode}
+\end{Examples}
+

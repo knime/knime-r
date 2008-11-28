@@ -1,0 +1,47 @@
+\HeaderA{pmml.kmeans}{Generate PMML for a kmeans object}{pmml.kmeans}
+\keyword{interface}{pmml.kmeans}
+\begin{Description}\relax
+Generate the PMML representation for a KMeans object (cluster). The
+kmeans object (a cluster described by k centroids) is converted into a
+PMML representation. The PMML can then be imported into other systems
+that accept PMML.
+\end{Description}
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'kmeans':
+pmml(model, model.name="KMeans_Model", app.name="Rattle/PMML",
+     description="KMeans cluster model", copyright=NULL, ...)
+\end{verbatim}
+\end{Usage}
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] a kmeans object.
+\item[\code{model.name}] a name to give to the model in the PMML.
+\item[\code{app.name}] the name of the application that generated the PMML.
+\item[\code{description}] a descriptive text for the header of the PMML.
+\item[\code{copyright}] the copyright notice for the model.
+\item[\code{...}] further arguments passed to or from other methods.
+\end{ldescription}
+\end{Arguments}
+\begin{Author}\relax
+\email{Graham.Williams@togaware.com}
+\end{Author}
+\begin{References}\relax
+Package home page: \url{http://rattle.togaware.com}
+
+PMML home page: \url{http://www.dmg.org}
+\end{References}
+\begin{SeeAlso}\relax
+\code{\LinkA{pmml}{pmml}},
+\code{\LinkA{kmeans}{kmeans}}.
+\end{SeeAlso}
+\begin{Examples}
+\begin{ExampleCode}
+ds <- rbind(matrix(rnorm(100, sd = 0.3), ncol = 2),
+                matrix(rnorm(100, mean = 1, sd = 0.3), ncol = 2))
+colnames(ds) <- c("Dimension1", "Dimension2")
+cl <- kmeans(ds, 2)
+pmml(cl)
+\end{ExampleCode}
+\end{Examples}
+

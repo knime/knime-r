@@ -1,0 +1,66 @@
+\HeaderA{pmml.ksvm}{Generate PMML for a ksvm object}{pmml.ksvm}
+\keyword{interface}{pmml.ksvm}
+\begin{Description}\relax
+Generate the PMML representation for a ksvm object (SVM). The PMML can
+then be imported into other systems that accept PMML.  With this code,
+a PMML representation can be obtained for SVMs implementing
+classification (multi-class and binary) as well as regression.
+\end{Description}
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'ksvm':
+pmml(model, model.name="SVM_model", app.name="Rattle/PMML",
+     description="Support Vector Machine PMML Model", copyright=NULL,
+     data.name, ...)
+\end{verbatim}
+\end{Usage}
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] a ksvm object.
+\item[\code{data.name}] the name of the data object used to train the SVM
+model in ksvm - required since the ksvm object does not appear to
+record information about the used categorical variables.
+\item[\code{model.name}] a name to give to the model in the PMML.
+\item[\code{app.name}] the name of the application that generated the PMML.
+\item[\code{description}] a descriptive text for the header of the PMML.
+\item[\code{copyright}] the copyright notice for the model.
+\item[\code{...}] further arguments passed to or from other methods.
+\end{ldescription}
+\end{Arguments}
+\begin{Details}\relax
+The generated PMML can be imported into any PMML consuming application
+that recognizes PMML 3.2. An example is ADAPA (Adaptive Decision and
+Predictive Analytics), a lightweight decision engine with batch and
+real-time scoring of predictive models (also supporting neural
+networks and linear and logistic regression).
+\end{Details}
+\begin{Author}\relax
+\email{info@zementis.com}
+\end{Author}
+\begin{References}\relax
+Package home page: \url{http://rattle.togaware.com}
+
+PMML home page: \url{http://www.dmg.org}
+
+Zementis' useful PMML convert: \url{http://www.zementis.com/pmml_converters.htm}
+
+ADAPA home page: \url{http://www.zementis.com/adapa.htm}
+\end{References}
+\begin{SeeAlso}\relax
+\code{\LinkA{pmml}{pmml}}.
+\code{\LinkA{ksvm}{ksvm}}.
+\end{SeeAlso}
+\begin{Examples}
+\begin{ExampleCode}
+# Train a support vector machine to perform binary classification.
+require(kernlab)
+data(spam)
+index <- sample(1:dim(spam)[1])
+ds <- spam[index[1:300],] # For illustration only use a small dataset.
+fit <- ksvm(type~., data=ds, kenrel="rbfdot")
+
+# Genetate the PMML.
+pmml(fit, data=ds)
+\end{ExampleCode}
+\end{Examples}
+

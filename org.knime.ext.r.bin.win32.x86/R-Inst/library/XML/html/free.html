@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Release the specified object and clean up its memory usage</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for free {XML}"><tr><td>free {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Release the specified object and clean up its memory usage</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This generic function is available for explicitly releasing
+the memory associated with the given object.
+It is intended for use on external pointer objects
+which do not have an automatic  finalizer
+function/routine that cleans up the memory that is used
+by the native object.
+This is the case, for example, for an XMLInternalDocument.
+We cannot free it with a finalizer in all cases as we may have
+a reference to a node in the associated document tree.
+So the user must explicitly release the XMLInternalDocument object
+to free the memory it occupies.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+free(obj)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>obj</code></td>
+<td>
+the object whose memory is to be released,
+typically an external pointer object or object
+that contains a slot that is an external pointer.  </td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+The methods will generally call a C routine to free the native
+memory.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+An updated version of the object with the external address set to NIL.
+This is up to the individual methods.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code> with <code>useInternalNodes = TRUE</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ f = system.file("exampleData", "boxplot.svg", package = "XML")
+ doc = xmlTreeParse(f, useInternalNodes = TRUE)
+ nodes = getNodeSet(doc, "//path")
+ rm(nodes)
+ # free(doc)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

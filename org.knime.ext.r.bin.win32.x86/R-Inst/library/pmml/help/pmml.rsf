@@ -1,0 +1,99 @@
+pmml.rsf                package:pmml                R Documentation
+
+_G_e_n_e_r_a_t_e _P_M_M_L _f_o_r _a _R_a_n_d_o_m _S_u_r_v_i_v_a_l _F_o_r_e_s_t (_r_s_f) _o_b_j_e_c_t
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     Generate the Predictive Model Markup Language (PMML)
+     representation of a 'randomSurvivalForest' forest object.  In
+     particular, this function gives the user the ability to save the
+     geometry of a forest as a PMML XML document.
+
+_U_s_a_g_e:
+
+     ## S3 method for class 'rsf':
+     pmml(model, model.name="rsfForest_Model", app.name="Rattle/PMML",
+          description="Random Survival Forest Tree Model", copyright, ...)
+
+_A_r_g_u_m_e_n_t_s:
+
+   model: the 'forest' object contained in an object of class
+          'randomSurvivalForest', as that contained in the object
+          returned by the function 'rsf' with the parameter
+          “forest=TRUE”.
+
+model.name: a name to give to the model in the PMML.
+
+app.name: the name of the application that generated the PMML.
+
+description: a descriptive text for the header of the PMML.
+
+copyright: the copyright notice for the model.
+
+     ...: further arguments passed to or from other methods.
+
+_D_e_t_a_i_l_s:
+
+     The Predictive Model Markup Language is an XML based language
+     which provides a way for applications to define statistical and
+     data mining models and to share models between PMML compliant
+     applications.  More information about PMML and the Data Mining
+     Group can be found at http://www.dmg.org.  
+
+     Use of PMML and 'pmml.rsf' requires the 'XML' package.  Be aware
+     that XML is a very verbose data format.  Reasonably sized trees
+     and data sets can lead to extremely large text files.  XML, while
+     achieving interoperability, is not an efficient data storage
+     mechanism in this case.
+
+     This function is used to export the geometry of the forest to
+     other PMML compliant applications, including graphics packages
+     that are capable of printing binary trees.  In addition, the user
+     may wish to save the geometry of the forest for later retrieval
+     and prediction on new data sets using 'pmml.rsf' together with
+     'pmml_to_rsf'.
+
+_V_a_l_u_e:
+
+     An object of class 'XMLNode' as that defined by the 'XML' package.
+      This represents the top level, or root node, of the XML document
+     and is of type PMML. It can be written to file with 'saveXML'.
+
+_N_o_t_e:
+
+     One cautionary note is in order.  The PMML representation of the
+     'randomSurvivalForest' forest object is incomplete, in that the
+     object needs to be massaged in order for prediction to be
+     possible. This will be clear in the examples.  This deficiency
+     will be addressed in future releases of this package.  However, it
+     was felt that the current functionality was important enough and
+     mature enough to warrant release in this version of the product.
+
+_A_u_t_h_o_r(_s):
+
+     Hemant Ishwaran hemant.ishwaran@gmail.com and Udaya B. Kogalur
+     ubk2101@columbia.edu with incorporation into the pmml package by
+     Graham.Williams@togaware.com
+
+_R_e_f_e_r_e_n_c_e_s:
+
+     H. Ishwaran and Udaya B. Kogalur (2006).  Random Survival Forests.
+     _Cleveland Clinic Technical Report_.
+
+     PMML home page: <URL: http://www.dmg.org>
+
+_S_e_e _A_l_s_o:
+
+     'pmml'.
+
+_E_x_a_m_p_l_e_s:
+
+     library(randomSurvivalForest)
+     data(veteran, package = "randomSurvivalForest")
+     veteran.out <- rsf(Survrsf(time, status)~.,
+             data = veteran,
+             ntree = 5,
+             forest = TRUE)
+     veteran.forest <- veteran.out$forest
+     pmml(veteran.forest)
+

@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Get the top-level XML node.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for xmlRoot {XML}"><tr><td>xmlRoot {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Get the top-level XML node.</h2>
+
+
+<h3>Description</h3>
+
+<p>
+These are a collection of methods for providing easy access to the
+top-level <code>XMLNode</code> object resulting from parsing an XML
+document.  They simplify accessing this node in the presence of
+auxillary information such as DTDs, file name and version information
+that is returned as part of the parsing.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xmlRoot(x, ...)
+## S3 method for class 'XMLDocumentContent':
+xmlRoot(x, ...)
+## S3 method for class 'XMLInternalDocument':
+xmlRoot(x, skip = TRUE, ...)
+## S3 method for class 'HTMLDocument':
+xmlRoot(x, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+the object whose root/top-level XML node is to be returned.</td></tr>
+<tr valign="top"><td><code>skip</code></td>
+<td>
+a logical value that controls whether DTD nodes and/or
+XMLComment objects that appear
+before the &ldquo;real&rdquo; top-level node of the document should be ignored (<code>TRUE</code>)
+or not (<code>FALSE</code>) when returning the root node.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+arguments that are passed by the generic to the different specialized 
+methods of this generic.</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+An object of class <code>XMLNode</code>.</p>
+
+<h3>Note</h3>
+
+<p>
+One cannot obtain the parent or top-level node
+of an XMLNode object in S. This is different from 
+languages like C, Java, Perl, etc. and is primarily 
+because S does not provide support for references.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>, <a href="http://www.jclark.com/xml">http://www.jclark.com/xml</a>,
+<a href="http://www.omegahat.org">http://www.omegahat.org</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code>
+<code><a href="xmlSubset.html">[[.XMLNode</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+  doc &lt;- xmlTreeParse(system.file("exampleData", "mtcars.xml", package="XML"))
+  xmlRoot(doc)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

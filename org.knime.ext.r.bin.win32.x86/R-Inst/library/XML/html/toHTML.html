@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Create an HTML representation of the given R object, using
+internal C-level nodes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for toHTML {XML}"><tr><td>toHTML {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Create an HTML representation of the given R object, using
+internal C-level nodes</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This generic function and the associated methods are
+intended to create an HTML tree that represents the
+R object in some intelligent manner.
+For example, we represent a vector as a table
+and we represent a matrix also as a table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+toHTML(x, context = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+the R object which is to be represented via an HTML tree </td></tr>
+<tr valign="top"><td><code>context</code></td>
+<td>
+an object which provides context in which the node will
+be used. This is currently arbitrary. It may be used, for example,
+when creating HTML for R documentation and providing information
+about variabes and functions that are available on that page
+and so have internal links.
+</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+It would be nicer if we could pass additional arguments
+to control whether the outer/parent layer is created,
+e.g. when reusing code for a vector for a row of a matrix.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+an object of class <code>XMLInternalNode</code></p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+The <code>R2HTML</code> package.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+ cat(as(toHTML(rnorm(10)), "character"))
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>

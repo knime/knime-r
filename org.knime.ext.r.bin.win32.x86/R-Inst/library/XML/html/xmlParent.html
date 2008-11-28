@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Get parent node of XMLInternalNode or ancestor nodes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for xmlParent {XML}"><tr><td>xmlParent {XML}</td><td align="right">R Documentation</td></tr></table>
+<h2>Get parent node of XMLInternalNode or ancestor nodes</h2>
+
+
+<h3>Description</h3>
+
+<p>
+<code>xmlParent</code> operates on an XML node
+and returns a reference to its parent node 
+within the document tree.
+This works for an internal, C-level
+<code>XMLInternalNode</code> object
+created, for examply, using <code><a href="newXMLDoc.html">newXMLNode</a></code>
+and related functions or <code><a href="xmlTree.html">xmlTree</a></code>
+or  from <code><a href="xmlTreeParse.html">xmlTreeParse</a></code> with the
+<code>useInternalNodes</code> parameter.
+</p>
+<p>
+It is possible to find the parent of an R-level
+XML node when using a tree
+created with, for example,  <code><a href="xmlFlatListTree.html">xmlHashTree</a></code>
+as the parent information is stored separately.
+</p>
+<p>
+<code>xmlAncestors</code> walks the chain of parens to the
+top of the document and either returns a list of those
+nodes, or alternatively a list of the values obtained
+by applying a function to each of the nodes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xmlParent(x)
+xmlAncestors(x, fun = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+an object of class <code>XMLInternalNode</code> whose parent is being requested. </td></tr>
+<tr valign="top"><td><code>fun</code></td>
+<td>
+an R function which is invoked for each  node as we walk up
+the tree.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+any additional arguments that are passed in calls to
+<code>fun</code> after the node object.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+This uses the internal libxml structures to access the parent in the DOM tree. 
+This function is generic so that we can add methods for other types of nodes
+if we so want in the future.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+<code>xmlParent</code> returns object of class <code>XMLInternalNode</code>.
+<br>
+If <code>fun</code> is <code>NULL</code>, <code>xmlAncestors</code> returns a list of the nodes in order of
+top-most node or root of the tree, then its child, then the child of
+that child, etc. This is the reverse order in which the nodes are
+visited/found.
+<br>
+If <code>fun</code> is a function, <code>xmlAncestors</code> returns a list
+whose elements are the results of calling that function for
+each node. Again, the order is top down.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Duncan Temple Lang
+</p>
+
+
+<h3>References</h3>
+
+<p>
+<a href="http://www.w3.org/XML">http://www.w3.org/XML</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="xmlChildren.html">xmlChildren</a></code>
+<code><a href="xmlTreeParse.html">xmlTreeParse</a></code>
+<code><a href="xmlNode.html">xmlNode</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+  top = newXMLNode("doc")
+  s = newXMLNode("section", attr = c(title = "Introduction"))
+  a = newXMLNode("article", s)
+  addChildren(top, a)
+
+  xmlName(xmlParent(s))
+  xmlName(xmlParent(xmlParent(s)))
+
+    # Find the root node.
+  root = a
+  while(!is.null(xmlParent(root)))
+      root = xmlParent(root)
+
+   # find the names of the parent nodes of each 'h' node.
+   # use a global variable to "simplify" things and not use a closure.
+
+  filename = system.file("exampleData", "branch.xml", package = "XML")
+  parentNames &lt;- character()
+  xmlTreeParse(filename,
+                handlers =
+                  list(h = function(x) {
+                   parentNames &lt;&lt;- c(parentNames, xmlName(xmlParent(x)))
+                  }), useInternalNodes = TRUE)
+
+  table(parentNames)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>XML</em> version 1.96-0 <a href="00Index.html">Index]</a></div>
+
+</body></html>
