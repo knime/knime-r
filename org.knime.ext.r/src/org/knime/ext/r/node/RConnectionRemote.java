@@ -38,6 +38,7 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
+import org.knime.ext.r.node.local.RAbstractLocalNodeModel;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 
@@ -54,23 +55,6 @@ final class RConnectionRemote {
 
     private RConnectionRemote() {
         
-    }
-    
-    /**
-     * Replaces illegal characters in the specified string. Legal characters are
-     * a-z, A-Z and 0-9. All others will be replaced by an underscore.
-     * 
-     * @param name the string to check and to replace illegal characters in.
-     * @return a string containing only a-z, A-Z, 0-9 and _. All other
-     *         characters got replaced by an underscore ('_').
-     */
-    static final String formatColumn(final String name) {
-        String newName = name.replaceAll("[^a-zA-Z0-9]", ".");
-        if (!newName.equals(name)) {
-            LOGGER.debug("Column name \"" + name + "\" changed into " 
-                    + "\"" + newName + "\".");
-        }
-        return newName;
     }
    
     /**
@@ -105,7 +89,8 @@ final class RConnectionRemote {
                 types[i] = -1; // unsupported type
             }
             // init column empty
-            String cmd = formatColumn(cspec.getName()) + " <- c()";
+            String cmd = RAbstractLocalNodeModel.formatColumn(
+                    cspec.getName()) + " <- c()";
             LOGGER.info(cmd);
             conn.eval(cmd);
         }
@@ -170,7 +155,7 @@ final class RConnectionRemote {
                 LOGGER.info(msg);
                 exec.setMessage(msg);
                 for (int i = 0; i < data.length; i++) {
-                    String colName = formatColumn(
+                    String colName = RAbstractLocalNodeModel.formatColumn(
                             spec.getColumnSpec(i).getName());
                     conn.eval("ColTmp" + i + " <- c(" + data[i].toString() 
                             + ")");
@@ -185,7 +170,7 @@ final class RConnectionRemote {
         
         if (z > 0 && z < max) {
             for (int i = 0; i < data.length; i++) {
-                String colName = formatColumn(
+                String colName = RAbstractLocalNodeModel.formatColumn(
                         spec.getColumnSpec(i).getName());
                 conn.eval("ColTmp" + i + " <- c(" + data[i].toString() + ")");
                 conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i 
@@ -199,7 +184,8 @@ final class RConnectionRemote {
             if (i > 0) {
                 colList.append(",");
             }
-            colList.append(formatColumn(spec.getColumnSpec(i).getName()));
+            colList.append(RAbstractLocalNodeModel.formatColumn(
+                    spec.getColumnSpec(i).getName()));
         }
         conn.eval("R <- data.frame(" + colList.toString() + ")");
         

@@ -53,6 +53,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.util.DataColumnSpecListCellRenderer;
+import org.knime.ext.r.node.local.RAbstractLocalNodeModel;
 
 
 /**
@@ -118,7 +119,8 @@ public class RDialogPanel extends JPanel implements MouseListener {
             DataColumnSpec oldSpec = spec.getColumnSpec(i);
             DataType type = oldSpec.getType();
             
-            String newName = RConnectionRemote.formatColumn(oldSpec.getName());
+            String newName = RAbstractLocalNodeModel.formatColumn(
+                    oldSpec.getName());
             DataColumnSpec cspec = 
                 new DataColumnSpecCreator(newName, type).createSpec();
             
@@ -251,27 +253,6 @@ public class RDialogPanel extends JPanel implements MouseListener {
         }
         settings.addString(CFG_EXPRESSION, expr.toString());
     }
-    
-    /**
-     * Renames all column names by replacing all characters which are not 
-     * numeric or letters by ".".
-     * @param inSpec spec to replace column names
-     * @return new spec with replaced column names
-     */
-    public static final DataTableSpec getRenamedDataTableSpec(
-            final DataTableSpec inSpec) {
-        DataColumnSpec[] cspecs = new DataColumnSpec[inSpec.getNumColumns()];
-        for (int i = 0; i < cspecs.length; i++) {
-            DataColumnSpecCreator cr = 
-                new DataColumnSpecCreator(inSpec.getColumnSpec(i));
-            String oldName = inSpec.getColumnSpec(i).getName();
-            cr.setName(RConnectionRemote.formatColumn(oldName));
-            cspecs[i] = cr.createSpec();
-        }
-        return new DataTableSpec(cspecs);
-    }
-        
-
     
     /**
      * {@inheritDoc}

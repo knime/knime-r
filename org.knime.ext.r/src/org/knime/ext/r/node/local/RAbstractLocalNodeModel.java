@@ -38,6 +38,8 @@ import org.knime.base.node.io.filereader.FileAnalyzer;
 import org.knime.base.node.io.filereader.FileReaderNodeSettings;
 import org.knime.base.node.io.filereader.FileTable;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
+import org.knime.core.data.DataColumnSpec;
+import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -52,7 +54,6 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
-import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
@@ -322,7 +323,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
      * @throws IOException If the data could not be written into the file.
      * @throws CanceledExecutionException If user canceled the process.
      */
-    static File writeInDataCsvFile(final BufferedDataTable inData,
+    final File writeInDataCsvFile(final BufferedDataTable inData,
             final ExecutionContext exec) throws IOException,
             CanceledExecutionException {
         // create Temp file
@@ -338,12 +339,64 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         CSVWriter writer = new CSVWriter(fw, fws);
 
         BufferedDataTable newTable = exec.createSpecReplacerTable(inData,
-               RDialogPanel.getRenamedDataTableSpec(inData.getDataTableSpec()));
+               createRenamedDataTableSpec(inData.getDataTableSpec()));
         ExecutionMonitor subExec = exec.createSubProgress(0.5);
         writer.write(newTable, subExec);
 
         writer.close();
         return tempInDataFile;
+    }
+    
+    /**
+     * Renames all column names by replacing all characters which are not 
+     * numeric or letters by ".".
+     * @param spec spec to replace column names
+     * @return new spec with replaced column names
+     */
+    private DataTableSpec createRenamedDataTableSpec(final DataTableSpec spec) {
+        StringBuilder warning = new StringBuilder();
+        DataColumnSpec[] cspecs = new DataColumnSpec[spec.getNumColumns()];
+        for (int i = 0; i < cspecs.length; i++) {
+            DataColumnSpecCreator cr = 
+                new DataColumnSpecCreator(spec.getColumnSpec(i));
+            String oldName = spec.getColumnSpec(i).getName();
+            cr.setName(formatColumn(oldName));
+            cspecs[i] = cr.createSpec();
+            if (!oldName.equals(cspecs[i].getName())) {
+                if (warning.length() > 0) {
+                    warning.append(",");
+                }
+                warning.append("\"" + oldName + "\"->\"" 
+                        + cspecs[i].getName() + "\""); 
+            }
+        }
+        if (warning.length() > 0) {
+            String wrn = "Some column names renamed: " + warning;
+            setWarningMessage(wrn);
+        }
+        return new DataTableSpec(cspecs);
+    }
+    
+    /**
+     * Replaces illegal characters in the specified string. Legal characters are
+     * a-z, A-Z and 0-9. All others will be replaced by an underscore.
+     * 
+     * @param name the string to check and to replace illegal characters in.
+     * @return a string containing only a-z, A-Z, 0-9 and _. All other
+     *         characters got replaced by an underscore ('_').
+     */
+    public static final String formatColumn(final String name) {
+        return name.replaceAll("[^a-zA-Z0-9]", ".");
+    }
+    
+    /**
+     * Formats the given string by attaching the String "R$".
+     * 
+     * @param name The name of the column to format.
+     * @return The formatted column name.
+     */
+    public static final String formatColumnName(final String name) {
+        return "R$\"" + name + "\"";
     }
 
     /**
