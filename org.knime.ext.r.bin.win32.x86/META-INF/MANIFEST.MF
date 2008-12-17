@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Windows R binaries for KNIME R plugin
 Bundle-SymbolicName: org.knime.ext.r.bin.win32.x86
-Bundle-Version: 2.0.0.0017855
+Bundle-Version: 2.0.0.0019487
 Fragment-Host: org.knime.ext.r;bundle-version="2.0.0"
 Bundle-Vendor: Chair for Bioinformatics and Information Mining, University of Konstanz, Germany
 Eclipse-PlatformFilter: (& (osgi.os=win32) (osgi.arch=x86))
