@@ -23,8 +23,6 @@
  * Or contact us: contact@knime.org.
  * --------------------------------------------------------------------- *
  *
- * History
- *   17.09.2007 (gabriel): created
  */
 package org.knime.ext.r.node.local;
 
@@ -38,8 +36,6 @@ import org.knime.base.node.io.filereader.FileAnalyzer;
 import org.knime.base.node.io.filereader.FileReaderNodeSettings;
 import org.knime.base.node.io.filereader.FileTable;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
-import org.knime.core.data.DataColumnSpec;
-import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -94,7 +90,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
     /**
      * The R expression suffix to read data.
      */
-    static final String READ_DATA_CMD_SUFFIX = "\", header = TRUE);\n";
+    static final String READ_DATA_CMD_SUFFIX = "\", header = TRUE, row.names = 1);\n";
 
     /**
      * The R expression prefix to write data.
@@ -105,7 +101,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
      * The R expression suffix to read data.
      */
     static final String WRITE_DATA_CMD_SUFFIX =
-        "\", row.names = FALSE);\n";
+        "\", row.names = TRUE);\n";
     
     /**
      * The R expression prefix to write a model.
@@ -278,13 +274,12 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
 
             // if file could not be deleted call GC and try again
             if (!del) {
-                // !!! What a mess !!!
                 // It is possible that there are still open streams around
                 // holding the file. Therefore these streams, actually belonging
                 // to the garbage, has to be collected by the GC.
                 System.gc();
 
-                // try to delete again ....
+                // try to delete again
                 del = FileUtil.deleteRecursively(file);
                 if (!del) {
                     // ok that's it no trials anymore ...
@@ -335,58 +330,15 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         FileWriterSettings fws = new FileWriterSettings();
         fws.setColSeparator(DELIMITER);
         fws.setWriteColumnHeader(true);
-
+        fws.setWriteRowID(true);
+        
         CSVWriter writer = new CSVWriter(fw, fws);
 
-        BufferedDataTable newTable = exec.createSpecReplacerTable(inData,
-               createRenamedDataTableSpec(inData.getDataTableSpec()));
         ExecutionMonitor subExec = exec.createSubProgress(0.5);
-        writer.write(newTable, subExec);
+        writer.write(inData, subExec);
 
         writer.close();
         return tempInDataFile;
-    }
-    
-    /**
-     * Renames all column names by replacing all characters which are not 
-     * numeric or letters by ".".
-     * @param spec spec to replace column names
-     * @return new spec with replaced column names
-     */
-    private DataTableSpec createRenamedDataTableSpec(final DataTableSpec spec) {
-        StringBuilder warning = new StringBuilder();
-        DataColumnSpec[] cspecs = new DataColumnSpec[spec.getNumColumns()];
-        for (int i = 0; i < cspecs.length; i++) {
-            DataColumnSpecCreator cr = 
-                new DataColumnSpecCreator(spec.getColumnSpec(i));
-            String oldName = spec.getColumnSpec(i).getName();
-            cr.setName(formatColumn(oldName));
-            cspecs[i] = cr.createSpec();
-            if (!oldName.equals(cspecs[i].getName())) {
-                if (warning.length() > 0) {
-                    warning.append(",");
-                }
-                warning.append("\"" + oldName + "\"->\"" 
-                        + cspecs[i].getName() + "\""); 
-            }
-        }
-        if (warning.length() > 0) {
-            String wrn = "Some column names renamed: " + warning;
-            setWarningMessage(wrn);
-        }
-        return new DataTableSpec(cspecs);
-    }
-    
-    /**
-     * Replaces illegal characters in the specified string. Legal characters are
-     * a-z, A-Z and 0-9. All others will be replaced by an underscore.
-     * 
-     * @param name the string to check and to replace illegal characters in.
-     * @return a string containing only a-z, A-Z, 0-9 and _. All other
-     *         characters got replaced by an underscore ('_').
-     */
-    public static final String formatColumn(final String name) {
-        return name.replaceAll("[^a-zA-Z0-9]", ".");
     }
     
     /**
@@ -420,7 +372,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         settings.setDelimiterUserSet(true);
         settings.setFileHasColumnHeaders(true);
         settings.setFileHasColumnHeadersUserSet(true);
-        settings.setFileHasRowHeaders(false);
+        settings.setFileHasRowHeaders(true);
         settings.setFileHasRowHeadersUserSet(true);
         settings.setQuoteUserSet(true);
         settings.setWhiteSpaceUserSet(true);

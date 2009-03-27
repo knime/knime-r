@@ -55,10 +55,9 @@ import javax.swing.ListSelectionModel;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.NodeView;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeView;
 import org.knime.core.node.util.DataColumnSpecListCellRenderer;
-import org.knime.ext.r.node.local.RAbstractLocalNodeModel;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.Rserve.RFileInputStream;
@@ -210,7 +209,7 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
             for (int i = 0; i < spec.getNumColumns(); i++) {
                 DataColumnSpec cspec = spec.getColumnSpec(i);
                 DataColumnSpecCreator create = new DataColumnSpecCreator(
-                        RAbstractLocalNodeModel.formatColumn(cspec.getName()), 
+                        RConnectionRemote.formatColumn(cspec.getName()), 
                         cspec.getType());
                 m_listModel.addElement(create.createSpec());
             }

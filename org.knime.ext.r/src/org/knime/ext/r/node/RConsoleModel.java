@@ -140,23 +140,32 @@ public class RConsoleModel extends RNodeModel {
         }
     }
 
-    private DataColumnSpec createColumnSpec(final String columnName,
-            final DataType columnType) {
-        return new DataColumnSpecCreator(columnName, columnType).createSpec();
+    private DataTableSpec createDataTableSpec(final String[] colNames,
+            final DataType... columnTypes) {
+        DataColumnSpec[] cspec = new DataColumnSpec[colNames.length];
+        for (int i = 0; i < cspec.length; i++) {
+            String name = colNames[i];
+            if (name == null) {
+                name = "X";
+                if (i > 0) {
+                    name += Integer.toString(i);
+                }
+            }
+            DataColumnSpecCreator colspeccreator = 
+                new DataColumnSpecCreator(name, columnTypes.length == 1 
+                        ? columnTypes[0] : columnTypes[i]);
+            cspec[i] = colspeccreator.createSpec();
+        }
+        return new DataTableSpec(cspec);
     }
     
     private BufferedDataTable readBytes(final REXP rexp, 
             final ExecutionContext exec)
             throws CanceledExecutionException, REXPMismatchException {
         byte[] bytes = rexp.asBytes();
-        DataColumnSpec[] cspec = new DataColumnSpec[1];
-        for (int i = 0; i < cspec.length; i++) {
-            DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R" + (i + 1), StringCell.TYPE);
-            cspec[i] = colspeccreator.createSpec();
-        }
         BufferedDataContainer dc = 
-            exec.createDataContainer(new DataTableSpec(cspec));
+            exec.createDataContainer(createDataTableSpec(
+                    new String[]{null}, StringCell.TYPE));
         for (int i = 0; i < bytes.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / bytes.length);
@@ -171,10 +180,11 @@ public class RConsoleModel extends RNodeModel {
     private BufferedDataTable readList(
             final RList list, final ExecutionContext exec) 
             throws CanceledExecutionException, REXPMismatchException {
-        DataColumnSpec[] cspec = new DataColumnSpec[list.size()];
-        Object[] object = new Object[cspec.length];
+        final Object[] object = new Object[list.size()];
+        final String[] colNames = new String[object.length];
+        final DataType[] colTypes = new DataType[object.length];
         int nrRows = 0;
-        for (int i = 0; i < cspec.length; i++) {
+        for (int i = 0; i < object.length; i++) {
             DataType type;
             if (list.at(i).isFactor()) {
                 object[i] = list.at(i).asStrings();
@@ -189,21 +199,21 @@ public class RConsoleModel extends RNodeModel {
                 object[i] = list.at(i).asStrings();
                 type = StringCell.TYPE;
             }
+            colNames[i] = (list.names == null 
+                    ? null : list.names.get(i).toString());
+            colTypes[i] = type;
             
             nrRows = list.at(i).asStrings().length;
-            DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator(list.names.get(i).toString(), type);
-            cspec[i] = colspeccreator.createSpec();
         }
-        BufferedDataContainer dc = 
-            exec.createDataContainer(new DataTableSpec(cspec));
+        DataTableSpec spec = createDataTableSpec(colNames, colTypes);
+        BufferedDataContainer dc = exec.createDataContainer(spec);
         for (int i = 0; i < nrRows; i++) {
             exec.checkCanceled();
             DataCell[] row = new DataCell[object.length];
             for (int j = 0; j < row.length; j++) {
-                if (cspec[j].getType() == IntCell.TYPE) {
+                if (spec.getColumnSpec(j).getType() == IntCell.TYPE) {
                     row[j] = new IntCell(((int[]) object[j])[i]);
-                } else if (cspec[j].getType() == DoubleCell.TYPE) {
+                } else if (spec.getColumnSpec(j).getType() == DoubleCell.TYPE) {
                     double dblValue = ((double[]) object[j])[i];
                     if (Double.isNaN(dblValue)) {
                         row[j] = DataType.getMissingCell();
@@ -229,14 +239,9 @@ public class RConsoleModel extends RNodeModel {
             final RFactor fac, final ExecutionContext exec) 
             throws CanceledExecutionException {
         String[] strings = fac.asStrings();
-        DataColumnSpec[] cspec = new DataColumnSpec[1];
-        for (int i = 0; i < cspec.length; i++) {
-            DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R" + (i + 1), StringCell.TYPE);
-            cspec[i] = colspeccreator.createSpec();
-        }
         BufferedDataContainer dc = 
-            exec.createDataContainer(new DataTableSpec(cspec));
+            exec.createDataContainer(createDataTableSpec(
+                    new String[]{null}, StringCell.TYPE));
         for (int i = 0; i < fac.size(); i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / strings.length);
@@ -257,15 +262,15 @@ public class RConsoleModel extends RNodeModel {
             final REXP rexp, final ExecutionContext exec) 
             throws REXPMismatchException {
         String string = rexp.asString();
-        DataColumnSpec cspec = createColumnSpec("R1", StringCell.TYPE);
         BufferedDataContainer dc = 
-            exec.createDataContainer(new DataTableSpec(cspec));
+            exec.createDataContainer(createDataTableSpec(
+                    new String[]{null}, StringCell.TYPE));
         DataRow row;
         if (string == null) {
-            row = new DefaultRow(new RowKey("Row1"), 
+            row = new DefaultRow(RowKey.createRowKey(0), 
                 DataType.getMissingCell());
         } else {
-            row = new DefaultRow(new RowKey("Row1"), string);
+            row = new DefaultRow(RowKey.createRowKey(0), string);
         }
         dc.addRowToTable(row);
         dc.close();
@@ -276,14 +281,9 @@ public class RConsoleModel extends RNodeModel {
             final REXP rexp, final ExecutionContext exec) 
             throws REXPMismatchException, CanceledExecutionException {
         double[] matrix = rexp.asDoubles();
-        DataColumnSpec[] cspec = new DataColumnSpec[1];
-        for (int i = 0; i < cspec.length; i++) {
-            DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R" + (i + 1), DoubleCell.TYPE);
-            cspec[i] = colspeccreator.createSpec();
-        }
         BufferedDataContainer dc = 
-            exec.createDataContainer(new DataTableSpec(cspec));
+            exec.createDataContainer(createDataTableSpec(
+                    new String[]{null}, DoubleCell.TYPE));
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
@@ -298,14 +298,9 @@ public class RConsoleModel extends RNodeModel {
             final REXP rexp, final ExecutionContext exec) 
             throws REXPMismatchException, CanceledExecutionException {
         String[] matrix = rexp.asStrings();
-        DataColumnSpec[] cspec = new DataColumnSpec[1];
-        for (int i = 0; i < cspec.length; i++) {
-            DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R" + (i + 1), StringCell.TYPE);
-            cspec[i] = colspeccreator.createSpec();
-        }
         BufferedDataContainer dc = 
-            exec.createDataContainer(new DataTableSpec(cspec));
+            exec.createDataContainer(createDataTableSpec(
+                    new String[]{null}, StringCell.TYPE));
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
@@ -325,19 +320,14 @@ public class RConsoleModel extends RNodeModel {
             final REXP rexp, final ExecutionContext exec) 
             throws REXPMismatchException, CanceledExecutionException {
         double[][] matrix = rexp.asDoubleMatrix();
-        DataColumnSpec[] cspec;
+        DataTableSpec spec;
         if (matrix.length == 0) {
-            cspec = new DataColumnSpec[0];
+            spec = new DataTableSpec();
         } else {
-            cspec = new DataColumnSpec[matrix[0].length];
-            for (int i = 0; i < cspec.length; i++) {
-                DataColumnSpecCreator colspeccreator = 
-                    new DataColumnSpecCreator("R" + (i + 1), DoubleCell.TYPE);
-                cspec[i] = colspeccreator.createSpec();
-            }
+            spec = createDataTableSpec(new String[matrix[1].length], 
+                    DoubleCell.TYPE);
         }
-        BufferedDataContainer dc = 
-            exec.createDataContainer(new DataTableSpec(cspec));
+        BufferedDataContainer dc = exec.createDataContainer(spec);
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
@@ -351,14 +341,9 @@ public class RConsoleModel extends RNodeModel {
             final REXP rexp, final ExecutionContext exec) 
             throws REXPMismatchException, CanceledExecutionException {
         int[] matrix = rexp.asIntegers();
-        DataColumnSpec[] cspec = new DataColumnSpec[1];
-        for (int i = 0; i < cspec.length; i++) {
-            DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator("R" + (i + 1), IntCell.TYPE);
-            cspec[i] = colspeccreator.createSpec();
-        }
         BufferedDataContainer dc = 
-            exec.createDataContainer(new DataTableSpec(cspec));
+            exec.createDataContainer(createDataTableSpec(
+                    new String[]{null}, IntCell.TYPE));
         for (int i = 0; i < matrix.length; i++) {
             exec.checkCanceled();
             exec.setProgress(1.0 * i / matrix.length);
@@ -372,7 +357,7 @@ public class RConsoleModel extends RNodeModel {
 
 
     /**
-     * @see org.knime.core.node.NodeModel#reset()
+     * {@inheritDoc}
      */
     @Override
     protected void reset() {

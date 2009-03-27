@@ -53,7 +53,6 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.util.DataColumnSpecListCellRenderer;
-import org.knime.ext.r.node.local.RAbstractLocalNodeModel;
 
 
 /**
@@ -119,8 +118,7 @@ public class RDialogPanel extends JPanel implements MouseListener {
             DataColumnSpec oldSpec = spec.getColumnSpec(i);
             DataType type = oldSpec.getType();
             
-            String newName = RAbstractLocalNodeModel.formatColumn(
-                    oldSpec.getName());
+            String newName = formatColumn(oldSpec.getName());
             DataColumnSpec cspec = 
                 new DataColumnSpecCreator(newName, type).createSpec();
             
@@ -139,6 +137,14 @@ public class RDialogPanel extends JPanel implements MouseListener {
                     + "(Integer, Double, String) are available!");
         }
         repaint();
+    }
+    
+    /**
+     * @param name the column name to change
+     * @return the same column name
+     */
+    protected String formatColumn(final String name) {
+        return name;
     }
     
     /**
@@ -274,7 +280,7 @@ public class RDialogPanel extends JPanel implements MouseListener {
      * @param name The name of the column to format.
      * @return The formatted column name.
      */
-    protected String formatColumnName(final String name) {
+    private static String formatColumnName(final String name) {
         return "R$\"" + name + "\"";
     }
 
