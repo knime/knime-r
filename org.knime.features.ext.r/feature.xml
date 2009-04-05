@@ -8,9 +8,7 @@ Miner.
 
    <copyright>
       Copyright, 2003 - 2009
-University of Konstanz, Germany
-Chair for Bioinformatics and Information Mining (Prof. M. Berthold)
-and KNIME GmbH, Konstanz, Germany
+      KNIME GmbH, Konstanz, Germany
    </copyright>
 
    <license>
@@ -18,7 +16,7 @@ and KNIME GmbH, Konstanz, Germany
          Version 2, June 1991
 
  Copyright (C) 1989, 1991 Free Software Foundation, Inc.
-                       51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
 
