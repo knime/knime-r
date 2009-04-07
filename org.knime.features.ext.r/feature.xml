@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<feature arch="x86,x86_64" id="org.knime.features.ext.r" label="KNIME R Statistics Integration" os="linux,win32" plugin="org.knime.ext.r" provider-name="Chair for Bioinformatics and Information Mining, Prof. Berthold, University of Konstanz, Germany" version="2.1.0.0018128">
+<feature arch="x86,x86_64" id="org.knime.features.ext.r" label="KNIME R Statistics Integration" os="linux,win32" plugin="org.knime.ext.r" provider-name="KNIME GmbH, Konstanz, Germany" version="2.1.0.0018128">
 
    <description url="http://www.knime.org/download_extensions.html">
       This plugin contains the R integration for the Konstanz Information
@@ -8,6 +8,7 @@ Miner.
 
    <copyright>
       Copyright, 2003 - 2009
+      University of Konstanz, Germany
       KNIME GmbH, Konstanz, Germany
    </copyright>
 
