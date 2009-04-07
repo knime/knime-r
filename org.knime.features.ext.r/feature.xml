@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<feature arch="x86,x86_64" id="org.knime.features.ext.r" label="KNIME R Statistics Integration" os="linux,win32" plugin="org.knime.ext.r" provider-name="KNIME GmbH, Konstanz, Germany" version="2.0.1.0019867">
+<feature arch="x86,x86_64" id="org.knime.features.ext.r" label="KNIME R Statistics Integration" os="linux,win32" plugin="org.knime.ext.r" provider-name="KNIME GmbH, Konstanz, Germany" version="2.0.2.0020587">
 
    <description url="http://www.knime.org/download_extensions.html">
       This plugin contains the R integration for the Konstanz Information
