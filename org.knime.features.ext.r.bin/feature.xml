@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<feature id="org.knime.features.ext.r.bin" label="Binaries for KNIME R Statistics Integration" provider-name="Chair for Bioinformatics and Information Mining, Prof. Berthold, University of Konstanz, Germany" version="2.0.1.0019867">
+<feature id="org.knime.features.ext.r.bin" label="Binaries for KNIME R Statistics Integration" provider-name="KNIME GmbH, Konstanz, Germany" version="2.0.1.0019867">
    <install-handler handler="org.knime.install.PermissionHandler" library="knime-installhandler.jar"/>
 
    <description url="http://www.knime.org/download_extensions.html">
@@ -9,6 +9,7 @@ Miner.
 
    <copyright>
       Copyright, 2003 - 2009
+      University of Konstanz, Germany
       KNIME GmbH, Konstanz, Germany
    </copyright>
 

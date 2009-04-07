@@ -20,5 +20,5 @@ Export-Package: org.knime.ext.r,
  org.rosuda.REngine.Rserve,
  org.rosuda.REngine.Rserve.protocol,
  org.rosuda.REngine.Rserve.test
-Bundle-Vendor: Chair for Bioinformatics and Information Mining, University of Konstanz, Germany
+Bundle-Vendor: KNIME GmbH, Konstanz, Germany
 Eclipse-LazyStart: true
