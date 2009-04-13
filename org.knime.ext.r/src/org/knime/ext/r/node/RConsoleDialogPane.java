@@ -45,22 +45,7 @@ public class RConsoleDialogPane extends RNodeDialogPane {
      */
     protected RConsoleDialogPane() {
         super();
-        m_dialogPanel = new RDialogPanel() {
-            /**
-             * Replaces illegal characters in the specified string. Legal
-             * characters are a-z, A-Z and 0-9. All others will be replaced by
-             * an underscore.
-             * 
-             * @param name the string to check and to replace illegal characters
-             *            in.
-             * @return a string containing only a-z, A-Z, 0-9 and _. All other
-             *         characters got replaced by an underscore ('_').
-             */
-            @Override
-            protected String formatColumn(final String name) {
-                return RConnectionRemote.formatColumn(name);
-            }
-        };
+        m_dialogPanel = new RDialogPanel();
         this.addTab("R Command", m_dialogPanel);
         super.addLoginTab();
     }

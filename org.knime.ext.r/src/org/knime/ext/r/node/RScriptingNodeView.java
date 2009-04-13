@@ -53,7 +53,6 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 
 import org.knime.core.data.DataColumnSpec;
-import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeView;
@@ -204,14 +203,13 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
         m_shell.setText("");
         m_listModel.removeAllElements();
         RScriptingNodeModel model = (RScriptingNodeModel) super.getNodeModel();
-        DataTableSpec spec = model.getDataTableSpec();
-        if (spec != null) {
+        DataTableSpec inSpec = model.getDataTableSpec();
+        if (inSpec != null) {
+            DataTableSpec spec = RConnectionRemote.createRenamedDataTableSpec(
+                    inSpec);
             for (int i = 0; i < spec.getNumColumns(); i++) {
                 DataColumnSpec cspec = spec.getColumnSpec(i);
-                DataColumnSpecCreator create = new DataColumnSpecCreator(
-                        RConnectionRemote.formatColumn(cspec.getName()), 
-                        cspec.getType());
-                m_listModel.addElement(create.createSpec());
+                m_listModel.addElement(cspec);
             }
         }
     }
