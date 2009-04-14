@@ -62,14 +62,14 @@ public final class RConnectionRemote {
     
     /**
      * Replaces illegal characters in the specified string. Legal characters are
-     * a-z, A-Z and 0-9. All others will be replaced by an underscore.
+     * a-z, A-Z and 0-9. All others will be replaced by a dot.
      * 
      * @param name the string to check and to replace illegal characters in.
      * @return a string containing only a-z, A-Z and 0-9. All other
-     *         characters got replaced by an underscore.
+     *         characters got replaced by a dot.
      */
     private static final String formatColumn(final String name) {
-        return name.replaceAll("[^a-zA-Z0-9]", "_");
+        return name.replaceAll("[^a-zA-Z0-9]", ".");
     }
     
     /**
