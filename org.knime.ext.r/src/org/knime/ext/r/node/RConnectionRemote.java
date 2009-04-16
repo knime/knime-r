@@ -26,8 +26,12 @@
  */
 package org.knime.ext.r.node;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
+import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
@@ -47,7 +51,7 @@ import org.rosuda.REngine.Rserve.RserveException;
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-final class RConnectionRemote {
+public final class RConnectionRemote {
         
     private static final NodeLogger LOGGER = 
         NodeLogger.getLogger(RConnectionRemote.class);
@@ -58,14 +62,47 @@ final class RConnectionRemote {
     
     /**
      * Replaces illegal characters in the specified string. Legal characters are
-     * a-z, A-Z and 0-9. All others will be replaced by an underscore.
+     * a-z, A-Z and 0-9. All others will be replaced by a dot.
      * 
      * @param name the string to check and to replace illegal characters in.
-     * @return a string containing only a-z, A-Z, 0-9 and _. All other
-     *         characters got replaced by an underscore ('_').
+     * @return a string containing only a-z, A-Z and 0-9. All other
+     *         characters got replaced by a dot.
      */
-    static final String formatColumn(final String name) {
-        return name.replaceAll("[^a-zA-Z0-9_]", ".");
+    private static final String formatColumn(final String name) {
+        return name.replaceAll("[^a-zA-Z0-9]", ".");
+    }
+    
+    /**
+     * Renames all column names by replacing all characters which are not 
+     * numeric or letters.
+     * @param spec spec to replace column names
+     * @return new spec with replaced column names
+     */
+    public static final DataTableSpec createRenamedDataTableSpec(
+            final DataTableSpec spec) {
+        DataColumnSpec[] cspecs = new DataColumnSpec[spec.getNumColumns()];
+        Set<String> newColNames = new HashSet<String>();
+        for (int i = 0; i < cspecs.length; i++) {
+            DataColumnSpecCreator cr = 
+                new DataColumnSpecCreator(spec.getColumnSpec(i));
+            String oldName = spec.getColumnSpec(i).getName();
+            // uniquify formatted column name
+            String newName = RConnectionRemote.formatColumn(oldName);
+            int colIdx = 0;
+            String uniqueColName = newName;
+            if (!oldName.equals(newName)) {
+                while (newColNames.contains(uniqueColName) 
+                        || spec.containsName(uniqueColName)) {
+                    uniqueColName = newName + "_" + colIdx++;
+                }
+                cr.setName(uniqueColName);
+                newColNames.add(uniqueColName);
+                LOGGER.info("Original column \"" + oldName 
+                        + "\" was renamed to \"" + uniqueColName + "\".");
+            }
+            cspecs[i] = cr.createSpec();
+        }
+        return new DataTableSpec(spec.getName(), cspecs);
     }
    
     /**
@@ -83,7 +120,8 @@ final class RConnectionRemote {
             throws RserveException, CanceledExecutionException {
         exec.setMessage("Start sending data to R server...");
         // prepare data
-        DataTableSpec spec = inData.getDataTableSpec();
+        DataTableSpec spec = RConnectionRemote.createRenamedDataTableSpec(
+                inData.getDataTableSpec());
         int[] types = new int[spec.getNumColumns()];
         for (int i = 0; i < types.length; i++) {
             DataColumnSpec cspec = spec.getColumnSpec(i);
@@ -100,7 +138,7 @@ final class RConnectionRemote {
                 types[i] = -1; // unsupported type
             }
             // init column empty
-            String cmd = formatColumn(cspec.getName()) + " <- c()";
+            String cmd = cspec.getName() + " <- c()";
             LOGGER.info(cmd);
             conn.eval(cmd);
         }
@@ -165,8 +203,7 @@ final class RConnectionRemote {
                 LOGGER.info(msg);
                 exec.setMessage(msg);
                 for (int i = 0; i < data.length; i++) {
-                    String colName = formatColumn(
-                            spec.getColumnSpec(i).getName());
+                    String colName = spec.getColumnSpec(i).getName();
                     conn.eval("ColTmp" + i + " <- c(" + data[i].toString() 
                             + ")");
                     conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" 
@@ -180,7 +217,7 @@ final class RConnectionRemote {
         
         if (z > 0 && z < max) {
             for (int i = 0; i < data.length; i++) {
-                String colName = formatColumn(spec.getColumnSpec(i).getName());
+                String colName = spec.getColumnSpec(i).getName();
                 conn.eval("ColTmp" + i + " <- c(" + data[i].toString() + ")");
                 conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i 
                         + ")");
@@ -193,7 +230,8 @@ final class RConnectionRemote {
             if (i > 0) {
                 colList.append(",");
             }
-            colList.append(formatColumn(spec.getColumnSpec(i).getName()));
+            String colName = spec.getColumnSpec(i).getName();
+            colList.append(colName);
         }
         conn.eval("R <- data.frame(" + colList.toString() + ")");
         

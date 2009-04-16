@@ -50,6 +50,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
+import org.knime.ext.r.node.RConnectionRemote;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
@@ -90,7 +91,8 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
     /**
      * The R expression suffix to read data.
      */
-    static final String READ_DATA_CMD_SUFFIX = "\", header = TRUE, row.names = 1);\n";
+    static final String READ_DATA_CMD_SUFFIX = 
+        "\", header = TRUE, row.names = 1);\n";
 
     /**
      * The R expression prefix to write data.
@@ -334,22 +336,21 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         
         CSVWriter writer = new CSVWriter(fw, fws);
 
-        ExecutionMonitor subExec = exec.createSubProgress(0.5);
-        writer.write(inData, subExec);
+        DataTableSpec inSpec = inData.getDataTableSpec();
+        DataTableSpec outSpec = 
+            RConnectionRemote.createRenamedDataTableSpec(inSpec);
+        if (!inSpec.equalStructure(outSpec)) {
+            setWarningMessage("Some columns are renamed: " 
+                    + inSpec + " <> " + outSpec);
+        }
+        BufferedDataTable newTable = 
+            exec.createSpecReplacerTable(inData, outSpec);
+         ExecutionMonitor subExec = exec.createSubProgress(0.5);
+         writer.write(newTable, subExec);
 
-        writer.close();
-        return tempInDataFile;
-    }
-    
-    /**
-     * Formats the given string by attaching the String "R$".
-     * 
-     * @param name The name of the column to format.
-     * @return The formatted column name.
-     */
-    public static final String formatColumnName(final String name) {
-        return "R$\"" + name + "\"";
-    }
+         writer.close();
+         return tempInDataFile;
+     }
 
     /**
      * Reads data out of specified csv file and creates a data table.

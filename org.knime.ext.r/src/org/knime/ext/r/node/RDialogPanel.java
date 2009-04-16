@@ -42,7 +42,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
 import org.knime.core.data.DataColumnSpec;
-import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
 import org.knime.core.data.DoubleValue;
@@ -65,9 +64,7 @@ public class RDialogPanel extends JPanel implements MouseListener {
     /** Key for the R expression command. */
     private static final String CFG_EXPRESSION = "EXPRESSION";
 
-    /**
-     * The default R command.
-     */
+    /** The default R command. */
     public static final String DEFAULT_R_COMMAND = "R<-R";
     
     private final JEditorPane m_textExpression;
@@ -114,14 +111,11 @@ public class RDialogPanel extends JPanel implements MouseListener {
     private final void update(final DataTableSpec spec) 
             throws NotConfigurableException {
         m_listModel.removeAllElements();
-        for (int i = 0; i < spec.getNumColumns(); i++) {
-            DataColumnSpec oldSpec = spec.getColumnSpec(i);
-            DataType type = oldSpec.getType();
-            
-            String newName = formatColumn(oldSpec.getName());
-            DataColumnSpec cspec = 
-                new DataColumnSpecCreator(newName, type).createSpec();
-            
+        DataTableSpec newSpec = 
+            RConnectionRemote.createRenamedDataTableSpec(spec);
+        for (int i = 0; i < newSpec.getNumColumns(); i++) {
+            DataColumnSpec cspec = newSpec.getColumnSpec(i);
+            DataType type = cspec.getType();
             if (type.isCompatible(IntValue.class)) {
                 m_listModel.addElement(cspec);                
             } else
@@ -137,14 +131,6 @@ public class RDialogPanel extends JPanel implements MouseListener {
                     + "(Integer, Double, String) are available!");
         }
         repaint();
-    }
-    
-    /**
-     * @param name the column name to change
-     * @return the same column name
-     */
-    protected String formatColumn(final String name) {
-        return name;
     }
     
     /**
