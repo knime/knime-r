@@ -62,7 +62,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
      */
     public RLocalLearnerNodeModel() {
         super(new PortType[]{BufferedDataTable.TYPE}, 
-                new PortType[]{new PortType(RPortObject.class)});
+                new PortType[]{RPortObject.TYPE});
     }
 
     /**

@@ -45,6 +45,7 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
+import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 
 /**
@@ -53,6 +54,10 @@ import org.knime.core.util.FileUtil;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RPortObject implements PortObject {
+    
+    /** Convenience access member for 
+     * <code>new PortType(RPortObject.class)</code>. */
+    public static final PortType TYPE = new PortType(RPortObject.class);
     
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RPortObject.class);    

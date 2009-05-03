@@ -54,7 +54,7 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
      * a R input port and PMML output port.
      */
     public R2PMMLNodeModel() {
-        super(new PortType[]{new PortType(RPortObject.class)}, 
+        super(new PortType[]{RPortObject.TYPE}, 
                 new PortType[]{new PortType(PMMLPortObject.class)});
     }
 
