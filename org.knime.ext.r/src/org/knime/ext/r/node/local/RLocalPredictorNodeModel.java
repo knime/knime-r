@@ -64,7 +64,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
      * given in- and out-port specification.
      */
     public RLocalPredictorNodeModel() {
-        super(new PortType[]{new PortType(RPortObject.class), 
+        super(new PortType[]{RPortObject.TYPE, 
               BufferedDataTable.TYPE}, new PortType[]{BufferedDataTable.TYPE});
     }
 
