@@ -55,7 +55,8 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
     /**
      * The default prediction command.
      */
-    static final String PREDICTION_CMD = "R<-cbind(RDATA, predict(RMODEL));\n";
+    static final String PREDICTION_CMD = 
+        "R<-cbind(RDATA, predict(RMODEL, RDATA));\n";
     
     private String m_rCommand = PREDICTION_CMD;
     
