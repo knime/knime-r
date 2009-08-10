@@ -32,6 +32,7 @@ import java.io.File;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.knime.core.node.NodeLogger;
 import org.knime.ext.r.RCorePlugin;
 
 /**
@@ -39,6 +40,9 @@ import org.knime.ext.r.RCorePlugin;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RPreferenceInitializer extends AbstractPreferenceInitializer {
+    
+    private static final NodeLogger LOGGER = 
+        NodeLogger.getLogger(RPreferenceInitializer.class); 
 
     /** Preference key for the path to the R executable setting. */
     public static final String PREF_R_PATH = "knime.r.path";
@@ -49,11 +53,13 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
     @Override
     public void initializeDefaultPreferences() {
         IPreferenceStore store = RCorePlugin.getDefault().getPreferenceStore();
-
         File rPath = RCorePlugin.getRExecutable();
-        // set default values
-        store.setDefault(PREF_R_PATH, rPath != null ? rPath.getAbsolutePath()
-                : "");
+        if (rPath != null) {
+            LOGGER.info("Default R executable: " + rPath.getAbsolutePath());
+            store.setDefault(PREF_R_PATH, rPath.getAbsolutePath());
+        } else {
+            store.setDefault(PREF_R_PATH, "");
+        }
     }
 
     /**

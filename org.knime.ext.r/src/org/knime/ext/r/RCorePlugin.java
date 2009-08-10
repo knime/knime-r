@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.knime.core.node.NodeFactory;
+import org.knime.core.node.NodeLogger;
 import org.knime.ext.r.node.RScriptingNodeFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -49,6 +50,9 @@ public class RCorePlugin extends AbstractUIPlugin {
     private static RCorePlugin plugin;
 
     private static File rExecutable;
+    
+    private static final NodeLogger LOGGER = 
+        NodeLogger.getLogger(RCorePlugin.class);
 
     /**
      * The constructor.
@@ -78,11 +82,22 @@ public class RCorePlugin extends AbstractUIPlugin {
                 url = e.nextElement();
             }
         }
+        // default path on linux systems (no R binary plugin available) 
+        String[] searchPaths = {"/usr/bin/R", "/usr/local/bin/R"};
+        if (url == null) {
+            for (String s : searchPaths) {
+                File f = new File(s);
+                if (f.canExecute()) {
+                    url = f.toURI().toURL();
+                    break;
+                }
+            }
+        }
         if (url != null) {
             try {
                 rExecutable = new File(FileLocator.toFileURL(url).getFile());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LOGGER.info("Could not locate default R executable", ex);
             }
         }
     }
