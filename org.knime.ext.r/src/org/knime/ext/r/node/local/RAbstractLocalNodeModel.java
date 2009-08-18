@@ -42,6 +42,7 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -129,7 +130,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
      * The temp directory used to save csv, script R output files temporarily.
      */
     static final String TEMP_PATH =
-        System.getProperty("java.io.tmpdir").replace('\\', '/');
+        KNIMEConstants.getKNIMETempDir().replace('\\', '/');
     
     /** R commands to set working dir, write and reads csv files. */
     static final String SET_WORKINGDIR_CMD =
