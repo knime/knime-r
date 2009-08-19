@@ -4,7 +4,6 @@
       label="KNIME R Statistics Integration (Binaries)"
       version="2.1.0.0021700"
       provider-name="KNIME GmbH, Konstanz, Germany">
-   <install-handler library="knime-installhandler.jar" handler="org.knime.install.PermissionHandler"/>
 
    <description url="http://www.knime.org/download_extensions.html">
       This plugin contains the platform specific binaries of the R integration for the Konstanz Information
