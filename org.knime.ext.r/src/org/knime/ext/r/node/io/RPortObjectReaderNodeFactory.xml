@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
+<knimeNode icon="./r_reader.png" type="Source">
+    <name>R Model Reader</name>
+    
+    <shortDescription>
+        Reads an R model from a file.
+    </shortDescription>
+    
+    <fullDescription>
+        <intro>Reads an R model from a (zip) file. 
+        </intro>
+        <option name="Selected File">The file containing the R model object.</option>
+    </fullDescription>
+    
+    <ports>
+        <outPort index="0" name="R Model">The R model.</outPort>
+    </ports>    
+</knimeNode>

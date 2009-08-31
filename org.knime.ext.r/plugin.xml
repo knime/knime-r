@@ -36,6 +36,17 @@
             factory-class="org.knime.ext.r.node.local.R2PMMLNodeFactory"
             id="org.knime.ext.r.node.local.R2PMMLNodeFactory">
       </node>
+      <node
+            category-path="/r/io"
+            factory-class="org.knime.ext.r.node.io.RPortObjectReaderNodeFactory"
+            id="org.knime.ext.r.node.io.RPortObjectReaderNodeFactory">
+      </node>
+      <node
+            after="org.knime.ext.r.node.io.RPortObjectReaderNodeFactory"
+            category-path="/r/io"
+            factory-class="org.knime.ext.r.node.io.RPortObjectWriterNodeFactory"
+            id="org.knime.ext.r.node.io.RPortObjectWriterNodeFactory">
+      </node>
    </extension>
    <extension
          point="org.knime.workbench.repository.categories">
@@ -51,9 +62,17 @@
             path="/r">
       </category>
       <category
+            after="local"
             icon="icons/missing.gif"
             level-id="remote"
             name="Remote"
+            path="/r">
+      </category>
+      <category
+            after="remote"
+            icon="icons/missing.gif"
+            level-id="io"
+            name="IO"
             path="/r">
       </category>
    </extension>
