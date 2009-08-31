@@ -3,7 +3,8 @@
       id="org.knime.features.ext.r.bin"
       label="KNIME R Statistics Integration (Binaries)"
       version="2.1.0.0021700"
-      provider-name="KNIME GmbH, Konstanz, Germany">
+      provider-name="KNIME GmbH, Konstanz, Germany"
+      os="win32">
 
    <description url="http://www.knime.org/download_extensions.html">
       This plugin contains the platform specific binaries of the R integration for the Konstanz Information
