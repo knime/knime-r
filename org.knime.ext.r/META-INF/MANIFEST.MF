@@ -23,4 +23,4 @@ Export-Package: org.knime.ext.r,
  org.rosuda.REngine.Rserve.protocol,
  org.rosuda.REngine.Rserve.test
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
