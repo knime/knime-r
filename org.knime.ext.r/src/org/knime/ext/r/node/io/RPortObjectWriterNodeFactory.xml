@@ -12,6 +12,10 @@
         This model can later be read using the appropriate reader.
         </intro>
         <option name="Selected File">Select the location of the output file.</option>
+        <option name="Overwrite OK">
+            If unchecked, the node refuses to execute when the output 
+            file exists (prevent unintentional overwrite).
+        </option>
     </fullDescription>
     
     <ports>
