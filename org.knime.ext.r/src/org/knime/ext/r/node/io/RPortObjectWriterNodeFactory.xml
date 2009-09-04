@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
-<knimeNode icon="./r_writer.png" type="Source">
+<knimeNode icon="./r_writer.png" type="Sink">
     <name>R Model Writer</name>
     
     <shortDescription>
