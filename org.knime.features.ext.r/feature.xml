@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.knime.features.ext.r"
-      label="KNIME R Statistics Integration"
+      label="%featureName"
       version="2.1.0.0021700"
       provider-name="KNIME GmbH, Konstanz, Germany"
       plugin="org.knime.ext.r">
 
    <description url="http://www.knime.org/download_extensions.html">
-      This plugin contains the R integration for the Konstanz Information
-Miner.
+      %description
    </description>
 
    <copyright>
