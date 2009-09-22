@@ -364,10 +364,6 @@ Public License instead of this License.
       <update label="KNIME Update Site" url="http://www.knime.org/update_2.x"/>
    </url>
 
-   <requires>
-      <import feature="org.knime.features.ext.r" version="2.0.0" match="greaterOrEqual"/>
-   </requires>
-
    <plugin
          id="org.knime.ext.r.bin.win32.x86"
          os="win32"
