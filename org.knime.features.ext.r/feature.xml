@@ -2,9 +2,10 @@
 <feature
       id="org.knime.features.ext.r"
       label="%featureName"
-      version="2.1.0.0021700"
+      version="2.1.0.0022922"
       provider-name="KNIME GmbH, Konstanz, Germany"
-      plugin="org.knime.ext.r">
+      plugin="org.knime.ext.r"
+      os="win32">
 
    <description url="http://www.knime.org/download_extensions.html">
       %description
