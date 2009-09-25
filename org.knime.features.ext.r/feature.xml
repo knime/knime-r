@@ -4,8 +4,7 @@
       label="%featureName"
       version="2.1.0.0022922"
       provider-name="KNIME GmbH, Konstanz, Germany"
-      plugin="org.knime.ext.r"
-      os="win32">
+      plugin="org.knime.ext.r">
 
    <description url="http://www.knime.org/download_extensions.html">
       %description
