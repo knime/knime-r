@@ -13,7 +13,7 @@
 		by the R Predictor node to predict unseen data. 
 		All input data is written to a CSV file, imported into R 
 		(saved in the variable named R) and processed together with the 
-		R commands.
+		R commands. The final model must be returned as variable called R.
 		<br /><br />
 		More details about R:<br />
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
