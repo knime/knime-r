@@ -7,16 +7,16 @@
  *
  * This file is part of the R integration plugin for KNIME.
  *
- * The R integration plugin is free software; you can redistribute 
- * it and/or modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 of the 
+ * The R integration plugin is free software; you can redistribute
+ * it and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St., Fifth Floor, Boston, MA 02110-1301, USA.
@@ -109,7 +109,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
         }
         return new PortType[0];
     }
-    
+
      /**
       * Implement this method to specify certain R code to run. Be aware that
       * this R code has to be valid, otherwise the node will not execute
@@ -140,6 +140,10 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws CanceledExecutionException,
             Exception {
+
+        // blow away the output of any previous (failed) runs
+        setFailedExternalErrorOutput(new LinkedList<String>());
+        setFailedExternalOutput(new LinkedList<String>());
 
         // preprocess data in in DataTable.
         PortObject[] inDataTables = preprocessDataTable(inData, exec);

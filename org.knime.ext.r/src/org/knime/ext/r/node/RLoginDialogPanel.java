@@ -1,28 +1,25 @@
-/* 
- * -------------------------------------------------------------------
- * Copyright, 2003 - 2009
- * University of Konstanz, Germany.
- * Chair for Bioinformatics and Information Mining
- * Prof. Dr. Michael R. Berthold
+/*
+ * ------------------------------------------------------------------------
  *
- * This file is part of the R integration plugin for KNIME.
+ *  Copyright (C) 2003 - 2009
+ *  University of Konstanz, Germany and
+ *  KNIME GmbH, Konstanz, Germany
+ *  Website: http://www.knime.org; Email: contact@knime.org
  *
- * The R integration plugin is free software; you can redistribute 
- * it and/or modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 of the 
- * License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St., Fifth Floor, Boston, MA 02110-1301, USA.
- * Or contact us: contact@knime.org.
- * -------------------------------------------------------------------
- * 
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License, version 2, as 
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * ------------------------------------------------------------------------
+ *
  */
 package org.knime.ext.r.node;
 
@@ -41,22 +38,26 @@ import org.knime.core.node.defaultnodesettings.DialogComponentString;
 
 /**
  * Panel used to login to a R server providing user, password, host, and port.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 final class RLoginDialogPanel extends JPanel {
 
-    private final DialogComponentString m_host = new DialogComponentString(
-            RLoginSettings.HOST, "Host: ");
+    private final DialogComponentString m_host =
+            new DialogComponentString(RLoginSettings.createHostModel(),
+                    "Host: ");
 
-    private final DialogComponentNumber m_port = new DialogComponentNumber(
-            RLoginSettings.PORT, "Port: ", 1);
+    private final DialogComponentNumber m_port =
+            new DialogComponentNumber(RLoginSettings.createPortModel(),
+                    "Port: ", 1);
 
-    private final DialogComponentString m_user = new DialogComponentString(
-            RLoginSettings.USER, "User: ");;
+    private final DialogComponentString m_user =
+            new DialogComponentString(RLoginSettings.createUserModel(),
+                    "User: ");;
 
-    private final DialogComponentPasswordField m_pass = 
-        new DialogComponentPasswordField(RLoginSettings.PASS, "Password: ");;
+    private final DialogComponentPasswordField m_pass =
+            new DialogComponentPasswordField(RLoginSettings
+                    .createPasswordModel(), "Password: ");;
 
     /**
      * Default constructor.
@@ -71,7 +72,8 @@ final class RLoginDialogPanel extends JPanel {
 
     /**
      * Transfers the values from the specified settings object into the dialog
-     * components.   
+     * components.
+     *
      * @param settings the new settings to display in the components.
      * @param specs the table specs from the input ports.
      * @throws NotConfigurableException if settings can't be loaded
@@ -86,7 +88,8 @@ final class RLoginDialogPanel extends JPanel {
 
     /**
      * Saves the current values in the dialog components into the specified
-     * settings object. 
+     * settings object.
+     *
      * @param settings the object to write the current settings into.
      * @throws InvalidSettingsException if the current values are invalid.
      */

@@ -1,7 +1,7 @@
 This directory contains the R integration for KNIME as Eclipse plugin.
 
 It is released under the GPL (see the file LICENSE.TXT, which should be located
-in the same directory as this file). If you didn't recieve a copy of the license
+in the same directory as this file). If you didn't receive a copy of the license
 file, please contact us: contact@knime.org
 
 This plugin makes use of the R client code which is under the copyright of its 
