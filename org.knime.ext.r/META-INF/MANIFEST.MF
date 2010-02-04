@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KNIME R-Project nodes
 Bundle-SymbolicName: org.knime.ext.r; singleton:=true
-Bundle-Version: 2.1.1.0023899
+Bundle-Version: 2.1.2.0024319
 Bundle-Activator: org.knime.ext.r.RCorePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
