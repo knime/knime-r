@@ -28,11 +28,6 @@
  */
 package org.knime.ext.r.node.local;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.LinkedList;
-
 import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -40,6 +35,11 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.LinkedList;
 
 /**
  * <code>RLocalNodeModel</code> is an abstract
@@ -181,7 +181,10 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             String rCmd = completeCmd.toString();
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
-            rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
+            rOutFile = File.createTempFile("R-outDataTempFile-", ".Rout",
+                    rCommandFile.getParentFile());
+
+
 
             // create shell command
             StringBuilder shellCmd = new StringBuilder();
