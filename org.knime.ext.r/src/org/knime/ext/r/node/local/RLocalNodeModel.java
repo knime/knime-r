@@ -172,6 +172,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
             tempOutData = File.createTempFile("R-outDataTempFile-", ".csv",
                     new File(TEMP_PATH));
+            tempOutData.deleteOnExit();
             completeCmd.append(WRITE_DATA_CMD_PREFIX);
             completeCmd
                     .append(tempOutData.getAbsolutePath().replace('\\', '/'));
@@ -183,8 +184,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = File.createTempFile("R-outDataTempFile-", ".Rout",
                     rCommandFile.getParentFile());
-
-
+            rOutFile.deleteOnExit();
 
             // create shell command
             StringBuilder shellCmd = new StringBuilder();

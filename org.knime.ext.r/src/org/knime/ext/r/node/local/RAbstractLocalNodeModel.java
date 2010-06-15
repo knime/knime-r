@@ -7,16 +7,16 @@
  *
  * This file is part of the R integration plugin for KNIME.
  *
- * The R integration plugin is free software; you can redistribute 
- * it and/or modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 of the 
+ * The R integration plugin is free software; you can redistribute
+ * it and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St., Fifth Floor, Boston, MA 02110-1301, USA.
@@ -25,10 +25,6 @@
  *
  */
 package org.knime.ext.r.node.local;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import org.knime.base.node.io.csvwriter.CSVWriter;
 import org.knime.base.node.io.csvwriter.FileWriterSettings;
@@ -53,6 +49,10 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RConnectionRemote;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * <code>RAbstractLocalNodeModel</code> is an abstract
@@ -80,19 +80,19 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  * @author Thomas Gabriel, University of Konstanz
  */
 public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
-    
+
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RAbstractLocalNodeModel.class);
-    
+
     /**
-     * The R expression prefix to read data. 
+     * The R expression prefix to read data.
      */
     static final String READ_DATA_CMD_PREFIX = "R <- read.csv(\"";
 
     /**
      * The R expression suffix to read data.
      */
-    static final String READ_DATA_CMD_SUFFIX = 
+    static final String READ_DATA_CMD_SUFFIX =
         "\", header = TRUE, row.names = 1);\n";
 
     /**
@@ -105,7 +105,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
      */
     static final String WRITE_DATA_CMD_SUFFIX =
         "\", row.names = TRUE);\n";
-    
+
     /**
      * The R expression prefix to write a model.
      */
@@ -115,12 +115,12 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
      * The R expression suffix to write a model.
      */
     static final String WRITE_MODEL_CMD_SUFFIX = "\", ascii=TRUE);\n";
-    
+
     /**
      * The R expression prefix to load a model.
      */
     static final String LOAD_MODEL_CMD_PREFIX = "load(\"";
-    
+
     /**
      * The R expression suffix to load a model.
      */
@@ -131,7 +131,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
      */
     static final String TEMP_PATH =
         KNIMEConstants.getKNIMETempDir().replace('\\', '/');
-    
+
     /** R commands to set working dir, write and reads csv files. */
     static final String SET_WORKINGDIR_CMD =
         "setwd(\"" + TEMP_PATH + "\");\n";
@@ -154,7 +154,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
     /**
      * Constructor of <code>RAbstractLocalNodeModel</code> with given in- and
      * out-port specification.
-     * 
+     *
      * @param inPorts in-port specification.
      * @param outPorts out-port specification.
      */
@@ -191,7 +191,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         m_rbinaryFileSettingsModel.validateSettings(settings);
         m_useSpecifiedModel.validateSettings(settings);
     }
-    
+
     /**
      * The method enables one to preprocess the data before the execution
      * of the R command. This method is called before the R commands are
@@ -243,7 +243,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         if (!binaryFile.isFile() || !binaryFile.canExecute()) {
             throw new InvalidSettingsException("R Binary \""
                         + path + "\" not executable.");
-        }        
+        }
     }
 
     /**
@@ -260,14 +260,14 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         }
         checkRExecutable(m_rbinaryFileSettingsModel.getStringValue());
     }
-    
+
 
     /**
      * Deletes the specified file. If the file is a directory the directory
      * itself as well as its files and subdirectories are deleted.
-     * 
+     *
      * @param file The file to delete.
-     * @return <code>true</code> if the file could be deleted, otherwise 
+     * @return <code>true</code> if the file could be deleted, otherwise
      * <code>false</code>.
      */
     static boolean deleteFile(final File file) {
@@ -296,7 +296,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
 
     /**
      * Writes the given string into a file and returns it.
-     * 
+     *
      * @param cmd The string to write into a file.
      * @return The file containing the given string.
      * @throws IOException If string could not be written to a file.
@@ -304,6 +304,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
     static File writeRcommandFile(final String cmd) throws IOException {
         File tempCommandFile = File.createTempFile("R-inDataTempFile-", ".r",
                     new File(TEMP_PATH));
+        tempCommandFile.deleteOnExit();
         FileWriter fw = new FileWriter(tempCommandFile);
         fw.write(cmd);
         fw.close();
@@ -313,9 +314,9 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
     /**
      * Writes the data contained in the given data table into a file as csv
      * format.
-     * 
+     *
      * @param inData The data table containing the data to write.
-     * @param exec The execution context to enable the user to cancel the 
+     * @param exec The execution context to enable the user to cancel the
      * process.
      * @return The csv file with the data.
      * @throws IOException If the data could not be written into the file.
@@ -327,6 +328,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         // create Temp file
         File tempInDataFile = File.createTempFile("R-inDataTempFile-", ".csv",
                     new File(TEMP_PATH));
+        tempInDataFile.deleteOnExit();
 
         // write data to file
         FileWriter fw = new FileWriter(tempInDataFile);
@@ -334,17 +336,17 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         fws.setColSeparator(DELIMITER);
         fws.setWriteColumnHeader(true);
         fws.setWriteRowID(true);
-        
+
         CSVWriter writer = new CSVWriter(fw, fws);
 
         DataTableSpec inSpec = inData.getDataTableSpec();
-        DataTableSpec outSpec = 
+        DataTableSpec outSpec =
             RConnectionRemote.createRenamedDataTableSpec(inSpec);
         if (!inSpec.equalStructure(outSpec)) {
-            setWarningMessage("Some columns are renamed: " 
+            setWarningMessage("Some columns are renamed: "
                     + inSpec + " <> " + outSpec);
         }
-        BufferedDataTable newTable = 
+        BufferedDataTable newTable =
             exec.createSpecReplacerTable(inData, outSpec);
          ExecutionMonitor subExec = exec.createSubProgress(0.5);
          writer.write(newTable, subExec);
@@ -355,7 +357,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
 
     /**
      * Reads data out of specified csv file and creates a data table.
-     * 
+     *
      * @param outData The file containing the csv data.
      * @param exec The execution context.
      * @return The data table containing the data of the specified file.
@@ -388,7 +390,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
 
         return exec.createBufferedDataTable(fTable, exec);
     }
-    
+
     /**
      * Path to R binary.
      * @return R binaray path
