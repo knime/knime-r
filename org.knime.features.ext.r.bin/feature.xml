@@ -356,7 +356,7 @@ Public License instead of this License.
    </license>
 
    <url>
-      <update label="KNIME Update Site" url="http://www.knime.org/update/2.1"/>
+      <update label="KNIME Update Site" url="http://www.knime.org/update/2.2"/>
    </url>
 
    <plugin download-size="0" fragment="true" id="org.knime.ext.r.bin.win32.x86" install-size="0" os="win32" version="0.0.0"/>
