@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
-Fragment-Host: org.knime.ext.r;bundle-version="2.2.1"
+Fragment-Host: org.knime.ext.r;bundle-version="2.2.2"
 Bundle-Version: 2.2.2.0026408
 Eclipse-PlatformFilter: (osgi.os=win32)
 Bundle-Name: Windows R binaries for KNIME R plugin
