@@ -1,26 +1,17 @@
 Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: KNIME R-Project nodes
-Bundle-SymbolicName: org.knime.ext.r; singleton:=true
-Bundle-Version: 2.2.0.0026408
-Bundle-Activator: org.knime.ext.r.RCorePlugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.knime.workbench.repository,
- org.knime.base
-Eclipse-RegisterBuddy: org.knime.base
-Bundle-ClassPath: knime-r-patches.jar,
- knime-r.jar,
- lib/Rserve-0.5-0.jar
-Export-Package: org.knime.ext.r,
- org.knime.ext.r.node,
- org.knime.ext.r.node.io,
- org.knime.ext.r.node.local,
- org.knime.ext.r.node.local.port,
- org.knime.ext.r.preferences,
- org.rosuda.REngine,
- org.rosuda.REngine.Rserve,
- org.rosuda.REngine.Rserve.protocol,
- org.rosuda.REngine.Rserve.test
+Export-Package: org.knime.ext.r,org.knime.ext.r.node,org.knime.ext.r.n
+ ode.io,org.knime.ext.r.node.local,org.knime.ext.r.node.local.port,org
+ .knime.ext.r.preferences,org.rosuda.REngine,org.rosuda.REngine.Rserve
+ ,org.rosuda.REngine.Rserve.protocol,org.rosuda.REngine.Rserve.test
+Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,org.knime.work
+ bench.repository,org.knime.base
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: knime-r-patches.jar,knime-r.jar,lib/Rserve-0.5-0.jar
+Bundle-Version: 2.2.2.0026408
+Bundle-Name: KNIME R-Project nodes
+Bundle-Activator: org.knime.ext.r.RCorePlugin
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.knime.ext.r; singleton:=true
+Eclipse-RegisterBuddy: org.knime.base
+
