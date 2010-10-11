@@ -23,15 +23,13 @@
  * Or contact us: contact@knime.org.
  * ---------------------------------------------------------------------
  *
- * History
- *   17.09.2007 (thiel): created
  */
 package org.knime.ext.r.node.local;
 
 import org.knime.base.node.util.exttool.ExtToolOutputNodeView;
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
-import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeDialogPane;
+import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  * Factory for the <code>RLocalScriptingNodeFactory</code> node.
@@ -39,8 +37,15 @@ import org.knime.core.node.NodeDialogPane;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalScriptingNodeFactory
-        extends NodeFactory<RLocalScriptingNodeModel> {
+        extends RNodeFactory<RLocalScriptingNodeModel> {
 
+    /**
+     * Empty default constructor.
+     */
+    public RLocalScriptingNodeFactory() {
+        super(RPreferenceInitializer.getRProvider());
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -54,7 +59,7 @@ public class RLocalScriptingNodeFactory
      */
     @Override
     public RLocalScriptingNodeModel createNodeModel() {
-        return new RLocalScriptingNodeModel();
+        return new RLocalScriptingNodeModel(getRProvider());
     }
 
     /**

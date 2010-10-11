@@ -46,7 +46,6 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
     /**
      * New pane for configuring REvaluator node dialog.
      */
-    @SuppressWarnings("unchecked")
     protected RPlotterNodeDialog() {
         super();
         m_plotCommandPanel = new RViewsDialogPanel(); 

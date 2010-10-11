@@ -42,6 +42,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
+import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
  * 
@@ -63,10 +64,11 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
     /**
      * Creates a new instance of <code>RLocalPredictorNodeModel</code> with
      * given in- and out-port specification.
+     * @param pref provider for R executable
      */
-    public RLocalPredictorNodeModel() {
-        super(new PortType[]{RPortObject.TYPE, 
-              BufferedDataTable.TYPE}, new PortType[]{BufferedDataTable.TYPE});
+    public RLocalPredictorNodeModel(final RPreferenceProvider pref) {
+        super(new PortType[]{RPortObject.TYPE, BufferedDataTable.TYPE}, 
+            new PortType[]{BufferedDataTable.TYPE}, pref);
     }
 
     /**

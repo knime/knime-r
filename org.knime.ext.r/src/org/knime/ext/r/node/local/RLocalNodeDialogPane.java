@@ -40,7 +40,6 @@ import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
-import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  * The <code>RLocalNodeDialogPane</code> is a
@@ -60,15 +59,6 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
     
     /** Tab name for the R binary path. */
     private static final String TAB_R_BINARY = "R Binary";
-    
-    /**
-     * @return Returns a <code>SettingsModelString</code> instance containing
-     * the path the R executable file.
-     */
-    static final SettingsModelString createRBinaryFile() {
-        return new SettingsModelString("R_binary_file", 
-                RPreferenceInitializer.getRPath()); 
-    }
     
     /**
      * @return Returns a <code>SettingsModelBoolean</code> instance specifying
@@ -91,7 +81,7 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         super();
         
         // create setting models and add listener to model of checkbox.
-        m_fileModel = createRBinaryFile();
+        m_fileModel = new SettingsModelString("R_binary_file", "");
         m_smb = createUseSpecifiedFileModel();
         m_smb.addChangeListener(new CheckBoxChangeListener());
         
@@ -157,7 +147,6 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
             m_fileModel.setEnabled(true);
         } else {
             m_fileModel.setEnabled(false);
-            m_fileModel.setStringValue(RPreferenceInitializer.getRPath());
         }
     }
     

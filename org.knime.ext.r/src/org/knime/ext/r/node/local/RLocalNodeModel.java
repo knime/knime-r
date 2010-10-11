@@ -23,8 +23,6 @@
  * Or contact us: contact@knime.org.
  * --------------------------------------------------------------------- *
  *
- * History
- *   17.09.2007 (gabriel): created
  */
 package org.knime.ext.r.node.local;
 
@@ -35,6 +33,7 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
+import org.knime.ext.r.preferences.RPreferenceProvider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -83,10 +82,11 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
     /**
      * Constructor of <code>RLocalNodeModel</code> creating a model with one
      * data in port an one data out port.
+     * @param pref provider for R executable
      */
-    public RLocalNodeModel() {
+    public RLocalNodeModel(final RPreferenceProvider pref) {
         super(new PortType[]{BufferedDataTable.TYPE},
-                new PortType[]{BufferedDataTable.TYPE});
+                new PortType[]{BufferedDataTable.TYPE}, pref);
     }
 
     /**
@@ -94,13 +94,14 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
      * data in port and one data out port if and only if <code>hasOutput</code>
      * is set <code>true</code>. Otherwise the node will not have any
      * data out port.
-     *
      * @param hasOutput If set <code>true</code> the node is instantiated
      * with one data out port if <code>false</code> with none.
+     * @param pref provider for R executable
      */
-    public RLocalNodeModel(final boolean hasOutput) {
+    public RLocalNodeModel(final boolean hasOutput, 
+            final RPreferenceProvider pref) {
         super(new PortType[]{BufferedDataTable.TYPE},
-                numberOfOuts(hasOutput));
+                numberOfOuts(hasOutput), pref);
     }
 
     private static PortType[] numberOfOuts(final boolean hasOutput) {

@@ -17,9 +17,7 @@
  * website: www.knime.org
  * email: contact@knime.org
  * ---------------------------------------------------------------------
- * 
- * History
- *   15.09.2008 (thiel): created
+ *
  */
 package org.knime.ext.r.node.local;
 
@@ -39,6 +37,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.pmml.PMMLPortObject;
 import org.knime.core.node.port.pmml.PMMLPortObjectSpec;
 import org.knime.ext.r.node.local.port.RPortObject;
+import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
  * 
@@ -52,10 +51,11 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
     /**
      * Creates a new instance of <code>R2PMMLNodeModel</code> with
      * a R input port and PMML output port.
+     * @param pref provider for R executable
      */
-    public R2PMMLNodeModel() {
+    public R2PMMLNodeModel(final RPreferenceProvider pref) {
         super(new PortType[]{RPortObject.TYPE}, 
-                new PortType[]{new PortType(PMMLPortObject.class)});
+                new PortType[]{new PortType(PMMLPortObject.class)}, pref);
     }
 
     /**

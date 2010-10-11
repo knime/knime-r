@@ -23,8 +23,6 @@
  * Or contact us: contact@knime.org.
  * ---------------------------------------------------------------------
  *
- * History
- *   18.09.2007 (thiel): created
  */
 package org.knime.ext.r.node.local;
 
@@ -48,6 +46,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.RPlotterNodeModel;
+import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
  * The <code>RLocalViewsNodeModel</code> provides functionality to create
@@ -108,9 +107,10 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     /**
      * Creates new instance of <code>RLocalViewsNodeModel</code> with one data
      * in port and no data out port.
+     * @param pref provider for R executable
      */
-    public RLocalViewsNodeModel() {
-        super(false);
+    public RLocalViewsNodeModel(final RPreferenceProvider pref) {
+        super(false, pref);
         m_resultImage = null;
     }
 

@@ -30,8 +30,8 @@ package org.knime.ext.r.node.local;
 
 import org.knime.base.node.util.exttool.ExtToolOutputNodeView;
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
-import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeDialogPane;
+import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  * Factory for the <code>RLocalLearnerNodeFactory</code> node.
@@ -39,7 +39,14 @@ import org.knime.core.node.NodeDialogPane;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalLearnerNodeFactory
-        extends NodeFactory<RLocalLearnerNodeModel> {
+        extends RNodeFactory<RLocalLearnerNodeModel> {
+    
+    /**
+     * Empty default constructor.
+     */
+    public RLocalLearnerNodeFactory() {
+        super(RPreferenceInitializer.getRProvider());
+    }
 
     /**
      * {@inheritDoc}
@@ -54,7 +61,7 @@ public class RLocalLearnerNodeFactory
      */
     @Override
     public RLocalLearnerNodeModel createNodeModel() {
-        return new RLocalLearnerNodeModel();
+        return new RLocalLearnerNodeModel(getRProvider());
     }
 
     /**
