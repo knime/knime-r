@@ -14,3 +14,4 @@ Bundle-Activator: org.knime.ext.r.RCorePlugin
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.knime.ext.r; singleton:=true
 Eclipse-RegisterBuddy: org.knime.base
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
