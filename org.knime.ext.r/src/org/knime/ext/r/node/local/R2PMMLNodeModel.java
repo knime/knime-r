@@ -108,8 +108,8 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             shellCmd.append(rBinaryFile);
 
             shellCmd.append(" CMD BATCH ");
-            shellCmd.append("\"" + rCommandFile.getAbsolutePath() + "\"");
-            shellCmd.append(" \"" + rOutFile.getAbsolutePath() + "\"");
+            shellCmd.append(rCommandFile.getAbsolutePath());
+            shellCmd.append(" " + rOutFile.getAbsolutePath());
 
             // execute shell command
             String shcmd = shellCmd.toString();

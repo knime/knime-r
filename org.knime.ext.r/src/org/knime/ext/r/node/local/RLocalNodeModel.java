@@ -173,8 +173,8 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
             // --vanilla in order not to create temporary workspace files.
             shellCmd.append(" CMD BATCH --vanilla ");
-            shellCmd.append("\"" + rCommandFile.getAbsolutePath() + "\"");
-            shellCmd.append(" \"" + rOutFile.getAbsolutePath() + "\"");
+            shellCmd.append(rCommandFile.getAbsolutePath());
+            shellCmd.append(" " + rOutFile.getAbsolutePath());
 
             // execute shell command
             String shcmd = shellCmd.toString();
