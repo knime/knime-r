@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------------
  *
  *  Copyright (C) 2003 - 2010
@@ -7,7 +7,7 @@
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -19,7 +19,7 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ------------------------------------------------------------------------
- * 
+ *
  */
 package org.knime.ext.r.node;
 
@@ -62,14 +62,15 @@ import org.rosuda.REngine.Rserve.RserveException;
 
 /**
  * <code>NodeView</code> and "RScripting" Node view.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
+@Deprecated
 public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
 
     private final JEditorPane m_shell;
     private final JTextArea m_output;
-    
+
     private final JList m_list;
     private final DefaultListModel m_listModel;
 
@@ -80,18 +81,18 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
 
     private static final NodeLogger LOGGER = NodeLogger
             .getLogger(RScriptingNodeView.class);
-    
+
     /** Underlying R model. */
     private final RNodeModel m_rModel;
 
     /**
      * Creates a new view.
-     * 
+     *
      * @param nodeModel The R Scripting model.
      */
     protected RScriptingNodeView(final RScriptingNodeModel nodeModel) {
         super(nodeModel);
-        m_rModel = (RNodeModel) nodeModel;
+        m_rModel = nodeModel;
         // create output view
         m_output = new JTextArea();
         m_output.setFont(new Font("Courier", Font.PLAIN, 12));
@@ -125,7 +126,7 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
                             print(rexp, cmd);
                         } catch (Exception exc) {
                             m_output.append(
-                                    m_rModel.getRconnection().getLastError() 
+                                    m_rModel.getRconnection().getLastError()
                                     + "\n");
                         } finally {
                             m_shell.requestFocus();
@@ -199,7 +200,7 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
     protected void modelChanged() {
         m_shell.setText("");
         m_listModel.removeAllElements();
-        RScriptingNodeModel model = (RScriptingNodeModel) super.getNodeModel();
+        RScriptingNodeModel model = super.getNodeModel();
         DataTableSpec inSpec = model.getDataTableSpec();
         if (inSpec != null) {
             DataTableSpec spec = RConnectionRemote.createRenamedDataTableSpec(
@@ -216,7 +217,7 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
      */
     @Override
     protected void onClose() {
-
+        // empty
     }
 
     /**
@@ -224,7 +225,7 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
      */
     @Override
     protected void onOpen() {
-
+        // empty
     }
 
     private void createPNG() throws RserveException, REXPMismatchException {

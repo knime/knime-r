@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
-<knimeNode type="Visualizer" icon="../r.png" deprecated="true">
+<knimeNode type="Visualizer" icon="../r.png">
 	<name>R View (Local)</name>
 	<shortDescription>
 	    Enables the usage of R views using the local R installation.
@@ -79,6 +79,7 @@
 	</fullDescription>
 	<ports>
 		<inPort name="Data Input" index="0">Data Input</inPort>
+		<outPort name="Image Output" index="0">View Image</outPort>
 	</ports>
 	<views>
 		<view index="0" name="R View">

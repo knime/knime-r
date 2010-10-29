@@ -23,53 +23,54 @@
  */
 package org.knime.ext.r.node;
 
-import java.awt.Image;
-
+import org.knime.core.node.NodeDialogPane;
+import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
 
 /**
- * <code>NodeView</code> for the R plotter.
+ * Factory for the R plotter.
  *
  * @author Thomas Gabriel, University of Konstanz
  */
-@Deprecated
-public class RPlotterNodeView extends NodeView<RPlotterNodeModel> {
-    private final RPlotterViewPanel m_panel;
-
+public class RPlotterNodeFactory2 extends NodeFactory<RPlotterNodeModel2> {
     /**
-     * Creates a new view.
-     *
-     * @param nodeModel The model (class: <code>RPlotterNodeModel</code>)
+     * {@inheritDoc}
      */
-    protected RPlotterNodeView(final RPlotterNodeModel nodeModel) {
-        super(nodeModel);
-        m_panel = new RPlotterViewPanel();
-        super.setComponent(m_panel);
+    @Override
+    public RPlotterNodeModel2 createNodeModel() {
+        return new RPlotterNodeModel2();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void modelChanged() {
-        RPlotterNodeModel model = super.getNodeModel();
-        Image image = model.getResultImage();
-        m_panel.update(image);
+    public int getNrNodeViews() {
+        return 1;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onClose() {
-        // empty
+    public NodeView<RPlotterNodeModel2> createNodeView(
+            final int viewIndex, final RPlotterNodeModel2 nodeModel) {
+        return new RPlotterNodeView2(nodeModel);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onOpen() {
-        // empty
+    public boolean hasDialog() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public NodeDialogPane createNodeDialogPane() {
+        return new RPlotterNodeDialog();
     }
 }

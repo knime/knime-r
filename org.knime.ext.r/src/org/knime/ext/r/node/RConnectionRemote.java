@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------------
  *
  *  Copyright (C) 2003 - 2010
@@ -7,7 +7,7 @@
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -19,7 +19,7 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ------------------------------------------------------------------------
- * 
+ *
  */
 package org.knime.ext.r.node;
 
@@ -45,22 +45,22 @@ import org.rosuda.REngine.Rserve.RserveException;
 
 /**
  * Utility class for sending data to a R server.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 public final class RConnectionRemote {
-        
-    private static final NodeLogger LOGGER = 
+
+    private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RConnectionRemote.class);
 
     private RConnectionRemote() {
-        
+        // empty
     }
-    
+
     /**
      * Replaces illegal characters in the specified string. Legal characters are
      * a-z, A-Z and 0-9. All others will be replaced by a dot.
-     * 
+     *
      * @param name the string to check and to replace illegal characters in.
      * @return a string containing only a-z, A-Z and 0-9. All other
      *         characters got replaced by a dot.
@@ -68,9 +68,9 @@ public final class RConnectionRemote {
     private static final String formatColumn(final String name) {
         return name.replaceAll("[^a-zA-Z0-9]", ".");
     }
-    
+
     /**
-     * Renames all column names by replacing all characters which are not 
+     * Renames all column names by replacing all characters which are not
      * numeric or letters.
      * @param spec spec to replace column names
      * @return new spec with replaced column names
@@ -80,7 +80,7 @@ public final class RConnectionRemote {
         DataColumnSpec[] cspecs = new DataColumnSpec[spec.getNumColumns()];
         Set<String> newColNames = new HashSet<String>();
         for (int i = 0; i < cspecs.length; i++) {
-            DataColumnSpecCreator cr = 
+            DataColumnSpecCreator cr =
                 new DataColumnSpecCreator(spec.getColumnSpec(i));
             String oldName = spec.getColumnSpec(i).getName();
             // uniquify formatted column name
@@ -88,20 +88,20 @@ public final class RConnectionRemote {
             int colIdx = 0;
             String uniqueColName = newName;
             if (!oldName.equals(newName)) {
-                while (newColNames.contains(uniqueColName) 
+                while (newColNames.contains(uniqueColName)
                         || spec.containsName(uniqueColName)) {
                     uniqueColName = newName + "_" + colIdx++;
                 }
                 cr.setName(uniqueColName);
                 newColNames.add(uniqueColName);
-                LOGGER.info("Original column \"" + oldName 
+                LOGGER.info("Original column \"" + oldName
                         + "\" was renamed to \"" + uniqueColName + "\".");
             }
             cspecs[i] = cr.createSpec();
         }
         return new DataTableSpec(spec.getName(), cspecs);
     }
-   
+
     /**
      * Sends the entire table to the R server for types which are compatible
      * to IntValue.class, DoubleValue.class, and StringValue.class.
@@ -113,7 +113,7 @@ public final class RConnectionRemote {
      */
     static final void sendData(
             final RConnection conn, final BufferedDataTable inData,
-            final ExecutionMonitor exec) 
+            final ExecutionMonitor exec)
             throws RserveException, CanceledExecutionException {
         exec.setMessage("Start sending data to R server...");
         // prepare data
@@ -187,7 +187,7 @@ public final class RConnectionRemote {
                             data[i].append("NA");
                         } else {
                             data[i].append("\""
-                                    + ((StringValue) cell).getStringValue() 
+                                    + ((StringValue) cell).getStringValue()
                                     + "\"");
                         }
                         break;
@@ -195,15 +195,15 @@ public final class RConnectionRemote {
             }
             z++;
             if (z % max == 0) {
-                String msg = "Sending data chunk " + (nsend + 1) 
+                String msg = "Sending data chunk " + (nsend + 1)
                     + " (with " + max + " rows).";
                 LOGGER.info(msg);
                 exec.setMessage(msg);
                 for (int i = 0; i < data.length; i++) {
                     String colName = spec.getColumnSpec(i).getName();
-                    conn.eval("ColTmp" + i + " <- c(" + data[i].toString() 
+                    conn.eval("ColTmp" + i + " <- c(" + data[i].toString()
                             + ")");
-                    conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" 
+                    conn.eval(colName + " <- " + "c(" + colName + ",ColTmp"
                             + i + ")");
                     data[i] = null;
                 }
@@ -211,17 +211,17 @@ public final class RConnectionRemote {
                 nsend++;
             }
         }
-        
+
         if (z > 0 && z < max) {
             for (int i = 0; i < data.length; i++) {
                 String colName = spec.getColumnSpec(i).getName();
                 conn.eval("ColTmp" + i + " <- c(" + data[i].toString() + ")");
-                conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i 
+                conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i
                         + ")");
                 data[i] = null;
             }
         }
-        
+
         StringBuilder colList = new StringBuilder();
         for (int i = 0; i < spec.getNumColumns(); i++) {
             if (i > 0) {
@@ -231,7 +231,7 @@ public final class RConnectionRemote {
             colList.append(colName);
         }
         conn.eval("R <- data.frame(" + colList.toString() + ")");
-        
+
     }
-    
+
 }

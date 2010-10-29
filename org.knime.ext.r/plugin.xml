@@ -5,8 +5,8 @@
          point="org.knime.workbench.repository.nodes">
       <node
             category-path="/r/remote"
-            factory-class="org.knime.ext.r.node.RPlotterNodeFactory"
-            id="org.knime.ext.r.node.RPlotterNodeFactory"/>
+            factory-class="org.knime.ext.r.node.RPlotterNodeFactory2"
+            id="org.knime.ext.r.node.RPlotterNodeFactory2"/>
       <node
             category-path="/r/remote"
             factory-class="org.knime.ext.r.node.RConsoleFactory"
@@ -18,8 +18,8 @@
       </node>
       <node
             category-path="/r/local"
-            factory-class="org.knime.ext.r.node.local.RLocalViewsNodeFactory"
-            id="org.knime.ext.r.node.local.RLocalViewsNodeFactory">
+            factory-class="org.knime.ext.r.node.local.RLocalViewsNodeFactory2"
+            id="org.knime.ext.r.node.local.RLocalViewsNodeFactory2">
       </node>
       <node
             category-path="/r/local"

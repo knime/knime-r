@@ -17,7 +17,7 @@
  * website: www.knime.org
  * email: contact@knime.org
  * ---------------------------------------------------------------------
- * 
+ *
  * History
  *   15.09.2008 (thiel): created
  */
@@ -44,28 +44,28 @@ import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
 
 /**
- * 
+ *
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
 
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RLocalPredictorNodeModel.class);
-    
+
     /**
      * The default prediction command.
      */
-    static final String PREDICTION_CMD = 
+    static final String PREDICTION_CMD =
         "R<-cbind(RDATA, predict(RMODEL, RDATA));\n";
-    
+
     private String m_rCommand = PREDICTION_CMD;
-    
+
     /**
      * Creates a new instance of <code>RLocalPredictorNodeModel</code> with
      * given in- and out-port specification.
      */
     public RLocalPredictorNodeModel() {
-        super(new PortType[]{RPortObject.TYPE, 
+        super(new PortType[]{RPortObject.TYPE,
               BufferedDataTable.TYPE}, new PortType[]{BufferedDataTable.TYPE});
     }
 
@@ -83,7 +83,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData, 
+    protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec)
             throws Exception {
         // preprocess data in in DataTable.
@@ -108,18 +108,18 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
                     '/'));
             completeCmd.append(READ_DATA_CMD_SUFFIX);
             completeCmd.append("RDATA<-R;\n");
-            
+
             // load model
             File fileR = ((RPortObject)inData[0]).getFile();
             completeCmd.append(LOAD_MODEL_CMD_PREFIX);
             completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
             completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
-            
+
             // predict data
             completeCmd.append("RMODEL<-R;\n");
             completeCmd.append(m_rCommand.trim());
             completeCmd.append("\n");
-            
+
             // write predicted data to csv
             tempOutData = File.createTempFile("R-outDataTempFile-", ".csv",
                     new File(TEMP_PATH));
@@ -141,8 +141,8 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
             shellCmd.append(rBinaryFile);
 
             shellCmd.append(" CMD BATCH ");
-            shellCmd.append(rCommandFile.getAbsolutePath());
-            shellCmd.append(" " + rOutFile.getAbsolutePath());
+            shellCmd.append("\"" + rCommandFile.getAbsolutePath() + "\"");
+            shellCmd.append(" \"" + rOutFile.getAbsolutePath() + "\"");
 
             // execute shell command
             String shcmd = shellCmd.toString();
@@ -196,7 +196,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
                 throw new IllegalStateException(
                         "Execution of R script failed: " + rErr);
             }
-            
+
             // read data from R output csv into a buffered data table.
             ExecutionContext subExecCon = exec.createSubExecutionContext(1.0);
             BufferedDataTable dt = readOutData(tempOutData, subExecCon);
@@ -244,5 +244,5 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
         super.validateSettings(settings);
         String exp = RDialogPanel.getExpressionFrom(settings);
         RConsoleModel.testExpressions(exp.split("\n"));
-    }    
+    }
 }

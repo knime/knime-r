@@ -23,6 +23,8 @@
  * Or contact us: contact@knime.org.
  * ---------------------------------------------------------------------
  *
+ * History
+ *   18.09.2007 (thiel): created
  */
 package org.knime.ext.r.node.local;
 
@@ -30,8 +32,9 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
-import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -44,9 +47,10 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.image.ImagePortObject;
+import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RDialogPanel;
-import org.knime.ext.r.node.RPlotterNodeModel;
 
 /**
  * The <code>RLocalViewsNodeModel</code> provides functionality to create
@@ -55,8 +59,7 @@ import org.knime.ext.r.node.RPlotterNodeModel;
  *
  * @author Kilian Thiel, University of Konstanz
  */
-@Deprecated
-public class RLocalViewsNodeModel extends RLocalNodeModel {
+public class RLocalViewsNodeModel2 extends RLocalNodeModel {
 
     /**
      * Default image size.
@@ -85,6 +88,10 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
 
     private static final String INTERNAL_FILE_NAME = "Rplot";
 
+    /** Output spec for a PNG image. */
+    private static final ImagePortObjectSpec OUT_SPEC =
+        new ImagePortObjectSpec(PNGImageContent.TYPE);
+
     private SettingsModelIntegerBounded m_heightModel =
         RViewsPngDialogPanel.createHeightModel();
 
@@ -109,8 +116,8 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
      * Creates new instance of <code>RLocalViewsNodeModel</code> with one data
      * in port and no data out port.
      */
-    public RLocalViewsNodeModel() {
-        super(new PortType[0]);
+    public RLocalViewsNodeModel2() {
+        super(new PortType[] {ImagePortObject.TYPE});
         m_resultImage = null;
     }
 
@@ -151,13 +158,23 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     protected final BufferedDataTable[] postprocessDataTable(
             final BufferedDataTable[] outData, final ExecutionContext exec)
             throws CanceledExecutionException, Exception {
+        return new BufferedDataTable[]{};
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected PortObject[] execute(final PortObject[] inData,
+            final ExecutionContext exec)
+            throws CanceledExecutionException, Exception {
+        super.execute(inData, exec);
         // create image after execution.
         FileInputStream fis = new FileInputStream(new File(m_filename));
-        m_resultImage = RPlotterNodeModel.createImage(fis);
+        PNGImageContent content = new PNGImageContent(fis);
         fis.close();
-
-        return new BufferedDataTable[]{};
+        m_resultImage = content.getImage();
+        return new PortObject[] {new ImagePortObject(content, OUT_SPEC)};
     }
 
     /**
@@ -183,7 +200,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
         checkRExecutable();
-        return new DataTableSpec[0];
+        return new PortObjectSpec[] {OUT_SPEC};
     }
 
     /**
@@ -260,9 +277,9 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         if (file.exists() && file.canRead()) {
             File pngFile = File.createTempFile(INTERNAL_FILE_NAME, ".png");
             FileUtil.copy(file, pngFile);
-            m_resultImage = RPlotterNodeModel.createImage(
-                    new FileInputStream(pngFile));
-            m_filename = pngFile.getAbsolutePath();
+            InputStream is = new FileInputStream(pngFile);
+            m_resultImage = new PNGImageContent(is).getImage();
+            is.close();
         }
     }
 

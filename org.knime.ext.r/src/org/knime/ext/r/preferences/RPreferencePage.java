@@ -7,7 +7,7 @@
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -19,7 +19,7 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ------------------------------------------------------------------------
- * 
+ *
  * History
  *   19.09.2007 (thiel): created
  */
@@ -33,10 +33,10 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.knime.ext.r.RCorePlugin;
 
 /**
- * 
+ *
  * @author Kilian Thiel, University of Konstanz
  */
-public class RPreferencePage extends FieldEditorPreferencePage 
+public class RPreferencePage extends FieldEditorPreferencePage
 implements IWorkbenchPreferencePage {
 
     /**
@@ -47,9 +47,9 @@ implements IWorkbenchPreferencePage {
 
         setPreferenceStore(RCorePlugin.getDefault().getPreferenceStore());
         setDescription("KNIME R preferences");
-    }    
-    
-    
+    }
+
+
     /**
      * {@inheritDoc}
      */
@@ -66,6 +66,7 @@ implements IWorkbenchPreferencePage {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init(final IWorkbench workbench) {
         // nothing to do
     }

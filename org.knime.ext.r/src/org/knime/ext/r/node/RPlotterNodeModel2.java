@@ -24,17 +24,14 @@
 package org.knime.ext.r.node;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.Vector;
 
-import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -48,6 +45,8 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.image.ImagePortObject;
+import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.local.RViewScriptingConstants;
 import org.knime.ext.r.node.local.RViewsPngDialogPanel;
@@ -60,17 +59,20 @@ import org.rosuda.REngine.Rserve.RserveException;
  *
  * @author Thomas Gabriel, University of Konstanz
  */
-@Deprecated
-public class RPlotterNodeModel extends RNodeModel {
+public class RPlotterNodeModel2 extends RNodeModel {
 
     private Image m_resultImage;
     private File m_imageFile;
+
+    /** PNG image output spec. */
+    private static final ImagePortObjectSpec OUT_SPEC =
+        new ImagePortObjectSpec(PNGImageContent.TYPE);
 
     private static final String FILE_NAME = "Rplot";
 
     // our LOGGER instance
     private static final NodeLogger LOGGER = NodeLogger
-            .getLogger(RPlotterNodeModel.class);
+            .getLogger(RPlotterNodeModel2.class);
 
     private SettingsModelIntegerBounded m_heightModel =
         RViewsPngDialogPanel.createHeightModel();
@@ -90,8 +92,9 @@ public class RPlotterNodeModel extends RNodeModel {
     /**
      * Creates a new plotter with one data input.
      */
-    protected RPlotterNodeModel() {
-        super(new PortType[]{BufferedDataTable.TYPE}, new PortType[0]);
+    protected RPlotterNodeModel2() {
+        super(new PortType[]{BufferedDataTable.TYPE},
+                new PortType[] {ImagePortObject.TYPE});
         m_resultImage = null;
     }
 
@@ -126,6 +129,7 @@ public class RPlotterNodeModel extends RNodeModel {
         }
         c.voidEval("dev.off()");
 
+        PNGImageContent content;
         try {
             // read png back from server
             RFileInputStream ris = c.openFile(fileName);
@@ -133,8 +137,9 @@ public class RPlotterNodeModel extends RNodeModel {
             FileOutputStream out = new FileOutputStream(m_imageFile);
             FileUtil.copy(ris, out);
             FileInputStream in = new FileInputStream(m_imageFile);
-            m_resultImage = createImage(in);
+            content = new PNGImageContent(in);
             in.close();
+            m_resultImage = content.getImage();
         } finally {
             try {
                 c.removeFile(fileName);
@@ -144,51 +149,7 @@ public class RPlotterNodeModel extends RNodeModel {
             c.close();
         }
         // nothing, has no out-port
-        return new BufferedDataTable[0];
-    }
-
-    /**
-     * Creates an image instance out of the given <code>InputStream</code>.
-     * This stream can for instance a <code>FileInputStream</code> holding
-     * a image file, such as a png and so on.
-     *
-     * @param is The stream reading the image file.
-     * @return The image instance.
-     * @throws IOException If image file can no be red.
-     */
-    public static Image createImage(final InputStream is) throws IOException {
-        Vector<byte[]> buffers = new Vector<byte[]>();
-        int bufSize = 65536;
-        byte[] buf = new byte[bufSize];
-        int imgLength = 0;
-        int n = 0;
-        while (true) {
-            n = is.read(buf);
-            if (n == bufSize) {
-                buffers.addElement(buf);
-                buf = new byte[bufSize];
-            }
-            if (n > 0) {
-                imgLength += n;
-            }
-            if (n < bufSize) {
-                break;
-            }
-        }
-        LOGGER.info("The image has " + imgLength + " bytes.");
-        byte[] imgCode = new byte[imgLength];
-        int imgPos = 0;
-        for (Enumeration<byte[]> e = buffers.elements(); e.hasMoreElements();) {
-            byte[] b = e.nextElement();
-            System.arraycopy(b, 0, imgCode, imgPos, bufSize);
-            imgPos += bufSize;
-        }
-        if (n > 0) {
-            System.arraycopy(buf, 0, imgCode, imgPos, n);
-        }
-
-        // create image based on image code
-        return Toolkit.getDefaultToolkit().createImage(imgCode);
+        return new PortObject[] {new ImagePortObject(content, OUT_SPEC)};
     }
 
     /**
@@ -213,7 +174,7 @@ public class RPlotterNodeModel extends RNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-        return new DataTableSpec[0];
+        return new PortObjectSpec[] {OUT_SPEC};
     }
 
     /**
@@ -284,7 +245,9 @@ public class RPlotterNodeModel extends RNodeModel {
         File file = new File(nodeInternDir, FILE_NAME + ".png");
         m_imageFile = File.createTempFile(FILE_NAME, ".png");
         FileUtil.copy(file, m_imageFile);
-        m_resultImage = createImage(new FileInputStream(m_imageFile));
+        InputStream is = new FileInputStream(m_imageFile);
+        m_resultImage = new PNGImageContent(is).getImage();
+        is.close();
     }
 
     /**

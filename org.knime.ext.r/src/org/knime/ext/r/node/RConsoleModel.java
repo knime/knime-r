@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------------
  *
  *  Copyright (C) 2003 - 2010
@@ -7,7 +7,7 @@
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -58,20 +58,20 @@ import org.rosuda.REngine.Rserve.RConnection;
 
 /**
  * Executes R command and returns the result of the variable R as output.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RConsoleModel extends RNodeModel {
 
-    private String[] m_expression = 
+    private String[] m_expression =
         new String[]{RDialogPanel.DEFAULT_R_COMMAND};
-    
-    private static final NodeLogger LOGGER = 
+
+    private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RConsoleModel.class);
-    
+
     /**
-     * 
-     * 
+     *
+     *
      */
     protected RConsoleModel() {
         super(new PortType[]{BufferedDataTable.TYPE}, new PortType[]{
@@ -98,7 +98,7 @@ public class RConsoleModel extends RNodeModel {
         exec.setMessage("Recieving R result...");
         REXP rexp = rconn.eval("try(R)");
         LOGGER.debug("R: " + rexp.toString() + " " + rexp.getClass());
-        
+
         if (rexp.isString()) {
             return new BufferedDataTable[]{readStrings(rexp, exec)};
         } else if (rexp.isNumeric()) {
@@ -148,19 +148,19 @@ public class RConsoleModel extends RNodeModel {
                     name += Integer.toString(i);
                 }
             }
-            DataColumnSpecCreator colspeccreator = 
-                new DataColumnSpecCreator(name, columnTypes.length == 1 
+            DataColumnSpecCreator colspeccreator =
+                new DataColumnSpecCreator(name, columnTypes.length == 1
                         ? columnTypes[0] : columnTypes[i]);
             cspec[i] = colspeccreator.createSpec();
         }
         return new DataTableSpec(cspec);
     }
-    
-    private BufferedDataTable readBytes(final REXP rexp, 
+
+    private BufferedDataTable readBytes(final REXP rexp,
             final ExecutionContext exec)
             throws CanceledExecutionException, REXPMismatchException {
         byte[] bytes = rexp.asBytes();
-        BufferedDataContainer dc = 
+        BufferedDataContainer dc =
             exec.createDataContainer(createDataTableSpec(
                     new String[]{null}, StringCell.TYPE));
         for (int i = 0; i < bytes.length; i++) {
@@ -171,11 +171,11 @@ public class RConsoleModel extends RNodeModel {
         }
         dc.close();
         return dc.getTable();
-        
+
     }
-    
+
     private BufferedDataTable readList(
-            final RList list, final ExecutionContext exec) 
+            final RList list, final ExecutionContext exec)
             throws CanceledExecutionException, REXPMismatchException {
         final Object[] object = new Object[list.size()];
         final String[] colNames = new String[object.length];
@@ -196,10 +196,10 @@ public class RConsoleModel extends RNodeModel {
                 object[i] = list.at(i).asStrings();
                 type = StringCell.TYPE;
             }
-            colNames[i] = (list.names == null 
+            colNames[i] = (list.names == null
                     ? null : list.names.get(i).toString());
             colTypes[i] = type;
-            
+
             nrRows = list.at(i).asStrings().length;
         }
         DataTableSpec spec = createDataTableSpec(colNames, colTypes);
@@ -224,19 +224,19 @@ public class RConsoleModel extends RNodeModel {
                     } else {
                         row[j] = new StringCell(strValue);
                     }
-                }   
+                }
             }
             dc.addRowToTable(new DefaultRow(RowKey.createRowKey(i), row));
         }
         dc.close();
         return dc.getTable();
     }
-    
+
     private BufferedDataTable readFactor(
-            final RFactor fac, final ExecutionContext exec) 
+            final RFactor fac, final ExecutionContext exec)
             throws CanceledExecutionException {
         String[] strings = fac.asStrings();
-        BufferedDataContainer dc = 
+        BufferedDataContainer dc =
             exec.createDataContainer(createDataTableSpec(
                     new String[]{null}, StringCell.TYPE));
         for (int i = 0; i < fac.size(); i++) {
@@ -254,17 +254,17 @@ public class RConsoleModel extends RNodeModel {
         dc.close();
         return dc.getTable();
     }
-    
+
     private BufferedDataTable readString(
-            final REXP rexp, final ExecutionContext exec) 
+            final REXP rexp, final ExecutionContext exec)
             throws REXPMismatchException {
         String string = rexp.asString();
-        BufferedDataContainer dc = 
+        BufferedDataContainer dc =
             exec.createDataContainer(createDataTableSpec(
                     new String[]{null}, StringCell.TYPE));
         DataRow row;
         if (string == null) {
-            row = new DefaultRow(RowKey.createRowKey(0), 
+            row = new DefaultRow(RowKey.createRowKey(0),
                 DataType.getMissingCell());
         } else {
             row = new DefaultRow(RowKey.createRowKey(0), string);
@@ -273,12 +273,12 @@ public class RConsoleModel extends RNodeModel {
         dc.close();
         return dc.getTable();
     }
-   
+
     private BufferedDataTable readDoubles(
-            final REXP rexp, final ExecutionContext exec) 
+            final REXP rexp, final ExecutionContext exec)
             throws REXPMismatchException, CanceledExecutionException {
         double[] matrix = rexp.asDoubles();
-        BufferedDataContainer dc = 
+        BufferedDataContainer dc =
             exec.createDataContainer(createDataTableSpec(
                     new String[]{null}, DoubleCell.TYPE));
         for (int i = 0; i < matrix.length; i++) {
@@ -290,12 +290,12 @@ public class RConsoleModel extends RNodeModel {
         dc.close();
         return dc.getTable();
     }
-    
+
     private BufferedDataTable readStrings(
-            final REXP rexp, final ExecutionContext exec) 
+            final REXP rexp, final ExecutionContext exec)
             throws REXPMismatchException, CanceledExecutionException {
         String[] matrix = rexp.asStrings();
-        BufferedDataContainer dc = 
+        BufferedDataContainer dc =
             exec.createDataContainer(createDataTableSpec(
                     new String[]{null}, StringCell.TYPE));
         for (int i = 0; i < matrix.length; i++) {
@@ -303,7 +303,7 @@ public class RConsoleModel extends RNodeModel {
             exec.setProgress(1.0 * i / matrix.length);
             RowKey rowKey = RowKey.createRowKey(i);
             if (matrix[i] == null) {
-                dc.addRowToTable(new DefaultRow(rowKey, 
+                dc.addRowToTable(new DefaultRow(rowKey,
                         DataType.getMissingCell()));
             } else {
                 dc.addRowToTable(new DefaultRow(rowKey, matrix[i]));
@@ -312,16 +312,16 @@ public class RConsoleModel extends RNodeModel {
         dc.close();
         return dc.getTable();
     }
-    
+
     private BufferedDataTable readDoubleMatrix(
-            final REXP rexp, final ExecutionContext exec) 
+            final REXP rexp, final ExecutionContext exec)
             throws REXPMismatchException, CanceledExecutionException {
         double[][] matrix = rexp.asDoubleMatrix();
         DataTableSpec spec;
         if (matrix.length == 0) {
             spec = new DataTableSpec();
         } else {
-            spec = createDataTableSpec(new String[matrix[1].length], 
+            spec = createDataTableSpec(new String[matrix[1].length],
                     DoubleCell.TYPE);
         }
         BufferedDataContainer dc = exec.createDataContainer(spec);
@@ -333,12 +333,12 @@ public class RConsoleModel extends RNodeModel {
         dc.close();
         return dc.getTable();
     }
-    
+
     private BufferedDataTable readIntegers(
-            final REXP rexp, final ExecutionContext exec) 
+            final REXP rexp, final ExecutionContext exec)
             throws REXPMismatchException, CanceledExecutionException {
         int[] matrix = rexp.asIntegers();
-        BufferedDataContainer dc = 
+        BufferedDataContainer dc =
             exec.createDataContainer(createDataTableSpec(
                     new String[]{null}, IntCell.TYPE));
         for (int i = 0; i < matrix.length; i++) {
@@ -378,8 +378,8 @@ public class RConsoleModel extends RNodeModel {
 
     /**
      * Tests the given expressions if they contain at least one statement
-     * where data is assigned to variable R. 
-     * 
+     * where data is assigned to variable R.
+     *
      * @param rexps a String array containing the expression to check.
      * @throws InvalidSettingsException If the given statements do not contain
      * at least one statement where data is assigned to variable R.
@@ -425,25 +425,25 @@ public class RConsoleModel extends RNodeModel {
         super.validateSettings(settings);
         testExpressions(RDialogPanel.getExpressionsFrom(settings));
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void loadInternals(final File nodeInternDir, 
-            final ExecutionMonitor exec) 
+    protected void loadInternals(final File nodeInternDir,
+            final ExecutionMonitor exec)
             throws IOException, CanceledExecutionException {
-        
+        // empty
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void saveInternals(final File nodeInternDir, 
-            final ExecutionMonitor exec) 
+    protected void saveInternals(final File nodeInternDir,
+            final ExecutionMonitor exec)
             throws IOException, CanceledExecutionException {
-        
+        // empty
     }
-    
+
 }

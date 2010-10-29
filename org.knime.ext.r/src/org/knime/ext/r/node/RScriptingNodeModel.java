@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------------
  *
  *  Copyright (C) 2003 - 2010
@@ -7,7 +7,7 @@
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -19,7 +19,7 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ------------------------------------------------------------------------
- * 
+ *
  */
 package org.knime.ext.r.node;
 
@@ -39,13 +39,13 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 
 /**
- * Executes R commands locally, the entire data is transfered to the R server 
+ * Executes R commands locally, the entire data is transfered to the R server
  * during execution.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RScriptingNodeModel extends RNodeModel {
-    
+
     private DataTableSpec m_spec;
 
     /**
@@ -69,7 +69,7 @@ public class RScriptingNodeModel extends RNodeModel {
         // nothing
         return new BufferedDataTable[0];
     }
-    
+
     /**
      * @see org.knime.core.node.NodeModel#reset()
      */
@@ -77,7 +77,7 @@ public class RScriptingNodeModel extends RNodeModel {
     protected void reset() {
         m_spec = null;
     }
-    
+
     /**
      * @return input spec used in view show all columns
      */
@@ -121,13 +121,13 @@ public class RScriptingNodeModel extends RNodeModel {
             throws InvalidSettingsException {
         super.validateSettings(settings);
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void loadInternals(final File nodeInternDir, 
-            final ExecutionMonitor exec) 
+    protected void loadInternals(final File nodeInternDir,
+            final ExecutionMonitor exec)
             throws IOException, CanceledExecutionException {
         throw new IOException("re-execute node to send data to R server");
     }
@@ -136,10 +136,10 @@ public class RScriptingNodeModel extends RNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void saveInternals(final File nodeInternDir, 
-            final ExecutionMonitor exec) 
+    protected void saveInternals(final File nodeInternDir,
+            final ExecutionMonitor exec)
             throws IOException, CanceledExecutionException {
-        
+        // empty
     }
 
 }

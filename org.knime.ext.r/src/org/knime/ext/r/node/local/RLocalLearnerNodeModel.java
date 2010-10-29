@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------
  * This source code, its documentation and all appendant files
  * are protected by copyright law. All rights reserved.
@@ -18,7 +18,7 @@
  * website: www.knime.org
  * email: contact@knime.org
  * --------------------------------------------------------------------- *
- * 
+ *
  * History
  *   12.09.2008 (gabriel): created
  */
@@ -51,17 +51,17 @@ import org.knime.ext.r.node.local.port.RPortObjectSpec;
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
-    
+
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RLocalLearnerNodeModel.class);
-    
+
     private String m_rCommand = RDialogPanel.DEFAULT_R_COMMAND;
 
     /**
      *
      */
     public RLocalLearnerNodeModel() {
-        super(new PortType[]{BufferedDataTable.TYPE}, 
+        super(new PortType[]{BufferedDataTable.TYPE},
                 new PortType[]{RPortObject.TYPE});
     }
 
@@ -107,7 +107,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
 
             completeCmd.append(m_rCommand.trim());
             completeCmd.append("\n");
-            
+
             File fileR = File.createTempFile("~knime", ".R");
             fileR.deleteOnExit();
             completeCmd.append(WRITE_MODEL_CMD_PREFIX);
@@ -127,8 +127,8 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             shellCmd.append(rBinaryFile);
 
             shellCmd.append(" CMD BATCH ");
-            shellCmd.append(rCommandFile.getAbsolutePath());
-            shellCmd.append(" " + rOutFile.getAbsolutePath());
+            shellCmd.append("\"" + rCommandFile.getAbsolutePath() + "\"");
+            shellCmd.append(" \"" + rOutFile.getAbsolutePath() + "\"");
 
             // execute shell command
             String shcmd = shellCmd.toString();
@@ -192,7 +192,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
         }
         return new PortObject[]{out};
     }
-    
+
     /**
      * {@inheritDoc}
      */

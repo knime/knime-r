@@ -23,10 +23,13 @@
  * Or contact us: contact@knime.org.
  * --------------------------------------------------------------------- *
  *
- * History
- *   17.09.2007 (gabriel): created
  */
 package org.knime.ext.r.node.local;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.LinkedList;
 
 import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.node.BufferedDataTable;
@@ -35,11 +38,6 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.LinkedList;
 
 /**
  * <code>RLocalNodeModel</code> is an abstract
@@ -82,47 +80,28 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
     /**
      * Constructor of <code>RLocalNodeModel</code> creating a model with one
-     * data in port an one data out port.
-     */
-    public RLocalNodeModel() {
-        super(new PortType[]{BufferedDataTable.TYPE},
-                new PortType[]{BufferedDataTable.TYPE});
-    }
-
-    /**
-     * Constructor of <code>RLocalNodeModel</code> creating a model with one
      * data in port and one data out port if and only if <code>hasOutput</code>
      * is set <code>true</code>. Otherwise the node will not have any
      * data out port.
-     *
-     * @param hasOutput If set <code>true</code> the node is instantiated
-     * with one data out port if <code>false</code> with none.
+     * @param outPorts array of out-port types
      */
-    public RLocalNodeModel(final boolean hasOutput) {
-        super(new PortType[]{BufferedDataTable.TYPE},
-                numberOfOuts(hasOutput));
+    public RLocalNodeModel(final PortType[] outPorts) {
+        super(new PortType[]{BufferedDataTable.TYPE}, outPorts);
     }
 
-    private static PortType[] numberOfOuts(final boolean hasOutput) {
-        if (hasOutput) {
-            return new PortType[]{BufferedDataTable.TYPE};
-        }
-        return new PortType[0];
-    }
-
-     /**
-      * Implement this method to specify certain R code to run. Be aware that
-      * this R code has to be valid, otherwise the node will not execute
-      * properly. To access the input data of the node via R use the variable
-      * "R". To access i.e. the first three columns of a table and reference
-      * them by another variable "a" the R command "a <- R[1:3];" can be used.
-      * End all R command lines with a semicolon and a line break. The data
-      * which has to be returned be the node as out data has to be stored in
-      * the "R" variable again, so take care to reference your data by "R".
-      *
-      * @return The R command to execute.
-      */
-     protected abstract String getCommand();
+    /**
+     * Implement this method to specify certain R code to run. Be aware that
+     * this R code has to be valid, otherwise the node will not execute
+     * properly. To access the input data of the node via R use the variable
+     * "R". To access i.e. the first three columns of a table and reference
+     * them by another variable "a" the R command "a <- R[1:3];" can be used.
+     * End all R command lines with a semicolon and a line break. The data
+     * which has to be returned be the node as out data has to be stored in
+     * the "R" variable again, so take care to reference your data by "R".
+     *
+     * @return The R command to execute.
+     */
+    protected abstract String getCommand();
 
     /**
      * First the
@@ -194,8 +173,8 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
             // --vanilla in order not to create temporary workspace files.
             shellCmd.append(" CMD BATCH --vanilla ");
-            shellCmd.append(rCommandFile.getAbsolutePath());
-            shellCmd.append(" " + rOutFile.getAbsolutePath());
+            shellCmd.append("\"" + rCommandFile.getAbsolutePath() + "\"");
+            shellCmd.append(" \"" + rOutFile.getAbsolutePath() + "\"");
 
             // execute shell command
             String shcmd = shellCmd.toString();

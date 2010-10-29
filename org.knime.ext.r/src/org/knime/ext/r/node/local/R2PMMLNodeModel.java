@@ -17,7 +17,7 @@
  * website: www.knime.org
  * email: contact@knime.org
  * ---------------------------------------------------------------------
- * 
+ *
  * History
  *   15.09.2008 (thiel): created
  */
@@ -37,24 +37,23 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.pmml.PMMLPortObject;
-import org.knime.core.node.port.pmml.PMMLPortObjectSpec;
 import org.knime.ext.r.node.local.port.RPortObject;
 
 /**
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
 
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(R2PMMLNodeModel.class);
-    
+
     /**
      * Creates a new instance of <code>R2PMMLNodeModel</code> with
      * a R input port and PMML output port.
      */
     public R2PMMLNodeModel() {
-        super(new PortType[]{RPortObject.TYPE}, 
+        super(new PortType[]{RPortObject.TYPE},
                 new PortType[]{new PortType(PMMLPortObject.class)});
     }
 
@@ -64,14 +63,14 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-        return new PortObjectSpec[]{(PMMLPortObjectSpec) null};
+        return new PortObjectSpec[]{null};
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData, 
+    protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec)
             throws Exception {
         File rCommandFile = null;
@@ -80,13 +79,13 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(SET_WORKINGDIR_CMD);
-            
+
             // load model
             File fileR = ((RPortObject)inData[0]).getFile();
             completeCmd.append(LOAD_MODEL_CMD_PREFIX);
             completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
             completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
-            
+
             // generate and write pmml
             completeCmd.append("library(pmml);\n");
             completeCmd.append("RPMML<-toString(pmml(R));\n");
@@ -109,8 +108,8 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             shellCmd.append(rBinaryFile);
 
             shellCmd.append(" CMD BATCH ");
-            shellCmd.append(rCommandFile.getAbsolutePath());
-            shellCmd.append(" " + rOutFile.getAbsolutePath());
+            shellCmd.append("\"" + rCommandFile.getAbsolutePath() + "\"");
+            shellCmd.append(" \"" + rOutFile.getAbsolutePath() + "\"");
 
             // execute shell command
             String shcmd = shellCmd.toString();
@@ -172,5 +171,5 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             deleteFile(rOutFile);
         }
     }
-  
+
 }

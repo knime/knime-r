@@ -26,62 +26,64 @@
  */
 package org.knime.ext.r.node.local;
 
-import java.awt.Image;
-
-import javax.swing.JScrollPane;
-
+import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
+import org.knime.core.node.NodeDialogPane;
+import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.knime.ext.r.node.RPlotterViewPanel;
 
 /**
- * The view of the <code>RLocalViewsNodeModel</code> which is able to display
- * an image created by a certain R command. To display the image
- * {@link org.knime.ext.r.node.RPlotterViewPanel} is used.
+ * Factory of the <code>RLocalViewsNodeModel</code>.
  *
  * @author Kilian Thiel, University of Konstanz
  */
-@Deprecated
-public class RLocalViewsNodeView extends NodeView<RLocalViewsNodeModel> {
-
-    private final RPlotterViewPanel m_panel;
+public class RLocalViewsNodeFactory2 extends
+        NodeFactory<RLocalViewsNodeModel2> {
 
     /**
-     * Creates a new instance of <code>RLocalViewsNodeView</code> which displays
-     * a certain image.
-     *
-     * @param nodeModel the model associated with this view.
-     */
-    public RLocalViewsNodeView(final RLocalViewsNodeModel nodeModel) {
-        super(nodeModel);
-        m_panel = new RPlotterViewPanel();
-        super.setComponent(new JScrollPane(m_panel));
-    }
-
-    /**
-     * Updates the image to display.
-     *
      * {@inheritDoc}
      */
     @Override
-    protected void modelChanged() {
-        RLocalViewsNodeModel model = super.getNodeModel();
-        Image image = model.getResultImage();
-        m_panel.update(image);
+    protected NodeDialogPane createNodeDialogPane() {
+        return new RLocalViewsNodeDialog();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onClose() {
-        // empty
+    public RLocalViewsNodeModel2 createNodeModel() {
+        return new RLocalViewsNodeModel2();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void onOpen() {
-        // empty
+    public NodeView<RLocalViewsNodeModel2> createNodeView(
+            final int viewIndex, final RLocalViewsNodeModel2 nodeModel) {
+        if (viewIndex == 0) {
+            return new RLocalViewsNodeView2(nodeModel);
+        } else if (viewIndex == 1) {
+            return new ExtToolStderrNodeView<RLocalViewsNodeModel2>(nodeModel);
+        } else {
+            return null;
+        }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected int getNrNodeViews() {
+        return 2;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean hasDialog() {
+        return true;
+    }
+
 }

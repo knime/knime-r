@@ -23,6 +23,8 @@
  * Or contact us: contact@knime.org.
  * ---------------------------------------------------------------------
  *
+ * History
+ *   18.09.2007 (thiel): created
  */
 package org.knime.ext.r.node.local;
 
@@ -40,8 +42,7 @@ import org.knime.ext.r.node.RPlotterViewPanel;
  *
  * @author Kilian Thiel, University of Konstanz
  */
-@Deprecated
-public class RLocalViewsNodeView extends NodeView<RLocalViewsNodeModel> {
+public class RLocalViewsNodeView2 extends NodeView<RLocalViewsNodeModel2> {
 
     private final RPlotterViewPanel m_panel;
 
@@ -51,7 +52,7 @@ public class RLocalViewsNodeView extends NodeView<RLocalViewsNodeModel> {
      *
      * @param nodeModel the model associated with this view.
      */
-    public RLocalViewsNodeView(final RLocalViewsNodeModel nodeModel) {
+    public RLocalViewsNodeView2(final RLocalViewsNodeModel2 nodeModel) {
         super(nodeModel);
         m_panel = new RPlotterViewPanel();
         super.setComponent(new JScrollPane(m_panel));
@@ -64,7 +65,7 @@ public class RLocalViewsNodeView extends NodeView<RLocalViewsNodeModel> {
      */
     @Override
     protected void modelChanged() {
-        RLocalViewsNodeModel model = super.getNodeModel();
+        RLocalViewsNodeModel2 model = super.getNodeModel();
         Image image = model.getResultImage();
         m_panel.update(image);
     }
@@ -74,7 +75,7 @@ public class RLocalViewsNodeView extends NodeView<RLocalViewsNodeModel> {
      */
     @Override
     protected void onClose() {
-        // empty
+        // rien ne vas plus
     }
 
     /**

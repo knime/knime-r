@@ -7,16 +7,16 @@
  *
  * This file is part of the R integration plugin for KNIME.
  *
- * The R integration plugin is free software; you can redistribute 
- * it and/or modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 of the 
+ * The R integration plugin is free software; you can redistribute
+ * it and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St., Fifth Floor, Boston, MA 02110-1301, USA.
@@ -29,10 +29,12 @@
 package org.knime.ext.r.node.local;
 
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 
@@ -51,7 +53,7 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
      * data in and data one out port.
      */
     public RLocalScriptingNodeModel() {
-        super();
+        super(new PortType[] {BufferedDataTable.TYPE});
     }
 
     /**

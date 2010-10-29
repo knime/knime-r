@@ -27,13 +27,13 @@ import java.awt.Image;
 
 import org.knime.core.node.NodeView;
 
+
 /**
  * <code>NodeView</code> for the R plotter.
  *
  * @author Thomas Gabriel, University of Konstanz
  */
-@Deprecated
-public class RPlotterNodeView extends NodeView<RPlotterNodeModel> {
+public class RPlotterNodeView2 extends NodeView<RPlotterNodeModel2> {
     private final RPlotterViewPanel m_panel;
 
     /**
@@ -41,7 +41,7 @@ public class RPlotterNodeView extends NodeView<RPlotterNodeModel> {
      *
      * @param nodeModel The model (class: <code>RPlotterNodeModel</code>)
      */
-    protected RPlotterNodeView(final RPlotterNodeModel nodeModel) {
+    protected RPlotterNodeView2(final RPlotterNodeModel2 nodeModel) {
         super(nodeModel);
         m_panel = new RPlotterViewPanel();
         super.setComponent(m_panel);
@@ -52,7 +52,7 @@ public class RPlotterNodeView extends NodeView<RPlotterNodeModel> {
      */
     @Override
     protected void modelChanged() {
-        RPlotterNodeModel model = super.getNodeModel();
+        RPlotterNodeModel2 model = super.getNodeModel();
         Image image = model.getResultImage();
         m_panel.update(image);
     }

@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------
  * This source code, its documentation and all appendant files
  * are protected by copyright law. All rights reserved.
@@ -18,7 +18,7 @@
  * website: www.knime.org
  * email: contact@knime.org
  * --------------------------------------------------------------------- *
- * 
+ *
  * History
  *   12.09.2008 (gabriel): created
  */
@@ -34,11 +34,11 @@ import org.knime.core.node.port.PortObjectSpecZipOutputStream;
 
 /**
  * A port object spec for R model port.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 public final class RPortObjectSpec implements PortObjectSpec {
-    
+
     /**
      * The port object spec instance.
      */
@@ -47,13 +47,15 @@ public final class RPortObjectSpec implements PortObjectSpec {
     /**
      * Creating a new instance of <code>RPortObjectSpec</code>.
      */
-    private RPortObjectSpec() { }
-    
+    private RPortObjectSpec() {
+        // empty
+    }
+
     /**
      * Serializer used to save this port object spec.
      * @return a {@link RPortObjectSpec}
      */
-    public static PortObjectSpecSerializer<RPortObjectSpec> 
+    public static PortObjectSpecSerializer<RPortObjectSpec>
             getPortObjectSpecSerializer() {
         return new PortObjectSpecSerializer<RPortObjectSpec>() {
             /** {@inheritDoc} */
@@ -66,9 +68,9 @@ public final class RPortObjectSpec implements PortObjectSpec {
             /** {@inheritDoc} */
             @Override
             public void savePortObjectSpec(final RPortObjectSpec portObjectSpec,
-                    final PortObjectSpecZipOutputStream out) 
+                    final PortObjectSpecZipOutputStream out)
                     throws IOException {
-                
+                // empty
             }
         };
     }
