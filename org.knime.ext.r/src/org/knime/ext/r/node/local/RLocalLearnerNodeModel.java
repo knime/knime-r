@@ -24,11 +24,6 @@
  */
 package org.knime.ext.r.node.local;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.LinkedList;
-
 import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -44,6 +39,11 @@ import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.LinkedList;
 
 /**
  *
@@ -126,10 +126,9 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             final String rBinaryFile = getRBinaryPath();
             shellCmd.append(rBinaryFile);
 
-            shellCmd.append(" CMD BATCH ");
-            shellCmd.append(rCommandFile.getAbsolutePath());
-            shellCmd.append(" " + rOutFile.getAbsolutePath());
-
+            shellCmd.append(" CMD BATCH");
+            shellCmd.append(" " + rCommandFile.getName());
+            shellCmd.append(" " + rOutFile.getName());
 
             // execute shell command
             String shcmd = shellCmd.toString();
@@ -137,6 +136,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
 
             CommandExecution cmdExec = new CommandExecution(shcmd);
             cmdExec.addObserver(this);
+            cmdExec.setExecutionDir(rCommandFile.getParentFile());
             int exitVal = cmdExec.execute(exec);
 
             setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));

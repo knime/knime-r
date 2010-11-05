@@ -23,11 +23,6 @@
  */
 package org.knime.ext.r.node.local;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.LinkedList;
-
 import org.knime.base.node.io.pmml.read.PMMLImport;
 import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.node.ExecutionContext;
@@ -38,6 +33,11 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.pmml.PMMLPortObject;
 import org.knime.ext.r.node.local.port.RPortObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.LinkedList;
 
 /**
  *
@@ -107,9 +107,9 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             final String rBinaryFile = getRBinaryPath();
             shellCmd.append(rBinaryFile);
 
-            shellCmd.append(" CMD BATCH ");
-            shellCmd.append(rCommandFile.getAbsolutePath());
-            shellCmd.append(" " + rOutFile.getAbsolutePath());
+            shellCmd.append(" CMD BATCH");
+            shellCmd.append(" " + rCommandFile.getName());
+            shellCmd.append(" " + rOutFile.getName());
 
             // execute shell command
             String shcmd = shellCmd.toString();
@@ -117,6 +117,7 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
 
             CommandExecution cmdExec = new CommandExecution(shcmd);
             cmdExec.addObserver(this);
+            cmdExec.setExecutionDir(rCommandFile.getParentFile());
             int exitVal = cmdExec.execute(exec);
 
             setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));

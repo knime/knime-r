@@ -23,11 +23,6 @@
  */
 package org.knime.ext.r.node.local;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.LinkedList;
-
 import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
@@ -42,6 +37,11 @@ import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.LinkedList;
 
 /**
  *
@@ -140,9 +140,9 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
             final String rBinaryFile = getRBinaryPath();
             shellCmd.append(rBinaryFile);
 
-            shellCmd.append(" CMD BATCH ");
-            shellCmd.append(rCommandFile.getAbsolutePath());
-            shellCmd.append(" " + rOutFile.getAbsolutePath());
+            shellCmd.append(" CMD BATCH");
+            shellCmd.append(" " + rCommandFile.getName());
+            shellCmd.append(" " + rOutFile.getName());
 
 
             // execute shell command
@@ -151,6 +151,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
 
             CommandExecution cmdExec = new CommandExecution(shcmd);
             cmdExec.addObserver(this);
+            cmdExec.setExecutionDir(rCommandFile.getParentFile());
             int exitVal = cmdExec.execute(exec);
 
             setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));
