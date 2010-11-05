@@ -123,13 +123,14 @@ public class RDialogPanel extends JPanel {
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
+        // init variable list
+        m_listModelVars = new DefaultListModel();
+        m_listVars = new JList(m_listModelVars);
+
         final JSplitPane allSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         allSplit.setResizeWeight(1d / 4);
         allSplit.setRightComponent(textPanel);
         if (Boolean.getBoolean(KNIMEConstants.PROPERTY_EXPERT_MODE)) {
-            // init variable list
-            m_listModelVars = new DefaultListModel();
-            m_listVars = new JList(m_listModelVars);
             m_listVars.setBorder(BorderFactory.createTitledBorder("" +
             		" Flow Variable List "));
             m_listVars.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -157,8 +158,6 @@ public class RDialogPanel extends JPanel {
             leftPane.setResizeWeight(0.5);
             allSplit.setLeftComponent(leftPane);
         } else {
-            m_listVars = null;
-            m_listModelVars = null;
             allSplit.setLeftComponent(leftComp);
         }
         super.add(allSplit, BorderLayout.CENTER);
