@@ -24,6 +24,11 @@
  */
 package org.knime.ext.r.node.local;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.LinkedList;
+
 import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -39,11 +44,6 @@ import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.LinkedList;
 
 /**
  *
@@ -115,7 +115,8 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(WRITE_MODEL_CMD_SUFFIX);
 
             // write R command
-            String rCmd = completeCmd.toString();
+            String rCmd = ExpressionResolver.parseCommand(
+                    completeCmd.toString(), this);
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");

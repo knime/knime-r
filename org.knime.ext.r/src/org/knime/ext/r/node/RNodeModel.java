@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------------
  *
  *  Copyright (C) 2003 - 2010
@@ -7,7 +7,7 @@
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -19,191 +19,105 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ------------------------------------------------------------------------
- * 
+ *
  */
 package org.knime.ext.r.node;
 
-import java.util.ArrayList;
-
-import org.knime.core.node.NodeModel;
-import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.port.PortType;
-import org.rosuda.REngine.Rserve.RConnection;
-import org.rosuda.REngine.Rserve.RserveException;
+import org.knime.core.node.workflow.FlowVariable;
 
 /**
- * R model to save and load login information for the R server.
- * 
- * @author Thomas Gabriel, University of Konstanz
+ * Interface for all R {@link RNodeModel} implementations. Currently only the
+ * methods for accessing flow variables are implemented.
+ *
+ * @author Thomas Gabriel, KNIME.com, Zurich, Switzerland
  */
-abstract class RNodeModel extends NodeModel {
-    
-    /** 
-     * Used only in cases where Rserve runs on local host and windows in order
-     * to overcome the problem that only one connection can be open at the 
-     * time. 
-     */ 
-    private static RConnection mSTATICRCONN;
-    
-    /**
-     * R connection for all non-windows machines.
-     */
-    private RConnection m_rconn;
-    
-    private static final String R_CONNECTION_ERROR = 
-        "Can't connect to R server; make sure the R server is running...";
-    
-    /** R Logger. */
-    private static final NodeLogger LOGGER = 
-        NodeLogger.getLogger(RNodeModel.class);
-    
-    /**
-     * Constructor. Specify the number of inputs and outputs required.
-     * @param ins number of inputs
-     * @param outs number of outputs
-     */
-    RNodeModel(final PortType[] ins, final PortType[] outs) {
-        super(ins, outs);
-    }
-    
-    /**
-     * @return The connection object to Rserve.
-     */
-    protected final RConnection getRconnection() {
-        if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0
-              && RLoginSettings.getHost().equals(RLoginSettings.DEFAULT_HOST)) {
-            mSTATICRCONN = createConnection(mSTATICRCONN);
-            return mSTATICRCONN;
-        }
-        m_rconn = createConnection(m_rconn);
-        return m_rconn;
-    }
-    
-    private RConnection createConnection(final RConnection checkR) {
-        if (checkR != null && checkR.isConnected()) {
-            try {
-                checkR.eval("try()");
-                return checkR;
-            } catch (RserveException e) {
-                LOGGER.debug("Exception during try(): ", e);
-            }
-        }
-        if (checkR != null) {
-            checkR.close();
-        }
-        LOGGER.debug("Starting R evaluation on Rserve (" 
-         + RLoginSettings.getHost() + ":" + RLoginSettings.getPort() + ") ...");
-        RConnection rconn;
-        try {
-            rconn = new RConnection(RLoginSettings.getHost(), 
-                    RLoginSettings.getPort());
-            if (rconn.needLogin()) {
-                rconn.login(RLoginSettings.getUser(), 
-                        RLoginSettings.getPassword());
-            }
-        } catch (RserveException rse) {
-            throw new IllegalStateException(R_CONNECTION_ERROR);
-        }
-        if (!rconn.isConnected()) {
-            throw new IllegalStateException(R_CONNECTION_ERROR);
-        }
-        LOGGER.debug("R connection opened.");
-        return rconn;
-    }
-    
-    /**
-     * Parse the given string into expressions line-by-line replacing "\r" 
-     * and "\t" by white spaces.
-     * @param exps string commands to parse
-     * @return an array of expressions for each line
-     */
-    static final String[] parseExpression(final String[] exps) {
-        ArrayList<String> res = new ArrayList<String>();
-        for (int i = 0; i < exps.length; i++) {
-            exps[i] = exps[i].replace('\r', ' ');
-            exps[i] = exps[i].replace('\t', ' ');
-            exps[i] = exps[i].trim();
-            String help = parseLine(exps[i]);
-            if (help.length() > 0) {
-                res.add(help);
-            }
-        }
-        return res.toArray(new String[0]);   
-    }
-    
-    private static String parseLine(final String str) {
-        StringBuilder b = new StringBuilder();
-        boolean isIgnoreNextChar = false;
-        boolean isInQuote = false;
-        for (int i = 0; i < str.length(); i++) {
-            if (isIgnoreNextChar) {
-                isIgnoreNextChar = false;
-                b.append(str.charAt(i));
-                continue;
-            }
-            switch (str.charAt(i)) {
-            case '"':
-                isInQuote = !isInQuote;
-                b.append(str.charAt(i));
-                break;
-            case '\\':
-                isIgnoreNextChar = true;
-                b.append(str.charAt(i));
-                break;
-            case '#':
-                if (!isInQuote) {
-                    i = str.length();
-                } else {
-                    b.append(str.charAt(i));
-                }
-                break;
-            default:
-                b.append(str.charAt(i));
-            }
-        }
-        if (isInQuote) {
-            return "";
-        }
-        return b.toString().trim();
-    }
-    
-    /**
-     * Reset R connection.
-     */
-    @Override
-    protected void reset() {
-        if (mSTATICRCONN != null) {
-            mSTATICRCONN.close();
-            mSTATICRCONN = null;
-        }
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings) {
-        RLoginSettings.saveSettingsTo(settings);
-    }
+public interface RNodeModel {
 
     /**
-     * {@inheritDoc}
+     * Delegate access to flow variable of type INTEGER.
+     * @param name identifier for flow variable
+     * @return int value
      */
-    @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
-        RLoginSettings.loadValidatedSettingsFrom(settings);
-    }
-    
+    public int delegatePeekFlowVariableInt(final String name);
+
     /**
-     * {@inheritDoc}
+     * Delegate access to flow variable of type DOUBLE.
+     * @param name identifier for flow variable
+     * @return double value
      */
-    @Override
-    protected void validateSettings(final NodeSettingsRO settings) 
-            throws InvalidSettingsException {
-        RLoginSettings.validateSettings(settings);
+    public double delegatePeekFlowVariableDouble(final String name);
+
+    /**
+     * Delegate access to flow variable of type STRING.
+     * @param name identifier for flow variable
+     * @return String value
+     */
+    public String delegatePeekFlowVariableString(final String name);
+
+    /**
+     * Used to parse the R script containing flow and workflow variables.
+     */
+    public static class ExpressionResolver {
+        private ExpressionResolver() {
+            // empty
+        }
+        /**
+         * Parses the given R command and replaces the variables.
+         * @param rCommand the R command to parse
+         * @param model delegator to to retrieve variables
+         * @return the R script where the variables have been replace with
+         *         their actual value
+         */
+        public static String parseCommand(final String rCommand,
+                final RNodeModel model) {
+            String command = new String(rCommand);
+            int currentIndex = 0;
+            do {
+                currentIndex = command.indexOf("$${", currentIndex);
+                if (currentIndex < 0) {
+                    break;
+                }
+                int endIndex = command.indexOf("}$$", currentIndex);
+                String var = command.substring(currentIndex + 4, endIndex);
+                switch (command.charAt(currentIndex + 3)) {
+                    case 'I' :
+                        int i = model.delegatePeekFlowVariableInt(var);
+                        command = command.replace(
+                                "$${I" + var + "}$$", Integer.toString(i));
+                        break;
+                    case 'D' :
+                        double d = model.delegatePeekFlowVariableDouble(var);
+                        command = command.replace(
+                                "$${D" + var + "}$$", Double.toString(d));
+                        break;
+                    case 'S' :
+                        String s = model.delegatePeekFlowVariableString(var);
+                        command = command.replace("$${S" + var + "}$$",
+                                "\"" + s + "\"");
+                        break;
+                }
+            } while (true);
+            return command;
+        }
+
+        /**
+         * Replaces and returns the given flow variable.
+         * @param var flow variable to be extended
+         * @return the new variable as string with pre- and suffix for
+         *         INTEGER, DOUBLE and STRING types
+         */
+        public static String extendVariable(final FlowVariable var) {
+            switch (var.getType()) {
+                case INTEGER :
+                    return "$${I" + var.getName() + "}$$";
+                case DOUBLE :
+                    return "$${D" + var.getName() + "}$$";
+                case STRING :
+                    return "$${S" + var.getName() + "}$$";
+                default : throw new RuntimeException(
+                    "Unsupported flow variable type '" + var.getType() + "'");
+            }
+        }
     }
+
 }

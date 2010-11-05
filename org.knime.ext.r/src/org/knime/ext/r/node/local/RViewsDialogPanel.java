@@ -23,14 +23,13 @@
  * Or contact us: contact@knime.org.
  * ---------------------------------------------------------------------
  *
- * History
- *   24.09.2007 (thiel): created
  */
 package org.knime.ext.r.node.local;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -45,6 +44,7 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DialogComponentStringSelection;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.workflow.FlowVariable;
 import org.knime.ext.r.node.RDialogPanel;
 
 /**
@@ -98,18 +98,20 @@ public class RViewsDialogPanel extends JPanel {
      * Loads settings into dialog components.
      * @param settings The settings to load.
      * @param specs The specs of the input data table.
+     * @param map of flow variables together with its identifiers
      * @throws NotConfigurableException If components could not be configured
      * and settings not be set.
      */
     public void loadSettings(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs) throws NotConfigurableException {
+            final PortObjectSpec[] specs, final Map<String, FlowVariable> map)
+            throws NotConfigurableException {
         m_viewSelectionComponent.loadSettingsFrom(settings, specs);
-        m_commandPanel.loadSettingsFrom(settings, specs);
+        m_commandPanel.loadSettingsFrom(settings, specs, map);
     }
 
     /**
      * Saves settings set in the dialog components into the settings instance.
-     * @param settings The settings instance ot save settings to.
+     * @param settings The settings instance to save settings to.
      * @throws InvalidSettingsException If invalid settings have been set.
      */
     public void saveSettings(final NodeSettingsWO settings)

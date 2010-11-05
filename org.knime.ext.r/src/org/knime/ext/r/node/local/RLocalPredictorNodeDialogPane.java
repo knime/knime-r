@@ -17,11 +17,13 @@
  * website: www.knime.org
  * email: contact@knime.org
  * ---------------------------------------------------------------------
- * 
+ *
  * History
  *   15.09.2008 (thiel): created
  */
 package org.knime.ext.r.node.local;
+
+import java.util.Map;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
@@ -29,18 +31,19 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.workflow.FlowVariable;
 import org.knime.ext.r.node.RDialogPanel;
 
 /**
- * 
+ *
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
-    
+
     private final RDialogPanel m_dialogPanel;
-    
+
     /**
-     * Constructor which creates a new instance of 
+     * Constructor which creates a new instance of
      * <code>RLocalPredictorNodeDialogPane</code>.
      */
     public RLocalPredictorNodeDialogPane() {
@@ -49,7 +52,7 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
         addTabAt(0, "R Command", m_dialogPanel);
         setSelected("R Command");
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -57,10 +60,11 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
     public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
             final PortObjectSpec[] specs) throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
-        m_dialogPanel.loadSettingsFrom(settings, 
-                new DataTableSpec[]{(DataTableSpec) specs[1]});
-    } 
-    
+        Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
+        m_dialogPanel.loadSettingsFrom(settings,
+                new DataTableSpec[]{(DataTableSpec) specs[1]}, flowMap);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -69,5 +73,5 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
         throws InvalidSettingsException {
         super.saveAdditionalSettingsTo(settings);
         m_dialogPanel.saveSettingsTo(settings);
-    } 
+    }
 }

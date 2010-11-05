@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------------
  *
  *  Copyright (C) 2003 - 2010
@@ -7,7 +7,7 @@
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -19,19 +19,22 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ------------------------------------------------------------------------
- * 
+ *
  */
 package org.knime.ext.r.node;
+
+import java.util.Map;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.workflow.FlowVariable;
 
 /**
  * <code>NodeDialogPane</code> for R Console.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RConsoleDialogPane extends RNodeDialogPane {
@@ -48,21 +51,22 @@ public class RConsoleDialogPane extends RNodeDialogPane {
     }
 
     /**
-     * Calls the update method of the underlying filter panel using the input 
+     * Calls the update method of the underlying filter panel using the input
      * data table spec from this <code>FilterColumnNodeModel</code>.
-     *  
+     *
      * @param settings The <code>NodeSettings</code> to read from.
      * @param specs The input specs.
      * @throws NotConfigurableException If not configurable.
      */
     @Override
     protected void loadSettingsFrom(
-            final NodeSettingsRO settings, final DataTableSpec[] specs) 
+            final NodeSettingsRO settings, final DataTableSpec[] specs)
             throws NotConfigurableException {
         super.loadSettingsFrom(settings, specs);
-        m_dialogPanel.loadSettingsFrom(settings, specs);
-    } 
-    
+        Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
+        m_dialogPanel.loadSettingsFrom(settings, specs, flowMap);
+    }
+
     /**
      * Sets the list of columns to exclude inside the underlying
      * <code>FilterColumnNodeModel</code> retrieving them from the filter panel.
@@ -70,7 +74,7 @@ public class RConsoleDialogPane extends RNodeDialogPane {
      * @throws InvalidSettingsException If settings wrong.
      */
     @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings) 
+    protected void saveSettingsTo(final NodeSettingsWO settings)
             throws InvalidSettingsException {
         super.saveSettingsTo(settings);
         m_dialogPanel.saveSettingsTo(settings);

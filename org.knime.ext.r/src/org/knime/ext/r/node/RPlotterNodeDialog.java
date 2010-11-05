@@ -23,11 +23,14 @@
  */
 package org.knime.ext.r.node;
 
+import java.util.Map;
+
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.workflow.FlowVariable;
 import org.knime.ext.r.node.local.RViewsDialogPanel;
 import org.knime.ext.r.node.local.RViewsPngDialogPanel;
 
@@ -68,7 +71,8 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
             final NodeSettingsRO settings, final DataTableSpec[] specs)
             throws NotConfigurableException {
         super.loadSettingsFrom(settings, specs);
-        m_plotCommandPanel.loadSettings(settings, specs);
+        Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
+        m_plotCommandPanel.loadSettings(settings, specs, flowMap);
         m_viewPngPanel.loadSettings(settings, specs);
     }
 

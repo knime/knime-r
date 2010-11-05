@@ -61,7 +61,7 @@ import org.rosuda.REngine.Rserve.RConnection;
  *
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RConsoleModel extends RNodeModel {
+public class RConsoleModel extends RRemoteNodeModel {
 
     private String[] m_expression =
         new String[]{RDialogPanel.DEFAULT_R_COMMAND};

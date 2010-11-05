@@ -83,7 +83,7 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
             .getLogger(RScriptingNodeView.class);
 
     /** Underlying R model. */
-    private final RNodeModel m_rModel;
+    private final RRemoteNodeModel m_rModel;
 
     /**
      * Creates a new view.

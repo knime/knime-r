@@ -44,7 +44,7 @@ import org.knime.core.node.port.PortType;
  *
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RScriptingNodeModel extends RNodeModel {
+public class RScriptingNodeModel extends RRemoteNodeModel {
 
     private DataTableSpec m_spec;
 

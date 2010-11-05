@@ -18,10 +18,13 @@
  * email: contact@knime.org
  * ---------------------------------------------------------------------
  *
- * History
- *   15.09.2008 (thiel): created
  */
 package org.knime.ext.r.node.local;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.LinkedList;
 
 import org.knime.base.node.io.pmml.read.PMMLImport;
 import org.knime.base.node.util.exttool.CommandExecution;
@@ -33,11 +36,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.pmml.PMMLPortObject;
 import org.knime.ext.r.node.local.port.RPortObject;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.LinkedList;
 
 /**
  *
@@ -96,7 +94,8 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append("\n");
 
             // write R command
-            String rCmd = completeCmd.toString();
+            String rCmd = ExpressionResolver.parseCommand(
+                    completeCmd.toString(), this);
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");

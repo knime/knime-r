@@ -59,7 +59,7 @@ import org.rosuda.REngine.Rserve.RserveException;
  *
  * @author Thomas Gabriel, University of Konstanz
  */
-public class RPlotterNodeModel2 extends RNodeModel {
+public class RPlotterNodeModel2 extends RRemoteNodeModel {
 
     private Image m_resultImage;
     private File m_imageFile;

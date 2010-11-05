@@ -23,6 +23,11 @@
  */
 package org.knime.ext.r.node.local;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.LinkedList;
+
 import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
@@ -37,11 +42,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.LinkedList;
 
 /**
  *
@@ -117,7 +117,8 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
 
             // predict data
             completeCmd.append("RMODEL<-R;\n");
-            completeCmd.append(m_rCommand.trim());
+            completeCmd.append(ExpressionResolver.parseCommand(
+                    m_rCommand.trim(), this));
             completeCmd.append("\n");
 
             // write predicted data to csv

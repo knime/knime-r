@@ -26,6 +26,10 @@
  */
 package org.knime.ext.r.node.local;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.knime.base.node.io.csvwriter.CSVWriter;
 import org.knime.base.node.io.csvwriter.FileWriterSettings;
 import org.knime.base.node.io.filereader.FileAnalyzer;
@@ -48,11 +52,8 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RConnectionRemote;
+import org.knime.ext.r.node.RNodeModel;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * <code>RAbstractLocalNodeModel</code> is an abstract
@@ -79,7 +80,8 @@ import java.io.IOException;
  * @author Kilian Thiel, University of Konstanz
  * @author Thomas Gabriel, University of Konstanz
  */
-public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
+public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
+        implements RNodeModel {
 
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RAbstractLocalNodeModel.class);
@@ -393,7 +395,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
 
     /**
      * Path to R binary.
-     * @return R binaray path
+     * @return R binary path
      */
     protected final String getRBinaryPath() {
         if (m_useSpecifiedModel.getBooleanValue()) {
@@ -401,6 +403,30 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel {
         } else {
             return RPreferenceInitializer.getRPath();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final double delegatePeekFlowVariableDouble(final String name) {
+        return peekFlowVariableDouble(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final int delegatePeekFlowVariableInt(final String name) {
+        return peekFlowVariableInt(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final String delegatePeekFlowVariableString(final String name) {
+        return peekFlowVariableString(name);
     }
 
 }
