@@ -1,6 +1,0 @@
-class.ind               Generates Class Indicator Matrix from a Factor
-multinom                Fit Multinomial Log-linear Models
-nnetHess                Evaluates Hessian for a Neural Network
-nnet                    Fit Neural Networks
-predict.nnet            Predict New Examples by a Trained Neural Net
-which.is.max            Find Maximum Position in Vector
