@@ -1,0 +1,19 @@
+Package: randomSurvivalForest
+Version: 3.6.3
+Date: 2010-05-21
+Title: Random Survival Forests
+Author: Hemant Ishwaran <hemant.ishwaran@gmail.com> and Udaya B.
+        Kogalur <kogalurshear@gmail.com>
+Maintainer: Udaya B. Kogalur <kogalurshear@gmail.com>
+Depends: R (>= 2.8.0)
+Suggests: XML
+Description: Random survival forests for right-censored and competing
+        risks survival data.
+License: GPL (>= 2)
+URL: http://www.bio.ri.ccf.org/Resume/Pages/Ishwaran/ishwaran.html
+        http://www.kogalur-shear.com
+Packaged: 2010-05-21 13:50:41 UTC; kogalur
+Repository: CRAN
+Date/Publication: 2010-05-26 14:15:14
+Built: R 2.12.0; i386-pc-mingw32; 2010-10-16 11:11:44 UTC; windows
+Archs: i386, x64

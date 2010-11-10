@@ -1,0 +1,35 @@
+Package: XML
+Version: 3.2-0.1
+Date: 2010/10/05
+Author: Duncan Temple Lang (duncan@wald.ucdavis.edu)
+Maintainer: Duncan Temple Lang <duncan@wald.ucdavis.edu>
+Title: Tools for parsing and generating XML within R and S-Plus.
+Depends: R (>= 1.2.0), methods, utils
+Suggests: bitops
+SystemRequirements: libxml2 (>= 2.6.3)
+LazyLoad: yes
+Description: This package provides many approaches for both reading and
+        creating XML (and HTML) documents (including DTDs), both local
+        and accessible via HTTP or FTP.  It also offers access to an
+        XPath "interpreter".
+Note: The versions numbers 1.0 and 2.0 do not have any special
+        significance, but are merely the result of incrementing the
+        minor count by 1 for each release. Specifically, there is no
+        change in the interface.
+URL: http://www.omegahat.org/RSXML
+License: BSD
+Collate: AAA.R DTD.R DTDClasses.R DTDRef.R SAXMethods.S XMLClasses.R
+        applyDOM.R assignChild.R catalog.R createNode.R dynSupports.R
+        error.R flatTree.R htmlParse.R nodeAccessors.R parseDTD.R
+        schema.S summary.R tangle.R toString.S tree.R version.R
+        xmlErrorEnums.R xmlEventHandler.R xmlEventParse.R xmlHandler.R
+        xmlInternalSource.R xmlOutputDOM.R xmlNodes.R xmlOutputBuffer.R
+        xmlTree.R xmlTreeParse.R hashTree.R zzz.R supports.R parser.R
+        libxmlFeatures.R xmlString.R saveXML.R namespaces.R
+        readHTMLTable.R reflection.R xmlToDataFrame.R bitList.R
+        compare.R encoding.R fixNS.R
+Repository: CRAN
+Date/Publication: 2010-10-05 16:44:24
+Packaged: 2010-10-06 04:48:33 UTC; ripley
+Built: R 2.12.0; i386-pc-mingw32; 2010-10-06 04:49:48 UTC; windows
+Archs: i386, x64

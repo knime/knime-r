@@ -1,0 +1,10 @@
+Package: tools
+Version: 2.12.0
+Priority: base
+Title: Tools for Package Development
+Author: R Development Core Team
+Maintainer: R Core Team <R-core@r-project.org>
+Description: Tools for package development, administration and
+        documentation
+License: Part of R 2.12.0
+Built: R 2.12.0; x86_64-pc-mingw32; 2010-10-16 13:04:08 UTC; windows

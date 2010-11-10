@@ -1,0 +1,64 @@
+You can use install.packages() to install this package, but to use it
+in R, you will have to add the XML/libs directory to your path or copy
+the files
+
+  libxml2.dll zlib.dll iconv.dll
+
+to a directory in your path.  Putting them into the directory which
+contains Rgui.exe and Rterm.exe for this version of R is probably
+best.  They will hopefully not interfere with other applications
+that rely on alternate versions.
+
+
+=====================================================================
+
+
+COMPILING the PACKAGE
+---------------------
+
+To compile this package on a Windows machine is quite easy.  Since the
+package depends on libxml (version 2), you will have to get the
+development version of that package for compiling with MingGW.  To do
+this, I have followed the links from www.xmlsloft.org to
+
+   http://www.zlatkovic.com/libxml.en.html 
+
+(The libraries are available directly at http://www.zlatkovic.com/pub/libxml/ )
+
+From the "Getting the Binaries" section, download the zlib, iconv,
+libxml2 (and openssl) zip files.
+
+Having fetched these binaries, I unzip these and move the relevant
+files to a common area.  Specifically, in my HOME directory on the
+cygwin setup on Windows, I create the following directories:
+
+  include/
+  lib/
+  bin/
+
+Then I copy the files from each of these directories in the .zip files 
+to these directories. 
+
+
+Now, all we need to do is tell the GNU make utility where to find
+these header and library files.  You can either edit the
+src/Makevars.win file and specify a value for (the now misnamed)
+LIB_XML variable to the directory containing the include/, lib/ and
+bin/ directory created earlier. In my case, this is $HOME, but
+specified as
+
+  D:/cygwin/home/duncan
+
+(rather than /home/duncan).
+The remainder of the file should not need to be modified.
+
+Alternatively, you can specify this as an environment variable, e.g.
+  export LIBM_XML=D:/cygwin/home/duncan
+ 
+
+To create a binary, I copy libxml2.dll, iconv.dll and zlib.dll to the
+directory XML/inst/libs in the source and then run
+
+  Rcmd build --binary XML
+
+

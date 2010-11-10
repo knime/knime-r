@@ -1,0 +1,28 @@
+Package: pmml
+Type: Package
+Title: Generate PMML for various models
+Version: 1.2.26
+Date: 2010-10-09
+Author: Graham Williams, Michael Hahsler (arules), Zementis Inc, Hemant
+        Ishwaran, Udaya B. Kogalur, Rajarshi Guha
+Maintainer: Graham Williams <Graham.Williams@togaware.com>
+Depends: XML
+Suggests: arules, nnet, rpart, randomSurvivalForest, randomForest,
+        kernlab
+License: GPL (>= 2)
+Description: The Predictive Modelling Markup Language (PMML) is a
+        language for representing models, in an application independent
+        way. Such models can then be loaded into other applications
+        supporting PMML, including ADAPA from Zementis, Teradata
+        Warehouse Miner and IBM's DB2. The package provides a generic
+        pmml function to generate pmml for an object. Using a S3
+        generic function the approriate method for the class of the
+        supplied object is dispatched. The package currently supports
+        the export of PMML for linear regression, SVMs, rpart
+        classification trees, randomSurvivalForest forest models, and
+        kmeans clusters. This package is part of the Rattle toolkit.
+URL: http://rattle.togaware.com/
+Packaged: 2010-10-08 21:28:53 UTC; gjw
+Repository: CRAN
+Date/Publication: 2010-10-09 07:30:08
+Built: R 2.12.0; ; 2010-11-08 12:46:00 UTC; windows

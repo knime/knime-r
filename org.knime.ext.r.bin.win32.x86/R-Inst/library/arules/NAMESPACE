@@ -1,0 +1,89 @@
+useDynLib(arules)
+
+importFrom("stats", "predict")  ## otherwise predict in stats does not work
+importFrom("Matrix", "summary", "image") ## we need the generics 
+importFrom("Matrix", "t")
+
+export(
+        "read.transactions", 
+        "random.transactions", 
+        "random.patterns",
+        "apriori", 
+        "eclat"
+      )
+
+exportClasses(
+        "itemMatrix", "summary.itemMatrix",
+        "transactions", "summary.transactions",
+        "tidLists", "summary.tidLists", 
+        "associations", "summary.associations",
+        "itemsets", "summary.itemsets",
+        "rules", "summary.rules",
+        "ASparameter", "AScontrol",
+        "APparameter", "APcontrol", "APappearance",
+        "ECparameter", "ECcontrol",
+        "ar_similarity", "ar_cross_dissimilarity", "dist"
+        )
+
+exportMethods(
+        "%in%",
+        "%ain%",
+        "%pin%",
+        "LIST",
+        "SORT",
+        "WRITE",
+        "[",
+        "coverage",
+        "crossTable",
+        "c", 
+        "coerce",           ### for setAs
+        "decode", 
+        "dim", 
+        "dimnames", "dimnames<-",
+	"duplicated",
+        "encode",
+        "generatingItemsets",
+        "image", 
+        "info", "info<-", 
+        "initialize", 
+        "inspect", 
+        "intersect", 
+        "itemInfo", "itemInfo<-", 
+        "itemsetInfo", "itemsetInfo<-", 
+        "items", "items<-",
+        "itemLabels", "itemLabels<-", 
+        "itemFrequency", 
+        "itemFrequencyPlot",
+        "is.closed",
+        "is.element",
+        "is.maximal",
+        "is.subset",
+        "is.superset",
+        "labels", 
+        "length", 
+        "lhs", "lhs<-",
+        "match",
+        "interestMeasure",
+        "nitems",
+        "quality", "quality<-",
+        "recode",
+        "rhs", "rhs<-", 
+        "ruleInduction",
+        "sample",
+        "setdiff",
+        "setequal",
+        "show", 
+        "size",
+        "sort",
+        "subset", 
+        "summary", 
+        "support", 
+        "t", 
+        "tidLists", 
+        "transactionInfo", "transactionInfo<-",
+        "union",
+        "unique",
+        "affinity", 
+        "predict",
+        "dissimilarity"
+        )

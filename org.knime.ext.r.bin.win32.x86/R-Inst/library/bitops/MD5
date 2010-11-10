@@ -1,0 +1,17 @@
+54bd71c0ed7ae6b323ee282a4dbb83a6 *DESCRIPTION
+17a0ec2e92452496167bc97715b4e70d *INDEX
+2f10f64f9b880c05d8aa30fabb1b2062 *Meta/Rd.rds
+450f73376f737b807400d0d94572a8c5 *Meta/hsearch.rds
+0d2970a01ba3506d3249c5249248c080 *Meta/links.rds
+875f209a7d650fc02b80602263612c94 *Meta/package.rds
+6e60a4480e0345d65902fc23b54bffd6 *R/bitops
+56c32735cca2f422e42d5ab1d86bee11 *R/bitops.rdb
+fa4fcaa0a8629136688dfda2f0eabb5f *R/bitops.rdx
+e4d02d9ccebbf40483b2b17516553db0 *help/AnIndex
+5081ac4c982bc2da865315d890367f90 *help/aliases.rds
+bb4e0506e328ad49f933422572a775b2 *help/bitops.rdb
+e9147e6818c9b5269cc63f36f6dccb39 *help/bitops.rdx
+9d976b3e1cdbe9c92c5318920dacb450 *help/paths.rds
+9636dbf37c010def713bf8725aaa0482 *html/00Index.html
+5ef4ca61410d42e26657ef040b4cf4b0 *libs/i386/bitops.dll
+6caa2ec4b6a0b9b15f71d73698a5b3e9 *libs/x64/bitops.dll
