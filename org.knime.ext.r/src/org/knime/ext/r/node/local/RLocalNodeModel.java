@@ -38,6 +38,7 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
+import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
  * <code>RLocalNodeModel</code> is an abstract
@@ -84,11 +85,13 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
      * is set <code>true</code>. Otherwise the node will not have any
      * data out port.
      * @param outPorts array of out-port types
+     * @param pref R preference provider
      */
-    public RLocalNodeModel(final PortType[] outPorts) {
-        super(new PortType[]{BufferedDataTable.TYPE}, outPorts);
+    public RLocalNodeModel(final PortType[] outPorts,
+    		final RPreferenceProvider pref) {
+        super(new PortType[]{BufferedDataTable.TYPE}, outPorts, pref);
     }
-
+    
     /**
      * Implement this method to specify certain R code to run. Be aware that
      * this R code has to be valid, otherwise the node will not execute

@@ -20,8 +20,6 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ------------------------------------------------------------------------
  *
- * History
- *   19.09.2007 (thiel): created
  */
 package org.knime.ext.r.preferences;
 
@@ -60,13 +58,18 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
     }
 
     /**
-     * Returns the path to the R executable.
-     *
-     * @return the path
+     * Returns a provider for the R executable.
+     * @return provider to the path to the R executable
      */
-    public static String getRPath() {
-        final IPreferenceStore pStore =
-                RCorePlugin.getDefault().getPreferenceStore();
-        return pStore.getString(PREF_R_PATH);
+    public static final RPreferenceProvider getRProvider() {
+        return new RPreferenceProvider() {
+            @Override
+            /** {@inheritDoc} */
+            public String getRPath() {
+                final IPreferenceStore pStore =
+                    RCorePlugin.getDefault().getPreferenceStore();
+                return pStore.getString(PREF_R_PATH);
+            }
+        };
     }
 }

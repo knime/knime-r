@@ -47,6 +47,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.RPlotterNodeModel;
+import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
  * The <code>RLocalViewsNodeModel</code> provides functionality to create
@@ -104,13 +105,13 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     private String m_viewCmd =
         RViewScriptingConstants.getDefaultExpressionCommand();
 
-
     /**
      * Creates new instance of <code>RLocalViewsNodeModel</code> with one data
      * in port and no data out port.
+     * @param pref provider for R executable
      */
-    public RLocalViewsNodeModel() {
-        super(new PortType[0]);
+    public RLocalViewsNodeModel(final RPreferenceProvider pref) {
+        super(new PortType[0], pref);
         m_resultImage = null;
     }
 

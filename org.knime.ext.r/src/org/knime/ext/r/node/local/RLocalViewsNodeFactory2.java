@@ -28,8 +28,8 @@ package org.knime.ext.r.node.local;
 
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  * Factory of the <code>RLocalViewsNodeModel</code>.
@@ -37,7 +37,14 @@ import org.knime.core.node.NodeView;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalViewsNodeFactory2 extends
-        NodeFactory<RLocalViewsNodeModel2> {
+        RNodeFactory<RLocalViewsNodeModel2> {
+	
+    /**
+     * Empty default constructor.
+     */
+    public RLocalViewsNodeFactory2() {
+        super(RPreferenceInitializer.getRProvider());
+    }
 
     /**
      * {@inheritDoc}
@@ -52,7 +59,7 @@ public class RLocalViewsNodeFactory2 extends
      */
     @Override
     public RLocalViewsNodeModel2 createNodeModel() {
-        return new RLocalViewsNodeModel2();
+        return new RLocalViewsNodeModel2(getRProvider());
     }
 
     /**

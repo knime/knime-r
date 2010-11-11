@@ -53,7 +53,8 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RConnectionRemote;
 import org.knime.ext.r.node.RNodeModel;
-import org.knime.ext.r.preferences.RPreferenceInitializer;
+import org.knime.ext.r.preferences.RPreferenceProvider;
+
 
 /**
  * <code>RAbstractLocalNodeModel</code> is an abstract
@@ -142,27 +143,31 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
     private static final String DELIMITER = ",";
 
     /**
-     * Model saving the path to the R binary file.
-     */
-    private final SettingsModelString m_rbinaryFileSettingsModel =
-        RLocalNodeDialogPane.createRBinaryFile();
-
-    /**
      * Model specifying if specific R binary file have to be used.
      */
     private final SettingsModelBoolean m_useSpecifiedModel =
         RLocalNodeDialogPane.createUseSpecifiedFileModel();
+    
+    /** Preference provider for the R executable. */
+    private final RPreferenceProvider m_pref;
 
+    /**
+     * Model saving the path to the R binary file.
+     */
+    private final SettingsModelString m_rbinaryFileSettingsModel
+        = new SettingsModelString("R_binary_file", "");
+   
     /**
      * Constructor of <code>RAbstractLocalNodeModel</code> with given in- and
      * out-port specification.
-     *
      * @param inPorts in-port specification.
      * @param outPorts out-port specification.
+     * @param pref provider for the R executable
      */
     protected RAbstractLocalNodeModel(final PortType[] inPorts,
-            final PortType[] outPorts) {
+            final PortType[] outPorts, final RPreferenceProvider pref) {
         super(inPorts, outPorts);
+        m_pref = pref;
     }
 
     /**
@@ -180,6 +185,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
+        m_rbinaryFileSettingsModel.setStringValue(getRBinaryPath());
         m_rbinaryFileSettingsModel.saveSettingsTo(settings);
         m_useSpecifiedModel.saveSettingsTo(settings);
     }
@@ -257,8 +263,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
      */
     protected void checkRExecutable() throws InvalidSettingsException {
         if (!m_useSpecifiedModel.getBooleanValue()) {
-            m_rbinaryFileSettingsModel.setStringValue(
-                    RPreferenceInitializer.getRPath());
+            m_rbinaryFileSettingsModel.setStringValue(m_pref.getRPath());
         }
         checkRExecutable(m_rbinaryFileSettingsModel.getStringValue());
     }
@@ -266,7 +271,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
 
     /**
      * Deletes the specified file. If the file is a directory the directory
-     * itself as well as its files and subdirectories are deleted.
+     * itself as well as its files and sub-directories are deleted.
      *
      * @param file The file to delete.
      * @return <code>true</code> if the file could be deleted, otherwise
@@ -401,7 +406,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
         if (m_useSpecifiedModel.getBooleanValue()) {
             return m_rbinaryFileSettingsModel.getStringValue();
         } else {
-            return RPreferenceInitializer.getRPath();
+            return m_pref.getRPath();
         }
     }
 

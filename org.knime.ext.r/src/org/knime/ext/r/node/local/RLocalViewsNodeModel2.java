@@ -51,6 +51,7 @@ import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RDialogPanel;
+import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
  * The <code>RLocalViewsNodeModel</code> provides functionality to create
@@ -111,13 +112,13 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
     private String m_viewCmd =
         RViewScriptingConstants.getDefaultExpressionCommand();
 
-
     /**
      * Creates new instance of <code>RLocalViewsNodeModel</code> with one data
      * in port and no data out port.
+     * @param pref provider for R executable
      */
-    public RLocalViewsNodeModel2() {
-        super(new PortType[] {ImagePortObject.TYPE});
+    public RLocalViewsNodeModel2(final RPreferenceProvider pref) {
+        super(new PortType[]{ImagePortObject.TYPE}, pref);
         m_resultImage = null;
     }
 

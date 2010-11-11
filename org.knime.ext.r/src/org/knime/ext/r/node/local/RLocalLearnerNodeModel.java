@@ -19,8 +19,6 @@
  * email: contact@knime.org
  * --------------------------------------------------------------------- *
  *
- * History
- *   12.09.2008 (gabriel): created
  */
 package org.knime.ext.r.node.local;
 
@@ -44,6 +42,7 @@ import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
+import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
  *
@@ -58,11 +57,11 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
     private String m_rCommand = RDialogPanel.DEFAULT_R_COMMAND;
 
     /**
-     *
+     * @param pref provider for R executable
      */
-    public RLocalLearnerNodeModel() {
+    public RLocalLearnerNodeModel(final RPreferenceProvider pref) {
         super(new PortType[]{BufferedDataTable.TYPE},
-                new PortType[]{RPortObject.TYPE});
+                new PortType[]{RPortObject.TYPE}, pref);
     }
 
     /**

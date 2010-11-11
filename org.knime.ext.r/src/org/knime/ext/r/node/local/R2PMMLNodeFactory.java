@@ -18,21 +18,26 @@
  * website: www.knime.org
  * email: contact@knime.org
  * --------------------------------------------------------------------- *
- * 
- * History
- *   04.12.2008 (gabriel): created
+ *
  */
 package org.knime.ext.r.node.local;
 
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  * 
  * @author Thomas Gabriel, University of Konstanz
  */
-public class R2PMMLNodeFactory extends NodeFactory<R2PMMLNodeModel> {
+public class R2PMMLNodeFactory extends RNodeFactory<R2PMMLNodeModel> {
+    
+    /**
+     * Creates a new factor for the R2PMML node.
+     */
+    public R2PMMLNodeFactory() {
+        super(RPreferenceInitializer.getRProvider());
+    }
 
     /**
      * {@inheritDoc}
@@ -47,7 +52,7 @@ public class R2PMMLNodeFactory extends NodeFactory<R2PMMLNodeModel> {
      */
     @Override
     public R2PMMLNodeModel createNodeModel() {
-        return new R2PMMLNodeModel();
+        return new R2PMMLNodeModel(getRProvider());
     }
 
     /**

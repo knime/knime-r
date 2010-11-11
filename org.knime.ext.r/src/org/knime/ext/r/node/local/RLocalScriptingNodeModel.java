@@ -37,6 +37,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
+import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
  * The <code>RLocalScriptingNodeModel</code> provides functionality to create
@@ -51,9 +52,10 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     /**
      * Creates new instance of <code>RLocalScriptingNodeModel</code> with one
      * data in and data one out port.
+     * @param pref R preference provider
      */
-    public RLocalScriptingNodeModel() {
-        super(new PortType[] {BufferedDataTable.TYPE});
+    public RLocalScriptingNodeModel(final RPreferenceProvider pref) {
+        super(new PortType[]{BufferedDataTable.TYPE}, pref);
     }
 
     /**

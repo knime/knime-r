@@ -18,22 +18,27 @@
  * email: contact@knime.org
  * ---------------------------------------------------------------------
  * 
- * History
- *   15.09.2008 (thiel): created
  */
 package org.knime.ext.r.node.local;
 
 import org.knime.base.node.util.exttool.ExtToolOutputNodeView;
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
+import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
  * 
  * @author Kilian Thiel, University of Konstanz
  */
 public class RLocalPredictorNodeFactory 
-extends NodeFactory<RLocalPredictorNodeModel> {
+        extends RNodeFactory<RLocalPredictorNodeModel> {
+    
+    /**
+     * Create a new factory class for a local R predictor node.
+     */
+    public RLocalPredictorNodeFactory() {
+        super(RPreferenceInitializer.getRProvider());
+    }
 
     /**
      * {@inheritDoc}
@@ -48,7 +53,7 @@ extends NodeFactory<RLocalPredictorNodeModel> {
      */
     @Override
     public RLocalPredictorNodeModel createNodeModel() {
-        return new RLocalPredictorNodeModel();
+        return new RLocalPredictorNodeModel(getRProvider());
     }
 
     /**
