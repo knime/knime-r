@@ -110,13 +110,15 @@ public class RDialogPanel extends JPanel {
             /** {@inheritDoc} */
             @Override
             public final void mouseClicked(final MouseEvent e) {
-                Object o = m_list.getSelectedValue();
-                if (o != null) {
-                    DataColumnSpec cspec = (DataColumnSpec) o;
-                    m_textExpression.replaceSelection(
-                            formatColumnName(cspec.getName()));
-                    m_list.clearSelection();
-                    m_textExpression.requestFocus();
+                if (e.getClickCount() == 2) {
+                    Object o = m_list.getSelectedValue();
+                    if (o != null) {
+                        DataColumnSpec cspec = (DataColumnSpec) o;
+                        m_textExpression.replaceSelection(
+                                formatColumnName(cspec.getName()));
+                        m_list.clearSelection();
+                        m_textExpression.requestFocus();
+                    }
                 }
             }
         });
@@ -141,13 +143,15 @@ public class RDialogPanel extends JPanel {
                 /** {@inheritDoc} */
                 @Override
                 public final void mouseClicked(final MouseEvent e) {
-                    Object o = m_listVars.getSelectedValue();
-                    if (o != null) {
-                        FlowVariable var = (FlowVariable) o;
-                        m_textExpression.replaceSelection(
-                                ExpressionResolver.extendVariable(var));
-                        m_listVars.clearSelection();
-                        m_textExpression.requestFocus();
+                    if (e.getClickCount() == 2) {
+                        Object o = m_listVars.getSelectedValue();
+                        if (o != null) {
+                            FlowVariable var = (FlowVariable) o;
+                            m_textExpression.replaceSelection(
+                                    ExpressionResolver.extendVariable(var));
+                            m_listVars.clearSelection();
+                            m_textExpression.requestFocus();
+                        }
                     }
                 }
             });
