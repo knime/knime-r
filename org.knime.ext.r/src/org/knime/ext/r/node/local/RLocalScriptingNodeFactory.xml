@@ -18,18 +18,34 @@
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 		<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-		<option name ="R binary path">
-			Path to the local R executable. Note that it is possible to specify
-			the path to the local R executable also in the R section of the 
-			KNIME preferences.<br />
-		</option>
-		<option name="Use selected">
-			If checked, the specified file is used as R binary. If not checked, 
-			the file specified in the KNIME's R preferences is used.
-		</option>
-		<option name ="R Command">
-			The R commands to run.
-		</option>
+        <tab name="R Command">
+          <option name ="R Snippet">
+            The R commands to run.
+          </option>
+          <option name="Column List">
+            The list contains the column that are available in the input table.
+            Double click any of the column names to insert the respective field
+            in the expression editor. It will replace your current selection or
+            simply insert at the current caret position.
+          </option>
+          <option name="Flow Variable List">
+            The list contains the flow variables that are currently available at
+            the node input. Double clicking any of the entries will insert the
+            respective identifier at the current cursor position (replacing the
+            selection, if any).
+          </option>
+        </tab>
+        <tab name="R Binary">
+          <option name ="R binary path">
+            Path to the local R executable. Note that it is possible to specify
+            the path to the local R executable also in the R section of the 
+            KNIME preferences.<br />
+          </option>
+          <option name="Override default">
+            If checked, the specified file is used as R binary. If not checked, 
+            the file specified in the KNIME's R preferences is used.
+          </option>
+        </tab>
 	</fullDescription>
 	<ports>
 		<inPort name="Data Input" index="0">Data Input</inPort>

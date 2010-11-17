@@ -41,24 +41,40 @@
 			<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 			<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-		<option name="R Command">
+		<tab name="R Command">
+		  <option name="R Snippet">
 			Enter R commands here, for instance for computing the Covariance 
 			of two columns: <br/>
 			<i>R&lt;-cov(Col0,Col1)</i>
-		</option>
-		<option name ="1. Host: ">
+		  </option>
+		  <option name="Column List">
+            The list contains the column that are available in the input table.
+            Double click any of the column names to insert the respective field
+            in the expression editor. It will replace your current selection or
+            simply insert at the current caret position.
+          </option>
+		  <option name="Flow Variable List">
+            The list contains the flow variables that are currently available at
+            the node input. Double clicking any of the entries will insert the
+            respective identifier at the current cursor position (replacing the
+            selection, if any).
+          </option>
+        </tab>
+        <tab name="Login">
+		  <option name ="Host">
 			The IP of the computer where the R server is running, for example
 			localhost with IP 127.0.0.1 
-		</option>
-		<option name ="2. Port: ">
+		  </option>
+		  <option name ="Port">
 			The port id, default is 6311.
-		</option>
-		<option name ="3. User: ">
+		  </option>
+		  <option name ="User">
 			The login name can be empty.
-		</option>
-		<option name ="4. Password: ">
+		  </option>
+		  <option name ="Password">
 			The password can be empty.
-		</option>
+		  </option>
+		</tab>
 	</fullDescription>
 	<ports>
 		<inPort name="Data Input" index="0">Data Input</inPort>
