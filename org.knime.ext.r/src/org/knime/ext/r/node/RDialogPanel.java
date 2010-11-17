@@ -23,24 +23,6 @@
  */
 package org.knime.ext.r.node;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Map;
-
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.JEditorPane;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
@@ -56,6 +38,23 @@ import org.knime.core.node.util.DataColumnSpecListCellRenderer;
 import org.knime.core.node.util.FlowVariableListCellRenderer;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.ext.r.node.RNodeModel.ExpressionResolver;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Map;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JEditorPane;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 
 /**
  * Panel to enter R expressions.
@@ -96,8 +95,10 @@ public class RDialogPanel extends JPanel {
         m_textExpression.setFont(newFont);
         m_textExpression.setBorder(BorderFactory.createTitledBorder(
                 " R Snippet "));
-        JPanel textPanel = new JPanel(new GridLayout(1, 1));
-        textPanel.add(m_textExpression);
+        JPanel textPanel = new JPanel(new BorderLayout());
+        textPanel.add(m_textExpression, BorderLayout.CENTER);
+        textPanel.setMinimumSize(new Dimension(0, 0));
+        textPanel.setMaximumSize(new Dimension(0, 0));
 
         // init column list
         m_listModel = new DefaultListModel();
@@ -128,11 +129,12 @@ public class RDialogPanel extends JPanel {
         m_listVars = new JList(m_listModelVars);
 
         final JSplitPane allSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        allSplit.setResizeWeight(1d / 4);
+        allSplit.setResizeWeight(0.25);
         allSplit.setRightComponent(textPanel);
+
         if (Boolean.getBoolean(KNIMEConstants.PROPERTY_EXPERT_MODE)) {
-            m_listVars.setBorder(BorderFactory.createTitledBorder("" +
-            		" Flow Variable List "));
+            m_listVars.setBorder(BorderFactory.createTitledBorder(
+                    " Flow Variable List "));
             m_listVars.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             m_listVars.setCellRenderer(new FlowVariableListCellRenderer());
             m_listVars.addMouseListener(new MouseAdapter() {
@@ -156,6 +158,7 @@ public class RDialogPanel extends JPanel {
             JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
                     leftComp, scrollVars);
             leftPane.setResizeWeight(0.5);
+
             allSplit.setLeftComponent(leftPane);
         } else {
             allSplit.setLeftComponent(leftComp);
