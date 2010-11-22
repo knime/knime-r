@@ -60,7 +60,7 @@ public class RViewsDialogPanel extends JPanel {
      * @return a <code>SettingsModelString</code> instance containing
      * a set of names of R views.
      */
-    static final SettingsModelString createViewSettingsModel() {
+    public static final SettingsModelString createViewSettingsModel() {
         return new SettingsModelString("R_View",
                 RViewScriptingConstants.DFT_EXPRESSION_KEY);
     }

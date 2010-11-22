@@ -147,7 +147,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
      */
     private final SettingsModelBoolean m_useSpecifiedModel =
         RLocalNodeDialogPane.createUseSpecifiedFileModel();
-    
+
     /** Preference provider for the R executable. */
     private final RPreferenceProvider m_pref;
 
@@ -155,8 +155,8 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
      * Model saving the path to the R binary file.
      */
     private final SettingsModelString m_rbinaryFileSettingsModel
-        = new SettingsModelString("R_binary_file", "");
-   
+        = RLocalLearnerNodeDialogPane.createRBinaryFile();
+
     /**
      * Constructor of <code>RAbstractLocalNodeModel</code> with given in- and
      * out-port specification.

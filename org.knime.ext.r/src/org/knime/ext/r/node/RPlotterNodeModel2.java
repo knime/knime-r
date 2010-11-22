@@ -49,6 +49,7 @@ import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.local.RViewScriptingConstants;
+import org.knime.ext.r.node.local.RViewsDialogPanel;
 import org.knime.ext.r.node.local.RViewsPngDialogPanel;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RFileInputStream;
@@ -74,17 +75,20 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
     private static final NodeLogger LOGGER = NodeLogger
             .getLogger(RPlotterNodeModel2.class);
 
-    private SettingsModelIntegerBounded m_heightModel =
+    private final SettingsModelIntegerBounded m_heightModel =
         RViewsPngDialogPanel.createHeightModel();
 
-    private SettingsModelIntegerBounded m_widthModel =
+    private final SettingsModelIntegerBounded m_widthModel =
         RViewsPngDialogPanel.createWidthModel();
 
-    private SettingsModelIntegerBounded m_pointSizeModel =
+    private final SettingsModelIntegerBounded m_pointSizeModel =
         RViewsPngDialogPanel.createPointSizeModel();
 
-    private SettingsModelString m_bgModel =
+    private final SettingsModelString m_bgModel =
         RViewsPngDialogPanel.createBgModel();
+
+    private final SettingsModelString m_viewType =
+        RViewsDialogPanel.createViewSettingsModel();
 
     private String[] m_viewCmds =
             RViewScriptingConstants.getDefaultExpressionCommands();
@@ -187,7 +191,7 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
         m_widthModel.saveSettingsTo(settings);
         m_pointSizeModel.saveSettingsTo(settings);
         m_bgModel.saveSettingsTo(settings);
-
+        m_viewType.saveSettingsTo(settings);
         RDialogPanel.setExpressionsTo(settings, m_viewCmds);
     }
 
@@ -202,7 +206,7 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
         m_widthModel.loadSettingsFrom(settings);
         m_pointSizeModel.loadSettingsFrom(settings);
         m_bgModel.loadSettingsFrom(settings);
-
+        m_viewType.loadSettingsFrom(settings);
         m_viewCmds = RDialogPanel.getExpressionsFrom(settings);
     }
 
@@ -225,6 +229,7 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
         m_widthModel.validateSettings(settings);
         m_pointSizeModel.validateSettings(settings);
         m_bgModel.validateSettings(settings);
+        m_viewType.validateSettings(settings);
     }
 
     /**

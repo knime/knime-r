@@ -93,17 +93,20 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
     private static final ImagePortObjectSpec OUT_SPEC =
         new ImagePortObjectSpec(PNGImageContent.TYPE);
 
-    private SettingsModelIntegerBounded m_heightModel =
+    private final SettingsModelIntegerBounded m_heightModel =
         RViewsPngDialogPanel.createHeightModel();
 
-    private SettingsModelIntegerBounded m_widthModel =
+    private final SettingsModelIntegerBounded m_widthModel =
         RViewsPngDialogPanel.createWidthModel();
 
-    private SettingsModelIntegerBounded m_pointSizeModel =
+    private final SettingsModelIntegerBounded m_pointSizeModel =
         RViewsPngDialogPanel.createPointSizeModel();
 
-    private SettingsModelString m_bgModel =
+    private final SettingsModelString m_bgModel =
         RViewsPngDialogPanel.createBgModel();
+
+    private final SettingsModelString m_viewType =
+        RViewsDialogPanel.createViewSettingsModel();
 
     private Image m_resultImage;
 
@@ -215,7 +218,7 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
         m_widthModel.loadSettingsFrom(settings);
         m_pointSizeModel.loadSettingsFrom(settings);
         m_bgModel.loadSettingsFrom(settings);
-
+        m_viewType.loadSettingsFrom(settings);
         m_viewCmd = RDialogPanel.getExpressionFrom(settings);
     }
 
@@ -229,7 +232,7 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
         m_widthModel.saveSettingsTo(settings);
         m_pointSizeModel.saveSettingsTo(settings);
         m_bgModel.saveSettingsTo(settings);
-
+        m_viewType.saveSettingsTo(settings);
         RDialogPanel.setExpressionTo(settings, m_viewCmd);
     }
 
@@ -252,6 +255,7 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
         m_widthModel.validateSettings(settings);
         m_pointSizeModel.validateSettings(settings);
         m_bgModel.validateSettings(settings);
+        m_viewType.validateSettings(settings);
 
         // validate background color code
         String colorCode = ((SettingsModelString)m_bgModel.

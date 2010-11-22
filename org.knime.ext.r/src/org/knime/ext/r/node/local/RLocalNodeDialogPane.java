@@ -81,7 +81,7 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         super();
 
         // create setting models and add listener to model of checkbox.
-        m_fileModel = new SettingsModelString("R_binary_file", "");
+        m_fileModel = createRBinaryFile();
         m_smb = createUseSpecifiedFileModel();
         m_smb.addChangeListener(new CheckBoxChangeListener());
 
@@ -110,6 +110,15 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         setDefaultTabTitle(TAB_R_BINARY);
     }
 
+    /**
+     * @return a <code>SettingsModelString</code> instance containing the path
+     *         to the R executable
+     */
+    static final SettingsModelString createRBinaryFile() {
+        SettingsModelString sms = new SettingsModelString("R_binary_file", "");
+        sms.setEnabled(false);
+        return sms;
+    }
 
     /**
      * Enable or disable file chooser model.
@@ -124,10 +133,7 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
     }
 
     private class CheckBoxChangeListener implements ChangeListener {
-
-        /**
-         * {@inheritDoc}
-         */
+        /** {@inheritDoc} */
         @Override
         public void stateChanged(final ChangeEvent e) {
             enableFileChooser();
