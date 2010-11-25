@@ -191,8 +191,8 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
         m_widthModel.saveSettingsTo(settings);
         m_pointSizeModel.saveSettingsTo(settings);
         m_bgModel.saveSettingsTo(settings);
-        m_viewType.saveSettingsTo(settings);
         RDialogPanel.setExpressionsTo(settings, m_viewCmds);
+        m_viewType.saveSettingsTo(settings);
     }
 
     /**
@@ -206,8 +206,12 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
         m_widthModel.loadSettingsFrom(settings);
         m_pointSizeModel.loadSettingsFrom(settings);
         m_bgModel.loadSettingsFrom(settings);
-        m_viewType.loadSettingsFrom(settings);
         m_viewCmds = RDialogPanel.getExpressionsFrom(settings);
+        try {
+            m_viewType.loadSettingsFrom(settings);
+        } catch (InvalidSettingsException ise) {
+            // ignore backward comp. < v2.3
+        }
     }
 
     /**
@@ -229,7 +233,6 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
         m_widthModel.validateSettings(settings);
         m_pointSizeModel.validateSettings(settings);
         m_bgModel.validateSettings(settings);
-        m_viewType.validateSettings(settings);
     }
 
     /**

@@ -218,8 +218,12 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
         m_widthModel.loadSettingsFrom(settings);
         m_pointSizeModel.loadSettingsFrom(settings);
         m_bgModel.loadSettingsFrom(settings);
-        m_viewType.loadSettingsFrom(settings);
         m_viewCmd = RDialogPanel.getExpressionFrom(settings);
+        try {
+            m_viewType.loadSettingsFrom(settings);
+        } catch (InvalidSettingsException ise) {
+            // ignore backward comp. < v2.3
+        }
     }
 
     /**
@@ -232,8 +236,8 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
         m_widthModel.saveSettingsTo(settings);
         m_pointSizeModel.saveSettingsTo(settings);
         m_bgModel.saveSettingsTo(settings);
-        m_viewType.saveSettingsTo(settings);
         RDialogPanel.setExpressionTo(settings, m_viewCmd);
+        m_viewType.saveSettingsTo(settings);
     }
 
     /**
@@ -255,7 +259,6 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
         m_widthModel.validateSettings(settings);
         m_pointSizeModel.validateSettings(settings);
         m_bgModel.validateSettings(settings);
-        m_viewType.validateSettings(settings);
 
         // validate background color code
         String colorCode = ((SettingsModelString)m_bgModel.
