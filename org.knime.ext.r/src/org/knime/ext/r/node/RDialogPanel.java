@@ -23,22 +23,6 @@
  */
 package org.knime.ext.r.node;
 
-import org.knime.core.data.DataColumnSpec;
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.data.DataType;
-import org.knime.core.data.DoubleValue;
-import org.knime.core.data.IntValue;
-import org.knime.core.data.StringValue;
-import org.knime.core.node.KNIMEConstants;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.node.util.DataColumnSpecListCellRenderer;
-import org.knime.core.node.util.FlowVariableListCellRenderer;
-import org.knime.core.node.workflow.FlowVariable;
-import org.knime.ext.r.node.RNodeModel.ExpressionResolver;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -55,6 +39,22 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+
+import org.knime.core.data.DataColumnSpec;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.DataType;
+import org.knime.core.data.DoubleValue;
+import org.knime.core.data.IntValue;
+import org.knime.core.data.StringValue;
+import org.knime.core.node.KNIMEConstants;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.util.DataColumnSpecListCellRenderer;
+import org.knime.core.node.util.FlowVariableListCellRenderer;
+import org.knime.core.node.workflow.FlowVariable;
+import org.knime.ext.r.node.RNodeModel.ExpressionResolver;
 
 /**
  * Panel to enter R expressions.
@@ -95,8 +95,11 @@ public class RDialogPanel extends JPanel {
         m_textExpression.setFont(newFont);
         m_textExpression.setBorder(BorderFactory.createTitledBorder(
                 " R Snippet "));
+        JScrollPane scroll = new JScrollPane(m_textExpression,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel textPanel = new JPanel(new BorderLayout());
-        textPanel.add(m_textExpression, BorderLayout.CENTER);
+        textPanel.add(scroll, BorderLayout.CENTER);
         textPanel.setMinimumSize(new Dimension(0, 0));
         textPanel.setMaximumSize(new Dimension(0, 0));
 
