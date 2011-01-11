@@ -79,6 +79,9 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
     private final SettingsModelIntegerBounded m_widthModel =
         RViewsPngDialogPanel.createWidthModel();
 
+    private final SettingsModelString m_resolutionModel =
+        RViewsPngDialogPanel.createResolutionModel();
+
     private final SettingsModelIntegerBounded m_pointSizeModel =
         RViewsPngDialogPanel.createPointSizeModel();
 
@@ -110,11 +113,12 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
         String fileName = FILE_NAME + "_" + System.identityHashCode(inData[0])
             + ".png";
         LOGGER.info("The image name: " + fileName);
-        String pngCommand = "png(\"" + fileName + "\", width="
-            + m_widthModel.getIntValue() + ", height="
-            + m_heightModel.getIntValue() + ", pointsize="
-            + m_pointSizeModel.getIntValue() + ", bg=\""
-            + m_bgModel.getStringValue() + "\")";
+        String pngCommand = "png(\"" + fileName + "\""
+            + ", width=" + m_widthModel.getIntValue()
+            + ", height=" + m_heightModel.getIntValue()
+            + ", pointsize=" + m_pointSizeModel.getIntValue()
+            + ", bg=\"" + m_bgModel.getStringValue() + "\""
+            + ", res=" + m_resolutionModel.getStringValue() + ")";
         c.eval("try(" + pngCommand + ")");
 
         // send data to R server
@@ -228,6 +232,7 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
         super.saveSettingsTo(settings);
         m_heightModel.saveSettingsTo(settings);
         m_widthModel.saveSettingsTo(settings);
+        m_resolutionModel.saveSettingsTo(settings);
         m_pointSizeModel.saveSettingsTo(settings);
         m_bgModel.saveSettingsTo(settings);
         RDialogPanel.setExpressionsTo(settings, m_viewCmds);
@@ -243,6 +248,11 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
         super.loadValidatedSettingsFrom(settings);
         m_heightModel.loadSettingsFrom(settings);
         m_widthModel.loadSettingsFrom(settings);
+        try {
+            m_resolutionModel.loadSettingsFrom(settings);
+        } catch (InvalidSettingsException ise) {
+            // ignore backward comp. < v2.3.1
+        }
         m_pointSizeModel.loadSettingsFrom(settings);
         m_bgModel.loadSettingsFrom(settings);
         m_viewCmds = RDialogPanel.getExpressionsFrom(settings);
@@ -270,6 +280,8 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
 
         m_heightModel.validateSettings(settings);
         m_widthModel.validateSettings(settings);
+        // new with 2.3.1: no validation possible
+        // m_resolutionModel.validateSettings(settings);
         m_pointSizeModel.validateSettings(settings);
         m_bgModel.validateSettings(settings);
     }

@@ -92,6 +92,9 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
     private final SettingsModelIntegerBounded m_widthModel =
         RViewsPngDialogPanel.createWidthModel();
 
+    private final SettingsModelString m_resolutionModel =
+        RViewsPngDialogPanel.createResolutionModel();
+
     private final SettingsModelIntegerBounded m_pointSizeModel =
         RViewsPngDialogPanel.createPointSizeModel();
 
@@ -136,11 +139,12 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
      */
     @Override
     protected String getCommand() {
-        return "png(\"" + m_filename + "\", width="
-            + m_widthModel.getIntValue() + ", height="
-            + m_heightModel.getIntValue() + ", pointsize="
-            + m_pointSizeModel.getIntValue() + ", bg=\""
-            + m_bgModel.getStringValue() + "\");\n"
+        return "png(\"" + m_filename + "\""
+            + ", width=" + m_widthModel.getIntValue()
+            + ", height=" + m_heightModel.getIntValue()
+            + ", pointsize=" + m_pointSizeModel.getIntValue()
+            + ", bg=\"" + m_bgModel.getStringValue() + "\""
+            + ", res=" + m_resolutionModel.getStringValue() + ");\n"
             + m_viewCmd
             + "\ndev.off();";
     }
@@ -199,6 +203,11 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         super.loadValidatedSettingsFrom(settings);
         m_heightModel.loadSettingsFrom(settings);
         m_widthModel.loadSettingsFrom(settings);
+        try {
+            m_resolutionModel.loadSettingsFrom(settings);
+        } catch (InvalidSettingsException ise) {
+            // ignore backward comp. < v2.3.1
+        }
         m_pointSizeModel.loadSettingsFrom(settings);
         m_bgModel.loadSettingsFrom(settings);
         m_viewCmd = RDialogPanel.getExpressionFrom(settings);
@@ -217,6 +226,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
         super.saveSettingsTo(settings);
         m_heightModel.saveSettingsTo(settings);
         m_widthModel.saveSettingsTo(settings);
+        m_resolutionModel.saveSettingsTo(settings);
         m_pointSizeModel.saveSettingsTo(settings);
         m_bgModel.saveSettingsTo(settings);
         RDialogPanel.setExpressionTo(settings, m_viewCmd);
@@ -240,6 +250,8 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
 
         m_heightModel.validateSettings(settings);
         m_widthModel.validateSettings(settings);
+        // new with 2.3.1: no validation possible
+        // m_resolutionModel.validateSettings(settings);
         m_pointSizeModel.validateSettings(settings);
         m_bgModel.validateSettings(settings);
 
