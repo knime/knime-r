@@ -2,7 +2,7 @@
 <feature
       id="org.knime.features.ext.r.bin"
       label="KNIME R Statistics Integration (Windows Binaries)"
-      version="2.3.1.qualifier"
+      version="2.4.0.qualifier"
       provider-name="KNIME GmbH, Konstanz, Germany"
       plugin="org.knime.ext.r">
 
@@ -361,7 +361,7 @@ Public License instead of this License.
    </license>
 
    <url>
-      <update label="KNIME Update Site" url="http://www.knime.org/update/2.3"/>
+      <update label="KNIME Update Site" url="http://www.knime.org/update/2.4"/>
    </url>
 
    <plugin
