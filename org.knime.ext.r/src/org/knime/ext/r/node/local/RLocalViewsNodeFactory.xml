@@ -87,6 +87,12 @@
 		  <option name ="Image height">
 			The height of the image to create and display in pixels
 		  </option>
+		  <option name ="Resolution (dpi)">
+            The nominal resolution in dpi which will be recorded in the
+            bitmap file, if a positive integer.  Also used for units
+            other than the default.  If not specified, taken as 72 dpi to
+            set the size of text and line widths.
+          </option>
 		  <option name ="Point size">
 			The point size of plotted text. One point is approximately one pixel.
 		  </option>

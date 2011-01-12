@@ -1,6 +1,6 @@
 /*
  * ------------------------------------------------------------------
- * Copyright, 2003 - 2010
+ * Copyright, 2003 - 2011
  * University of Konstanz, Germany.
  * Chair for Bioinformatics and Information Mining
  * Prof. Dr. Michael R. Berthold
@@ -23,8 +23,6 @@
  * Or contact us: contact@knime.org.
  * ---------------------------------------------------------------------
  *
- * History
- *   27.09.2007 (thiel): created
  */
 package org.knime.ext.r.node.local;
 
@@ -60,9 +58,9 @@ public class RViewsPngDialogPanel extends JLabel {
      */
     public static final SettingsModelIntegerBounded createHeightModel() {
         return new SettingsModelIntegerBounded("R-png-height",
-                RLocalViewsNodeModel.IMG_DEF_SIZE,
-                RLocalViewsNodeModel.IMG_MIN_HEIGHT,
-                RLocalViewsNodeModel.IMG_MAX_HEIGHT);
+                RLocalViewsNodeModel2.IMG_DEF_SIZE,
+                RLocalViewsNodeModel2.IMG_MIN_HEIGHT,
+                RLocalViewsNodeModel2.IMG_MAX_HEIGHT);
     }
 
     /**
@@ -71,9 +69,9 @@ public class RViewsPngDialogPanel extends JLabel {
      */
     public static final SettingsModelIntegerBounded createWidthModel() {
         return new SettingsModelIntegerBounded("R-png-width",
-                RLocalViewsNodeModel.IMG_DEF_SIZE,
-                RLocalViewsNodeModel.IMG_MIN_WIDTH,
-                RLocalViewsNodeModel.IMG_MAX_WIDTH);
+                RLocalViewsNodeModel2.IMG_DEF_SIZE,
+                RLocalViewsNodeModel2.IMG_MIN_WIDTH,
+                RLocalViewsNodeModel2.IMG_MAX_WIDTH);
     }
 
     /**
@@ -87,25 +85,34 @@ public class RViewsPngDialogPanel extends JLabel {
 
     /**
      * @return a <code>SettingsModelString</code> instance
+     * containing the resolution of the png image to create by R.
+     */
+    public static final SettingsModelString createResolutionModel() {
+        return new SettingsModelString("R-png-resolution", "NA");
+    }
+
+    /**
+     * @return a <code>SettingsModelString</code> instance
      * containing the background color of the png image to create by R.
      */
     public static final SettingsModelString createBgModel() {
         return new SettingsModelString("R-bg-col", "#FFFFFF");
     }
 
+    private final DialogComponentNumberEdit m_heightComp;
+    private final SettingsModelIntegerBounded m_heightModel;
 
-    private DialogComponentNumberEdit m_heightComp;
-    private SettingsModelIntegerBounded m_heightModel;
+    private final DialogComponentNumberEdit m_widthComp;
+    private final SettingsModelIntegerBounded m_widthModel;
 
-    private DialogComponentNumberEdit m_widthComp;
-    private SettingsModelIntegerBounded m_widthModel;
+    private final DialogComponentNumber m_pointSizeComp;
+    private final SettingsModelIntegerBounded m_pointSizeModel;
 
-    private DialogComponentNumber m_pointSizeComp;
-    private SettingsModelIntegerBounded m_pointSizeModel;
+    private final DialogComponentString m_bgComp;
+    private final SettingsModelString m_bgModel;
 
-    private DialogComponentString m_bgComp;
-    private SettingsModelString m_bgModel;
-
+    private final DialogComponentString m_resolutionComp;
+    private final SettingsModelString m_resolutionModel;
 
     /**
      * Creates new instance of <code>RViewsPngDialogPanel</code> which provides
@@ -124,19 +131,27 @@ public class RViewsPngDialogPanel extends JLabel {
         m_widthComp = new DialogComponentNumberEdit(m_widthModel,
                 "Width: ");
 
+        // Resolution (dpi)
+        m_resolutionModel = createResolutionModel();
+        m_resolutionComp = new DialogComponentString(m_resolutionModel,
+                "Resolution (dpi): ");
+        m_resolutionComp.setToolTipText("Resolution in dots per inch; "
+                + "default value is NA (72 dpi)");
+
         // Image size
         JPanel size = new JPanel(new BorderLayout());
         size.setBorder(BorderFactory.createTitledBorder(BorderFactory
                 .createEtchedBorder(), " Image size "));
         size.add(m_widthComp.getComponentPanel(), BorderLayout.WEST);
         size.add(m_heightComp.getComponentPanel(), BorderLayout.CENTER);
+        size.add(m_resolutionComp.getComponentPanel(), BorderLayout.EAST);
 
         // Point size
         m_pointSizeModel = createPointSizeModel();
         m_pointSizeComp = new DialogComponentNumber(m_pointSizeModel,
                 "Point size: ", 1);
 
-        // Bg col
+        // Background color
         m_bgModel = createBgModel();
         m_bgComp = new DialogComponentString(m_bgModel , "Background color: ");
 
@@ -151,7 +166,6 @@ public class RViewsPngDialogPanel extends JLabel {
         add(upperPanel, BorderLayout.CENTER);
     }
 
-
     /**
      * Loads settings into dialog components.
      * @param settings The settings to load.
@@ -165,11 +179,12 @@ public class RViewsPngDialogPanel extends JLabel {
         m_widthComp.loadSettingsFrom(settings, specs);
         m_pointSizeComp.loadSettingsFrom(settings, specs);
         m_bgComp.loadSettingsFrom(settings, specs);
+        m_resolutionComp.loadSettingsFrom(settings, specs);
     }
 
     /**
      * Saves settings set in the dialog components into the settings instance.
-     * @param settings The settings instance ot save settings to.
+     * @param settings The settings instance to save settings to.
      * @throws InvalidSettingsException If invalid settings have been set.
      */
     public void saveSettings(final NodeSettingsWO settings)
@@ -178,5 +193,6 @@ public class RViewsPngDialogPanel extends JLabel {
         m_widthComp.saveSettingsTo(settings);
         m_pointSizeComp.saveSettingsTo(settings);
         m_bgComp.saveSettingsTo(settings);
+        m_resolutionComp.saveSettingsTo(settings);
     }
 }
