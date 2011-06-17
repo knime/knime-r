@@ -46,7 +46,6 @@ import org.knime.core.data.DataType;
 import org.knime.core.data.DoubleValue;
 import org.knime.core.data.IntValue;
 import org.knime.core.data.StringValue;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
@@ -137,39 +136,35 @@ public class RDialogPanel extends JPanel {
         allSplit.setResizeWeight(0.25);
         allSplit.setRightComponent(textPanel);
 
-        if (Boolean.getBoolean(KNIMEConstants.PROPERTY_EXPERT_MODE)) {
-            m_listVars.setBorder(BorderFactory.createTitledBorder(
-                    " Flow Variable List "));
-            m_listVars.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            m_listVars.setCellRenderer(new FlowVariableListCellRenderer());
-            m_listVars.addMouseListener(new MouseAdapter() {
-                /** {@inheritDoc} */
-                @Override
-                public final void mouseClicked(final MouseEvent e) {
-                    if (e.getClickCount() == 2) {
-                        Object o = m_listVars.getSelectedValue();
-                        if (o != null) {
-                            FlowVariable var = (FlowVariable) o;
-                            m_textExpression.replaceSelection(
-                                    ExpressionResolver.extendVariable(var));
-                            m_listVars.clearSelection();
-                            m_textExpression.requestFocus();
-                        }
+        m_listVars.setBorder(BorderFactory.createTitledBorder(
+                " Flow Variable List "));
+        m_listVars.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        m_listVars.setCellRenderer(new FlowVariableListCellRenderer());
+        m_listVars.addMouseListener(new MouseAdapter() {
+            /** {@inheritDoc} */
+            @Override
+            public final void mouseClicked(final MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    Object o = m_listVars.getSelectedValue();
+                    if (o != null) {
+                        FlowVariable var = (FlowVariable) o;
+                        m_textExpression.replaceSelection(
+                                ExpressionResolver.extendVariable(var));
+                        m_listVars.clearSelection();
+                        m_textExpression.requestFocus();
                     }
                 }
-            });
-            JScrollPane scrollVars = new JScrollPane(m_listVars,
-                    ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            }
+        });
+        JScrollPane scrollVars = new JScrollPane(m_listVars,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-            JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-                    leftComp, scrollVars);
-            leftPane.setResizeWeight(0.5);
+        JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+                leftComp, scrollVars);
+        leftPane.setResizeWeight(0.5);
 
-            allSplit.setLeftComponent(leftPane);
-        } else {
-            allSplit.setLeftComponent(leftComp);
-        }
+        allSplit.setLeftComponent(leftPane);
         super.add(allSplit, BorderLayout.CENTER);
 
 
