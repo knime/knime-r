@@ -165,7 +165,7 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
                 throw new IllegalStateException(
                         "Execution of R script failed: " + rErr);
             }
-            PMMLImport importer = new PMMLImport(pmmlFile);
+            PMMLImport importer = new PMMLImport(pmmlFile, true);
             return new PortObject[]{importer.getPortObject()};
         } finally {
             // delete all temp files
