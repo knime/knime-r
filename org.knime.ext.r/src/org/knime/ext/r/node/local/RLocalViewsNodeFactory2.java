@@ -27,6 +27,7 @@
 package org.knime.ext.r.node.local;
 
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
+import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeView;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
@@ -71,6 +72,8 @@ public class RLocalViewsNodeFactory2 extends
         if (viewIndex == 0) {
             return new RLocalViewsNodeView2(nodeModel);
         } else if (viewIndex == 1) {
+            return new ExtToolStdoutNodeView<RLocalViewsNodeModel2>(nodeModel);
+        } else if (viewIndex == 2) {
             return new ExtToolStderrNodeView<RLocalViewsNodeModel2>(nodeModel);
         } else {
             return null;
@@ -82,7 +85,7 @@ public class RLocalViewsNodeFactory2 extends
      */
     @Override
     protected int getNrNodeViews() {
-        return 2;
+        return 3;
     }
 
     /**

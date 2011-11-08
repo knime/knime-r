@@ -75,9 +75,11 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
  * @author Thomas Gabriel, University of Konstanz
  */
 public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
-
+    
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RLocalNodeModel.class);
+    
+    private boolean m_hasDataTableOutPort = false;
 
     /**
      * Constructor of <code>RLocalNodeModel</code> creating a model with one
@@ -90,6 +92,14 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
     public RLocalNodeModel(final PortType[] outPorts,
     		final RPreferenceProvider pref) {
         super(new PortType[]{BufferedDataTable.TYPE}, outPorts, pref);
+        // check for data table out ports
+        if (outPorts != null) {
+            for (int i = 0; i < outPorts.length; i++) {
+                if (outPorts[i].equals(BufferedDataTable.TYPE)) {
+                    m_hasDataTableOutPort = true;
+                }
+            }
+        }
     }
     
     /**
@@ -152,13 +162,16 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(getCommand().trim());
             completeCmd.append("\n");
 
-            tempOutData = File.createTempFile("R-outDataTempFile-", ".csv",
-                    new File(TEMP_PATH));
-            tempOutData.deleteOnExit();
-            completeCmd.append(WRITE_DATA_CMD_PREFIX);
-            completeCmd
-                    .append(tempOutData.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(WRITE_DATA_CMD_SUFFIX);
+            // write R data only into out file if data table out port exists
+            if (m_hasDataTableOutPort) {
+                tempOutData = File.createTempFile("R-outDataTempFile-", ".csv",
+                        new File(TEMP_PATH));
+                tempOutData.deleteOnExit();
+                completeCmd.append(WRITE_DATA_CMD_PREFIX);
+                completeCmd.append(
+                        tempOutData.getAbsolutePath().replace('\\', '/'));
+                completeCmd.append(WRITE_DATA_CMD_SUFFIX);
+            }
 
             // write R command
             String rCmd = ExpressionResolver.parseCommand(
@@ -192,54 +205,62 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));
             setExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
 
-            if (exitVal != 0) {
-                String rErr = "";
+            String rErr = "";
 
+            if (exitVal != 0) {
                 // before we return, we save the output in the failing list
                 synchronized (cmdExec) {
-                    setFailedExternalOutput(new LinkedList<String>(cmdExec
-                            .getStdOutput()));
+                    setFailedExternalOutput(new LinkedList<String>(
+                            cmdExec.getStdOutput()));
                 }
-                synchronized (cmdExec) {
+            }
+            synchronized (cmdExec) {
 
-                    // save error description of the Rout file to the ErrorOut
-                    LinkedList<String> list = new LinkedList<String>(
-                            cmdExec.getStdErr());
+                // save error description of the Rout file to the ErrorOut
+                LinkedList<String> list =
+                        new LinkedList<String>(cmdExec.getStdErr());
 
-                    list.add("#############################################");
-                    list.add("#");
-                    list.add("# Content of .Rout file: ");
-                    list.add("#");
-                    list.add("#############################################");
-                    list.add(" ");
-                    BufferedReader bfr = new BufferedReader(
-                            new FileReader(rOutFile));
-                    String line;
-                    while ((line = bfr.readLine()) != null) {
-                        list.add(line);
-                    }
-                    bfr.close();
+                list.add("#############################################");
+                list.add("#");
+                list.add("# Content of .Rout file: ");
+                list.add("#");
+                list.add("#############################################");
+                list.add(" ");
+                BufferedReader bfr =
+                        new BufferedReader(new FileReader(rOutFile));
+                String line;
+                while ((line = bfr.readLine()) != null) {
+                    list.add(line);
+                }
+                bfr.close();
 
-                    // use row before last as R error.
-                    int index = list.size() - 2;
-                    if (index >= 0) {
-                        rErr = list.get(index);
-                    }
+                // use row before last as R error.
+                int index = list.size() - 2;
+                if (index >= 0) {
+                    rErr = list.get(index);
+                }
+                
+                if (exitVal != 0) {
                     setFailedExternalErrorOutput(list);
-                }
-
-                LOGGER.debug("Execution of R Script failed with exit code: "
-                        + exitVal);
-                throw new IllegalStateException(
-                        "Execution of R script failed: " + rErr);
+                    LOGGER.debug("Execution of R Script failed with exit code: "
+                            + exitVal);
+                    throw new IllegalStateException(
+                            "Execution of R script failed: " + rErr);
+                } else {
+                    setExternalOutput(list);
+                }                
             }
 
-            // read data from R output csv into a buffered data table.
-            ExecutionContext subExecCon = exec.createSubExecutionContext(1.0);
-            BufferedDataTable dt = readOutData(tempOutData, subExecCon);
+            // read out data only if data table out port exists
+            if (m_hasDataTableOutPort) {
+                // read data from R output csv into a buffered data table.
+                ExecutionContext subExecCon = 
+                    exec.createSubExecutionContext(1.0);
+                BufferedDataTable dt = readOutData(tempOutData, subExecCon);
 
-            // postprocess data in out DataTable.
-            dts = postprocessDataTable(new BufferedDataTable[]{dt}, exec);
+                // postprocess data in out DataTable.
+                dts = postprocessDataTable(new BufferedDataTable[]{dt}, exec);
+            }
 
         } finally {
             // delete all temp files

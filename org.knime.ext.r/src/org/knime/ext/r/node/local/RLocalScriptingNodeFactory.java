@@ -28,6 +28,7 @@ package org.knime.ext.r.node.local;
 
 import org.knime.base.node.util.exttool.ExtToolOutputNodeView;
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
+import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
@@ -71,6 +72,9 @@ public class RLocalScriptingNodeFactory
             final RLocalScriptingNodeModel nodeModel) {
         if (viewIndex == 0) {
             return
+                new ExtToolStdoutNodeView<RLocalScriptingNodeModel>(nodeModel);
+        } else if (viewIndex == 1) {
+            return
                 new ExtToolStderrNodeView<RLocalScriptingNodeModel>(nodeModel);
         }
         return null;
@@ -81,7 +85,7 @@ public class RLocalScriptingNodeFactory
      */
     @Override
     protected int getNrNodeViews() {
-        return 1;
+        return 2;
     }
 
     /**
