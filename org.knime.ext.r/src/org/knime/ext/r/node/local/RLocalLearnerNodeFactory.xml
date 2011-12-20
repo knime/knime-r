@@ -40,8 +40,13 @@
 		  <option name ="R binary path">
 			Path to the local R executable. Note that it is possible to specify
 			the path to the local R executable also in the R section of the 
-			KNIME preferences.<br />
+			KNIME preferences.
 		  </option>
+		  <option name ="Arguments for R binary">
+            Add additional arguments run together with the R binary. The 
+            '--vanilla' mode ensures a clean workspace and may cause problems 
+            when removed.
+          </option>
 		  <option name="Override default">
 			If checked, the specified file is used as R binary. If not checked, 
 			the file specified in the KNIME's R preferences is used.

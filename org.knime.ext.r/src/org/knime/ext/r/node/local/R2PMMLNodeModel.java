@@ -31,6 +31,7 @@ import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -105,10 +106,8 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             // create shell command
             StringBuilder shellCmd = new StringBuilder();
 
-            final String rBinaryFile = getRBinaryPath();
+            final String rBinaryFile = getRBinaryPathAndArguments();
             shellCmd.append(rBinaryFile);
-
-            shellCmd.append(" CMD BATCH");
             shellCmd.append(" " + rCommandFile.getName());
             shellCmd.append(" " + rOutFile.getName());
 
@@ -171,6 +170,21 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             // delete all temp files
             deleteFile(rCommandFile);
             deleteFile(rOutFile);
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
+            throws InvalidSettingsException {
+        super.loadValidatedSettingsFrom(settings);
+        try {
+            m_argumentsR.loadSettingsFrom(settings);
+        } catch (InvalidSettingsException ise) {
+            // load old workflow no option is used, overwrite new dialog dft
+            m_argumentsR.setStringValue("");
         }
     }
 

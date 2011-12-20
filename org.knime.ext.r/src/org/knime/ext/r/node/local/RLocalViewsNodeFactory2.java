@@ -39,7 +39,7 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  */
 public class RLocalViewsNodeFactory2 extends
         RNodeFactory<RLocalViewsNodeModel2> {
-	
+    
     /**
      * Empty default constructor.
      */

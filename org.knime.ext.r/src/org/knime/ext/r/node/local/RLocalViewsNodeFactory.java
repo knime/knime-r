@@ -41,7 +41,7 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
 @Deprecated
 public class RLocalViewsNodeFactory extends
         RNodeFactory<RLocalViewsNodeModel> {
-	
+    
     /**
      * Empty default constructor.
      */

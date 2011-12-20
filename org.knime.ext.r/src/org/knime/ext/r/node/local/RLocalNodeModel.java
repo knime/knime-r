@@ -35,7 +35,9 @@ import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.ext.r.preferences.RPreferenceProvider;
@@ -89,8 +91,8 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
      * @param outPorts array of out-port types
      * @param pref R preference provider
      */
-    public RLocalNodeModel(final PortType[] outPorts,
-    		final RPreferenceProvider pref) {
+    public RLocalNodeModel(final PortType[] outPorts, 
+            final RPreferenceProvider pref) {
         super(new PortType[]{BufferedDataTable.TYPE}, outPorts, pref);
         // check for data table out ports
         if (outPorts != null) {
@@ -185,11 +187,8 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             // create shell command
             StringBuilder shellCmd = new StringBuilder();
 
-            final String rBinaryFile = getRBinaryPath();
+            final String rBinaryFile = getRBinaryPathAndArguments();
             shellCmd.append(rBinaryFile);
-
-            // --vanilla in order not to create temporary workspace files.
-            shellCmd.append(" CMD BATCH --vanilla");
             shellCmd.append(" " + rCommandFile.getName());
             shellCmd.append(" " + rOutFile.getName());
 
@@ -272,6 +271,20 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
         // return this table
         return dts;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
+            throws InvalidSettingsException {
+        super.loadValidatedSettingsFrom(settings);
+        try {
+            m_argumentsR.loadSettingsFrom(settings);
+        } catch (InvalidSettingsException ise) {
+            m_argumentsR.setStringValue("--vanilla");
+        }
     }
 
 }

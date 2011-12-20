@@ -106,8 +106,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
     /**
      * The R expression suffix to read data.
      */
-    static final String WRITE_DATA_CMD_SUFFIX =
-        "\", row.names = TRUE);\n";
+    static final String WRITE_DATA_CMD_SUFFIX = "\", row.names = TRUE);\n";
 
     /**
      * The R expression prefix to write a model.
@@ -151,11 +150,13 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
     /** Preference provider for the R executable. */
     private final RPreferenceProvider m_pref;
 
-    /**
-     * Model saving the path to the R binary file.
-     */
+    /** Model saving the path to the R binary file. */
     private final SettingsModelString m_rbinaryFileSettingsModel
         = RLocalLearnerNodeDialogPane.createRBinaryFile();
+    
+    /** Model for additional R arguments. */
+    protected final SettingsModelString m_argumentsR
+        = RLocalNodeDialogPane.createRargumentsModel();
 
     /**
      * Constructor of <code>RAbstractLocalNodeModel</code> with given in- and
@@ -188,6 +189,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
         m_rbinaryFileSettingsModel.setStringValue(getRBinaryPath());
         m_rbinaryFileSettingsModel.saveSettingsTo(settings);
         m_useSpecifiedModel.saveSettingsTo(settings);
+        m_argumentsR.saveSettingsTo(settings);
     }
 
     /**
@@ -198,6 +200,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
             throws InvalidSettingsException {
         m_rbinaryFileSettingsModel.validateSettings(settings);
         m_useSpecifiedModel.validateSettings(settings);
+        // new with 2.5.1 m_Rarguments.validateSettings(settings);
     }
 
     /**
@@ -399,6 +402,19 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
     }
 
     /**
+     * Path to R binary together with the R arguments <code>CMD BATCH</code> and
+     * additional options.
+     * @return R binary path and arguments
+     */
+    protected final String getRBinaryPathAndArguments() {
+        String argR = m_argumentsR.getStringValue();
+        if (!argR.isEmpty()) {
+            argR = " " + argR;
+        }
+        return getRBinaryPath() + " CMD BATCH" + argR;
+    }
+    
+    /**
      * Path to R binary.
      * @return R binary path
      */
@@ -409,7 +425,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
             return m_pref.getRPath();
         }
     }
-
+    
     /**
      * {@inheritDoc}
      */
