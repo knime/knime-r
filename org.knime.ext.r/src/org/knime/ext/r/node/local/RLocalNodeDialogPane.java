@@ -37,6 +37,7 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
 import org.knime.core.node.defaultnodesettings.DialogComponentFileChooser;
+import org.knime.core.node.defaultnodesettings.DialogComponentString;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
@@ -45,8 +46,8 @@ import org.knime.core.node.port.PortObjectSpec;
  * The <code>RLocalNodeDialogPane</code> is a
  * dialog pane providing a file chooser to select the R executable, as well
  * as a checkbox to specify which R executable will be used to execute the
- * R script. If the checkbox is <u>not</u> checked, the R executable file
- * specified in the KNIME-R preferences is used, if the checkbox <u>is</u>
+ * R script. If the checkbox is <b>not</b> checked, the R executable file
+ * specified in the KNIME-R preferences is used, if the checkbox <b>is</b>
  * checked the specified file of the file chooser dialog is used.
  * This dialog can be extended to take use of this functionality but be aware
  * to call the super constructor when extending
@@ -71,7 +72,7 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
     private final SettingsModelBoolean m_smb;
 
     private final SettingsModelString m_fileModel;
-
+    
     /**
      * Constructor of <code>RLocalNodeDialogPane</code> which provides a
      * default dialog component to specify the R executable file and a checkbox
@@ -102,12 +103,28 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
 
         addDialogComponent(checkbox);
         addDialogComponent(fileChooser);
+        
+        setHorizontalPlacement(false);
+        DialogComponentString argumentsComp = new DialogComponentString(
+                createRargumentsModel(),
+                "Arguments run together with the R binary: ", false, 25);
+        argumentsComp.setToolTipText("Add arguments for R;"
+                + " --vanilla mode ensures a clean workspace.");
+        addDialogComponent(argumentsComp);
 
         closeCurrentGroup();
         setHorizontalPlacement(false);
 
         enableFileChooser();
         setDefaultTabTitle(TAB_R_BINARY);
+    }
+    
+    /**
+     * @return a new settings model for additional R arguments per default
+     *         '--vanilla' is appended
+     */
+    static final SettingsModelString createRargumentsModel() {
+        return new SettingsModelString("R-arguments", "--vanilla"); 
     }
 
     /**
