@@ -95,8 +95,8 @@ public class RDialogPanel extends JPanel {
         m_textExpression.setBorder(BorderFactory.createTitledBorder(
                 " R Snippet "));
         JScrollPane scroll = new JScrollPane(m_textExpression,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel textPanel = new JPanel(new BorderLayout());
         textPanel.add(scroll, BorderLayout.CENTER);
         textPanel.setMinimumSize(new Dimension(0, 0));
@@ -136,8 +136,7 @@ public class RDialogPanel extends JPanel {
         allSplit.setResizeWeight(0.25);
         allSplit.setRightComponent(textPanel);
 
-        m_listVars.setBorder(BorderFactory.createTitledBorder(
-                " Flow Variable List "));
+        m_listVars.setBorder(BorderFactory.createTitledBorder(" Flow Variable List "));
         m_listVars.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         m_listVars.setCellRenderer(new FlowVariableListCellRenderer());
         m_listVars.addMouseListener(new MouseAdapter() {
@@ -148,8 +147,7 @@ public class RDialogPanel extends JPanel {
                     Object o = m_listVars.getSelectedValue();
                     if (o != null) {
                         FlowVariable var = (FlowVariable) o;
-                        m_textExpression.replaceSelection(
-                                ExpressionResolver.extendVariable(var));
+                        m_textExpression.replaceSelection(ExpressionResolver.extendVariable(var));
                         m_listVars.clearSelection();
                         m_textExpression.requestFocus();
                     }
@@ -160,8 +158,7 @@ public class RDialogPanel extends JPanel {
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-                leftComp, scrollVars);
+        JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, leftComp, scrollVars);
         leftPane.setResizeWeight(0.5);
 
         allSplit.setLeftComponent(leftPane);
@@ -172,32 +169,32 @@ public class RDialogPanel extends JPanel {
 
     /**
      * Updates the list of columns based on the given table spec.
-     * @param spec The spec to get columns from.
-     * compatible with the Rserv implementation.
+     * @param spec to get columns compatible with String, Double, Integer
      */
-    private final void update(final DataTableSpec spec,
-            final Map<String, FlowVariable> map)
+    private final void update(final DataTableSpec spec, final Map<String, FlowVariable> map)
             throws NotConfigurableException {
         // update column list
         m_listModel.removeAllElements();
-        DataTableSpec newSpec =
-            RConnectionRemote.createRenamedDataTableSpec(spec);
-        for (int i = 0; i < newSpec.getNumColumns(); i++) {
-            DataColumnSpec cspec = newSpec.getColumnSpec(i);
-            DataType type = cspec.getType();
-            if (type.isCompatible(IntValue.class)) {
-                m_listModel.addElement(cspec);
-            } else
-            if (type.isCompatible(DoubleValue.class)) {
-                m_listModel.addElement(cspec);
-            } else
-            if (type.isCompatible(StringValue.class)) {
-                m_listModel.addElement(cspec);
+
+        // check of null spec in case of optional input data port
+        if (spec != null) {
+            DataTableSpec newSpec = RConnectionRemote.createRenamedDataTableSpec(spec);
+            for (int i = 0; i < newSpec.getNumColumns(); i++) {
+                DataColumnSpec cspec = newSpec.getColumnSpec(i);
+                DataType type = cspec.getType();
+                if (type.isCompatible(IntValue.class)) {
+                    m_listModel.addElement(cspec);
+                } else
+                if (type.isCompatible(DoubleValue.class)) {
+                    m_listModel.addElement(cspec);
+                } else
+                if (type.isCompatible(StringValue.class)) {
+                    m_listModel.addElement(cspec);
+                }
             }
-        }
-        if (m_listModel.size() <= 0) {
-            throw new NotConfigurableException("No valid columns "
-                    + "(Integer, Double, String) are available!");
+            if (m_listModel.size() <= 0) {
+                throw new NotConfigurableException("No valid columns (Integer, Double, String) are available!");
+            }
         }
 
         // update list of flow/workflow variables
@@ -234,20 +231,18 @@ public class RDialogPanel extends JPanel {
 
     /**
      * Loads R command string out of given settings instance.
-     *
      * @param settings settings instance to load R command string from.
-     * @param specs input DataTable spec
+     * @param specs input specs, can be null or its elements or not of type DTS
      * @param map holding flow variables together with its identifier
      * @throws NotConfigurableException if no columns are available.
      */
     public void loadSettingsFrom(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs, final Map<String, FlowVariable> map)
-            throws NotConfigurableException {
-        if (!(specs[0] instanceof DataTableSpec)) {
-            throw new NotConfigurableException("Expected DataTableSpec at"
-                    + " port 0!");
+            final PortObjectSpec[] specs, final Map<String, FlowVariable> map) throws NotConfigurableException {
+        if (specs != null && specs.length > 0 && specs[0] != null && specs[0] instanceof DataTableSpec) {
+             update((DataTableSpec) specs[0], map);
+        } else {
+            update(null, map);
         }
-        update((DataTableSpec)specs[0], map);
         setText(getExpressionFrom(settings));
     }
 
@@ -257,8 +252,7 @@ public class RDialogPanel extends JPanel {
      * @param settings settings instance to load expression from.
      * @return The expression loaded from settings instance.
      */
-    public static final String getExpressionFrom(final NodeSettingsRO settings)
-    {
+    public static final String getExpressionFrom(final NodeSettingsRO settings) {
         return settings.getString(CFG_EXPRESSION, DEFAULT_R_COMMAND);
     }
 
@@ -283,8 +277,7 @@ public class RDialogPanel extends JPanel {
      * @param settings settings instance to save expression to.
      * @param expr expression to save.
      */
-    public static final void setExpressionTo(final NodeSettingsWO settings,
-            final String expr) {
+    public static final void setExpressionTo(final NodeSettingsWO settings, final String expr) {
         settings.addString(CFG_EXPRESSION, expr);
     }
 
@@ -295,8 +288,7 @@ public class RDialogPanel extends JPanel {
      * @param settings settings instance to load expression from.
      * @return The expression loaded from settings instance.
      */
-    public static final String[] getExpressionsFrom(
-            final NodeSettingsRO settings) {
+    public static final String[] getExpressionsFrom(final NodeSettingsRO settings) {
         String expr = settings.getString(CFG_EXPRESSION, DEFAULT_R_COMMAND);
         return expr.split("\n");
     }

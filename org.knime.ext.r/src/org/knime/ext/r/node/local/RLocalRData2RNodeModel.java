@@ -31,6 +31,7 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -44,29 +45,26 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
  *
- * @author Kilian Thiel, University of Konstanz
+ * @author Thomas Gabriel, KNIME.com AG, Zurich
+ * @since 2.7
  */
-public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
+public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
 
     private static final NodeLogger LOGGER =
-        NodeLogger.getLogger(RLocalPredictorNodeModel.class);
+        NodeLogger.getLogger(RLocalRData2RNodeModel.class);
+
+    /** The default R command. */
+    static final String DEFAULT_R_CMD = "R<-cbind(RMODEL, RDATA)";
+
+    private String m_rCommand = DEFAULT_R_CMD;
 
     /**
-     * The default prediction command.
-     */
-    static final String PREDICTION_CMD =
-        "R<-cbind(RDATA, predict(RMODEL, RDATA));\n";
-
-    private String m_rCommand = PREDICTION_CMD;
-
-    /**
-     * Creates a new instance of <code>RLocalPredictorNodeModel</code> with
-     * given in- and out-port specification.
+     * Creates a new instance of <code>RLocalRData2RNodeModel</code> with given in- and out-port specification.
      * @param pref provider for R executable
      */
-    public RLocalPredictorNodeModel(final RPreferenceProvider pref) {
-        super(new PortType[]{RPortObject.TYPE, BufferedDataTable.TYPE},
-            new PortType[]{BufferedDataTable.TYPE}, pref);
+    public RLocalRData2RNodeModel(final RPreferenceProvider pref) {
+        super(new PortType[]{RPortObject.TYPE, BufferedDataTable.TYPE_OPTIONAL},
+              new PortType[]{RPortObject.TYPE}, pref);
     }
 
     /**
@@ -75,6 +73,11 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
+        if (inSpecs[1] == null) {
+            if (DEFAULT_R_CMD.equals(m_rCommand)) {
+                throw new InvalidSettingsException("Configure node or connect data input.");
+            }
+        }
         checkRExecutable();
         return new DataTableSpec[]{null};
     }
@@ -83,29 +86,33 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec)
-            throws Exception {
-        // preprocess data in in DataTable.
-        PortObject[] inDataTables = preprocessDataTable(inData, exec);
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
 
+        // tmp files
         File tempOutData = null;
         File inDataCsvFile = null;
         File rCommandFile = null;
         File rOutFile = null;
-        BufferedDataTable[] dts = null;
+        RPortObject out;
 
         try {
-            // write data to csv
-            inDataCsvFile = writeInDataCsvFile((BufferedDataTable)inDataTables[1], exec);
-
-            // execute R cmd
+         // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(SET_WORKINGDIR_CMD);
-            completeCmd.append(READ_DATA_CMD_PREFIX);
-            completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(READ_DATA_CMD_SUFFIX);
-            completeCmd.append("RDATA<-R;\n");
+
+            // data in-port is optional
+            if (inData[1] != null) {
+                // preprocess data in in DataTable.
+                PortObject[] inDataTables = preprocessDataTable(inData, exec);
+                // write data to csv
+                inDataCsvFile = writeInDataCsvFile((BufferedDataTable)inDataTables[1], exec);
+
+                // write data into R
+                completeCmd.append(READ_DATA_CMD_PREFIX);
+                completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
+                completeCmd.append(READ_DATA_CMD_SUFFIX);
+                completeCmd.append("RDATA<-R;\n");
+            }
 
             // load model
             File fileR = ((RPortObject)inData[0]).getFile();
@@ -113,18 +120,22 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
             completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
 
-            // predict data
+            // result R port
             completeCmd.append("RMODEL<-R;\n");
-            completeCmd.append(ExpressionResolver.parseCommand(
-                    m_rCommand.trim(), this));
+            completeCmd.append(ExpressionResolver.parseCommand(m_rCommand.trim(), this));
             completeCmd.append("\n");
 
-            // write predicted data to csv
+            // write R to csv
             tempOutData = File.createTempFile("R-outDataTempFile-", ".csv", new File(TEMP_PATH));
             completeCmd.append(WRITE_DATA_CMD_PREFIX);
-            completeCmd
-                    .append(tempOutData.getAbsolutePath().replace('\\', '/'));
+            completeCmd.append(tempOutData.getAbsolutePath().replace('\\', '/'));
             completeCmd.append(WRITE_DATA_CMD_SUFFIX);
+
+            File outR = File.createTempFile("~knime", ".R", new File(KNIMEConstants.getKNIMETempDir()));
+            outR.deleteOnExit();
+            completeCmd.append(WRITE_MODEL_CMD_PREFIX);
+            completeCmd.append(outR.getAbsolutePath().replace('\\', '/'));
+            completeCmd.append(WRITE_MODEL_CMD_SUFFIX);
 
             // write R command
             String rCmd = completeCmd.toString();
@@ -139,7 +150,6 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
             shellCmd.append(rBinaryFile);
             shellCmd.append(" " + rCommandFile.getName());
             shellCmd.append(" " + rOutFile.getName());
-
 
             // execute shell command
             String shcmd = shellCmd.toString();
@@ -158,15 +168,13 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
             if (exitVal != 0) {
                 // before we return, we save the output in the failing list
                 synchronized (cmdExec) {
-                    setFailedExternalOutput(new LinkedList<String>(
-                            cmdExec.getStdOutput()));
+                    setFailedExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
                 }
             }
             synchronized (cmdExec) {
 
                 // save error description of the Rout file to the ErrorOut
-                LinkedList<String> list =
-                        new LinkedList<String>(cmdExec.getStdErr());
+                LinkedList<String> list = new LinkedList<String>(cmdExec.getStdErr());
 
                 list.add("#############################################");
                 list.add("#");
@@ -174,8 +182,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
                 list.add("#");
                 list.add("#############################################");
                 list.add(" ");
-                BufferedReader bfr =
-                        new BufferedReader(new FileReader(rOutFile));
+                BufferedReader bfr = new BufferedReader(new FileReader(rOutFile));
                 String line;
                 while ((line = bfr.readLine()) != null) {
                     list.add(line);
@@ -190,21 +197,15 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
 
                 if (exitVal != 0) {
                     setFailedExternalErrorOutput(list);
-                    LOGGER.debug("Execution of R Script failed with exit code: "
-                            + exitVal);
-                    throw new IllegalStateException(
-                            "Execution of R script failed: " + rErr);
+                    LOGGER.debug("Execution of R Script failed with exit code: " + exitVal);
+                    throw new IllegalStateException("Execution of R script failed: " + rErr);
                 } else {
                     setExternalOutput(list);
                 }
             }
 
-            // read data from R output csv into a buffered data table.
-            ExecutionContext subExecCon = exec.createSubExecutionContext(1.0);
-            BufferedDataTable dt = readOutData(tempOutData, subExecCon);
-
-            // postprocess data in out DataTable.
-            dts = postprocessDataTable(new BufferedDataTable[]{dt}, exec);
+            // generate R output
+            out = new RPortObject(outR);
 
         } finally {
             // delete all temp files
@@ -214,8 +215,8 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
             deleteFile(rOutFile);
         }
 
-        // return this table
-        return dts;
+        // return R output
+        return new PortObject[]{out};
     }
 
     /**
@@ -225,7 +226,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_rCommand = RDialogPanel.getExpressionFrom(settings, PREDICTION_CMD);
+        m_rCommand = RDialogPanel.getExpressionFrom(settings, DEFAULT_R_CMD);
         try {
             m_argumentsR.loadSettingsFrom(settings);
         } catch (InvalidSettingsException ise) {

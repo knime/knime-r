@@ -30,6 +30,7 @@ import org.knime.base.node.io.pmml.read.PMMLImport;
 import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.port.PortObject;
@@ -90,7 +91,7 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             // generate and write pmml
             completeCmd.append("library(pmml);\n");
             completeCmd.append("RPMML<-toString(pmml(R));\n");
-            File pmmlFile = File.createTempFile("R2PMML~", ".pmml");
+            File pmmlFile = File.createTempFile("R2PMML~", ".pmml", new File(KNIMEConstants.getKNIMETempDir()));
             pmmlFile.deleteOnExit();
             completeCmd.append("write(RPMML, file=\""
                     + pmmlFile.getAbsolutePath().replace('\\', '/') + "\")\n");
@@ -172,7 +173,7 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             deleteFile(rOutFile);
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */

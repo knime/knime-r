@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------
  * This source code, its documentation and all appendant files
  * are protected by copyright law. All rights reserved.
@@ -18,7 +18,7 @@
  * website: www.knime.org
  * email: contact@knime.org
  * --------------------------------------------------------------------- *
- * 
+ *
  * History
  *   12.09.2008 (gabriel): created
  */
@@ -40,6 +40,7 @@ import javax.swing.JScrollPane;
 
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
@@ -49,24 +50,24 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 
 /**
- * A port object for R model port providing a file containing a R model. 
- * 
+ * A port object for R model port providing a file containing a R model.
+ *
  * @author Kilian Thiel, University of Konstanz
  */
 public class RPortObject implements PortObject {
-    
-    /** Convenience access member for 
+
+    /** Convenience access member for
      * <code>new PortType(RPortObject.class)</code>. */
     public static final PortType TYPE = new PortType(RPortObject.class);
-    
+
     private static final NodeLogger LOGGER =
-        NodeLogger.getLogger(RPortObject.class);    
-    
+        NodeLogger.getLogger(RPortObject.class);
+
     private final File m_fileR;
-    
+
     /**
      * Creates an instance of <code>RPortObject</code> with given file.
-     * 
+     *
      * @param fileR The file containing a R model.
      */
     public RPortObject(final File fileR) {
@@ -88,27 +89,27 @@ public class RPortObject implements PortObject {
     public String getSummary() {
         return "R Object";
     }
-    
+
     /**
      * Returns the file containing the R model.
-     * 
+     *
      * @return the file containing the R model.
      */
     public File getFile() {
         return m_fileR;
     }
-    
+
     /**
      * Serializer used to save this port object.
      * @return a {@link RPortObject}
      */
-    public static PortObjectSerializer<RPortObject> 
+    public static PortObjectSerializer<RPortObject>
             getPortObjectSerializer() {
         return new PortObjectSerializer<RPortObject>() {
             /** {@inheritDoc} */
             @Override
             public void savePortObject(final RPortObject portObject,
-                    final PortObjectZipOutputStream out, 
+                    final PortObjectZipOutputStream out,
                     final ExecutionMonitor exec)
                     throws IOException, CanceledExecutionException {
                 out.putNextEntry(new ZipEntry("knime.R"));
@@ -117,16 +118,16 @@ public class RPortObject implements PortObject {
                 fis.close();
                 out.close();
             }
-            
+
             /** {@inheritDoc} */
             @Override
             public RPortObject loadPortObject(
-                    final PortObjectZipInputStream in, 
-                    final PortObjectSpec spec, 
+                    final PortObjectZipInputStream in,
+                    final PortObjectSpec spec,
                     final ExecutionMonitor exec)
                     throws IOException, CanceledExecutionException {
                 in.getNextEntry();
-                File fileR = File.createTempFile("~knime", ".R");
+                File fileR = File.createTempFile("~knime", ".R", new File(KNIMEConstants.getKNIMETempDir()));
                 FileOutputStream fos = new FileOutputStream(fileR);
                 FileUtil.copy(in, fos);
                 in.close();
@@ -149,7 +150,7 @@ public class RPortObject implements PortObject {
         panel.add(new JScrollPane(jep));
         return new JComponent[]{panel};
     }
-    
+
     /**
      * @return The path of the R model file if available, otherwise
      * "No file available".
@@ -160,7 +161,7 @@ public class RPortObject implements PortObject {
         }
         return "No file available";
     }
-    
+
     /**
      * @return The input of the R model file.
      */
@@ -181,7 +182,7 @@ public class RPortObject implements PortObject {
         }
         return buf.toString();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean equals(final Object obj) {
@@ -192,9 +193,9 @@ public class RPortObject implements PortObject {
             return false;
         }
         RPortObject rPort = (RPortObject) obj;
-        return m_fileR.equals(rPort.m_fileR); 
+        return m_fileR.equals(rPort.m_fileR);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public int hashCode() {

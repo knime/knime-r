@@ -57,7 +57,7 @@ public interface RNodeModel {
     /**
      * Used to parse the R script containing flow and workflow variables.
      */
-    public static class ExpressionResolver {
+    public static final class ExpressionResolver {
         private ExpressionResolver() {
             // empty
         }

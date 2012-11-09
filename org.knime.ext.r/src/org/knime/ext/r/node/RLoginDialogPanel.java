@@ -7,7 +7,7 @@
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -44,20 +44,16 @@ import org.knime.core.node.defaultnodesettings.DialogComponentString;
 final class RLoginDialogPanel extends JPanel {
 
     private final DialogComponentString m_host =
-            new DialogComponentString(RLoginSettings.createHostModel(),
-                    "Host: ");
+        new DialogComponentString(RLoginSettings.createHostModel(), "Host: ");
 
     private final DialogComponentNumber m_port =
-            new DialogComponentNumber(RLoginSettings.createPortModel(),
-                    "Port: ", 1);
+        new DialogComponentNumber(RLoginSettings.createPortModel(), "Port: ", 1);
 
     private final DialogComponentString m_user =
-            new DialogComponentString(RLoginSettings.createUserModel(),
-                    "User: ");;
+        new DialogComponentString(RLoginSettings.createUserModel(), "User: ");
 
     private final DialogComponentPasswordField m_pass =
-            new DialogComponentPasswordField(RLoginSettings
-                    .createPasswordModel(), "Password: ");;
+        new DialogComponentPasswordField(RLoginSettings.createPasswordModel(), "Password: ");
 
     /**
      * Default constructor.

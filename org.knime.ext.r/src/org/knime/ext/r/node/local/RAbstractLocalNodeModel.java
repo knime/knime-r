@@ -131,8 +131,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
     /**
      * The temp directory used to save csv, script R output files temporarily.
      */
-    static final String TEMP_PATH =
-        KNIMEConstants.getKNIMETempDir().replace('\\', '/');
+    static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/');
 
     /** R commands to set working dir, write and reads csv files. */
     static final String SET_WORKINGDIR_CMD =
@@ -151,12 +150,10 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
     private final RPreferenceProvider m_pref;
 
     /** Model saving the path to the R binary file. */
-    private final SettingsModelString m_rbinaryFileSettingsModel
-        = RLocalLearnerNodeDialogPane.createRBinaryFile();
-    
+    private final SettingsModelString m_rbinaryFileSettingsModel = RLocalNodeDialogPane.createRBinaryFile();
+
     /** Model for additional R arguments. */
-    protected final SettingsModelString m_argumentsR
-        = RLocalNodeDialogPane.createRargumentsModel();
+    protected final SettingsModelString m_argumentsR = RLocalNodeDialogPane.createRargumentsModel();
 
     /**
      * Constructor of <code>RAbstractLocalNodeModel</code> with given in- and
@@ -312,8 +309,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
      * @throws IOException If string could not be written to a file.
      */
     static File writeRcommandFile(final String cmd) throws IOException {
-        File tempCommandFile = File.createTempFile("R-inDataTempFile-", ".r",
-                    new File(TEMP_PATH));
+        File tempCommandFile = File.createTempFile("R-inDataTempFile-", ".r", new File(TEMP_PATH));
         tempCommandFile.deleteOnExit();
         FileWriter fw = new FileWriter(tempCommandFile);
         fw.write(cmd);
@@ -336,8 +332,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
             final ExecutionContext exec) throws IOException,
             CanceledExecutionException {
         // create Temp file
-        File tempInDataFile = File.createTempFile("R-inDataTempFile-", ".csv",
-                    new File(TEMP_PATH));
+        File tempInDataFile = File.createTempFile("R-inDataTempFile-", ".csv", new File(TEMP_PATH));
         tempInDataFile.deleteOnExit();
 
         // write data to file
@@ -413,7 +408,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
         }
         return getRBinaryPath() + " CMD BATCH" + argR;
     }
-    
+
     /**
      * Path to R binary.
      * @return R binary path
@@ -425,7 +420,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
             return m_pref.getRPath();
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */

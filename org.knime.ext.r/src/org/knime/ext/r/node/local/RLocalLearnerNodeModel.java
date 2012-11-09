@@ -32,6 +32,7 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -107,7 +108,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(m_rCommand.trim());
             completeCmd.append("\n");
 
-            File fileR = File.createTempFile("~knime", ".R");
+            File fileR = File.createTempFile("~knime", ".R", new File(KNIMEConstants.getKNIMETempDir()));
             fileR.deleteOnExit();
             completeCmd.append(WRITE_MODEL_CMD_PREFIX);
             completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
@@ -174,7 +175,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
                 if (index >= 0) {
                     rErr = list.get(index);
                 }
-             
+
                 if (exitVal != 0) {
                     setFailedExternalErrorOutput(list);
                     LOGGER.debug("Execution of R Script failed with exit code: "
@@ -185,7 +186,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
                     setExternalOutput(list);
                 }
             }
-                
+
             out = new RPortObject(fileR);
         } finally {
             // delete all temp files
@@ -232,5 +233,5 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
         String exp = RDialogPanel.getExpressionFrom(settings);
         RConsoleModel.testExpressions(exp.split("\n"));
     }
-    
+
 }

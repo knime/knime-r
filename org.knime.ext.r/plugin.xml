@@ -18,8 +18,28 @@
       </node>
       <node
             category-path="/r/local"
+            factory-class="org.knime.ext.r.node.local.RLocalR2TableNodeFactory"
+            id="org.knime.ext.r.node.local.RLocalR2TableNodeFactory">
+      </node>
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.ext.r.node.local.RLocalRData2RNodeFactory"
+            id="org.knime.ext.r.node.local.RLocalRData2RNodeFactory">
+      </node>
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.ext.r.node.local.RLocalTable2RNodeFactory"
+            id="org.knime.ext.r.node.local.RLocalTable2RNodeFactory">
+      </node>
+      <node
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.RLocalViewsNodeFactory2"
             id="org.knime.ext.r.node.local.RLocalViewsNodeFactory2">
+      </node>
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.ext.r.node.local.RLocalRViewsNodeFactory2"
+            id="org.knime.ext.r.node.local.RLocalRViewsNodeFactory2">
       </node>
       <node
             category-path="/r/local"

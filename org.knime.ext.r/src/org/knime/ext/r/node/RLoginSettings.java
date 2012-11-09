@@ -7,7 +7,7 @@
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -73,18 +73,22 @@ public final class RLoginSettings {
     /** Settings model for enrypted password field. */
     static final SettingsModelString PASS = createPasswordModel();
 
+    /** @return settings model for the password. */
     static SettingsModelString createPasswordModel() {
         return new SettingsModelString(KEY_PASSWORD, DEFAULT_PASS);
     }
 
+    /** @return settings model for the port. */
     static SettingsModelIntegerBounded createPortModel() {
         return new SettingsModelIntegerBounded(KEY_PORT, DEFAULT_PORT, 0, 65536);
     }
 
+    /** @return settings model for the host. */
     static SettingsModelString createHostModel() {
         return new SettingsModelString(KEY_HOST, DEFAULT_HOST);
     }
 
+    /** @return Settings model for the user. */
     static SettingsModelString createUserModel() {
         return new SettingsModelString(KEY_USER, DEFAULT_USER);
     }
@@ -160,12 +164,10 @@ public final class RLoginSettings {
 
     /**
      * Validate settings.
-     *
      * @param settings to validate
-     * @throws InvalidSettingsException
+     * @throws InvalidSettingsException if settings could not be validated
      */
-    static void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    static void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
         USER.validateSettings(settings);
         HOST.validateSettings(settings);
         PASS.validateSettings(settings);
@@ -174,12 +176,10 @@ public final class RLoginSettings {
 
     /**
      * Load validated settings.
-     *
      * @param settings to load
-     * @throws InvalidSettingsException
+     * @throws InvalidSettingsException if settings could not loaded
      */
-    static void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    static void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         USER.loadSettingsFrom(settings);
         HOST.loadSettingsFrom(settings);
         PASS.loadSettingsFrom(settings);

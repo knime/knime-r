@@ -40,6 +40,7 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -137,7 +138,7 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
         try {
             // read png back from server
             RFileInputStream ris = c.openFile(fileName);
-            m_imageFile = File.createTempFile(FILE_NAME, ".png");
+            m_imageFile = File.createTempFile(FILE_NAME, ".png", new File(KNIMEConstants.getKNIMETempDir()));
             FileOutputStream out = new FileOutputStream(m_imageFile);
             FileUtil.copy(ris, out);
             FileInputStream in = new FileInputStream(m_imageFile);
@@ -302,7 +303,7 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
             final ExecutionMonitor exec)
             throws IOException, CanceledExecutionException {
         File file = new File(nodeInternDir, FILE_NAME + ".png");
-        m_imageFile = File.createTempFile(FILE_NAME, ".png");
+        m_imageFile = File.createTempFile(FILE_NAME, ".png", new File(KNIMEConstants.getKNIMETempDir()));
         FileUtil.copy(file, m_imageFile);
         m_resultImage = createImage(new FileInputStream(m_imageFile));
     }

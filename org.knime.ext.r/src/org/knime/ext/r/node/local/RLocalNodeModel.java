@@ -77,10 +77,10 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
  * @author Thomas Gabriel, University of Konstanz
  */
 public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
-    
+
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RLocalNodeModel.class);
-    
+
     private boolean m_hasDataTableOutPort = false;
 
     /**
@@ -91,7 +91,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
      * @param outPorts array of out-port types
      * @param pref R preference provider
      */
-    public RLocalNodeModel(final PortType[] outPorts, 
+    public RLocalNodeModel(final PortType[] outPorts,
             final RPreferenceProvider pref) {
         super(new PortType[]{BufferedDataTable.TYPE}, outPorts, pref);
         // check for data table out ports
@@ -103,7 +103,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             }
         }
     }
-    
+
     /**
      * Implement this method to specify certain R code to run. Be aware that
      * this R code has to be valid, otherwise the node will not execute
@@ -166,8 +166,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
             // write R data only into out file if data table out port exists
             if (m_hasDataTableOutPort) {
-                tempOutData = File.createTempFile("R-outDataTempFile-", ".csv",
-                        new File(TEMP_PATH));
+                tempOutData = File.createTempFile("R-outDataTempFile-", ".csv", new File(TEMP_PATH));
                 tempOutData.deleteOnExit();
                 completeCmd.append(WRITE_DATA_CMD_PREFIX);
                 completeCmd.append(
@@ -180,8 +179,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
                     completeCmd.toString(), this);
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
-            rOutFile = File.createTempFile("R-outDataTempFile-", ".Rout",
-                    rCommandFile.getParentFile());
+            rOutFile = File.createTempFile("R-outDataTempFile-", ".Rout", rCommandFile.getParentFile());
             rOutFile.deleteOnExit();
 
             // create shell command
@@ -238,7 +236,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
                 if (index >= 0) {
                     rErr = list.get(index);
                 }
-                
+
                 if (exitVal != 0) {
                     setFailedExternalErrorOutput(list);
                     LOGGER.debug("Execution of R Script failed with exit code: "
@@ -247,13 +245,13 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
                             "Execution of R script failed: " + rErr);
                 } else {
                     setExternalOutput(list);
-                }                
+                }
             }
 
             // read out data only if data table out port exists
             if (m_hasDataTableOutPort) {
                 // read data from R output csv into a buffered data table.
-                ExecutionContext subExecCon = 
+                ExecutionContext subExecCon =
                     exec.createSubExecutionContext(1.0);
                 BufferedDataTable dt = readOutData(tempOutData, subExecCon);
 
@@ -272,7 +270,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
         // return this table
         return dts;
     }
-    
+
     /**
      * {@inheritDoc}
      */
