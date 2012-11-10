@@ -40,6 +40,7 @@ import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
+import org.knime.base.node.util.FlowVariableResolvable.FlowVariableResolver;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
@@ -53,7 +54,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.util.DataColumnSpecListCellRenderer;
 import org.knime.core.node.util.FlowVariableListCellRenderer;
 import org.knime.core.node.workflow.FlowVariable;
-import org.knime.ext.r.node.RNodeModel.ExpressionResolver;
 
 /**
  * Panel to enter R expressions.
@@ -147,7 +147,7 @@ public class RDialogPanel extends JPanel {
                     Object o = m_listVars.getSelectedValue();
                     if (o != null) {
                         FlowVariable var = (FlowVariable) o;
-                        m_textExpression.replaceSelection(ExpressionResolver.extendVariable(var));
+                        m_textExpression.replaceSelection(FlowVariableResolver.getPlaceHolderForVariable(var));
                         m_listVars.clearSelection();
                         m_textExpression.requestFocus();
                     }

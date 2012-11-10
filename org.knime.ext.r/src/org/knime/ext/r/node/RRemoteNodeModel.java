@@ -25,6 +25,7 @@ package org.knime.ext.r.node;
 
 import java.util.ArrayList;
 
+import org.knime.base.node.util.FlowVariableResolvable;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
@@ -39,7 +40,7 @@ import org.rosuda.REngine.Rserve.RserveException;
  *
  * @author Thomas Gabriel, University of Konstanz
  */
-abstract class RRemoteNodeModel extends NodeModel implements RNodeModel {
+abstract class RRemoteNodeModel extends NodeModel implements FlowVariableResolvable {
 
     /**
      * Used only in cases where Rserve runs on local host and windows in order
@@ -128,7 +129,7 @@ abstract class RRemoteNodeModel extends NodeModel implements RNodeModel {
             exps[i] = exps[i].trim();
             String help = parseLine(exps[i]);
             if (help.length() > 0) {
-                String command = ExpressionResolver.parseCommand(help, this);
+                String command = FlowVariableResolver.parse(help, this);
                 res.add(command);
             }
         }

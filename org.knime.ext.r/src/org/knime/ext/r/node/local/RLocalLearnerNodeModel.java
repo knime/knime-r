@@ -115,7 +115,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(WRITE_MODEL_CMD_SUFFIX);
 
             // write R command
-            String rCmd = ExpressionResolver.parseCommand(
+            String rCmd = FlowVariableResolver.parse(
                     completeCmd.toString(), this);
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);

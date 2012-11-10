@@ -122,7 +122,7 @@ public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
 
             // result R port
             completeCmd.append("RMODEL<-R;\n");
-            completeCmd.append(ExpressionResolver.parseCommand(m_rCommand.trim(), this));
+            completeCmd.append(FlowVariableResolver.parse(m_rCommand.trim(), this));
             completeCmd.append("\n");
 
             // write R to csv

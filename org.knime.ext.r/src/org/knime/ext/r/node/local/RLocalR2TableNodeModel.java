@@ -93,7 +93,7 @@ public class RLocalR2TableNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
 
             // result data
-            completeCmd.append(ExpressionResolver.parseCommand(m_rCommand.trim(), this));
+            completeCmd.append(FlowVariableResolver.parse(m_rCommand.trim(), this));
             completeCmd.append("\n");
 
             // write result data to csv

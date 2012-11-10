@@ -98,7 +98,7 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append("\n");
 
             // write R command
-            String rCmd = ExpressionResolver.parseCommand(
+            String rCmd = FlowVariableResolver.parse(
                     completeCmd.toString(), this);
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);

@@ -35,6 +35,7 @@ import org.knime.base.node.io.csvwriter.FileWriterSettings;
 import org.knime.base.node.io.filereader.FileAnalyzer;
 import org.knime.base.node.io.filereader.FileReaderNodeSettings;
 import org.knime.base.node.io.filereader.FileTable;
+import org.knime.base.node.util.FlowVariableResolvable;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
@@ -52,7 +53,6 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RConnectionRemote;
-import org.knime.ext.r.node.RNodeModel;
 import org.knime.ext.r.preferences.RPreferenceProvider;
 
 
@@ -82,7 +82,7 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
  * @author Thomas Gabriel, University of Konstanz
  */
 public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
-        implements RNodeModel {
+        implements FlowVariableResolvable {
 
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RAbstractLocalNodeModel.class);

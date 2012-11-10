@@ -175,7 +175,7 @@ public class RLocalRViewsNodeModel2 extends RAbstractLocalNodeModel {
                 + ", bg=\"" + m_bgModel.getStringValue() + "\""
                 + ", res=" + m_resolutionModel.getStringValue() + ");\n"
                 + m_viewCmd + "\ndev.off();";
-            completeCmd.append(ExpressionResolver.parseCommand(command, this));
+            completeCmd.append(FlowVariableResolver.parse(command, this));
             completeCmd.append("\n");
 
             // write R command
