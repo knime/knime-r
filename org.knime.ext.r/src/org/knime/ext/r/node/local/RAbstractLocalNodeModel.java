@@ -442,7 +442,8 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
      */
     @Override
     public final String delegatePeekFlowVariableString(final String name) {
-        return peekFlowVariableString(name);
+        // R needs it in quotes
+        return "\"" + peekFlowVariableString(name) + "\"";
     }
 
 }
