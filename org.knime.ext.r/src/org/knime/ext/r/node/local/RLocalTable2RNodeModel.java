@@ -119,8 +119,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(WRITE_MODEL_CMD_SUFFIX);
 
             // write R command
-            String rCmd = FlowVariableResolver.parse(
-                    completeCmd.toString(), this);
+            String rCmd = FlowVariableResolver.parse(completeCmd.toString(), this);
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
@@ -164,8 +163,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
                 list.add("#");
                 list.add("#############################################");
                 list.add(" ");
-                BufferedReader bfr =
-                        new BufferedReader(new FileReader(rOutFile));
+                BufferedReader bfr = new BufferedReader(new FileReader(rOutFile));
                 String line;
                 while ((line = bfr.readLine()) != null) {
                     list.add(line);
@@ -180,10 +178,8 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
 
                 if (exitVal != 0) {
                     setFailedExternalErrorOutput(list);
-                    LOGGER.debug("Execution of R Script failed with exit code: "
-                            + exitVal);
-                    throw new IllegalStateException(
-                            "Execution of R script failed: " + rErr);
+                    LOGGER.debug("Execution of R Script failed with exit code: " + exitVal);
+                    throw new IllegalStateException("Execution of R script failed: " + rErr);
                 } else {
                     setExternalOutput(list);
                 }
@@ -230,8 +226,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.validateSettings(settings);
         String exp = RDialogPanel.getExpressionFrom(settings);
         RConsoleModel.testExpressions(exp.split("\n"));

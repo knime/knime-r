@@ -18,7 +18,7 @@
 		<tab name="R Command">
 		  <option name ="R Snippet">
             The R commands to run, default: <br/>
-            <pre>R&lt;-R;</pre>
+            <pre>R&lt;-R</pre>
           </option>
           <option name="Column List">
             The list contains the column that are available in the input table.

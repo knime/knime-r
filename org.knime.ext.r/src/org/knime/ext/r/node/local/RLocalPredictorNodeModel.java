@@ -54,8 +54,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
     /**
      * The default prediction command.
      */
-    static final String PREDICTION_CMD =
-        "R<-cbind(RDATA, predict(RMODEL, RDATA));\n";
+    static final String PREDICTION_CMD = "R<-cbind(RDATA, predict(RMODEL, RDATA))";
 
     private String m_rCommand = PREDICTION_CMD;
 
@@ -115,8 +114,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
 
             // predict data
             completeCmd.append("RMODEL<-R;\n");
-            completeCmd.append(FlowVariableResolver.parse(
-                    m_rCommand.trim(), this));
+            completeCmd.append(FlowVariableResolver.parse(m_rCommand.trim(), this));
             completeCmd.append("\n");
 
             // write predicted data to csv

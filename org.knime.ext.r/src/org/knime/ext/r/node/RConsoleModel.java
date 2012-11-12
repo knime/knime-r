@@ -393,8 +393,7 @@ public class RConsoleModel extends RRemoteNodeModel {
                 return;
             }
         }
-        throw new InvalidSettingsException("The result has to be provided"
-                + " inside the variable R");
+        throw new InvalidSettingsException("The result has to be provided as a variable R.");
     }
 
     /**

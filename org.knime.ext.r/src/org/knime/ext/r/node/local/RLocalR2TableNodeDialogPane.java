@@ -48,7 +48,7 @@ public class RLocalR2TableNodeDialogPane extends RLocalNodeDialogPane {
      */
     public RLocalR2TableNodeDialogPane() {
         m_dialogPanel = new RDialogPanel();
-        m_dialogPanel.setText(RLocalR2TableNodeModel.DEFAULT_R_CMD);
+        m_dialogPanel.setText(RDialogPanel.DEFAULT_R_COMMAND);
         addTabAt(0, "R Command", m_dialogPanel);
         setSelected("R Command");
     }

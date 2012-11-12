@@ -109,8 +109,7 @@ public class RLocalViewsNodeModel extends RLocalNodeModel {
 
     private String m_filename;
 
-    private String m_viewCmd =
-        RViewScriptingConstants.getDefaultExpressionCommand();
+    private String m_viewCmd = RViewScriptingConstants.getDefaultExpressionCommand();
 
     /**
      * Creates new instance of <code>RLocalViewsNodeModel</code> with one data
