@@ -1,0 +1,24 @@
+Irish                   Irish data
+Munsingen               Hodson's Munsingen Data Set
+Psych24                 Psych24 - 24 psychological tests
+Townships               Bertin's Characteristics and Townships Data Set
+Zoo                     Zoo database
+bertinplot              Plot a Bertin matrix
+criterion               Criterion for a loss/merit function for data
+                        given a permutation
+dissplot                Dissimilarity Plot
+get_order               Getting an integer permutation vector from a
+                        permutation object
+hmap                    Plot heat map reordered by different algorithms
+permute                 Permute a dist object, a matrix, an array, a
+                        list, or a numeric vector
+pimage                  Permutation image plot
+ser_permutation         Class ser\_permutation - A collection of
+                        permutation vectors for seriation
+ser_permutation_vector
+                        Class ser\_permutation\_vector - A single
+                        permutation vector for seriation
+seriate                 Seriate objects in dissimilarity matrices,
+                        matrices or arrays
+set_criterion_method    Registry for criterion methods
+set_seriation_method    Registry for seriation methods

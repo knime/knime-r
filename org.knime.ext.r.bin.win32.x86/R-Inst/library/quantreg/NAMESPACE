@@ -1,0 +1,5 @@
+useDynLib("quantreg")
+import(SparseM)
+
+# Export all names
+exportPattern(".")

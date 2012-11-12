@@ -1,0 +1,35 @@
+                  Changes in DAAG version 1.14
+
+NEW FEATURES
+
+    o The function CVlm (alias cv.lm) has been modified to allow
+      multiple explanatory variables.  Predicted values can be
+      subtracted off from the points that are shown.  If there is
+      more than one explanatory variable, the lines that are shown
+      for individual folds are approximations to the small points
+      that show the fitted values for the respective fold.
+      Arguments main (main title) and legend.pos have been added.
+
+                  Changes in DAAG version 1.13
+
+NEW FUNCTIONS
+
+    o the function bsnOpt has been added - this finds the regression
+      model that is optimal according to the stated criteria
+
+    o the functions bestsetNoise, bestset.noise, bsnCV, bsnOpt, and
+      bsnVaryNvar all allow the optional logical argument intercept.
+      Except for bsnVaryNvar, the user now has the option to supply
+      arguments X and y.
+
+    o the function lmdiags and the generic function plotSimDiags with
+      a method for lm models have been added.  The function takes as
+      argument a model object, then returning a lattice graphics object
+      or objects that show regression diagnostics for simulated data
+
+BUG FIX
+
+    o In the dataset possumsites, the first two column names have been
+      corrected to "Longitude" and "Latitude".  The code under 'Examples'
+      has been changed accordingly, so that the map that appears is
+      the same as before.

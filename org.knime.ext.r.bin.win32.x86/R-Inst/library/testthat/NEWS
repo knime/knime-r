@@ -1,0 +1,105 @@
+Version 0.7
+------------------------------------------------------------------------------
+
+* `SummaryReporter`: still return informative messages even if no tests
+  defined (just bare expectations). (Fixes #31)
+
+* Improvements to reference classes (Thanks to John Chambers)
+
+* Bug fixes for when nothing was generated in `gives_warning` /
+  `shows_message`. (Thanks to Bernd Bischl)
+
+* New `make_expectation` function to programmatically generate an equality
+  expectation. (Fixes #24)
+
+* `SummaryReporter`: You don't get praise until you have some tests.
+
+* Depend on `methods` rather than requiring it so that testthat works when run
+  from `Rscript`
+
+* `auto_test` now normalises paths to enable better identification of file
+  changes, and fixes bug in instantiating new reporter object.
+
+Version 0.6
+------------------------------------------------------------------------------
+
+* All `mutatr` classes have been replaced with ReferenceClasses.
+
+* Better documentation for short-hand expectations.
+
+* `test_dir` and `test_package` gain new `filter` argument which allows you to
+   restrict which tests are run.
+
+Version 0.5
+------------------------------------------------------------------------------
+
+* bare expectations now correctly throw errors again
+
+Changes in version 0.4
+------------------------------------------------------------------------------
+
+* autotest correctly loads code and executes tests in same environment
+
+* contexts are never closed before they are opened, and always closed at the
+  end of file
+
+* fixed small bug in `test_dir` where each test was not given its own
+  environment
+
+* all `expect_*` short cut functions gain a label argument, thanks to Steve
+  Lianoglou
+
+Changes in version 0.3
+------------------------------------------------------------------------------
+
+* all expectations now have a shortcut form, so instead of 
+     expect_that(a, is_identical_to(b))
+  you can do
+     expect_identical(a, b)
+
+* new shows_message and gives_warning expectations to test warnings and
+  messages
+
+* expect_that, equals, is_identical_to and is_equivalent to now have
+  additional label argument which allows you to control the appearance of the
+  text used for the expected object (for expect_that) and actual object (for
+  all other functions) in failure messages. This is useful when you have loops
+  that run tests as otherwise all the variable names are identical, and it's
+  difficult to tell which iteration caused the failure.
+
+* executing bare tests gives nicer output
+
+* all expectations now give more information on failure to make it easier to
+  track down the problem.
+
+* test_file and test_dir now run in code in separate environment to avoid
+  pollution of global environment. They also temporary change the working 
+  directory so tests can use relative paths.
+
+* test_package makes it easier to run all tests in an installed package. Code
+  run in this manner has access to non-exported functions and objects. If any
+  errors or failures occur, test_package will throw an error, making it
+  suitable for use with R CMD check.
+
+Changes in version 0.2
+------------------------------------------------------------------------------
+
+
+* colourise also works in screen terminal
+
+* equals expectation provides more information about failure
+
+* expect_that has extra info argument to allow you to pass in any extra
+  information you'd like included in the message - this is very helpful if
+  you're using a loop to run tests
+
+* is_equivalent_to: new expectation that tests for equality ignoring
+  attributes
+
+* library_if_available now works! (thanks to report and fix from Felix
+  Andrews)
+
+* specify larger width and join pieces back together whenever deparse used
+  (thanks to report and fix from Felix Andrews)
+
+* test_dir now looks for any files starting with test (not test- as before)

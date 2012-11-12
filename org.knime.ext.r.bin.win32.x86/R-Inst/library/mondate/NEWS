@@ -1,0 +1,31 @@
+
+Version 0.9.10.01
+================
+Changes
+
+	o	Replaced S4 methods cbind and rbind with functions cbindmondate and rbindmondate. This removed the two Internal calls in the package. As a result, the functionality is slightly changed:
+		- Whereas mondate's and non-mondate's could previously be c/r-binded together with the result being a mondate, such a "mixed combination" now results in a data.frame. If necessary, non-mondates should be coerced to mondates ahead of time. 
+		- When all the arguments are mondates, the result is a mondate as before.
+		- The user will no longer see the message about the c/r-bind generics being created when the package is loaded.
+		- Base c/r-bind with mondate arguments act on the Data slot of the mondates.
+
+	o	The as.numeric method now assignes the names attribute of the mondate, if it exists. Before, only the dimnames attribute was assigned.
+
+
+Version 0.9.9.01
+================
+Bug Fixes
+   
+================
+NEW FEATURES
+   o New 'as.mondate' function for coercing R objects to a mondate
+================
+Changes
+
+   o Reverted any S4 method better implemented as S3 to an S3 version. 
+	In particular, 'format' and 'unique' enable 'aggregate' to work
+	with a mondate object specified in 'by' argument
+   o Removed deprecated 'displayFormat' argument from as.character.mondate method
+   o Clarified some of the documentation
+   
+

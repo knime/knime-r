@@ -1,0 +1,306 @@
+\documentclass[letterpaper]{article}
+\usepackage{fullpage}% save trees
+\usepackage{url}
+\title{Creating an R data set from STAR}
+\author{Douglas Bates\\Department of Statistics\\University of Wisconsin -- Madison}
+\date{April 5, 2005}
+\newcommand{\RR}{\textsf{R}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+%%\VignetteIndexEntry{Creating an R data set from STAR}
+%%\VignetteDepends{lme4}
+\begin{document}
+\SweaveOpts{engine=R,eps=FALSE,pdf=TRUE,width=5,height=3}
+\SweaveOpts{strip.white=true,keep.source=TRUE}
+\SweaveOpts{prefix=TRUE,prefix.string=STAR,include=FALSE}
+\maketitle
+\begin{abstract}
+  A substantial portion of the data from Tennessee's Student Teacher
+  Achievement Ratio (STAR) project, a large-scale, four-year study of
+  reduced class size, has been made available to the public at
+  \url{http://www.heros-inc.org/data.htm}.  We describe the creation
+  of an \RR (\url{http:www.r-project.org}) data set from these data.
+\end{abstract}
+<<preliminaries,echo=FALSE,results=hide>>=
+options(show.signif.stars = FALSE,width=68)
+library(mlmRev)
+library(lme4)
+@
+
+\section{Introduction}
+\label{sec:intro}
+
+The data from the STAR project are available in several different
+forms from the web site \url{http://www.heros-inc.org/data.htm}.  The
+most convenient form for creation of an \RR data set is the
+tab-delimited text file.  Download the archive file
+\url{http://www.heros-inc.org/text-star.zip} containing two files:
+\texttt{readme.txt}, a description of the data, and
+\texttt{webstar.txt}, the data themselves.
+
+
+\section{Reading the data}
+\label{sec:reading}
+
+From the data description file we can see that there are 53 columns in
+the data set and most of these columns are coded values.  Such columns
+should be represented as factors in \RR but many of these columns will
+need to be combined before we can work with them.  We will convert the
+first 5 columns to factors and leave the remaining 48 columns as integers.
+<<datainput>>=
+str(orig <- read.delim(unz(system.file("original/text-star.zip",
+                                       package = "mlmRev"),
+                           "webstar.txt"),
+                       colCl = rep(c("factor", "integer"), c(5, 48))))
+@
+In the call to \code{read.delim} we read directly from the zip archive
+and avoided expanding the much larger text file.  The call to
+\code{system.file} determines the name of a file that is part of a
+package.  In practice it is often more convenient to use the
+\code{file.choose} function which brings up a file chooser panel.
+
+We also check the form of the original data by calling \code{str} on
+the object
+<<strorig>>=
+str(orig)
+@
+
+\subsection{Missing value codes}
+\label{sec:missval}
+
+All the columns except the first column have missing values present.
+Typically the missing value code is \code{"9"} but \code{"99"},
+\code{"999"} and \code{"9999"} are also used.
+We convert these to \RR's missing value code \code{NA} column by column.
+<<missval>>=
+mv <- rep("9", 53)
+mv[c(4,17,26,34,45)] <- "99"
+mv[c(19,20,27,28,35,36,39,40,46:53)] <- "999"
+mv[5] <- "9999"
+mv[1] <- "999999"
+for (i in seq(a = orig)) orig[[i]][orig[[i]] == mv[i]] <- NA
+summary(orig[1:5])
+@
+
+Notice that level \code{"9"} is still present for the \code{SSEX}
+variable even after all the observations at that level have been
+replaced by the missing value code.  To remove these unused levels
+from this and all the other columns, we loop over the columns
+selecting all the values but using the optional argument \code{drop = TRUE}.
+<<dropunused>>=
+for (i in seq(a = orig)) orig[[i]] <- orig[[i]][drop = TRUE]
+summary(orig[1:5])
+@
+
+For convenience we convert the names of the columns to lower case.
+<<lcase>>=
+names(orig) <- tolower(names(orig))
+@
+
+\section{Setting factor levels}
+\label{sec:factorLevels}
+
+In \RR the levels of a factor can be given meaningful labels instead of
+numeric codes and in most cases this eliminates the need for a
+separate codebook.  For example storing the labels of \code{sex} as
+\code{"M"} and \code{"F"} makes the coding self-explanatory.  When
+used in a model a factor is automatically converted to a set of
+``contrasts'' (there is a technical definition of the term
+``contrast'' in linear models that is not always fulfilled by these
+derived variables) and the corresponding coefficients are given
+meaningful names.
+
+When there is a natural ordering of the levels of a factor it can be
+created as an ordered factor that will preserve this ordering.
+
+The labels can be set after the factor is created or as part of the
+creation of the factor.  Below we will create a ``long form'' of the
+data where each row corresponds to a combination of student and
+grade.  In doing this we will need to concatenate related columns of
+the original data frame.  For example, the columns \code{cltypek},
+\code{cltype1}, \code{cltype2} and \code{cltype3} will be concatenated
+to form a single column \code{cltype}.  If the coding is consistent
+across the grades then it is easiest to concatenate the integer codes
+and set the labels on the ``long'' version of the variable.
+
+However there are two groups of variables, \code{hdeg} and
+\code{clad}, that are not coded consistently.  In each case the codes
+used for kindergarten teachers are different from those used for
+teachers of grades 1 to 3 classes.  The codes for kindergarten
+teachers are a superset of those for the other teachers but the
+numbering is not consistent; a bachelor's degree is coded as 2 for
+kindergarten but 1 for the others.  Thus we cannot combine the numeric
+values - we must create the labels for each column and then
+concatenate the labels and convert to a factor.
+
+<<factorlevels>>=
+orig$hdegk <- ordered(orig$hdegk, levels = 1:6,
+                      labels = c("ASSOC","BS/BA","MS/MA/MEd","MA+","Ed.S","Ed.D/Ph.D"))
+orig$hdeg1 <- ordered(orig$hdeg1, levels = 1:4,
+                      labels = c("BS/BA","MS/MA/MEd","Ed.S","Ed.D/Ph.D"))
+orig$hdeg2 <- ordered(orig$hdeg2, levels = 1:4,
+                     labels = c("BS/BA","MS/MA/MEd","Ed.S","Ed.D/Ph.D"))
+orig$hdeg3 <- ordered(orig$hdeg3, levels = 1:4,
+                     labels = c("BS/BA","MS/MA/MEd","Ed.S","Ed.D/Ph.D"))
+orig$cladk <- factor(orig$cladk, levels = c(1:3,5:8),
+                     labels = c("1","2","3","APPR","PROB","NOT","PEND"))
+orig$clad1 <- factor(orig$clad1, levels = 1:6,
+                     labels = c("NOT","APPR","PROB","1","2","3"))
+orig$clad2 <- factor(orig$clad2, levels = 1:6,
+                     labels = c("NOT","APPR","PROB","1","2","3"))
+orig$clad3 <- factor(orig$clad3, levels = 1:6,
+                     labels = c("NOT","APPR","PROB","1","2","3"))
+@
+\section{Creating separate data frames}
+\label{sec:separate}
+
+These data are represented in a ``wide'' format where each row
+corresponds to a student.  Some of the columns, such as \code{ssex},
+are indeed a property of the student; some, such as \code{hdegk} are
+properties of teachers; some, such as \code{schtypek} are properties
+of schools or classes in schools; and some are unique to a
+student/grade combination.  We will create separate frames for each of
+these types.
+
+The first 5 columns are student-level data
+<<student>>=
+student <- orig[1:5]
+names(student) <- c("id", "sx", "eth", "birthq", "birthy")
+levels(student$sx) <- c("M", "F")
+levels(student$eth) <- c("W", "B", "A", "H", "I", "O")
+student$birthy <- ordered(student$birthy)
+student$birthq <- ordered(paste(student$birthy,student$birthq,sep=":"))
+summary(student)
+@
+
+The other columns refer to a combination of the student and grade.  We
+first create an expanded or ``long'' version of the table with a row
+for each student/grade combination.
+
+To create the long version of the table we repeat the student ids four
+times and add a column for the grade level.  Related groups of
+columns, such as \code{cltypek}, \code{cltype1}, \code{cltype2} and
+\code{cltype3}, are concatenated then converted to a factor.  However,
+there are two groups, \code{hdeg} and \code{clad}, for which this
+approach will not work because these groups are not encoded
+consistently.
+<<long>>=
+long <- data.frame(id = rep(orig$newid, 4),
+                   gr = ordered(rep(c("K", 1:3), each = nrow(orig)),
+                                levels = c("K", 1:3)),
+                   star = factor(unlist(orig[6:9])),
+                   cltype = factor(unlist(orig[10:13])),
+                   schtype = factor(unlist(orig[c(14,22,30,38)])),
+                   hdeg = ordered(unlist(lapply(orig[c(15,24,32,43)],as.character)),
+                                  levels = c("ASSOC","BS/BA","MS/MA/MEd","MA+","Ed.S","Ed.D/Ph.D")),
+                   clad = factor(unlist(lapply(orig[c(16,25,33,44)],as.character)),
+                                  levels = c("NOT","APPR","PROB","PEND","1","2","3")),
+                   exp = unlist(orig[c(17,26,34,45)]),
+                   trace = factor(unlist(orig[c(18,23,31,42)]), levels=1:6,
+                                  labels=c("W", "B", "A", "H", "I", "O")),
+                   read = unlist(orig[c(19,27,35,39)]),
+                   math = unlist(orig[c(20,28,36,40)]),
+                   ses = factor(unlist(orig[c(21,29,37,41)]),labels=c("F","N")),
+                   sch = factor(unlist(orig[50:53])))
+@
+
+We can now eliminate the combinations that are completely missing.  Checking
+<<summarylong>>=
+summary(long)
+@
+indicates that fewest missing values are in the \code{sch},
+\code{cltype}, and \code{schtype} columns. They are also consistent
+<<isnacheck>>=
+with(long, all.equal(is.na(schtype), is.na(sch)))
+with(long, all.equal(is.na(cltype), is.na(sch)))
+@
+hence we use these to subset the data frame
+<<longsubset>>=
+long <- long[!is.na(long$sch),]
+@
+
+It turns out that we could have used the \code{star} column as this
+simply indicates if the student was in the study that year.
+<<summlong>>=
+summary(long[1:5])
+@
+Because it now contains no information we will drop it.
+<<dropstar>>=
+long$star <- NULL
+@
+
+For convenience we set the row names of this data frame to be a combination of the student id and the grade.
+<<rownames>>=
+rownames(long) <- paste(long$id, long$gr, sep = '/')
+@
+
+We can extract the school-level data from this table.
+<<schooltable>>=
+school <- unique(long[, c("sch", "schtype")])
+length(levels(school$sch)) == nrow(school)
+row.names(school) <- school$sch
+school <- school[order(as.integer(as.character(school$sch))),]
+long$schtype <- NULL
+levels(school$schtype) <- c("inner","suburb","rural","urban")
+levels(long$cltype) <- c("small", "reg", "reg+A")
+@
+
+We can create a merged data set with
+<<merging>>=
+star <- merge(merge(long, school, by = "sch"), student, by = "id")
+star$time <- as.integer(star$gr) - 1
+@
+
+\section{Assigning teacher ids}
+\label{sec:teacher}
+
+There are no teacher id numbers available but we can obtain a
+reasonably accurate surrogate by determining the unique combinations
+of all the variables associated with the teacher.
+<<teacher>>=
+teacher <- unique(star[, c("cltype", "trace", "exp", "clad", "gr",
+                           "hdeg", "sch")])
+teacher <- teacher[with(teacher, order(sch, gr, cltype, exp, hdeg,
+                                       clad, trace)), ]
+@
+
+To generate the correspondence between the observations and the
+teacher we create labels that incorporate the levels of each of the
+variables that defined the unique combinations.
+<<teacherlabels>>=
+row.names(teacher) <- tch <- teacher$tch <- seq(nrow(teacher))
+names(tch) <- do.call("paste", c(teacher[,1:7], list(sep=":")))
+star$tch <- tch[do.call("paste", c(star[c("cltype", "trace", "exp",
+                                          "clad", "gr", "hdeg", "sch")],
+                                   list(sep = ":")))]
+@
+
+We can check if this is successful by generating tables of class sizes.
+<<classsizes>>=
+table(table(star$tch))
+table(table(subset(star, cltype == "small")$tch))
+table(table(subset(star, cltype == "reg")$tch))
+table(table(subset(star, cltype == "reg+A")$tch))
+@
+
+We see that there are three classes with sizes greater than 30 and
+that one of these is labelled as a ``small'' class.  It is likely that
+each of these represents two or more classes but we do not have enough
+information to distinguish them.
+
+\section{Initial model fits}
+\label{sec:initial}
+
+Some initial model fits are
+<<initialModel>>=
+library(lme4)
+(mm1 <- lmer(math ~ gr + sx + eth + cltype + (1|id) + (1|sch), star))
+(rm1 <- lmer(read ~ gr + sx + eth + cltype + (1|id) + (1|sch), star))
+@
+
+\section{Session Info}
+
+<<sessionInfo, results=tex>>=
+toLatex(sessionInfo())
+@
+
+\end{document}

@@ -1,0 +1,114 @@
+\section{Design\label{design}}
+\emph{Scatterplot3d} is designed to plot three dimensional point clouds
+by exclusive usage of functions in the \RR\ base package.
+Advantages of this ``\emph{\RR\ code only}'' design are the well known
+generality and extensibility of the \RR\ graphics system, the similar
+behavior of arguments and the similar look and feel with respect to common
+\RR\ graphics, as well as the quality of the graphics, which is extremely
+important for publications.
+Drawbacks are the lack of interactivity, and the missing 3D support (2D
+design).
+
+While the function {\tt persp} for plotting surfaces (cf.\ Section
+\ref{tools}) applies a perspective projection, in \sdd\ a parallel
+projection for a better comparison of distances between different points
+is used.
+
+The final implementation of the function and the building of the package
+was done according to the ``\RR\ Language definition'' and ``Writing \RR\ Extensions''
+manuals of the \shortciteANP{r-lang} (in short, `\emph{R core}'),
+\citeyearNP{r-lang} and \citeyearNP{r-ext}.
+
+\enlargethispage{10mm}
+
+\subsection{Arguments\label{arguments}}
+The \sdd\ function has been designed to accept as many common arguments to
+\RR\ graphics functions as possible, particularly those mentioned in the help
+pages of the function {\tt par} and {\tt plot.default} (R core, \citeyearNP{r-ref}).
+In principle, arguments of {\tt par} with a particular 2D design are
+replaced by new arguments in \sdd .
+%
+Regularly, values of the corresponding arguments in {\tt par} for the first
+two dimensions are read out, and \sdd\ either ``guesses'' the value for the
+third dimension or has an appropriate default.
+
+A few graphical parameters can only be set as arguments in \sdd\ but not in
+{\tt par}.  For details on which arguments have got a non common default
+with respect to other \RR\ graphics functions see the ``Usage'' and
+``Arguments'' sections of the help page in the Appendix.
+%
+Other arguments of {\tt par} may be split into several arguments in \sdd
+, e.g. for specification of the line type.  Finally, some of the arguments
+in {\tt par} do not work, e.g. some of those for axis calculation.  As
+common in \RR , additional arguments that are not mentioned on the help
+page can be passed through to underlying low level graphics functions by
+making use of the general `\texttt{...}' argument.
+
+
+\subsection{xyz.coords()\label{xyzcoords}}
+As well known from other \RR\ functions, vectors $x$, $y$ and $z$ (for the
+3D case) are used to specify the locations of points.
+
+If $x$ has got an appropriate structure, it can be provided as a single
+argument.  In this case, an attempt has to be made to interpret the
+argument in a way suitable for plotting.
+%
+For that purpose, we added the function {\tt xyz.coords} (R core, \citeyearNP{r-ref})
+into the \RR\ base package that accept various combinations of $x$ and
+optionally $y$ and $z$ arguments.
+%
+It is a ``utility for obtaining consistent $x$, $y$ and $z$ coordinates and
+labels for three dimensional plots'' (R core, \citeyearNP{r-ref}).  Many
+ideas used in this function are taken from the function {\tt xy.coords}
+already existing for the 2D case.
+%
+Even though {\tt xyz.coords} was introduced to support \sdd , it is
+designed to be used by \textsl{any} 3D plot functions making use of $(x_i,
+y_i, z_i)$ triples\footnote{The functions \code{persp}, \code{image} and
+  \code{contour} are restricted to use a \emph{grid} of $x,y$ values and
+  hence only need $n$ $x-$ and $m$ $y-$ values for $n \times m$ $z-$
+  values.}.
+
+If the argument is a formula of type \verb& zvar ~ xvar + yvar&
+(cf.\ R core \citeyear{r-lang} for details on formulas), {\tt xvar},
+{\tt yvar} and {\tt zvar} are used as $x$, $y$ and $z$ variables.  If the
+argument is a
+list with components $x$, $y$ and $z$, these are assumed to define
+plotting coordinates.  If it is a matrix with three columns, the first is
+assumed to contain the $x$ values, etc.  Alternatively, two arguments $x$
+and $y$ can be be provided, one may be real, the other complex.  In any
+other case, the arguments are coerced to vectors and the values plotted
+against their indices.  If no axis labels are given explicitly, {\tt
+  xyz.coords} attempts to extract appropriate axis labels {\tt xlab}, {\tt
+  ylab} and {\tt zlab} from the above mentioned data structures.
+
+Additionally, color vectors contained in a matrix, data frame or list can
+be detected by \sdd\ internally.
+
+
+\subsection{Structure\label{structure}}
+The \RR\ code of \sdd\ is structured into a few parts:\\
+A quite long list of arguments in the first part of the function is followed by some plausibility checks,
+extraction of characters, conversion of data structures (cf.\ Section \ref{xyzcoords}),
+basic calculations of the angle for displaying the cube, and calculations regarding the data region limits,
+as well as data sorting for an optional ``3D highlighting" feature.
+
+In order to optimize the fit of the data into the plotting region, the second part of the function deals
+with optimal scaling of the three axis.
+This yields a high printout quality as well known from regular \RR\ graphics,
+but unfortunately it results also in a static plot, i.e.~rotation is not possible.
+If \sdd s with different viewing angles are put together as a ``slide show" to imitate a rotation,
+each of these ``slides" is {\sl individually} optimally sized regarding the plotting region,
+so all in all such a ``slide show" will not work.
+
+After the graphics device is initialized in the third part, axis, tick marks, box, grid and labels are added
+to the plot, if it is required.
+In the last but one part, the data is plotted and overlayed by the front edges of the box.
+
+Besides the primarily expected result, a drawn plot, four functions are generated and invisibly returned as
+\emph{Values} in the last part of \sdd\ (cf. the Appendix).
+
+These functions, namely \code{xyz.convert}, \code{points3d}, \code{plane3d}
+and \code{box3d}, are required to provide extensibility of the three
+dimensional plot; details are described in Section~\ref{extend}.
+

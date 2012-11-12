@@ -1,0 +1,22 @@
+Package: sandwich
+Version: 2.2-9
+Date: 2012-01-14
+Title: Robust Covariance Matrix Estimators
+Authors@R: c(person(given = "Thomas", family = "Lumley", role = "aut",
+        email = "tlumley@u.washington.edu"), person(given = "Achim",
+        family = "Zeileis", role = c("aut", "cre"), email =
+        "Achim.Zeileis@R-project.org"))
+Author: Thomas Lumley [aut], Achim Zeileis [aut, cre]
+Maintainer: Achim Zeileis <Achim.Zeileis@R-project.org>
+Description: Model-robust standard error estimators for
+        cross-sectional, time series and longitudinal data.
+LazyLoad: yes
+LazyData: yes
+Depends: R (>= 2.0.0), stats, zoo
+Suggests: car, lmtest, strucchange, AER, survival, MASS, scatterplot3d
+Imports: stats
+License: GPL-2
+Packaged: 2012-01-14 17:28:56 UTC; zeileis
+Repository: CRAN
+Date/Publication: 2012-01-14 17:31:01
+Built: R 2.15.2; ; 2012-11-07 00:13:00 UTC; windows

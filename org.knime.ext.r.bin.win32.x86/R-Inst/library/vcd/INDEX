@@ -1,0 +1,78 @@
+Arthritis               Arthritis Treatment Data
+Baseball                Baseball Data
+BrokenMarriage          Broken Marriage Data
+Bundesliga              Ergebnisse der Fussball-Bundesliga
+Bundestag2005           Votes in German Bundestag Election 2005
+Butterfly               Butterfly Species in Malaya
+CoalMiners              Breathlessness and Wheeze in Coal Miners
+DanishWelfare           Danish Welfare Study Data
+Employment              Employment Status
+Federalist              'May' in Federalist Papers
+Hitters                 Hitters Data
+HorseKicks              Death by Horse Kicks
+Hospital                Hospital data
+JobSatisfaction         Job Satisfaction Data
+JointSports             Opinions About Joint Sports
+Kappa                   Cohen's Kappa and Weighted Kappa
+Lifeboats               Lifeboats on the Titanic
+MSPatients              Diagnosis of Multiple Sclerosis
+NonResponse             Non-Response Survey Data
+Ord_plot                Ord Plots
+OvaryCancer             Ovary Cancer Data
+PreSex                  Pre-marital Sex and Divorce
+Punishment              Corporal Punishment Data
+RepVict                 Repeat Victimization Data
+Rochdale                Rochdale Data
+Saxony                  Families in Saxony
+SexualFun               Sex is Fun
+SpaceShuttle            Space Shuttle O-ring Failures
+Suicide                 Suicide Rates in Germany
+Trucks                  Truck Accidents Data
+UKSoccer                UK Soccer Scores
+VisualAcuity            Visual Acuity in Left and Right Eyes
+VonBort                 Von Bortkiewicz Horse Kicks Data
+WeldonDice              Weldon's Dice Data
+WomenQueue              Women in Queues
+agreementplot           Bangdiwala's Observer Agreement Chart
+assoc                   Extended Association Plots
+assocstats              Association Statistics
+cd_plot                 Conditional Density Plots
+co_table                Compute Conditional Tables
+coindep_test            Test for (Conditional) Independence
+cotab_mosaic            Panel-generating Functions for Contingency
+                        Table Coplots
+cotabplot               Coplot for Contingency Tables
+distplot                Diagnostic Distribution Plots
+doubledecker            Doubledecker Plot
+fourfold                Fourfold Plots
+goodfit                 Goodness-of-fit Tests for Discrete Data
+grid_barplot            Barplot
+grid_legend             Legend Function for grid Graphics
+hls                     HLS Color Specification
+independence_table      Independence Table
+labeling_border         Labeling Functions for Strucplots
+labeling_list           Labeling Functions for Strucplots
+legends                 Legend Functions for Strucplots
+mar_table               Table with Marginal Sums
+mosaic                  Extended Mosaic Plots
+oddsratio               (Log) Odds Ratios
+pairs.table             Pairs Plot for Contingency Tables
+pairs_barplot           Diagonal Panel Functions for Table Pairs Plot
+pairs_strucplot         Off-diagonal Panel Functions for Table Pairs
+                        Plot
+plot.loglm              Visualize Fitted Log-linear Models
+rootogram               Rootograms
+shadings                Shading-generating Functions for Residual-based
+                        Shadings
+sieve                   Extended Sieve Plots
+spacings                Spacing-generating Functions
+spine                   Spine Plots and Spinograms
+struc_assoc             Core-generating Function for Association Plots
+struc_mosaic            Core-generating Function for Mosaic Plots
+struc_sieve             Core-generating Function for Sieve Plots
+strucplot               Structured Displays of Contingency Tables
+structable              Structured Contingency Tables
+table2d_summary         Summary of a 2-way Table
+ternaryplot             Ternary Diagram
+tile                    Tile Plot
+woolf_test              Woolf Test

@@ -1,0 +1,575 @@
+
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Chapter Logistic Regression and Generalised Linear Models}
+\setcounter{chapter}{5}
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+
+\chapter[Logistic Regression and Generalised Linear Models]{Logistic
+Regression and Generalised Linear Models: Blood Screening, Women's Role in %'
+Society, \\ and Colonic Polyps \label{GLM}}
+
+\section{Introduction}
+
+
+\section{Logistic Regression and Generalised Linear Models}
+
+
+\section{Analysis Using \R{}}
+
+\subsection{ESR and Plasma Proteins}
+
+
+\begin{figure}
+\begin{center}
+<<GLM-plasma-plot, echo = TRUE, fig = TRUE, height = 4>>=
+data("plasma", package = "HSAUR")
+layout(matrix(1:2, ncol = 2))
+cdplot(ESR ~ fibrinogen, data = plasma)
+cdplot(ESR ~ globulin, data = plasma)
+@
+\caption{Conditional density plots of 
+ the erythrocyte sedimentation rate (ESR) given fibrinogen and globulin.
+ \label{GLM:plasma1}}
+\end{center}
+\end{figure}
+
+We can now fit a logistic regression model to the data using 
+the \Rcmd{glm} function. We start with a model that includes 
+only a single explanatory variable, \Robject{fibrinogen}. The 
+code to fit the model is
+<<GLM-plasma-fit1, echo = TRUE>>=
+plasma_glm_1 <- glm(ESR ~ fibrinogen, data = plasma, 
+                    family = binomial())
+@
+The formula implicitly defines a parameter for the global mean (the
+intercept term) as discussed in Chapters~\ref{ANOVA} and \ref{MLR}. The
+distribution of the response is defined by the \Robject{family} argument, a
+binomial distribution in our case.
+%%<FIXME>
+\index{family argument@\Rcmd{family} argument}
+%%</FIXME>
+\index{Binomial distribution}
+(The default link function when the binomial family is requested 
+is the logistic function.)
+
+
+
+\renewcommand{\nextcaption}{\R{} output of the \Robject{summary} 
+                            method for the logistic regression model fitted
+                            to the \Robject{plasma} data.
+                            \label{GLM-plasma-summary-1}}
+\SchunkLabel
+<<GLM-plasma-summary-1, echo = TRUE>>=
+summary(plasma_glm_1)
+@
+\SchunkRaw
+
+
+From the results in Figure~\ref{GLM-plasma-summary-1} we 
+see that the regression 
+coefficient for fibrinogen is significant at the $5\%$ level. 
+An increase 
+of one unit in this variable increases the log-odds in favour 
+of an ESR value greater than $20$ by an estimated
+$\Sexpr{round(coef(plasma_glm_1)["fibrinogen"], 2)}$ with 95\% 
+confidence interval 
+<<GLM-plasma-confint, echo = FALSE, results = hide>>=
+ci <- confint(plasma_glm_1)["fibrinogen",]
+@
+<<GLM-plasma-confint, echo = TRUE, results = hide>>=
+confint(plasma_glm_1, parm = "fibrinogen")
+@
+<<GLM-plasma-confint, echo = FALSE>>=
+print(ci) 
+@
+These values are more helpful 
+if converted to the corresponding values for the odds themselves 
+by exponentiating the estimate
+<<GLM-plasma-exp, echo = TRUE>>=
+exp(coef(plasma_glm_1)["fibrinogen"])
+@
+and the confidence interval 
+<<GLM-plasma-exp-ci, echo = FALSE, results = hide>>=
+ci <- exp(confint(plasma_glm_1, parm = "fibrinogen"))
+@
+<<GLM-plasma-exp-ci, echo = TRUE, results = hide>>=
+exp(confint(plasma_glm_1, parm = "fibrinogen"))
+@
+<<GLM-plasma-exp-ci, echo = FALSE>>=
+print(ci)
+@
+The confidence interval is very wide because there are few observations 
+overall and very few where the ESR value is greater than $20$. 
+Nevertheless it seems likely that increased values of fibrinogen 
+lead to a greater probability of an ESR value greater than $20$.
+
+We can now fit a logistic regression model that includes both 
+explanatory variables using the code
+<<GLM-plasma-fit2, echo = TRUE>>=
+plasma_glm_2 <- glm(ESR ~ fibrinogen +  globulin, data = plasma, 
+                   family = binomial())
+@
+and the output of the \Rcmd{summary} method is shown in Figure
+\ref{GLM-plasma-summary-2}.
+
+\renewcommand{\nextcaption}{\R{} output of the \Robject{summary} 
+                            method for the logistic regression model fitted
+                            to the \Robject{plasma} data.
+                            \label{GLM-plasma-summary-2}}
+\SchunkLabel
+<<GLM-plasma-summary-2, echo = TRUE>>=
+summary(plasma_glm_2)
+@
+\SchunkRaw
+<<GLM-plasma-anova-hide, echo = FALSE, results = hide>>=
+plasma_anova <- anova(plasma_glm_1, plasma_glm_2, test = "Chisq")
+@
+
+The coefficient for gamma 
+globulin is not significantly different from zero. Subtracting 
+the residual deviance of the second model from the corresponding 
+value for the first model we get a value of
+$\Sexpr{round(plasma_anova$Deviance[2], 2)}$. Tested using a  
+$\chi^2$-distribution with a single degree of freedom this is not significant 
+at the 5\% level and so we conclude that gamma globulin is not 
+associated with ESR level. In \R{}, the task of comparing the two nested
+models can be performed using the \Rcmd{anova} function
+<<GLM-plasma-anova, echo = TRUE>>=
+anova(plasma_glm_1, plasma_glm_2, test = "Chisq")
+@
+Nevertheless we shall use the predicted 
+values from the second model and plot them against the values 
+of \stress{both} explanatory variables using a \stress{bubble 
+plot} to illustrate the use of the  \Rcmd{symbols} function. 
+\index{Bubble plot}
+The estimated conditional probability of a ESR value larger $20$ for all
+observations can be computed, following formula (\ref{GLM:logitexp}), by
+<<GLM-plasma-predict, echo = TRUE>>=
+prob <- predict(plasma_glm_2, type = "response")
+@
+and now we can assign a larger circle to observations with larger probability
+as shown in Figure~\ref{GLM:bubble}. The plot clearly 
+shows the increasing probability of an ESR value above $20$ (larger 
+circles) as the values of fibrinogen, and to a lesser extent, 
+gamma globulin, increase.
+
+\begin{figure}
+\begin{center}
+<<GLM-plasma-bubble, echo = TRUE, fig = TRUE>>=
+plot(globulin ~ fibrinogen, data = plasma, xlim = c(2, 6), 
+     ylim = c(25, 55), pch = ".")
+symbols(plasma$fibrinogen, plasma$globulin, circles = prob,
+        add = TRUE)
+@
+\caption{Bubble plot of fitted values for a logistic regression model
+fitted to the ESR data. \label{GLM:bubble}}     
+\end{center}
+\end{figure}
+
+
+\subsection{Women's Role in Society} %'
+
+Originally the data in Table~\ref{GLM-womensrole-tab} 
+would have been in a completely 
+equivalent form to the data in Table~\ref{GLM-plasma-tab} 
+data, but here 
+the individual observations have been grouped into counts 
+of numbers of agreements and disagreements for the two explanatory 
+variables, \Robject{sex} and \Robject{education}.
+To fit a logistic 
+regression model to such grouped data using the \Rcmd{glm} function 
+we need to specify the number of agreements and disagreements 
+as a two-column matrix on the left hand side of the model formula. 
+We first fit a model that includes the two explanatory variables 
+using the code
+<<GLM-womensrole-fit1, echo = TRUE>>=
+data("womensrole", package = "HSAUR")
+fm1 <- cbind(agree, disagree) ~ sex + education
+womensrole_glm_1 <- glm(fm1, data = womensrole, 
+                        family = binomial())
+@
+
+\renewcommand{\nextcaption}{\R{} output of the \Robject{summary}
+                            method for the logistic regression model fitted
+                            to the \Robject{womensrole} data.
+                            \label{GLM-womensrole-summary-1}}
+\SchunkLabel
+<<GLM-womensrole-summary-1, echo = TRUE>>=
+summary(womensrole_glm_1)
+@
+\SchunkRaw
+
+From the \Rcmd{summary} output in Figure~\ref{GLM-womensrole-summary-1} 
+it appears that education 
+has a highly significant part to play in predicting whether a respondent 
+will agree with the statement read to them, but the respondent's %'
+sex is apparently unimportant. As years of education increase 
+the probability of agreeing with the statement declines. 
+We now are going to construct a plot comparing the observed proportions of
+agreeing with those fitted by our fitted model. Because we will reuse this
+plot for another fitted object later on, we define a function which plots
+years of education against some fitted probabilities, e.g., 
+<<GLM-womensrole-probfit, echo = TRUE>>=
+role.fitted1 <- predict(womensrole_glm_1, type = "response")
+@
+and labels each observation with the person's sex: %%'
+<<GLM-plot-setup, echo = TRUE>>=
+myplot <- function(role.fitted)  {
+    f <- womensrole$sex == "Female"
+    plot(womensrole$education, role.fitted, type = "n", 
+         ylab = "Probability of agreeing",
+         xlab = "Education", ylim = c(0,1))
+    lines(womensrole$education[!f], role.fitted[!f], lty = 1)
+    lines(womensrole$education[f], role.fitted[f], lty = 2)  
+    lgtxt <- c("Fitted (Males)", "Fitted (Females)")
+    legend("topright", lgtxt, lty = 1:2, bty = "n")
+    y <-  womensrole$agree / (womensrole$agree + 
+                              womensrole$disagree)
+    text(womensrole$education, y, ifelse(f, "\\VE", "\\MA"), 
+         family = "HersheySerif", cex = 1.25)
+} 
+@
+
+\begin{figure}
+\begin{center}
+<<GLM-role-fitted1, echo = TRUE, fig = TRUE>>=
+myplot(role.fitted1)
+@
+\caption{Fitted (from \Robject{womensrole\_glm\_1}) and observed probabilities of
+         agreeing for the \Robject{womensrole} data. \label{GLM-role1plot}}
+\end{center}
+\end{figure}
+
+The two curves 
+for males and females in Figure~\ref{GLM-role1plot} 
+are almost the same reflecting the non-significant 
+value of the regression coefficient for sex in
+\Robject{womensrole\_glm\_1}. But the observed values plotted on 
+Figure~\ref{GLM-role1plot} suggest that 
+there might be an interaction of education and sex, a possibility 
+that can be investigated by applying a further logistic regression 
+model using
+\index{Interaction}
+<<GLM-womensrole-fit2, echo = TRUE>>=   
+fm2 <- cbind(agree,disagree) ~ sex * education
+womensrole_glm_2 <- glm(fm2, data = womensrole, 
+                        family = binomial())
+@
+The \Robject{sex} and \Robject{education}
+interaction term is seen to be highly significant, as can be seen from the
+\Rcmd{summary} output in Figure~\ref{GLM-womensrole-summary-2}.
+\renewcommand{\nextcaption}{\R{} output of the \Robject{summary}
+                            method for the logistic regression model fitted
+                            to the \Robject{womensrole} data.
+                            \label{GLM-womensrole-summary-2}}
+\SchunkLabel
+<<GLM-womensrole-summary-2, echo = TRUE>>=
+summary(womensrole_glm_2)
+@
+\SchunkRaw
+
+
+\begin{figure}
+\begin{center}
+<<GLM-role-fitted2, echo = TRUE, fig = TRUE>>=
+role.fitted2 <- predict(womensrole_glm_2, type = "response")
+myplot(role.fitted2)
+@
+\caption{Fitted (from \Robject{womensrole\_glm\_2}) and observed probabilities of
+agreeing for the \Robject{womensrole} data. \label{GLM-role2plot}}
+\end{center}
+\end{figure}
+
+
+We can obtain a plot of deviance residuals plotted against 
+fitted values using the following code above Figure~\ref{GLM:devplot}.
+\begin{figure}
+\begin{center}
+<<GLM-role-plot2, echo = TRUE, fig = TRUE>>=
+res <- residuals(womensrole_glm_2, type = "deviance")
+plot(predict(womensrole_glm_2), res,
+     xlab="Fitted values", ylab = "Residuals", 
+     ylim = max(abs(res)) * c(-1,1))
+abline(h = 0, lty = 2)
+@
+\caption{Plot of deviance residuals from logistic
+         regression model fitted to the \Robject{womensrole} data.
+         \label{GLM:devplot}}
+\end{center}
+\end{figure}
+The residuals fall into a horizontal band between $-2$ and $2$. 
+This pattern does not suggest  a poor fit for any particular observation 
+or subset of observations.
+
+
+\subsection{Colonic Polyps}
+
+The data on colonic polyps in Table~\ref{GLM-polyps-tab} 
+involves \stress{count}
+data. We could try to model this using multiple regression 
+but there are two problems. The first is that a response that 
+is a count can only take positive values, and secondly such a 
+variable is unlikely to have a normal distribution. Instead we 
+will apply a GLM with a log link function, ensuring that fitted 
+values are positive, and a Poisson error distribution, i.e., 
+\index{Poisson error distribution}
+\index{Poisson regression}
+\begin{eqnarray*}
+\P(y) = \frac{e^{-\lambda}\lambda^y}{y!}.
+\end{eqnarray*}
+This type of GLM is often known as \stress{Poisson regression}. 
+We can apply the model using
+<<GLM-polyps-fit1, echo = TRUE>>=
+data("polyps", package = "HSAUR")
+polyps_glm_1 <- glm(number ~ treat + age, data = polyps, 
+                    family = poisson())
+@
+(The default link function when the Poisson family is requested 
+is the log function.)
+
+\renewcommand{\nextcaption}{\R{} output of the \Robject{summary}
+                            method for the Poisson regression model fitted
+                            to the \Robject{polyps} data.
+                            \label{GLM-polyps-summary-1}}
+\SchunkLabel
+<<GLM-polyps-summary-1, echo = TRUE>>=
+summary(polyps_glm_1)
+@
+\SchunkRaw
+
+
+We can deal with overdispersion by using a procedure known 
+as \stress{quasi-likelihood}, 
+\index{Quasi-likelihood}
+which allows the estimation of 
+model parameters without fully knowing the error distribution 
+of the response variable. \cite{HSAUR:McCullaghNelder1989} give full 
+details of the quasi-likelihood approach. In many respects it 
+simply allows for the estimation of $\phi$ 
+from the data rather than defining it to be unity for the 
+binomial and Poisson distributions. We can apply quasi-likelihood 
+estimation to the colonic polyps data using the following \R{} code
+<<GLM-polyp-quasi, echo = TRUE>>=
+polyps_glm_2 <- glm(number ~ treat + age, data = polyps, 
+                    family = quasipoisson())
+summary(polyps_glm_2)
+@
+The regression coefficients 
+for both explanatory variables remain significant but their estimated 
+standard errors are now much greater than the values given in 
+Figure~\ref{GLM-polyps-summary-1}. A possible reason for 
+overdispersion in these data 
+is that polyps do not occur independently of one another, but 
+instead may `cluster' together. %'
+\index{Overdispersion|)}
+
+
+\bibliographystyle{LaTeXBibTeX/refstyle}
+\bibliography{LaTeXBibTeX/HSAUR}   
+\end{document}

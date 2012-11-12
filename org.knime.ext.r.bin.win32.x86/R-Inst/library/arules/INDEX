@@ -1,0 +1,69 @@
+APappearance-class      Class "APappearance" - Specifying the
+                        'appearance' Argument of apriori()
+AScontrol-class         Classes "AScontrol", "APcontrol", "ECcontrol" -
+                        Specifying the 'control' Argument of apriori()
+                        and eclat()
+ASparameter-class       Classes "ASparameter", "APparameter",
+                        "ECparameter" - Specifying the 'parameter'
+                        Argument of apriori() and eclat()
+Adult                   Adult Data Set
+Epub                    Epub Data Set
+Groceries               Groceries Data Set
+Income                  Income Data Set
+LIST                    List Representation for Objects Based on
+                        "itemMatrix"
+WRITE                   Writes transactions or associations to disk
+[-methods               Methods for "[": Extraction or Subsetting in
+                        Package 'arules'
+addComplement           Add Complement-items to Transactions
+affinity                Computing Affinity Between Items
+aggregate               Aggregate Items Into Item Groups
+apriori                 Mining Associations with Apriori
+ar_similarity-class     Classes "dist", "ar\_cross\_dissimilarity" and
+                        "ar\_similarity" - Proximity Matrices
+associations-class      Class "associations" - A Set of Associations
+c                       Combining Objects
+categorize              Convert a Continuous Variable into a
+                        Categorical Variable
+coverage                Calculate coverage for rules
+crossTable              Cross-tabulate joint occurrences across pairs
+                        of items
+decode                  Item Coding - Handling Item Labels and Column
+                        IDs Conversions
+dissimilarity           Dissimilarity Computation
+duplicated              Find Duplicated Elements
+eclat                   Mining Associations with Eclat
+image                   Visual Inspection of Binary Incidence Matrices
+inspect                 Display Associations and Transactions in
+                        Readable Form
+interestMeasure         Calculating various additional interest
+                        measures
+is.closed               Find Closed Itemsets
+is.maximal              Find Maximal Itemsets
+is.superset             Find Super and Subsets
+itemFrequency           Getting Frequency/Support for Single Items
+itemFrequencyPlot       Creating a Item Frequencies/Support Bar Plot
+itemMatrix-class        Class "itemMatrix" - Sparse Binary Incidence
+                        Matrix to Represent Sets of Items
+itemsets-class          Class "itemsets" - A Set of Itemsets
+length                  Getting the Number of Elements
+match                   Value Matching
+merge                   Merging (adding) items
+predict                 Model Predictions
+random.transactions     Simulate a Random Transaction Data Set
+read.transactions       Read Transaction Data
+ruleInduction           Rule Induction for a Set of Itemsets
+rules-class             Class "rules" - A Set of Rules
+sample                  Random Samples and Permutations
+sets                    Set Operations
+size                    Getting the Size of Each Element
+sort                    Sorting Associations
+subset                  Subsetting Itemsets, Rules and Transactions
+support                 Support Counting for Itemsets
+supportingTransactions
+                        Supporting Transactions
+tidLists-class          Class "tidLists" - Transaction ID Lists for
+                        Items/Itemsets
+transactions-class      Class "transactions" - Binary Incidence Matrix
+                        for Transactions
+unique                  Remove Duplicated Elements from a Collection

@@ -1,0 +1,35 @@
+Version 0.4.2
+------------------------------------------------------------------------------
+
+* replace deprecated `.Internal(eval.with.vis)` with correct `withVisible`
+
+* `evaluate` gains `debug` argument
+
+Version 0.4.1
+------------------------------------------------------------------------------
+
+* use `test_package` to avoid problems with latest version of `testthat`
+
+evaluate 0.4 (2011-11-03) 
+=========================
+
+* Use plot hooks to capture multiple plots created in a loop or within a
+  function.  (Contributed by Yihui Xie)
+
+evaluate 0.3 
+============
+
+* Import `stringr` instead of depending on it.
+
+* Test plot recording only in the presence of interactive devices.
+
+evaluate 0.2
+============
+
+* try_capture_stack and create_traceback do a much better job of removing
+  infrastructure calls from the captured traceback
+
+* visible results are automatically evaluated and their outputs are captured.
+  This is particularly important for lattice and ggplot graphics, which
+  otherwise require special handling. It also correctly captures warnings,
+  errors and messages raised by the print method.

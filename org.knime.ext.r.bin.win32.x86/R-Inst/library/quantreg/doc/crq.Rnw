@@ -1,0 +1,17 @@
+\documentclass[letterpaper]{article}
+%\VignetteIndexEntry{Censored Quantile Regression}
+%\VignettePackage{quantreg}
+
+\usepackage{pdfpages}
+
+\begin{document}
+
+\newread\PDFtoInclude
+\openin\PDFtoInclude=crq0.pdf
+\ifeof\PDFtoInclude
+\typeout{No file crq0.pdf}
+\else
+\includepdf[fitpaper=true,pages=-]{crq0.pdf}
+\fi
+
+\end{document}

@@ -1,0 +1,40 @@
+MinimalReporter         Test reporter: minimal.
+Reporter                Stub object for managing a reporter of tests.
+StopReporter            Test reporter: stop on error.
+SummaryReporter         Test reporter: summary of errors.
+auto_test               Watches code and tests for changes, rerunning
+                        tests as appropriate.
+auto_test_package       Watches a package for changes, rerunning tests
+                        as appropriate.
+colourise               Colourise text for display in the terminal.
+context                 Describe the context of a set of tests.
+equals                  Expectation: is the object equal (with
+                        numerical tolerance) to a value?
+expect_that             Expect that a condition holds.
+gives_warning           Expectation: does expression give a warning?
+is_a                    Expectation: does the object inherit from a
+                        class?
+is_equivalent_to        Expectation: is the object equivalent to a
+                        value? This expectation tests for equivalency:
+                        are two objects equal once their attributes
+                        have been removed.
+is_false                Expectation: is the object false?
+is_identical_to         Expectation: is the object identical to
+                        another?
+is_true                 Expectation: is the object true?
+library_if_available    Load package, if available.
+make_expectation        Make an equality test.
+matches                 Expectation: does string match regular
+                        expression?
+prints_text             Expectation: does printed output match a
+                        regular expression?
+shows_message           Expectation: does expression show a message?
+takes_less_than         Expectation: does expression take less than a
+                        fixed amount of time to run?
+test_dir                Run all of the tests in a directory.
+test_file               Run all tests in specified file.
+test_package            Run all tests in an installed package
+test_that               Create a test.
+throws_error            Expectation: does expression throw an error?
+watch                   Watch a directory for changes (additions,
+                        deletions & modifications).

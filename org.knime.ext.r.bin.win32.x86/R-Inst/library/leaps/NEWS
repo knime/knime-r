@@ -1,0 +1,5 @@
+2.9  improved documentation for summary.regsubsets
+   
+     added coef(), vcov() methods for regsubsets.
+
+2.8  Added regsubsets() method for biglm objects.

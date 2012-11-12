@@ -1,0 +1,307 @@
+# $Id: CHANGES 232 2012-01-19 17:06:59Z thothorn $
+
+        0.9-9993 (22.10.2012)
+
+        sigma is called `scale' matrix of {dpq}mvt, thanks to
+        Richard Boys <Richard.Boys@ncl.ac.uk> for the hint
+
+        0.9-9992 (19.01.2012)
+
+        qmvt(..., df = 0, ...) gave NaN
+
+        R CMD check works on x64 with GCC 4.6.2 (Debian 4.6.2-11) 
+
+        0.9-9991 (10.06.2011)
+
+        tvpack wasn't working on 64bit machines. The reason
+        was that the wrapper SUBROUTINEs around the original
+        FUNCTIONs didn't return the appropriate double precision
+        for unknown reasons. Redefining TVTL and BVTL as FUNCTIONs
+        fixed the problem.
+
+        0.9-999 (26.04.2011)
+
+	still problems in fix approx_interval (when !is.null(sigma));
+        disable for the time being
+
+        0.9-99 (21.04.2011)
+
+	fix bug in approx_interval spotted by Ravi Varadhan
+        <rvaradhan@jhmi.edu>
+
+        0.9-98 (19.04.2011)
+
+	allow ... to pass arguments to rmvnorm in rmvt
+
+        0.9-97 (31.01.2011)
+
+	use check.attributes = FALSE in isSymmetric calls
+        (requested by Nick Sabbe <nick.sabbe@ugent.be>)
+
+        0.9-96 (28.01.2011)
+
+        use fixed interval when sigma is specified in qmvt
+
+        0.9-95 (18.11.2010)
+
+        q{mvt,mvnorm} shall always return a list, not a vector
+	checks for correlation matrices are less picky now
+
+        0.9-94 (16.11.2010)
+
+        allow for two different noncentral t distributions (via type
+        argument)
+
+        add support for one-dimensional quantiles (requested by Jerry Lewis
+        <jerry.lewis@biogenidec.com>)
+
+        documentation fixes for problems spotted by
+        Jerry Lewis <jerry.lewis@biogenidec.com>
+
+        0.9-93 (30.08.2010, not published)
+
+        interface to Alan's TVPACK algorithms for 2- and 3-d 
+        probabilities by Bjoern Bornkamp added.
+
+        0.9-92 (06.07.2010)
+
+        update to new mvtdstpack.f (7/10) by Alan. Fixes
+        potential bias problem in higher dimension.
+
+        0.9-91 (13.04.2010)
+
+        better search interval for uniroot in qmv{t,norm} speeds up
+        quantile estimation; suggestion by Björn Bornkamp 
+        <bornkamp@statistik.tu-dortmund.de>
+
+        0.9-9 (27.01.2010)
+
+        document ... in pmvt.Rd
+
+        0.9-8 (27.10.2009)
+
+        add citation entry
+
+        0.9-7 (22.05.2009)
+
+        make sure `error' is not NA
+
+        0.9-6 (25.03.2009)
+
+        update Alan's FORTRAN code
+
+        0.9-5 (17.03.2009)
+
+        fix FORTRAN bug spotted by Alex Lenkoski
+        <lenkoski@stat.washington.edu>
+
+	0.9-3 (22.12.2008)
+
+	update meta data
+
+	0.9-2 (08.07.2008)
+
+        be a little more liberal (tol = sqrt(.Machine$double.eps))
+        when testing for symmetry of covariance matrices
+        (and make R CMD CHECK monomvn happy again)
+
+
+	0.9-1 (02.07.2008)
+
+        better check for covariance matrices, suggested by 
+        James Rogers  <James.A.Rogers@pfizer.com>
+
+
+	0.9-0 (1.04.2008)
+
+	add support for the multivariate normal distributions in small
+        dimensions by Miwa's method thanks to Tetsuhisa Miwa and Xuefei Mi;
+        both have been added as `authors'.
+
+        new argument `algorithm' defaulting to `GenzBretz()' with 
+        `Miwa()' being the alternative. Those two functions are now used
+        to specify hyper parameters such as `abseps'.
+
+        internal function `mvt' is no longer exported.
+
+	0.8-3
+
+        make sure rmvnorm(1, sigma = matrix(0.5, 1, 1)) works
+        (reported by Kurt Hornik)
+
+	0.8-2 (10.02.2008)
+
+	rmvnorm() now issues a warning for non-symmetric sigma and uses 
+        the eigenvalue decomposition as default. 
+
+        make gfortran 4.3 happy
+
+
+	0.8-1 (24.07.2007)
+
+        Orion Poplawski <orion@cora.nwra.com> spotted a meaningless check in
+        the regression tests
+
+
+	0.8-0 (23.07.2007)
+
+	upgrade to 7/7 version of MVTDST (includes better support for
+        dimensions > 100). Thanks to Karen Conneely <conneely@umich.edu>
+        for motivating the update and for checking the new version.
+
+	rmvnorm() now can also use a Cholesky decomposition to compute
+        the root of sigma (thanks to Fabian Scheipl)
+
+
+	0.7-5 (15.09.2006)
+
+        fix problem reported by valgrind
+
+	0.7-4 (08.09.2006)
+
+        add long requested `dmvt'
+        call RNG functions only one time
+        make sure unifrnd is double precision
+
+	0.7-3 (23.08.2006)
+
+        make sure pmvnorm(lo=c(-Inf,-Inf), up=c(Inf,Inf), mean=c(0,0) == 0
+
+	0.7-2 (29.08.2005)
+
+        make gfortran happy (a warning about unused variable NF remains)
+
+	0.7-1 (18.11.2004)
+
+	use #!/bin/sh 
+
+	0.7-0 (14.10.2004)
+
+	a coding session with Frank produced `qmv{t,norm}'.
+        try to check if the support specified by `lower' and `upper' is
+        empty (problem spotted by Peter Thomson <peter@statsresearch.co.nz>)
+	Alan's fix prevents negative values to be returned.
+
+	some cosmetics
+
+	0.6-8 (03.06.2004)
+
+	EXIT statements are not supported by `f2c', Alan added GOTO
+        statements to `MVCHNC' 
+
+	0.6-7 (27.05.2004)
+
+	Alan's fix to MVCHNC solves problems with large degree of freedom
+
+	0.6-6 (22.01.2004)
+
+	`La.eigen' is deprecated and `eigen' replaces it in R-1.9.0
+
+	0.6-5 (14.11.2003)
+
+	check if covariance matrix is pd in rmvnorm (by Fritz Leisch)
+
+	0.6-4 (06.10.2003)
+
+	use new base function `cov2cor'
+
+	0.6-3 (21.07.2003)
+
+	Alans changes were restricted to N <= 100, now N <= 1000
+        are possible again
+
+	0.6-2 (25.06.2003)
+
+	Alan's recent changes to `mvt.f' make `g77 -pedantic -Wall'
+	happy
+
+	0.6-1 (18.06.2003)
+
+	pmvt(..., df = 0, ...) will return normal probabilities for both
+        the univariate and multvariate problem
+
+	0.6-0 (17.06.2003)
+
+	Fortran code in `mvt.f' updated to recent version by Alan and Frank.
+        This fixes problems with `pmvt' and large degrees of freedom.
+
+	0.5-15 (16.06.2003)
+
+	a note on one-sided probabilities in `pmvt'
+	correlation matrices in cats example a little bit nicer 	
+
+	0.5-14 (06.05.2003)
+
+	the package owns a vignette based on the paper in RNews 1(2)
+
+	0.5-12 (08.05.2003)
+
+	allow df=0 for pmvt
+
+	0.5-11 (29.04.2003)
+	
+	package npmc trys to use 'mvt' which is internal: export it anyway
+
+	0.5-10 (23.04.2003)
+
+	mvtnorm is now in a NAMESPACE
+
+	0.5-9 (13.02.2003)
+
+	log argument added to dmvnorm, thanks to 
+        Jerome Asselin <jerome@hivnet.ubc.ca>
+
+	0.5-8 (21.01.2003)
+
+	fixed bugreport PR#2478: sigma for univariate probabilities
+
+	0.5-7 (27.11.2002)
+
+	use R's random number generator in the FORTRAN code:
+	set.seed has now has the desired impact.
+
+	0.5-6 (07.10.2002)
+
+	rmvt added
+
+	0.5-5 (03.07.2002)
+
+	use .Fortran(..., PACKAGE="mvtnorm")
+
+	0.5-4 (09.04.2002)
+
+	correlation matrices for sigma with unequal variances incorrectly
+	computed, added `sig2corr' for that propose, tol argument removed,
+	fix by Alan to mvt.f
+
+	0.5-2 (22.03.2002)
+
+	Frank added `tol' argument to MVTDST, now in mvtnorm
+
+	0.5-1 (24.01.2002)
+
+	pmvt(0,1) works now
+
+	0.5-0 (10.12.2001)
+
+	release for R-1.4.0
+
+	0.4-4 (06.12.2001)
+
+	bugfix
+
+	0.4-3 (05.12.2001)
+
+	the length of lower, upper and mean (delta) is now recycled to the
+	length of the largest, i.e. it is possible to say
+	pmvnorm(lower=-Inf, upper=1, mean=rep(1,10), corr=diag(10))
+
+	0.4-2 (04.12.2001)
+
+	several typos, man-pages improved
+
+	0.4-1 (04.12.2001)
+
+	interface changed: sigma (covariance matrix) can be specified as
+                           well
+	{rd}mvnorm added from package e1071 (thanks to Fritz!)

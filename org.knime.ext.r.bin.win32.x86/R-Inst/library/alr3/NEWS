@@ -1,0 +1,26 @@
+Changes to Version 2.0.5
+       o Documentation for UN3 updated.  Minor changes for compatability with R 2.14.
+
+Changes to Version 2.0.2
+       o A correction was made to the NAMESPACE.
+
+Changes to Version 2.0.1
+       o A correction was made to the NAMESPACE.
+
+Changes to Version 2.0.0
+
+       o 'alr3' now formally depends on 'car'.
+
+       o Most functions were rewritten, and almost all have been moved to
+the 'car' package with slightly different names.  Old function names
+continue to work calling the new function in 'car'. The exception is the
+'bcpower' function in the old 'alr3', which has been superceded by the new
+'powerTransform' function in 'car', but with different arguments.
+
+       o All data sets remain in 'alr3'.  In some cases, variable names have
+become row labels rather than a variable.  The 'longley' data was been
+removed, as it is in the 'datasets' package in base R.  The 'forbes' data in
+the 'alr3' package has one additional column with rounded logarithms of one
+of the base variables, and is otherwise identical to the 'forbes' data in
+the MASS package.
+

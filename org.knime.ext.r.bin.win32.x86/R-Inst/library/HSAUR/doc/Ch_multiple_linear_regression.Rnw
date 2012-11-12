@@ -1,0 +1,427 @@
+
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Multiple Linear Regression}
+\setcounter{chapter}{4}
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+
+\chapter[Multiple Linear Regression]{Multiple Linear Regression: \                                     Cloud Seeding \label{MLR}}
+
+\section{Introduction}
+
+
+\index{Cloud seeding}
+
+\section{Multiple Linear Regression}
+\index{Linear models|(}
+
+
+\section{Analysis Using \R{}}
+
+
+\begin{figure}
+\begin{center}
+<<MLR-clouds-boxplots, echo = TRUE, fig = TRUE, height = 9>>=
+data("clouds", package = "HSAUR")
+layout(matrix(1:2, nrow = 2))
+bxpseeding <- boxplot(rainfall ~ seeding, data = clouds, 
+    ylab = "Rainfall", xlab = "Seeding")
+bxpecho <- boxplot(rainfall ~ echomotion, data = clouds, 
+    ylab = "Rainfall", xlab = "Echo Motion")
+@
+\caption{Boxplots of \Robject{rainfall}. \label{MLR-rainfall-boxplot}}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+<<MLR-clouds-scatterplots, echo = TRUE, fig = TRUE, width = 7, height = 7>>=
+layout(matrix(1:4, nrow = 2))
+plot(rainfall ~ time, data = clouds)
+plot(rainfall ~ cloudcover, data = clouds)
+plot(rainfall ~ sne, data = clouds, xlab="S-Ne criterion")
+plot(rainfall ~ prewetness, data = clouds)
+@
+\caption{Scatterplots of \Robject{rainfall} against the continuous
+covariates. \label{MLR-rainfall-scplot}}
+\end{center}
+\end{figure}
+
+Both the boxplots (Figure~\ref{MLR-rainfall-boxplot}) and the scatterplots 
+(Figure~\ref{MLR-rainfall-scplot}) show some evidence 
+of outliers. The row names of the extreme observations in the
+\Robject{clouds} \Rclass{data.frame} can be identified via
+<<MLR-clouds-outliers, echo = TRUE>>=
+rownames(clouds)[clouds$rainfall %in% c(bxpseeding$out, 
+                                        bxpecho$out)]
+@
+where \Robject{bxpseeding} and \Robject{bxpecho} are variables 
+created by \Rcmd{boxplot} in Figure~\ref{MLR-rainfall-boxplot}.
+For the time being we shall not remove these observations but bear 
+in mind during the modelling process that they may cause problems.
+
+\subsection{Fitting a Linear Model}
+
+In this example it is sensible to assume that the effect that 
+some of the other explanatory variables is modified by seeding 
+and therefore consider a model that allows interaction terms 
+\index{Interaction}
+for \Robject{seeding} with each of the covariates except \Robject{time}.
+This model can be described by the \Rclass{formula}
+<<MLR-clouds-formula, echo = TRUE>>=
+clouds_formula <- rainfall ~ seeding * (sne + cloudcover +
+    prewetness + echomotion) + time
+@
+and the design matrix $\X^\star$ can be computed via
+<<MLR-clouds-modelmatrix, echo = TRUE>>=
+Xstar <- model.matrix(clouds_formula, data = clouds)
+@
+By default, treatment contrasts have been applied to the dummy codings of
+the factors \Robject{seeding} and \Robject{echomotion} as can be seen from
+the inspection of the \Robject{contrasts} attribute of the model matrix
+<<MLR-clouds-contrasts, echo = TRUE>>=
+attr(Xstar, "contrasts")
+@
+The default contrasts can be changed via the \Rarg{contrasts.arg}
+argument to \Rcmd{model.matrix} or the \Robject{contrasts} argument to the
+fitting function, for example \Rcmd{lm} or \Rcmd{aov} as shown in 
+Chapter~4.
+
+However, such internals are hidden and performed by high-level model fitting
+functions such as \Rcmd{lm} which will be used to fit the linear model
+defined by the \Rclass{formula} \Robject{clouds\_formula}:
+<<MLR-clouds-lm, echo = TRUE>>=
+clouds_lm <- lm(clouds_formula, data = clouds)
+class(clouds_lm)
+@
+The results of the model fitting is an object of class \Rclass{lm} for which
+a \Rcmd{summary} method showing the conventional regression analysis
+output is available. The output in Figure~\ref{MLR-clouds-summary}
+shows the estimates $\hat{\beta}^\star$ with corresponding standard errors
+and $t$-statistics as well as the $F$-statistic with associated $p$-value.
+\renewcommand{\nextcaption}{\R{} output of the linear model fit  
+                            for the \Robject{clouds} data.
+                            \label{MLR-clouds-summary}}
+\SchunkLabel
+<<MLR-clouds-summary, echo = TRUE>>=
+summary(clouds_lm)
+@
+\SchunkRaw
+
+Many methods are available for extracting components of the fitted model.
+The estimates $\hat{\beta}^\star$ can be assessed via
+<<MLR-clouds-coef, echo = TRUE>>=
+betastar <- coef(clouds_lm)
+betastar
+@
+and the corresponding covariance matrix $\Cov(\hat{\beta}^\star)$ is available
+from the \Rcmd{vcov} method
+<<MLR-clouds-vcov, echo = TRUE>>=
+Vbetastar <- vcov(clouds_lm)
+@
+where the square roots of the diagonal elements are the standard errors as
+shown in Figure~\ref{MLR-clouds-summary}
+<<MLR-clouds-sd, echo = TRUE>>=
+sqrt(diag(Vbetastar))
+@
+
+
+\begin{figure}
+\begin{center}
+<<MLR-clouds-lmplot, echo = TRUE, fig = TRUE>>=
+psymb <- as.numeric(clouds$seeding)
+plot(rainfall ~ sne, data = clouds, pch = psymb, 
+     xlab = "S-Ne criterion")
+abline(lm(rainfall ~ sne, data = clouds, 
+          subset = seeding == "no"))
+abline(lm(rainfall ~ sne, data = clouds, 
+          subset = seeding == "yes"), lty = 2)  
+legend("topright", legend = c("No seeding", "Seeding"), 
+       pch = 1:2, lty = 1:2, bty = "n")
+@
+\caption{Regression relationship between S-Ne criterion and rainfall with
+and without seeding. \label{MLR-rel}}
+\end{center}
+\end{figure}
+
+
+\subsection{Regression Diagnostics}
+
+
+In order to investigate the quality of the model fit, we need access to the
+residuals and the fitted values. The residuals can be found by the 
+\Rcmd{residuals} method and the fitted values of the response 
+from the \Rcmd{fitted} (or \Rcmd{predict}) method
+<<MLR-clouds-residfitted, echo = TRUE>>=
+clouds_resid <- residuals(clouds_lm)
+clouds_fitted <- fitted(clouds_lm)
+@
+Now the residuals and the fitted values 
+can be used to construct diagnostic plots; for example the residual
+plot in Figure~\ref{MLR-resid} where each observation is labelled by its
+number. Observations $1$ and $15$ give rather large residual values and the
+data should perhaps be reanalysed after these two observations are removed.
+The normal probability plot of the residuals shown in Figure~\ref{MLR-qqplot} 
+shows a reasonable agreement between theoretical and sample
+quantiles, however, observations $1$ and $15$ are extreme again.
+
+\begin{figure}
+\begin{center}
+<<MLR-clouds-residplot, echo = TRUE, fig = TRUE>>=
+plot(clouds_fitted, clouds_resid, xlab = "Fitted values", 
+     ylab = "Residuals", type = "n", 
+     ylim = max(abs(clouds_resid)) * c(-1, 1))
+abline(h = 0, lty = 2)
+text(clouds_fitted, clouds_resid, labels = rownames(clouds))
+@
+\caption{Plot of residuals against fitted values for \Robject{clouds} seeding data.
+\label{MLR-resid}}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+<<MLR-clouds-qqplot, echo = TRUE, fig = TRUE>>=
+qqnorm(clouds_resid, ylab = "Residuals")
+qqline(clouds_resid)
+@
+\caption{Normal probability plot of residuals from cloud seeding model
+         \Robject{clouds\_lm}. \label{MLR-qqplot}}
+\end{center}
+\end{figure}
+
+
+An index plot of the Cook's distances for each observation %'
+(and many other plots including those constructed above from
+using the basic functions) can be found from applying the \Rcmd{plot} method 
+to the object that results from the application
+of the \Rcmd{lm} function. 
+\begin{figure}
+\begin{center}
+<<MLR-clouds-cook, echo = TRUE, eval = FALSE>>=
+plot(clouds_lm)
+@
+<<MLR-clouds-cook, echo = FALSE, fig = TRUE>>=
+plot(clouds_lm, which = 4, sub.caption = NULL)
+@
+\caption{Index plot of Cook's distances for cloud seeding data. %'
+         \label{MLR-cook}}
+\end{center}
+\end{figure}
+Figure~\ref{MLR-cook} suggests that observations 2 and 18 have undue
+influence on the 
+estimated regression coefficients, but the two outliers identified
+previously do not. Again it may be useful to look at the results
+after these two observations have been removed (see Exercise
+5.2).
+%% \ref{MLR-ex2})
+\index{Regression diagnostics|)}
+
+%%\bibliographystyle{LaTeXBibTeX/refstyle}
+%%\bibliography{LaTeXBibTeX/HSAUR}   
+\end{document}

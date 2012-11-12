@@ -1,0 +1,17 @@
+citHeader("To cite the package drc in publications use:")
+
+citEntry(entry   = "Article",
+         title   = "Bioassay Analysis using R",
+         author  = personList(as.person("C. Ritz"),
+                             as.person("J. C. Streibig")),
+         journal = "Journal of Statistical Software",
+         volume  = 12,
+         issue   = 5,
+         year    = 2005,
+         url     = "http://www.bioassay.dk",
+
+         textVersion =
+         paste("Ritz, C. & Streibig, J. C. (2005)",
+               "Bioassay Analysis using R.",
+               "J. Statist. Software, Vol 12, Issue 5.")
+)

@@ -1,0 +1,21 @@
+Package: caTools
+Type: Package
+Title: Tools: moving window statistics, GIF, Base64, ROC AUC, etc.
+Version: 1.13
+Date: 2012-05-22
+Author: Jarek Tuszynski <jaroslaw.w.tuszynski@saic.com>
+Maintainer: Timothy P. Jurka <tpjurka@ucdavis.edu>
+Depends: R (>= 2.2.0), bitops
+Suggests: MASS, rpart
+Description: Contains several basic utility functions including: moving
+        (rolling, running) window statistic functions, read/write for
+        GIF and ENVI binary files, fast calculation of AUC, LogitBoost
+        classifier, base64 encoder/decoder, round-off error free sum
+        and cumsum, etc.
+License: GPL-3
+LazyLoad: yes
+Packaged: 2012-05-22 17:21:12 UTC; timjurka
+Repository: CRAN
+Date/Publication: 2012-05-23 07:37:21
+Built: R 2.15.2; x86_64-w64-mingw32; 2012-11-07 00:08:33 UTC; windows
+Archs: i386, x64

@@ -1,0 +1,16 @@
+Package: munsell
+Type: Package
+Title: Munsell colour system
+Version: 0.4
+Author: Charlotte Wickham <cwickham@gmail.com>
+Maintainer: Charlotte Wickham <cwickham@gmail.com>
+Description: Functions for exploring and using the Munsell colour
+        system
+Suggests: ggplot2
+Imports: colorspace
+License: MIT
+Collate: 'alter.r' 'check.r' 'convert.r' 'munsell.r' 'plot.r'
+Packaged: 2012-09-11 23:33:12 UTC; wickham
+Repository: CRAN
+Date/Publication: 2012-09-12 04:46:56
+Built: R 2.15.2; ; 2012-11-07 00:08:50 UTC; windows

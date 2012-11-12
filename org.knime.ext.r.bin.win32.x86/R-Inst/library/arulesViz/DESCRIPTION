@@ -1,0 +1,21 @@
+Package: arulesViz
+Version: 0.1-5
+Date: 2012-03-31
+Title: arulesViz - Visualizing Association Rules and Frequent Itemsets
+Author: Michael Hahsler and Sudheer Chelluboina
+Maintainer: Michael Hahsler <michael@hahsler.net>
+Depends: R (>= 2.14.0), arules (>= 1.0-5), MASS, scatterplot3d, vcd,
+        seriation, igraph
+Suggests: iplots, Rgraphviz
+Description: Various visualization techniques for association rules and
+        itemsets. The packages also includes several interactive
+        visualizations for rule exploration. This package extends
+        package arules.
+License: GPL (>= 2)
+URL: http://r-forge.r-project.org/projects/arulesviz/,
+        http://lyle.smu.edu/IDA/arules/
+Copyright: (C) 2011 Michael Hahsler and Sudheer Chelluboina
+Packaged: 2012-04-02 15:51:03 UTC; hahsler
+Repository: CRAN
+Date/Publication: 2012-04-02 17:47:21
+Built: R 2.15.2; ; 2012-11-07 01:16:05 UTC; windows

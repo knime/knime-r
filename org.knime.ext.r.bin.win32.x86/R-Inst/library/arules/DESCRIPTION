@@ -1,0 +1,31 @@
+Package: arules
+Version: 1.0-10
+Date: 2011-8-28
+Title: Mining Association Rules and Frequent Itemsets
+Author: Michael Hahsler, Christian Buchta, Bettina Gruen and Kurt
+        Hornik
+Maintainer: Michael Hahsler <mhahsler@lyle.smu.edu>
+Description: Provides the infrastructure for representing, manipulating
+        and analyzing transaction data and patterns (frequent itemsets
+        and association rules). Also provides interfaces to C
+        implementations of the association mining algorithms Apriori
+        and Eclat by C. Borgelt.
+Classification/ACM: G.4, H.2.8, I.5.1
+URL: http://R-Forge.R-project.org/projects/arules/,
+        http://lyle.smu.edu/IDA/arules/
+Depends: R (>= 2.11.0), stats, methods, Matrix (>= 0.999375-38)
+Suggests: pmml, arulesViz
+License: GPL-2
+Copyright: The code for apriori and eclat in src/rapriori.c was
+        obtained from http://fuzzy.cs.uni-magdeburg.de/~borgelt/ and is
+        Copyright (C) 1996-2003 Christian Borgelt. All other code is
+        Copyright (C) Michael Hahsler, Christian Buchta, Bettina Gruen
+        and Kurt Hornik.
+LazyLoad: yes
+Repository: CRAN
+Repository/R-Forge/Project: arules
+Repository/R-Forge/Revision: 1549
+Packaged: 2012-08-29 14:20:44 UTC; rforge
+Date/Publication: 2012-09-03 05:34:23
+Built: R 2.15.2; x86_64-w64-mingw32; 2012-11-07 00:53:12 UTC; windows
+Archs: i386, x64

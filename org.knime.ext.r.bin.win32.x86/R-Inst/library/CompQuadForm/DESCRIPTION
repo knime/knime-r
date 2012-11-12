@@ -1,0 +1,17 @@
+Package: CompQuadForm
+Type: Package
+Title: Distribution function of quadratic forms in normal variables
+Version: 1.4
+Date: 2012-04-21
+Author: P. Lafaye de Micheaux
+Maintainer: P. Lafaye de Micheaux <lafaye@dms.umontreal.ca>
+Description: Computes the distribution function of quadratic forms in
+        normal variables using Imhof's method, Davies's algorithm,
+        Farebrother's algorithm or Liu et al.'s algorithm.
+License: GPL (>= 2)
+LazyLoad: yes
+Packaged: 2012-08-10 18:35:10 UTC; root
+Repository: CRAN
+Date/Publication: 2012-08-10 19:42:15
+Built: R 2.15.2; x86_64-w64-mingw32; 2012-10-31 19:22:39 UTC; windows
+Archs: i386, x64

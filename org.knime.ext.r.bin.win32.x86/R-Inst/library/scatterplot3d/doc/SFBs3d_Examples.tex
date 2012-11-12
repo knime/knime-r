@@ -1,0 +1,468 @@
+\section{Examples\label{examples}}
+\subsection{Feature demonstration\label{artificial}}
+In this section some of the features of \sdd\ will be demonstrated using
+artificially generated data, well known examples from other \RR\ functions
+and the (slightly modified) examples of \sdd 's help file (cf.\ the Appendix).
+The presentation starts with the latter, each example printed
+on an individual page to obtain lucidity.
+
+\vspace*{30mm}
+\begin{center}\sl\small this space intentionally left blank
+\end{center}
+
+\clearpage\subsubsection{Helix}
+In Figure \ref{helix} points of a helix are
+calculated and plotted using the 3D highlighting mode (%
+\verb|highlight.3d = TRUE|) in a blue box with a light blue grid.  We
+produce the solid look with the point symbol, \texttt{pch = 20}.
+
+\vspace*{10mm}
+\begin{figure}[htb!]
+\small
+\begin{Verbatim}[frame=single]
+  z <- seq(-10, 10, 0.01)
+  x <- cos(z)
+  y <- sin(z)
+  scatterplot3d(x, y, z, highlight.3d = TRUE, col.axis = "blue",
+                col.grid = "lightblue", main = "Helix", pch = 20)
+\end{Verbatim}
+\normalsize
+\begin{center}
+\includegraphics[width=13cm]{helix}
+\end{center}
+\vspace*{-10mm}\caption{Helix\label{helix}}
+\end{figure}
+
+
+\clearpage\subsubsection{Hemisphere}
+Figure \ref{hemisphere} shows points on a hemisphere.
+Except for  angle and the size of axes annotation, this figure is generated analogously to Figure \ref{helix}.
+
+\vspace*{10mm}
+\begin{figure}[htb!]
+\small
+\begin{Verbatim}[frame=single]
+  temp <- seq(-pi, 0, length = 50)
+  x <- c(rep(1, 50) %*% t(cos(temp)))
+  y <- c(cos(temp)  %*% t(sin(temp)))
+  z <- c(sin(temp)  %*% t(sin(temp)))
+  scatterplot3d(x, y, z, highlight.3d = TRUE,  angle = 120,
+           col.axis = "blue", col.grid = "lightblue", cex.axis = 1.3,
+           cex.lab = 1.1, main = "Hemisphere", pch = 20)
+\end{Verbatim}
+\normalsize
+\begin{center}
+\includegraphics[width=13cm]{hemisphere}
+\end{center}
+\vspace*{-10mm}\caption{Hemisphere\label{hemisphere}}
+\end{figure}
+
+
+\clearpage\subsubsection{3D barplot}
+With some simple modifications, it is possible to generate a 3D barplot, as shown in this example.
+To make the plot look like a barplot, {\tt type = "h"} is set to draw vertical lines to the $x$--$y$ plane,
+{\tt pch = " "} to avoid plotting of point symbols and {\tt lwd = 5} to make the lines looking like bars.
+Furthermore, instead of three vectors a data frame is given as the first argument to \sdd .
+
+\enlargethispage{1cm}
+\vspace*{5mm}
+\begin{figure}[htb!]
+\small
+\begin{Verbatim}[frame=single]
+  my.mat <- matrix(runif(25), nrow = 5)
+  dimnames(my.mat) <- list(LETTERS[1:5], letters[11:15])
+  s3d.dat <- data.frame(columns = c(col(my.mat)),
+                        rows    = c(row(my.mat)), value = c(my.mat))
+  scatterplot3d(s3d.dat, type = "h", lwd = 5, pch = " ",
+        x.ticklabs = colnames(my.mat), y.ticklabs = rownames(my.mat),
+        color = grey(25:1 / 40), main = "3D barplot")
+\end{Verbatim}
+\normalsize
+\begin{center}
+\includegraphics[width=12.5cm]{barplot}
+\end{center}
+\vspace*{-10mm}\caption{3D barplot\label{barplot}}
+\end{figure}
+
+
+\clearpage\subsubsection{Adding elements}
+The importance of \textsl{Lexical Scoping} to generate \textsl{function closures}
+to provide extensibility of \sdd\ was discussed in Section \ref{extend}.
+An example how to use the invisibly returned functions is given below on the famous
+(at least for \textsf{S} users) tree data.
+
+After the tree data is loaded, it is plotted by \sdd ,
+and the (invisibly returned) result is assigned to the variable {\tt s3d}.
+The (blue colored) points are plotted using {\tt type = "h"},
+so one can see the $x$--$y$ location of those points very clearly.
+
+In the next step, a linear model (assumption: volume depends on girth and height of the trees) is calculated.
+Furthermore, this \textsf{lm} object is plotted by the returned {\tt plane3d} function (was assigned to {\tt s3d} before),
+and it results in a regression plane.
+
+Just for demonstration purposes, in the last step some red colored points (on a imaginary line crossing the plot)
+are plotted with an asterisk as its point symbol.
+
+\vspace*{10mm}
+\small
+\begin{Verbatim}[frame=single]
+  data(trees)
+  s3d <- scatterplot3d(trees, type = "h", color = "blue",
+      angle = 55, scale.y = 0.7, pch = 16, main = "Adding elements")
+  my.lm <- lm(trees$Volume ~ trees$Girth + trees$Height)
+  s3d$plane3d(my.lm)
+  s3d$points3d(seq(10, 20, 2), seq(85, 60, -5), seq(60, 10, -10),
+      col = "red", type = "h", pch = 8)
+\end{Verbatim}
+%$
+\normalsize
+
+\clearpage
+\begin{figure}[htb!]
+\begin{center}
+\includegraphics[width=13cm]{elements}
+\end{center}
+\vspace*{-10mm}\caption{Adding elements\label{elements}}
+\end{figure}
+
+
+\subsubsection{Bivariate normal distribution}
+In Figure \ref{binorm} a surface of the density of a bivariate normal
+distribution is plotted.  This example is a bit more sophisticated than the
+examples before and shows the extensibility of \sdd.  Note that \sdd\
+is designed to generate  scatter plots, not to draw surfaces,
+is not really user friendly for this purpose, for which we'd typically
+rather use \RR's \code{persp} function.
+
+In a first step a matrix containing the density is calculated.
+The call of \sdd\ sets up the plot (axes, labels, etc.), but doesn't draw
+the surface itself which is accomplished by the two loops at the end of the
+code.  Additionally, we give an example of quite sophisticated mathematical
+annotation.
+\clearpage
+\small
+\begin{Verbatim}[frame=single]
+  library(mvtnorm)
+  x1 <- x2 <- seq(-10, 10, length = 51)
+  dens <- matrix(dmvnorm(expand.grid(x1, x2),
+                    sigma = rbind(c(3, 2), c(2, 3))),
+                 ncol = length(x1))
+  s3d <- scatterplot3d(x1, x2,
+                    seq(min(dens), max(dens), length = length(x1)),
+                    type = "n", grid = FALSE, angle = 70,
+                    zlab = expression(f(x[1], x[2])),
+                    xlab = expression(x[1]), ylab = expression(x[2]),
+                    main = "Bivariate normal distribution")
+  text(s3d$xyz.convert(-1, 10, 0.07),
+        labels = expression(f(x) == frac(1, sqrt((2 * pi)^n *
+            phantom(".") * det(Sigma[X]))) * phantom(".") * exp{
+            bgroup("(", - scriptstyle(frac(1, 2) * phantom(".")) *
+                (x - mu)^T * Sigma[X]^-1 * (x - mu), ")")}))
+  text(s3d$xyz.convert(1.5, 10, 0.05),
+        labels = expression("with" * phantom("m") *
+            mu == bgroup("(", atop(0, 0), ")") * phantom(".") * "," *
+                phantom(0) *
+            Sigma[X] ==  bgroup("(", atop(3 * phantom(0) * 2,
+                2 * phantom(0) * 3), ")")))
+  for(i in length(x1):1)
+      s3d$points3d(rep(x1[i], length(x2)), x2, dens[i,], type = "l")
+  for(i in length(x2):1)
+      s3d$points3d(x1, rep(x2[i], length(x1)), dens[,i], type = "l")
+\end{Verbatim}
+\normalsize
+
+\clearpage
+\begin{figure}[htb!]
+\begin{center}
+\includegraphics[width=13cm]{binorm}
+\end{center}
+\vspace*{-12mm}\caption{Density of a bivariate normal distribution\label{binorm}}
+\end{figure}
+
+\subsubsection{RGB color cube}
+In Figure \ref{colorcube}, we visualize the RGB (red--green--blue) color
+space which \RR{} and most computer screens use for color coding.
+First, we draw all the \emph{named} colors available in \RR{} via
+\texttt{colors()}.  Note that it might be interesting to find a better
+background color here than white. Optimally it would correspond to an RGB
+location as far away as possible from all given colors.
+%%\enlargethispage{1cm}% Trick, damit es passt ...
+Second, we show the \texttt{rainbow()} colors in the RGB space.  Here we
+redraw the points \emph{on top} of the cube, using the \texttt{points3d()}
+closure which is also the basis of our \texttt{cubedraw()} function.
+\begin{figure}[htb!]
+\small
+%% to save space, suppressed things like
+%%       ## Purpose: Draw nice cube with corners
+
+%%   par(mfrow = 1:2)
+
+\begin{Verbatim}[frame=single]
+  cubedraw <- function(res3d, min = 0, max = 255, cex = 2)
+  {
+      cube01 <- rbind(0,c(1,0,0),c(1,1,0),1,c(0,1,1),c(0,0,1),c(1,0,1),
+                        c(1,0,0),c(1,0,1),1,c(1,1,0),
+                        c(0,1,0),c(0,1,1),  c(0,1,0),0)
+      cub <- min + (max-min)* cube01
+      res3d$points3d(cub[ 1:11,], cex = cex, type = 'b', lty = 1)
+      res3d$points3d(cub[11:15,], cex = cex, type = 'b', lty = 3)
+  }
+  crgb <- t(col2rgb(cc <- colors()))
+  rr <- scatterplot3d(crgb, color = cc, box = FALSE, angle = 24)
+  cubedraw(rr)
+
+  Rrb <- t(col2rgb(rbc <- rainbow(201)))
+  rR <- scatterplot3d(Rrb, color = rbc, box = FALSE, angle = 24)
+  cubedraw(rR)
+  rR$points3d(Rrb, col = rbc, pch = 16)
+\end{Verbatim}
+\par\vspace*{-12mm}%$
+\normalsize
+\centerline{\includegraphics[width=19cm]{colorcube}}
+\par\vspace*{-5mm}
+\caption{The RGB color cube. On the left, the named colors in \RR{}, i.e.,
+  \texttt{colors()}. Note the diagonal of gray tones. On the right, the
+  locations and colors of \texttt{rainbow(201)}.\label{colorcube}}
+\end{figure}
+
+
+
+
+
+\clearpage
+\subsection{Real world examples\label{realworld}}
+Three real world examples are presented in this section.
+The data are from the following recent projects of the collaborative
+research centre 475
+(Deutsche Forschungsgemeinschaft, SFB 475:
+ ``Reduction of complexity in multivariate data structures''):
+
+\vspace{-5mm}\begin{description}
+\item[C3 \textmd{(Biometrics)}] Meta--Analysis in Biometry and Epidemiology,
+\item[B3 \textmd{(Econometrics)}] Multivariate Analysis of Business Cycles, and
+\item[C5 \textmd{(Technometrics)}]
+    Analysis and Modelling of the Deephole--Drilling--Process with Methods of Statistics and Neuronal Networks.
+\end{description}
+
+
+\subsubsection{Meta--analysis of controlled clinical trials\label{meta}}
+In the first real world example the data from a project on ``Meta--Analysis
+in Biometry and Epidemiology'' is taken.
+The data set contains the results of 13 placebo--controlled clinical trials
+which evaluated the efficacy of the Bacillus Calmette--Gu\'{e}rin (BCG)
+vaccine for the prevention of tuberculosis (TB).
+%
+An important task in combining the results of clinical trials is to detect
+possible sources of heterogeneity which may influence the true treatment
+effect.
+%
+In the present example, a possible influential covariate is the distance of
+each trial from the equator, which may serve as a surrogate for the
+presence of environmental mycobacteria that provide a certain level of
+natural immunity against TB.
+%
+Other covariates may be the year the trial was carried out and the
+allocation scheme of the vaccination
+(A = alternate, R = random, S = systematic).
+%%
+For more details, especially on the choice of the trials and the
+meta--analytical methods of combining the results, we refer to
+\citeN{knapp02} and the references given therein.
+
+In Figure \ref{fig:meta} the estimated risks of TB disease are plotted for the
+vaccinated group and the non--vaccinated group, respectively, in the
+dependence of the year the trial was carried out, of the absolute distance
+from the equator and of the allocation scheme.
+The color represents the precisions of the estimated risks.
+Figure \ref{fig:meta} clearly reveals a spatio--temporal trend in the realization of the trials.
+The former trials were carried out far away from the equator,
+and in all these trials one can observe an evident superiority of the BCG vaccine for the prevention of TB.
+Except one trial all the other later trials were realized closer to the equator.
+In these trials, it is apparently that the estimated risks in the non--vaccinated groups are even rather low and,
+consequently, cannot graphically separated from the estimated risks in the vaccinated groups.
+Finally, it is worthwhile to note that the later trial which was carried out far away from the equator
+has a relative small estimated risk in the non--vaccinated group compared to the former trials and, hence,
+does not yield such an evident superiority of the BCG vaccine.
+
+\begin{figure}[b!]
+\small
+\begin{Verbatim}[frame=single]
+  layout(cbind(1:2, 1:2), heights = c(7, 1))
+  prc <- hsv((prc <- 0.7 * Prec / diff(range(Prec))) - min(prc) + 0.3)
+  s3d <- scatterplot3d(Year, Latitude, Risk, mar = c(5, 3, 4, 3),
+      type = "h", pch = " ", main = "Estimated TB risks")
+  s3d$points(Year, Latitude, Risk, pch = ifelse(vac, 22, 21), bg = prc,
+      cex = ifelse(vac, 2, 1.5))
+  s3d.coords <- s3d$xyz.convert(Year, Latitude, Risk)
+  al.char <- toupper(substr(as.character(Allocation), 1, 1))
+  text(s3d.coords$x[!vac], s3d.coords$y[!vac], labels = al.char[!vac],
+      pos = 2, offset = 0.5)
+  legend(s3d$xyz.convert(80, 15, 0.21), pch = c("A", "R", "S"), yjust=0,
+      legend = c("alternate", "random", "systematic"), cex = 1.1)
+  legend(s3d$xyz.convert(47, 60, 0.24), pch = 22:21, yjust = 0,
+      legend = c("vaccinated", "not vaccinated"), cex = 1.1)
+
+  par(mar=c(5, 3, 0, 3))
+  plot(seq(min(Prec), max(Prec), length = 100), rep(0, 100), pch = 15,
+      axes = FALSE, xlab = "color code of variable \"Precision\"",
+      ylab = "", col = hsv(seq(0.3, 1, length = 100)))
+  axis(1, at = 4:7, labels = expression(10^4, 10^5, 10^6, 10^7))
+\end{Verbatim}
+\end{figure}
+\normalsize
+
+Three variables are represented by the three dimensions of the cube, while
+variable ``Precision'' is represented by color.  To realize color
+representation for metric variables, some manual tuning is necessary,
+though.
+
+Two kinds of point symbols stand for the ``Vaccinated'' variable,
+and for a sixth variable, ``Allocation'', an appropriate letter is printed
+additionally close to the ``not vaccinated'' symbol.
+
+For each of the latter three variables a legend is desirable.
+Thus the smaller two legends are plotted into the \sdd ,
+while the legend for the color coding gets a single plot.
+The function {\tt layout} arranges the two plots suitably on the same device.
+
+\begin{figure}[htb!]
+\begin{center}\includegraphics[width=13cm]{meta}\end{center}
+\caption{Estimated TB risks\label{fig:meta}}
+\end{figure}
+\clearpage
+
+
+\subsubsection{Business cycle data}
+The example in this section shows the plotting of data from a project on ``Multivariate Analysis of Business Cycles''.
+One of the main interests of the project is the prediction of business cycle phases.
+An extraction of available relevant (concerning the purposes of this section) variables
+and its abbreviations is given in Table \ref{StyFacts}.
+The abbreviation 'gr' stands for growth rates with respect to last year's
+corresponding quarter.
+
+\begin{table}[htb!]
+ \centering \vspace{0.2cm}
+ \begin{tabular}{|l|l|}   \hline
+ abbr & description                     \\ \hline
+ IE & real investment in equipment (gr) \\
+ C  & real private consumption (gr)     \\
+ Y  & real gross national product (gr)  \\
+ L  & wage and salary earners (gr)      \\ \hline
+ \end{tabular}
+ \caption{Abbreviations\label{StyFacts}}
+\end{table}
+
+The experts' classification of the data into business cycle phases
+(``PH'') was done by \citeN{heilemann} using a 4-phase scheme.
+These phases are called {\sl lower turning points}, {\sl upswing}, {\sl
+  upper turning points}, and {\sl downswing}.
+
+In Figure~\ref{business} the three variables C, Y, and L are represented by
+the three dimensions of the cube.  The variable IE is represented by color,
+while four different point symbols stand for the four business cycle phases
+(PH).
+
+For each of the latter two variables, a legend is desirable.
+Thus the smaller one (for PH) is plotted into the \sdd , while the legend
+for the color coding of IE got a single plot, analogously to the example in
+Section~\ref{meta}.
+
+A regression plane is added to the plot to support the visual impression.
+Obviously all the plotted variables are highly correlated, with the
+exception of the class variable which does not appear to be well
+predictable by the other variables.  Details are discussed in
+\citeN{theis99}.
+%
+In order to provide a correct impression of the fit, the residuals,
+i.e. the projection lines to the plane, are drawn in Figure~\ref{residuals}
+where different color and line types are used for positive and negative
+residuals respectively.
+
+\begin{figure}[H]
+\vspace*{-10mm}
+\footnotesize
+\begin{Verbatim}[frame=single]
+  layout(cbind(1:2, 1:2), heights = c(7, 1))
+  temp <- hsv((temp <- 0.7 * IE / diff(range(IE))) - min(temp) + 0.3)
+  s3d <- scatterplot3d(L, C, Y, pch = Phase, color = temp,
+      mar = c(5, 3, 4, 3), main = "Business cycle phases")
+  legend(s3d$xyz.convert(-2, 0, 16), pch = 1:4, yjust = 0,
+      legend = c("upswing", "upper turning points",
+          "downswing", "lower turning points"))
+  s3d$plane3d(my.lm <- lm(Y ~ L + C), lty = "dotted")
+  par(mar=c(5, 3, 0, 3))
+  plot(seq(min(IE), max(IE), length = 100), rep(0, 100), pch = 15,
+      axes = FALSE, xlab = "color code of variable \"IE\"", ylab = "",
+      col = hsv(seq(0.3, 1, length = 100)))
+  axis(1, at = seq(-20, 25, 5))
+\end{Verbatim}
+\normalsize
+\begin{center}\includegraphics[width=13cm]{business}\end{center}
+\vspace*{-5mm}\caption{Business cycle phases\label{business}}
+\end{figure}
+
+\begin{figure}[htb!]
+\small
+\begin{Verbatim}[frame=single]
+  s3d <- scatterplot3d(L, C, Y, pch = 20, mar = c(5, 3, 4, 3),
+            main = "Residuals")
+  s3d$plane3d(my.lm, lty = "dotted")
+  orig <- s3d$xyz.convert(L, C, Y)
+  plane <- s3d$xyz.convert(L, C,  fitted(my.lm))
+  i.negpos <- 1 + (resid(my.lm) > 0)
+  segments(orig$x, orig$y, plane$x, plane$y,
+            col = c("blue", "red")[i.negpos], lty = (2:1)[i.negpos])
+\end{Verbatim}
+%%$
+\normalsize
+\begin{center}\includegraphics[width=13cm]{residuals}\end{center}
+\vspace*{-5mm}\caption{Residuals (cf. Figure \ref{business})\label{residuals}}
+\end{figure}
+
+
+\clearpage
+\subsubsection{Deep hole drilling}
+Our last real world example shows phase spaces (\cite{tong93}) of the drilling torque of a deep hole drilling process.
+The data is taken from a project on
+"Analysis and Modelling of the Deephole--Drilling--Process with Methods of Statistics and Neuronal Networks".
+More detailed analysis on the data than provided in the following example was done by,
+e.g., \citeN{busse} and \citeN{weinert}.
+
+Figure \ref{drill1} visualizes the phase spaces of the drilling torques of two deep hole drilling processes,
+a regular and a chattering one.
+Obviously the points in the phase space of the chattering process are very systematically scattered,
+and the range of the data is very different for the two processes.
+The magnification of the regular process in Figure \ref{drill2} shows that the points of the regular process are scattered
+unsystematically.
+Note that other lags like 10, 20, 100 would produce a similar plot.
+This indicates a sine wave like relationship in the chattering case.
+
+\vspace{10mm}
+\small
+\begin{Verbatim}[frame=single]
+  s3d <- scatterplot3d(drill1[1:400], drill1[7:406], drill1[32:431],
+      color = "red", type = "l", angle = 120, xlab = "drilling torque",
+      ylab = "drilling torque, lag 6", zlab = "drilling torque, lag 31",
+      main = "Two deep hole drilling processes")
+  s3d$points3d(drill2[1:400], drill2[7:406], drill2[32:431],
+      col = "blue", type = "l")
+  legend(s3d$xyz.convert(-400, 1000, 950), col= c("blue", "red"),
+      legend = c("regular process", "chattering process"), lwd = 2,
+      bg = "white")
+
+  scatterplot3d(drill2[1:400], drill2[7:406], drill2[32:431],
+      color = "blue", type = "l", angle = 120, xlab = "drilling torque",
+      ylab = "drilling torque, lag 6", zlab = "drilling torque, lag 31",
+      main = "Magnification of the regular process")
+\end{Verbatim}
+\normalsize
+
+\begin{figure}[htb!]
+\vspace*{-15mm}
+\begin{center}\includegraphics[width=11.5cm]{drill1}
+\vspace*{-10mm}\caption{Phase spaces of the drilling torques of two deep hole drilling processes\label{drill1}}
+\vspace*{10mm}
+\includegraphics[width=11.5cm]{drill2}\end{center}
+\vspace*{-10mm}\caption{Magnification of the regular process (Figure \ref{drill1})\label{drill2}}
+\end{figure}
+\clearpage

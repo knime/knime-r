@@ -1,0 +1,438 @@
+
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Chapter Survival Analysis}
+%%\VignetteDepends{survival,coin}
+\setcounter{chapter}{8}
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+
+<<SA-setup, echo = FALSE, results = hide>>=
+x <- library("survival")
+x <- library("coin")
+x <- library("party")
+@
+
+\chapter[Survival Analysis]{Survival Analysis: \\ Glioma Treatment and Breast Cancer Survival \label{SA}}
+
+\section{Introduction}
+
+
+\section{Survival Analysis}
+
+
+\section{Analysis Using \R{}}
+
+\subsection{Glioma Radioimmunotherapy}
+
+
+\begin{figure}
+\begin{center}
+<<SA-glioma-KM, echo = TRUE, fig = TRUE, height = 4>>=
+data("glioma", package = "coin")
+library("survival")
+layout(matrix(1:2, ncol = 2))
+g3 <- subset(glioma, histology == "Grade3")
+plot(survfit(Surv(time, event) ~ group, data = g3), 
+     main = "Grade III Glioma", lty = c(2, 1), 
+     ylab = "Probability", xlab = "Survival Time in Month",
+     legend.bty = "n", legend.text = c("Control", "Treated")
+)
+g4 <- subset(glioma, histology == "GBM")
+plot(survfit(Surv(time, event) ~ group, data = g4), 
+     main = "Grade IV Glioma", ylab = "Probability", 
+     lty = c(2, 1), xlab = "Survival Time in Month", 
+     xlim = c(0, max(glioma$time) * 1.05))
+@
+\caption{Survival times comparing treated and control patients.
+\label{SA-glioma-plot}}
+\end{center}
+\end{figure}
+
+Figure~\ref{SA-glioma-plot} leads to the impression that patients treated
+with the novel radioimmunotherapy survive longer, regardless of the tumor
+type. In order to assess if this informal finding is reliable, we may perform a
+log-rank test via
+\index{Log-rank test}
+<<SA-glioma-logrank, echo = TRUE>>=
+survdiff(Surv(time, event) ~ group, data = g3)
+@
+which indicates that the survival times are indeed different in both groups.
+However, the number of patients is rather limited and so it might be
+dangerous to rely on asymptotic tests. As shown in 
+Chapter~3,
+conditioning on the data and computing the distribution of the test
+statistics without additional assumptions is one alternative. The function
+\Rcmd{surv\_test} from package \Rpackage{coin} \citep{HSAUR:Hothorn:2006:AmStat,PKG:coin} can be used
+to compute an exact conditional test answering the question whether the
+survival times differ for grade III patients:
+<<SA-glioma-exact, echo = TRUE>>=
+library("coin")
+surv_test(Surv(time, event) ~ group, data = g3, 
+          distribution = "exact")
+@
+which, in this case, confirms the above results. The same exercise can be
+performed for patients with grade IV glioma
+<<SA-glioma-g4, echo = TRUE>>=
+surv_test(Surv(time, event) ~ group, data = g4, 
+                  distribution = "exact")
+@
+which shows a difference as well. However, it might be more appropriate to
+answer the question whether the novel therapy is superior for both groups
+of tumors simultaneously. This can be implemented by \stress{stratifying},
+or \stress{blocking}, with respect tumor grading:
+<<SA-glioma-hist, echo = TRUE>>=
+surv_test(Surv(time, event) ~ group | histology, data = glioma,
+          distribution = approximate(B = 10000))
+@
+Here, we need to approximate the exact conditional distribution since the
+exact distribution is hard to compute.
+The result supports the initial impression implied by Figure~\ref{SA-glioma-plot}
+
+\subsection{Breast Cancer Survival}
+
+Before fitting a Cox model to the \Robject{GBSG2} data, we again derive a
+Kaplan-Meier estimate of the survival function of the data, 
+here stratified with respect to whether a
+patient received a hormonal therapy or not (see Figure~\ref{SA-GBSG2-plot}).
+\begin{figure}
+\begin{center}
+<<SA-GBSG2-plot, echo = TRUE, fig = TRUE>>=
+data("GBSG2", package = "ipred")
+plot(survfit(Surv(time, cens) ~ horTh, data = GBSG2), 
+     lty = 1:2, mark.time = FALSE,  ylab = "Probability", 
+     xlab = "Survival Time in Days")
+legend(250, 0.2, legend = c("yes", "no"), lty = c(2, 1), 
+       title = "Hormonal Therapy", bty = "n")
+@
+\caption{Kaplan-Meier estimates for breast cancer patients who either
+received a hormonal therapy or not. \label{SA-GBSG2-plot}}
+\end{center}
+\end{figure}
+
+Fitting a Cox model follows roughly the same rules are shown for linear
+models in 
+Chapters~4, 5 or 6
+with the exception
+that the response variable is again coded as a \Rclass{Surv} object.
+For the \Robject{GBSG2} data, the model is fitted via
+<<SA-GBSG2-coxph, echo = TRUE>>=
+GBSG2_coxph <- coxph(Surv(time, cens) ~ ., data = GBSG2)
+@
+and the results as given by the \Rcmd{summary} method are given in 
+Figure~\ref{GBSG2-coxph-summary}. Since we are especially interested in the
+relative risk for patients who underwent a hormonal therapy, we can
+compute an estimate of the relative risk and a corresponding confidence
+interval via
+<<SA-GBSG2-coxph-ci, echo = TRUE>>=
+ci <- confint(GBSG2_coxph)
+exp(cbind(coef(GBSG2_coxph), ci))["horThyes",]
+@
+This result implies that patients treated with a hormonal therapy had a
+lower risk and thus survived longer compared to women who were not treated
+this way. 
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method    
+                            for \Robject{GBSG2\_coxph}.
+                            \label{GBSG2-coxph-summary}}
+\SchunkLabel
+<<GBSG2-coxph-summary, echo = TRUE>>=
+summary(GBSG2_coxph)
+@
+\SchunkRaw
+
+Model checking and model selection for proportional hazards models are
+complicated by the fact that easy to use residuals, such as those discussed 
+in 
+Chapter 5
+for linear regression model are not available,
+but several possibilities do exist.
+A check of the proportional hazards assumption can be done by looking at the
+parameter estimates $\beta_1, \dots, \beta_q$ over time. We can safely
+assume proportional hazards when the estimates don't vary much over time.  %'
+The null hypothesis of constant regression coefficients can be tested, both
+globally as well as for each covariate, by using the \Rcmd{cox.zph} function
+<<SA-GBSG2-zph, echo = TRUE>>=
+GBSG2_zph <- cox.zph(GBSG2_coxph)
+GBSG2_zph
+@
+There seems to be some evidence of time-varying effects, 
+\index{Time-varying effects}
+especially for age
+and tumor grading. A graphical representation of the estimated 
+regression coefficient over time is shown in Figure~\ref{SA-GBSG2-zph-plot}.
+We refer to \cite{HSAUR:TherneauGrambsch2000} for a detailed 
+theoretical description of these topics.
+\begin{figure}
+\begin{center}
+<<SA-GBSG2-zph-plot, echo = TRUE, fig = TRUE, width = 7, height = 7>>=
+plot(GBSG2_zph, var = "age")
+@
+\caption{Estimated regression coefficient for \Robject{age} depending on
+         time for the \Robject{GBSG2} data. \label{SA-GBSG2-zph-plot}}
+\end{center}
+\end{figure}
+
+
+\begin{figure}
+\begin{center} 
+<<SA-GBSG2-Martingal, echo = TRUE, fig = TRUE, height = 4>>=
+layout(matrix(1:3, ncol = 3))
+res <- residuals(GBSG2_coxph)
+plot(res ~ age, data = GBSG2, ylim = c(-2.5, 1.5), 
+     pch = ".", ylab = "Martingale Residuals")
+abline(h = 0, lty = 3)
+plot(res ~ pnodes, data = GBSG2, ylim = c(-2.5, 1.5), 
+     pch = ".", ylab = "")
+abline(h = 0, lty = 3)
+plot(res ~ log(progrec), data = GBSG2, ylim = c(-2.5, 1.5), 
+     pch = ".", ylab = "")
+abline(h = 0, lty = 3)
+@
+\caption{Martingale residuals for the \Robject{GBSG2} data.
+         \label{SA-GBSG2-mart-plot}}
+\end{center}
+\end{figure} 
+
+The tree-structured regression models applied to continuous and binary 
+responses in 
+Chapter~8
+are applicable to censored responses in 
+survival analysis as well. Such a simple prognostic model with only
+a few terminal nodes might be helpful for relating the risk to certain
+subgroups of patients. Both \Rcmd{rpart} and the \Rcmd{ctree} function 
+from package \Rpackage{party} can be applied to the GBSG2 data, where
+the conditional trees of the latter selects cutpoints based on 
+log-rank statistics;
+\index{Conditional tree}
+<<SA-GBSG2-ctree, echo = TRUE>>=
+GBSG2_ctree <- ctree(Surv(time, cens) ~ ., data = GBSG2)
+@
+and the \Rcmd{plot} method applied to this tree produces the graphical 
+representation in Figure~\ref{SA-GBSG2-ctree-plot}. The number of positive
+lymph nodes (\Robject{pnodes}) is the most important variable in the tree, 
+this corresponds to the $p$-value associated with this variable in Cox's %%'s
+regression, see Figure~\ref{GBSG2-coxph-summary}. Women with not more than
+three positive lymph nodes who have undergone a hormonal therapy seem to
+have the best prognosis whereas a large number of positive lymph nodes and 
+a small value of the progesterone receptor indicates a bad prognosis.
+
+\begin{figure}  
+\begin{center}
+<<SA-GBSG2-ctree-plot, echo = TRUE, fig = TRUE, width = 8>>=
+plot(GBSG2_ctree)
+@
+\caption{\Robject{GBSG2} data: Conditonal inference tree with the survival function,
+         estimated by Kaplan-Meier, shown for every subgroup of patients
+         identified by the tree. \label{SA-GBSG2-ctree-plot}}
+\end{center}
+\end{figure}
+
+
+\bibliographystyle{LaTeXBibTeX/refstyle}
+\bibliography{LaTeXBibTeX/HSAUR}   
+\end{document}

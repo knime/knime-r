@@ -1,0 +1,30 @@
+useDynLib(SparseM)
+
+importFrom(graphics, image, image.default)
+importFrom(stats, model.matrix,model.response)
+importFrom(utils, packageDescription)
+
+export(is.matrix.csr, is.matrix.csc, is.matrix.ssr, is.matrix.ssc, is.matrix.coo, as.matrix.csr, as.matrix.csc, as.matrix.ssr, as.matrix.ssc, as.matrix.coo, rbind.matrix.csr, cbind.matrix.csr, read.matrix.hb, model.guess, model.xexact, Ops.matrix.csr, Ops.matrix.diag.csr, "[.matrix.csr", "[<-.matrix.csr", "[.matrix.diag.csr", slm, slm.fit, slm.wfit, slm.fit.csr, coef.slm, fitted.slm, residuals.slm, deviance.slm, extractAIC.slm, summary.mslm, summary.slm, print.summary.slm, print.slm, "[<-.matrix.coo","[.matrix.coo", forwardsolve)
+
+if(getRversion() < "2.11.0" || R.version$`svn rev` < 51018)
+    export("norm")
+
+if(getRversion() >= "2.15.0")
+    importFrom("methods", kronecker)
+
+exportClasses(matrix.csr, matrix.csc, matrix.ssr, matrix.ssc, matrix.coo, matrix.csr.chol, matrix.csc.hb, matrix.ssc.hb, slm, mslm, summary.slm, matrix.diag.csr)
+
+exportMethods(as.matrix.csr, as.matrix.csc, as.matrix.ssr, as.matrix.ssc, as.matrix.coo, 
+	as.matrix, t, coerce, dim, diff, diag, "diag<-", det, norm, chol, backsolve, 
+	solve, model.matrix, model.response, "%*%", kronecker, image)
+
+S3method(coef, slm)
+S3method(fitted, slm)
+S3method(residuals, slm)
+S3method(summary, mslm)
+S3method(summary, slm)
+S3method(print, summary.slm)
+S3method(print, slm)
+S3method(deviance, slm)
+S3method(extractAIC, slm)
+

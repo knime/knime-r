@@ -1,0 +1,377 @@
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Chapter Principal Component Analysis}
+\setcounter{chapter}{12}
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+
+\chapter[Principal Component Analysis]{Principal Component Analysis: The Olympic Heptathlon \label{PCA}}
+
+\section{Introduction}
+
+
+\section{Principal Component Analysis}
+
+
+\section{Analysis Using \R{}}
+
+To begin it will help to score all the seven events in the
+same direction, so that `large' values are `good'. We will    
+recode the running events to achieve this;
+<<PCA-heptathlon-recode, echo = TRUE>>=a
+data("heptathlon", package = "HSAUR")
+heptathlon$hurdles <- max(heptathlon$hurdles) - 
+    heptathlon$hurdles
+heptathlon$run200m <- max(heptathlon$run200m) - 
+    heptathlon$run200m
+heptathlon$run800m <- max(heptathlon$run800m) - 
+    heptathlon$run800m
+@
+
+\begin{figure}
+\begin{center}
+<<PCA-heptathlon-scatter, echo = TRUE, fig = TRUE>>=
+score <- which(colnames(heptathlon) == "score")
+plot(heptathlon[,-score])
+@
+\caption{Scatterplot matrix for the \Robject{heptathlon} data. \label{PCA-heptathlon-scatter}}
+\end{center}
+\end{figure}
+
+Figure~\ref{PCA-heptathlon-scatter} shows a      
+scatterplot matrix of the results from the $25$ competitors on      
+the seven events. We 
+see that most pairs of events are positively correlated
+to a greater or lesser degree. The exceptions all involve the
+javelin event -- this is the only really `technical' event and %%'
+it is clear that training to become successful in the other six
+`power'-based events makes this event difficult for %%'
+the majority of the competitors. We can examine the numerical
+values of the correlations by applying the \Rcmd{cor} function
+<<PCA-options65, echo = FALSE>>=
+w <- options("width")
+options(width = 65)
+@
+<<PCA-heptathlon-cor, echo = TRUE>>=
+round(cor(heptathlon[,-score]), 2)
+@
+<<PCA-optionsw, echo = FALSE>>=
+options(width = w$width)
+@
+This correlation matrix demonstrates again the points made earlier.
+
+A principal component analysis of the data can be applied
+using the \Rcmd{prcomp} function. The result is a list
+containing the coefficients defining each component 
+(sometimes referred to as \stress{loadings}), 
+\index{Loadings}
+the principal component scores, etc. The required
+code is (omitting the \Robject{score} variable)
+<<PCA-heptathlon-pca, echo = TRUE>>=
+heptathlon_pca <- prcomp(heptathlon[, -score], scale = TRUE)
+print(heptathlon_pca)
+@
+The \Rcmd{summary} method can be used for further inspection of the details:
+<<PCA-heptathlon-summary, echo = TRUE>>=
+summary(heptathlon_pca)
+@
+The linear combination for the first principal component is
+<<PCA-heptathlon-a1, echo = TRUE>>=
+a1 <- heptathlon_pca$rotation[,1]
+a1
+@
+We see that the 200m and long jump competitions receive the highest weight
+but the javelin result is less important.
+For computing the first principal component, the data need to be rescaled
+appropriately. The center and the scaling used by \Rcmd{prcomp} internally
+can be extracted from the \Robject{heptathlon\_pca}
+via
+<<PCA-heptathlon-scaling, echo = TRUE>>=
+center <- heptathlon_pca$center
+scale <- heptathlon_pca$scale
+@
+Now, we can apply the \Rcmd{scale} function to the data and multiply with
+the loadings matrix in order to compute the first principal component score 
+for each competitor
+<<PCA-heptathlon-s1, echo = TRUE>>=
+hm <- as.matrix(heptathlon[,-score])
+drop(scale(hm, center = center, scale = scale) %*% 
+     heptathlon_pca$rotation[,1])
+@
+or, more conveniently, by extracting the first from all precomputed 
+principal components
+<<PCA-heptathlon-s1, echo = TRUE>>=
+predict(heptathlon_pca)[,1]
+@
+
+\begin{figure}
+\begin{center}
+<<PCA-heptathlon-pca-plot, echo = TRUE, fig = TRUE>>=
+plot(heptathlon_pca)
+@
+\caption{Barplot of the variances explained by the principal components.
+\label{PCA-heptathlon-pca-plot}}
+\end{center}
+\end{figure}
+
+<<PCA-heptathlon-sdev, echo = FALSE, results = hide>>=
+sdev <- heptathlon_pca$sdev
+prop12 <- round(sum(sdev[1:2]^2)/sum(sdev^2)*100, 0)
+@
+The first two components account for $\Sexpr{prop12}\%$ of the variance. 
+A barplot of each component's variance (see %%'
+Figure~\ref{PCA-heptathlon-pca-plot}) shows how the first two components dominate.
+A plot of the data in the space of the first two principal components, with the points
+labelled by the name of the corresponding competitor can be produced as shown
+with Figure~\ref{PCA-heptathlon-PCscatter}. In addition, the first two loadings for
+the events are given in a second coordinate system, also illustrating the special
+role of the javelin event. This graphical representation is known as 
+\stress{biplot} \citep{HSAUR:Gabriel1971}.
+\index{Biplot}
+
+\begin{figure}
+\begin{center}
+<<PCA-heptathlon-PCscatter, eval = FALSE>>=
+biplot(heptathlon_pca, col = c("gray", "black"))
+@
+<<PCA-heptathlon-PCscatter, echo = FALSE, fig = TRUE>>=
+tmp <- heptathlon[, -score]
+rownames(tmp) <- abbreviate(gsub(" \\(.*", "", rownames(tmp)))
+biplot(prcomp(tmp, scale = TRUE), col = c("black", "lightgray"), xlim =
+c(-0.5, 0.7))
+@
+\caption{Biplot of the (scaled) first two principal components.
+\label{PCA-heptathlon-PCscatter}}
+\end{center}
+\end{figure}
+
+The correlation between the score
+given to each athlete by the standard scoring system used for
+the heptathlon and the first principal component score can be   
+found from
+<<PCA-scorecor, echo = TRUE>>=
+cor(heptathlon$score, heptathlon_pca$x[,1])
+@
+This implies that the first principal component is in good agreement with
+the score assigned to the athletes by official Olympic rules; a scatterplot
+of the official score and the first principal component is given in 
+Figure~\ref{PCA-heptathlonscore}.
+
+\begin{figure}
+\begin{center}
+<<PCA-heptathlonscore, echo = TRUE, fig = TRUE>>=
+plot(heptathlon$score, heptathlon_pca$x[,1])
+@
+\caption{Scatterplot of the score assigned to each athlete in 1988 and the
+first principal component. \label{PCA-heptathlonscore}}
+\end{center}
+\end{figure}
+
+
+%%\bibliographystyle{LaTeXBibTeX/refstyle} 
+%%\bibliography{LaTeXBibTeX/HSAUR}
+\end{document}

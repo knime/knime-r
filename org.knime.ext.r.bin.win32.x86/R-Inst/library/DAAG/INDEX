@@ -1,0 +1,208 @@
+ACF1                    Aberrant Crypt Foci in Rat Colons
+CVbinary                Cross-Validation for Regression with a Binary
+                        Response
+CVlm                    Cross-Validation for Linear Regression
+Cars93.summary          A Summary of the Cars93 Data set
+DAAG-package            The R DAAG Package
+DAAGxdb                 List, each of whose elements hold rows of a
+                        file, in character format
+Lottario                Ontario Lottery Data
+Manitoba.lakes          The Nine Largest Lakes in Manitoba
+SP500W90                Closing Numbers for S and P 500 Index - First
+                        100 Days of 1990
+SP500close              Closing Numbers for S and P 500 Index
+ais                     Australian athletes data set
+allbacks                Measurements on a Selection of Books
+anesthetic              Anesthetic Effectiveness
+ant111b                 Averages by block of corn yields, for treatment
+                        111 only
+antigua                 Averages by block of yields for the Antigua
+                        Corn data
+appletaste              Tasting experiment that compared four apple
+                        varieties
+audists                 Road distances between 10 Australian cities
+aulatlong               Latitudes and longitudes for ten Australian
+                        cities
+austpop                 Population figures for Australian States and
+                        Territories
+bestsetNoise            Best Subset Selection Applied to Noise
+biomass                 Biomass Data
+bomregions              Australian and Related Historical Annual
+                        Climate Data, by region
+bomregions2011          Australian and Related Historical Annual
+                        Climate Data, by region
+bomsoi                  Southern Oscillation Index Data
+bomsoi2001              Southern Oscillation Index Data
+bostonc                 Boston Housing Data - Corrected
+bounce                  Separate plotting positions for labels, to
+                        avoid overlap
+capstring               Converts initial character of a string to upper
+                        case
+carprice                US Car Price Data
+cerealsugar             Percentage of Sugar in Breakfast Cereal
+cfseal                  Cape Fur Seal Data
+cities                  Populations of Major Canadian Cities (1992-96)
+codling                 Dose-mortality data, for fumigation of codling
+                        moth with methyl bromide
+compareTreecalcs        Error rate comparisons for tree-based
+                        classification
+component.residual      Component + Residual Plot
+confusion               Given actual and predicted group assignments,
+                        give the confusion matrix
+cottonworkers           Occupation and wage profiles of British cotton
+                        workers
+cps1                    Labour Training Evaluation Data
+cps2                    Labour Training Evaluation Data
+cps3                    Labour Training Evaluation Data
+cricketer               Lifespans of UK 1st class cricketers born
+                        1840-1960
+cuckoohosts             Comparison of cuckoo eggs with host eggs
+cuckoos                 Cuckoo Eggs Data
+datafile                Write an ASCII data file to the working
+                        directory.
+dengue                  Dengue prevalence, by administrative region
+dewpoint                Dewpoint Data
+droughts                Periods Between Rain Events
+edcCO2                  EPICA Dome C Ice Core 800KYr Carbon Dioxide
+                        Data
+edcT                    EPICA Dome C Ice Core 800KYr Temperature
+                        Estimates
+elastic1                Elastic Band Data Replicated
+elastic2                Elastic Band Data Replicated Again
+elasticband             Elastic Band Data
+errorsINseveral         Simulation of classical errors in x model, with
+                        multiple explanatory variables.
+errorsINx               Simulate data for straight line regression,
+                        with "errors in x".
+excessRisk              Create and analyze multiway frequency or
+                        weighted frequency table
+fossilfuel              Fossil Fuel Data
+fossum                  Female Possum Measurements
+frogs                   Frogs Data
+frostedflakes           Frosted Flakes data
+fruitohms               Electrical Resistance of Kiwi Fruit
+gaba                    Effect of pentazocine on post-operative pain
+                        (average VAS scores)
+geophones               Seismic Timing Data
+greatLakes              Yearly averages of Great Lake heights: 1918 -
+                        2009
+grog                    Alcohol consumption in Australia and New
+                        Zealand
+hardcopy                Graphical Output for Hardcopy
+head.injury             Minor Head Injury (Simulated) Data
+headInjury              Minor Head Injury (Simulated) Data
+hills                   Scottish Hill Races Data
+hills2000               Scottish Hill Races Data - 2000
+hotspots                Hawaian island chain hotspot Potassium-Argon
+                        ages
+hotspots2006            Hawaian island chain hotspot Argon-Argon ages
+houseprices             Aranda House Prices
+humanpower1             Oxygen uptake versus mechanical power, for
+                        humans
+intersalt               Blood pressure versus Salt; inter-population
+                        data
+ironslag                Iron Content Measurements
+jobs                    Canadian Labour Force Summary Data (1995-96)
+kiwishade               Kiwi Shading Data
+leafshape               Full Leaf Shape Data Set
+leafshape17             Subset of Leaf Shape Data Set
+leaftemp                Leaf and Air Temperature Data
+leaftemp.all            Full Leaf and Air Temperature Data Set
+litters                 Mouse Litters
+lmdiags                 Return data required for diagnostic plots
+logisticsim             Simple Logistic Regression Data Simulator
+lung                    Cape Fur Seal Lung Measurements
+measles                 Deaths in London from measles
+medExpenses             Family Medical Expenses
+mifem                   Mortality Outcomes for Females Suffering
+                        Myocardial Infarction
+mignonette              Darwin's Wild Mignonette Data
+milk                    Milk Sweetness Study
+modelcars               Model Car Data
+monica                  WHO Monica Data
+moths                   Moths Data
+multilap                Data Filtering Function
+nassCDS                 Airbag and other influences on accident
+                        fatalities
+nasshead                Documentation of names of columns in
+                        nass9702cor
+nihills                 Record times for Northern Ireland mountain
+                        running events
+nsw74demo               Labour Training Evaluation Data
+nsw74psid1              Labour Training Evaluation Data
+nsw74psid3              Labour Training Evaluation Data
+nsw74psidA              A Subset of the nsw74psid1 Data Set
+nswdemo                 Labour Training Evaluation Data
+nswpsid1                Labour Training Evaluation Data
+obounce                 Bounce - obsolete
+oddbooks                Measurements on 12 books
+onesamp                 Paired Sample t-test
+onet.permutation        One Sample Permutation t-test
+onetPermutation         One Sample Permutation t-test
+oneway.plot             Display of One Way Analysis Results
+onewayPlot              Display of One Way Analysis Results
+orings                  Challenger O-rings Data
+overlap.density         Overlapping Density Plots - obsolete
+overlapDensity          Overlapping Density Plots
+ozone                   Ozone Data
+pair65                  Heated Elastic Bands
+panel.corr              Scatterplot Panel
+panelCorr               Scatterplot Panel
+panelplot               Panel Plot
+pause                   Pause before continuing execution
+plotSampDist            Plot(s) of simulated sampling distributions
+plotSimDiags            Return lattice graphics objects that show
+                        regression diagnostics for simulated data.
+plotSimDiags.lm         Diagnostic plots for simulated data
+poissonsim              Simple Poisson Regression Data Simulator
+possum                  Possum Measurements
+possumsites             Possum Sites
+powerplot               Plot of Power Functions
+poxetc                  Deaths from various causes, in London from 1629
+                        till 1881, with gaps
+press                   Predictive Error Sum of Squares
+primates                Primate Body and Brain Weights
+progression             Progression of Record times for track races,
+                        1912 - 2008
+psid1                   Labour Training Evaluation Data
+psid2                   Labour Training Evaluation Data
+psid3                   Labour Training Evaluation Data
+qreference              Normal QQ Reference Plot
+races2000               Scottish Hill Races Data - 2000
+rainforest              Rainforest Data
+rareplants              Rare and Endangered Plant Species
+rice                    Genetically Modified and Wild Type Rice Data
+rockArt                 Pacific Rock Art features
+roller                  Lawn Roller Data
+sampdist                Plot sampling distribution of mean or other
+                        sample statistic.
+science                 School Science Survey Data
+seedrates               Barley Seeding Rate Data
+show.colors             Show R's Colors
+simulateLinear          Simulation of Linear Models for ANOVA vs.
+                        Regression Comparison
+simulateSampDist        Simulated sampling distribution of mean or
+                        other statistic
+socsupport              Social Support Data
+softbacks               Measurements on a Selection of Paperback Books
+sorption                sorption data set
+spam7                   Spam E-mail Data
+stVincent               Averages by block of yields for the St. Vincent
+                        Corn data
+sugar                   Sugar Data
+tinting                 Car Window Tinting Experiment Data
+toycars                 Toy Cars Data
+two65                   Unpaired Heated Elastic Bands
+twot.permutation        Two Sample Permutation Test - Obsolete
+twotPermutation         Two Sample Permutation Test
+vif                     Variance Inflation Factors
+vince111b               Averages by block of corn yields, for treatment
+                        111 only
+vlt                     Video Lottery Terminal Data
+wages1833               Wages of Lancashire Cotton Factory Workers in
+                        1833
+whoops                  Deaths from whooping cough, in London
+worldRecords            Record times for track and road races, at
+                        August 9th 2006
+zzDAAGxdb               List, each of whose elements hold rows of a
+                        file, in character format
