@@ -37,7 +37,6 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.preferences.RPreferenceProvider;
@@ -219,8 +218,10 @@ public class RLocalR2TableNodeModel extends RAbstractLocalNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        String exp = RDialogPanel.getExpressionFrom(settings);
-        RConsoleModel.testExpressions(exp.split("\n"));
+        final String exp = RDialogPanel.getExpressionFrom(settings);
+        if (exp == null || exp.trim().isEmpty()) {
+            throw new InvalidSettingsException("Configure node and enter a non-empty R script.");
+        }
     }
 
 }

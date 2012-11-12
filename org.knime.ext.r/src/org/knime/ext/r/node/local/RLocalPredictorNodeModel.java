@@ -104,7 +104,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(READ_DATA_CMD_PREFIX);
             completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
             completeCmd.append(READ_DATA_CMD_SUFFIX);
-            completeCmd.append("RDATA<-R;\n");
+            completeCmd.append("RDATA<-R\n");
 
             // load model
             File fileR = ((RPortObject)inData[0]).getFile();
@@ -113,7 +113,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
 
             // predict data
-            completeCmd.append("RMODEL<-R;\n");
+            completeCmd.append("RMODEL<-R\n");
             completeCmd.append(FlowVariableResolver.parse(m_rCommand.trim(), this));
             completeCmd.append("\n");
 

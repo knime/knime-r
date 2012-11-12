@@ -97,7 +97,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
             StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(SET_WORKINGDIR_CMD);
 
-            // data in-port is optiona
+            // data in-port is optional
             if (inData[0] != null) {
                 // preprocess data in in DataTable.
                 PortObject[] inDataTables = preprocessDataTable(inData, exec);
@@ -114,9 +114,9 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
 
             File fileR = File.createTempFile("~knime", ".R", new File(KNIMEConstants.getKNIMETempDir()));
             fileR.deleteOnExit();
-            completeCmd.append(WRITE_MODEL_CMD_PREFIX);
+            completeCmd.append("save(list = ls(all=TRUE), file=\"");
             completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(WRITE_MODEL_CMD_SUFFIX);
+            completeCmd.append("\")\n");
 
             // write R command
             String rCmd = FlowVariableResolver.parse(completeCmd.toString(), this);

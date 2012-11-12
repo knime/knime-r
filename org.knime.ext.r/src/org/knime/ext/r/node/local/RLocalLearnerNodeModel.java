@@ -39,7 +39,6 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.knime.ext.r.node.RConsoleModel;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
@@ -101,8 +100,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(SET_WORKINGDIR_CMD);
             completeCmd.append(READ_DATA_CMD_PREFIX);
-            completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\',
-                    '/'));
+            completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
             completeCmd.append(READ_DATA_CMD_SUFFIX);
 
             completeCmd.append(m_rCommand.trim());
@@ -110,9 +108,9 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
 
             File fileR = File.createTempFile("~knime", ".R", new File(KNIMEConstants.getKNIMETempDir()));
             fileR.deleteOnExit();
-            completeCmd.append(WRITE_MODEL_CMD_PREFIX);
+            completeCmd.append("save(list = ls(all=TRUE), file=\"");
             completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(WRITE_MODEL_CMD_SUFFIX);
+            completeCmd.append("\")\n");
 
             // write R command
             String rCmd = FlowVariableResolver.parse(
@@ -230,8 +228,10 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        String exp = RDialogPanel.getExpressionFrom(settings);
-        RConsoleModel.testExpressions(exp.split("\n"));
+        final String exp = RDialogPanel.getExpressionFrom(settings);
+        if (exp == null || exp.trim().isEmpty()) {
+            throw new InvalidSettingsException("Configure node and enter a non-empty R script.");
+        }
     }
 
 }
