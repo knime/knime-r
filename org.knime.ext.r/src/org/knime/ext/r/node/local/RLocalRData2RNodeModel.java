@@ -88,7 +88,6 @@ public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
     protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
 
         // tmp files
-        File tempOutData = null;
         File inDataCsvFile = null;
         File rCommandFile = null;
         File rOutFile = null;
@@ -98,6 +97,12 @@ public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
          // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(SET_WORKINGDIR_CMD);
+
+            // load model
+            File fileR = ((RPortObject)inData[0]).getFile();
+            completeCmd.append(LOAD_MODEL_CMD_PREFIX);
+            completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
+            completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
 
             // data in-port is optional
             if (inData[1] != null) {
@@ -110,25 +115,11 @@ public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
                 completeCmd.append(READ_DATA_CMD_PREFIX);
                 completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
                 completeCmd.append(READ_DATA_CMD_SUFFIX);
-                completeCmd.append("RDATA<-R\n");
             }
 
-            // load model
-            File fileR = ((RPortObject)inData[0]).getFile();
-            completeCmd.append(LOAD_MODEL_CMD_PREFIX);
-            completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
-
             // result R port
-            completeCmd.append("RMODEL<-R\n");
             completeCmd.append(FlowVariableResolver.parse(m_rCommand.trim(), this));
             completeCmd.append("\n");
-
-            // write R to csv
-            tempOutData = File.createTempFile("R-outDataTempFile-", ".csv", new File(TEMP_PATH));
-            completeCmd.append(WRITE_DATA_CMD_PREFIX);
-            completeCmd.append(tempOutData.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(WRITE_DATA_CMD_SUFFIX);
 
             File outR = File.createTempFile("~knime", ".R", new File(KNIMEConstants.getKNIMETempDir()));
             outR.deleteOnExit();
@@ -209,7 +200,6 @@ public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
         } finally {
             // delete all temp files
             deleteFile(inDataCsvFile);
-            deleteFile(tempOutData);
             deleteFile(rCommandFile);
             deleteFile(rOutFile);
         }

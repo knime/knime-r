@@ -228,8 +228,10 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.validateSettings(settings);
-        String exp = RDialogPanel.getExpressionFrom(settings);
-        RConsoleModel.testExpressions(exp.split("\n"));
+        final String exp = RDialogPanel.getExpressionFrom(settings);
+        if (exp == null || exp.trim().isEmpty()) {
+            throw new InvalidSettingsException("Configure node and enter a non-empty R script.");
+        }
     }
 
 }
