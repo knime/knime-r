@@ -49,13 +49,9 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
  */
 public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
 
-    private static final NodeLogger LOGGER =
-        NodeLogger.getLogger(RLocalRData2RNodeModel.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RLocalRData2RNodeModel.class);
 
-    /** The default R command. */
-    static final String DEFAULT_R_CMD = "R<-cbind(RMODEL, RDATA)";
-
-    private String m_rCommand = DEFAULT_R_CMD;
+    private String m_rCommand = "";
 
     /**
      * Creates a new instance of <code>RLocalRData2RNodeModel</code> with given in- and out-port specification.
@@ -72,10 +68,8 @@ public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-        if (inSpecs[1] == null) {
-            if (DEFAULT_R_CMD.equals(m_rCommand)) {
-                throw new InvalidSettingsException("Configure node or connect data input.");
-            }
+        if ("".equals(m_rCommand)) {
+            setWarningMessage("R script is missing; configure node.");
         }
         checkRExecutable();
         return new DataTableSpec[]{null};
@@ -215,7 +209,7 @@ public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
-        m_rCommand = RDialogPanel.getExpressionFrom(settings, DEFAULT_R_CMD);
+        m_rCommand = RDialogPanel.getExpressionFrom(settings, "");
         try {
             m_argumentsR.loadSettingsFrom(settings);
         } catch (InvalidSettingsException ise) {
@@ -240,10 +234,6 @@ public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         super.validateSettings(settings);
-        final String exp = RDialogPanel.getExpressionFrom(settings);
-        if (exp == null || exp.trim().isEmpty()) {
-            throw new InvalidSettingsException("Configure node and enter a non-empty R script.");
-        }
     }
 
 }

@@ -3,15 +3,13 @@
 <knimeNode type="Manipulator" icon="../r.png">
 	<name>R+Table to R</name>
 	<shortDescription>
-	    Merges an optional data branch onto an R workspace.Converts an R object from an R workspace into a KNIME data table. 
-        The result data is returned at the data out-port.
-        The R-object is imported into R workspace as variable named R which can be manipulated as needed.
+	    Merges an optional data branch into an R workspace.
 	</shortDescription>
 	<fullDescription>
 		<intro>
-		Merges an optional data branch onto an R workspace which can be manipulated at the same time. 
-		The input data is written to a CSV file and imported into R as variable named RDATA. 
-		The model is imported into R saved as a variable named RMODEL.
+        Merges an optional data branch into an R workspace. 
+        The data table from the optional in-port is imported into the R workspace as variable R; 
+        existing R variables are overwritten.
 		<br /><br />
 		More details about R:<br />
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
@@ -19,8 +17,7 @@
 		</intro>
 		<tab name="R Command">
 		  <option name ="R Snippet">
-            The R commands to run, default: <br/>
-            <pre>R&lt;-cbind(RMODEL, RDATA)</pre>
+            The R commands being executed in R.
           </option>
           <option name="Column List">
             The list contains the column that are available in the input table.
