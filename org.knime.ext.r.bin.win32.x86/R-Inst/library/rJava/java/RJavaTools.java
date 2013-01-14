@@ -1,6 +1,6 @@
 // RJavaTools.java: rJava - low level R to java interface
 //
-// Copyright (C) 2009 - 2010	Simon Urbanek and Romain Francois
+// Copyright (C) 2009 - 2013	Simon Urbanek and Romain Francois
 //
 // This file is part of rJava.
 //

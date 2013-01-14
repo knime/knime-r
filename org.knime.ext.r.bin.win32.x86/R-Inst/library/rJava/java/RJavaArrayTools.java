@@ -2,7 +2,7 @@
 //
 // :tabSize=2:indentSize=2:noTabs=false:folding=explicit:collapseFolds=1:
 //
-// Copyright (C) 2009 - 2010	Simon Urbanek and Romain Francois
+// Copyright (C) 2009 - 2013	Simon Urbanek and Romain Francois
 //
 // This file is part of rJava.
 //
