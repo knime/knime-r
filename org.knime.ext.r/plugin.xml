@@ -114,7 +114,8 @@
    <extension
          point="org.knime.product.splashExtension">
       <splashExtension
-            icon="icons/R_splash.png"
+            icon="icons/R_splash_48.png"
+            icon32="icons/R_splash_32.png"
             id="R"
             tooltip="R Project">
       </splashExtension>
