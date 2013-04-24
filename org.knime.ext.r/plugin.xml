@@ -67,6 +67,11 @@
             factory-class="org.knime.ext.r.node.io.RPortObjectWriterNodeFactory"
             id="org.knime.ext.r.node.io.RPortObjectWriterNodeFactory">
       </node>
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.ext.r.node.local.RLocalSourceNodeFactory"
+            id="org.knime.ext.r.node.local.RLocalSourceNodeFactory">
+      </node>
    </extension>
    <extension
          point="org.knime.workbench.repository.categories">
