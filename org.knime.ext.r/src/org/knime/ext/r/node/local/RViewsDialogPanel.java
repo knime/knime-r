@@ -54,6 +54,7 @@ import org.knime.ext.r.node.RDialogPanel;
  *
  * @author Kilian Thiel, University of Konstanz
  */
+@SuppressWarnings("serial")
 public class RViewsDialogPanel extends JPanel {
 
     /**

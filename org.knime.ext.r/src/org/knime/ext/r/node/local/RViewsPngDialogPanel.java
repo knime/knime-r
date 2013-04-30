@@ -47,6 +47,7 @@ import org.knime.core.node.port.PortObjectSpec;
  *
  * @author Kilian Thiel, University of Konstanz
  */
+@SuppressWarnings("serial")
 public class RViewsPngDialogPanel extends JLabel {
 
     /** Default tab title for this panel. */

@@ -41,6 +41,7 @@ import org.knime.core.node.defaultnodesettings.DialogComponentString;
  *
  * @author Thomas Gabriel, University of Konstanz
  */
+@SuppressWarnings("serial")
 final class RLoginDialogPanel extends JPanel {
 
     private final DialogComponentString m_host =

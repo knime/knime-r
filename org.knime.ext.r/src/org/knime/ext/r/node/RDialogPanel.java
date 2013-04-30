@@ -60,6 +60,7 @@ import org.knime.core.node.workflow.FlowVariable;
  *
  * @author Thomas Gabriel, University of Konstanz
  */
+@SuppressWarnings("serial")
 public class RDialogPanel extends JPanel {
 
     /** Key for the R expression command. */
@@ -79,10 +80,18 @@ public class RDialogPanel extends JPanel {
     private String m_defaultCommand = DEFAULT_R_COMMAND;
 
     /**
-     * Creates a new dialog to enter R expressions with a default
-     * mouse listener.
+     * Creates a new dialog to enter R expressions with a default mouse listener.
      */
     public RDialogPanel() {
+        this("R");
+    }
+
+    /**
+     * Creates a new dialog to enter R expressions with a default mouse listener.
+     * @param varName variable prefix holding the input data, default is <code>R</code>.
+     * @since 2.8
+     */
+    public RDialogPanel(final String varName) {
         super(new BorderLayout());
 
         // init editor pane
@@ -116,8 +125,7 @@ public class RDialogPanel extends JPanel {
                     Object o = m_list.getSelectedValue();
                     if (o != null) {
                         DataColumnSpec cspec = (DataColumnSpec) o;
-                        m_textExpression.replaceSelection(
-                                formatColumnName(cspec.getName()));
+                        m_textExpression.replaceSelection(formatColumnName(varName, cspec.getName()));
                         m_list.clearSelection();
                         m_textExpression.requestFocus();
                     }
@@ -321,8 +329,8 @@ public class RDialogPanel extends JPanel {
      * @param name The name of the column to format.
      * @return The formatted column name.
      */
-    private static String formatColumnName(final String name) {
-        return "R$\"" + name + "\"";
+    private static String formatColumnName(final String varName, final String name) {
+        return varName + "$\"" + name + "\"";
     }
 
     /**

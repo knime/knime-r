@@ -47,7 +47,7 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
      * <code>RLocalPredictorNodeDialogPane</code>.
      */
     public RLocalPredictorNodeDialogPane() {
-        m_dialogPanel = new RDialogPanel();
+        m_dialogPanel = new RDialogPanel("RDATA");
         m_dialogPanel.setText(RLocalPredictorNodeModel.PREDICTION_CMD);
         addTabAt(0, "R Command", m_dialogPanel);
         setSelected("R Command");

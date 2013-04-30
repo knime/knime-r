@@ -1,4 +1,4 @@
-/* 
+/*
  * ------------------------------------------------------------------------
  *
  *  Copyright (C) 2003 - 2013
@@ -7,7 +7,7 @@
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License, version 2, as 
+ *  it under the terms of the GNU General Public License, version 2, as
  *  published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -19,7 +19,7 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ------------------------------------------------------------------------
- * 
+ *
  */
 package org.knime.ext.r.node;
 
@@ -32,13 +32,14 @@ import javax.swing.JPanel;
 
 /**
  * Displays the R result image.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
+@SuppressWarnings("serial")
 public final class RPlotterViewPanel extends JPanel {
 
     private final JLabel m_label;
-    
+
     /**
      * Creates a new panel with an empty label.
      * @param image The content to show.
