@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="templaterepository" name="RSnippet Template Repository" schema="schema/templaterepository.exsd"/>
+
+   <extension
+         point="org.knime.workbench.repository.nodes">
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.r.RSnippetNodeFactory"
+            id="org.knime.r.RSnippetNodeFactory">
+      </node>
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.r.RSourceNodeFactory"
+            id="org.knime.r.RSourceNodeFactory">
+      </node>      
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.knime.workbench.ui.preferences"
+            class="org.knime.r.preferences.RPreferencePage"
+            id="org.knime.r.preferences.RPreferencePage"
+            name="R (new)">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.knime.r.preferences.RPreferenceInitializer">
+      </initializer>
+   </extension>   
+   
+   <extension
+         point="org.knime.r.templaterepository">
+         <template-repository
+               provider-class="org.knime.r.template.DefaultFileTemplateRepositoryProvider"
+               id="org.knime.r.template.DefaultFileTemplateRepositoryProvider">
+         </template-repository>
+         <template-repository
+               provider-class="org.knime.r.template.PluginFileTemplateRepositoryProvider"
+               id="org.knime.r.template.PluginFileTemplateRepositoryProvider">
+         </template-repository>                  
+   </extension>   
+</plugin>

@@ -1,0 +1,353 @@
+/*
+ * ------------------------------------------------------------------------
+ *
+ *  Copyright (C) 2003 - 2013
+ *  University of Konstanz, Germany and
+ *  KNIME GmbH, Konstanz, Germany
+ *  Website: http://www.knime.org; Email: contact@knime.org
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License, Version 3, as
+ *  published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, see <http://www.gnu.org/licenses>.
+ *
+ *  Additional permission under GNU GPL version 3 section 7:
+ *
+ *  KNIME interoperates with ECLIPSE solely via ECLIPSE's plug-in APIs.
+ *  Hence, KNIME and ECLIPSE are both independent programs and are not
+ *  derived from each other. Should, however, the interpretation of the
+ *  GNU GPL Version 3 ("License") under any applicable laws result in
+ *  KNIME and ECLIPSE being a combined program, KNIME GMBH herewith grants
+ *  you the additional permission to use and propagate KNIME together with
+ *  ECLIPSE with only the license terms in place for ECLIPSE applying to
+ *  ECLIPSE and the GNU GPL Version 3 applying for KNIME, provided the
+ *  license terms of ECLIPSE themselves allow for the respective use and
+ *  propagation of ECLIPSE together with KNIME.
+ *
+ *  Additional permission relating to nodes for KNIME that extend the Node
+ *  Extension (and in particular that are based on subclasses of NodeModel,
+ *  NodeDialog, and NodeView) and that only interoperate with KNIME through
+ *  standard APIs ("Nodes"):
+ *  Nodes are deemed to be separate and independent programs and to not be
+ *  covered works.  Notwithstanding anything to the contrary in the
+ *  License, the License does not apply to Nodes, you are not required to
+ *  license Nodes under the License, and you are granted a license to
+ *  prepare and propagate Nodes, in each case even if such Nodes are
+ *  propagated with or for interoperation with KNIME. The owner of a Node
+ *  may freely choose the license terms applicable to such Node, including
+ *  when such Node is propagated with or for interoperation with KNIME.
+ * ------------------------------------------------------------------------
+ *
+ * History
+ *   01.12.2011 (hofer): created
+ */
+package org.knime.r;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
+import org.rosuda.REngine.REXPMismatchException;
+import org.rosuda.REngine.REngineException;
+
+/**
+ * The R snippet which can be controlled by changing the settings
+ * or by changing the contents of the snippets document.
+ *
+ * @author Heiko Hofer
+ */
+@SuppressWarnings("restriction")
+public final class RSnippet {
+    /** Identifier for row index (starting with 0). */
+    public static final String ROWINDEX = "ROWINDEX";
+    /** Identifier for row ID. */
+    public static final String ROWID = "ROWID";
+    /** Identifier for row count. */
+    public static final String ROWCOUNT = "ROWCOUNT";
+
+    /** The version 1.x of the java snippet. */
+    public static final String VERSION_1_X = "version 1.x";
+
+    private RSyntaxDocument m_document;
+    // true when the document has changed and the m_snippet is not up to date.
+    private boolean m_dirty;
+
+    private RSnippetSettings m_settings;
+
+    private NodeLogger m_logger;
+    
+    public RSnippet() {
+		m_settings = new RSnippetSettings();
+		
+	}
+
+    /**
+     * Create a new snippet with the given settings.
+     * @param settings the settings
+     */
+    public void setSettings(final RSnippetSettings settings) {
+        m_settings = settings;
+        init();
+    }
+
+    private void init() {
+        if (null != m_document) {
+            initDocument(m_document);
+        }
+    }
+
+
+    /**
+     * Get the updated settings java snippet.
+     * @return the settings
+     */
+    public RSnippetSettings getSettings() {
+        updateSettings();
+        return m_settings;
+    }
+
+    private void updateSettings() {
+        try {
+			m_settings.setScript(m_document.getText(0, m_document.getLength()));
+		} catch (BadLocationException e) {
+			// never happens
+			throw new RuntimeException(e);
+		}
+    }
+
+
+    
+    /**
+     * Get the document with the code of the snippet.
+     * @return the document
+     */
+    public RSyntaxDocument getDocument() {
+        // Lazy initialization of the document
+        if (m_document == null) {
+            m_document = createDocument();
+            m_document.addDocumentListener(new DocumentListener() {
+
+                @Override
+                public void removeUpdate(final DocumentEvent e) {
+                    m_dirty = true;
+                }
+
+                @Override
+                public void insertUpdate(final DocumentEvent e) {
+                    m_dirty = true;
+                }
+
+                @Override
+                public void changedUpdate(final DocumentEvent e) {
+                    m_dirty = true;
+                }
+            });
+            initDocument(m_document);
+        }
+        return m_document;
+    }
+
+
+    /** Create the document with the default skeleton. */
+    private RSyntaxDocument createDocument() {
+    	RSyntaxDocument doc = new RSnippetDocument();
+        return doc;
+    }
+
+    /** Initialize document with information from the settings. */
+    private void initDocument(final RSyntaxDocument doc) {
+        try {
+            doc.replace(0, doc.getLength(), m_settings.getScript(), null);
+        } catch (BadLocationException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+        
+    }
+
+    /**
+     * Create the outspec of the java snippet node. This method is typically
+     * used in the configure of a node.
+     * @param spec the spec of the data table at the inport
+     * @param flowVariableRepository the flow variables at the inport
+     * @return the spec at the output
+     * @throws InvalidSettingsException when settings are inconsistent with
+     *  the spec or the flow variables at the inport
+     */
+    public ValueReport<DataTableSpec> configure(final DataTableSpec spec,
+            final FlowVariableRepository flowVariableRepository)
+            throws InvalidSettingsException {
+        List<String> errors = new ArrayList<String>();
+        List<String> warnings = new ArrayList<String>();
+        DataTableSpec outSpec = spec;
+        
+//            createRearranger(spec, flowVariableRepository, -1).createSpec();
+//        // populate flowVariableRepository with new flow variables having
+//        // default values
+//        for (OutVar outVar : m_fields.getOutVarFields()) {
+//            FlowVariable flowVar = null;
+//            if (outVar.getKnimeType().equals(
+//                    org.knime.core.node.workflow.FlowVariable.Type.INTEGER)) {
+//                flowVar = new FlowVariable(outVar.getKnimeName(), -1);
+//            } else if (outVar.getKnimeType().equals(
+//                    org.knime.core.node.workflow.FlowVariable.Type.DOUBLE)) {
+//                flowVar = new FlowVariable(outVar.getKnimeName(), -1.0);
+//            } else {
+//                flowVar = new FlowVariable(outVar.getKnimeName(), "");
+//            }
+//            flowVariableRepository.put(flowVar);
+//        }
+        return new ValueReport<DataTableSpec>(outSpec, errors, warnings);
+    }
+
+
+    /**
+     * Execute the snippet.
+     * @param table the data table at the inport
+     * @param flowVariableRepository the flow variables at the inport
+     * @param exec the execution context to report progress
+     * @return the table for the output
+     * @throws InvalidSettingsException when settings are inconsistent with
+     * the table or the flow variables at the input
+     * @throws CanceledExecutionException when execution is canceled by the user
+     */
+    public ValueReport<BufferedDataTable> execute(
+            final BufferedDataTable table,
+            final FlowVariableRepository flowVariableRepository,
+            final ExecutionContext exec) throws CanceledExecutionException,
+            InvalidSettingsException  {
+    	List<String> errors = new ArrayList<String>();
+        List<String> warnings = new ArrayList<String>();
+        
+    	try {
+	    	RController r = RController.getDefault();
+	    	// TODO: lock controller
+			r.clearWorkspace();
+			if (table != null) {
+				r.exportDataTable(table, "R", exec);
+			}
+			
+			r.timedEval(getDocument().getText(0, getDocument().getLength()));
+			
+			BufferedDataTable out = r.importBufferedDataTable("R_out", exec);
+			// TODO: unlock controller
+			return new ValueReport<BufferedDataTable>(out, errors, warnings);
+			
+		} catch (REngineException | REXPMismatchException | BadLocationException e) {
+			errors.add(e.getMessage());
+			// TODO: Remove later
+			e.printStackTrace();
+			m_logger.error(e);
+			return new ValueReport<BufferedDataTable>(null, errors, warnings);
+		}
+    	
+    	
+    	
+    	
+//        OutColList outFields = m_fields.getOutColFields();
+//        if (outFields.size() > 0) {
+//            ColumnRearranger rearranger = createRearranger(
+//                    table.getDataTableSpec(),
+//                    flowVariableRepository, table.getRowCount());
+//
+//            return exec.createColumnRearrangeTable(table,
+//                    rearranger, exec);
+//        } else {
+//            CellFactory factory = new JavaSnippetCellFactory(this,
+//                    table.getDataTableSpec(),
+//                    flowVariableRepository, table.getRowCount());
+//            for (DataRow row : table) {
+//                factory.getCells(row);
+//            }
+//            return table;
+//        }
+    }
+
+//    /**
+//     * The execution method when no input table is present. I.e. used by
+//     * the java edit variable node.
+//     * @param flowVariableRepository flow variables at the input
+//     * @param exec the execution context to report progress, may be null when
+//     * this method is called from configure
+//     */
+//    public void execute(final FlowVariableRepository flowVariableRepository,
+//            final ExecutionContext exec) {
+//        DataTableSpec spec = new DataTableSpec();
+//        CellFactory factory = new JavaSnippetCellFactory(this, spec,
+//                flowVariableRepository, 1);
+//        factory.getCells(new DefaultRow(RowKey.createRowKey(0),
+//                new DataCell[0]));
+//    }
+
+//    /** The rearranger is the working horse for creating the ouput table. */
+//    private ColumnRearranger createRearranger(final DataTableSpec spec,
+//            final FlowVariableRepository flowVariableRepository,
+//            final int rowCount)
+//        throws InvalidSettingsException {
+//        int offset = spec.getNumColumns();
+//        CellFactory factory = new JavaSnippetCellFactory(this, spec,
+//                flowVariableRepository, rowCount);
+//        ColumnRearranger c = new ColumnRearranger(spec);
+//        // add factory to the column rearranger
+//        c.append(factory);
+//
+//        // define which new columns do replace others
+//        OutColList outFields = m_fields.getOutColFields();
+//        for (int i = outFields.size() - 1; i >= 0; i--) {
+//            OutCol field = outFields.get(i);
+//            int index = spec.findColumnIndex(field.getKnimeName());
+//            if (index >= 0) {
+//                if (field.getReplaceExisting()) {
+//                    c.remove(index);
+//                    c.move(offset + i - 1, index);
+//                } else {
+//                    throw new InvalidSettingsException("Field \""
+//                            + field.getJavaName() + "\" is configured to "
+//                            + "replace no existing columns.");
+//                }
+//            }
+//        }
+//
+//        return c;
+//    }
+
+
+    /**
+     * Create a template for this snippet.
+     * @param metaCategory the meta category of the template
+     * @return the template with a new uuid.
+     */
+    @SuppressWarnings("rawtypes")
+    public RSnippetTemplate createTemplate(final Class metaCategory) {
+        RSnippetTemplate template = new RSnippetTemplate(metaCategory,
+                getSettings());
+        return template;
+    }
+    
+    /**
+     * Attach logger to be used by this java snippet instance.
+     * @param logger the node logger
+     */
+    public void attachLogger(final NodeLogger logger) {
+        m_logger = logger;
+    }
+
+}
+
+
