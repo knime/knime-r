@@ -31,8 +31,13 @@ package org.knime.r.preferences;
 public interface RPreferenceProvider {
 
     /**
-     * @return path to an R executable
+     * @return path to RHome
      */
     public String getRHome();
+    
+    /**
+     * @return path to an R executable
+     */
+    public String getRBinPath();
     
 }

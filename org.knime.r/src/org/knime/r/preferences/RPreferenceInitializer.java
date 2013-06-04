@@ -23,6 +23,8 @@
  */
 package org.knime.r.preferences;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.knime.core.node.NodeLogger;
@@ -68,6 +70,12 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
                 final IPreferenceStore pStore =
                     Activator.getDefault().getPreferenceStore();
                 return pStore.getString(PREF_R_HOME);
+            }
+            
+            /** {@inheritDoc} */
+            @Override
+            public String getRBinPath() {
+            	return getRHome() + File.separator + "bin" + File.separator + "R";
             }
         };
     }

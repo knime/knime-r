@@ -1,5 +1,6 @@
 package org.knime.r;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -626,6 +627,16 @@ public class RController {
 		REXP rexp = eval("sapply(" + name + ",function(a)class(get(a,envir=globalenv()))[1])");
 		return rexp != null && !rexp.isNull() ? rexp.asStrings() : null;				
      }
+
+	public void saveWorkspace(final File tempWorkspaceFile) {
+		// save workspace to file
+		timedEval("save.image(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");");
+	}
+
+	public void loadWorkspace(final File tempWorkspaceFile) {
+		// load workspace form file
+		timedEval("load(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");");
+	}
 }
 
 final class MonitoredEval {

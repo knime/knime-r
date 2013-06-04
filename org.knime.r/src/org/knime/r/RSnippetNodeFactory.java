@@ -26,6 +26,8 @@
  */
 package org.knime.r;
 
+import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
+import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
@@ -38,16 +40,19 @@ import org.knime.core.node.interactive.InteractiveNodeFactoryExtension;
  */
 public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel> 
 		implements InteractiveNodeFactoryExtension<RSnippetNodeModel, RSnippetViewContent> {
-//	private final RPreferenceProvider m_pref; 
+	private RSnippetNodeConfig m_config = new RSnippetNodeConfig();
 	
     /**
      * Empty default constructor.
      */
     public RSnippetNodeFactory() {
-//        m_pref = RPreferenceInitializer.getRProvider();
     }
     
-    /**
+    public RSnippetNodeFactory(final RSnippetNodeConfig rSnippetModelConfig) {
+    	m_config = rSnippetModelConfig;
+	}
+
+	/**
      * {@inheritDoc}
      */
     @Override
@@ -60,8 +65,7 @@ public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel>
      */
     @Override
     public RSnippetNodeModel createNodeModel() {
-//        return new RSnippetNodeModel(m_pref);
-    	return new RSnippetNodeModel();
+    	return new RSnippetNodeModel(m_config);
     }
     
     /**
@@ -69,7 +73,7 @@ public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel>
      */
     @Override
     public int getNrNodeViews() {
-        return 0;
+        return 2;
     }
 
     /**
@@ -78,7 +82,14 @@ public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel>
     @Override
     public NodeView<RSnippetNodeModel> createNodeView(final int viewIndex,
             final RSnippetNodeModel nodeModel) {
-        throw new IndexOutOfBoundsException();
+        if (viewIndex == 0) {
+            return
+                new ExtToolStdoutNodeView<RSnippetNodeModel>(nodeModel);
+        } else if (viewIndex == 1) {
+            return
+                new ExtToolStderrNodeView<RSnippetNodeModel>(nodeModel);
+        }
+        return null;
     }
 
     /**

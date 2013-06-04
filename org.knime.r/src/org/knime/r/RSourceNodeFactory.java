@@ -26,64 +26,40 @@
  */
 package org.knime.r;
 
-import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeView;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.port.PortType;
+import org.knime.ext.r.node.local.port.RPortObject;
 
 /**
- * Factory for the <code>RSourceNodeFactory</code> node.
+ * Factory for the <code>RSource</code> node.
  *
  * @author Heiko Hofer
  */
-public class RSourceNodeFactory extends NodeFactory<RSourceNodeModel> {
-//	private final RPreferenceProvider m_pref; 
-	
+public class RSourceNodeFactory extends RSnippetNodeFactory {
+
     /**
      * Empty default constructor.
      */
     public RSourceNodeFactory() {
-//        m_pref = RPreferenceInitializer.getRProvider();
+    	super(new RSnippetNodeConfig() {
+    		@Override
+    		protected Collection<PortType> getInPortTypes() {
+    			Collection<PortType> portTypes = new ArrayList<PortType>(4);
+    			return portTypes;
+    		}
+    		
+    		@Override
+    		protected Collection<PortType> getOutPortTypes() {
+    			Collection<PortType> portTypes = new ArrayList<PortType>(4);
+    			portTypes.add(BufferedDataTable.TYPE);
+    			portTypes.add(RPortObject.TYPE);
+    			return portTypes;
+    		}
+    		
+    	});
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected NodeDialogPane createNodeDialogPane() {
-        return new RSourceNodeDialog();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public RSourceNodeModel createNodeModel() {
-//        return new RSourceNodeModel(m_pref);
-    	return new RSourceNodeModel();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getNrNodeViews() {
-        return 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public NodeView<RSourceNodeModel> createNodeView(final int viewIndex,
-            final RSourceNodeModel nodeModel) {
-        throw new IndexOutOfBoundsException();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean hasDialog() {
-        return true;
-    }
+  
 }
