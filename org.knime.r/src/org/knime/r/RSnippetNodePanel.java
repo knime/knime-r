@@ -71,8 +71,6 @@ import org.knime.r.ui.RFlowVariableList;
 import org.knime.r.ui.RObjectBrowser;
 import org.knime.r.ui.RSnippetTextArea;
 import org.rosuda.REngine.REXP;
-import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.REngineException;
 
 /**
  * The dialog component for RSnippet-Nodes.
@@ -360,7 +358,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		REXP rexp;
 		try {
 			rexp = RController.getDefault().idleEval("print(" + name + ")");
-		} catch (REngineException | REXPMismatchException e) {
+		} catch (Exception e) {
 			// TODO: Add log entry
 		}
 	}
@@ -370,7 +368,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		try {
 			rexp = RController.getDefault().idleEval("ls()");
 			return rexp != null ? rexp.asStrings() : null;
-		} catch (REngineException | REXPMismatchException e) {
+		} catch (Exception e) {
 			// TODO: Add log entry
 			return null;
 		}
@@ -384,7 +382,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 					.idleEval(
 							"sapply(ls(),function(a)class(get(a,envir=globalenv()))[1])");
 			return rexp != null ? rexp.asStrings() : null;
-		} catch (REngineException | REXPMismatchException e) {
+		} catch (Exception e) {
 			// TODO: Add log entry
 			return null;
 		}

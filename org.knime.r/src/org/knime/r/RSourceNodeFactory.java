@@ -28,6 +28,7 @@ package org.knime.r;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.port.PortType;
@@ -47,8 +48,7 @@ public class RSourceNodeFactory extends RSnippetNodeFactory {
     	super(new RSnippetNodeConfig() {
     		@Override
     		protected Collection<PortType> getInPortTypes() {
-    			Collection<PortType> portTypes = new ArrayList<PortType>(4);
-    			return portTypes;
+    			return Collections.EMPTY_LIST;
     		}
     		
     		@Override
@@ -58,7 +58,6 @@ public class RSourceNodeFactory extends RSnippetNodeFactory {
     			portTypes.add(RPortObject.TYPE);
     			return portTypes;
     		}
-    		
     	});
     }
   

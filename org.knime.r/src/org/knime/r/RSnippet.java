@@ -64,8 +64,6 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
-import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.REngineException;
 
 /**
  * The R snippet which can be controlled by changing the settings
@@ -249,34 +247,11 @@ public final class RSnippet {
 			// TODO: unlock controller
 			return new ValueReport<BufferedDataTable>(out, errors, warnings);
 			
-		} catch (REngineException | REXPMismatchException | BadLocationException e) {
+		} catch (Exception e) {
 			errors.add(e.getMessage());
-			// TODO: Remove later
-			e.printStackTrace();
 			m_logger.error(e);
 			return new ValueReport<BufferedDataTable>(null, errors, warnings);
 		}
-    	
-    	
-    	
-    	
-//        OutColList outFields = m_fields.getOutColFields();
-//        if (outFields.size() > 0) {
-//            ColumnRearranger rearranger = createRearranger(
-//                    table.getDataTableSpec(),
-//                    flowVariableRepository, table.getRowCount());
-//
-//            return exec.createColumnRearrangeTable(table,
-//                    rearranger, exec);
-//        } else {
-//            CellFactory factory = new JavaSnippetCellFactory(this,
-//                    table.getDataTableSpec(),
-//                    flowVariableRepository, table.getRowCount());
-//            for (DataRow row : table) {
-//                factory.getCells(row);
-//            }
-//            return table;
-//        }
     }
 
 //    /**
