@@ -384,6 +384,8 @@ Public License instead of this License.
 
    <plugin
          id="org.rosuda.rengine.bin.linux.x86"
+         os="linux"
+         arch="x86"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -391,6 +393,8 @@ Public License instead of this License.
 
    <plugin
          id="org.rosuda.rengine.bin.linux.x86_64"
+         os="linux"
+         arch="x86_64"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -398,6 +402,8 @@ Public License instead of this License.
 
    <plugin
          id="org.rosuda.rengine.bin.macosx.x86_64"
+         os="macosx"
+         arch="x86_64"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -405,6 +411,8 @@ Public License instead of this License.
 
    <plugin
          id="org.rosuda.rengine.bin.win32.x86"
+         os="win32"
+         arch="x86"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -412,6 +420,8 @@ Public License instead of this License.
 
    <plugin
          id="org.rosuda.rengine.bin.win32.x86_64"
+         os="win32"
+         arch="x86_64"
          download-size="0"
          install-size="0"
          version="0.0.0"
