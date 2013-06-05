@@ -26,35 +26,87 @@
  */
 package org.knime.r;
 
-import java.util.Collection;
-import java.util.Collections;
-
+import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
+import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.NodeDialogPane;
+import org.knime.core.node.NodeFactory;
+import org.knime.core.node.NodeView;
+import org.knime.core.node.interactive.InteractiveNodeFactoryExtension;
 import org.knime.core.node.port.PortType;
-import org.knime.ext.r.node.local.port.RPortObject;
 
 /**
  * Factory for the <code>RSource</code> node.
  *
  * @author Heiko Hofer
  */
-public class RViewNodeFactory extends RSnippetNodeFactory {
+public class RViewNodeFactory extends NodeFactory<RViewNodeModel> 
+implements InteractiveNodeFactoryExtension<RViewNodeModel, RSnippetViewContent> {
+	private PortType m_portType;
 
     /**
      * Empty default constructor.
      */
     public RViewNodeFactory() {
-    	super(new RSnippetNodeConfig() {
-    		@Override
-    		protected Collection<PortType> getInPortTypes() {
-    			return Collections.singleton(BufferedDataTable.TYPE);
-    		}
-    		
-    		@Override
-    		protected Collection<PortType> getOutPortTypes() {
-    			return Collections.singleton(RPortObject.TYPE);
-    		}
-    	});
+    	this(BufferedDataTable.TYPE);
     }
+
+	public RViewNodeFactory(final PortType type) {
+		m_portType = type;
+	}
+
+	/**
+     * {@inheritDoc}
+     */
+    @Override
+    protected NodeDialogPane createNodeDialogPane() {
+        return new RSnippetNodeDialog(this.getClass());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public RViewNodeModel createNodeModel() {
+    	return new RViewNodeModel(m_portType);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getNrNodeViews() {
+        return 2;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public NodeView<RViewNodeModel> createNodeView(final int viewIndex,
+            final RViewNodeModel nodeModel) {
+        if (viewIndex == 0) {
+            return
+                new ExtToolStdoutNodeView<RViewNodeModel>(nodeModel);
+        } else if (viewIndex == 1) {
+            return
+                new ExtToolStderrNodeView<RViewNodeModel>(nodeModel);
+        }
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean hasDialog() {
+        return true;
+    }
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public RSnippetNodeView createInteractiveView(final RViewNodeModel model) {
+		return new RSnippetNodeView(model, this.getClass());
+	}    
   
 }

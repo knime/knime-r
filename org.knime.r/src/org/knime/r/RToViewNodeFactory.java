@@ -26,10 +26,6 @@
  */
 package org.knime.r;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.local.port.RPortObject;
 
 /**
@@ -37,23 +33,13 @@ import org.knime.ext.r.node.local.port.RPortObject;
  *
  * @author Heiko Hofer
  */
-public class RToViewNodeFactory extends RSnippetNodeFactory {
+public class RToViewNodeFactory extends RViewNodeFactory {
 
     /**
      * Empty default constructor.
      */
     public RToViewNodeFactory() {
-    	super(new RSnippetNodeConfig() {
-    		@Override
-    		protected Collection<PortType> getInPortTypes() {
-    			return Collections.singleton(RPortObject.TYPE);
-    		}
-    		
-    		@Override
-    		protected Collection<PortType> getOutPortTypes() {
-    			return Collections.singleton(RPortObject.TYPE);
-    		}
-    	});
+    	super(RPortObject.TYPE);
     }
   
 }

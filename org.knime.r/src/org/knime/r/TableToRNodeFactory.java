@@ -47,12 +47,13 @@ public class TableToRNodeFactory extends RSnippetNodeFactory {
     	super(new RSnippetNodeConfig() {
     		@Override
     		protected Collection<PortType> getInPortTypes() {
-    			return Collections.singleton(RPortObject.TYPE);
+    			return Collections.singleton(BufferedDataTable.TYPE);
+    			
     		}
     		
     		@Override
     		protected Collection<PortType> getOutPortTypes() {
-    			return Collections.singleton(BufferedDataTable.TYPE);
+    			return Collections.singleton(RPortObject.TYPE);
     		}
     	});
     }

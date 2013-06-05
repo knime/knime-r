@@ -51,8 +51,8 @@
 package org.knime.r;
 
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeSettingsRO;
-import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.config.ConfigRO;
+import org.knime.core.node.config.ConfigWO;
 
 /**
  * The settings of the java snippet node.
@@ -134,7 +134,7 @@ public class RSnippetSettings {
     /** Saves current parameters to settings object.
      * @param settings To save to.
      */
-    public void saveSettings(final NodeSettingsWO settings) {
+    public void saveSettings(final ConfigWO settings) {
         settings.addString(SCRIPT, m_script);
         settings.addString(TEMPLATE_UUID, m_templateUUID);
         settings.addString(VERSION, m_version);
@@ -144,7 +144,7 @@ public class RSnippetSettings {
      * @param settings To load from.
      * @throws InvalidSettingsException If incomplete or wrong.
      */
-    public void loadSettings(final NodeSettingsRO settings)
+    public void loadSettings(final ConfigRO settings)
             throws InvalidSettingsException {
         m_script = settings.getString(SCRIPT);
         if (settings.containsKey(TEMPLATE_UUID)) {
@@ -157,7 +157,7 @@ public class RSnippetSettings {
     /** Loads parameters in Dialog.
      * @param settings To load from.
      */
-    public void loadSettingsForDialog(final NodeSettingsRO settings) {
+    public void loadSettingsForDialog(final ConfigRO settings) {
         m_script = settings.getString(SCRIPT, "");
         m_templateUUID = settings.getString(TEMPLATE_UUID, null);        
         m_version = settings.getString(VERSION, RSnippet.VERSION_1_X);

@@ -99,7 +99,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
         m_config = config;
     }  
 
-    /**
+	/**
      * {@inheritDoc}
      */
     @Override
@@ -405,6 +405,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
 		rScript.append(tempWorkspaceFile.getAbsolutePath().replace('\\', '/'));
 		rScript.append("\");\n");
 		
+		// add node specific prefix
+		rScript.append(m_config.getScriptPrefix());
 		// user defined script
 		String userScript = m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength());
 		rScript.append(userScript.trim());
@@ -491,7 +493,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        m_settings.loadSettings(settings);
+        m_settings.loadSettings(settings);        
     }
 
     /**
@@ -544,6 +546,10 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
 	
 	public RSnippetSettings getSettings() {
 		return m_settings;
+	}
+	
+	protected RSnippetNodeConfig getRSnippetNodeConfig() {
+		return m_config;
 	}
 	
 	public BufferedDataTable getInputData() {

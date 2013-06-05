@@ -28,7 +28,15 @@ public class RSnippetNodeConfig {
 	}
 
 	/**
-	 * Suffix appended to the r-script.
+	 * Text preceding to the r-script.
+	 * @return the r-script prefix
+	 */
+	protected String getScriptPrefix() {
+		return "";
+	}  
+	
+	/**
+	 * Text appended to the r-script.
 	 * @return the r-script suffix
 	 */
 	protected String getScriptSuffix() {
