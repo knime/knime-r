@@ -86,7 +86,7 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
         super(nodeModel);
         m_templateMetaCategory = templateMetaCategory;
         
-        m_panel = new RSnippetNodePanel(templateMetaCategory, false) {
+        m_panel = new RSnippetNodePanel(templateMetaCategory, nodeModel.getRSnippetNodeConfig(), false, true) {
 
         	@Override
 			public void applyTemplate(final RSnippetTemplate template,
@@ -189,7 +189,8 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
     
     /** Create the templates tab. */
     private JPanel createTemplatesPanel() {
-        RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, true);
+        RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, 
+        		getNodeModel().getRSnippetNodeConfig(), true, false);
         m_templatesController = new DefaultTemplateController(
                 m_panel, preview);
         TemplatesPanel templatesPanel = new TemplatesPanel(

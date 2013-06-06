@@ -42,7 +42,7 @@ import org.knime.core.node.port.PortType;
  */
 public class RViewNodeFactory extends NodeFactory<RViewNodeModel> 
 implements InteractiveNodeFactoryExtension<RViewNodeModel, RSnippetViewContent> {
-	private PortType m_portType;
+	private RViewNodeConfig m_portType;
 
     /**
      * Empty default constructor.
@@ -51,8 +51,8 @@ implements InteractiveNodeFactoryExtension<RViewNodeModel, RSnippetViewContent> 
     	this(BufferedDataTable.TYPE);
     }
 
-	public RViewNodeFactory(final PortType type) {
-		m_portType = type;
+	public RViewNodeFactory(final PortType inPortType) {
+		m_portType = new RViewNodeConfig(inPortType);
 	}
 
 	/**
@@ -60,7 +60,7 @@ implements InteractiveNodeFactoryExtension<RViewNodeModel, RSnippetViewContent> 
      */
     @Override
     protected NodeDialogPane createNodeDialogPane() {
-        return new RSnippetNodeDialog(this.getClass());
+        return new RSnippetNodeDialog(this.getClass(), m_portType);
     }
 
     /**

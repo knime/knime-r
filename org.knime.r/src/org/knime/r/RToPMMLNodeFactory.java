@@ -42,7 +42,7 @@ import org.knime.ext.r.node.local.port.RPortObject;
  */
 public class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> 
 implements InteractiveNodeFactoryExtension<RToPMMLNodeModel, RSnippetViewContent> {
-	private PortType m_portType;
+	private RToPMMLNodeConfig m_config;
 
     /**
      * Empty default constructor.
@@ -51,8 +51,8 @@ implements InteractiveNodeFactoryExtension<RToPMMLNodeModel, RSnippetViewContent
     	this(RPortObject.TYPE);
     }
 
-	public RToPMMLNodeFactory(final PortType type) {
-		m_portType = type;
+	public RToPMMLNodeFactory(final PortType inPortType) {
+		m_config = new RToPMMLNodeConfig(inPortType);
 	}
 	
 
@@ -69,7 +69,7 @@ implements InteractiveNodeFactoryExtension<RToPMMLNodeModel, RSnippetViewContent
      */
     @Override
     protected NodeDialogPane createNodeDialogPane() {
-        return new RSnippetNodeDialog(this.getClass());
+        return new RSnippetNodeDialog(this.getClass(), m_config);
     }
 
     /**
@@ -77,7 +77,7 @@ implements InteractiveNodeFactoryExtension<RToPMMLNodeModel, RSnippetViewContent
      */
     @Override
     public RToPMMLNodeModel createNodeModel() {
-    	return new RToPMMLNodeModel(m_portType);
+    	return new RToPMMLNodeModel(m_config);
     }
     
     /**

@@ -41,5 +41,5 @@ public class RSnippetNodeConfig {
 	 */
 	protected String getScriptSuffix() {
 		return "";
-	}  	
+	}
 }

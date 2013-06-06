@@ -38,7 +38,6 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.node.port.PortType;
 
 
 /**
@@ -50,8 +49,8 @@ public class RToPMMLNodeModel extends RSnippetNodeModel {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger("R To PMML");
 
 
-	public RToPMMLNodeModel(final PortType inPortType) {
-		super(new RToPMMLNodeConfig(inPortType));
+	public RToPMMLNodeModel(final RToPMMLNodeConfig config) {
+		super(config);
 	}
 
 

@@ -57,7 +57,7 @@ public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel>
      */
     @Override
     protected NodeDialogPane createNodeDialogPane() {
-        return new RSnippetNodeDialog(this.getClass());
+        return new RSnippetNodeDialog(this.getClass(), m_config);
     }
 
     /**

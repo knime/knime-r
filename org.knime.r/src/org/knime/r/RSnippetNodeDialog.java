@@ -57,20 +57,21 @@ import java.util.Map;
 import javax.swing.JPanel;
 
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.port.PortType;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.r.template.DefaultTemplateController;
 import org.knime.r.template.TemplatesPanel;
 
-
-
 /**
- * The dialog of the java snippet node.
+ * The dialog of the R nodes.
  *
  * @author Heiko Hofer
  */
@@ -85,6 +86,8 @@ public class RSnippetNodeDialog extends NodeDialogPane {
 	private DefaultTemplateController m_templatesController;
 
 	private Class m_templateMetaCategory;
+	private RSnippetNodeConfig m_config;
+	private int m_tableInPort;
 
     /**
      * Create a new Dialog.
@@ -92,9 +95,19 @@ public class RSnippetNodeDialog extends NodeDialogPane {
      * tab or to create templates
      */
     @SuppressWarnings("rawtypes")
-    protected RSnippetNodeDialog(final Class templateMetaCategory) {  
+    protected RSnippetNodeDialog(final Class templateMetaCategory, final RSnippetNodeConfig config) {  
     	m_templateMetaCategory = templateMetaCategory;
-        m_panel = new RSnippetNodePanel(templateMetaCategory, false) {
+    	m_config = config;
+    	m_tableInPort = -1;
+    	int i = 0;
+    	for (PortType portType : m_config.getInPortTypes()) {
+    		if (portType.equals(BufferedDataTable.TYPE)) {
+    			m_tableInPort = i;
+        	}
+    		i++;
+    	}
+    	
+        m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, false) {
 
         	@Override
 			public void applyTemplate(final RSnippetTemplate template,
@@ -114,7 +127,7 @@ public class RSnippetNodeDialog extends NodeDialogPane {
    
     /** Create the templates tab. */
     private JPanel createTemplatesPanel() {
-        RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, true);
+        RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, m_config, true, false);
 
         m_templatesController = new DefaultTemplateController(
                 m_panel, preview);
@@ -133,13 +146,15 @@ public class RSnippetNodeDialog extends NodeDialogPane {
         // in the snippets textarea.
         return false;
     }
-
+    
     @Override
     protected void loadSettingsFrom(final NodeSettingsRO settings,
-    		final DataTableSpec[] specs) throws NotConfigurableException {
-        m_panel.updateData(settings, specs[0], getAvailableFlowVariables().values());
+    		final PortObjectSpec[] specs) throws NotConfigurableException {
+    	DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec)specs[m_tableInPort] : null;
+    	
+        m_panel.updateData(settings, spec, getAvailableFlowVariables().values());
         
-        m_templatesController.setDataTableSpec(specs[0]);
+        m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getAvailableFlowVariables());	
     }
    
@@ -167,6 +182,7 @@ public class RSnippetNodeDialog extends NodeDialogPane {
             throws InvalidSettingsException {
         m_panel.saveSettingsTo(settings);
     }
+    
 
     /**
      * Called right before storing the settings object. Gives subclasses

@@ -55,8 +55,8 @@ import java.util.Map;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.workflow.FlowVariable;
-import org.knime.r.RSnippetTemplate;
 import org.knime.r.RSnippetNodePanel;
+import org.knime.r.RSnippetTemplate;
 
 /**
  * The default implementation of TemplateController. It provides methods to get
@@ -115,7 +115,6 @@ public class DefaultTemplateController implements TemplateController {
      */
     public void setDataTableSpec(final DataTableSpec spec) {
         m_spec = spec;
-
     }
 
     /**

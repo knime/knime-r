@@ -44,7 +44,6 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
@@ -69,8 +68,8 @@ public class RViewNodeModel extends RSnippetNodeModel {
     
     private static final String INTERNAL_FILE_NAME = "Rplot";
 
-	public RViewNodeModel(final PortType inPortType) {
-		super(new RViewNodeConfig(inPortType));
+	public RViewNodeModel(final RViewNodeConfig config) {
+		super(config);
 		m_settings = new RViewNodeSettings(getSettings());
 		getConfig().setSettings(m_settings);
 	}
