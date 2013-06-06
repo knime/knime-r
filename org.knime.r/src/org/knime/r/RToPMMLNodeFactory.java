@@ -26,9 +26,12 @@
  */
 package org.knime.r;
 
-import java.util.Collection;
-import java.util.Collections;
-
+import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
+import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
+import org.knime.core.node.NodeDialogPane;
+import org.knime.core.node.NodeFactory;
+import org.knime.core.node.NodeView;
+import org.knime.core.node.interactive.InteractiveNodeFactoryExtension;
 import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.local.port.RPortObject;
 
@@ -37,23 +40,76 @@ import org.knime.ext.r.node.local.port.RPortObject;
  *
  * @author Heiko Hofer
  */
-public class RToPMMLNodeFactory extends RSnippetNodeFactory {
+public class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> 
+implements InteractiveNodeFactoryExtension<RToPMMLNodeModel, RSnippetViewContent> {
+	private PortType m_portType;
 
     /**
      * Empty default constructor.
      */
     public RToPMMLNodeFactory() {
-    	super(new RSnippetNodeConfig() {
-    		@Override
-    		protected Collection<PortType> getInPortTypes() {
-    			return Collections.singleton(RPortObject.TYPE);
-    		}
-    		
-    		@Override
-    		protected Collection<PortType> getOutPortTypes() {
-    			return Collections.singleton(RPortObject.TYPE);
-    		}
-    	});
+    	this(RPortObject.TYPE);
     }
+
+	public RToPMMLNodeFactory(final PortType type) {
+		m_portType = type;
+	}
+	
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean hasDialog() {
+        return true;
+    }	
+
+	/**
+     * {@inheritDoc}
+     */
+    @Override
+    protected NodeDialogPane createNodeDialogPane() {
+        return new RSnippetNodeDialog(this.getClass());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public RToPMMLNodeModel createNodeModel() {
+    	return new RToPMMLNodeModel(m_portType);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getNrNodeViews() {
+        return 2;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public NodeView<RToPMMLNodeModel> createNodeView(final int viewIndex,
+            final RToPMMLNodeModel nodeModel) {
+        if (viewIndex == 0) {
+            return
+                new ExtToolStdoutNodeView<RToPMMLNodeModel>(nodeModel);
+        } else if (viewIndex == 1) {
+            return
+                new ExtToolStderrNodeView<RToPMMLNodeModel>(nodeModel);
+        }
+        return null;
+    }
+
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public RSnippetNodeView createInteractiveView(final RToPMMLNodeModel model) {
+		return new RSnippetNodeView(model, this.getClass());
+	}    
+  
   
 }
