@@ -124,7 +124,7 @@ public class RColumnList extends JList {
         }
     }
 
-    private String getFieldReadStatement(DataColumnSpec colSpec) {
+    private String getFieldReadStatement(final DataColumnSpec colSpec) {
 		return "$\"" + colSpec.getName() + "\"";
 	}
 
@@ -168,11 +168,12 @@ public class RColumnList extends JList {
 //        listModel.addElement(RSnippet.ROWID);
 //        listModel.addElement(RSnippet.ROWINDEX);
 //        listModel.addElement(RSnippet.ROWCOUNT);
-
-        for (int i = 0; i < spec.getNumColumns(); i++) {
-            DataColumnSpec colSpec = spec.getColumnSpec(i);
-            listModel.addElement(colSpec);
-        }
+	    if (spec != null) {	
+	        for (int i = 0; i < spec.getNumColumns(); i++) {
+	            DataColumnSpec colSpec = spec.getColumnSpec(i);
+	            listModel.addElement(colSpec);
+	        }
+	    }
     }
 
 }
