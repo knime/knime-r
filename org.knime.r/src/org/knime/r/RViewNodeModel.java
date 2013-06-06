@@ -169,4 +169,9 @@ public class RViewNodeModel extends RSnippetNodeModel {
     	return (RViewNodeConfig)getRSnippetNodeConfig();
     }
 
+
+	public Image getResultImage() {
+		return m_resultImage;
+	}
+
 }

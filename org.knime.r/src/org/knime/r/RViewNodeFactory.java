@@ -86,13 +86,14 @@ implements InteractiveNodeFactoryExtension<RViewNodeModel, RSnippetViewContent> 
     public NodeView<RViewNodeModel> createNodeView(final int viewIndex,
             final RViewNodeModel nodeModel) {
         if (viewIndex == 0) {
-            return
-                new ExtToolStdoutNodeView<RViewNodeModel>(nodeModel);
+            return new RViewNodeView(nodeModel);
         } else if (viewIndex == 1) {
-            return
-                new ExtToolStderrNodeView<RViewNodeModel>(nodeModel);
+            return new ExtToolStdoutNodeView<RViewNodeModel>(nodeModel);
+        } else if (viewIndex == 2) {
+            return new ExtToolStderrNodeView<RViewNodeModel>(nodeModel);
+        } else {
+            return null;
         }
-        return null;
     }
 
     /**
