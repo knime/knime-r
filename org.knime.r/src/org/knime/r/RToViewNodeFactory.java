@@ -29,7 +29,7 @@ package org.knime.r;
 import org.knime.ext.r.node.local.port.RPortObject;
 
 /**
- * Factory for the <code>RSource</code> node.
+ * Factory for the R To View node.
  *
  * @author Heiko Hofer
  */

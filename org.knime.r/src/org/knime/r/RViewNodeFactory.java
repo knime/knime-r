@@ -36,7 +36,7 @@ import org.knime.core.node.interactive.InteractiveNodeFactoryExtension;
 import org.knime.core.node.port.PortType;
 
 /**
- * Factory for the <code>RSource</code> node.
+ * Factory for the R View node.
  *
  * @author Heiko Hofer
  */
