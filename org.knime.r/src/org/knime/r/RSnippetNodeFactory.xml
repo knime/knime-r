@@ -17,14 +17,14 @@
           <option name ="R Script">
             <p>The R commands to run. The input table is accessible within R using 
             the data frame stored in <i>knime.in</i>, where as the data frame that
-            should apear at the output is expected to be stored in <i>knime.out</i>.</p>
+            should appear at the output is expected to be stored in <i>knime.out</i>.</p>
                
             <p>The node also allows to access and modify flow variables. You can access
             all flow variables at <i>knime.flow.in</i> and please add all new or
             modified flow variables to the list at <i>knime.flow.out.</i></p>
             
             <p><b>Examples</b></p>
-			<p>Take the input column "d", add one and send it to the ouput:</p>
+			<p>Take the input column "d", add one and send it to the output:</p>
                      
 	        <i>p &lt;- knime.in["d"] + 1</i><br/>
 	        <i>knime.out &lt;- data.frame(p)</i>
@@ -60,7 +60,7 @@
         
 	</fullDescription>
 	<interactiveView name="R Sandbox">
-    	Evaluate the R script with input data. Try changes and optinally apply them to the node.
+    	Evaluate the R script with input data. Try changes and optionally apply them to the node.
     </interactiveView>	
 	<ports>
 		<inPort name="Data Input" index="0">Data Input</inPort>

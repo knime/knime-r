@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
-<knimeNode type="Manipulator" icon="rsnippet.png">
+<knimeNode type="Manipulator" icon="rsnippet.png" xmlns="http://knime.org/node/v2.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v2.8 http://knime.org/node/v2.8.xsd">
 	<name>R to Table</name>
 	<shortDescription>
 	    Converts an R object into a KNIME data table.
 	</shortDescription>
 	<fullDescription>
 		<intro>
-		Converts an R object from an R workspace into a KNIME data table. 
+		Converts a data frame from an R workspace into a KNIME data table. 
 		The result data is returned at the data out-port.
-        The R-object is imported into R workspace as variable named R which can be manipulated as needed.
+        
+		Please, use the variable name <i>knime.out</i> for the data frame.
 		<br /><br />
 		More details about R:<br />
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 		<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-		<tab name="R Command">
-		  <option name ="R Snippet">
-            The R commands to run, default: <br/>
-            <pre>R&lt;-R</pre>
-          </option>
-          <option name="Column List">
-            The list contains the column that are available in the input table.
-            Double click any of the column names to insert the respective field
-            in the expression editor. It will replace your current selection or
-            simply insert at the current caret position.
+        <tab name="R Snippet">
+          <option name ="R Script">
+            <p>The R commands to run. The data frame that
+            should appear at the output is expected to be stored in <i>knime.out</i>.</p>
+               
+            <p>The node also allows to access and modify flow variables. You can access
+            all flow variables at <i>knime.flow.in</i> and please add all new or
+            modified flow variables to the list at <i>knime.flow.out.</i></p>
+            
+            <p><b>Examples</b></p>
+			<p>Take the input "data" and send it to the ouput:</p>
+                     	        
+	        <i>knime.out &lt;- data.frame(data)</i>
+	                    
+            <p>Read the data from the file defined by the flow variable fname:</p>
+            <i>data &lt;- read.table(knime.flow.in[["fname"]])</i>
+            
+            <p>Compute students t-test and store the p-value in the flow variable p.value:</p>
+            <i>h &lt;- t.test(knime.in["d"])</i><br/>
+			<i>knime.flow.out &lt;- list(p.value = h[["p.value"]])</i>
           </option>
           <option name="Flow Variable List">
             The list contains the flow variables that are currently available at
@@ -33,23 +43,19 @@
             selection, if any).
           </option>
         </tab>
-        <tab name="R Binary">
-		  <option name ="R binary path">
-			Path to the local R executable. Note that it is possible to specify
-			the path to the local R executable also in the R section of the 
-			KNIME preferences.
-		  </option>
-		  <option name ="Arguments for R binary">
-            Add additional arguments run together with the R binary. The 
-            '--vanilla' mode ensures a clean workspace and may cause problems 
-            when removed.
+        <tab name="Templates">
+          <option name="Category - Title">
+	          <p>A categorized list of R script templates. The apply button at the left 
+	          will replace the R script and guide you to the R Snippet tab.</p>
+	          <p>Please use "Create Template..." button on the R Snippet tab to add the
+	          current R script to the list of templates.</p>
           </option>
-		  <option name="Override default">
-			If checked, the specified file is used as R binary. If not checked, 
-			the file specified in the KNIME's R preferences is used.
-		  </option>
-	    </tab>
+        </tab>
+        
 	</fullDescription>
+	<interactiveView name="R Sandbox">
+    	Evaluate the R script with input data. Try changes and optionally apply them to the node.
+    </interactiveView>	
 	<ports>
 	    <inPort index="0" name="R Input">R Input</inPort>
         <outPort index="0" name="Data Output">Data Table Output</outPort>
