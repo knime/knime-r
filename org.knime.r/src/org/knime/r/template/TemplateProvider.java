@@ -116,7 +116,7 @@ public final class TemplateProvider extends TemplateRepository
                     }
                 }
             } catch (CoreException ex) {
-                LOGGER.error("Error while reading jsnippet template "
+                LOGGER.error("Error while reading rsnippet template "
                         + "repositories.", ex);
             }
         }

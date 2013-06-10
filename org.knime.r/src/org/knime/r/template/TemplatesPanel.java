@@ -84,7 +84,7 @@ import org.knime.r.RSnippetTemplate;
 
 
 /**
- * The Panel displayed in the templates tab of a jsnippet dialog.
+ * The Panel displayed in the templates tab of a R snippet dialog.
  *
  * @author Heiko Hofer
  */

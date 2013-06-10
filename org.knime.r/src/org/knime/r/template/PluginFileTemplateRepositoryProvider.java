@@ -96,7 +96,7 @@ public class PluginFileTemplateRepositoryProvider
             URL url = FileLocator.find(bundle, new Path(relativePath), null);
             m_file = FileUtil.getFileFromURL(FileLocator.toFileURL(url));
         } catch (Exception e) {
-            logger.error("Cannot locate jsnippet templates in path "
+            logger.error("Cannot locate rsnippet templates in path "
                     + symbolicName + " of the bundle "
                     + relativePath + ".", e);
         }
