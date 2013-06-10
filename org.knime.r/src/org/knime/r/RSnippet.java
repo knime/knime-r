@@ -238,12 +238,12 @@ public final class RSnippet {
 	    	// TODO: lock controller
 			r.clearWorkspace();
 			if (table != null) {
-				r.exportDataTable(table, "R", exec);
+				r.exportDataTable(table, "knime.in", exec);
 			}
 			
 			r.timedEval(getDocument().getText(0, getDocument().getLength()));
 			
-			BufferedDataTable out = r.importBufferedDataTable("R_out", exec);
+			BufferedDataTable out = r.importBufferedDataTable("knime.out", exec);
 			// TODO: unlock controller
 			return new ValueReport<BufferedDataTable>(out, errors, warnings);
 			

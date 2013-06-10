@@ -209,8 +209,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
         File tempWorkspaceFile = null;
         
     	try {
-    		tempWorkspaceFile = exportData(exec);
-	    	
+    		tempWorkspaceFile = exportData(flowVarRepo, exec);
     		runRScript(tempWorkspaceFile, exec);    	
     		
 
@@ -222,6 +221,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
             		outPorts.add(new RPortObject(tempWorkspaceFile));
             	} 
             }
+            // TODO tempWorkspaceFile is load twice in case that there is a data table outport
+            importFlowVariables(tempWorkspaceFile, flowVarRepo, exec);
 	        
 			return new ValueReport<PortObject[]>(outPorts.toArray(new PortObject[outPorts.size()]), errors, warnings);
 			
@@ -234,7 +235,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
 		}    	
 	}
 
-    private void runRScript(final File tempWorkspaceFile, final ExecutionContext exec) throws Exception {
+
+	private void runRScript(final File tempWorkspaceFile, final ExecutionContext exec) throws Exception {
     	
     	String rScript = buildRScript(tempWorkspaceFile);
 
@@ -428,19 +430,40 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
 		
 		r.loadWorkspace(tempWorkspaceFile);
 		
-    	BufferedDataTable out = r.importBufferedDataTable("R_out", exec);
+    	BufferedDataTable out = r.importBufferedDataTable("knime.out", exec);
 		
     	// TODO: unlock controller
     	return out;
 	}
+	
 
-	private File exportData(final ExecutionContext exec) throws REngineException, REXPMismatchException, IOException {
+
+	private void importFlowVariables(final File tempWorkspaceFile, final FlowVariableRepository flowVarRepo,
+			final ExecutionContext exec) throws REngineException, REXPMismatchException {
+    	RController r = RController.getDefault();
+    	// TODO: lock controller
+		r.clearWorkspace();
+		
+		r.loadWorkspace(tempWorkspaceFile);
+		
+    	Collection<FlowVariable> flowVars = r.importFlowVariables("knime.flow.out", exec);
+    	for (FlowVariable flowVar : flowVars) {
+    		flowVarRepo.put(flowVar);
+    	}
+		
+    	// TODO: unlock controller
+    	
+		
+	}	
+
+	private File exportData(final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws REngineException, REXPMismatchException, IOException {
     	RController r = RController.getDefault();
     	// TODO: lock controller
 		r.clearWorkspace();
 		if (m_data != null) {
-			r.exportDataTable(m_data, "R", exec);
+			r.exportDataTable(m_data, "knime.in", exec);
 		}
+		r.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
 		
 		File tempFolder = new File(TEMP_PATH);
 		// save workspace to temporary file
@@ -451,6 +474,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
 		
 		return tempWorkspaceFile;
 	}
+	
 
 	/**
      * Push changed flow variables.

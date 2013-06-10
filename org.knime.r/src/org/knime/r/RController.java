@@ -3,6 +3,8 @@ package org.knime.r;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,6 +33,7 @@ import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.workflow.FlowVariable;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
 import org.rosuda.REngine.REXPGenericVector;
@@ -219,6 +222,56 @@ public class RController {
 	public void exportDataValue(final DataValue value, final String name) {
 		timedAssign(TEMP_VARIABLE_NAME, new REXPString(value.toString()));
 		setVariableName(name);
+	}
+	
+	public void exportFlowVariables(final Collection<FlowVariable> inFlowVariables,
+			final String name, final ExecutionContext exec)
+			throws REXPMismatchException {
+		REXP[] content = new REXP[inFlowVariables.size()];
+		String[] names = new String[inFlowVariables.size()];
+		int i = 0;
+		for(FlowVariable flowVar : inFlowVariables) {
+			names[i] = flowVar.getName();
+			if (flowVar.getType().equals(FlowVariable.Type.INTEGER)) { 
+				content[i] = new REXPInteger(flowVar.getIntValue());
+			} else if (flowVar.getType().equals(FlowVariable.Type.DOUBLE)) { 
+				content[i] = new REXPDouble(flowVar.getDoubleValue());
+			} else { // string
+				content[i] = new REXPString(flowVar.getStringValue());
+			}
+			i++;	
+		}
+
+		timedAssign(TEMP_VARIABLE_NAME, new REXPList(new RList(content, names)));
+		// JGR.getREngine().assign(TEMP_VARIABLE_NAME,
+		// createDataFrame(content, rexpRowNames));
+		setVariableName(name);
+	}	
+	
+
+
+	public Collection<FlowVariable> importFlowVariables(final String string,
+			final ExecutionContext exec) throws REXPMismatchException, REngineException {
+		List<FlowVariable> flowVars = new ArrayList<FlowVariable>();
+		REXP value = m_engine.get(string, null, true);
+		if (value == null) {
+			// A variable with this name does not exist
+			return Collections.emptyList();
+		}
+		RList rList = value.asList();
+		
+		for (int c = 0; c < rList.size(); c++) {
+			REXP rexp = rList.at(c);	
+			if (rexp.isInteger()) {
+				flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asInteger()));
+			} else if (rexp.isNumeric()) {
+				flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asDouble()));
+			} else if (rexp.isString()) {
+				flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asString()));
+			} 			
+		}
+
+		return flowVars;
 	}
 
 	public void exportDataTable(final BufferedDataTable table,
@@ -486,7 +539,14 @@ public class RController {
 
 	public BufferedDataTable importBufferedDataTable(final String string,
 			final ExecutionContext exec) throws REngineException, REXPMismatchException {
-		String type = eval("class(" + string + ")").asString();
+		REXP typeRexp = eval("class(" + string + ")");
+		if (typeRexp.isNull()) {
+			// a variable with this name does not exist
+			BufferedDataContainer cont = exec.createDataContainer(new DataTableSpec());
+			cont.close();
+			return cont.getTable();
+		}
+		String type = typeRexp.asString();
 		if (!type.equals("data.frame")) {
 			throw new RuntimeException("Supporting 'data.frame' as return type, only.");
 		}
@@ -586,7 +646,7 @@ public class RController {
 	
 		return cells;
 	}
-
+	
 	private DataTableSpec createSpecFromDataFrame(final RList rList) throws REXPMismatchException {
 		List<DataColumnSpec> colSpecs = new ArrayList<DataColumnSpec>();
 		for (int c = 0; c < rList.size(); c++) {
@@ -637,6 +697,9 @@ public class RController {
 		// load workspace form file
 		timedEval("load(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");");
 	}
+
+
+
 }
 
 final class MonitoredEval {

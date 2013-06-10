@@ -74,6 +74,14 @@ public class FlowVariableRepository {
         m_input = input;
         m_modified = new LinkedHashMap<String, FlowVariable>();
     }
+    
+    /**
+     * Get the flow variables at the input
+     * @return the flow variables at the input
+     */
+    public Collection<FlowVariable> getInFlowVariables() {
+        return m_input.values();
+    }    
 
     /**
      * Get the modified or new flow variables.
