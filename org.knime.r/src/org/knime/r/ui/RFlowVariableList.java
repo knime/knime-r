@@ -118,9 +118,8 @@ public class RFlowVariableList extends JList {
         }
     }
 
-    private String getFieldReadStatement(FlowVariable v) {
-    	// TODO add type encoding
-		return "$${" + v.getName() + "}$$";
+    private String getFieldReadStatement(final FlowVariable v) {
+		return "knime.flow.in[[\"" + v.getName() + "\"]]";
 	}
 
 	/**
