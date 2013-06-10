@@ -7,20 +7,35 @@
 	</shortDescription>
 	<fullDescription>
 		<intro>
-		Allows execution of R commands in a local R installation. The result of 
-		these R commands is returned in the output table of this node. All
-		input data is written to a CSV file, imported into R 
-		(saved in the variable named R) and processed together with the 
-		R commands. The result which has to be saved into variable R as 
-		well is written to a CSV file again and then imported into KNIME.
+		Allows execution of an R script in a local R installation. The result of 
+		this script is returned in the output table of this node. 
 		<br /><br />
 		More details about R:<br />
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 		<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-        <tab name="R Command">
-          <option name ="R Snippet">
-            The R commands to run.
+        <tab name="R Snippet">
+          <option name ="R Script">
+            <p>The R commands to run. The input table is accessible within R using 
+            the data frame stored in <i>knime.in</i>, where as the data frame that
+            should apear at the output is expected to be stored in <i>knime.out</i>.</p>
+               
+            <p>The node also allows to access and modify flow variables. You can access
+            all flow variables at <i>knime.flow.in</i> and please add all new or
+            modified flow variables to the list at <i>knime.flow.out.</i></p>
+            
+            <p><b>Examples</b></p>
+			<p>Take the input column "d", add one and send it to the ouput:</p>
+                     
+	        <i>p &lt;- knime.in["d"] + 1</i><br/>
+	        <i>knime.out &lt;- data.frame(p)</i>
+	                    
+            <p>Read the data from the file defined by the flow variable fname:</p>
+            <i>data &lt;- read.table(knime.flow.in[["fname"]])</i>
+            
+            <p>Compute students t-test and store the p-value in the flow variable p.value:</p>
+            <i>h &lt;- t.test(knime.in["d"])</i><br/>
+			<i>knime.flow.out &lt;- list(p.value = h[["p.value"]])</i>
           </option>
           <option name="Column List">
             The list contains the column that are available in the input table.
@@ -35,22 +50,15 @@
             selection, if any).
           </option>
         </tab>
-        <tab name="R Binary">
-          <option name ="R binary path">
-            Path to the local R executable. Note that it is possible to specify
-            the path to the local R executable also in the R section of the 
-            KNIME preferences.
-          </option>
-          <option name ="Arguments for R binary">
-            Add additional arguments run together with the R binary. The 
-            '--vanilla' mode ensures a clean workspace and may cause problems 
-            when removed.
-          </option>
-          <option name="Override default">
-            If checked, the specified file is used as R binary. If not checked, 
-            the file specified in the KNIME's R preferences is used.
+        <tab name="Templates">
+          <option name="Category - title">
+	          <p>A categorized list of R snippet templates. The apply button at the left 
+	          will replace the R Script and guide you to the R Snippet tab.</p>
+	          <p>Please use "Create Template..." button on the R Snippet tab to add the
+	          current R script to the list of templates.</p>
           </option>
         </tab>
+        
 	</fullDescription>
 	<ports>
 		<inPort name="Data Input" index="0">Data Input</inPort>
