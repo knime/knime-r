@@ -58,7 +58,7 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
         DirectoryFieldEditor rPath =
                 new DirectoryFieldEditor(
                         RPreferenceInitializer.PREF_R_HOME,
-                        "Path to R executable", parent);
+                        "Path to R Home", parent);
         addField(rPath);
     }
 
