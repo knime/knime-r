@@ -33,6 +33,7 @@ import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
@@ -53,7 +54,8 @@ import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 public class RController {
-
+	NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
+	
 	private static final String TEMP_VARIABLE_NAME = "knimertemp836481";
 
 	private static RController instance;
@@ -81,6 +83,7 @@ public class RController {
         void printf(String format, Object... args);
         void setenv(String env, String value, int replace);
         int _putenv(String name);
+        String getenv(String name);
     }
 
 
@@ -97,6 +100,8 @@ public class RController {
 			} else {
 				CLibrary.INSTANCE.setenv("R_HOME", rHome, 1);
 			}
+			String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
+			LOGGER.info("R_HOME: " + sysRHome);
 //			m_engine = new JRIEngine(new String[] { "--no-save",
 //					"--knime-rhome", rHome }, m_consoleController);
 			m_engine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
