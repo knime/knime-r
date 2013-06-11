@@ -47,7 +47,6 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.BufferedDataTableHolder;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
-import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
@@ -539,35 +538,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
         m_snippet.getSettings().loadSettings(settings);        
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void reset() {
-        // no internals, nothing to reset.
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void loadInternals(final File nodeInternDir,
-            final ExecutionMonitor exec)
-            throws IOException, CanceledExecutionException {
-        // no internals.
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveInternals(final File nodeInternDir,
-            final ExecutionMonitor exec)
-            throws IOException, CanceledExecutionException {
-        // no internals.
     }
 
 	public DataTableSpec getInputSpec() {
