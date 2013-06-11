@@ -80,6 +80,7 @@ public class RController {
 
         void printf(String format, Object... args);
         void setenv(String env, String value, int replace);
+        int _putenv(String name);
     }
 
 
@@ -91,7 +92,11 @@ public class RController {
 		listenerList = new EventListenerList();
 
 		try {
-			CLibrary.INSTANCE.setenv("R_HOME", rHome, 1);
+			if (Platform.isWindows()) {
+				CLibrary.INSTANCE._putenv("R_HOME" + "=" + rHome);
+			} else {
+				CLibrary.INSTANCE.setenv("R_HOME", rHome, 1);
+			}
 //			m_engine = new JRIEngine(new String[] { "--no-save",
 //					"--knime-rhome", rHome }, m_consoleController);
 			m_engine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
