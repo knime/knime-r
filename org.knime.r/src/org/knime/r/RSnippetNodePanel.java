@@ -45,6 +45,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -148,7 +149,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		m_flowVarsList.install(m_snippetTextArea);
 		
 		setEnabled(!isPreview);
-		panel.setPreferredSize(new Dimension(800, 600));
+		panel.setPreferredSize(new Dimension(850, 600));
 	}
 
 	private JPanel createPanel(final boolean isPreview, final boolean isInteractive) {
@@ -158,14 +159,13 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		snippetPanel.add(snippet, BorderLayout.CENTER);
 		
 		if (isInteractive) {
-			JPanel runPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-			JButton runButton = new JButton("Run Script");
+			JPanel runPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));			
+			JButton runButton = new JButton("Eval Script");
 			runButton.addActionListener(new ActionListener() {
 	
 				@Override
 				public void actionPerformed(final ActionEvent e) {
 					try {
-						rClearRWorkspace();
 						RController.getDefault().getConsoleQueue()
 								.putRScript(m_snippetTextArea.getText());
 					} catch (InterruptedException e1) {
@@ -228,10 +228,24 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			});
 			JScrollPane objectBrowserScroller = new JScrollPane(m_objectBrowser);
 			objectBrowserScroller.setBorder(createEmptyTitledBorder("Workspace"));
+			
+			JPanel objectBrowserContainer = new JPanel(new BorderLayout());
+			objectBrowserContainer.add(objectBrowserScroller, BorderLayout.CENTER);
+			
+			JPanel objectBrowserButtons = new JPanel(new FlowLayout(FlowLayout.TRAILING));		
+			JButton resetData = new JButton("Reset Workspace");
+			resetData.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(final ActionEvent e) {
+					resetWorkspace();
+				}
+			});	
+			objectBrowserButtons.add(resetData);
+			objectBrowserContainer.add(objectBrowserButtons, BorderLayout.SOUTH);
 
 			JSplitPane rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 			rightSplitPane.setLeftComponent(leftSplitPane);
-			rightSplitPane.setRightComponent(objectBrowserScroller);
+			rightSplitPane.setRightComponent(objectBrowserContainer);
 			rightSplitPane.setDividerLocation(550);
 
 			JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -252,6 +266,13 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		JPanel templateInfoPanel = createTemplateInfoPanel(isPreview);
         p.add(templateInfoPanel, BorderLayout.NORTH);		
 		return p;
+	}
+	
+	/** 
+	 * Subclasses that set the interactive flag should override this.
+	 */
+	protected void resetWorkspace() {
+		JOptionPane.showMessageDialog(null, "Method is not suppoerted");
 	}
 
 

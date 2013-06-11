@@ -71,6 +71,8 @@ import org.knime.core.node.interactive.InteractiveClientNodeView;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.r.template.DefaultTemplateController;
 import org.knime.r.template.TemplatesPanel;
+import org.rosuda.REngine.REXPMismatchException;
+import org.rosuda.REngine.REngineException;
 
 /**
  *
@@ -103,7 +105,14 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
                     final Map<String, FlowVariable> flowVariables) {
         		super.applyTemplate(template, spec, flowVariables);
         		m_tabbedPane.setSelectedIndex(0);
-        	}	
+        	}
+        	
+        	@Override
+        	protected void resetWorkspace() {
+        		resetRWorkspace();
+        	}
+
+
         }; 
         m_panel.getRSnippet().getSettings().loadSettings(nodeModel.getSettings());
             
@@ -234,8 +243,25 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
     	
     		
 		m_templatesController.setDataTableSpec(spec);
-        m_templatesController.setFlowVariables(getNodeModel().getAvailableInputFlowVariables());			
+        m_templatesController.setFlowVariables(getNodeModel().getAvailableInputFlowVariables());
+        // send data to R
+        resetRWorkspace();
     }
+    
+	private void resetRWorkspace() {
+		try {
+			RController.getDefault().clearWorkspace();
+			if (getNodeModel().getInputData() != null) {
+				RController.getDefault().exportDataTable(getNodeModel().getInputData(), "knime.in", null);
+			}
+			RController.getDefault().exportFlowVariables(getNodeModel().getAvailableFlowVariables().values(), "knime.flow.in", null);
+			m_panel.workspaceChanged(null);
+		} catch (REngineException e) {
+			throw new RuntimeException(e);
+		} catch (REXPMismatchException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
     /**
      * {@inheritDoc}

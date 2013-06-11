@@ -44,6 +44,7 @@ import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.BufferedDataTableHolder;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -71,7 +72,8 @@ import org.rosuda.REngine.REngineException;
  *
  * @author Heiko Hofer
  */
-public class RSnippetNodeModel extends ExtToolOutputNodeModel implements InteractiveNode<RSnippetViewContent> {
+public class RSnippetNodeModel extends ExtToolOutputNodeModel 
+		implements InteractiveNode<RSnippetViewContent>, BufferedDataTableHolder {
     private RSnippet m_snippet;
 	private BufferedDataTable m_data;
 	private DataTableSpec m_configSpec;
@@ -586,5 +588,17 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
 
 	public void loadSettings(final RSnippetSettings settings) {
 		m_snippet.getSettings().loadSettings(settings);
+	}
+
+	@Override
+	public BufferedDataTable[] getInternalTables() {
+		return m_data != null ? new BufferedDataTable[] {m_data} : new BufferedDataTable[0];
+	}
+
+	@Override
+	public void setInternalTables(final BufferedDataTable[] tables) {
+		if (tables.length > 0) {
+			m_data = tables[0];
+		}
 	}
 }
