@@ -72,7 +72,6 @@ import org.rosuda.REngine.REngineException;
  * @author Heiko Hofer
  */
 public class RSnippetNodeModel extends ExtToolOutputNodeModel implements InteractiveNode<RSnippetViewContent> {
-    private RSnippetSettings m_settings;
     private RSnippet m_snippet;
 	private BufferedDataTable m_data;
 	private DataTableSpec m_configSpec;
@@ -93,7 +92,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
     public RSnippetNodeModel(final RSnippetNodeConfig config) {
         super(config.getInPortTypes().toArray(new PortType[config.getInPortTypes().size()]), 
         		config.getOutPortTypes().toArray(new PortType[config.getOutPortTypes().size()]));;
-        m_settings = new RSnippetSettings();
         m_snippet = new RSnippet();
         m_snippet.attachLogger(LOGGER);
         m_config = config;
@@ -105,7 +103,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
-        m_snippet.setSettings(m_settings);
         for (PortObjectSpec inSpec : inSpecs) {
         	if (inSpec instanceof DataTableSpec) {
         		m_configSpec = (DataTableSpec)inSpec;
@@ -175,7 +172,13 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
     @Override
     protected PortObject[] execute(final PortObject[] inData,
             final ExecutionContext exec) throws Exception {
-        m_snippet.setSettings(m_settings);
+    	return executeInternal(m_snippet.getSettings(), inData, exec);
+    }
+    
+
+	private PortObject[] executeInternal(final RSnippetSettings settings,
+			final PortObject[] inData, final ExecutionContext exec) {
+        m_snippet.getSettings().loadSettings(settings);
         for (PortObject in : inData) {
         	if (in instanceof BufferedDataTable) {
         		m_data = (BufferedDataTable)in;
@@ -195,7 +198,23 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
         pushFlowVariables(flowVarRepo);
         
         return out.getValue();
-    }
+	}
+
+	@Override
+	public PortObject[] reExecute(final RSnippetViewContent content,
+			final PortObject[] data, final ExecutionContext exec)
+			throws CanceledExecutionException {
+		return executeInternal(content.getSettings(), data, exec);
+	}
+	
+	
+
+	@Override
+	public RSnippetViewContent createViewContent() {
+		RSnippetSettings settings = new RSnippetSettings();
+		settings.loadSettings(m_snippet.getSettings());
+		return new RSnippetViewContent(settings);
+	}
     
     private ValueReport<PortObject[]> executeSnippet(final PortObject[] inData,
 			final FlowVariableRepository flowVarRepo, final ExecutionContext exec) {
@@ -497,7 +516,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
      */
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) {
-        m_settings.saveSettings(settings);
+        m_snippet.getSettings().saveSettings(settings);
     }
 
     /**
@@ -517,7 +536,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
     @Override
     protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-        m_settings.loadSettings(settings);        
+        m_snippet.getSettings().loadSettings(settings);        
     }
 
     /**
@@ -549,27 +568,12 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
         // no internals.
     }
 
-	@Override
-	public PortObject[] reExecute(final RSnippetViewContent content,
-			final PortObject[] data, final ExecutionContext exec)
-			throws CanceledExecutionException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public RSnippetViewContent createViewContent() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 	public DataTableSpec getInputSpec() {
 		return m_data != null ? m_data.getDataTableSpec() : m_configSpec;
 	}
 	
 	public RSnippetSettings getSettings() {
-		return m_settings;
+		return m_snippet.getSettings();
 	}
 	
 	protected RSnippetNodeConfig getRSnippetNodeConfig() {
@@ -578,5 +582,9 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Interac
 	
 	public BufferedDataTable getInputData() {
 		return m_data;
+	}
+
+	public void loadSettings(final RSnippetSettings settings) {
+		m_snippet.getSettings().loadSettings(settings);
 	}
 }

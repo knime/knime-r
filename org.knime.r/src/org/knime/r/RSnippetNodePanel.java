@@ -92,8 +92,6 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	/** Component with a list of all input flow variables. */
 	protected RFlowVariableList m_flowVarsList;
 
-	/** The settings. */
-	protected RSnippetSettings m_settings;
 	private RSnippet m_snippet;
 
 	/** The input data table */
@@ -143,7 +141,6 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		
 		m_isInteractive = isPreview ? false : isInteractive;
 		
-		m_settings = new RSnippetSettings();
 		m_snippet = new RSnippet();
 
 		JPanel panel = createPanel(isPreview, m_isInteractive);
@@ -341,7 +338,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
                 if (null != newTemplate) {
                     TemplateProvider.getDefault().addTemplate(newTemplate);
                     // update the template UUID of the current snippet
-                    m_settings.setTemplateUUID(newTemplate.getUUID());
+                    m_snippet.getSettings().setTemplateUUID(newTemplate.getUUID());
                     String loc = TemplateProvider.getDefault().
                         getDisplayLocation(newTemplate);
                     m_templateLocation.setText(loc);
@@ -351,7 +348,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
         });
         JPanel templateInfoPanel = new JPanel(new BorderLayout());
         TemplateProvider provider = TemplateProvider.getDefault();
-        String uuid = m_settings.getTemplateUUID();
+        String uuid = m_snippet.getSettings().getTemplateUUID();
         RSnippetTemplate template = null != uuid ? provider.getTemplate(
                 UUID.fromString(uuid)) : null;
         String loc = null != template
@@ -498,14 +495,13 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			NodeSettingsRO settingsro = NodeSettings
 					.loadFromXML(new ByteArrayInputStream(os.toString("UTF-8")
 							.getBytes("UTF-8")));
-			m_settings.loadSettings(settingsro);
+			m_snippet.getSettings().loadSettings(settingsro);
 		} catch (Exception e) {
 			LOGGER.error("Cannot apply template.", e);
 		}
  
 		m_colList.setSpec(spec);
 		m_flowVarsList.setFlowVariables(flowVariables.values());
-		m_snippet.setSettings(m_settings);
 		// update template info panel
 		m_templateLocation.setText(createTemplateLocationText(template));
 
@@ -528,24 +524,28 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	 * {@inheritDoc}
 	 */
 	public void onOpen() {
-		// FIXME: Should we keep following lines?
-		rClearRWorkspace();
-		m_console.setText("");
-		m_objectBrowser.updateData(new String[0], new String[0]);
-
-		m_snippetTextArea.requestFocus();
-		m_snippetTextArea.requestFocusInWindow();
-
-		RController.getDefault().getConsoleController().attachOutput(m_console);
-		// start listing to the RController for updating the object browser
-		RController.getDefault().addRListener(this);
+		if (m_isInteractive) {
+			// FIXME: Should we keep following lines?
+			rClearRWorkspace();
+			m_console.setText("");
+			m_objectBrowser.updateData(new String[0], new String[0]);
+	
+			m_snippetTextArea.requestFocus();
+			m_snippetTextArea.requestFocusInWindow();
+	
+			RController.getDefault().getConsoleController().attachOutput(m_console);
+			// start listing to the RController for updating the object browser
+			RController.getDefault().addRListener(this);
+		}
 
 	}
 
 	public void onClose() {
-		RController.getDefault().getConsoleController().detach(m_console);
-		// start listing to the RController for updating the object browser
-		RController.getDefault().removeRListener(this);
+		if (m_isInteractive) {
+			RController.getDefault().getConsoleController().detach(m_console);
+			// start listing to the RController for updating the object browser
+			RController.getDefault().removeRListener(this);
+		}
 	}
 
 	/**
@@ -576,8 +576,8 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	
 	public void updateData(final NodeSettingsRO settings,
 			final DataTableSpec spec, final Collection<FlowVariable> flowVariables) {
-		m_settings.loadSettingsForDialog(settings);
-		updateData(m_settings, null, spec, flowVariables);
+		m_snippet.getSettings().loadSettingsForDialog(settings);		
+		updateData(m_snippet.getSettings(), null, spec, flowVariables);
 	}
 
 
@@ -612,11 +612,10 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	protected void updateDataInternal(final RSnippetSettings settings,
 			final BufferedDataTable inputData, final DataTableSpec spec,
 			final Collection<FlowVariable> flowVariables) {
-		m_settings.loadSettings(settings);
+		m_snippet.getSettings().loadSettings(settings);
 
 		m_colList.setSpec(spec);
 		m_flowVarsList.setFlowVariables(flowVariables);
-		m_snippet.setSettings(m_settings);
 
 		// // set caret position to the start of the custom expression
 		// m_snippetTextArea.setCaretPosition(
@@ -627,12 +626,16 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
         // update template info panel
         TemplateProvider provider = TemplateProvider.getDefault();
-        String uuid = m_settings.getTemplateUUID();
+        String uuid = m_snippet.getSettings().getTemplateUUID();
         RSnippetTemplate template = null != uuid ? provider.getTemplate(
                 UUID.fromString(uuid)) : null;
         String loc = null != template ? createTemplateLocationText(template)
                 : "";
         m_templateLocation.setText(loc);	
+	}
+
+	public RSnippet getRSnippet() {
+		return m_snippet;
 	}	
 	
 }

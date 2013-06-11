@@ -53,8 +53,6 @@ package org.knime.r;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
@@ -71,7 +69,6 @@ import org.knime.core.node.NodeLogger;
  *
  * @author Heiko Hofer
  */
-@SuppressWarnings("restriction")
 public final class RSnippet {
     /** Identifier for row index (starting with 0). */
     public static final String ROWINDEX = "ROWINDEX";
@@ -84,53 +81,54 @@ public final class RSnippet {
     public static final String VERSION_1_X = "version 1.x";
 
     private RSyntaxDocument m_document;
-    // true when the document has changed and the m_snippet is not up to date.
-    private boolean m_dirty;
+
 
     private RSnippetSettings m_settings;
 
     private NodeLogger m_logger;
     
     public RSnippet() {
-		m_settings = new RSnippetSettings();
+		m_settings = new RSnippetSettings() {
+        	
+        	@Override
+        	String getScript() {
+        		if (m_document != null) {
+        			try {
+						return m_document.getText(0, m_document.getLength());
+					} catch (BadLocationException e) {
+						// never happens
+						throw new RuntimeException(e);
+					}  			
+        		} else {
+        			return super.getScript();
+        		}
+        	}
+        	
+        	@Override
+        	void setScript(final String script) {        
+        		if (m_document != null) {
+        	        try {
+        	        	String s = m_document.getText(0, m_document.getLength());
+        	        	if (!s.equals(script)) {
+        	        		m_document.replace(0, m_document.getLength(), script, null);
+        	        	}
+        	        } catch (BadLocationException e) {
+        	            throw new IllegalStateException(e.getMessage(), e);
+        	        }		
+        		}
+        		super.setScript(script);
+        	}
+		};
 		
 	}
-
-    /**
-     * Create a new snippet with the given settings.
-     * @param settings the settings
-     */
-    public void setSettings(final RSnippetSettings settings) {
-        m_settings = settings;
-        init();
-    }
-
-    private void init() {
-        if (null != m_document) {
-            initDocument(m_document);
-        }
-    }
-
 
     /**
      * Get the updated settings java snippet.
      * @return the settings
      */
     public RSnippetSettings getSettings() {
-        updateSettings();
-        return m_settings;
+    	return m_settings;
     }
-
-    private void updateSettings() {
-        try {
-			m_settings.setScript(m_document.getText(0, m_document.getLength()));
-		} catch (BadLocationException e) {
-			// never happens
-			throw new RuntimeException(e);
-		}
-    }
-
-
     
     /**
      * Get the document with the code of the snippet.
@@ -139,25 +137,10 @@ public final class RSnippet {
     public RSyntaxDocument getDocument() {
         // Lazy initialization of the document
         if (m_document == null) {
+        	String initScript = m_settings.getScript();
             m_document = createDocument();
-            m_document.addDocumentListener(new DocumentListener() {
-
-                @Override
-                public void removeUpdate(final DocumentEvent e) {
-                    m_dirty = true;
-                }
-
-                @Override
-                public void insertUpdate(final DocumentEvent e) {
-                    m_dirty = true;
-                }
-
-                @Override
-                public void changedUpdate(final DocumentEvent e) {
-                    m_dirty = true;
-                }
-            });
-            initDocument(m_document);
+            // this changes the document to, if present
+            m_settings.setScript(initScript);
         }
         return m_document;
     }
@@ -167,16 +150,6 @@ public final class RSnippet {
     private RSyntaxDocument createDocument() {
     	RSyntaxDocument doc = new RSnippetDocument();
         return doc;
-    }
-
-    /** Initialize document with information from the settings. */
-    private void initDocument(final RSyntaxDocument doc) {
-        try {
-            doc.replace(0, doc.getLength(), m_settings.getScript(), null);
-        } catch (BadLocationException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-        
     }
 
     /**

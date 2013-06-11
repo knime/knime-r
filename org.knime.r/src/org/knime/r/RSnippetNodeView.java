@@ -50,14 +50,23 @@
 package org.knime.r;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.interactive.DefaultReexecutionCallback;
 import org.knime.core.node.interactive.InteractiveClientNodeView;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.r.template.DefaultTemplateController;
@@ -96,96 +105,102 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
         		m_tabbedPane.setSelectedIndex(0);
         	}	
         }; 
-        
-        setShowNODATALabel(false);       
-        
+        m_panel.getRSnippet().getSettings().loadSettings(nodeModel.getSettings());
+            
         
         JPanel mainPanel = new JPanel(new BorderLayout());
         m_tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         m_tabbedPane.addTab("R Snippet", m_panel);
         m_tabbedPane.addTab("Templates", createTemplatesPanel());
-        mainPanel.add(m_tabbedPane, BorderLayout.CENTER);
-        setComponent(mainPanel);
+        mainPanel.add(m_tabbedPane, BorderLayout.CENTER);        
         
         
-        //super.setShowNODATALabel(false);
-//        JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-//        p.setBorder(BorderFactory.createTitledBorder(" Append Annotation "));
-//
-//        final JCheckBox checkBox = new JCheckBox("New Column");
-//
-//        final JTextField textField = new JTextField();
-//        textField.setPreferredSize(new Dimension(150,
-//                Math.max(20, textField.getHeight())));
-//        textField.addKeyListener(new KeyAdapter() {
-//            @Override
-//            public void keyPressed(final java.awt.event.KeyEvent e) {
-//                if (e == null) {
-//                    return;
-//                }
-//                if (e.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
-//                    appendAnnotation(
-//                            textField.getText(), checkBox.isSelected());
-//                }
-//            }
-//        });
-//        p.add(textField);
-//
-//        JButton button = new JButton("Apply");
-//        button.setPreferredSize(new Dimension(100,
-//                Math.max(25, button.getHeight())));
-//        button.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(final ActionEvent e) {
-//                if (e == null) {
-//                    return;
-//                }
-//                appendAnnotation(textField.getText(), checkBox.isSelected());
-//            }
-//        });
-//        p.add(button);
-//        p.add(checkBox);
-//
-//        JPanel panel = new JPanel(new BorderLayout());
-//        panel.add(p, BorderLayout.NORTH);
-//        TableContentModel cview = new TableContentModel() {
-//            /**
-//             * {@inheritDoc}
-//             */
-//            @Override
-//            public void hiLite(final KeyEvent e) {
-//                modelChanged();
-//            }
-//            /**
-//             * {@inheritDoc}
-//             */
-//            @Override
-//            public void unHiLite(final KeyEvent e) {
-//                modelChanged();
-//            }
-//            /**
-//             * {@inheritDoc}
-//             */
-//            @Override
-//            public void unHiLiteAll(final KeyEvent e) {
-//                modelChanged();
-//            }
-//        };
-//        m_table = new TableView(cview);
-//        super.getJMenuBar().add(m_table.createHiLiteMenu());
-//        m_table.setPreferredSize(new Dimension(425, 250));
-//        m_table.setShowColorInfo(false);
-//        panel.add(m_table, BorderLayout.CENTER);
-//        super.setComponent(panel);
-    }
+        
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+        buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 30));
+        final JButton tryRun = new JButton("Re-Execute");
+        final JButton setAsNewDefault = new JButton("Set as new default");
+        
+        tryRun.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				triggerReExecution(new RSnippetViewContent(m_panel.getRSnippet().getSettings()), new DefaultReexecutionCallback());
+				setAsNewDefault.setEnabled(true);
+			}
+		});
+        tryRun.setEnabled(false);
+        buttonsPanel.add(tryRun);
+        
+        
+        setAsNewDefault.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				getNodeModel().loadSettings(m_panel.getRSnippet().getSettings());
+				setNewDefaultConfiguration(new DefaultReexecutionCallback());		
+			}
+		});
+        setAsNewDefault.setEnabled(false);
+        buttonsPanel.add(setAsNewDefault);
+        JButton close = new JButton("Close");
+        close.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				if (!m_panel.getRSnippet().getSettings().getScript().equals(getNodeModel().getSettings().getScript())) {
+					int answer = JOptionPane.showOptionDialog(null, 
+							"Do you want to discard your recent changes?", 
+							"Confirm Cancel", 
+							JOptionPane.OK_CANCEL_OPTION, 
+							JOptionPane.QUESTION_MESSAGE, 
+							null, 
+							new Object[] {"Ok", "Set as new default", "Cancel"}, JOptionPane.OK_OPTION);						
+			        if (answer == 0) {
+			        	closeView();
+			        } else if(answer == 1) {
+			        	synchronized(getNodeModel()) {
+							triggerReExecution(new RSnippetViewContent(m_panel.getRSnippet().getSettings()), new DefaultReexecutionCallback());
+							getNodeModel().loadSettings(m_panel.getRSnippet().getSettings());
+							setNewDefaultConfiguration(new DefaultReexecutionCallback());
+				        	closeView();
+			        	}
+			        }
+				} else {
+					closeView();
+				}
 
-//    private void appendAnnotation(final String anno, final boolean newColumn) {
-//        if (anno != null && !anno.isEmpty()) {
-//            getNodeModel().appendAnnotation(anno, newColumn);
-//            //FIXME: Put annotation map in view content
-//            triggerReExecution(new RSnippetViewContent(), new DefaultReexecutionCallback());
-//        }
-//    }
+			}
+		});
+        buttonsPanel.add(close);   
+        
+        mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
+        
+        RSnippet snippet = m_panel.getRSnippet();
+        snippet.getDocument().addDocumentListener(new DocumentListener() {
+			
+        	private void documentChanged(final boolean changed) {
+        		tryRun.setEnabled(changed);
+				setAsNewDefault.setEnabled(!changed);
+        	}
+        	
+			@Override
+			public void removeUpdate(final DocumentEvent e) {
+				documentChanged(true);
+			}
+			
+			@Override
+			public void insertUpdate(final DocumentEvent e) {
+				documentChanged(true);
+			}
+			
+			@Override
+			public void changedUpdate(final DocumentEvent e) {
+				documentChanged(true);
+			}
+		});
+        
+        setComponent(mainPanel);
+    }
     
     /** Create the templates tab. */
     private JPanel createTemplatesPanel() {
@@ -204,27 +219,22 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
      */
     @Override
     protected void modelChanged() {
-//        DataTable data = super.getNodeModel().getHiLiteAnnotationsTable();
-//        m_table.setDataTable(data);
-//        HiLiteHandler hdl = super.getNodeModel().getInHiLiteHandler(0);
-//        m_table.setHiLiteHandler(hdl);
-//        m_table.setColumnWidth(50);
     	RSnippetNodeModel model = getNodeModel();
+    	// if script has been updated    	
     	DataTableSpec spec = model.getInputSpec() != null
     			? model.getInputSpec()
     			: new DataTableSpec(); 
     	if (model.getInputData() != null) {
-    		m_panel.updateData(model.getSettings(), model.getInputData(),
+    		m_panel.updateData(m_panel.getRSnippet().getSettings(), model.getInputData(),
     				model.getAvailableInputFlowVariables().values());
     	} else {   		
-	    	m_panel.updateData(model.getSettings(), spec,
+	    	m_panel.updateData(m_panel.getRSnippet().getSettings(), spec,
 	    			model.getAvailableInputFlowVariables().values());
     	}
     	
     		
 		m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getNodeModel().getAvailableInputFlowVariables());			
-    	
     }
 
     /**

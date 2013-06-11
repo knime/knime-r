@@ -57,4 +57,14 @@ import org.knime.core.node.interactive.ViewContent;
  */
 public class RSnippetViewContent extends ViewContent {
 
+	private RSnippetSettings m_settings;
+
+	public RSnippetViewContent(final RSnippetSettings settings) {
+		m_settings = settings;
+	}
+
+	public RSnippetSettings getSettings() {
+		return m_settings;
+	}
+
 }

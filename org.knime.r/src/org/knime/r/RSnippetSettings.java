@@ -135,9 +135,9 @@ public class RSnippetSettings {
      * @param settings To save to.
      */
     public void saveSettings(final ConfigWO settings) {
-        settings.addString(SCRIPT, m_script);
-        settings.addString(TEMPLATE_UUID, m_templateUUID);
-        settings.addString(VERSION, m_version);
+        settings.addString(SCRIPT, getScript());
+        settings.addString(TEMPLATE_UUID, getTemplateUUID());
+        settings.addString(VERSION, getVersion());
     }
 
     /** Loads parameters in NodeModel.
@@ -146,11 +146,11 @@ public class RSnippetSettings {
      */
     public void loadSettings(final ConfigRO settings)
             throws InvalidSettingsException {
-        m_script = settings.getString(SCRIPT);
+        setScript(settings.getString(SCRIPT));
         if (settings.containsKey(TEMPLATE_UUID)) {
-            m_templateUUID = settings.getString(TEMPLATE_UUID);
+            setTemplateUUID(settings.getString(TEMPLATE_UUID));
         }        
-        m_version = settings.getString(VERSION);
+        setVersion(settings.getString(VERSION));
     }
 
 
@@ -158,18 +158,15 @@ public class RSnippetSettings {
      * @param settings To load from.
      */
     public void loadSettingsForDialog(final ConfigRO settings) {
-        m_script = settings.getString(SCRIPT, "");
-        m_templateUUID = settings.getString(TEMPLATE_UUID, null);        
-        m_version = settings.getString(VERSION, RSnippet.VERSION_1_X);
+    	setScript(settings.getString(SCRIPT, ""));
+    	setTemplateUUID(settings.getString(TEMPLATE_UUID, null));        
+    	setVersion(settings.getString(VERSION, RSnippet.VERSION_1_X));
     }
 
 
 	public void loadSettings(final RSnippetSettings s) {
-		if (this == s) {
-			return;
-		}
-		m_script = s.m_script;
-		m_templateUUID = s.m_templateUUID;
-		m_version = s.m_version;
+		setScript(s.getScript());
+		setTemplateUUID(s.getTemplateUUID());
+		setVersion(s.getVersion());
 	}
 }
