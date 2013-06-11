@@ -153,16 +153,17 @@ public class RViewNodeModel extends RSnippetNodeModel {
     protected void reset() {
         m_resultImage = null;
         // clear image file contents
-		try {
-			FileOutputStream erasor = new FileOutputStream(getConfig().getImageFile());
-			erasor.write((new String()).getBytes());
-		    erasor.close();    
-		} catch (FileNotFoundException e) {
-			LOGGER.error("Temporary file is removed.", e);
-		} catch (IOException e) {
-			LOGGER.error("Cannot write temporary file.", e);
-		}
-           
+	    if (getConfig().getImageFile() != null) {
+			try {
+				FileOutputStream erasor = new FileOutputStream(getConfig().getImageFile());
+				erasor.write((new String()).getBytes());
+			    erasor.close();    
+			} catch (FileNotFoundException e) {
+				LOGGER.error("Temporary file is removed.", e);
+			} catch (IOException e) {
+				LOGGER.error("Cannot write temporary file.", e);
+			}
+	    }  
     }
     
     private RViewNodeConfig getConfig() {
