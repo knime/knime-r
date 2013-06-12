@@ -95,6 +95,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel
         		config.getOutPortTypes().toArray(new PortType[config.getOutPortTypes().size()]));;
         m_snippet = new RSnippet();
         m_snippet.attachLogger(LOGGER);
+        m_snippet.getSettings().setScript(config.getDefaultScript());
         m_config = config;
     }  
 

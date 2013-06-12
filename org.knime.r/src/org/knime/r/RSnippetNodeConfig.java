@@ -42,4 +42,34 @@ public class RSnippetNodeConfig {
 	protected String getScriptSuffix() {
 		return "";
 	}
+	
+	/**
+	 * The default script for this node.
+	 * @return the default script
+	 */
+	protected String getDefaultScript() {
+		boolean inHasTable = false;
+		for(PortType portType : getInPortTypes()) {
+			if (portType.equals(BufferedDataTable.TYPE)) {
+				inHasTable = true;
+				break;
+			}
+		}
+		boolean outHasTable = false;
+		for(PortType portType : getOutPortTypes()) {
+			if (portType.equals(BufferedDataTable.TYPE)) {
+				outHasTable = true;
+				break;
+			}
+		}		
+		if (inHasTable && outHasTable) {
+			return "knime.out <- knime.in";
+		} else if (!inHasTable && outHasTable) {
+			return "knime.out <- data";
+		} else if (inHasTable && !outHasTable) {
+			return "data <- knime.in";
+		} else {
+			return "";
+		}
+	}	
 }
