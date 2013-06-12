@@ -85,6 +85,11 @@ public class RViewNodeModel extends RSnippetNodeModel {
 	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
 			throws Exception {
         super.execute(inData, exec);
+        return postExecuteInternal();
+
+	}
+	
+	private PortObject[] postExecuteInternal() throws Exception {
         if (getConfig().getImageFile().length() > 0) {
 	        // create image after execution.
 	        FileInputStream fis = new FileInputStream(getConfig().getImageFile());
@@ -95,6 +100,23 @@ public class RViewNodeModel extends RSnippetNodeModel {
         } else {
         	throw new RuntimeException("No Image was created by thr R-Script");
         }
+	}
+
+
+	@Override
+	public PortObject[] reExecute(final RSnippetViewContent content,
+			final PortObject[] data, final ExecutionContext exec)
+			throws CanceledExecutionException {
+		super.reExecute(content, data, exec);
+		try {
+			return postExecuteInternal();
+		} catch (Exception e) {
+			if (e instanceof CanceledExecutionException) {
+				throw (CanceledExecutionException)e;
+			} else {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 	
 	

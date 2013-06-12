@@ -27,9 +27,11 @@
 package org.knime.r;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.knime.base.node.io.pmml.read.PMMLImport;
+import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -38,6 +40,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.port.image.ImagePortObject;
 
 
 /**
@@ -64,6 +67,10 @@ public class RToPMMLNodeModel extends RSnippetNodeModel {
 	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
 			throws Exception {
         super.execute(inData, exec);
+        return postExecuteInternal();
+	}
+	
+	private PortObject[] postExecuteInternal() throws Exception {
         if (getConfig().getImageFile().length() > 0) {
 	        PMMLImport importer = new PMMLImport(getConfig().getImageFile(), true);
             return new PortObject[]{importer.getPortObject()};
@@ -71,8 +78,23 @@ public class RToPMMLNodeModel extends RSnippetNodeModel {
         	throw new RuntimeException("No PMML file was created by thr R-Script");
         }
 	}
-	
-	
+
+
+	@Override
+	public PortObject[] reExecute(final RSnippetViewContent content,
+			final PortObject[] data, final ExecutionContext exec)
+			throws CanceledExecutionException {
+		super.reExecute(content, data, exec);
+		try {
+			return postExecuteInternal();
+		} catch (Exception e) {
+			if (e instanceof CanceledExecutionException) {
+				throw (CanceledExecutionException)e;
+			} else {
+				throw new RuntimeException(e);
+			}
+		}
+	}	
 	
     /**
      * {@inheritDoc}
