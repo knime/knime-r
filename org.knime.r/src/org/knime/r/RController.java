@@ -97,13 +97,16 @@ public class RController {
 		try {
 			if (Platform.isWindows()) {
 				CLibrary.INSTANCE._putenv("R_HOME" + "=" + rHome);
+				String path = CLibrary.INSTANCE.getenv("PATH");
+				String rdllPath = getWinRDllPath(rHome);				
+				CLibrary.INSTANCE._putenv("PATH" + "=" + path + ";" + rdllPath);
 			} else {
 				CLibrary.INSTANCE.setenv("R_HOME", rHome, 1);
 			}
 			String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
 			LOGGER.info("R_HOME: " + sysRHome);
-//			m_engine = new JRIEngine(new String[] { "--no-save",
-//					"--knime-rhome", rHome }, m_consoleController);
+			String sysPATH = CLibrary.INSTANCE.getenv("PATH");
+			LOGGER.info("PATH: " + sysPATH);
 			m_engine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
 		} catch (REngineException e) {
 			throw new RuntimeException(e);
@@ -127,6 +130,31 @@ public class RController {
 				}
 			}
 		}.start();
+	}
+
+	/**
+	 * Get path to the directory containing R.dll
+	 * @param rHome the R_HOME directory
+	 * @return path to the directory containing R.dll
+	 */
+	private String getWinRDllPath(String rHome) {
+		if (Platform.is64Bit()) {
+			String rdllPath64 = rHome + "\\bin\\x64";
+			File rdllFile64 = new File(rdllPath64);
+			if (rdllFile64.exists() && rdllFile64.isDirectory()) {
+				return rdllPath64;			
+			} else {			
+				throw new RuntimeException("Cannot find path to R.dll (64bit)");
+			}			
+		} else {
+			String rdllPath32 = rHome + "\\bin\\i386";
+			File rdllFile32 = new File(rdllPath32);
+			if (rdllFile32.exists() && rdllFile32.isDirectory()) {
+				return rdllPath32;		
+			} else {			
+				throw new RuntimeException("Cannot find path to R.dll (32bit)");
+			}	
+		}		
 	}
 
 	public JRIEngine getJRIEngine() {
