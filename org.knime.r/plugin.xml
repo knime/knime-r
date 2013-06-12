@@ -7,59 +7,69 @@
          point="org.knime.workbench.repository.nodes">
       <node
             category-path="/r/local"
-            factory-class="org.knime.r.RSnippetNodeFactory"
-            id="org.knime.r.RSnippetNodeFactory">
-      </node>
-      <node
-            category-path="/r/local"
-            factory-class="org.knime.r.RToTableNodeFactory"
-            id="org.knime.r.RToTableNodeFactory">
-      </node>         
-      <node
-            category-path="/r/local"
-            factory-class="org.knime.r.AddTableToRNodeFactory"
-            id="org.knime.r.AddTableToRNodeFactory">
-      </node>      
-      <node
-            category-path="/r/local"
-            factory-class="org.knime.r.RViewNodeFactory"
-            id="org.knime.r.RViewNodeFactory">
-      </node>   
-      <node
-            category-path="/r/local"
-            factory-class="org.knime.r.RToViewNodeFactory"
-            id="org.knime.r.RToViewNodeFactory">
-      </node>
-      <node
-            category-path="/r/local"
-            factory-class="org.knime.r.RLearnerNodeFactory"
-            id="org.knime.r.RLearnerNodeFactory">
-      </node>         
-      <node
-            category-path="/r/local"
-            factory-class="org.knime.r.RPredictorNodeFactory"
-            id="org.knime.r.RPredictorNodeFactory">
-      </node>        
-      <node
-            category-path="/r/local"
-            factory-class="org.knime.r.RToPMMLNodeFactory"
-            id="org.knime.r.RToPMMLNodeFactory">
-      </node>         
-      <node
-            category-path="/r/local"
             factory-class="org.knime.r.RReaderTableNodeFactory"
             id="org.knime.r.RReaderTableNodeFactory">
       </node>        
       <node
             category-path="/r/local"
             factory-class="org.knime.r.RReaderWorkspaceNodeFactory"
-            id="org.knime.r.RReaderWorkspaceNodeFactory">
+            id="org.knime.r.RReaderWorkspaceNodeFactory"
+            after="org.knime.r.RReaderTableNodeFactory">
       </node>
       <node
             category-path="/r/local"
+            factory-class="org.knime.r.RSnippetNodeFactory"
+            id="org.knime.r.RSnippetNodeFactory"
+            after="org.knime.r.RReaderWorkspaceNodeFactory">
+      </node>
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.r.RViewNodeFactory"
+            id="org.knime.r.RViewNodeFactory"
+            after="org.knime.r.RSnippetNodeFactory">
+      </node>   
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.r.RToViewNodeFactory"
+            id="org.knime.r.RToViewNodeFactory"
+            after="org.knime.r.RViewNodeFactory">
+      </node>
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.r.RToTableNodeFactory"
+            id="org.knime.r.RToTableNodeFactory"
+            after="org.knime.r.RToViewNodeFactory">
+      </node>         
+      <node
+            category-path="/r/local"
             factory-class="org.knime.r.TableToRNodeFactory"
-            id="org.knime.r.TableToRNodeFactory">
+            id="org.knime.r.TableToRNodeFactory"
+            after="org.knime.r.RToTableNodeFactory">
       </node>                             
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.r.AddTableToRNodeFactory"
+            id="org.knime.r.AddTableToRNodeFactory"
+            after="org.knime.r.TableToRNodeFactory">
+      </node>      
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.r.RLearnerNodeFactory"
+            id="org.knime.r.RLearnerNodeFactory"
+            after="org.knime.r.AddTableToRNodeFactory">
+      </node>         
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.r.RPredictorNodeFactory"
+            id="org.knime.r.RPredictorNodeFactory"
+            after="org.knime.r.RLearnerNodeFactory">
+      </node>        
+      <node
+            category-path="/r/local"
+            factory-class="org.knime.r.RToPMMLNodeFactory"
+            id="org.knime.r.RToPMMLNodeFactory"
+            after="org.knime.r.RPredictorNodeFactory">
+      </node>         
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
