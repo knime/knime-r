@@ -57,6 +57,8 @@ import org.fife.ui.rsyntaxtextarea.ErrorStrip;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettings;
@@ -73,8 +75,6 @@ import org.knime.r.ui.RFlowVariableList;
 import org.knime.r.ui.RObjectBrowser;
 import org.knime.r.ui.RSnippetTextArea;
 import org.rosuda.REngine.REXP;
-import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.REngineException;
 
 /**
  * The dialog component for RSnippet-Nodes.
@@ -432,16 +432,12 @@ public class RSnippetNodePanel extends JPanel implements RListener {
     }	
 
 	private void rClearRWorkspace() {
-		 try {
-			RController.getDefault().clearWorkspace();
-		} catch (REngineException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (REXPMismatchException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ExecutionMonitor exec = new ExecutionMonitor();
+		try {
+			RController.getDefault().clearWorkspace(exec);
+		} catch (CanceledExecutionException e) {
+			LOGGER.info("clear workspace canceled.", e);
 		}
-
 	}
 
 	private void rPrintValue(final String name) {

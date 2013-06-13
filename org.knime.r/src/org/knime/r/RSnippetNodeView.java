@@ -65,14 +65,14 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.interactive.DefaultReexecutionCallback;
 import org.knime.core.node.interactive.InteractiveClientNodeView;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.r.template.DefaultTemplateController;
 import org.knime.r.template.TemplatesPanel;
-import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.REngineException;
 
 /**
  *
@@ -86,6 +86,10 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
 	private JTabbedPane m_tabbedPane;
 	private Class m_templateMetaCategory;
 	private DefaultTemplateController m_templatesController;
+
+	private JButton m_tryRun;
+
+	private JButton m_setAsNewDefault;
     
 	/**
      * @param nodeModel
@@ -95,6 +99,7 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
      */
     protected RSnippetNodeView(final RSnippetNodeModel nodeModel, final Class templateMetaCategory) {
         super(nodeModel);
+        setShowNODATALabel(false);
         m_templateMetaCategory = templateMetaCategory;
         
         m_panel = new RSnippetNodePanel(templateMetaCategory, nodeModel.getRSnippetNodeConfig(), false, true) {
@@ -109,7 +114,11 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
         	
         	@Override
         	protected void resetWorkspace() {
-        		resetRWorkspace();
+        		try {
+					resetRWorkspace();
+				} catch (CanceledExecutionException e) {
+					throw new RuntimeException(e);
+				}
         	}
 
 
@@ -127,30 +136,30 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
         
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 30));
-        final JButton tryRun = new JButton("Re-Execute");
-        final JButton setAsNewDefault = new JButton("Set as new default");
+        m_tryRun = new JButton("Re-Execute");
+        m_setAsNewDefault = new JButton("Set as new default");
         
-        tryRun.addActionListener(new ActionListener() {
+        m_tryRun.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				triggerReExecution(new RSnippetViewContent(m_panel.getRSnippet().getSettings()), new DefaultReexecutionCallback());
-				setAsNewDefault.setEnabled(true);
+				m_setAsNewDefault.setEnabled(true);
 			}
 		});
-        tryRun.setEnabled(false);
-        buttonsPanel.add(tryRun);
+        reExecuteSetEnabled(false);
+        buttonsPanel.add(m_tryRun);
         
         
-        setAsNewDefault.addActionListener(new ActionListener() {
+        m_setAsNewDefault.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				getNodeModel().loadSettings(m_panel.getRSnippet().getSettings());
 				setNewDefaultConfiguration(new DefaultReexecutionCallback());		
 			}
 		});
-        setAsNewDefault.setEnabled(false);
-        buttonsPanel.add(setAsNewDefault);
+        setAsNewDefaultSetEnabled(false);
+        buttonsPanel.add(m_setAsNewDefault);
         JButton close = new JButton("Close");
         close.addActionListener(new ActionListener() {
 			
@@ -188,8 +197,8 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
         snippet.getDocument().addDocumentListener(new DocumentListener() {
 			
         	private void documentChanged(final boolean changed) {
-        		tryRun.setEnabled(changed);
-				setAsNewDefault.setEnabled(!changed);
+        		reExecuteSetEnabled(changed);
+        		setAsNewDefaultSetEnabled(!changed);
         	}
         	
 			@Override
@@ -210,6 +219,24 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
         
         setComponent(mainPanel);
     }
+    
+    private void reExecuteSetEnabled(final boolean enabled) {
+//    	if (!canReExecute()) {
+//    		m_tryRun.setEnabled(false);
+//    		m_setAsNewDefault.setEnabled(false);
+//    	} else {
+    		m_tryRun.setEnabled(enabled);
+//    	}
+    }
+    
+    private void setAsNewDefaultSetEnabled(final boolean enabled) {
+//    	if (!canReExecute()) {
+//    		m_tryRun.setEnabled(false);
+//    		m_setAsNewDefault.setEnabled(false);
+//    	} else {
+    		m_setAsNewDefault.setEnabled(enabled);
+//    	}
+    }    
     
     /** Create the templates tab. */
     private JPanel createTemplatesPanel() {
@@ -245,22 +272,27 @@ public class RSnippetNodeView extends InteractiveClientNodeView<RSnippetNodeMode
 		m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getNodeModel().getAvailableInputFlowVariables());
         // send data to R
-        resetRWorkspace();
-    }
-    
-	private void resetRWorkspace() {
-		try {
-			RController.getDefault().clearWorkspace();
-			if (getNodeModel().getInputData() != null) {
-				RController.getDefault().exportDataTable(getNodeModel().getInputData(), "knime.in", null);
-			}
-			RController.getDefault().exportFlowVariables(getNodeModel().getAvailableFlowVariables().values(), "knime.flow.in", null);
-			m_panel.workspaceChanged(null);
-		} catch (REngineException e) {
-			throw new RuntimeException(e);
-		} catch (REXPMismatchException e) {
+        try {
+			resetRWorkspace();
+		} catch (CanceledExecutionException e) {
 			throw new RuntimeException(e);
 		}
+        
+        // both tryRun and setAsNewDefault triggers a reexecute check if reexecute is possible.
+//        if (!canReExecute()) {
+//        	reExecuteSetEnabled(false);
+//        	
+//        }
+    }
+    
+	private void resetRWorkspace() throws CanceledExecutionException {
+		ExecutionMonitor exec = new ExecutionMonitor();
+		RController.getDefault().clearWorkspace(exec);
+		if (getNodeModel().getInputData() != null) {
+			RController.getDefault().exportDataTable(getNodeModel().getInputData(), "knime.in", exec);
+		}
+		RController.getDefault().exportFlowVariables(getNodeModel().getAvailableFlowVariables().values(), "knime.flow.in", exec);
+		m_panel.workspaceChanged(null);
 	}
 
     /**

@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
 
 import org.knime.core.data.BooleanValue;
@@ -19,7 +17,6 @@ import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
-import org.knime.core.data.DataValue;
 import org.knime.core.data.DoubleValue;
 import org.knime.core.data.IntValue;
 import org.knime.core.data.collection.CollectionCellFactory;
@@ -32,7 +29,9 @@ import org.knime.core.data.def.IntCell;
 import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
 import org.rosuda.REngine.REXP;
@@ -42,6 +41,7 @@ import org.rosuda.REngine.REXPInteger;
 import org.rosuda.REngine.REXPList;
 import org.rosuda.REngine.REXPLogical;
 import org.rosuda.REngine.REXPMismatchException;
+import org.rosuda.REngine.REXPNull;
 import org.rosuda.REngine.REXPString;
 import org.rosuda.REngine.REXPVector;
 import org.rosuda.REngine.REngine;
@@ -137,7 +137,7 @@ public class RController {
 	 * @param rHome the R_HOME directory
 	 * @return path to the directory containing R.dll
 	 */
-	private String getWinRDllPath(String rHome) {
+	private String getWinRDllPath(final String rHome) {
 		if (Platform.is64Bit()) {
 			String rdllPath64 = rHome + "\\bin\\x64";
 			File rdllFile64 = new File(rdllPath64);
@@ -226,49 +226,46 @@ public class RController {
 		}).start();
 	}
 
-	public REXP timedEval(final String cmd) {
-		return timedEval(cmd, 15000, true);
+	public REXP monitoredEval(final String cmd, final ExecutionMonitor exec) throws CanceledExecutionException {
+		try {
+			return new MonitoredEval(exec).run(cmd);
+		} catch (REngineException e) {
+			LOGGER.error("REngine error", e);
+			return new REXPNull();
+		} catch (REXPMismatchException e) {
+			LOGGER.error("REngine error", e);
+			return new REXPNull();
+		}
 	}
 
-	public REXP timedEval(final String cmd, final boolean ask) {
-		return timedEval(cmd, 15000, ask);
+	public void monitoredAssign(final String symbol, final REXP value, final ExecutionMonitor exec) throws CanceledExecutionException {
+		try {
+			new MonitoredEval(exec).assign(symbol, value);
+		} catch (REngineException e) {
+			LOGGER.error("REngine error", e);
+		} catch (REXPMismatchException e) {
+			LOGGER.error("REngine error", e);
+		}		
+		
 	}
 
-	public REXP timedEval(final String cmd, final int interval,
-			final boolean ask) {
-		return new MonitoredEval(interval, ask).run(cmd);
+	public void clearWorkspace(final ExecutionMonitor exec) throws CanceledExecutionException {
+		monitoredEval("rm(list = ls())", exec);
 	}
 
-	public void timedAssign(final String symbol, final REXP value) {
-		timedAssign(symbol, value, 15000, true);
-	}
-
-	public void timedAssign(final String symbol, final REXP value,
-			final boolean ask) {
-		timedAssign(symbol, value, 15000, ask);
-	}
-
-	public void timedAssign(final String symbol, final REXP value,
-			final int interval, final boolean ask) {
-		new MonitoredEval(interval, ask).assign(symbol, value);
-	}
-
-	public void clearWorkspace() throws REngineException, REXPMismatchException {
-		RController.getDefault().eval("rm(list = ls())");
-	}
-
-	public void exportDataValue(final DataValue value, final String name) {
-		timedAssign(TEMP_VARIABLE_NAME, new REXPString(value.toString()));
-		setVariableName(name);
-	}
+//	public void exportDataValue(final DataValue value, final String name) {
+//		timedAssign(TEMP_VARIABLE_NAME, new REXPString(value.toString()));
+//		setVariableName(name);
+//	}
 	
 	public void exportFlowVariables(final Collection<FlowVariable> inFlowVariables,
-			final String name, final ExecutionContext exec)
-			throws REXPMismatchException {
+			final String name, final ExecutionMonitor exec)
+			throws CanceledExecutionException {
 		REXP[] content = new REXP[inFlowVariables.size()];
 		String[] names = new String[inFlowVariables.size()];
 		int i = 0;
 		for(FlowVariable flowVar : inFlowVariables) {
+			exec.checkCanceled();
 			names[i] = flowVar.getName();
 			if (flowVar.getType().equals(FlowVariable.Type.INTEGER)) { 
 				content[i] = new REXPInteger(flowVar.getIntValue());
@@ -280,54 +277,64 @@ public class RController {
 			i++;	
 		}
 
-		timedAssign(TEMP_VARIABLE_NAME, new REXPList(new RList(content, names)));
+		monitoredAssign(TEMP_VARIABLE_NAME, new REXPList(new RList(content, names)), exec);
 		// JGR.getREngine().assign(TEMP_VARIABLE_NAME,
 		// createDataFrame(content, rexpRowNames));
-		setVariableName(name);
+		setVariableName(name, exec);
 	}	
 	
 
 
 	public Collection<FlowVariable> importFlowVariables(final String string,
-			final ExecutionContext exec) throws REXPMismatchException, REngineException {
+			final ExecutionContext exec) {
 		List<FlowVariable> flowVars = new ArrayList<FlowVariable>();
-		REXP value = m_engine.get(string, null, true);
-		if (value == null) {
-			// A variable with this name does not exist
-			return Collections.emptyList();
+		try {
+			REXP value = m_engine.get(string, null, true);
+	
+			if (value == null) {
+				// A variable with this name does not exist
+				return Collections.emptyList();
+			}
+			RList rList = value.asList();
+			
+			for (int c = 0; c < rList.size(); c++) {
+				REXP rexp = rList.at(c);	
+				if (rexp.isInteger()) {
+					flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asInteger()));
+				} else if (rexp.isNumeric()) {
+					flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asDouble()));
+				} else if (rexp.isString()) {
+					flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asString()));
+				} 			
+			}
+		} catch (REngineException e) {
+			LOGGER.error("Rengine error", e);
+		} catch (REXPMismatchException e) {
+			LOGGER.error("Rengine error", e);
 		}
-		RList rList = value.asList();
-		
-		for (int c = 0; c < rList.size(); c++) {
-			REXP rexp = rList.at(c);	
-			if (rexp.isInteger()) {
-				flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asInteger()));
-			} else if (rexp.isNumeric()) {
-				flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asDouble()));
-			} else if (rexp.isString()) {
-				flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asString()));
-			} 			
-		}
-
 		return flowVars;
 	}
 
 	public void exportDataTable(final BufferedDataTable table,
-			final String name, final ExecutionContext exec)
-			throws REXPMismatchException {
+			final String name, final ExecutionMonitor exec)
+			throws CanceledExecutionException {
 		DataTableSpec spec = table.getDataTableSpec();
 
 		String[] rowNames = new String[table.getRowCount()];
 
 		Object[] columns = initializeColumns(table);
-		fillColumns(table, columns, rowNames);
-		RList content = createContent(table, columns);
+		fillColumns(table, columns, rowNames, exec.createSubProgress(0.7));
+		RList content = createContent(table, columns, exec.createSubProgress(0.9));
 
 		REXPString rexpRowNames = new REXPString(rowNames);
-		timedAssign(TEMP_VARIABLE_NAME, createDataFrame(content, rexpRowNames));
-		// JGR.getREngine().assign(TEMP_VARIABLE_NAME,
-		// createDataFrame(content, rexpRowNames));
-		setVariableName(name);
+		try {
+			monitoredAssign(TEMP_VARIABLE_NAME, createDataFrame(content, rexpRowNames, exec), exec);
+			setVariableName(name, exec);
+		} catch (REXPMismatchException e) {
+			LOGGER.error("Cannot create data frame with data from KNIME.", e);
+		}
+
+		exec.setProgress(1.0);
 	}
 
 	private Object[] initializeColumns(final BufferedDataTable table) {
@@ -363,11 +370,13 @@ public class RController {
 	}
 
 	private void fillColumns(final BufferedDataTable table,
-			final Object[] columns, final String[] rowNames) {
+			final Object[] columns, final String[] rowNames, final ExecutionMonitor exec) throws CanceledExecutionException {
 		DataTableSpec spec = table.getDataTableSpec();
 
 		int r = 0;
 		for (DataRow row : table) {
+			exec.checkCanceled();
+			exec.setProgress(r / (double)table.getRowCount());
 			rowNames[r] = row.getKey().getString();
 			for (int c = 0; c < spec.getNumColumns(); c++) {
 				DataType type = spec.getColumnSpec(c).getType();
@@ -437,6 +446,7 @@ public class RController {
 			}
 			r++;
 		}
+		exec.setProgress(1.0);
 	}
 	
 
@@ -475,13 +485,15 @@ public class RController {
 
 
 	private RList createContent(final BufferedDataTable table,
-			final Object[] columns) {
+			final Object[] columns, final ExecutionMonitor exec) throws CanceledExecutionException {
 		DataTableSpec spec = table.getDataTableSpec();
 		String[] colNames = spec.getColumnNames();
 
 		RList content = new RList();
 
 		for (int c = 0; c < spec.getNumColumns(); c++) {
+			exec.checkCanceled();
+			exec.setProgress(c / (double)spec.getNumColumns());
 			DataType type = spec.getColumnSpec(c).getType();
 
 			if (type.isCollectionType()) {
@@ -552,11 +564,11 @@ public class RController {
 				}
 			}
 		}
+		exec.setProgress(1.0);
 		return content;
 	}
 
-	public static REXP createDataFrame(final RList l, final REXP rownames)
-			throws REXPMismatchException {
+	public static REXP createDataFrame(final RList l, final REXP rownames, final ExecutionMonitor exec) throws REXPMismatchException {
 		if (l == null || l.size() < 1) {
 			throw new REXPMismatchException(new REXPList(l),
 					"data frame (must have dim>0)");
@@ -570,13 +582,13 @@ public class RController {
 				rownames }, new String[] { "class", "names", "row.names" })));
 	}
 
-	private void setVariableName(final String name) {
-		timedEval(name + " <- " + TEMP_VARIABLE_NAME + "; rm("
-				+ TEMP_VARIABLE_NAME + ")");
+	private void setVariableName(final String name, final ExecutionMonitor exec) throws CanceledExecutionException {
+		monitoredEval(name + " <- " + TEMP_VARIABLE_NAME + "; rm("
+				+ TEMP_VARIABLE_NAME + ")", exec);
 	}
 
 	public BufferedDataTable importBufferedDataTable(final String string,
-			final ExecutionContext exec) throws REngineException, REXPMismatchException {
+			final ExecutionContext exec) throws REngineException, REXPMismatchException, CanceledExecutionException {
 		REXP typeRexp = eval("class(" + string + ")");
 		if (typeRexp.isNull()) {
 			// a variable with this name does not exist
@@ -603,6 +615,8 @@ public class RController {
 		DataTableSpec outSpec = createSpecFromDataFrame(rList);
 		BufferedDataContainer cont = exec.createDataContainer(outSpec);
 		for (int r = 0; r < numRows; r++) {
+			exec.checkCanceled();
+			exec.setProgress(r / (double)numRows);
 			
 			String rowId = rowIds[r];
 			
@@ -726,138 +740,76 @@ public class RController {
 		return rexp != null && !rexp.isNull() ? rexp.asStrings() : null;				
      }
 
-	public void saveWorkspace(final File tempWorkspaceFile) {
+	public void saveWorkspace(final File tempWorkspaceFile, final ExecutionMonitor exec) throws CanceledExecutionException {
 		// save workspace to file
-		timedEval("save.image(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");");
+		monitoredEval("save.image(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec);
 	}
 
-	public void loadWorkspace(final File tempWorkspaceFile) {
+	public void loadWorkspace(final File tempWorkspaceFile, final ExecutionMonitor exec) throws CanceledExecutionException {
 		// load workspace form file
-		timedEval("load(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");");
+		monitoredEval("load(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec);
 	}
-
-
-
 }
 
 final class MonitoredEval {
 
-	volatile boolean done;
-	volatile REXP result;
-	int interval;
-	int checkInterval;
-	boolean ask;
+	volatile boolean m_done;
+	volatile REXP m_result;
+	int m_interval;
+	private ExecutionMonitor m_exec;
 
-	public MonitoredEval(final int inter, final boolean ak) {
-		done = false;
-		interval = inter;
-		checkInterval = interval;
-		ask = ak;
+	public MonitoredEval(final ExecutionMonitor exec) {
+		m_done = false;
+		m_interval = 300;
+		m_exec = exec;
 	}
 
 	protected void startMonitor() {
-		int t = 0;
 		while (true) {
 			try {
-				Thread.sleep(checkInterval);
+				Thread.sleep(m_interval);
 
 			} catch (InterruptedException e) {
 				return;
 			}
-			if (done) {
+			if (m_done) {
 				return;
 			}
-			if (t + checkInterval < interval) {
-				t = t + checkInterval;
-				continue;
-			}
-			int cancel;
-			if (ask) {
-				cancel = JOptionPane
-						.showConfirmDialog(
-								null,
-								"This R process is taking some time.\nWould you like to cancel it?",
-								"Cancel R Process", JOptionPane.YES_NO_OPTION);
-			} else {
-				cancel = JOptionPane.YES_OPTION;
-			}
-			if (cancel == JOptionPane.YES_OPTION) {
+			try {
+				m_exec.checkCanceled();
+			} catch (CanceledExecutionException e) {
+				// stop R
 				(RController.getDefault().getJRIEngine()).getRni().rniStop(0);
 				return;
-			} else {
-				t = 0;
 			}
 		}
 	}
 
-	public REXP run(final String cmd) {
-
-		try {
-			if (SwingUtilities.isEventDispatchThread() && ask) {
-				final String c = cmd;
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							result = RController.getDefault().eval(c);
-						} catch (REngineException e) {
-							result = null;
-						} catch (REXPMismatchException e) {
-							result = null;
-						}
-						done = true;
-					}
-				}).start();
-				checkInterval = 10;
+	public REXP run(final String cmd) throws REngineException, REXPMismatchException, CanceledExecutionException {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
 				startMonitor();
-			} else {
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						startMonitor();
-					}
-				}).start();
-
-				result = RController.getDefault().eval(cmd);
 			}
-			done = true;
-			return result;
-		} catch (Exception e) {
-			return null;
-		}
+		}).start();
+
+		m_result = RController.getDefault().eval(cmd);
+		m_exec.checkCanceled();
+		m_done = true;
+		return m_result;
 	}
 
-	public void assign(final String symbol, final REXP value) {
-		if (SwingUtilities.isEventDispatchThread() && ask) {
-			final String sym = symbol;
-			final REXP val = value;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						RController.getDefault().getREngine().assign(sym, val);
-					} catch (REngineException e) {
-						result = null;
-					} catch (REXPMismatchException e) {
-						result = null;
-					}
-					done = true;
-				}
-			}).start();
-			checkInterval = 10;
-			startMonitor();
-		} else {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					startMonitor();
-				}
-			}).start();
-			try {
-				RController.getDefault().getREngine().assign(symbol, value);
-				done = true;
-			} catch (Exception e) {
+	public void assign(final String symbol, final REXP value) throws REngineException, REXPMismatchException, CanceledExecutionException {
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				startMonitor();
 			}
-		}
+		}).start();
+
+		RController.getDefault().getREngine().assign(symbol, value);
+		m_done = true;
+		m_exec.checkCanceled();
 	}
 }

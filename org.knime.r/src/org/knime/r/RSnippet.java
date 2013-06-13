@@ -57,9 +57,6 @@ import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.CanceledExecutionException;
-import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 
@@ -198,34 +195,34 @@ public final class RSnippet {
      * the table or the flow variables at the input
      * @throws CanceledExecutionException when execution is canceled by the user
      */
-    public ValueReport<BufferedDataTable> execute(
-            final BufferedDataTable table,
-            final FlowVariableRepository flowVariableRepository,
-            final ExecutionContext exec) throws CanceledExecutionException,
-            InvalidSettingsException  {
-    	List<String> errors = new ArrayList<String>();
-        List<String> warnings = new ArrayList<String>();
-        
-    	try {
-	    	RController r = RController.getDefault();
-	    	// TODO: lock controller
-			r.clearWorkspace();
-			if (table != null) {
-				r.exportDataTable(table, "knime.in", exec);
-			}
-			
-			r.timedEval(getDocument().getText(0, getDocument().getLength()));
-			
-			BufferedDataTable out = r.importBufferedDataTable("knime.out", exec);
-			// TODO: unlock controller
-			return new ValueReport<BufferedDataTable>(out, errors, warnings);
-			
-		} catch (Exception e) {
-			errors.add(e.getMessage());
-			m_logger.error(e);
-			return new ValueReport<BufferedDataTable>(null, errors, warnings);
-		}
-    }
+//    public ValueReport<BufferedDataTable> execute(
+//            final BufferedDataTable table,
+//            final FlowVariableRepository flowVariableRepository,
+//            final ExecutionContext exec) throws CanceledExecutionException,
+//            InvalidSettingsException  {
+//    	List<String> errors = new ArrayList<String>();
+//        List<String> warnings = new ArrayList<String>();
+//        
+//    	try {
+//	    	RController r = RController.getDefault();
+//	    	// TODO: lock controller
+//			r.clearWorkspace();
+//			if (table != null) {
+//				r.exportDataTable(table, "knime.in", exec);
+//			}
+//			
+//			r.timedEval(getDocument().getText(0, getDocument().getLength()));
+//			
+//			BufferedDataTable out = r.importBufferedDataTable("knime.out", exec);
+//			// TODO: unlock controller
+//			return new ValueReport<BufferedDataTable>(out, errors, warnings);
+//			
+//		} catch (Exception e) {
+//			errors.add(e.getMessage());
+//			m_logger.error(e);
+//			return new ValueReport<BufferedDataTable>(null, errors, warnings);
+//		}
+//    }
 
 //    /**
 //     * The execution method when no input table is present. I.e. used by
