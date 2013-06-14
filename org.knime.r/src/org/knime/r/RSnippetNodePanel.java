@@ -40,6 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -122,6 +123,14 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 	private RProgressPanel m_progressPanel;
 
+	private boolean m_hasLock;
+
+	private JButton m_evalSelButton;
+
+	private JButton m_evalScriptButton;
+
+	private JButton m_resetWorkspace;
+
 	/**
 	 * @param templateMetaCategory
 	 *            the meta category used in the templates tab or to create
@@ -169,8 +178,8 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		
 		if (isInteractive) {
 			JPanel runPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));			
-			JButton runButton = new JButton("Eval Script");
-			runButton.addActionListener(new ActionListener() {
+			m_evalScriptButton = new JButton("Eval Script");
+			m_evalScriptButton.addActionListener(new ActionListener() {
 	
 				@Override
 				public void actionPerformed(final ActionEvent e) {
@@ -182,9 +191,9 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 					}
 				}
 			});
-			runPanel.add(runButton);
-			JButton evalSelButton = new JButton("Eval Selection");
-			evalSelButton.addActionListener(new ActionListener() {
+			runPanel.add(m_evalScriptButton);
+			m_evalSelButton = new JButton("Eval Selection");
+			m_evalSelButton.addActionListener(new ActionListener() {
 	
 				@Override
 				public void actionPerformed(final ActionEvent e) {
@@ -199,7 +208,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 					}
 				}
 			});
-			runPanel.add(evalSelButton);
+			runPanel.add(m_evalSelButton);
 			snippetPanel.add(runPanel, BorderLayout.SOUTH);
 		}
 		
@@ -242,14 +251,14 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			objectBrowserContainer.add(objectBrowserScroller, BorderLayout.CENTER);
 			
 			JPanel objectBrowserButtons = new JPanel(new FlowLayout(FlowLayout.TRAILING));		
-			JButton resetData = new JButton("Reset Workspace");
-			resetData.addActionListener(new ActionListener() {
+			m_resetWorkspace = new JButton("Reset Workspace");
+			m_resetWorkspace.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(final ActionEvent e) {
 					resetWorkspace();
 				}
 			});	
-			objectBrowserButtons.add(resetData);
+			objectBrowserButtons.add(m_resetWorkspace);
 			objectBrowserContainer.add(objectBrowserButtons, BorderLayout.SOUTH);
 
 			JSplitPane rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -289,8 +298,8 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				ExecutionMonitor exec = m_progressPanel.lock();
 				try {
-					ExecutionMonitor exec = m_progressPanel.lockR();
 					RController.getDefault().clearWorkspace(exec);
 
 					if (m_input != null) {
@@ -315,7 +324,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 				} catch (CanceledExecutionException e) {
 					// user cancelled, so what.
 				} finally {
-					m_progressPanel.unlockR();
+					m_progressPanel.unlock();
 				}
 			}
 		}).start();
@@ -588,29 +597,72 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	 */
 	public void onOpen() {
 		if (m_isInteractive) {
-			// FIXME: Should we keep following lines?
-			rClearRWorkspace();
+			
 			m_console.setText("");
 			m_objectBrowser.updateData(new String[0], new String[0]);
 	
 			m_snippetTextArea.requestFocus();
 			m_snippetTextArea.requestFocusInWindow();
-	
-			RController.getDefault().getConsoleController().attachOutput(m_console);
-			// start listing to the RController for updating the object browser
-			RController.getDefault().addRListener(this);
 			
-			// send dat a to R
-		    resetWorkspace();
+			m_hasLock = RController.getDefault().tryLock();
+			
+			m_evalScriptButton.setEnabled(m_hasLock);
+			m_evalSelButton.setEnabled(m_hasLock);
+			m_resetWorkspace.setEnabled(m_hasLock);
+			if (!m_hasLock) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						ExecutionMonitor exec = m_progressPanel.lock();
+						try {
+							exec.setMessage("R is busy waiting...");
+							exec.setProgress(0.0);
+							while(!m_hasLock) {
+								exec.checkCanceled();							
+								m_hasLock = RController.getDefault().tryLock(500, TimeUnit.MILLISECONDS);
+							}
+							connectToR();
+						} catch (InterruptedException e) {
+							// interrupted, it's ok
+						} catch (CanceledExecutionException e) {
+							// user interrupted, so what
+						} finally {
+							m_progressPanel.unlock();
+						}
+					}
+				}).start();				
+				
+			} else {
+				connectToR();
+			}
 		}
 
 	}
+	
+	private void connectToR() {
+		RController.getDefault().getConsoleController().attachOutput(m_console);
+		// start listing to the RController for updating the object browser
+		RController.getDefault().addRListener(this);
+		
+		// send dat a to R
+	    resetWorkspace();
+	    
+	    m_evalScriptButton.setEnabled(m_hasLock);
+		m_evalSelButton.setEnabled(m_hasLock);
+		m_resetWorkspace.setEnabled(m_hasLock);
+	}
+	
 
 	public void onClose() {
 		if (m_isInteractive) {
 			RController.getDefault().getConsoleController().detach(m_console);
-			// start listing to the RController for updating the object browser
+			// stop listing to the RController for updating the object browser
 			RController.getDefault().removeRListener(this);
+			m_progressPanel.forceCancel();
+			if (m_hasLock) {
+				RController.getDefault().unlock();
+				m_hasLock = false;
+			}
 		}
 	}
 

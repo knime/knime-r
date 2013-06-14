@@ -77,6 +77,7 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 	private JLabel m_message;
 	private CardLayout m_cardLayout;
 	private DefaultNodeProgressMonitor m_progressMonitor;
+	private boolean m_forceCancel;
 	
 	public RProgressPanel() {
 		super(new CardLayout());
@@ -92,8 +93,6 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 				m_cancelButton.setEnabled(false);
 				
 				m_progressMonitor.setExecuteCanceled();
-				// stop R, which should be done by client code, but in case...
-//				(RController.getDefault().getJRIEngine()).getRni().rniStop(0);
 			}
 		});
 		m_progressBar = new JProgressBar(0, 100);
@@ -115,7 +114,7 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 		m_cardLayout.show(this, "default");
 	}
 
-	public ExecutionMonitor lockR() {
+	public ExecutionMonitor lock() {
 		lock.lock();  // block until condition holds
 		// TODO: try lock R
 		m_progressMonitor = new DefaultNodeProgressMonitor();
@@ -125,10 +124,13 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 		m_progressBar.setIndeterminate(true);
 		m_cancelButton.setEnabled(true);
 		m_cardLayout.show(this, "progress");
+		if (m_forceCancel) {
+			m_progressMonitor.setExecuteCanceled();
+		}
 		return m_exec;
 	}
 
-	public void unlockR() {
+	public void unlock() {
 		try {
 			m_progressMonitor = null;
 			m_cardLayout.show(this, "default");
@@ -138,6 +140,9 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 		} finally {
 			
 			lock.unlock();
+		}
+		if (!lock.hasQueuedThreads()) {
+			m_forceCancel = false;
 		}
 
 	}
@@ -153,6 +158,15 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 			}			
 			int p = (int) Math.round(progress * 100);
 			m_progressBar.setValue(p);
+		}
+	}
+
+	public void forceCancel() {
+		if (m_progressMonitor != null) {
+			// set flag to cancel all waiting threads
+			m_forceCancel = true;
+			// cancel current process
+			m_progressMonitor.setExecuteCanceled();
 		}
 	}
 

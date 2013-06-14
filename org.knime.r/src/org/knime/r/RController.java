@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.event.EventListenerList;
 
@@ -65,6 +67,8 @@ public class RController {
 	private JRIEngine m_engine;
 
 	private EventListenerList listenerList;
+	
+	private ReentrantLock m_lock;
 
 	public static synchronized RController getDefault() {
 		// TODO: recreate instance when R_HOME changes in the preferences.
@@ -92,6 +96,7 @@ public class RController {
 				.getRProvider().getRHome();
 		m_commandQueue = new RCommandQueue();
 		m_consoleController = new RConsoleController();
+		m_lock = new ReentrantLock();
 		listenerList = new EventListenerList();
 
 		try {
@@ -131,7 +136,35 @@ public class RController {
 			}
 		}.start();
 	}
+	
+    /**
+     * see ReentrantLock.lock()
+     */	
+	public void lock() {
+		m_lock.lock();
+	}
 
+    /**
+     * see ReentrantLock.unlock()
+     */	
+	public void unlock() {
+		m_lock.unlock();
+	}
+	
+	/**
+     * see ReentrantLock.tryLock()
+     */		
+	public boolean tryLock() {
+		return m_lock.tryLock();
+	}
+	
+    /**
+     * see ReentrantLock.tryLock()
+     */		
+	public boolean tryLock(final long timeout, final TimeUnit unit) throws InterruptedException {
+		return m_lock.tryLock(timeout, unit);
+	}
+	 
 	/**
 	 * Get path to the directory containing R.dll
 	 * @param rHome the R_HOME directory

@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.text.BadLocationException;
 
@@ -44,7 +45,6 @@ import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.BufferedDataTableHolder;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
@@ -70,10 +70,8 @@ import org.rosuda.REngine.REngineException;
  *
  * @author Heiko Hofer
  */
-public class RSnippetNodeModel extends ExtToolOutputNodeModel implements BufferedDataTableHolder {
+public class RSnippetNodeModel extends ExtToolOutputNodeModel {
     private RSnippet m_snippet;
-	private BufferedDataTable m_data;
-	private DataTableSpec m_configSpec;
 	private RSnippetNodeConfig m_config;
     private static final NodeLogger LOGGER = NodeLogger.getLogger(
         "R Snippet");
@@ -103,17 +101,17 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Buffere
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
             throws InvalidSettingsException {
+    	DataTableSpec tableSpec = null;
         for (PortObjectSpec inSpec : inSpecs) {
         	if (inSpec instanceof DataTableSpec) {
-        		m_configSpec = (DataTableSpec)inSpec;
+        		tableSpec = (DataTableSpec)inSpec;
         	}
         }
         
         FlowVariableRepository flowVarRepository =
             new FlowVariableRepository(getAvailableInputFlowVariables());
         
-        ValueReport<DataTableSpec> report = m_snippet.configure(m_configSpec,
-                flowVarRepository);
+        ValueReport<DataTableSpec> report = m_snippet.configure(tableSpec, flowVarRepository);
 
         if (report.hasWarnings()) {
             setWarningMessage(joinString(report.getWarnings(), "\n"));
@@ -179,32 +177,42 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Buffere
 	private PortObject[] executeInternal(final RSnippetSettings settings,
 			final PortObject[] inData, final ExecutionContext exec) throws CanceledExecutionException {
         m_snippet.getSettings().loadSettings(settings);
-        for (PortObject in : inData) {
-        	if (in instanceof BufferedDataTable) {
-        		m_data = (BufferedDataTable)in;
-        	}
-        }        
 
         FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
-        ValueReport<PortObject[]> out = executeSnippet(inData, flowVarRepo, exec);
         
-        if (out.hasWarnings()) {
-        	setWarningMessage(joinString(out.getWarnings(), "\n"));
-        }            
-        if (out.hasErrors()) {
-        	throw new RuntimeException(joinString(out.getErrors(), "\n"));
-        }
-    
-        pushFlowVariables(flowVarRepo);
         
-        return out.getValue();
-	}
+        boolean hasLock = RController.getDefault().tryLock();
+        try {
+			exec.setMessage("R is busy waiting...");
+			while(!hasLock) {
+				exec.checkCanceled();							
+				hasLock = RController.getDefault().tryLock(500, TimeUnit.MILLISECONDS);
+			
+			}
+			ValueReport<PortObject[]> out = executeSnippet(inData, flowVarRepo, exec);
+			
+	        if (out.hasWarnings()) {
+	        	setWarningMessage(joinString(out.getWarnings(), "\n"));
+	        }            
+	        if (out.hasErrors()) {
+	        	throw new RuntimeException(joinString(out.getErrors(), "\n"));
+	        }
+	        
+	        pushFlowVariables(flowVarRepo);
 
-	
-	@Override
-	protected void reset() {
-		m_data = null;
+	        return out.getValue();		        
+        } catch (InterruptedException e) {
+			// It is interrupted, ok
+		} finally {
+        	if (hasLock) {
+        		RController.getDefault().unlock();
+        	}
+        	
+        }
+        return null;
 	}
+	
+	
 
     
     private ValueReport<PortObject[]> executeSnippet(final PortObject[] inData,
@@ -228,9 +236,9 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Buffere
             }
     		exec.setProgress(0.0);
     		exec.setMessage("Export data do to R");
-    		tempWorkspaceFile = exportData(flowVarRepo, exec.createSubExecutionContext(0.6 - importTime));
+    		tempWorkspaceFile = exportData(inData, flowVarRepo, exec.createSubExecutionContext(0.6 - importTime));
     		exec.setMessage("Run R");
-    		runRScript(tempWorkspaceFile, exec.createSubExecutionContext(1.0 - importTime));    	
+    		runRScript(inData, tempWorkspaceFile, exec.createSubExecutionContext(1.0 - importTime));    	
     		exec.setProgress(1.0 - importTime);
 
     		exec.setMessage("Import data from R");
@@ -257,13 +265,13 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Buffere
 			e.printStackTrace();
 			LOGGER.error(e);
 			return new ValueReport<PortObject[]>(null, errors, warnings);
-		}    	
+		}
 	}
 
 
-	private void runRScript(final File tempWorkspaceFile, final ExecutionContext exec) throws Exception {
+	private void runRScript(final PortObject[] inData, final File tempWorkspaceFile, final ExecutionContext exec) throws Exception {
     	
-    	String rScript = buildRScript(tempWorkspaceFile);
+    	String rScript = buildRScript(inData, tempWorkspaceFile);
 
         // tmp files
         File rCommandFile = null;
@@ -422,13 +430,23 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Buffere
         return tempCommandFile;
     }
     
-	private String buildRScript(final File tempWorkspaceFile) throws BadLocationException {
+	private String buildRScript(final PortObject[] inPorts, final File tempWorkspaceFile) throws BadLocationException {
     	StringBuilder rScript = new StringBuilder();
 		// set working directory
 		rScript.append("setwd(\"");
 		rScript.append(TEMP_PATH);
 		rScript.append("\");\n");
-		// load workspace
+		
+		// load workspaces from the input ports
+		for (PortObject port : inPorts) {
+			if (port instanceof RPortObject) {
+				File portFile = ((RPortObject)port).getFile();
+				rScript.append("load(\"");
+				rScript.append(portFile.getAbsolutePath().replace('\\', '/'));
+				rScript.append("\");\n");
+			}
+		}
+		// load workspace with data table input and flow variables
 		rScript.append("load(\"");
 		rScript.append(tempWorkspaceFile.getAbsolutePath().replace('\\', '/'));
 		rScript.append("\");\n");
@@ -483,12 +501,18 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Buffere
 		
 	}	
 
-	private File exportData(final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws REngineException, REXPMismatchException, IOException, CanceledExecutionException {
+	private File exportData(final PortObject[] inData, final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws REngineException, REXPMismatchException, IOException, CanceledExecutionException {
     	RController r = RController.getDefault();
     	// TODO: lock controller
 		r.clearWorkspace(exec);
-		if (m_data != null) {
-			r.exportDataTable(m_data, "knime.in", exec);
+		BufferedDataTable inTable = null;
+		for (PortObject in : inData) {
+	      	if (in instanceof BufferedDataTable) {
+	      		inTable = (BufferedDataTable)in;
+	       	}
+	    }
+		if (inTable != null) {
+			r.exportDataTable(inTable, "knime.in", exec);
 		}
 		r.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
 		
@@ -547,9 +571,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Buffere
         m_snippet.getSettings().loadSettings(settings);        
     }
 
-	public DataTableSpec getInputSpec() {
-		return m_data != null ? m_data.getDataTableSpec() : m_configSpec;
-	}
 	
 	public RSnippetSettings getSettings() {
 		return m_snippet.getSettings();
@@ -558,24 +579,9 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel implements Buffere
 	protected RSnippetNodeConfig getRSnippetNodeConfig() {
 		return m_config;
 	}
-	
-	public BufferedDataTable getInputData() {
-		return m_data;
-	}
 
 	public void loadSettings(final RSnippetSettings settings) {
 		m_snippet.getSettings().loadSettings(settings);
 	}
 
-	@Override
-	public BufferedDataTable[] getInternalTables() {
-		return m_data != null ? new BufferedDataTable[] {m_data} : new BufferedDataTable[0];
-	}
-
-	@Override
-	public void setInternalTables(final BufferedDataTable[] tables) {
-		if (tables.length > 0) {
-			m_data = tables[0];
-		}
-	}
 }
