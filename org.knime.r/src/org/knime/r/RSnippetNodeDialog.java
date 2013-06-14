@@ -58,13 +58,13 @@ import javax.swing.JPanel;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
-import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.r.template.DefaultTemplateController;
@@ -75,7 +75,7 @@ import org.knime.r.template.TemplatesPanel;
  *
  * @author Heiko Hofer
  */
-public class RSnippetNodeDialog extends NodeDialogPane {
+public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
     private static final NodeLogger LOGGER = NodeLogger.getLogger(
             RSnippetNodeDialog.class);
 
@@ -88,6 +88,8 @@ public class RSnippetNodeDialog extends NodeDialogPane {
 	private Class m_templateMetaCategory;
 	private RSnippetNodeConfig m_config;
 	private int m_tableInPort;
+
+	private PortObject[] m_input;
 
     /**
      * Create a new Dialog.
@@ -107,7 +109,7 @@ public class RSnippetNodeDialog extends NodeDialogPane {
     		i++;
     	}
     	
-        m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, false) {
+        m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, true) {
 
         	@Override
 			public void applyTemplate(final RSnippetTemplate template,
@@ -115,6 +117,12 @@ public class RSnippetNodeDialog extends NodeDialogPane {
                     final Map<String, FlowVariable> flowVariables) {
         		super.applyTemplate(template, spec, flowVariables);
         		setSelected(SNIPPET_TAB);
+        	}
+        	
+        	@Override
+        	protected void resetWorkspace() {
+        		// TODO Auto-generated method stub
+        		super.resetWorkspace();
         	}
         };
         
@@ -149,10 +157,10 @@ public class RSnippetNodeDialog extends NodeDialogPane {
     
     @Override
     protected void loadSettingsFrom(final NodeSettingsRO settings,
-    		final PortObjectSpec[] specs) throws NotConfigurableException {
-    	DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec)specs[m_tableInPort] : null;
-    	
-        m_panel.updateData(settings, spec, getAvailableFlowVariables().values());
+    		final PortObject[] input) throws NotConfigurableException {    	
+    	DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable)input[m_tableInPort]).getSpec() : null;
+    	m_input = input;
+        m_panel.updateData(settings, input, getAvailableFlowVariables().values());
         
         m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getAvailableFlowVariables());	

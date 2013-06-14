@@ -31,7 +31,6 @@ import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.knime.core.node.interactive.InteractiveNodeFactoryExtension;
 import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.local.port.RPortObject;
 
@@ -40,8 +39,7 @@ import org.knime.ext.r.node.local.port.RPortObject;
  *
  * @author Heiko Hofer
  */
-public class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> 
-implements InteractiveNodeFactoryExtension<RToPMMLNodeModel, RSnippetViewContent> {
+public class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> {
 	private RToPMMLNodeConfig m_config;
 
     /**
@@ -102,14 +100,7 @@ implements InteractiveNodeFactoryExtension<RToPMMLNodeModel, RSnippetViewContent
                 new ExtToolStderrNodeView<RToPMMLNodeModel>(nodeModel);
         }
         return null;
-    }
-
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public RSnippetNodeView createInteractiveView(final RToPMMLNodeModel model) {
-		return new RSnippetNodeView(model, this.getClass());
-	}    
+    }  
   
   
 }

@@ -31,15 +31,13 @@ import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.knime.core.node.interactive.InteractiveNodeFactoryExtension;
 
 /**
  * Factory for the <code>RSnippetNodeFactory</code> node.
  *
  * @author Heiko Hofer
  */
-public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel> 
-		implements InteractiveNodeFactoryExtension<RSnippetNodeModel, RSnippetViewContent> {
+public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel> {
 	private RSnippetNodeConfig m_config = new RSnippetNodeConfig();
 	
     /**
@@ -99,10 +97,4 @@ public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel>
     protected boolean hasDialog() {
         return true;
     }
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public RSnippetNodeView createInteractiveView(final RSnippetNodeModel model) {
-		return new RSnippetNodeView(model, this.getClass());
-	}
 }

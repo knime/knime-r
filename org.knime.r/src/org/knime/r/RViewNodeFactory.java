@@ -32,7 +32,6 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.knime.core.node.interactive.InteractiveNodeFactoryExtension;
 import org.knime.core.node.port.PortType;
 
 /**
@@ -40,8 +39,7 @@ import org.knime.core.node.port.PortType;
  *
  * @author Heiko Hofer
  */
-public class RViewNodeFactory extends NodeFactory<RViewNodeModel> 
-implements InteractiveNodeFactoryExtension<RViewNodeModel, RSnippetViewContent> {
+public class RViewNodeFactory extends NodeFactory<RViewNodeModel> {
 	private RViewNodeConfig m_portType;
 
     /**
@@ -104,10 +102,4 @@ implements InteractiveNodeFactoryExtension<RViewNodeModel, RSnippetViewContent> 
         return true;
     }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public RSnippetNodeView createInteractiveView(final RViewNodeModel model) {
-		return new RSnippetNodeView(model, this.getClass());
-	}    
-  
 }

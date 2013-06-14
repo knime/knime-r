@@ -102,25 +102,6 @@ public class RViewNodeModel extends RSnippetNodeModel {
         }
 	}
 
-
-	@Override
-	public PortObject[] reExecute(final RSnippetViewContent content,
-			final PortObject[] data, final ExecutionContext exec)
-			throws CanceledExecutionException {
-		super.reExecute(content, data, exec);
-		try {
-			return postExecuteInternal();
-		} catch (Exception e) {
-			if (e instanceof CanceledExecutionException) {
-				throw (CanceledExecutionException)e;
-			} else {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-	
-	
-	
     /**
      * {@inheritDoc}
      */

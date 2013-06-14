@@ -56,9 +56,6 @@
         </tab>
         
 	</fullDescription>
-	<interactiveView name="R Script Editor">
-    	Evaluate the R script with input data. Try changes and optionally apply them to the node.
-    </interactiveView>	
 	<ports>
         <inPort name="Data Input" index="0">Data Table Input</inPort>
         <outPort name="R Output" index="0">R Output</outPort>

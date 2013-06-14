@@ -45,7 +45,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -64,15 +63,18 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettings;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.r.template.AddTemplateDialog;
 import org.knime.r.template.TemplateProvider;
 import org.knime.r.ui.RColumnList;
 import org.knime.r.ui.RConsole;
 import org.knime.r.ui.RFlowVariableList;
 import org.knime.r.ui.RObjectBrowser;
+import org.knime.r.ui.RProgressPanel;
 import org.knime.r.ui.RSnippetTextArea;
 import org.rosuda.REngine.REXP;
 
@@ -114,6 +116,12 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 	private int m_tableInPort;
 
+	private PortObject[] m_input;
+
+	private Collection<FlowVariable> m_inputFlowVars;
+
+	private RProgressPanel m_progressPanel;
+
 	/**
 	 * @param templateMetaCategory
 	 *            the meta category used in the templates tab or to create
@@ -127,6 +135,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			final RSnippetNodeConfig config, 
 			final boolean isPreview, final boolean isInteractive) {
 		super(new BorderLayout());
+		
     	m_config = config;
     	m_tableInPort = -1;
     	int i = 0;
@@ -249,17 +258,22 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			rightSplitPane.setDividerLocation(550);
 
 			JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+			rightSplitPane.setPreferredSize(new Dimension(rightSplitPane.getPreferredSize().width, 400));
 			mainSplitPane.setTopComponent(rightSplitPane);
 			
 			JScrollPane consoleScroller = new JScrollPane(m_console);
 			consoleScroller.setBorder(createEmptyTitledBorder("Console"));
 			mainSplitPane.setBottomComponent(consoleScroller);
 			mainSplitPane.setOneTouchExpandable(true);
+			
 	
-			JPanel centerPanel = new JPanel(new GridLayout(0, 1));
+			JPanel centerPanel = new JPanel(new GridLayout(0, 1));			
 			centerPanel.add(mainSplitPane);
+			
+			m_progressPanel = new RProgressPanel();
 	
 			p.add(centerPanel, BorderLayout.CENTER);
+			p.add(m_progressPanel, BorderLayout.SOUTH);
 		} else {
 			p.add(leftSplitPane, BorderLayout.CENTER);
 		}
@@ -269,10 +283,42 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	}
 	
 	/** 
-	 * Subclasses that set the interactive flag should override this.
+	 * Reset workspace with input data.
 	 */
 	protected void resetWorkspace() {
-		JOptionPane.showMessageDialog(null, "Method is not suppoerted");
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					ExecutionMonitor exec = m_progressPanel.lockR();
+					RController.getDefault().clearWorkspace(exec);
+
+					if (m_input != null) {
+						for (int i = 0; i < m_input.length; i++) {
+							if (m_input[i] instanceof RPortObject) {
+								exec.setMessage("Load R data from input.");
+								RPortObject port = (RPortObject)m_input[i];
+								RController.getDefault().loadWorkspace(port.getFile(), exec);
+							}
+						}
+					}
+					
+					if (m_input != null && m_tableInPort >= 0) {
+						exec.setMessage("Send input table to R");
+						RController.getDefault().exportDataTable((BufferedDataTable)m_input[m_tableInPort], "knime.in", exec);
+					}
+					
+
+					exec.setMessage("Send flow variables to R");
+					RController.getDefault().exportFlowVariables(m_inputFlowVars, "knime.flow.in", exec);
+					workspaceChanged(null);
+				} catch (CanceledExecutionException e) {
+					// user cancelled, so what.
+				} finally {
+					m_progressPanel.unlockR();
+				}
+			}
+		}).start();
 	}
 
 
@@ -553,6 +599,9 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			RController.getDefault().getConsoleController().attachOutput(m_console);
 			// start listing to the RController for updating the object browser
 			RController.getDefault().addRListener(this);
+			
+			// send dat a to R
+		    resetWorkspace();
 		}
 
 	}
@@ -593,32 +642,26 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	
 	public void updateData(final NodeSettingsRO settings,
 			final DataTableSpec spec, final Collection<FlowVariable> flowVariables) {
-		m_snippet.getSettings().loadSettingsForDialog(settings);		
+		m_snippet.getSettings().loadSettingsForDialog(settings);	
 		updateData(m_snippet.getSettings(), null, spec, flowVariables);
 	}
-
-
-	public void updateData(final RSnippetSettings settings,
-			final BufferedDataTable inputData, final Collection<FlowVariable> flowVariables) {
-		updateData(settings, inputData, inputData.getDataTableSpec(), flowVariables);
+	
+	public void updateData(final NodeSettingsRO settings,
+			final PortObject[] input, final Collection<FlowVariable> flowVariables) {
+		m_snippet.getSettings().loadSettingsForDialog(settings);
+		DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable)input[m_tableInPort]).getSpec() : null;
+		updateData(m_snippet.getSettings(), input, spec, flowVariables);
 		
-	}
+	}	
 
-	public void updateData(final RSnippetSettings settings,
-			final DataTableSpec spec, final Collection<FlowVariable> flowVariables) {
-		DataTableSpec fooSpec = spec != null
-    			? spec
-    			: new DataTableSpec(); 		
-		updateData(settings, null, fooSpec, flowVariables);
-	}
 	
 	private void updateData(final RSnippetSettings settings,
-			final BufferedDataTable inputData,
+			final PortObject[] input,
 			final DataTableSpec spec, final Collection<FlowVariable> flowVariables) {
 		ViewUtils.invokeAndWaitInEDT(new Runnable() {
 			@Override
 			public void run() {
-				updateDataInternal(settings, inputData, spec, flowVariables);
+				updateDataInternal(settings, input, spec, flowVariables);
 			}
 
 
@@ -627,12 +670,14 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	}	
 	
 	protected void updateDataInternal(final RSnippetSettings settings,
-			final BufferedDataTable inputData, final DataTableSpec spec,
+			final PortObject[] input, final DataTableSpec spec,
 			final Collection<FlowVariable> flowVariables) {
 		m_snippet.getSettings().loadSettings(settings);
 
 		m_colList.setSpec(spec);
 		m_flowVarsList.setFlowVariables(flowVariables);
+		m_input = input;
+		m_inputFlowVars = flowVariables;
 
 		// // set caret position to the start of the custom expression
 		// m_snippetTextArea.setCaretPosition(

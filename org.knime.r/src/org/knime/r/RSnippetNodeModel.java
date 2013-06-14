@@ -52,7 +52,6 @@ import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
-import org.knime.core.node.interactive.InteractiveNode;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -71,8 +70,7 @@ import org.rosuda.REngine.REngineException;
  *
  * @author Heiko Hofer
  */
-public class RSnippetNodeModel extends ExtToolOutputNodeModel 
-		implements InteractiveNode<RSnippetViewContent>, BufferedDataTableHolder {
+public class RSnippetNodeModel extends ExtToolOutputNodeModel implements BufferedDataTableHolder {
     private RSnippet m_snippet;
 	private BufferedDataTable m_data;
 	private DataTableSpec m_configSpec;
@@ -202,25 +200,12 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel
         return out.getValue();
 	}
 
-	@Override
-	public PortObject[] reExecute(final RSnippetViewContent content,
-			final PortObject[] data, final ExecutionContext exec)
-			throws CanceledExecutionException {
-		return executeInternal(content.getSettings(), data, exec);
-	}
 	
 	@Override
 	protected void reset() {
 		m_data = null;
 	}
-	
 
-	@Override
-	public RSnippetViewContent createViewContent() {
-		RSnippetSettings settings = new RSnippetSettings();
-		settings.loadSettings(m_snippet.getSettings());
-		return new RSnippetViewContent(settings);
-	}
     
     private ValueReport<PortObject[]> executeSnippet(final PortObject[] inData,
 			final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws CanceledExecutionException  {
