@@ -181,12 +181,12 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
         FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
         
         
-        boolean hasLock = RController.getDefault().tryLock();
+        boolean hasLock = RController.getDefault().tryAcquire();
         try {
 			exec.setMessage("R is busy waiting...");
 			while(!hasLock) {
 				exec.checkCanceled();							
-				hasLock = RController.getDefault().tryLock(500, TimeUnit.MILLISECONDS);
+				hasLock = RController.getDefault().tryAcquire(500, TimeUnit.MILLISECONDS);
 			
 			}
 			ValueReport<PortObject[]> out = executeSnippet(inData, flowVarRepo, exec);
@@ -205,7 +205,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			// It is interrupted, ok
 		} finally {
         	if (hasLock) {
-        		RController.getDefault().unlock();
+        		RController.getDefault().release();
         	}
         	
         }

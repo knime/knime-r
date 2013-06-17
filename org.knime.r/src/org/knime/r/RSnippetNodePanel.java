@@ -604,7 +604,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			m_snippetTextArea.requestFocus();
 			m_snippetTextArea.requestFocusInWindow();
 			
-			m_hasLock = RController.getDefault().tryLock();
+			m_hasLock = RController.getDefault().tryAcquire();
 			
 			m_evalScriptButton.setEnabled(m_hasLock);
 			m_evalSelButton.setEnabled(m_hasLock);
@@ -619,7 +619,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 							exec.setProgress(0.0);
 							while(!m_hasLock) {
 								exec.checkCanceled();							
-								m_hasLock = RController.getDefault().tryLock(500, TimeUnit.MILLISECONDS);
+								m_hasLock = RController.getDefault().tryAcquire(500, TimeUnit.MILLISECONDS);
 							}
 							connectToR();
 						} catch (InterruptedException e) {
@@ -655,13 +655,17 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 	public void onClose() {
 		if (m_isInteractive) {
-			RController.getDefault().getConsoleController().detach(m_console);
-			// stop listing to the RController for updating the object browser
-			RController.getDefault().removeRListener(this);
-			m_progressPanel.forceCancel();
-			if (m_hasLock) {
-				RController.getDefault().unlock();
-				m_hasLock = false;
+			try {
+				RController.getDefault().getConsoleController().detach(m_console);
+				// stop listing to the RController for updating the object browser
+				RController.getDefault().removeRListener(this);
+				m_progressPanel.forceCancel();
+			} catch (Exception e) {
+			} finally {
+				if (m_hasLock) {
+					RController.getDefault().release();
+					m_hasLock = false;
+				}
 			}
 		}
 	}

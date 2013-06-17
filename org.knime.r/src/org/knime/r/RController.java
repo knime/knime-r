@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.event.EventListenerList;
 
@@ -68,7 +68,7 @@ public class RController {
 
 	private EventListenerList listenerList;
 	
-	private ReentrantLock m_lock;
+	private Semaphore m_lock;
 
 	public static synchronized RController getDefault() {
 		// TODO: recreate instance when R_HOME changes in the preferences.
@@ -96,7 +96,7 @@ public class RController {
 				.getRProvider().getRHome();
 		m_commandQueue = new RCommandQueue();
 		m_consoleController = new RConsoleController();
-		m_lock = new ReentrantLock();
+		m_lock = new Semaphore(1);
 		listenerList = new EventListenerList();
 
 		try {
@@ -138,31 +138,25 @@ public class RController {
 	}
 	
     /**
-     * see ReentrantLock.lock()
+     * see Semaphore.realease()
      */	
-	public void lock() {
-		m_lock.lock();
-	}
-
-    /**
-     * see ReentrantLock.unlock()
-     */	
-	public void unlock() {
-		m_lock.unlock();
+	public void release() {
+		m_lock.release();
 	}
 	
 	/**
-     * see ReentrantLock.tryLock()
+     * see Semaphore.tryAcquire()
      */		
-	public boolean tryLock() {
-		return m_lock.tryLock();
+	public boolean tryAcquire() {
+		return m_lock.tryAcquire();
 	}
+
 	
     /**
-     * see ReentrantLock.tryLock()
+     * see Semaphore.tryAcquire()
      */		
-	public boolean tryLock(final long timeout, final TimeUnit unit) throws InterruptedException {
-		return m_lock.tryLock(timeout, unit);
+	public boolean tryAcquire(final long timeout, final TimeUnit unit) throws InterruptedException {
+		return m_lock.tryAcquire(timeout, unit);
 	}
 	 
 	/**
