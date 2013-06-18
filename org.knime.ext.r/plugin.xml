@@ -12,47 +12,47 @@
             factory-class="org.knime.ext.r.node.RConsoleFactory"
             id="org.knime.ext.r.node.RConsoleFactory"/>
       <node
-            category-path="/r/local_deprecated"
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.RLocalScriptingNodeFactory"
             id="org.knime.ext.r.node.local.RLocalScriptingNodeFactory">
       </node>
       <node
-            category-path="/r/local_deprecated"
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.RLocalR2TableNodeFactory"
             id="org.knime.ext.r.node.local.RLocalR2TableNodeFactory">
       </node>
       <node
-            category-path="/r/local_deprecated"
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.RLocalRData2RNodeFactory"
             id="org.knime.ext.r.node.local.RLocalRData2RNodeFactory">
       </node>
       <node
-            category-path="/r/local_deprecated"
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.RLocalTable2RNodeFactory"
             id="org.knime.ext.r.node.local.RLocalTable2RNodeFactory">
       </node>
       <node
-            category-path="/r/local_deprecated"
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.RLocalViewsNodeFactory2"
             id="org.knime.ext.r.node.local.RLocalViewsNodeFactory2">
       </node>
       <node
-            category-path="/r/local_deprecated"
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.RLocalRViewsNodeFactory2"
             id="org.knime.ext.r.node.local.RLocalRViewsNodeFactory2">
       </node>
       <node
-            category-path="/r/local_deprecated"
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.RLocalLearnerNodeFactory"
             id="org.knime.ext.r.node.local.RLocalLearnerNodeFactory">
       </node>
       <node
-            category-path="/r/local_deprecated"
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.RLocalPredictorNodeFactory"
             id="org.knime.ext.r.node.local.RLocalPredictorNodeFactory">
       </node>
       <node
-            category-path="/r/local_deprecated"
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.R2PMMLNodeFactory"
             id="org.knime.ext.r.node.local.R2PMMLNodeFactory">
       </node>
@@ -68,7 +68,7 @@
             id="org.knime.ext.r.node.io.RPortObjectWriterNodeFactory">
       </node>
       <node
-            category-path="/r/local_deprecated"
+            category-path="/r/local"
             factory-class="org.knime.ext.r.node.local.RLocalSourceNodeFactory"
             id="org.knime.ext.r.node.local.RLocalSourceNodeFactory">
       </node>
@@ -101,10 +101,9 @@
             path="/r">
       </category>
       <category
-            after="io"
             icon="icons/missing.gif"
-            level-id="local_deprecated"
-            name="Local (deprecated)"
+            level-id="local"
+            name="Local"
             path="/r">
       </category>
    </extension>
