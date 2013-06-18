@@ -50,11 +50,14 @@
  */
 package org.knime.r;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
@@ -184,7 +187,17 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
      */
     @Override
     public void onOpen() {
-        m_panel.onOpen();
+        final ValueReport<Boolean> report = m_panel.onOpen();       
+        if (report.hasErrors()) {
+        	final Component parent = m_panel;
+        	SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					JOptionPane.showMessageDialog(parent, ValueReport.joinString(report.getErrors(), "\n"));
+				}
+			});
+        }
     }
     
 

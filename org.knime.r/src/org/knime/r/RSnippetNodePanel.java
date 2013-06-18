@@ -38,6 +38,7 @@ import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -598,7 +599,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void onOpen() {
+	public ValueReport<Boolean> onOpen() {
 		if (m_isInteractive) {
 			
 			m_console.setText("");
@@ -607,42 +608,50 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			m_snippetTextArea.requestFocus();
 			m_snippetTextArea.requestFocusInWindow();
 			
-			m_hasLock = RController.getDefault().tryAcquire();
+			final ValueReport<Boolean> isRAvailable = RController.getDefault().isRAvailable();
+	        m_hasLock = isRAvailable.getValue() ? RController.getDefault().tryAcquire() : false;
+			
 			
 			m_evalScriptButton.setEnabled(m_hasLock);
 			m_evalSelButton.setEnabled(m_hasLock);
 			m_resetWorkspace.setEnabled(m_hasLock);
-			if (!m_hasLock) {
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						ExecutionMonitor exec = m_progressPanel.lock();
-						try {
-							exec.setMessage("R is busy waiting...");
-							exec.setProgress(0.0);
-							while(!m_hasLock) {
-								exec.checkCanceled();							
-								m_hasLock = RController.getDefault().tryAcquire(500, TimeUnit.MILLISECONDS);
+			if (isRAvailable.getValue()) {
+				if (!m_hasLock) {
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							ExecutionMonitor exec = m_progressPanel.lock();
+							try {
+								exec.setMessage("R is busy waiting...");
+								exec.setProgress(0.0);
+								while(!m_hasLock) {
+									exec.checkCanceled();							
+									m_hasLock = RController.getDefault().tryAcquire(500, TimeUnit.MILLISECONDS);
+								}
+								m_evalScriptButton.setEnabled(m_hasLock);
+								m_evalSelButton.setEnabled(m_hasLock);
+								m_resetWorkspace.setEnabled(m_hasLock);
+								connectToR();
+							} catch (InterruptedException e) {
+								// interrupted, it's ok
+							} catch (CanceledExecutionException e) {
+								// user interrupted, so what
+							} finally {
+								m_progressPanel.unlock();
 							}
-							m_evalScriptButton.setEnabled(m_hasLock);
-							m_evalSelButton.setEnabled(m_hasLock);
-							m_resetWorkspace.setEnabled(m_hasLock);
-							connectToR();
-						} catch (InterruptedException e) {
-							// interrupted, it's ok
-						} catch (CanceledExecutionException e) {
-							// user interrupted, so what
-						} finally {
-							m_progressPanel.unlock();
 						}
-					}
-				}).start();				
+					}).start();				
+					
+				} else {
+					connectToR();
+				}
 				
-			} else {
-				connectToR();
 			}
+			return isRAvailable;
+		} else {
+			return new ValueReport<Boolean>(true, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 		}
-
+		
 	}
 	
 	private void connectToR() {

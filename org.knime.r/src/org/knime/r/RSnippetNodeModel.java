@@ -114,11 +114,11 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
         ValueReport<DataTableSpec> report = m_snippet.configure(tableSpec, flowVarRepository);
 
         if (report.hasWarnings()) {
-            setWarningMessage(joinString(report.getWarnings(), "\n"));
+            setWarningMessage(ValueReport.joinString(report.getWarnings(), "\n"));
         }
         if (report.hasErrors()) {
             throw new InvalidSettingsException(
-                    joinString(report.getErrors(), "\n"));
+            		ValueReport.joinString(report.getErrors(), "\n"));
         }
 
         for (FlowVariable flowVar : flowVarRepository.getModified()) {
@@ -144,25 +144,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
         return outSpec.toArray(new PortObjectSpec[outSpec.size()]);
     }
 
-    /**
-     * Concatenate strings with delimiter.
-     * @param strings the string
-     * @param delim the delimiter
-     * @return concatenated string
-     */
-    private String joinString(final String[] strings, final String delim) {
-    	if (null == strings || strings.length == 0) {
-    		return "";
-    	}
-		StringBuilder b = new StringBuilder();
-		b.append(strings[0]);
-		for (int i = 1; i < strings.length; i++) {
-			b.append(delim);
-			b.append(strings);
-		}
-		return b.toString();
-	}
-
 
 	/**
      * {@inheritDoc}
@@ -180,7 +161,10 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
         FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
         
-        
+        ValueReport<Boolean> isRAvailable = RController.getDefault().isRAvailable();
+        if (!isRAvailable.getValue()) {
+        	throw new RuntimeException(ValueReport.joinString(isRAvailable.getErrors(), "\n"));
+        }
         boolean hasLock = RController.getDefault().tryAcquire();
         try {
 			exec.setMessage("R is busy waiting...");
@@ -192,10 +176,10 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			ValueReport<PortObject[]> out = executeSnippet(inData, flowVarRepo, exec);
 			
 	        if (out.hasWarnings()) {
-	        	setWarningMessage(joinString(out.getWarnings(), "\n"));
+	        	setWarningMessage(ValueReport.joinString(out.getWarnings(), "\n"));
 	        }            
 	        if (out.hasErrors()) {
-	        	throw new RuntimeException(joinString(out.getErrors(), "\n"));
+	        	throw new RuntimeException(ValueReport.joinString(out.getErrors(), "\n"));
 	        }
 	        
 	        pushFlowVariables(flowVarRepo);

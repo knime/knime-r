@@ -1,6 +1,7 @@
 package org.knime.r;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,13 +71,21 @@ public class RController {
 	
 	private Semaphore m_lock;
 
+	private boolean m_isRAvailable;
+
+	private List<String> m_warnings;
+
+	private List<String> m_errors;
+
 	public static synchronized RController getDefault() {
 		// TODO: recreate instance when R_HOME changes in the preferences.
-		instance = instance != null ? instance : new RController();
+		if (!(instance != null && instance.isRAvailable().getValue())) {
+			instance = new RController();
+		}
 		return instance;
 	}
 
-    // This is the standard, stable way of mapping, which supports extensive
+	// This is the standard, stable way of mapping, which supports extensive
     // customization and mapping of Java to native types.
 
     public interface CLibrary extends Library {
@@ -92,52 +101,98 @@ public class RController {
 
 
 	private RController() {
-		String rHome = org.knime.r.preferences.RPreferenceInitializer
-				.getRProvider().getRHome();
-		m_commandQueue = new RCommandQueue();
-		m_consoleController = new RConsoleController();
-		m_lock = new Semaphore(1);
-		listenerList = new EventListenerList();
-
 		try {
-			if (Platform.isWindows()) {
-				CLibrary.INSTANCE._putenv("R_HOME" + "=" + rHome);
-				String path = CLibrary.INSTANCE.getenv("PATH");
-				String rdllPath = getWinRDllPath(rHome);				
-				CLibrary.INSTANCE._putenv("PATH" + "=" + path + ";" + rdllPath);
-			} else {
-				CLibrary.INSTANCE.setenv("R_HOME", rHome, 1);
-			}
-			String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
-			LOGGER.info("R_HOME: " + sysRHome);
-			String sysPATH = CLibrary.INSTANCE.getenv("PATH");
-			LOGGER.info("PATH: " + sysPATH);
-			m_engine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
-		} catch (REngineException e) {
-			throw new RuntimeException(e);
-		}
-
-		// attach a thread to the console controller to get notify when
-		// commands are executed via the console
-		new Thread() {
-			@Override
-			public void run() {
-				while (true) {
-					// wait for r workspace change or at most given time
-					try {
-						m_consoleController.waitForWorkspaceChange();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					// notify listeners
-					fireWorkspaceChange();
+			m_errors = new ArrayList<String>();
+			m_warnings = new ArrayList<String>();
+			
+	    	String rHome = org.knime.r.preferences.RPreferenceInitializer
+					.getRProvider().getRHome();
+			if (!checkRHome(rHome)) {
+				m_isRAvailable = false;
+				return;
+			}		
+			m_commandQueue = new RCommandQueue();
+			m_consoleController = new RConsoleController();
+			m_lock = new Semaphore(1);
+			listenerList = new EventListenerList();
+	
+			try {
+				if (Platform.isWindows()) {
+					CLibrary.INSTANCE._putenv("R_HOME" + "=" + rHome);
+					String path = CLibrary.INSTANCE.getenv("PATH");
+					String rdllPath = getWinRDllPath(rHome);				
+					CLibrary.INSTANCE._putenv("PATH" + "=" + path + ";" + rdllPath);
+				} else {
+					CLibrary.INSTANCE.setenv("R_HOME", rHome, 1);
 				}
+				String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
+				LOGGER.info("R_HOME: " + sysRHome);
+				String sysPATH = CLibrary.INSTANCE.getenv("PATH");
+				LOGGER.info("PATH: " + sysPATH);
+				m_engine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
+			} catch (REngineException e) {
+				throw new RuntimeException(e);
 			}
-		}.start();
+	
+			// attach a thread to the console controller to get notify when
+			// commands are executed via the console
+			new Thread() {
+				@Override
+				public void run() {
+					while (true) {
+						// wait for r workspace change or at most given time
+						try {
+							m_consoleController.waitForWorkspaceChange();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						// notify listeners
+						fireWorkspaceChange();
+					}
+				}
+			}.start();
+		} finally {
+			m_isRAvailable = false;
+		}
+		// everything is ok.
+		m_isRAvailable = true;
 	}
 	
+    private boolean checkRHome(final String rHomePath) {
+		File rHome = new File(rHomePath);
+		String msgSuffix = "R_HOME is meant to be the path to the folder beeing the root of Rs installation tree. \n"
+				+ "It contains a bin folder which itself contains the R executable. \nPlease change the R settings in the preferences.";
+		if (!rHome.exists()) {
+			m_errors.add("R_HOME does not exists. \n" + msgSuffix);
+			return false;
+		}
+		if (!rHome.isDirectory()) {
+			m_errors.add("R_HOME is not a directory. \n" + msgSuffix);
+			return false;
+		}
+		String[] hasNameBin = rHome.list(new FilenameFilter() {			
+			@Override
+			public boolean accept(final File dir, final String name) {
+				return name.equals("bin");
+			}
+		});
+		
+		if (hasNameBin == null || hasNameBin.length == 0) {
+			m_errors.add("R_HOME does not contain a folder with name \"bin\". \n" + msgSuffix);
+			return false;
+		}
+		return true;
+	}
+    
     /**
+     * returns true when R is available and correctly initilized.
+     */
+    public ValueReport<Boolean> isRAvailable() {
+    	return new ValueReport<Boolean>(m_isRAvailable, m_errors, m_warnings);
+    }
+
+	/**
      * see Semaphore.realease()
      */	
 	public void release() {
@@ -148,7 +203,7 @@ public class RController {
      * see Semaphore.tryAcquire()
      */		
 	public boolean tryAcquire() {
-		return m_lock.tryAcquire();
+		return m_isRAvailable ? m_lock.tryAcquire() : false;
 	}
 
 	
@@ -156,7 +211,7 @@ public class RController {
      * see Semaphore.tryAcquire()
      */		
 	public boolean tryAcquire(final long timeout, final TimeUnit unit) throws InterruptedException {
-		return m_lock.tryAcquire(timeout, unit);
+		return m_isRAvailable ? m_lock.tryAcquire(timeout, unit) : false;
 	}
 	 
 	/**

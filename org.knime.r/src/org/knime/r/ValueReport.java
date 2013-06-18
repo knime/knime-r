@@ -116,4 +116,24 @@ public class ValueReport<T> {
     public boolean hasWarnings() {
         return m_warnings != null && m_warnings.length > 0;
     }
+    
+
+    /**
+     * Concatenate strings with delimiter.
+     * @param strings the string
+     * @param delim the delimiter
+     * @return concatenated string
+     */
+    public static String joinString(final String[] strings, final String delim) {
+    	if (null == strings || strings.length == 0) {
+    		return "";
+    	}
+		StringBuilder b = new StringBuilder();
+		b.append(strings[0]);
+		for (int i = 1; i < strings.length; i++) {
+			b.append(delim);
+			b.append(strings);
+		}
+		return b.toString();
+	}
 }
