@@ -610,42 +610,51 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			
 			final ValueReport<Boolean> isRAvailable = RController.getDefault().isRAvailable();
 	        m_hasLock = isRAvailable.getValue() ? RController.getDefault().tryAcquire() : false;
-			
-			
-			m_evalScriptButton.setEnabled(m_hasLock);
-			m_evalSelButton.setEnabled(m_hasLock);
-			m_resetWorkspace.setEnabled(m_hasLock);
-			if (isRAvailable.getValue()) {
-				if (!m_hasLock) {
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							ExecutionMonitor exec = m_progressPanel.lock();
-							try {
-								exec.setMessage("R is busy waiting...");
-								exec.setProgress(0.0);
-								while(!m_hasLock) {
-									exec.checkCanceled();							
-									m_hasLock = RController.getDefault().tryAcquire(500, TimeUnit.MILLISECONDS);
-								}
-								m_evalScriptButton.setEnabled(m_hasLock);
-								m_evalSelButton.setEnabled(m_hasLock);
-								m_resetWorkspace.setEnabled(m_hasLock);
-								connectToR();
-							} catch (InterruptedException e) {
-								// interrupted, it's ok
-							} catch (CanceledExecutionException e) {
-								// user interrupted, so what
-							} finally {
-								m_progressPanel.unlock();
-							}
-						}
-					}).start();				
-					
-				} else {
-					connectToR();
-				}
+			try {
 				
+				
+				m_evalScriptButton.setEnabled(m_hasLock);
+				m_evalSelButton.setEnabled(m_hasLock);
+				m_resetWorkspace.setEnabled(m_hasLock);
+				if (isRAvailable.getValue()) {
+					if (!m_hasLock) {
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								ExecutionMonitor exec = m_progressPanel.lock();
+								try {
+									exec.setMessage("R is busy waiting...");
+									exec.setProgress(0.0);
+									while(!m_hasLock) {
+										exec.checkCanceled();							
+										m_hasLock = RController.getDefault().tryAcquire(500, TimeUnit.MILLISECONDS);
+									}
+									m_evalScriptButton.setEnabled(m_hasLock);
+									m_evalSelButton.setEnabled(m_hasLock);
+									m_resetWorkspace.setEnabled(m_hasLock);
+									connectToR();
+								} catch (InterruptedException e) {
+									// interrupted, it's ok
+								} catch (CanceledExecutionException e) {
+									// user interrupted, so what
+								} finally {
+									m_progressPanel.unlock();
+								}
+							}
+						}).start();				
+						
+					} else {
+						connectToR();
+					}	
+				}
+			} finally {
+				if (m_hasLock) {
+					if (RController.getDefault().isRAvailable().getValue()) {
+						m_progressPanel.forceCancel();
+					}					
+					RController.getDefault().release();
+					m_hasLock = false;
+				}
 			}
 			return isRAvailable;
 		} else {
@@ -667,11 +676,12 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	public void onClose() {
 		if (m_isInteractive) {
 			try {
-				RController.getDefault().getConsoleController().detach(m_console);
-				// stop listing to the RController for updating the object browser
-				RController.getDefault().removeRListener(this);
-				m_progressPanel.forceCancel();
-			} catch (Exception e) {
+				if (RController.getDefault().isRAvailable().getValue()) {
+					RController.getDefault().getConsoleController().detach(m_console);
+					// stop listing to the RController for updating the object browser
+					RController.getDefault().removeRListener(this);
+					m_progressPanel.forceCancel();
+				}
 			} finally {
 				if (m_hasLock) {
 					RController.getDefault().release();
