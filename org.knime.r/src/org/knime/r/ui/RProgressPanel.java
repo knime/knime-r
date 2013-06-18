@@ -49,6 +49,7 @@ package org.knime.r.ui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -82,7 +83,9 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 	public RProgressPanel() {
 		super(new CardLayout());
 		m_cardLayout = (CardLayout)super.getLayout();
-		add(new JPanel(), "default");
+		JPanel defaultPanel = new JPanel();
+		defaultPanel.setPreferredSize(new Dimension(0,0));
+		add(defaultPanel, "default");
 		
 		
 		m_cancelButton = new JButton("Cancel");

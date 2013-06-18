@@ -299,6 +299,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				m_resetWorkspace.setEnabled(false);
 				ExecutionMonitor exec = m_progressPanel.lock();
 				try {
 					RController.getDefault().clearWorkspace(exec);
@@ -322,6 +323,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 					exec.setMessage("Send flow variables to R");
 					RController.getDefault().exportFlowVariables(m_inputFlowVars, "knime.flow.in", exec);
 					workspaceChanged(null);
+					m_resetWorkspace.setEnabled(true);
 				} catch (CanceledExecutionException e) {
 					// user cancelled, so what.
 				} finally {
@@ -597,7 +599,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	 * {@inheritDoc}
 	 */
 	public void onOpen() {
-		if (m_isInteractive && m_input != null) {
+		if (m_isInteractive) {
 			
 			m_console.setText("");
 			m_objectBrowser.updateData(new String[0], new String[0]);
@@ -622,6 +624,9 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 								exec.checkCanceled();							
 								m_hasLock = RController.getDefault().tryAcquire(500, TimeUnit.MILLISECONDS);
 							}
+							m_evalScriptButton.setEnabled(m_hasLock);
+							m_evalSelButton.setEnabled(m_hasLock);
+							m_resetWorkspace.setEnabled(m_hasLock);
 							connectToR();
 						} catch (InterruptedException e) {
 							// interrupted, it's ok
@@ -637,12 +642,6 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 				connectToR();
 			}
 		}
-		
-		if (m_input == null) {
-			m_evalScriptButton.setEnabled(false);
-			m_evalSelButton.setEnabled(false);
-			m_resetWorkspace.setEnabled(false);
-		}
 
 	}
 	
@@ -651,17 +650,13 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		// start listing to the RController for updating the object browser
 		RController.getDefault().addRListener(this);
 		
-		// send dat a to R
+		// send data to R
 	    resetWorkspace();
-	    
-	    m_evalScriptButton.setEnabled(m_hasLock);
-		m_evalSelButton.setEnabled(m_hasLock);
-		m_resetWorkspace.setEnabled(m_hasLock);
 	}
 	
 
 	public void onClose() {
-		if (m_isInteractive && m_input != null) {
+		if (m_isInteractive) {
 			try {
 				RController.getDefault().getConsoleController().detach(m_console);
 				// stop listing to the RController for updating the object browser
