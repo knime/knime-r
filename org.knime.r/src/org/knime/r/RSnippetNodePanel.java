@@ -65,6 +65,7 @@ import org.knime.core.node.NodeSettings;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
@@ -596,7 +597,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	 * {@inheritDoc}
 	 */
 	public void onOpen() {
-		if (m_isInteractive) {
+		if (m_isInteractive && m_input != null) {
 			
 			m_console.setText("");
 			m_objectBrowser.updateData(new String[0], new String[0]);
@@ -636,6 +637,12 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 				connectToR();
 			}
 		}
+		
+		if (m_input == null) {
+			m_evalScriptButton.setEnabled(false);
+			m_evalSelButton.setEnabled(false);
+			m_resetWorkspace.setEnabled(false);
+		}
 
 	}
 	
@@ -654,7 +661,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	
 
 	public void onClose() {
-		if (m_isInteractive) {
+		if (m_isInteractive && m_input != null) {
 			try {
 				RController.getDefault().getConsoleController().detach(m_console);
 				// stop listing to the RController for updating the object browser
@@ -697,8 +704,9 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	
 	
 	public void updateData(final NodeSettingsRO settings,
-			final DataTableSpec spec, final Collection<FlowVariable> flowVariables) {
+			final PortObjectSpec[] specs, final Collection<FlowVariable> flowVariables) {
 		m_snippet.getSettings().loadSettingsForDialog(settings);	
+		DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec)specs[m_tableInPort] : null;
 		updateData(m_snippet.getSettings(), null, spec, flowVariables);
 	}
 	

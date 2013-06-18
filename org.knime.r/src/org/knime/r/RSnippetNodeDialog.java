@@ -65,6 +65,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.r.template.DefaultTemplateController;
@@ -153,6 +154,17 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         // do not close on ESC, since ESC is used to close autocomplete popups
         // in the snippets textarea.
         return false;
+    }
+    
+    @Override
+    protected void loadSettingsFrom(final NodeSettingsRO settings,
+    		final PortObjectSpec[] specs) throws NotConfigurableException {
+    	DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec)specs[m_tableInPort] : null;
+    	m_input = null;
+        m_panel.updateData(settings, specs, getAvailableFlowVariables().values());
+        
+        m_templatesController.setDataTableSpec(spec);
+        m_templatesController.setFlowVariables(getAvailableFlowVariables());	
     }
     
     @Override
