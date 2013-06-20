@@ -125,7 +125,7 @@ public class RColumnList extends JList {
     }
 
     private String getFieldReadStatement(final DataColumnSpec colSpec) {
-		return "knime.in[\"" + colSpec.getName() + "\"]";
+		return "knime.in$\"" + colSpec.getName() + "\"";
 	}
 
 	/**
