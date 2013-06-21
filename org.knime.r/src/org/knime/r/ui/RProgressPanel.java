@@ -53,7 +53,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -61,7 +60,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import org.knime.core.node.DefaultNodeProgressMonitor;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.workflow.NodeProgressEvent;
 import org.knime.core.node.workflow.NodeProgressListener;
@@ -71,18 +69,18 @@ import org.knime.core.node.workflow.NodeProgressListener;
  * @author Heiko Hofer
  */
 public class RProgressPanel extends JPanel implements NodeProgressListener {
-	private final ReentrantLock lock = new ReentrantLock();
+//	private final ReentrantLock lock = new ReentrantLock();
 	private ExecutionMonitor m_exec;
 	private JButton m_cancelButton;
 	private JProgressBar m_progressBar;
 	private JLabel m_message;
 	private CardLayout m_cardLayout;
-	private DefaultNodeProgressMonitor m_progressMonitor;
-	private boolean m_forceCancel;
+//	private boolean m_forceCancel;
 	
 	public RProgressPanel() {
 		super(new CardLayout());
 		m_cardLayout = (CardLayout)super.getLayout();
+		m_exec = new ExecutionMonitor();
 		JPanel defaultPanel = new JPanel();
 		defaultPanel.setPreferredSize(new Dimension(0,0));
 		add(defaultPanel, "default");
@@ -93,9 +91,8 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 			
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				m_cancelButton.setEnabled(false);
-				
-				m_progressMonitor.setExecuteCanceled();
+				m_exec.getProgressMonitor().setExecuteCanceled();
+				stopMonitoring();
 			}
 		});
 		m_progressBar = new JProgressBar(0, 100);
@@ -116,39 +113,23 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 		add(progressPanel, "progress");
 		m_cardLayout.show(this, "default");
 	}
+	
+	public void stopMonitoring() {
+		m_cancelButton.setEnabled(false);	
+		m_exec.getProgressMonitor().removeProgressListener(this);	
+		m_cardLayout.show(this, "default");
+	}
 
-	public ExecutionMonitor lock() {
-		lock.lock();  // block until condition holds
-		// TODO: try lock R
-		m_progressMonitor = new DefaultNodeProgressMonitor();
-		m_exec = new ExecutionMonitor(m_progressMonitor);
+	public void startMonitoring(final ExecutionMonitor exec) {
+	    m_exec.getProgressMonitor().removeProgressListener(this);		
+		m_exec = exec;
 		m_exec.getProgressMonitor().addProgressListener(this);
 		m_message.setText("");
-		m_progressBar.setIndeterminate(true);
+		m_progressBar.setIndeterminate(m_exec.getProgressMonitor().getProgress() != null);
 		m_cancelButton.setEnabled(true);
 		m_cardLayout.show(this, "progress");
-		if (m_forceCancel) {
-			m_progressMonitor.setExecuteCanceled();
-		}
-		return m_exec;
 	}
 
-	public void unlock() {
-		try {
-			m_progressMonitor = null;
-			m_cardLayout.show(this, "default");
-			m_exec.getProgressMonitor().removeProgressListener(this);
-			// TODO: do cleanup code.
-			
-		} finally {
-			
-			lock.unlock();
-		}
-		if (!lock.hasQueuedThreads()) {
-			m_forceCancel = false;
-		}
-
-	}
 
 	@Override
 	public void progressChanged(final NodeProgressEvent pe) {
@@ -161,17 +142,13 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 			}			
 			int p = (int) Math.round(progress * 100);
 			m_progressBar.setValue(p);
+			
+			if (p >= 100) {
+				m_cardLayout.show(this, "default");
+			}
 		}
 	}
 
-	public void forceCancel() {
-		if (m_progressMonitor != null) {
-			// set flag to cancel all waiting threads
-			m_forceCancel = true;
-			// cancel current process
-			m_progressMonitor.setExecuteCanceled();
-		}
-	}
 
 
 }

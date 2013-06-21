@@ -71,6 +71,9 @@ public class RConsoleController implements RMainLoopCallbacks {
 		m_pane = null;
 	}	
 	
+	public boolean isAttached(final JTextPane pane) {
+		return m_pane == pane;
+	}
 	/**
 	 * Append text to pane.
 	 * 

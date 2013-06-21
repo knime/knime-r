@@ -122,12 +122,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         		super.applyTemplate(template, spec, flowVariables);
         		setSelected(SNIPPET_TAB);
         	}
-        	
-        	@Override
-        	protected void resetWorkspace() {
-        		// TODO Auto-generated method stub
-        		super.resetWorkspace();
-        	}
+
         };
         
         addTab(SNIPPET_TAB, m_panel);
