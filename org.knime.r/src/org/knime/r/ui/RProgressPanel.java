@@ -53,6 +53,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -61,21 +62,21 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.NodeProgressEvent;
 import org.knime.core.node.workflow.NodeProgressListener;
 
 /**
+ * Display progress in the bottom of the R-Snippet nodes.
  * 
  * @author Heiko Hofer
  */
 public class RProgressPanel extends JPanel implements NodeProgressListener {
-//	private final ReentrantLock lock = new ReentrantLock();
 	private ExecutionMonitor m_exec;
 	private JButton m_cancelButton;
 	private JProgressBar m_progressBar;
 	private JLabel m_message;
 	private CardLayout m_cardLayout;
-//	private boolean m_forceCancel;
 	
 	public RProgressPanel() {
 		super(new CardLayout());
@@ -114,7 +115,18 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 		m_cardLayout.show(this, "default");
 	}
 	
+	private final AtomicBoolean m_updateInProgress = new AtomicBoolean(false);
+	
 	public void stopMonitoring() {
+		ViewUtils.runOrInvokeLaterInEDT(new Runnable() {
+			@Override
+			public void run() {
+				stopMonitoringInternal();					
+			}
+		});
+	}
+
+	protected void stopMonitoringInternal() {
 		m_cancelButton.setEnabled(false);	
 		m_exec.getProgressMonitor().removeProgressListener(this);	
 		m_cardLayout.show(this, "default");
@@ -128,13 +140,33 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 		m_progressBar.setIndeterminate(m_exec.getProgressMonitor().getProgress() != null);
 		m_cancelButton.setEnabled(true);
 		m_cardLayout.show(this, "progress");
+		m_updateInProgress.set(false);
 	}
 
 
 	@Override
 	public void progressChanged(final NodeProgressEvent pe) {
-		Double progress = pe.getNodeProgress().getProgress();
-		String message = pe.getNodeProgress().getMessage();		
+		// if another state is waiting to be processed, simply return
+        // and leave the work to the previously started thread. This
+        // works because we are retrieving the current state information!
+		if (m_updateInProgress.compareAndSet(false, true)) {
+			ViewUtils.runOrInvokeLaterInEDT(new Runnable() {
+				@Override
+				public void run() {
+					// let others know we are in the middle of processing
+	                // this update - they will now need to start their own job.                
+	                m_updateInProgress.set(false);
+	                progressChangedInternal();
+					
+				}
+			});
+		}
+
+	}
+
+	private void progressChangedInternal() {
+		Double progress = m_exec.getProgressMonitor().getProgress();
+		String message = m_exec.getProgressMonitor().getMessage();		
 		m_message.setText(message);
 		if (progress != null) {
 			if (m_progressBar.isIndeterminate()) {
@@ -148,7 +180,4 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 			}
 		}
 	}
-
-
-
 }
