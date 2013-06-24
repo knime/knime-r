@@ -1,16 +1,18 @@
 package org.knime.r;
 
 import java.awt.Color;
+import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -18,6 +20,8 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import org.knime.core.node.util.ViewUtils;
+import org.knime.core.util.Pair;
 import org.rosuda.JRI.RMainLoopCallbacks;
 import org.rosuda.JRI.Rengine;
 import org.rosuda.REngine.JRI.JRIEngine;
@@ -121,11 +125,9 @@ public class RConsoleController implements RMainLoopCallbacks {
 	@Override
 	public String rReadConsole(final Rengine rengine, final String prompt, final int addToHistory) {
 		if (m_commands.isEmpty()) {
-//			if (m_commands.isEmpty()) {
-				m_lock.lock();
-				m_workspaceChanged.signalAll();
-				m_lock.unlock();
-//			}			
+			m_lock.lock();
+			m_workspaceChanged.signalAll();
+			m_lock.unlock();
 			RCommandQueue queue = RController.getDefault().getConsoleQueue();
 			while (m_commands.isEmpty()) {
 				try {
@@ -148,17 +150,7 @@ public class RConsoleController implements RMainLoopCallbacks {
 		}
 		final RCommand rCmd = m_commands.poll();
 		if (rCmd != null) {
-			Runnable runnable = new Runnable() {
-				@Override
-				public void run() {
-					try {
-						append(prompt + rCmd.getCommand() + "\n", m_commandStyle);
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}
-			};
-			SwingUtilities.invokeLater(runnable);
+			append(prompt + rCmd.getCommand() + "\n", 0);
 		} 
 
 
@@ -176,25 +168,65 @@ public class RConsoleController implements RMainLoopCallbacks {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private final AtomicBoolean m_updateScheduled = new AtomicBoolean(false);
 
+	
+	private ReentrantLock m_appendBufferLock = new ReentrantLock(true);
+	Deque<Pair<StringBuilder, Integer>> m_buffer = new ArrayDeque<Pair<StringBuilder,Integer>>();
+	
 	@Override
 	public void rWriteConsole(final Rengine rengine, final String text, final int oType) {
-		if (m_pane != null) {
-			Runnable doWork = new Runnable() {
-				@Override
-				public void run() {
-					StyledDocument doc = m_pane.getStyledDocument();
-					try {
-						Style style = oType == 0 ? m_normalStyle : m_errorStyle;
-						doc.insertString(doc.getLength(), text, style);
-					} catch (BadLocationException e) {
-						// never happens
-						throw new RuntimeException(e);
-					}
-				}
-			};
+		append(text, oType);
 		
-	     	SwingUtilities.invokeLater(doWork);
+
+	}
+
+	private void append(final String text, final int oType) {
+		
+		if (m_pane != null) {
+			// update is scheduled contribute to this update
+			m_appendBufferLock.lock();
+			try {
+				if (m_buffer.size() > 0 && m_buffer.peekLast().getSecond() == oType) {
+					m_buffer.peekLast().getFirst().append(text);
+				} else {
+					m_buffer.offer(new Pair<StringBuilder, Integer>(new StringBuilder(text), oType));
+				}
+			} finally {
+				m_appendBufferLock.unlock();
+			}			
+			// if update is not scheduled
+			if (m_updateScheduled.compareAndSet(false, true)) {
+				Runnable doWork = new Runnable() {
+					@Override
+					public void run() {
+						Queue<Pair<StringBuilder, Integer>> buffer = null;
+						m_appendBufferLock.lock();						
+						try {
+							m_updateScheduled.set(false);	
+							buffer = m_buffer;
+							m_buffer = new ArrayDeque<Pair<StringBuilder,Integer>>();		
+						} finally {
+							m_appendBufferLock.unlock();
+						}
+						
+					    StyledDocument doc = m_pane.getStyledDocument();
+					    while (buffer.size() > 0) {
+					    	Pair<StringBuilder, Integer> toWrite = buffer.poll();
+							try {
+								Style style = toWrite.getSecond() == 0 ? m_normalStyle : m_errorStyle;
+								doc.insertString(doc.getLength(), toWrite.getFirst().toString(), style);
+							} catch (BadLocationException e) {
+								// never happens
+								throw new RuntimeException(e);
+							}
+						}				    
+					}
+				};
+			
+		     	ViewUtils.runOrInvokeLaterInEDT(doWork);				
+			}
 		}
 	}
 

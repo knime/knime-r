@@ -211,8 +211,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 					try {
 						String selected = m_snippetTextArea.getSelectedText();
 						if (selected != null) {
-							RController.getDefault().getConsoleQueue()
-									.putRScript(selected);
+							RController.getDefault().getConsoleQueue().putRScript(selected);
 						}
 					} catch (InterruptedException e1) {
 						throw new RuntimeException(e1);
@@ -732,6 +731,8 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 				if (RController.getDefault().isRAvailable().getValue()) {
 					if (RController.getDefault().getConsoleController().isAttached(m_console)) {
 						RController.getDefault().getConsoleController().detach(m_console);
+						// clear pending commands in the console queue
+						RController.getDefault().getConsoleQueue().clear();
 					}
 					// stop listing to the RController for updating the object
 					// browser
