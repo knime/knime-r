@@ -57,7 +57,6 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
@@ -70,6 +69,7 @@ import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.r.template.DefaultTemplateController;
 import org.knime.r.template.TemplatesPanel;
@@ -101,7 +101,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
      * tab or to create templates
      */
     @SuppressWarnings("rawtypes")
-    protected RSnippetNodeDialog(final Class templateMetaCategory, final RSnippetNodeConfig config) {  
+    protected RSnippetNodeDialog(final Class templateMetaCategory, final RSnippetNodeConfig config) {
     	m_templateMetaCategory = templateMetaCategory;
     	m_config = config;
     	m_tableInPort = -1;
@@ -112,7 +112,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         	}
     		i++;
     	}
-    	
+
         m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, true) {
 
         	@Override
@@ -124,14 +124,14 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         	}
 
         };
-        
+
         addTab(SNIPPET_TAB, m_panel);
         // The preview does not have the templates tab
         addTab("Templates", createTemplatesPanel());
 
         m_panel.setPreferredSize(new Dimension(800, 600));
     }
-   
+
     /** Create the templates tab. */
     private JPanel createTemplatesPanel() {
         RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, m_config, true, false);
@@ -143,7 +143,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
                 m_templatesController);
         return templatesPanel;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -153,40 +153,39 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         // in the snippets textarea.
         return false;
     }
-    
+
     @Override
     protected void loadSettingsFrom(final NodeSettingsRO settings,
     		final PortObjectSpec[] specs) throws NotConfigurableException {
     	DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec)specs[m_tableInPort] : null;
     	m_input = null;
         m_panel.updateData(settings, specs, getAvailableFlowVariables().values());
-        
+
         m_templatesController.setDataTableSpec(spec);
-        m_templatesController.setFlowVariables(getAvailableFlowVariables());	
+        m_templatesController.setFlowVariables(getAvailableFlowVariables());
     }
-    
+
     @Override
     protected void loadSettingsFrom(final NodeSettingsRO settings,
-    		final PortObject[] input) throws NotConfigurableException {    	
+    		final PortObject[] input) throws NotConfigurableException {
     	DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable)input[m_tableInPort]).getSpec() : null;
     	m_input = input;
         m_panel.updateData(settings, input, getAvailableFlowVariables().values());
-        
+
         m_templatesController.setDataTableSpec(spec);
-        m_templatesController.setFlowVariables(getAvailableFlowVariables());	
+        m_templatesController.setFlowVariables(getAvailableFlowVariables());
     }
-   
-	
+
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void onOpen() {
-        final ValueReport<Boolean> report = m_panel.onOpen();       
+        final ValueReport<Boolean> report = m_panel.onOpen();
         if (report.hasErrors()) {
         	final Component parent = m_panel;
-        	SwingUtilities.invokeLater(new Runnable() {
-				
+        	ViewUtils.runOrInvokeLaterInEDT(new Runnable() {
 				@Override
 				public void run() {
 					JOptionPane.showMessageDialog(parent, ValueReport.joinString(report.getErrors(), "\n"));
@@ -194,7 +193,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 			});
         }
     }
-    
+
 
 
 	@Override
@@ -210,7 +209,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
             throws InvalidSettingsException {
         m_panel.saveSettingsTo(settings);
     }
-    
+
 
     /**
      * Called right before storing the settings object. Gives subclasses

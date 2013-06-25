@@ -39,6 +39,7 @@ import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.util.ThreadUtils;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
 import org.rosuda.REngine.REXPGenericVector;
@@ -60,7 +61,7 @@ import com.sun.jna.Platform;
 
 public class RController {
 	NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
-	
+
 	private static final String TEMP_VARIABLE_NAME = "knimertemp836481";
 
 	private static RController instance;
@@ -70,7 +71,7 @@ public class RController {
 	private JRIEngine m_engine;
 
 	private EventListenerList listenerList;
-	
+
 	private Semaphore m_lock;
 
 	private boolean m_isRAvailable;
@@ -108,23 +109,23 @@ public class RController {
 		try {
 			m_errors = new ArrayList<String>();
 			m_warnings = new ArrayList<String>();
-			
+
 	    	String rHome = org.knime.r.preferences.RPreferenceInitializer
 					.getRProvider().getRHome();
 			if (!checkRHome(rHome)) {
 				m_isRAvailable = false;
 				return;
-			}		
+			}
 			m_commandQueue = new RCommandQueue();
 			m_consoleController = new RConsoleController();
 			m_lock = new Semaphore(1);
 			listenerList = new EventListenerList();
-	
+
 			try {
 				if (Platform.isWindows()) {
 					CLibrary.INSTANCE._putenv("R_HOME" + "=" + rHome);
 					String path = CLibrary.INSTANCE.getenv("PATH");
-					String rdllPath = getWinRDllPath(rHome);				
+					String rdllPath = getWinRDllPath(rHome);
 					CLibrary.INSTANCE._putenv("PATH" + "=" + path + ";" + rdllPath);
 				} else {
 					CLibrary.INSTANCE.setenv("R_HOME", rHome, 1);
@@ -137,7 +138,7 @@ public class RController {
 			} catch (REngineException e) {
 				throw new RuntimeException(e);
 			}
-	
+
 			// attach a thread to the console controller to get notify when
 			// commands are executed via the console
 			new Thread() {
@@ -179,7 +180,7 @@ public class RController {
 		
 		
 	}
-	
+
     private boolean checkRHome(final String rHomePath) {
 		File rHome = new File(rHomePath);
 		String msgSuffix = "R_HOME is meant to be the path to the folder beeing the root of Rs installation tree. \n"
@@ -192,20 +193,20 @@ public class RController {
 			m_errors.add("R_HOME is not a directory. \n" + msgSuffix);
 			return false;
 		}
-		String[] hasNameBin = rHome.list(new FilenameFilter() {			
+		String[] hasNameBin = rHome.list(new FilenameFilter() {
 			@Override
 			public boolean accept(final File dir, final String name) {
 				return name.equals("bin");
 			}
 		});
-		
+
 		if (hasNameBin == null || hasNameBin.length == 0) {
 			m_errors.add("R_HOME does not contain a folder with name \"bin\". \n" + msgSuffix);
 			return false;
 		}
 		return true;
 	}
-    
+
     /**
      * returns true when R is available and correctly initilized.
      */
@@ -215,26 +216,26 @@ public class RController {
 
 	/**
      * see Semaphore.realease()
-     */	
+     */
 	public void release() {
 		m_lock.release();
 	}
-	
+
 	/**
      * see Semaphore.tryAcquire()
-     */		
+     */
 	public boolean tryAcquire() {
 		return m_isRAvailable ? m_lock.tryAcquire() : false;
 	}
 
-	
+
     /**
      * see Semaphore.tryAcquire()
-     */		
+     */
 	public boolean tryAcquire(final long timeout, final TimeUnit unit) throws InterruptedException {
 		return m_isRAvailable ? m_lock.tryAcquire(timeout, unit) : false;
 	}
-	 
+
 	/**
 	 * Get path to the directory containing R.dll
 	 * @param rHome the R_HOME directory
@@ -245,19 +246,19 @@ public class RController {
 			String rdllPath64 = rHome + "\\bin\\x64";
 			File rdllFile64 = new File(rdllPath64);
 			if (rdllFile64.exists() && rdllFile64.isDirectory()) {
-				return rdllPath64;			
-			} else {			
+				return rdllPath64;
+			} else {
 				throw new RuntimeException("Cannot find path to R.dll (64bit)");
-			}			
+			}
 		} else {
 			String rdllPath32 = rHome + "\\bin\\i386";
 			File rdllFile32 = new File(rdllPath32);
 			if (rdllFile32.exists() && rdllFile32.isDirectory()) {
-				return rdllPath32;		
-			} else {			
+				return rdllPath32;
+			} else {
 				throw new RuntimeException("Cannot find path to R.dll (32bit)");
-			}	
-		}		
+			}
+		}
 	}
 
 	public JRIEngine getJRIEngine() {
@@ -293,8 +294,9 @@ public class RController {
 
 	public REXP idleEval(final String cmd) throws REngineException,
 			REXPMismatchException {
-		if (getREngine() == null)
-			throw new REngineException(null, "REngine not available");
+		if (getREngine() == null) {
+            throw new REngineException(null, "REngine not available");
+        }
 		REXP x = null;
 		int lock = m_engine.tryLock();
 		if (lock != 0) {
@@ -318,7 +320,7 @@ public class RController {
 
 	public void threadedEval(final String cmd) {
 		final String c = cmd;
-		new Thread(new Runnable() {
+		ThreadUtils.threadWithContext(new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -348,8 +350,8 @@ public class RController {
 			LOGGER.error("REngine error", e);
 		} catch (REXPMismatchException e) {
 			LOGGER.error("REngine error", e);
-		}		
-		
+		}
+
 	}
 
 	public void clearWorkspace(final ExecutionMonitor exec) throws CanceledExecutionException {
@@ -360,7 +362,7 @@ public class RController {
 //		timedAssign(TEMP_VARIABLE_NAME, new REXPString(value.toString()));
 //		setVariableName(name);
 //	}
-	
+
 	public void exportFlowVariables(final Collection<FlowVariable> inFlowVariables,
 			final String name, final ExecutionMonitor exec)
 			throws CanceledExecutionException {
@@ -370,22 +372,22 @@ public class RController {
 		for(FlowVariable flowVar : inFlowVariables) {
 			exec.checkCanceled();
 			names[i] = flowVar.getName();
-			if (flowVar.getType().equals(FlowVariable.Type.INTEGER)) { 
+			if (flowVar.getType().equals(FlowVariable.Type.INTEGER)) {
 				content[i] = new REXPInteger(flowVar.getIntValue());
-			} else if (flowVar.getType().equals(FlowVariable.Type.DOUBLE)) { 
+			} else if (flowVar.getType().equals(FlowVariable.Type.DOUBLE)) {
 				content[i] = new REXPDouble(flowVar.getDoubleValue());
 			} else { // string
 				content[i] = new REXPString(flowVar.getStringValue());
 			}
-			i++;	
+			i++;
 		}
 
 		monitoredAssign(TEMP_VARIABLE_NAME, new REXPList(new RList(content, names)), exec);
 		// JGR.getREngine().assign(TEMP_VARIABLE_NAME,
 		// createDataFrame(content, rexpRowNames));
 		setVariableName(name, exec);
-	}	
-	
+	}
+
 
 
 	public Collection<FlowVariable> importFlowVariables(final String string,
@@ -393,22 +395,22 @@ public class RController {
 		List<FlowVariable> flowVars = new ArrayList<FlowVariable>();
 		try {
 			REXP value = m_engine.get(string, null, true);
-	
+
 			if (value == null) {
 				// A variable with this name does not exist
 				return Collections.emptyList();
 			}
 			RList rList = value.asList();
-			
+
 			for (int c = 0; c < rList.size(); c++) {
-				REXP rexp = rList.at(c);	
+				REXP rexp = rList.at(c);
 				if (rexp.isInteger()) {
 					flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asInteger()));
 				} else if (rexp.isNumeric()) {
 					flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asDouble()));
 				} else if (rexp.isString()) {
 					flowVars.add(new FlowVariable((String)rList.names.get(c), rexp.asString()));
-				} 			
+				}
 			}
 		} catch (REngineException e) {
 			LOGGER.error("Rengine error", e);
@@ -504,7 +506,7 @@ public class RController {
 							for (Iterator<DataCell> iter = collValue.iterator(); iter.hasNext();) {
 								elementValue[i] = exportIntValue(iter.next());
 								i++;
-							}							
+							}
 							int[][] column = (int[][]) columns[c];
 							column[r] = elementValue;
 						} else if (elementType.isCompatible(DoubleValue.class)) {
@@ -513,7 +515,7 @@ public class RController {
 							for (Iterator<DataCell> iter = collValue.iterator(); iter.hasNext();) {
 								elementValue[i] = exportDoubleValue(iter.next());
 								i++;
-							}							
+							}
 							double[][] column = (double[][]) columns[c];
 							column[r] = elementValue;
 						} else {
@@ -522,7 +524,7 @@ public class RController {
 							for (Iterator<DataCell> iter = collValue.iterator(); iter.hasNext();) {
 								elementValue[i] = exportStringValue(iter.next());
 								i++;
-							}							
+							}
 							String[][] column = (String[][]) columns[c];
 							column[r] = elementValue;
 						}
@@ -551,7 +553,7 @@ public class RController {
 		}
 		exec.setProgress(1.0);
 	}
-	
+
 
 	private byte exportBooleanValue(final DataCell cell) {
 		if (!cell.isMissing()) {
@@ -560,7 +562,7 @@ public class RController {
 		} else {
 			return REXPLogical.NA;
 		}
-	}	
+	}
 
 	private int exportIntValue(final DataCell cell) {
 		if (!cell.isMissing()) {
@@ -645,7 +647,7 @@ public class RController {
 							rList.add(null);
 						}
 					}
-					content.put(colNames[c], new REXPGenericVector(rList));					
+					content.put(colNames[c], new REXPGenericVector(rList));
 				}
 			} else {
 				if (type.isCompatible(BooleanValue.class)) {
@@ -704,25 +706,25 @@ public class RController {
 			throw new RuntimeException("Supporting 'data.frame' as return type, only.");
 		}
 		String[] columnTypes = eval("sapply(" + string + ",class)").asStrings();
-		
-		// TODO: Support int[] as row names or int which defines the column of row names: 
+
+		// TODO: Support int[] as row names or int which defines the column of row names:
 		// http://stat.ethz.ch/R-manual/R-patched/library/base/html/row.names.html
 		String[] rowIds = eval("attr(" + string + " , \"row.names\")").asStrings();
 		int numRows = rowIds.length;
 		int ommitColumn = -1;
-		
-		REXP value = m_engine.get(string, null, true);		
+
+		REXP value = m_engine.get(string, null, true);
 		RList rList = value.asList();
-		
-		
+
+
 		DataTableSpec outSpec = createSpecFromDataFrame(rList);
 		BufferedDataContainer cont = exec.createDataContainer(outSpec);
 		for (int r = 0; r < numRows; r++) {
 			exec.checkCanceled();
 			exec.setProgress(r / (double)numRows);
-			
+
 			String rowId = rowIds[r];
-			
+
 			int numCells = ommitColumn < 0 ? rList.size() : rList.size() - 1;
 			DataCell[] cells = new DataCell[numCells];
 		    int i = 0;
@@ -730,7 +732,7 @@ public class RController {
 				REXP column = rList.at(c);
 				if (c == ommitColumn) {
 					continue;
-				} 
+				}
 				if (column.isNull()) {
 					cells[i] = DataType.getMissingCell();
 				} else if (column.isList()) {
@@ -743,7 +745,7 @@ public class RController {
 						DataCell[] listCells = new DataCell[colValue.length()];
 						for (int cc = 0; cc < colValue.length(); cc++) {
 							listCells[cc] = importCells(colValue, cc);
-						}					
+						}
 						cells[i] = CollectionCellFactory.createListCell(Arrays.asList(listCells));
 					}
 				} else {
@@ -751,18 +753,18 @@ public class RController {
 				}
 				i++;
 			}
-			
+
 		    cont.addRowToTable(new DefaultRow(rowId, cells));
 		}
 		cont.close();
-		
+
 		return cont.getTable();
 	}
 
 	private DataCell importCells(final REXP rexp, final int r) throws REXPMismatchException {
 
 	     DataCell cells;
-			
+
 		 if (rexp.isNull()) {
 				cells = DataType.getMissingCell();
 			} else if (rexp.isLogical()) {
@@ -783,11 +785,11 @@ public class RController {
 				}
 			} else if (rexp.isNumeric()) {
 				double[] colValues = rexp.asDoubles();
-				if (colValues[r] == REXPDouble.NA 
+				if (colValues[r] == REXPDouble.NA
 						|| Double.isNaN(colValues[r])
 					    || Double.isInfinite(colValues[r])) {
 					cells = DataType.getMissingCell();
-				} else {					
+				} else {
 					cells = new DoubleCell(colValues[r]);
 				}
 			} else  {
@@ -797,11 +799,11 @@ public class RController {
 				} else {
 					cells = new StringCell(colValues[r]);
 				}
-			} 
-	
+			}
+
 		return cells;
 	}
-	
+
 	private DataTableSpec createSpecFromDataFrame(final RList rList) throws REXPMismatchException {
 		List<DataColumnSpec> colSpecs = new ArrayList<DataColumnSpec>();
 		for (int c = 0; c < rList.size(); c++) {
@@ -840,7 +842,7 @@ public class RController {
 
 	private String[] getObjectClasses(final String name) throws REngineException, REXPMismatchException {
 		REXP rexp = eval("sapply(" + name + ",function(a)class(get(a,envir=globalenv()))[1])");
-		return rexp != null && !rexp.isNull() ? rexp.asStrings() : null;				
+		return rexp != null && !rexp.isNull() ? rexp.asStrings() : null;
      }
 
 	public void saveWorkspace(final File tempWorkspaceFile, final ExecutionMonitor exec) throws CanceledExecutionException {
@@ -893,7 +895,7 @@ final class MonitoredEval {
 	}
 
 	public REXP run(final String cmd) throws REngineException, REXPMismatchException, CanceledExecutionException {
-		new Thread(new Runnable() {
+		ThreadUtils.threadWithContext(new Runnable() {
 			@Override
 			public void run() {
 				startMonitor();
@@ -907,8 +909,7 @@ final class MonitoredEval {
 	}
 
 	public void assign(final String symbol, final REXP value) throws REngineException, REXPMismatchException, CanceledExecutionException {
-
-		new Thread(new Runnable() {
+		ThreadUtils.threadWithContext(new Runnable() {
 			@Override
 			public void run() {
 				startMonitor();

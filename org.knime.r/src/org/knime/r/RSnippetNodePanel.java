@@ -86,7 +86,7 @@ import org.rosuda.REngine.REXP;
 
 /**
  * The dialog component for RSnippet-Nodes.
- * 
+ *
  * @author Heiko Hofer
  */
 public class RSnippetNodePanel extends JPanel implements RListener {
@@ -419,7 +419,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	 * The panel at the left with the column and variables at the input.
 	 * Override this method when the columns or variables should not be
 	 * displayed.
-	 * 
+	 *
 	 * @return the panel at the left with the column and variables at the input.
 	 */
 	protected JComponent createColsAndVarsPanel() {
@@ -448,7 +448,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 	/**
 	 * Create Panel with additional options to be displayed in the south.
-	 * 
+	 *
 	 * @return options panel or null if there are no additional options.
 	 */
 	protected JPanel createOptionsPanel() {
@@ -500,7 +500,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 	/**
 	 * Create an empty, titled border.
-	 * 
+	 *
 	 * @param title
 	 *            Title of the border.
 	 * @return Such a new border.
@@ -514,7 +514,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	/**
 	 * Determines whether this component is enabled. An enabled component can
 	 * respond to user input and generate events.
-	 * 
+	 *
 	 * @return <code>true</code> if the component is enabled, <code>false</code>
 	 *         otherwise
 	 */
@@ -527,7 +527,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	 * Sets whether or not this component is enabled. A component that is
 	 * enabled may respond to user input, while a component that is not enabled
 	 * cannot respond to user input.
-	 * 
+	 *
 	 * @param enabled
 	 *            true if this component should be enabled, false otherwise
 	 */
@@ -592,8 +592,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		final String[] objectNames = rGetObjectNames();
 		if (objectNames != null && objectNames.length > 0) {
 			final String[] objectClasses = rGetObjectClasses();
-			SwingUtilities.invokeLater(new Runnable() {
-
+			ViewUtils.runOrInvokeLaterInEDT(new Runnable() {
 				@Override
 				public void run() {
 					m_objectBrowser.updateData(objectNames, objectClasses);
@@ -605,7 +604,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 	/**
 	 * Reinitialize with the given blueprint.
-	 * 
+	 *
 	 * @param template
 	 *            the template
 	 * @param flowVariables
@@ -640,7 +639,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 	/**
 	 * Get the template's location for display.
-	 * 
+	 *
 	 * @param template
 	 *            the template
 	 * @return the template's loacation for display
@@ -784,7 +783,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	/**
 	 * Called right before storing the settings object. Gives subclasses the
 	 * chance to modify the settings object.
-	 * 
+	 *
 	 * @param s
 	 *            the settings
 	 */
