@@ -1,6 +1,7 @@
 package org.knime.r;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
@@ -12,6 +13,9 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JTextPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -37,11 +41,30 @@ public class RConsoleController implements RMainLoopCallbacks {
 	private Queue<RCommand> m_commands;
 	private Lock m_lock = new ReentrantLock();
 	private Condition m_workspaceChanged;
+	private Action m_cancelAction;
+	private boolean m_idle;	
 
 	public RConsoleController() {
 		m_commands = new LinkedList<RCommand>();
 		m_lock = new ReentrantLock();
 		m_workspaceChanged = m_lock.newCondition();
+		m_cancelAction = new AbstractAction("Cancel") {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				// clear commands in queue
+				RController.getDefault().getConsoleQueue().clear();
+				// clear commands 
+				m_commands.clear();
+				
+				if (!m_idle) {
+					// stop R if not idle
+					(RController.getDefault().getJRIEngine()).getRni().rniStop(0);
+				}				
+			}
+		};
+		Icon icon = ViewUtils.loadIcon(this.getClass(), "cancel.png");
+		m_cancelAction.putValue(Action.SMALL_ICON, icon);
+		m_idle = true;		
 	}
 	
 	public void attachOutput(final JTextPane pane) {
@@ -100,8 +123,13 @@ public class RConsoleController implements RMainLoopCallbacks {
 	
 	@Override
 	public void rBusy(final Rengine arg0, final int arg1) {
-		// TODO Auto-generated method stub
-		
+		if (arg1 == 1) {
+			m_cancelAction.setEnabled(true);
+		}
+		if (arg1 == 0 && m_commands.size() == 0) {
+			m_cancelAction.setEnabled(false);
+		}	
+		m_idle = arg1 == 0;
 	}
 
 	@Override
@@ -234,6 +262,10 @@ public class RConsoleController implements RMainLoopCallbacks {
 		m_lock.lock();
 		m_workspaceChanged.await();
 		m_lock.unlock();
+	}
+
+	public Action getCancelAction() {
+		return m_cancelAction;
 	}
 
 

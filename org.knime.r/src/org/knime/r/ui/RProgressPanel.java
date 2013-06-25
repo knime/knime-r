@@ -77,6 +77,7 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 	private JProgressBar m_progressBar;
 	private JLabel m_message;
 	private CardLayout m_cardLayout;
+
 	
 	public RProgressPanel() {
 		super(new CardLayout());

@@ -285,9 +285,20 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 					.getPreferredSize().width, 400));
 			mainSplitPane.setTopComponent(rightSplitPane);
 
+			JPanel consolePanel = new JPanel(new BorderLayout());
 			JScrollPane consoleScroller = new JScrollPane(m_console);
-			consoleScroller.setBorder(createEmptyTitledBorder("Console"));
-			mainSplitPane.setBottomComponent(consoleScroller);
+		    JPanel consoleButtons = new JPanel(new FlowLayout());
+		    JButton consoleCancelButton = new JButton(RController.getDefault().getConsoleController().getCancelAction());
+		    consoleCancelButton.setText("");
+		    consoleCancelButton.setPreferredSize(new Dimension(
+		    		consoleCancelButton.getPreferredSize().height,
+		    		consoleCancelButton.getPreferredSize().height));
+
+		    consoleButtons.add(consoleCancelButton);
+		    consolePanel.add(consoleButtons, BorderLayout.WEST);
+		    consolePanel.add(consoleScroller, BorderLayout.CENTER);
+			consolePanel.setBorder(createEmptyTitledBorder("Console"));
+			mainSplitPane.setBottomComponent(consolePanel);
 			mainSplitPane.setOneTouchExpandable(true);
 
 			JPanel centerPanel = new JPanel(new GridLayout(0, 1));
