@@ -2,6 +2,7 @@ package org.knime.r;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,6 +36,7 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
 import org.rosuda.REngine.REXP;
@@ -76,6 +78,8 @@ public class RController {
 	private List<String> m_warnings;
 
 	private List<String> m_errors;
+
+	private File m_imageFile;
 
 	public static synchronized RController getDefault() {
 		// TODO: recreate instance when R_HOME changes in the preferences.
@@ -157,6 +161,23 @@ public class RController {
 		}
 		// everything is ok.
 		m_isRAvailable = true;
+		// write to png by default
+		try {
+			m_imageFile = File.createTempFile("rsnippet-default-", ".png", new File(KNIMEConstants.getKNIMETempDir()));
+			eval("options(device = \"png\")");			
+			eval("png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")");
+		} catch (IOException e) {
+			LOGGER.error("Cannot create temporary file.", e);
+			throw new RuntimeException(e);
+		} catch (REngineException e) {
+			LOGGER.error("R initialisation failed.", e);
+			throw new RuntimeException(e);
+		} catch (REXPMismatchException e) {
+			LOGGER.error("R initialisation failed.", e);
+			throw new RuntimeException(e);
+		}
+		
+		
 	}
 	
     private boolean checkRHome(final String rHomePath) {
@@ -830,6 +851,10 @@ public class RController {
 	public void loadWorkspace(final File tempWorkspaceFile, final ExecutionMonitor exec) throws CanceledExecutionException {
 		// load workspace form file
 		monitoredEval("load(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec);
+	}
+
+	public String newDev() {
+		return "png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")\n";
 	}
 }
 

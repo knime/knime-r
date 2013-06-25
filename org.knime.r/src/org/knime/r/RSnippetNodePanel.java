@@ -196,7 +196,9 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 				public void actionPerformed(final ActionEvent e) {
 					try {
 						RController.getDefault().getConsoleQueue()
-								.putRScript(m_snippetTextArea.getText());
+								.putRScript(
+										RController.getDefault().newDev() +
+										m_snippetTextArea.getText() + "\ndev.off()");
 					} catch (InterruptedException e1) {
 						throw new RuntimeException(e1);
 					}
@@ -211,7 +213,9 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 					try {
 						String selected = m_snippetTextArea.getSelectedText();
 						if (selected != null) {
-							RController.getDefault().getConsoleQueue().putRScript(selected);
+							RController.getDefault().getConsoleQueue().putRScript(
+									RController.getDefault().newDev() +
+									selected + "\ndev.off()");
 						}
 					} catch (InterruptedException e1) {
 						throw new RuntimeException(e1);
@@ -364,12 +368,15 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 						RController.getDefault().exportFlowVariables(
 								m_inputFlowVars, "knime.flow.in", m_exec);
 						workspaceChanged(null);
+ 
 
 					} finally {
 						if (m_exec != null) {
 							m_exec.getProgressMonitor().setExecuteCanceled();
 						}
 						m_lock.unlock();
+						// make sure the m_exec is at 100% at end
+						m_exec.setProgress(1);
 					}
 
 				} finally {
