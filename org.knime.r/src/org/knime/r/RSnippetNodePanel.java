@@ -52,7 +52,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
@@ -73,6 +72,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.util.SwingWorkerWithContext;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.r.template.AddTemplateDialog;
 import org.knime.r.template.TemplateProvider;
@@ -324,10 +324,10 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	 * Reset workspace with input data.
 	 */
 	private void resetWorkspace() {
-		new SwingWorker<Void, Void>() {
+		new SwingWorkerWithContext<Void, Void>() {
 
 			@Override
-			protected Void doInBackground() throws Exception {
+			protected Void doInBackgroundWithContext() throws Exception {
 				m_resetWorkspace.setEnabled(false);
 				try {
 					while (!m_lock.tryLock(100, TimeUnit.MILLISECONDS)) {
@@ -368,7 +368,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 						RController.getDefault().exportFlowVariables(
 								m_inputFlowVars, "knime.flow.in", m_exec);
 						workspaceChanged(null);
- 
+
 
 					} finally {
 						if (m_exec != null) {
@@ -670,10 +670,10 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 				m_resetWorkspace.setEnabled(m_hasLock);
 				if (isRAvailable.getValue()) {
 					if (!m_hasLock) {
-						new SwingWorker<Void, Void>() {
+						new SwingWorkerWithContext<Void, Void>() {
 
 							@Override
-							protected Void doInBackground() throws Exception {
+							protected Void doInBackgroundWithContext() throws Exception {
 								while (!m_lock.tryLock(100, TimeUnit.MILLISECONDS)) {
 									if (m_closing) {
 										return null;
