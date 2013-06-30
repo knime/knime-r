@@ -38,10 +38,10 @@ public class RConsoleController implements RMainLoopCallbacks {
 	
 	private JTextPane m_pane;
 	
-	private Queue<RCommand> m_commands;
+	private final Queue<RCommand> m_commands;
 	private Lock m_lock = new ReentrantLock();
-	private Condition m_workspaceChanged;
-	private Action m_cancelAction;
+	private final Condition m_workspaceChanged;
+	private final Action m_cancelAction;
 	private boolean m_idle;	
 
 	public RConsoleController() {
@@ -177,10 +177,9 @@ public class RConsoleController implements RMainLoopCallbacks {
 			}
 		}
 		final RCommand rCmd = m_commands.poll();
-		if (rCmd != null) {
+		if (rCmd != null && rCmd.isShowInConsole()) {
 			append(prompt + rCmd.getCommand() + "\n", 0);
 		} 
-
 
 		return (rCmd.getCommand() == null || rCmd.getCommand().length() == 0) ? "\n" : rCmd.getCommand() + "\n";
 	}
@@ -200,7 +199,7 @@ public class RConsoleController implements RMainLoopCallbacks {
 	private final AtomicBoolean m_updateScheduled = new AtomicBoolean(false);
 
 	
-	private ReentrantLock m_appendBufferLock = new ReentrantLock(true);
+	private final ReentrantLock m_appendBufferLock = new ReentrantLock(true);
 	Deque<Pair<StringBuilder, Integer>> m_buffer = new ArrayDeque<Pair<StringBuilder,Integer>>();
 	
 	@Override

@@ -2,7 +2,6 @@ package org.knime.r;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,7 +35,6 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.ThreadUtils;
@@ -80,7 +78,7 @@ public class RController {
 
 	private List<String> m_errors;
 
-	private File m_imageFile;
+//	private File m_imageFile;
 
 	public static synchronized RController getDefault() {
 		// TODO: recreate instance when R_HOME changes in the preferences.
@@ -162,21 +160,21 @@ public class RController {
 		}
 		// everything is ok.
 		m_isRAvailable = true;
-		// write to png by default
-		try {
-			m_imageFile = File.createTempFile("rsnippet-default-", ".png", new File(KNIMEConstants.getKNIMETempDir()));
-			eval("options(device = \"png\")");			
-			eval("png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")");
-		} catch (IOException e) {
-			LOGGER.error("Cannot create temporary file.", e);
-			throw new RuntimeException(e);
-		} catch (REngineException e) {
-			LOGGER.error("R initialisation failed.", e);
-			throw new RuntimeException(e);
-		} catch (REXPMismatchException e) {
-			LOGGER.error("R initialisation failed.", e);
-			throw new RuntimeException(e);
-		}
+//		// write to png by default
+//		try {
+//			m_imageFile = FileUtil.createTempFile("rsnippet-default-", ".png");
+//			eval("options(device = \"png\")");			
+//			eval("png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")");
+//		} catch (IOException e) {
+//			LOGGER.error("Cannot create temporary file.", e);
+//			throw new RuntimeException(e);
+//		} catch (REngineException e) {
+//			LOGGER.error("R initialisation failed.", e);
+//			throw new RuntimeException(e);
+//		} catch (REXPMismatchException e) {
+//			LOGGER.error("R initialisation failed.", e);
+//			throw new RuntimeException(e);
+//		}
 		
 		
 	}
@@ -441,7 +439,7 @@ public class RController {
 
 		exec.setProgress(1.0);
 	}
-
+	
 	private Object[] initializeColumns(final BufferedDataTable table) {
 		DataTableSpec spec = table.getDataTableSpec();
 
@@ -855,9 +853,9 @@ public class RController {
 		monitoredEval("load(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec);
 	}
 
-	public String newDev() {
-		return "png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")\n";
-	}
+//	public String newDev() {
+//		return "png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")\n";
+//	}
 }
 
 final class MonitoredEval {
@@ -865,7 +863,7 @@ final class MonitoredEval {
 	volatile boolean m_done;
 	volatile REXP m_result;
 	int m_interval;
-	private ExecutionMonitor m_exec;
+	private final ExecutionMonitor m_exec;
 
 	public MonitoredEval(final ExecutionMonitor exec) {
 		m_done = false;

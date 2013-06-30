@@ -50,7 +50,6 @@
  */
 package org.knime.r;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.Collections;
 import java.util.Map;
@@ -86,11 +85,11 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
     private static final String SNIPPET_TAB = "R Snippet";
 
 
-	private RSnippetNodePanel m_panel;
+	private final RSnippetNodePanel m_panel;
 	private DefaultTemplateController m_templatesController;
 
-	private Class m_templateMetaCategory;
-	private RSnippetNodeConfig m_config;
+	private final Class m_templateMetaCategory;
+	private final RSnippetNodeConfig m_config;
 	private int m_tableInPort;
 
 	private PortObject[] m_input;
@@ -182,23 +181,25 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
      */
     @Override
     public void onOpen() {
-        final ValueReport<Boolean> report = m_panel.onOpen();
-        if (report.hasErrors()) {
-        	final Component parent = m_panel;
-        	ViewUtils.runOrInvokeLaterInEDT(new Runnable() {
-				@Override
-				public void run() {
-					JOptionPane.showMessageDialog(parent, ValueReport.joinString(report.getErrors(), "\n"));
-				}
-			});
-        }
+        ViewUtils.invokeAndWaitInEDT(new Runnable() {
+            @Override
+            public void run() {
+                final ValueReport<Boolean> report = m_panel.onOpen();
+                if (report.hasErrors()) {
+                    JOptionPane.showMessageDialog(m_panel, ValueReport.joinString(report.getErrors(), "\n"));
+                }
+            }
+        });
     }
-
-
 
 	@Override
     public void onClose() {
-		m_panel.onClose();
+	    ViewUtils.invokeAndWaitInEDT(new Runnable() {
+	        @Override
+	        public void run() {
+	            m_panel.onClose();
+	        }
+	    });
     }
 
     /**
