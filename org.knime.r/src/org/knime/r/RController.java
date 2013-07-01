@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -40,6 +41,7 @@ import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.ThreadUtils;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
+import org.rosuda.REngine.REXPFactor;
 import org.rosuda.REngine.REXPGenericVector;
 import org.rosuda.REngine.REXPInteger;
 import org.rosuda.REngine.REXPList;
@@ -663,12 +665,29 @@ public class RController {
 				} else {
 					String[] column = (String[]) columns[c];
 					REXPString ri = new REXPString(column);
+					// TODO Heiko - See email 1 July. String columns should be factors.
+//					REXPFactor rf = createFactor(column);
 					content.put(colNames[c], ri);
 				}
 			}
 		}
 		exec.setProgress(1.0);
 		return content;
+	}
+	
+	private static REXPFactor createFactor(final String[] values) {
+	    LinkedHashMap<String, Integer> hash = new LinkedHashMap<String, Integer>();
+	    int[] valueIndices = new int[values.length];
+	    for (int i = 0; i < values.length; i++) {
+	        Integer index = hash.get(values[i]);
+            if (index == null) {
+                index = hash.size() + 1;
+                hash.put(values[i], index);
+            }
+            valueIndices[i] = index.intValue();
+	    }
+	    String[] categories = hash.keySet().toArray(new String[hash.size()]);
+	    return new REXPFactor(valueIndices, categories);
 	}
 
 	public static REXP createDataFrame(final RList l, final REXP rownames, final ExecutionMonitor exec) throws REXPMismatchException {
