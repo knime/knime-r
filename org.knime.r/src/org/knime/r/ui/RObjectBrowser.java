@@ -55,8 +55,13 @@ public class RObjectBrowser extends JTable {
 		}
 		
 		public void updateData(final String[] objectNames, final String[] objectClasses) {
-			m_objectNames = objectNames;
-			m_objectClasses = objectClasses;
+			if (objectNames != null && objectClasses != null) {
+				m_objectNames = objectNames;
+				m_objectClasses = objectClasses;
+			} else {
+				m_objectNames = new String[0];
+				m_objectClasses = new String[0];
+			}
 			fireTableDataChanged();
 		}		
 		
