@@ -56,6 +56,8 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
 
 import org.fife.ui.rsyntaxtextarea.ErrorStrip;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -274,7 +276,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			m_showPlot = new JButton("Show Plot");
 			m_showPlot.addActionListener(new ActionListener() {
                 @Override
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed(final ActionEvent e) {
                     showPlot();
                 }
             });
@@ -756,6 +758,18 @@ public class RSnippetNodePanel extends JPanel implements RListener {
                     connectToR();
                 }
             }
+        	if (isRAvailable.hasErrors()) {
+			    StyledDocument doc = m_console.getStyledDocument();
+				try {
+					doc.insertString(doc.getLength(), "R cannot be intialized.\n", m_console.getErrorStyle());
+					doc.insertString(doc.getLength(), ValueReport.joinString(isRAvailable.getErrors(), "\n"), 
+							m_console.getErrorStyle());
+				} catch (BadLocationException e) {
+					// never happens
+					throw new RuntimeException(e);
+				}
+        	}
+        
 			return isRAvailable;
 		} else {
 			return new ValueReport<Boolean>(true, Collections.EMPTY_LIST,
@@ -902,7 +916,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		return m_snippet;
 	}
 
-    private void evalScriptFragment(String script) {
+    private void evalScriptFragment(final String script) {
         try {
             final String setupPlotInitCommand = setupPlotInitCommand();
         	final RCommandQueue consoleQueue = RController.getDefault().getConsoleQueue();

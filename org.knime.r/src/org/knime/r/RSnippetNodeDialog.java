@@ -54,7 +54,6 @@ import java.awt.Dimension;
 import java.util.Collections;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.knime.core.data.DataTableSpec;
@@ -184,10 +183,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         ViewUtils.invokeAndWaitInEDT(new Runnable() {
             @Override
             public void run() {
-                final ValueReport<Boolean> report = m_panel.onOpen();
-                if (report.hasErrors()) {
-                    JOptionPane.showMessageDialog(m_panel, ValueReport.joinString(report.getErrors(), "\n"));
-                }
+                m_panel.onOpen();
             }
         });
     }

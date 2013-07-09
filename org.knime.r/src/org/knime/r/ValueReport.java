@@ -132,7 +132,7 @@ public class ValueReport<T> {
 		b.append(strings[0]);
 		for (int i = 1; i < strings.length; i++) {
 			b.append(delim);
-			b.append(strings);
+			b.append(strings[i]);
 		}
 		return b.toString();
 	}

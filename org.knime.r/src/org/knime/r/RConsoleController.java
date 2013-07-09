@@ -1,6 +1,5 @@
 package org.knime.r;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -17,26 +16,20 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JTextPane;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.util.Pair;
+import org.knime.r.ui.RConsole;
 import org.rosuda.JRI.RMainLoopCallbacks;
 import org.rosuda.JRI.Rengine;
 import org.rosuda.REngine.JRI.JRIEngine;
 
 public class RConsoleController implements RMainLoopCallbacks {
-	private Style m_errorStyle;
-	private Style m_normalStyle;
-	private Style m_commandStyle;
-	private Style m_resultStyle;
 	
-	private JTextPane m_pane;
+	private RConsole m_pane;
 	
 	private final Queue<RCommand> m_commands;
 	private Lock m_lock = new ReentrantLock();
@@ -67,58 +60,26 @@ public class RConsoleController implements RMainLoopCallbacks {
 		m_idle = true;		
 	}
 	
-	public void attachOutput(final JTextPane pane) {
+	public void attachOutput(final RConsole pane) {
 		if (m_pane != null) {
 			detach(m_pane);
 		}
 		
 		m_pane = pane;
 		
-        m_errorStyle = m_pane.addStyle("Error Style", null);
-        StyleConstants.setForeground(m_errorStyle, Color.red);
-        m_normalStyle = m_pane.addStyle("Normal Style", null);
-        StyleConstants.setForeground(m_normalStyle, Color.black);
-        m_commandStyle = m_pane.addStyle("Command Style", null);
-        StyleConstants.setForeground(m_commandStyle, Color.darkGray);
-        m_resultStyle = m_pane.addStyle("Result Style", null);
-        StyleConstants.setForeground(m_resultStyle, Color.black);   
-        
-        m_pane.setEditable(false);
-        m_pane.setDragEnabled(true);
+
 	}
 
 	public void detach(final JTextPane pane) {
 		if (pane == null || m_pane != pane) {
 			throw new RuntimeException("Wrong text pane to detach.");
 		}
-		m_pane.removeStyle("Error Style");
-		m_pane.removeStyle("Normal Style");
-		m_pane.removeStyle("Command Style");
-		m_pane.removeStyle("Result Style");
+
 		m_pane = null;
 	}	
 	
 	public boolean isAttached(final JTextPane pane) {
 		return m_pane == pane;
-	}
-	/**
-	 * Append text to pane.
-	 * 
-	 * @param str text to be appended
-	 * @param a attribute-set for insertion
-	 */
-	public void append(final String str, final AttributeSet a) {
-		if (m_pane != null) {
-			Document doc = m_pane.getDocument();
-			if (doc != null) {
-				try {
-					doc.insertString(doc.getLength(), str, a);
-				} catch (BadLocationException e) {
-					// never happens
-					throw new RuntimeException(e);
-				}
-			}
-		}
 	}
 	
 	@Override
@@ -242,7 +203,7 @@ public class RConsoleController implements RMainLoopCallbacks {
 					    while (buffer.size() > 0) {
 					    	Pair<StringBuilder, Integer> toWrite = buffer.poll();
 							try {
-								Style style = toWrite.getSecond() == 0 ? m_normalStyle : m_errorStyle;
+								Style style = toWrite.getSecond() == 0 ? m_pane.getNormalStyle() : m_pane.getErrorStyle();
 								doc.insertString(doc.getLength(), toWrite.getFirst().toString(), style);
 							} catch (BadLocationException e) {
 								// never happens
