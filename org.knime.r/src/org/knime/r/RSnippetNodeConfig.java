@@ -62,14 +62,23 @@ public class RSnippetNodeConfig {
 				break;
 			}
 		}		
-		if (inHasTable && outHasTable) {
-			return "knime.out <- knime.in";
-		} else if (!inHasTable && outHasTable) {
-			return "knime.out <- data";
-		} else if (inHasTable && !outHasTable) {
-			return "data <- knime.in";
+		// the source nodes
+		if (getInPortTypes().size() <= 0) {
+			if (outHasTable) {
+				return "knime.out <- data.frame()";
+			} else {
+				return "R <- data.frame()";
+			}
 		} else {
-			return "";
+			if (inHasTable && outHasTable) {
+				return "knime.out <- knime.in";
+			} else if (!inHasTable && outHasTable) {
+				return "knime.out <- R";
+			} else if (inHasTable && !outHasTable) {
+				return "R <- knime.in";
+			} else {
+				return "R <- data.frame()";
+			}
 		}
 	}	
 }

@@ -71,6 +71,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettings;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.config.ConfigRO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -836,24 +837,11 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			throws InvalidSettingsException {
 		RSnippetSettings s = m_snippet.getSettings();
 
-		// give subclasses the chance to modify settings
-		preSaveSettings(s);
-
 		s.saveSettings(settings);
 	}
 
-	/**
-	 * Called right before storing the settings object. Gives subclasses the
-	 * chance to modify the settings object.
-	 *
-	 * @param s
-	 *            the settings
-	 */
-	protected void preSaveSettings(final RSnippetSettings s) {
-		// just a place holder.
-	}
 
-	public void updateData(final NodeSettingsRO settings,
+	public void updateData(final ConfigRO settings,
 			final PortObjectSpec[] specs,
 			final Collection<FlowVariable> flowVariables) {
 		m_snippet.getSettings().loadSettingsForDialog(settings);
@@ -862,7 +850,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		updateData(m_snippet.getSettings(), null, spec, flowVariables);
 	}
 
-	public void updateData(final NodeSettingsRO settings,
+	public void updateData(final ConfigRO settings,
 			final PortObject[] input,
 			final Collection<FlowVariable> flowVariables) {
 		m_snippet.getSettings().loadSettingsForDialog(settings);

@@ -563,6 +563,10 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	protected RSnippetNodeConfig getRSnippetNodeConfig() {
 		return m_config;
 	}
+	
+	protected RSnippet getRSnippet() {
+		return m_snippet;
+	}
 
 	public void loadSettings(final RSnippetSettings settings) {
 		m_snippet.getSettings().loadSettings(settings);

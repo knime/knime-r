@@ -432,14 +432,23 @@ public class RController {
 		fillColumns(table, columns, rowNames, exec.createSubProgress(0.7));
 		RList content = createContent(table, columns, exec.createSubProgress(0.9));
 
-		REXPString rexpRowNames = new REXPString(rowNames);
-		try {
-			monitoredAssign(TEMP_VARIABLE_NAME, createDataFrame(content, rexpRowNames, exec), exec);
-			setVariableName(name, exec);
-		} catch (REXPMismatchException e) {
-			LOGGER.error("Cannot create data frame with data from KNIME.", e);
-		}
-
+	    if (content.size() > 0) {
+			REXPString rexpRowNames = new REXPString(rowNames);
+			try {
+				monitoredAssign(TEMP_VARIABLE_NAME, createDataFrame(content, rexpRowNames, exec), exec);
+				setVariableName(name, exec);
+			} catch (REXPMismatchException e) {
+				LOGGER.error("Cannot create data frame with data from KNIME.", e);
+			}
+	    } else {
+	    	try {
+				eval("knime.in <- data.frame()");
+			} catch (REngineException e) {
+				throw new RuntimeException(e);
+			} catch (REXPMismatchException e) {
+				throw new RuntimeException(e);
+			}
+	    }
 		exec.setProgress(1.0);
 	}
 	
@@ -690,7 +699,7 @@ public class RController {
 	}
 
 	public static REXP createDataFrame(final RList l, final REXP rownames, final ExecutionMonitor exec) throws REXPMismatchException {
-		if (l == null || l.size() < 1) {
+		if (l == null || l.size() <= 0) {
 			throw new REXPMismatchException(new REXPList(l),
 					"data frame (must have dim>0)");
 		}
@@ -721,7 +730,6 @@ public class RController {
 		if (!type.equals("data.frame")) {
 			throw new RuntimeException("Supporting 'data.frame' as return type, only.");
 		}
-		String[] columnTypes = eval("sapply(" + string + ",class)").asStrings();
 
 		// TODO: Support int[] as row names or int which defines the column of row names:
 		// http://stat.ethz.ch/R-manual/R-patched/library/base/html/row.names.html
@@ -775,6 +783,8 @@ public class RController {
 		cont.close();
 
 		return cont.getTable();
+
+
 	}
 
 	private DataCell importCells(final REXP rexp, final int r) throws REXPMismatchException {

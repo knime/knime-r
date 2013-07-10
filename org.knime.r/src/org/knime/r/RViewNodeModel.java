@@ -42,6 +42,7 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.image.ImagePortObject;
@@ -102,13 +103,40 @@ public class RViewNodeModel extends RSnippetNodeModel {
         }
 	}
 
+	/**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void saveSettingsTo(final NodeSettingsWO settings) {
+        m_settings.saveSettings(settings);
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     protected void validateSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-    	// TODO: validate settings
+        RViewNodeSettings s = new RViewNodeSettings();
+        s.loadSettings(settings);
+
+
+        // validate background color code
+        String colorCode = s.getImageBackgroundColor();
+        if (!colorCode.matches("^#[0-9aAbBcCdDeEfF]{6}")) {
+            throw new InvalidSettingsException("Specified color code \""
+                    + colorCode + "\" is not valid!");
+        }        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
+            throws InvalidSettingsException {
+        m_settings.loadSettings(settings);
+        getRSnippet().getSettings().loadSettings(m_settings.getRSettings());
     }
     
     /**

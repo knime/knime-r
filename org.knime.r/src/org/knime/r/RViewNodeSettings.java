@@ -29,6 +29,7 @@ package org.knime.r;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.config.ConfigRO;
 
 
 /**
@@ -69,6 +70,7 @@ public class RViewNodeSettings {
 	public RViewNodeSettings() {
 		this(new RSnippetSettings());
 	}
+
 	
     public RViewNodeSettings(final RSnippetSettings rSnippetSettings) {
     	m_imgWidth = 640;
@@ -78,7 +80,20 @@ public class RViewNodeSettings {
 		m_textPointSize = 12;
 		m_rSettings = rSnippetSettings;
 	}
-
+	
+	public static ConfigRO extractRSettings(final ConfigRO config) {
+		if (config.containsKey(R_SETTINGS)) {
+    		try {
+				return config.getConfig(R_SETTINGS);
+			} catch (InvalidSettingsException e) {
+				// should never happen
+				throw new RuntimeException(e);
+			}
+    	} else {
+    		return null;
+    	}
+	}
+	
 	/** Saves current parameters to settings object.
      * @param settings To save to.
      */
@@ -97,12 +112,18 @@ public class RViewNodeSettings {
      */
     public void loadSettings(final NodeSettingsRO settings)
             throws InvalidSettingsException {
-    	m_imgWidth = settings.getInt(IMAGE_WIDTH);
-    	m_imgHeight = settings.getInt(IMAGE_HEIGHT);
-    	m_imgResolution  = settings.getString(IMAGE_RESOLUTION);
-    	m_imgBackgroundColor = settings.getString(IMAGE_BACKGROUND_COLOR);
-    	m_textPointSize = settings.getInt(TEXT_POINT_SIZE);
-    	m_rSettings.loadSettings(settings.getConfig(R_SETTINGS));
+    	
+    	if (settings.containsKey(IMAGE_WIDTH)) {
+	    	m_imgWidth = settings.getInt(IMAGE_WIDTH);
+	    	m_imgHeight = settings.getInt(IMAGE_HEIGHT);
+	    	m_imgResolution  = settings.getString(IMAGE_RESOLUTION);
+	    	m_imgBackgroundColor = settings.getString(IMAGE_BACKGROUND_COLOR);
+	    	m_textPointSize = settings.getInt(TEXT_POINT_SIZE);
+	    	m_rSettings.loadSettings(settings.getConfig(R_SETTINGS));
+    	} else {
+    		// Support just R Settings
+    		m_rSettings.loadSettings(settings);
+    	}
     }
 
 

@@ -58,7 +58,7 @@ public class RViewNodeFactory extends NodeFactory<RViewNodeModel> {
      */
     @Override
     protected NodeDialogPane createNodeDialogPane() {
-        return new RSnippetNodeDialog(this.getClass(), m_portType);
+        return new RViewNodeDialog(this.getClass(), m_portType);
     }
 
     /**
