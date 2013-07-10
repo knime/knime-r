@@ -160,7 +160,6 @@ public class RController {
 			LOGGER.info("PATH: " + sysPATH);
 			m_engine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
 
-			
 			// attach a thread to the console controller to get notify when
 			// commands are executed via the console
 			new Thread() {
@@ -186,6 +185,21 @@ public class RController {
 		}
 		// everything is ok.
 		m_isRAvailable = true;
+		
+
+		if (Platform.isWindows()) {
+			try {
+				// set memory to the one of the used R 
+				eval("memory.limit(" + m_rMemoryLimit + ");");
+			} catch (REngineException e) {
+				LOGGER.error("R initialisation failed.", e);
+				throw new RuntimeException(e);
+			} catch (REXPMismatchException e) {
+				LOGGER.error("R initialisation failed.", e);
+				throw new RuntimeException(e);
+			}
+		}
+		
 //		// write to png by default
 //		try {
 //			m_imageFile = FileUtil.createTempFile("rsnippet-default-", ".png");
