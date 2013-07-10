@@ -1,7 +1,10 @@
 package org.knime.r;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,6 +12,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -36,9 +40,11 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.ThreadUtils;
+import org.knime.r.preferences.RPreferenceInitializer;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
 import org.rosuda.REngine.REXPFactor;
@@ -80,7 +86,18 @@ public class RController {
 	private List<String> m_warnings;
 
 	private List<String> m_errors;
+	
+	private Properties m_rProps;
 
+	private String m_rMajorVersion;
+
+	private String m_rMemoryLimit;
+
+    /**
+     * The temp directory used as a working directory for R
+     */
+    static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/');    
+	
 //	private File m_imageFile;
 
 	public static synchronized RController getDefault() {
@@ -116,30 +133,34 @@ public class RController {
 			if (!checkRHome(rHome)) {
 				m_isRAvailable = false;
 				return;
-			}
+			}			
+			m_rProps = retrieveRProperties(); 
+			m_rMajorVersion = m_rProps.get("major").toString().trim();
+			// TODO: Test for supported R versions
+//			if (m_rMajorVersion != "2") {
+//				m_errors.add("Only R in version 2.x is supported.");
+//			}
+			m_rMemoryLimit = m_rProps.get("memory.limit").toString().trim();
 			m_commandQueue = new RCommandQueue();
 			m_consoleController = new RConsoleController();
 			m_lock = new Semaphore(1);
 			listenerList = new EventListenerList();
 
-			try {
-				if (Platform.isWindows()) {
-					CLibrary.INSTANCE._putenv("R_HOME" + "=" + rHome);
-					String path = CLibrary.INSTANCE.getenv("PATH");
-					String rdllPath = getWinRDllPath(rHome);
-					CLibrary.INSTANCE._putenv("PATH" + "=" + path + ";" + rdllPath);
-				} else {
-					CLibrary.INSTANCE.setenv("R_HOME", rHome, 1);
-				}
-				String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
-				LOGGER.info("R_HOME: " + sysRHome);
-				String sysPATH = CLibrary.INSTANCE.getenv("PATH");
-				LOGGER.info("PATH: " + sysPATH);
-				m_engine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
-			} catch (REngineException e) {
-				throw new RuntimeException(e);
+			if (Platform.isWindows()) {
+				CLibrary.INSTANCE._putenv("R_HOME" + "=" + rHome);
+				String path = CLibrary.INSTANCE.getenv("PATH");
+				String rdllPath = getWinRDllPath(rHome);
+				CLibrary.INSTANCE._putenv("PATH" + "=" + path + ";" + rdllPath);
+			} else {
+				CLibrary.INSTANCE.setenv("R_HOME", rHome, 1);
 			}
+			String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
+			LOGGER.info("R_HOME: " + sysRHome);
+			String sysPATH = CLibrary.INSTANCE.getenv("PATH");
+			LOGGER.info("PATH: " + sysPATH);
+			m_engine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
 
+			
 			// attach a thread to the console controller to get notify when
 			// commands are executed via the console
 			new Thread() {
@@ -158,7 +179,9 @@ public class RController {
 					}
 				}
 			}.start();
-		} finally {
+		} catch (Exception e) {
+			m_errors.add(e.getMessage());
+		} finally {		
 			m_isRAvailable = false;
 		}
 		// everything is ok.
@@ -182,7 +205,81 @@ public class RController {
 		
 	}
 
-    private boolean checkRHome(final String rHomePath) {
+    private Properties retrieveRProperties() throws IOException, InterruptedException {
+    	File propsFile = File.createTempFile("R-propsTempFile-", ".r", new File(TEMP_PATH));
+    	propsFile.deleteOnExit();
+	
+    	File rCommandFile = writeRcommandFile(
+    			"setwd(\"" + TEMP_PATH + "\");\n"
+    		  +	"foo <- paste(names(R.Version()), R.Version(), sep=\"=\");\n"
+    		  + "lapply(foo, cat, \"\\n\", file=\"" +  propsFile.getAbsolutePath().replace('\\', '/') + "\", append=TRUE);\n"
+    		  + "foo <- paste(\"memory.limit\", memory.limit(), sep=\"=\");\n"
+    		  + "lapply(foo, cat, \"\\n\", file=\"" +  propsFile.getAbsolutePath().replace('\\', '/') + "\", append=TRUE);\n");
+    	// create shell command
+        StringBuilder shellCmd = new StringBuilder();
+    	String rBinaryFile = getRBinaryPathAndArguments();
+        shellCmd.append(rBinaryFile);
+        shellCmd.append(" ");
+        shellCmd.append(rCommandFile.getName());
+        
+    	Runtime rt = Runtime.getRuntime();
+		Process process = rt.exec(shellCmd.toString(), null, rCommandFile.getParentFile());
+		// wait for process to be ended
+		process.waitFor();
+		
+		// read propsFile
+		Properties props = new Properties();
+        FileInputStream fis = new FileInputStream(propsFile);
+     
+        // loading properties from properties file
+        props.load(fis);
+
+
+		return props;
+	}
+    
+    /**
+     * Writes the given string into a file and returns it.
+     *
+     * @param cmd The string to write into a file.
+     * @return The file containing the given string.
+     * @throws IOException If string could not be written to a file.
+     */
+    private File writeRcommandFile(final String cmd) throws IOException {
+        File tempCommandFile = File.createTempFile("R-readPropsTempFile-", ".r", new File(TEMP_PATH));
+        tempCommandFile.deleteOnExit();
+        FileWriter fw = new FileWriter(tempCommandFile);
+        fw.write(cmd);
+        fw.close();
+        return tempCommandFile;
+    }    
+    
+    /**
+     * Path to R binary together with the R arguments <code>CMD BATCH</code> and
+     * additional options.
+     * @return R binary path and arguments
+     */
+    private final String getRBinaryPathAndArguments() {
+        String argR = retRArguments();
+        if (!argR.isEmpty()) {
+            argR = " " + argR;
+        }
+        return getRBinaryPath() + " CMD BATCH" + argR;
+    }
+
+    private String retRArguments() {
+		return "--vanilla";
+	}
+
+	/**
+     * Path to R binary.
+     * @return R binary path
+     */
+    private final String getRBinaryPath() {
+    	return RPreferenceInitializer.getRProvider().getRBinPath();
+    }   
+
+	private boolean checkRHome(final String rHomePath) {
 		File rHome = new File(rHomePath);
 		String msgSuffix = "R_HOME is meant to be the path to the folder beeing the root of Rs installation tree. \n"
 				+ "It contains a bin folder which itself contains the R executable. \nPlease change the R settings in the preferences.";
