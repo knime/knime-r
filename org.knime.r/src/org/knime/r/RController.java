@@ -52,6 +52,7 @@ import org.rosuda.REngine.REXPString;
 import org.rosuda.REngine.REXPVector;
 import org.rosuda.REngine.REngine;
 import org.rosuda.REngine.REngineException;
+import org.rosuda.REngine.RFactor;
 import org.rosuda.REngine.RList;
 import org.rosuda.REngine.JRI.JRIEngine;
 
@@ -641,8 +642,8 @@ public class RController {
 					String[][] column = (String[][]) columns[c];
 					RList rList = new RList();
 					for (int i = 0; i < column.length; i++) {
-						if (column[i] != null) {
-							rList.add(new REXPString(column[i]));
+						if (column[i] != null) {							
+							rList.add(new REXPFactor(new RFactor(column[i])));
 						} else {
 							rList.add(null);
 						}
@@ -664,9 +665,7 @@ public class RController {
 					content.put(colNames[c], ri);
 				} else {
 					String[] column = (String[]) columns[c];
-					REXPString ri = new REXPString(column);
-					// TODO Heiko - See email 1 July. String columns should be factors.
-//					REXPFactor rf = createFactor(column);
+					REXPFactor ri = new REXPFactor(new RFactor(column));
 					content.put(colNames[c], ri);
 				}
 			}
@@ -793,6 +792,14 @@ public class RController {
 				} else {
 					cells = DataType.getMissingCell();
 				}
+			} else if (rexp.isFactor()) {
+				RFactor factor = rexp.asFactor();
+				String[] colValues = factor.asStrings();
+				if (colValues[r] == null) {
+					cells = DataType.getMissingCell();
+				} else {
+					cells = new StringCell(colValues[r]);
+				}
 			} else if (rexp.isInteger()) {
 				int[] colValues = rexp.asIntegers();
 				if (colValues[r] == REXPInteger.NA) {
@@ -848,6 +855,8 @@ public class RController {
 			return StringCell.TYPE;
 		} else if (column.isLogical()) {
 			return BooleanCell.TYPE;
+		} else if (column.isFactor()) {
+			return StringCell.TYPE;
 		} else if (column.isInteger()) {
 			return IntCell.TYPE;
 		} else if (column.isNumeric()) {
