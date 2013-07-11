@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -334,11 +335,16 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	 * Reset workspace with input data.
 	 */
 	private void resetWorkspace() {
-		new SwingWorkerWithContext<Void, Void>() {
+		new SwingWorkerWithContext<Void, Boolean>() {
+		    
+		    @Override
+		    protected void processWithContext(List<Boolean> chunks) {
+		        m_resetWorkspace.setEnabled(chunks.get(chunks.size() - 1));
+		    }
 
 			@Override
 			protected Void doInBackgroundWithContext() throws Exception {
-				m_resetWorkspace.setEnabled(false);
+			    publish(Boolean.FALSE);
 				try {
 					while (!m_lock.tryLock(100, TimeUnit.MILLISECONDS)) {
 						if (m_closing) {
@@ -391,7 +397,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 					}
 
 				} finally {
-					m_resetWorkspace.setEnabled(true);
+				    publish(Boolean.TRUE);
 				}
 				return null;
 			}
