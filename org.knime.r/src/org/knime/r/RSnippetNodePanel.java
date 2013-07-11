@@ -30,7 +30,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -302,14 +305,9 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 			JPanel consolePanel = new JPanel(new BorderLayout());
 			JScrollPane consoleScroller = new JScrollPane(m_console);
-		    JPanel consoleButtons = new JPanel(new FlowLayout());
-		    JButton consoleCancelButton = new JButton(RController.getDefault().getConsoleController().getCancelAction());
-		    consoleCancelButton.setText("");
-		    consoleCancelButton.setPreferredSize(new Dimension(
-		    		consoleCancelButton.getPreferredSize().height,
-		    		consoleCancelButton.getPreferredSize().height));
+		    JPanel consoleButtons = createConsoleButtons(); 
+		    		
 
-		    consoleButtons.add(consoleCancelButton);
 		    consolePanel.add(consoleButtons, BorderLayout.WEST);
 		    consolePanel.add(consoleScroller, BorderLayout.CENTER);
 			consolePanel.setBorder(createEmptyTitledBorder("Console"));
@@ -331,6 +329,45 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		return p;
 	}
 
+	private JPanel createConsoleButtons() {
+    	JPanel p = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.BASELINE;
+        c.insets = new Insets(4, 2, 0, 4);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.weighty = 0;
+
+        c.gridx = 0;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        
+		JButton consoleCancelButton = new JButton(RController.getDefault().getConsoleController().getCancelAction());
+		consoleCancelButton.setText("");
+		consoleCancelButton.setPreferredSize(new Dimension(
+				consoleCancelButton.getPreferredSize().height,
+				consoleCancelButton.getPreferredSize().height));
+		
+		p.add(consoleCancelButton, c);
+		
+		JButton consoleClearButton = new JButton(RController.getDefault().getConsoleController().getClearAction());
+		consoleClearButton.setText("");
+		consoleClearButton.setPreferredSize(new Dimension(
+				consoleClearButton.getPreferredSize().height,
+				consoleClearButton.getPreferredSize().height));
+		
+		c.gridy++;
+		p.add(consoleClearButton,c);
+		
+		c.gridy++;
+		c.weighty = 1;
+		p.add(new JPanel(), c);
+		return p;
+	}
+
 	/**
 	 * Reset workspace with input data.
 	 */
@@ -338,7 +375,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		new SwingWorkerWithContext<Void, Boolean>() {
 		    
 		    @Override
-		    protected void processWithContext(List<Boolean> chunks) {
+		    protected void processWithContext(final List<Boolean> chunks) {
 		        m_resetWorkspace.setEnabled(chunks.get(chunks.size() - 1));
 		    }
 

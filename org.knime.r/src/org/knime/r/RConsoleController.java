@@ -16,6 +16,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JTextPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
@@ -35,13 +37,16 @@ public class RConsoleController implements RMainLoopCallbacks {
 	private Lock m_lock = new ReentrantLock();
 	private final Condition m_workspaceChanged;
 	private final Action m_cancelAction;
-	private boolean m_idle;	
+	private final Action m_clearAction;
+	private boolean m_idle;
+
+	private DocumentListener m_docListener;	
 
 	public RConsoleController() {
 		m_commands = new LinkedList<RCommand>();
 		m_lock = new ReentrantLock();
 		m_workspaceChanged = m_lock.newCondition();
-		m_cancelAction = new AbstractAction("Cancel") {
+		m_cancelAction = new AbstractAction("Terminate") {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				// clear commands in queue
@@ -55,9 +60,52 @@ public class RConsoleController implements RMainLoopCallbacks {
 				}				
 			}
 		};
-		Icon icon = ViewUtils.loadIcon(this.getClass(), "cancel.png");
-		m_cancelAction.putValue(Action.SMALL_ICON, icon);
+		Icon cancelIcon = ViewUtils.loadIcon(this.getClass(), "progress_stop.gif");
+		m_cancelAction.putValue(Action.SMALL_ICON, cancelIcon);
+		m_cancelAction.putValue(Action.SHORT_DESCRIPTION, "Terminate");
+		m_clearAction = new AbstractAction("Clear Console") {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				if (m_pane != null) {
+					
+					ViewUtils.invokeLaterInEDT(new Runnable() {
+						@Override
+						public void run() {
+							if (m_pane != null) {
+								m_pane.setText("");
+							}							
+						}
+					});
+					
+				}
+			}
+		};
+		Icon clearIcon = ViewUtils.loadIcon(this.getClass(), "clear_co.gif");
+		m_clearAction.putValue(Action.SMALL_ICON, clearIcon);		
+		m_clearAction.putValue(Action.SHORT_DESCRIPTION, "Clear Console");
+		m_clearAction.setEnabled(false);
 		m_idle = true;		
+		m_docListener = new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(final DocumentEvent e) {
+				updateClearAction();
+			}
+			
+			@Override
+			public void insertUpdate(final DocumentEvent e) {
+				updateClearAction();
+			}
+			
+			@Override
+			public void changedUpdate(final DocumentEvent e) {
+				updateClearAction();
+			}
+
+			private void updateClearAction() {
+				m_clearAction.setEnabled(m_pane.getDocument().getLength() > 0);
+			}
+		};
 	}
 	
 	public void attachOutput(final RConsole pane) {
@@ -66,15 +114,17 @@ public class RConsoleController implements RMainLoopCallbacks {
 		}
 		
 		m_pane = pane;
-		
-
+		if (m_pane != null) {
+			m_pane.getDocument().addDocumentListener(m_docListener);
+		}
+		m_clearAction.setEnabled(false);
 	}
 
 	public void detach(final JTextPane pane) {
 		if (pane == null || m_pane != pane) {
 			throw new RuntimeException("Wrong text pane to detach.");
 		}
-
+		m_pane.getDocument().removeDocumentListener(m_docListener);
 		m_pane = null;
 	}	
 	
@@ -226,6 +276,10 @@ public class RConsoleController implements RMainLoopCallbacks {
 
 	public Action getCancelAction() {
 		return m_cancelAction;
+	}
+
+	public Action getClearAction() {
+		return m_clearAction;
 	}
 
 
