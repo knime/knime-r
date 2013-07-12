@@ -135,11 +135,12 @@ public class RController {
 				return;
 			}			
 			m_rProps = retrieveRProperties(); 
-			m_rMajorVersion = m_rProps.get("major").toString().trim();
-			// TODO: Test for supported R versions
-//			if (m_rMajorVersion != "2") {
-//				m_errors.add("Only R in version 2.x is supported.");
-//			}
+			m_rMajorVersion = m_rProps.get("major").toString().trim();			
+			if (!m_rMajorVersion.equals("2")) {
+				m_errors.add("Only R in version 2.x is supported.");
+				m_isRAvailable = false;
+				return;
+			}
 			m_rMemoryLimit = m_rProps.get("memory.limit").toString().trim();
 			m_commandQueue = new RCommandQueue();
 			m_consoleController = new RConsoleController();
