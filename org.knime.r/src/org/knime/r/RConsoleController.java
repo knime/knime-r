@@ -265,6 +265,12 @@ public class RConsoleController implements RMainLoopCallbacks {
 							try {
 								Style style = toWrite.getSecond() == 0 ? m_pane.getNormalStyle() : m_pane.getErrorStyle();
 								doc.insertString(doc.getLength(), toWrite.getFirst().toString(), style);
+								int maxDocLength = 20* 1024 * 1024 / 2; // 20MB
+								if (doc.getLength() > maxDocLength ) {
+									// TODO: Cut by whole line
+									doc.remove(0, doc.getLength() - maxDocLength);
+								}
+								
 							} catch (BadLocationException e) {
 								// never happens
 								throw new RuntimeException(e);
