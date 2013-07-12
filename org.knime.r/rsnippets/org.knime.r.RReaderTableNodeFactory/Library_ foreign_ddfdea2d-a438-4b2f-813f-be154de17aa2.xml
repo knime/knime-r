@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="Library_ foreign_ddfdea2d-a438-4b2f-813f-be154de17aa2.xml">
+<entry key="Meta category" type="xstring" value="org.knime.r.RReaderTableNodeFactory"/>
+<entry key="Category" type="xstring" value="File Reading"/>
+<entry key="Name" type="xstring" value="Library: foreign"/>
+<entry key="Description" type="xstring" value="Shows how to use the foreign library to read data into KNIME"/>
+<entry key="Version" type="xstring" value="version 1.x"/>
+<config key="Snippet">
+<entry key="script" type="xstring" value="# The foreign library provides access to many 3rd party data formats.%%00010# Just a few examples are listed below, many others exist. %%00010# More details cran.r-project.org/web/packages/foreign/foreign.pdf %%00010%%00010library(foreign)%%00010%%00010# map filepath from a flow variable here.%%00010path = &quot;&lt;PathToFile&gt;&quot;%%00010%%00010# Read SPSS%%00010data = read.spss(path) %%00010%%00010# Read SAS XPORT%%00010data = read.xport(path) %%00010%%00010#Read STATA file%%00010data = read.dta(path)%%00010%%00010knime.out &lt;- data"/>
+<entry key="templateUUID" type="xstring" value="ddfdea2d-a438-4b2f-813f-be154de17aa2"/>
+<entry key="version" type="xstring" value="version 1.x"/>
+</config>
+</config>

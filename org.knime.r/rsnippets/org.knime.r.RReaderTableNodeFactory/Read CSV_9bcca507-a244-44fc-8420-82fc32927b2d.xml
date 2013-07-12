@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="Read CSV_9bcca507-a244-44fc-8420-82fc32927b2d.xml">
+<entry key="Meta category" type="xstring" value="org.knime.r.RReaderTableNodeFactory"/>
+<entry key="Category" type="xstring" value="File Reading"/>
+<entry key="Name" type="xstring" value="Read CSV"/>
+<entry key="Description" type="xstring" value="Read CSV data into KNIME including only column names that match a regular expression"/>
+<entry key="Version" type="xstring" value="version 1.x"/>
+<config key="Snippet">
+<entry key="script" type="xstring" value="# A typical use case would be List Files node &gt; TableRow to Variable Loop Start &gt; R Table Source %%00010# using the file path from the loop start to read in a file using some special library in R. Here %%00010# we simply use the read.csv method.%%00010%%00010%%00010# map filepath from a flow variable here.%%00010path = &quot;&lt;PathToFile&gt;&quot;%%00010%%00010# Read a file%%00010file = read.csv(path)%%00010%%00010# Show column names%%00010colnames(file)%%00010%%00010# Choose some columns%%00010col_index = grep(&quot;*regex*&quot;, names(file))%%00010data = file[col_index]%%00010%%00010# Export to KNIME, requires a data frame.%%00010knime.out &lt;- data"/>
+<entry key="templateUUID" type="xstring" value="9bcca507-a244-44fc-8420-82fc32927b2d"/>
+<entry key="version" type="xstring" value="version 1.x"/>
+</config>
+</config>

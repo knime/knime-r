@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="Cummulative Statistics_efdf9a3f-a1f4-436c-a25a-dcbd4d072b37.xml">
+<entry key="Meta category" type="xstring" value="org.knime.r.RSnippetNodeFactory"/>
+<entry key="Category" type="xstring" value="Statistics"/>
+<entry key="Name" type="xstring" value="Cummulative Statistics"/>
+<entry key="Description" type="xstring" value="Use built-in functions to generate cumulative statistics (cummulative sum, cummulative min, cummulative max etc.) for a KNIME Table column"/>
+<entry key="Version" type="xstring" value="version 1.x"/>
+<config key="Snippet">
+<entry key="script" type="xstring" value="# Some examples for how to generate cumulative metrics for a column of data%%00010%%00010# Reference a column in your table here.%%00010column = knime.in$&quot;&lt;Column Name&gt;&quot;%%00010%%00010#Add the cumulative sum of all values in your column%%00010knime.in$&quot;cumsum&quot; &lt;- cumsum(column)%%00009%%00010%%00010#The cumulative product of all values in your column%%00010knime.in$&quot;cumprod&quot; &lt;- cumprod(column)%%00009%%00010%%00010# Add the min for all values in your column from the start of the vector up to the current position%%00010knime.in$&quot;cummin&quot; &lt;- cummin(column)%%00010%%00010# Add the max for all values in your column from the start of the vector up to the current position%%00010knime.in$&quot;cummax&quot; &lt;- cummax(column)%%00010%%00010knime.out &lt;- knime.in"/>
+<entry key="templateUUID" type="xstring" value="efdf9a3f-a1f4-436c-a25a-dcbd4d072b37"/>
+<entry key="version" type="xstring" value="version 1.x"/>
+</config>
+</config>
