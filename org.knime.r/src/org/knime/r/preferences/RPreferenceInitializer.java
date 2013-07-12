@@ -50,7 +50,7 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
         File rHomeFile = getDefaultRHome();
         String rHome = rHomeFile == null ? "" : rHomeFile.getAbsolutePath();
-        LOGGER.info("Default R Home: " + rHome);
+        LOGGER.debug("Default R Home: " + rHome);
         store.setDefault(PREF_R_HOME, rHome);
     }
 
