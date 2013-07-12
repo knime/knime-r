@@ -77,7 +77,7 @@
             category="org.knime.workbench.ui.preferences"
             class="org.knime.r.preferences.RPreferencePage"
             id="org.knime.r.preferences.RPreferencePage"
-            name="R (new)">
+            name="R (labs)">
       </page>
    </extension>
    <extension

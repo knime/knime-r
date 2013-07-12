@@ -45,7 +45,7 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
         super(GRID);
 
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
-        setDescription("KNIME R preferences (new)");
+        setDescription("KNIME R (labs) preferences");
     }
 
 

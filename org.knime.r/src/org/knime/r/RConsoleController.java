@@ -42,6 +42,8 @@ public class RConsoleController implements RMainLoopCallbacks {
 
 	private DocumentListener m_docListener;	
 
+	private AtomicBoolean m_stop = new AtomicBoolean(false);
+	
 	public RConsoleController() {
 		m_commands = new LinkedList<RCommand>();
 		m_lock = new ReentrantLock();
@@ -63,6 +65,8 @@ public class RConsoleController implements RMainLoopCallbacks {
 		Icon cancelIcon = ViewUtils.loadIcon(this.getClass(), "progress_stop.gif");
 		m_cancelAction.putValue(Action.SMALL_ICON, cancelIcon);
 		m_cancelAction.putValue(Action.SHORT_DESCRIPTION, "Terminate");
+		m_cancelAction.setEnabled(false);
+		
 		m_clearAction = new AbstractAction("Clear Console") {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
@@ -168,7 +172,7 @@ public class RConsoleController implements RMainLoopCallbacks {
 			m_workspaceChanged.signalAll();
 			m_lock.unlock();
 			RCommandQueue queue = RController.getDefault().getConsoleQueue();
-			while (m_commands.isEmpty()) {
+			while (m_commands.isEmpty() && !m_stop.get()) {
 				try {
 					// wait on queue, which means that this threads waits until either notifyAll is called
 					// on the queue ore 100ms elapsed.
@@ -186,6 +190,12 @@ public class RConsoleController implements RMainLoopCallbacks {
 					throw new RuntimeException(e);
 				}
 			}
+		}
+		
+		if (m_stop.get()) {
+			m_commands.clear();
+			m_stop.set(true);
+			return null;
 		}
 		final RCommand rCmd = m_commands.poll();
 		if (rCmd != null && rCmd.isShowInConsole()) {
@@ -280,6 +290,10 @@ public class RConsoleController implements RMainLoopCallbacks {
 
 	public Action getClearAction() {
 		return m_clearAction;
+	}
+
+	public void stop() {
+		m_stop.compareAndSet(false, true);	
 	}
 
 

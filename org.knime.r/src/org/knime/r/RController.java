@@ -93,19 +93,32 @@ public class RController {
 
 	private String m_rMemoryLimit;
 
+	private String m_rHome;
+
+	private boolean m_wasRAvailable;
+
     /**
      * The temp directory used as a working directory for R
      */
     static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/');    
-	
-//	private File m_imageFile;
 
 	public static synchronized RController getDefault() {
 		// TODO: recreate instance when R_HOME changes in the preferences.
-		if (!(instance != null && instance.isRAvailable().getValue())) {
+		if (instance == null) {
 			instance = new RController();
+		} else {
+			if (!instance.isRAvailable().getValue() || instance.rHomeChanged()) {
+				// try to reinitialize R
+				instance.initR();
+			}
 		}
 		return instance;
+	}
+
+	private boolean rHomeChanged() {
+		String rHome = org.knime.r.preferences.RPreferenceInitializer
+				.getRProvider().getRHome();
+		return !m_rHome.equals(rHome);
 	}
 
 	// This is the standard, stable way of mapping, which supports extensive
@@ -124,36 +137,55 @@ public class RController {
 
 
 	private RController() {
+		m_commandQueue = new RCommandQueue();
+		m_consoleController = new RConsoleController();
+		m_wasRAvailable = false;
+		m_isRAvailable = false;
+		initR();
+	}
+	
+	private void initR() {
 		try {
 			m_errors = new ArrayList<String>();
-			m_warnings = new ArrayList<String>();
+			m_warnings = new ArrayList<String>();			
+			if (m_wasRAvailable) {
+				// FIXME: Causes KNIME To crash, workaround is now to require a restart.
+//				m_engine.close();
+//				m_consoleController.stop();
+				m_isRAvailable = false;
+				m_errors.add("You must restart. KNIME that the changes in R (labs) take effect.");
+				return;
+			}
 
+			
 	    	String rHome = org.knime.r.preferences.RPreferenceInitializer
 					.getRProvider().getRHome();
+	    	
 			if (!checkRHome(rHome)) {
 				m_isRAvailable = false;
 				return;
 			}			
-			m_rProps = retrieveRProperties(); 
+			m_rHome = rHome;
+			m_rProps = retrieveRProperties();
+			
 			m_rMajorVersion = m_rProps.get("major").toString().trim();			
 			if (!m_rMajorVersion.equals("2")) {
-				m_errors.add("Only R in version 2.x is supported.");
+				m_errors.add("Only R in version 2.x is supported. The R installation defined in the prefenrences is of version " + m_rMajorVersion + ".x.");
 				m_isRAvailable = false;
 				return;
 			}
 			m_rMemoryLimit = m_rProps.get("memory.limit").toString().trim();
-			m_commandQueue = new RCommandQueue();
-			m_consoleController = new RConsoleController();
+			
 			m_lock = new Semaphore(1);
 			listenerList = new EventListenerList();
 
 			if (Platform.isWindows()) {
-				CLibrary.INSTANCE._putenv("R_HOME" + "=" + rHome);
+				CLibrary.INSTANCE._putenv("R_HOME" + "=" + m_rHome);
 				String path = CLibrary.INSTANCE.getenv("PATH");
-				String rdllPath = getWinRDllPath(rHome);
+				String rdllPath = getWinRDllPath(m_rHome);
 				CLibrary.INSTANCE._putenv("PATH" + "=" + path + ";" + rdllPath);
 			} else {
-				CLibrary.INSTANCE.setenv("R_HOME", rHome, 1);
+				CLibrary.INSTANCE.setenv("R_HOME", m_rHome, 1);
 			}
 			String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
 			LOGGER.info("R_HOME: " + sysRHome);
@@ -181,12 +213,12 @@ public class RController {
 			}.start();
 		} catch (Exception e) {
 			m_errors.add(e.getMessage());
-		} finally {		
 			m_isRAvailable = false;
+			return;
 		}
 		// everything is ok.
 		m_isRAvailable = true;
-		
+		m_wasRAvailable = true;
 
 		if (Platform.isWindows()) {
 			try {
@@ -200,24 +232,6 @@ public class RController {
 				throw new RuntimeException(e);
 			}
 		}
-		
-//		// write to png by default
-//		try {
-//			m_imageFile = FileUtil.createTempFile("rsnippet-default-", ".png");
-//			eval("options(device = \"png\")");			
-//			eval("png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")");
-//		} catch (IOException e) {
-//			LOGGER.error("Cannot create temporary file.", e);
-//			throw new RuntimeException(e);
-//		} catch (REngineException e) {
-//			LOGGER.error("R initialisation failed.", e);
-//			throw new RuntimeException(e);
-//		} catch (REXPMismatchException e) {
-//			LOGGER.error("R initialisation failed.", e);
-//			throw new RuntimeException(e);
-//		}
-		
-		
 	}
 
     private Properties retrieveRProperties() throws IOException, InterruptedException {
