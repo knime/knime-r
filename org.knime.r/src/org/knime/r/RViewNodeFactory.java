@@ -74,7 +74,7 @@ public class RViewNodeFactory extends NodeFactory<RViewNodeModel> {
      */
     @Override
     public int getNrNodeViews() {
-        return 2;
+        return 3;
     }
 
     /**
