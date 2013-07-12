@@ -28,7 +28,6 @@ import java.io.File;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.knime.core.node.NodeFactory;
-import org.knime.ext.r.bin.PackagedPathUtil;
 import org.knime.ext.r.node.RScriptingNodeFactory;
 import org.osgi.framework.BundleContext;
 
@@ -95,7 +94,7 @@ public class RCorePlugin extends AbstractUIPlugin {
      */
     public static File getRExecutable() {
         try {
-            File packagedExecutable = PackagedPathUtil.getPackagedExecutable();
+            File packagedExecutable = SystemPathUtil.getSystemExecutable();
             if (packagedExecutable != null) {
                 return packagedExecutable;
             }
