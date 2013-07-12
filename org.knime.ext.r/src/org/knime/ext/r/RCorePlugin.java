@@ -28,7 +28,6 @@ import java.io.File;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeLogger;
 import org.knime.ext.r.bin.PackagedPathUtil;
 import org.knime.ext.r.node.RScriptingNodeFactory;
 import org.osgi.framework.BundleContext;
@@ -43,12 +42,7 @@ public class RCorePlugin extends AbstractUIPlugin {
     // The shared instance.
     private static RCorePlugin plugin;
 
-    private static final NodeLogger LOGGER =
-        NodeLogger.getLogger(RCorePlugin.class);
-
-    /**
-     * The constructor.
-     */
+    /** The constructor. */
     public RCorePlugin() {
         plugin = this;
     }
