@@ -73,8 +73,8 @@ public class RController {
 
 	private static RController instance;
 
-	private RCommandQueue m_commandQueue;
-	private RConsoleController m_consoleController;
+	private final RCommandQueue m_commandQueue;
+	private final RConsoleController m_consoleController;
 	private JRIEngine m_engine;
 
 	private EventListenerList listenerList;
@@ -188,9 +188,9 @@ public class RController {
 				CLibrary.INSTANCE.setenv("R_HOME", m_rHome, 1);
 			}
 			String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
-			LOGGER.info("R_HOME: " + sysRHome);
+			LOGGER.debug("R_HOME: " + sysRHome);
 			String sysPATH = CLibrary.INSTANCE.getenv("PATH");
-			LOGGER.info("PATH: " + sysPATH);
+			LOGGER.debug("PATH: " + sysPATH);
 			m_engine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
 
 			// attach a thread to the console controller to get notify when
