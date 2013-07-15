@@ -4,6 +4,6 @@ Bundle-Name: R Binaries Windows 32bit
 Bundle-SymbolicName: org.knime.ext.r.bin.win32.x86
 Bundle-Version: 2.15.2
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
-Fragment-Host: org.knime.ext.r;bundle-version="2.0.0"
+Fragment-Host: org.knime.ext.r.bin;bundle-version="2.0.0"
 Eclipse-PlatformFilter: (osgi.os=win32)
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

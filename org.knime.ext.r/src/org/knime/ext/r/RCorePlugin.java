@@ -28,7 +28,7 @@ import java.io.File;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.knime.core.node.NodeFactory;
-import org.knime.ext.r.bin.PackagedPathUtil;
+import org.knime.ext.r.bin.RPathUtil;
 import org.knime.ext.r.node.RScriptingNodeFactory;
 import org.osgi.framework.BundleContext;
 
@@ -94,14 +94,10 @@ public class RCorePlugin extends AbstractUIPlugin {
      * @return R executable
      */
     public static File getRExecutable() {
-        try {
-            File packagedExecutable = PackagedPathUtil.getPackagedExecutable();
-            if (packagedExecutable != null) {
-                return packagedExecutable;
-            }
-        } catch (NoClassDefFoundError err) {
-            // PackagedPathUtil may not exist if the optional plug-in is not installed
+        File packagedExecutable = RPathUtil.getPackagedRExecutable();
+        if (packagedExecutable != null) {
+            return packagedExecutable;
         }
-        return SystemPathUtil.getSystemExecutable();
+        return RPathUtil.getSystemRExecutable();
     }
 }
