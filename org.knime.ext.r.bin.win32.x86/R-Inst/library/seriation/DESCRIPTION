@@ -1,0 +1,27 @@
+Package: seriation
+Type: Package
+Title: Infrastructure for seriation
+Author: Michael Hahsler, Christian Buchta and Kurt Hornik
+Maintainer: Michael Hahsler <mhahsler@lyle.smu.edu>
+Version: 1.0-8
+Date: 2012-11-04
+Description: Infrastructure for seriation with an implementation of
+        several seriation/sequencing techniques to reorder matrices,
+        dissimilarity matrices, and dendrograms. Also contains some
+        visualizations techniques based on seriation.
+Classification/ACM: G.1.6, G.2.1, G.4
+URL: http://R-Forge.R-project.org/projects/seriation/,
+        http://lyle.smu.edu/IDA/seriation/
+Depends: R (>= 2.10.0), stats, cluster, TSP, gclus, grid, colorspace
+Suggests: MASS, biclust
+License: GPL-2
+Copyright: The code in src/bea.f is Copyright (C) 1991 F. Murtagh;
+        src/bbwrcg.f, src/arsa.f and src/bburcg.f are Copyright (C)
+        2005 M. Brusco, H.F. Kohn, and S. Stahl. All other code is
+        Copyright (C) Michael Hahsler, Christian Buchta, and Kurt
+        Hornik.
+Packaged: 2012-11-05 19:10:32 UTC; hahsler
+Repository: CRAN
+Date/Publication: 2012-11-06 07:36:51
+Built: R 2.15.2; x86_64-w64-mingw32; 2012-11-06 23:22:32 UTC; windows
+Archs: i386, x64

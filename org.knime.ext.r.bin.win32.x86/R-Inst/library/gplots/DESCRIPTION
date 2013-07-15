@@ -1,0 +1,20 @@
+Package: gplots
+Title: Various R programming tools for plotting data
+Description: Various R programming tools for plotting data
+Depends: R (>= 2.10), gtools, gdata, stats, caTools, grid, KernSmooth,
+        MASS, datasets
+Recommends: grid
+Suggests: gtools
+Version: 2.11.0
+Date: 2012-06-08
+Author: Gregory R. Warnes. Includes R source code and/or documentation
+        contributed by (in alphabetical order): Ben Bolker, Lodewijk
+        Bonebakker, Robert Gentleman, Wolfgang Huber Andy Liaw, Thomas
+        Lumley, Martin Maechler, Arni Magnusson, Steffen Moeller, Marc
+        Schwartz, Bill Venables
+Maintainer: Gregory R. Warnes <greg@warnes.net>
+License: GPL-2
+Packaged: 2012-06-08 18:33:16 UTC; warnegr1
+Repository: CRAN
+Date/Publication: 2012-06-08 19:33:58
+Built: R 2.15.2; ; 2012-11-07 00:52:06 UTC; windows

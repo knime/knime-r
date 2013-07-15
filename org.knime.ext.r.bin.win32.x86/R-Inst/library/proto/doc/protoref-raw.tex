@@ -1,0 +1,63 @@
+\begin{tabular}{rp{10.5cm}}
+\multicolumn{2}{l}{\textbf{Creation}} \\
+\code{proto} & \code{proto(., expr, envir, ... )}  embeds the components
+  specified in \code{expr} and/or \code{...} into the \code{proto} object
+  or environment specified by \code{envir}.  A new object is created if
+  \code{envir} is omitted.  The parent of the object is set to \code{.} .
+  The parent object, \code{.}, defaults
+  to the parent of \code{envir} or the current environment if \code{envir}
+  is missing. \code{expr} and \code{\dots} default
+  to empty specifications.
+  The returned object will contain \code{.that} and \code{.super} variables
+  referring to the object itself and the parent of the object, respectively.
+  \\[0.5cm]
+
+\multicolumn{2}{l}{\textbf{Coercion}} \\
+  \code{as.proto} & If \code{x} is a \code{proto} object or environment
+  then \code{x} is returned as a \code{proto} object
+  with the values of \code{.that} and \code{.super} inserted in the case
+  of an environment or refreshed in the case of a proto object.
+  If \code{x} is a list then additional arguments are available:
+  \code{as.proto(x, envir, parent, FUN, all.names, ...)}.  
+  Each component of \code{x} is copied into \code{envir}.  
+  \code{envir} may be an \code{environment} or \code{proto} object.
+  If it is missing a new \code{proto} object is created.  
+  If \code{all.names = FALSE} then only list components whose
+  names do not begin with a dot are copied.  If \code{FUN} is specified
+  then, in addition, only list components \code{v} for which \code{FUN(v)}
+  is \code{TRUE} are copied.  If \code{parent} is specified then the
+  resulting \code{proto} object will have that parent.  Otherwise, it
+  will have the parent of \code{envir} if \code{envir} was specified.
+  If neither are specified the parent defaults to the current environment.
+  \\[0.5cm]
+
+\multicolumn{2}{l}{\textbf{Standard methods}} \\
+\code{\$} & \code{obj\$x} searches \code{proto} object \code{obj} for
+  \code{x}.  If the name \code{x} does not begin with two dots then
+  ancestors are searched if the name is not found in \code{obj}.
+  If \code{x} is a variable
+  or if \code{obj} is \code{.super} or \code{.that} then \code{x} is returned.
+  Otherwise, the call \code{obj\$x(...)} is
+  equivalent to the call \code{get("x", obj)(obj, ...)}. If it is desired
+  to return a method as a value  rather than in 
+  the context of a call then use \code{get("x", obj)} (or \code{obj[["x"]]}
+  \code{x} is known to be directly in \code{obj})
+  rather than \code{\$} syntax.\\
+\code{\$<-} & \code{obj\$x <- value} sets \code{x} in \code{proto} object
+  \code{obj} to \code{value} creating \code{x} if not present.  If 
+  \code{obj} is \code{.super} then a side effect is to set the parent
+  of \code{obj} to \code{value}.\\
+\code{is.proto(x)} & returns \code{TRUE} if \code{x} is a \code{proto}
+  object and othewise returns \code{FALSE}.\\[0.5cm]
+
+\multicolumn{2}{l}{\textbf{Utilities}} \\
+\code{graph.proto} & \code{graph.proto(e, g, child.to.parent)} adds a
+  graph in the sense of the \code{graph} package representing an ancestor tree
+  among all \code{proto} objects in \code{environment} or \code{proto} 
+  object \code{e} to graph \code{g}.
+  \code{e} defaults to the current environment and \code{g}
+  defaults to an empty graph.
+  \code{child.to.parent} is a logical variable specifying the direction
+   of arrows.  By default they are displayed from children to parents.
+  \\[0.5cm]
+\end{tabular}

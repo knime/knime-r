@@ -1,0 +1,74 @@
+                        diff
+                        merge
+                        sample
+                        scale
+                        extract
+                        periodical
+                        splits
+                        window
+TimeSeriesClass         timeSeries Class
+TimeSeriesData          Time Series Data Sets
+TimeSeriesSubsettings   Subsettig Time Series
+aggregate-methods       timeSeries Class, Functions and Methods
+align-methods           timeSeries Class, Functions and Methods
+as                      timeSeries Class, Coercion and Transformation
+attach                  Attach a timSeries to the search path
+colCum                  Cumulated Column Statistics
+colStats                Column Statistics
+comment,timeSeries-method
+                        comment for timeSeries objects
+cumulated               Cumulated Time Series from Returns
+description             Creates Date and User Information
+dim,timeSeries-method   Time Series Columns and Rows
+drawdowns               Calculations of Drawdowns
+dummyDailySeries        Special Daily Time Series
+durations               Durations from a Time Series
+fapply                  Apply Functions Over Time Series Periods
+filter,timeSeries-method
+                        Linear Filtering on a Time Series
+finCenter,timeSeries-method
+                        Get and Set Financial Center of a 'timeSeries'
+getDataPart,timeSeries-method
+                        DataPart,timeSeries-method
+getUnits                Get and Set Unit Names of a 'timeSeries'
+is.timeSeries           timeSeries Class, Coercion and Transformation
+isDaily,timeSeries-method
+                        Checks if a time series is regular
+isUnivariate            Checks if a Time Series is Univariate
+lag                     Lag a Time Series
+math                    Mathematical Time Series Operations
+mean,timeSeries-method
+                        Methods for 'timeSeries' object
+merge                   Bind two timeSeries objects
+model.frame             Model Frames for Time Series Objects
+monthly                 Special Monthly Series
+na                      Handling Missing Time Series Values
+na.contiguous,timeSeries-method
+                        Find Longest Contiguous Stretch of non-NAs
+orderColnames           Reorder Column Names of a Time Series
+orderStatistics         order Statistics
+plot                    Plot a Time Series
+rank,timeSeries-method
+                        Sample Ranks of a Time Series
+readSeries              Reads a 'timeSeries' from a File
+returns                 Financial Returns
+rev,timeSeries-method   Reversion of a 'timeSeries'
+rollMean                Rolling Statistics
+rowCum                  Cumulated Column Statistics
+runlengths              Runlengths of a Time Series
+sd-methods              Time Series Correlations
+series                  Get and Set Data of a 'timeSeries'
+seriesPositions         Deprecated functions in timeSeries package
+show,timeSeries-method
+                        Print a Time Series
+smoothLowess            Smoothes Time Series Objects
+sort,timeSeries-method
+                        Sorting a 'timeSeries' by Time Stamps
+spreads                 Spreads and Mid Quotes
+start,timeSeries-method
+                        Start and End of a 'timeSeries'
+str                     Object Str
+t,timeSeries-method     timeSeries Transpose
+time                    Get and Set Time stamps of a 'timeSeries'
+timeSeries-package      Utilities and Tools Package
+turns                   Turning Points of a Time Series

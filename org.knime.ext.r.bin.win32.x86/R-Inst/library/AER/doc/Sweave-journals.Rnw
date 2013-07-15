@@ -1,0 +1,23 @@
+%\VignetteIndexEntry{Sweave Example: Linear Regression for Economics Journals Data}
+\documentclass[a4paper]{article}
+
+\begin{document}
+
+We fit a linear regression for the economic journals demand model.
+
+<<>>=
+data("Journals", package = "AER")
+journals_lm <- lm(log(subs) ~ log(price/citations), data = Journals)
+journals_lm
+@
+
+A scatter plot with the fitted regression line is shown below.
+
+\begin{center}
+<<fig=TRUE, echo=FALSE>>=
+plot(log(subs) ~ log(price/citations), data = Journals)
+abline(journals_lm)
+@
+\end{center}
+
+\end{document}

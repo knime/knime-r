@@ -1,0 +1,2081 @@
+2012-09-12 17:29  warnes
+
+	* [r1604] .Rinstignore: Don't ignore .Rnw files, but do ignore .svn
+	  files.
+
+2012-09-11 20:41  warnes
+
+	* [r1603] man/interleave.Rd: Clarify workding of DROP argument to
+	  interleave().
+
+2012-09-11 20:37  warnes
+
+	* [r1602] man/interleave.Rd: Replace call to aggregate.table() with
+	  equivalent tapply() call since aggregate.table() is being
+	  depreciated.
+
+2012-08-22 16:47  warnes
+
+	* [r1601] DESCRIPTION, inst/NEWS: Update DESCRIPTION and NEWS for
+	  gdate 2.11.1.
+
+2012-08-22 16:42  warnes
+
+	* [r1600] man/read.xls.Rd: Add example for read.xls() that shows
+	  how to use the fileEncoding
+	  argument to read in latin-1 encoded data.
+
+2012-08-22 16:41  warnes
+
+	* [r1599] tests/latin-1.xls, tests/test.read.xls.R,
+	  tests/test.read.xls.Rout.save: Add XLSX test for latin-1
+	  characters, and look for them in their new
+	  location in inst/xls/.
+
+2012-08-22 16:35  warnes
+
+	* [r1598] inst/xls/latin-1.xls, inst/xls/latin-1.xlsx: add XLSX
+	  version of latin-1.xls
+
+2012-08-22 15:48  warnes
+
+	* [r1597] tests/latin-1.xls, tests/test.read.xls.R,
+	  tests/test.read.xls.Rout.save: Add test file and code to ensure
+	  that read.xls() can properly handle
+	  files with alternative encodings. latin-1.xls contains each of
+	  the
+	  non-ascii latin-1 special characters in both the column headings
+	  and
+	  the body of the file.
+
+2012-08-22 15:45  warnes
+
+	* [r1596] R/read.xls.R: Change code to have R read the csv/tab data
+	  from the file rather than
+	  from the connetion we made, so that file encodings can be
+	  properly handled.
+
+2012-08-22 14:29  warnes
+
+	* [r1595] R/read.xls.R: Always close the connection.
+
+2012-08-13 22:13  warnes
+
+	* [r1594] inst/perl/xls2csv.pl: Remove trailing space from output
+	  line.
+
+2012-06-18 20:32  warnes
+
+	* [r1567] inst/NEWS: Update NEWS for 2.11.0 release.
+
+2012-06-18 20:27  warnes
+
+	* [r1566] DESCRIPTION: Bump version number and add
+	  SystemRequirements for perl.
+
+2012-06-18 20:26  warnes
+
+	* [r1565] R/xls2sep.R, inst/perl/xls2csv.pl, man/read.xls.Rd,
+	  tests/test.read.xls.R, tests/test.read.xls.Rout.save: read.xls()
+	  and supporting functions now allow blank lines to be
+	  preserved, rather than skipped, by supplying the argument
+	  "blank.lines.skip=FALSE". The underlying perl function has been
+	  extended to suppor this via an optional "-s" argument which, when
+	  present, *preserves* blank lines during the conversion.
+
+2012-06-13 01:10  warnes
+
+	* [r1564] DESCRIPTION, R/nobs.R, inst/NEWS: - nobs.default needs to
+	  handle logical vectors in addition to numeric
+	  vectors.
+	  - update DESCRIPTION and NEWS for 2.10.6.
+
+2012-06-13 01:00  warnes
+
+	* [r1563] R/nobs.R: nobs.default needs to handle logical as well as
+	  numeric vectors.
+
+2012-06-08 22:04  warnes
+
+	* [r1562] DESCRIPTION, tests/test.read.xls.Rout.save: Update
+	  DESCRIPTION and tests
+
+2012-06-08 21:59  warnes
+
+	* [r1561] tests/test.read.xls.R: fix incorrect function name
+
+2012-06-08 20:02  warnes
+
+	* [r1560] DESCRIPTION, man/installXLSXsupport.Rd: Mark example for
+	  installXLSXsupport() to not be executed durin R CMD check.
+
+2012-06-08 19:01  warnes
+
+	* [r1559] DESCRIPTION: stats:::nobs.default and stats::nobs.lm
+	  require R > 2.13.0, so add this as a dependency.
+
+2012-06-06 22:10  warnes
+
+	* [r1552] DESCRIPTION, inst/NEWS: Update for release 2.10.2
+
+2012-06-06 22:09  warnes
+
+	* [r1551] R/nobs.R: Fix bugs in nobs.default.
+
+2012-06-06 21:11  warnes
+
+	* [r1550] tests/test.read.xls.Rout.save,
+	  tests/tests.write.fwf.Rout.save: Update to reflect warning on
+	  startup that 'nobs' hides 'stats::nobs'.
+
+2012-06-06 21:11  warnes
+
+	* [r1549] man/nobs.Rd: Remove stray non-ASCII characters.
+
+2012-06-06 21:07  warnes
+
+	* [r1548] R/nobs.R: The nobs() dispatch method must be defined in
+	  the gdata namespace to
+	  pick up the definition of gdata::nobs.default.
+
+2012-06-06 20:30  warnes
+
+	* [r1547] DESCRIPTION, inst/NEWS: Update DESCRIPTION and NEWS for
+	  2.10.1 release.
+
+2012-06-06 20:26  warnes
+
+	* [r1546] NAMESPACE, R/nobs.R, man/nobs.Rd: Define aliases for
+	  'nobs' and 'nobs.lm' to support backward
+	  compatibility for packages depending on gdata.
+
+2012-06-06 01:59  warnes
+
+	* [r1545] DESCRIPTION, inst/NEWS: Update DESCRIPTION and NEWS for
+	  2.10.0 release
+
+2012-06-06 01:53  warnes
+
+	* [r1544] NAMESPACE, R/startsWith.R, man/startsWith.Rd: - Add
+	  manual page and NAMESPACE entry for startsWith().
+	  - Add 'ignore.case' argument to startsWith().
+
+2012-06-06 01:26  warnes
+
+	* [r1543] tests/test.read.xls.Rout.save: Update to match new code.
+
+2012-06-06 01:25  warnes
+
+	* [r1542] man/read.xls.Rd: Replace non-ASCII characters.
+
+2012-06-06 01:21  warnes
+
+	* [r1541] R/read.xls.R, man/read.xls.Rd, tests/test.read.xls.R: Add
+	  na.strings to read.xls call to convert "#DIV/0!" to NA.
+
+2012-06-05 20:09  warnes
+
+	* [r1540] NAMESPACE: Remove nobs method dispatch and lm methods
+	  since these are now provided by the stats package.
+
+2012-06-05 20:08  warnes
+
+	* [r1539] R/env.R: Spell out arguments to ls() to avoid R CMD check
+	  warnings.
+
+2012-06-05 20:08  warnes
+
+	* [r1538] .Rinstignore: Add .Rinstignore file to omit latex style
+	  and source files from distributed inst/doc directory.
+
+2012-06-05 19:56  warnes
+
+	* [r1537] R/ConvertMedUnits.R: - Add NULL definition of MedUnits to
+	  avoid R CMD check warning.
+	  - Specify local environment when calling data() so that MedUnits
+	  gets
+	  defined in the function's environment rather than the global
+	  environment.
+
+2012-06-05 19:07  warnes
+
+	* [r1536] R/ls.funs.R: Fix error in ls.funs() that occurs when
+	  there are no objects in the environment.
+
+2012-06-05 18:36  warnes
+
+	* [r1535] R/object.size.R: Avoid warning by calling
+	  utils::object.size rather than Internal(object.size(x))
+
+2012-05-31 22:14  warnes
+
+	* [r1534] R/nobs.R, man/nobs.Rd: - Remove dispatch function 'nobs'
+	  and method 'nobs.lm' since these are
+	  now provided by the R 'stats' package.
+
+2012-05-04 21:20  warnes
+
+	* [r1532] DESCRIPTION: Update for next release
+
+2012-05-04 19:39  warnes
+
+	* [r1531] NAMESPACE, R/ls.funs.R, man/ls.funs.Rd: Add ls.funs() to
+	  show functions defined in the specified environment.
+
+2012-05-04 19:38  warnes
+
+	* [r1530] man/is.what.Rd: Fix enumerate syntax.
+
+2012-04-03 19:49  warnes
+
+	* [r1522] R/startsWith.R: Add startsWith() function.
+
+2011-10-05 15:31  warnes
+
+	* [r1516] man/read.xls.Rd: Fix typo
+
+2011-09-30 19:09  warnes
+
+	* [r1515] inst/NEWS: Update DESCRIPTION and README for 2.9.0
+	  release.
+
+2011-09-30 19:09  warnes
+
+	* [r1514] DESCRIPTION: Update DESCRIPTION and README for 2.9.0
+	  release.
+
+2011-09-20 18:08  warnes
+
+	* [r1508] man/read.xls.Rd: Improve xls2csv() man page
+
+2011-09-20 18:07  warnes
+
+	* [r1507] NAMESPACE: Add case() function, a vector equivalent of
+	  the switch() function
+
+2011-09-20 18:07  warnes
+
+	* [r1506] R/case.R, man/case.Rd: Add case() function, a vector
+	  equivalent of the switch() function
+
+2011-09-02 17:25  warnes
+
+	* [r1500] NAMESPACE: Add 'centerText' function to center text
+	  strings for a specified width.
+
+2011-09-02 17:24  warnes
+
+	* [r1499] R/centerText.R, man/centerText.Rd: Add 'centerText'
+	  function to center text strings for a specified width.
+
+2011-04-16 17:04  warnes
+
+	* [r1469] DESCRIPTION, inst/NEWS: Update for release 2.8.2
+
+2011-04-15 20:25  warnes
+
+	* [r1468] R/dQuote.ascii.R, R/installXLSXsupport.R, R/read.xls.R,
+	  R/sheetCount.R, R/xls2sep.R: Fix errors on windows when R or Perl
+	  install path includes spaces by properly quoting the path.
+
+2011-04-15 19:43  warnes
+
+	* [r1467] R/xlsFormats.R: Fix error in xlsFormat() on windows when
+	  R or Perl install path includes spaces by quoting the path.
+
+2011-01-15 21:58  ggorjan
+
+	* [r1465] NAMESPACE, R/nPairs.R, inst/NEWS,
+	  inst/unitTests/runit.nPairs.R, man/nPairs.Rd: Adding summary
+	  method for nPairs
+
+2010-11-12 19:14  warnes
+
+	* [r1462] inst/NEWS: Update NEWS for gdata 2.8.1
+
+2010-11-12 19:09  warnes
+
+	* [r1461] DESCRIPTION: Update DEScription file for 2.8.1 release
+
+2010-11-12 19:08  warnes
+
+	* [r1460] tests/test.read.xls.Rout.save,
+	  tests/tests.write.fwf.Rout.save: Update test output to match
+	  latest code
+
+2010-11-12 19:08  warnes
+
+	* [r1459] R/write.fwf.R, man/write.fwf.Rd,
+	  tests/test.write.fwf.eol.R: Modify write.fwf() to capture and
+	  pass on additional arguments for
+	  write.table(). This resolves a bug reported by Jan Wijffels.
+
+2010-11-01 00:30  arnima
+
+	* [r1453] man/Args.Rd: Minor improvement in Args.Rd help page
+
+2010-10-19 22:04  warnes
+
+	* [r1452] R/onAttach.R, R/xls2sep.R: Avoid use of file.access()
+	  which is unreliable on Windows network shares.
+
+2010-07-08 12:36  ggrothendieck2
+
+	* [r1448] R/xls2sep.R: findPerl call added to xls2sep
+
+2010-07-07 22:48  ggrothendieck2
+
+	* [r1447] man/read.xls.Rd: small improvements to read.xls.Rd
+
+2010-05-03 16:26  warnes
+
+	* [r1439] NAMESPACE, R/installXLSXModules.R,
+	  R/installXLSXsupport.R, R/onAttach.R, inst/NEWS,
+	  man/installXLSXsupport.Rd, man/xlsFormats.Rd: Rename
+	  installXLSXModules() to installXLSXsupport() and provide
+	  documentation for it.
+
+2010-05-03 13:48  warnes
+
+	* [r1438] inst/NEWS: Update news for gdata 2.8.0
+
+2010-05-03 13:35  warnes
+
+	* [r1437] DESCRIPTION, NAMESPACE, R/installXLSXModules.R,
+	  R/onAttach.R, inst/perl/install_modules.pl,
+	  inst/perl/module_tools.pl, tests/test.read.xls.R: Add .onAttach
+	  function to check & inform user if perl is available, to check
+	  whether XLS and XLSX formats are avaiable, and to run the (new)
+	  installXLSXModules() functon to attempt to install the necessar
+	  libraries if not. Added installXLSXModules() function.
+
+2010-05-02 13:56  warnes
+
+	* [r1436] man/xlsFormats.Rd: Correct error in xlsFormat example
+
+2010-05-02 06:11  warnes
+
+	* [r1435] DESCRIPTION, NAMESPACE, R/dQuote.ascii.R, R/findPerl.R,
+	  R/read.xls.R, R/xlsFormats.R, inst/doc/gregmisc.tex,
+	  inst/perl/install_modules.pl, inst/perl/module_tools.pl,
+	  inst/perl/sheetCount.pl, inst/perl/supportedFormats.pl,
+	  inst/perl/xls2csv.pl, man/ConvertMedUnits.Rd,
+	  man/aggregate.table.Rd, man/combine.Rd, man/interleave.Rd,
+	  man/matchcols.Rd, man/nobs.Rd, man/read.xls.Rd,
+	  man/rename.vars.Rd, man/reorder.Rd, man/resample.Rd,
+	  man/sheetCount.Rd, man/trim.Rd, man/unmatrix.Rd,
+	  man/upperTriangle.Rd, man/xlsFormats.Rd, src,
+	  tests/test.read.xls.R, tests/test.read.xls.Rout.save,
+	  tests/tests.write.fwf.Rout.save: Update perl code to work (but
+	  generate warnings) when Zlib or SpreadSheet::XLXS is not
+	  instaled. Also update Greg's email address
+
+2010-02-21 17:12  ggrothendieck2
+
+	* [r1423] R/read.xls.R, man/read.xls.Rd: isOpen problems fixed
+	  (isOpen must have changed in R since this worked in earlier
+	  versions). Also nba.xls link in read.xls.Rd disappeared. Replaced
+	  with similar link.
+
+2010-02-20 11:32  ggrothendieck2
+
+	* [r1422] INSTALL: improved INSTALL file
+
+2010-02-19 15:36  ggrothendieck2
+
+	* [r1421] INSTALL, R/dQuote.ascii.R, R/read.xls.R, R/sheetCount.R,
+	  inst/NEWS: added findPerl to locate ActiveState Perl on Windows
+	  if perl= not specified and Rtools perl would have otherwise been
+	  used. Also added INSTALL file.
+
+2010-01-28 19:58  warnes
+
+	* [r1419] DESCRIPTION, inst/NEWS: Update for release 2.7.1
+
+2010-01-28 19:56  warnes
+
+	* [r1418] R/xls2sep.R: xls2sep(): Show output of perl call when
+	  verbose=T
+
+2010-01-28 16:43  warnes
+
+	* [r1417] src/build.bat: More Win32 fixes
+
+2010-01-28 16:00  warnes
+
+	* [r1416] src/Makefile, src/Makefile.win, src/build.bat: More work
+	  on Win32 building
+
+2010-01-28 03:58  warnes
+
+	* [r1415] src/Makefile, src/Makefile.win, src/build.bat: Support
+	  building Compress::Raw::Zlib perl package under windows.
+
+2010-01-26 04:12  warnes
+
+	* [r1413] inst/NEWS: Fix typos
+
+2010-01-26 04:11  warnes
+
+	* [r1412] R/sheetCount.R: Show more details in sheetCount() when
+	  verbose=TRUE
+
+2010-01-24 23:30  warnes
+
+	* [r1411] R/xls2sep.R: Replace two calls to 'dQuote', to
+	  'dQuote.ascii'
+
+2010-01-24 19:25  warnes
+
+	* [r1408] inst/doc/mapLevels.pdf, inst/doc/unknown.pdf: Remove
+	  auto-generated pdf files from svn
+
+2010-01-24 19:18  warnes
+
+	* [r1407] src/Makefile: create 'distclean' to remove perl binary
+	  dir, currently mac-only
+
+2010-01-24 19:13  warnes
+
+	* [r1406] R/read.xls.R, R/xls2sep.R: Make read.xls() and xls2sep()
+	  quieter when verbose=FALSE
+
+2010-01-24 19:12  warnes
+
+	* [r1405] tests/test.read.xls.R, tests/test.read.xls.Rout.save: Add
+	  tests for read.xls, sheetCount, and sheetNames
+
+2010-01-24 18:22  warnes
+
+	* [r1404] src/Makefile: Modify makefile to 1) clean up after build,
+	  2) make tar non-verbose
+
+2010-01-24 18:19  warnes
+
+	* [r1403] R/read.xls.R, R/sheetCount.R: Close connections when
+	  done.
+
+2010-01-24 18:17  warnes
+
+	* [r1402] man/read.xls.Rd: Fix typo
+
+2010-01-24 18:10  warnes
+
+	* [r1401] man/read.xls.Rd, man/sheetNames.Rd: Fix R CMD CHECK
+	  errors
+
+2010-01-24 08:47  warnes
+
+	* [r1400] src/Compress-Raw-Zlib-2.024,
+	  src/Compress-Raw-Zlib-2.024.tar.gz, src/Makefile: Use the
+	  original gz file for Compress::Raw::Zlib to avoid issues with
+	  'non-platform-independent' filename error in R CMD CHECK
+
+2010-01-24 08:38  warnes
+
+	* [r1399] inst/perl/Archive/README-Archive-Zip,
+	  inst/perl/Archive/README-Archive::Zip: Rename files to remove R
+	  CMD check error
+
+2010-01-24 08:33  warnes
+
+	* [r1398] DESCRIPTION, inst/NEWS, inst/doc/mapLevels.pdf,
+	  inst/doc/unknown.pdf: Update for 2.7.0 release
+
+2010-01-24 08:21  warnes
+
+	* [r1397] NAMESPACE: Add new functions to NAMESPACE
+
+2010-01-24 08:19  warnes
+
+	* [r1396] src, src/Compress-Raw-Zlib-2.024,
+	  src/Compress-Raw-Zlib-2.024/Changes,
+	  src/Compress-Raw-Zlib-2.024/MANIFEST,
+	  src/Compress-Raw-Zlib-2.024/META.yml,
+	  src/Compress-Raw-Zlib-2.024/Makefile.PL,
+	  src/Compress-Raw-Zlib-2.024/README,
+	  src/Compress-Raw-Zlib-2.024/Zlib.xs,
+	  src/Compress-Raw-Zlib-2.024/config.in,
+	  src/Compress-Raw-Zlib-2.024/examples,
+	  src/Compress-Raw-Zlib-2.024/examples/filtdef,
+	  src/Compress-Raw-Zlib-2.024/examples/filtinf,
+	  src/Compress-Raw-Zlib-2.024/fallback,
+	  src/Compress-Raw-Zlib-2.024/fallback/constants.h,
+	  src/Compress-Raw-Zlib-2.024/fallback/constants.xs,
+	  src/Compress-Raw-Zlib-2.024/lib,
+	  src/Compress-Raw-Zlib-2.024/lib/Compress,
+	  src/Compress-Raw-Zlib-2.024/lib/Compress/Raw,
+	  src/Compress-Raw-Zlib-2.024/lib/Compress/Raw/Zlib.pm,
+	  src/Compress-Raw-Zlib-2.024/pod,
+	  src/Compress-Raw-Zlib-2.024/pod/FAQ.pod,
+	  src/Compress-Raw-Zlib-2.024/ppport.h,
+	  src/Compress-Raw-Zlib-2.024/private,
+	  src/Compress-Raw-Zlib-2.024/private/MakeUtil.pm,
+	  src/Compress-Raw-Zlib-2.024/t,
+	  src/Compress-Raw-Zlib-2.024/t/000prereq.t,
+	  src/Compress-Raw-Zlib-2.024/t/01version.t,
+	  src/Compress-Raw-Zlib-2.024/t/02zlib.t,
+	  src/Compress-Raw-Zlib-2.024/t/07bufsize.t,
+	  src/Compress-Raw-Zlib-2.024/t/09limitoutput.t,
+	  src/Compress-Raw-Zlib-2.024/t/18lvalue.t,
+	  src/Compress-Raw-Zlib-2.024/t/99pod.t,
+	  src/Compress-Raw-Zlib-2.024/t/Test,
+	  src/Compress-Raw-Zlib-2.024/t/Test/Builder.pm,
+	  src/Compress-Raw-Zlib-2.024/t/Test/More.pm,
+	  src/Compress-Raw-Zlib-2.024/t/Test/Simple.pm,
+	  src/Compress-Raw-Zlib-2.024/t/compress,
+	  src/Compress-Raw-Zlib-2.024/t/compress/CompTestUtils.pm,
+	  src/Compress-Raw-Zlib-2.024/typemap,
+	  src/Compress-Raw-Zlib-2.024/zlib-src,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/adler32.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/compress.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/crc32.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/crc32.h,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/deflate.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/deflate.h,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/infback.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/inffast.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/inffast.h,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/inffixed.h,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/inflate.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/inflate.h,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/inftrees.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/inftrees.h,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/trees.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/trees.h,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/uncompr.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/zconf.h,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/zlib.h,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/zutil.c,
+	  src/Compress-Raw-Zlib-2.024/zlib-src/zutil.h, src/Makefile: Add
+	  Compress::Raw::Zlib code
+
+2010-01-24 08:15  warnes
+
+	* [r1395] man/read.xls.Rd, man/sheetCount.Rd: Add/Update
+	  documentation
+
+2010-01-24 08:06  warnes
+
+	* [r1394] R/xls2sep.R: Minor formatting change
+
+2010-01-24 07:54  warnes
+
+	* [r1393] inst/xls/ExampleExcelFile.xls,
+	  inst/xls/ExampleExcelFile.xlsx: Add additional example files
+
+2010-01-24 07:49  warnes
+
+	* [r1392] inst/perl/sheetCount.pl, inst/perl/sheetNames.pl,
+	  inst/perl/xls2csv.pl: Combine sheetCount.pl and sheetNames.pl and
+	  modify to support Excel 2007 'xlsx' format
+
+2010-01-24 07:26  warnes
+
+	* [r1391] inst/perl/Spreadsheet/XLSX.pm,
+	  inst/perl/Spreadsheet/XLSX/Fmt2007.pm, inst/perl/xls2csv.pl:
+	  Complete changes to handle Excel 2007 'xlsx' files
+
+2010-01-24 05:36  warnes
+
+	* [r1390] inst/perl/Archive, inst/perl/Archive/README-Archive::Zip,
+	  inst/perl/Archive/Zip, inst/perl/Archive/Zip.pm,
+	  inst/perl/Archive/Zip/Archive.pm,
+	  inst/perl/Archive/Zip/BufferedFileHandle.pm,
+	  inst/perl/Archive/Zip/DirectoryMember.pm,
+	  inst/perl/Archive/Zip/FAQ.pod,
+	  inst/perl/Archive/Zip/FileMember.pm,
+	  inst/perl/Archive/Zip/Member.pm,
+	  inst/perl/Archive/Zip/MemberRead.pm,
+	  inst/perl/Archive/Zip/MockFileHandle.pm,
+	  inst/perl/Archive/Zip/NewFileMember.pm,
+	  inst/perl/Archive/Zip/StringMember.pm,
+	  inst/perl/Archive/Zip/Tree.pm,
+	  inst/perl/Archive/Zip/ZipFileMember.pm,
+	  inst/perl/OLE/README-OLE-Storage_Lite,
+	  inst/perl/Spreadsheet/README-ParseExcel,
+	  inst/perl/Spreadsheet/README-XLS, inst/perl/Spreadsheet/XLSX,
+	  inst/perl/Spreadsheet/XLSX.pm,
+	  inst/perl/Spreadsheet/XLSX/Fmt2007.pm,
+	  inst/perl/Spreadsheet/XLSX/Utility2007.pm, inst/perl/VERSIONS:
+	  Add additional Perl modules to support Excel 2007 'xlsx' files
+
+2010-01-24 02:28  ggrothendieck2
+
+	* [r1389] NAMESPACE, man/sheetNames.Rd: added sheetNames.Rd
+	  (documenting sheetNames/sheetCount) and updated NAMESPACE file.
+
+2010-01-24 02:05  ggrothendieck2
+
+	* [r1388] inst/NEWS: fixed spacing problem in NEWS
+
+2010-01-23 07:11  warnes
+
+	* [r1387] inst/perl/xls2csv.pl: Check if parsing the xls file
+	  succeeds... Current code doesn't handle new XML-based format
+
+2010-01-23 07:09  warnes
+
+	* [r1386] inst/perl/Spreadsheet/XLSX: Remove perl
+	  'Spreadsheet:XLSX' module since it depends on Compress-Raw-Zlib,
+	  which probably won't be available on most machines, and I don't
+	  have time to figure out how to get R to build it properly when
+	  gdata is installed.
+
+2010-01-23 06:49  warnes
+
+	* [r1385] inst/perl/Spreadsheet/XLSX,
+	  inst/perl/Spreadsheet/XLSX/Fmt2007.pm,
+	  inst/perl/Spreadsheet/XLSX/Utility2007.pm: Add perl
+	  'Spreadsheet:XLSX' module to support new Excel XML format files
+
+2010-01-23 05:51  warnes
+
+	* [r1384] R/xls2sep.R: Add xls2tsv() convenience wrapper to
+	  xls2sep()
+
+2010-01-23 05:50  warnes
+
+	* [r1383] R/read.xls.R, R/xls2sep.R: Update to match new xls2csv.pl
+	  code, allow specification of sheets by name, support CSV and TAB
+	  delimited files using the same code, other minor changes.
+
+2010-01-23 05:45  warnes
+
+	* [r1382] R/sheetCount.R: Add sheetNames() function to extract the
+	  names from XLS files
+
+2010-01-23 05:23  warnes
+
+	* [r1381] inst/bin/xls2csv.bat: Fix xls2csv.bat
+
+2010-01-23 05:17  warnes
+
+	* [r1380] inst/perl/xls2csv.pl: If only one sheet is present in the
+	  file, don't insert the sheet name into the filename
+
+2010-01-23 04:38  warnes
+
+	* [r1379] inst/xls/ExampleExcelFile.xls,
+	  inst/xls/ExampleExcelFile.xlsx: Add additional test/example Excel
+	  files
+
+2010-01-23 04:34  warnes
+
+	* [r1378] inst/perl/xls2csv.pl, inst/perl/xls2tab.pl,
+	  inst/perl/xls2tsv.pl: Modify xls2csv.pl script to:
+	  - Use tab-delimiter and .tsv or .tab extension if called with the
+	  name
+	  xls2tsv.pl or xls2tab.pl, respectively. This allows a single
+	  source
+	  file and two symlinks to be used intstead of maintaining several
+	  almost-identical files.
+	  - Allow selection of sheets by name
+	  - Provide better error checking
+	  - Other code improvements
+
+2010-01-23 02:30  warnes
+
+	* [r1377] inst/perl/sheetCount.pl, inst/perl/sheetNames.pl: Add
+	  perl scripts to extract worksheet names and sheet count from
+	  Excel files
+
+2010-01-22 19:35  warnes
+
+	* [r1376] inst/perl/OLE/Storage_Lite.pm: Upgrade Perl
+	  OLE::StorageLight module to version 0.19
+
+2010-01-22 19:31  warnes
+
+	* [r1375] inst/perl/Spreadsheet/ParseExcel.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Cell.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Dump.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtDefault.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtJapan.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtJapan2.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtUnicode.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Font.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Format.pm,
+	  inst/perl/Spreadsheet/ParseExcel/SaveParser,
+	  inst/perl/Spreadsheet/ParseExcel/SaveParser.pm,
+	  inst/perl/Spreadsheet/ParseExcel/SaveParser/Workbook.pm,
+	  inst/perl/Spreadsheet/ParseExcel/SaveParser/Worksheet.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Utility.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Workbook.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Worksheet.pm: Upgrade perl
+	  Spreadsheet::ParseExcel to version 0.56
+
+2010-01-22 19:20  warnes
+
+	* [r1374] DESCRIPTION: Add complete list of contributors
+
+2010-01-22 14:00  arnima
+
+	* [r1373] man/keep.Rd: Minor improvement in help page
+
+2010-01-22 13:06  arnima
+
+	* [r1371] R/Args.R, R/env.R, R/is.what.R, R/keep.R, R/ll.R,
+	  man/Args.Rd, man/env.Rd, man/is.what.Rd, man/keep.Rd, man/ll.Rd:
+	  Many small improvements to documentation of Arni's five functions
+
+2010-01-22 12:45  warnes
+
+	* [r1370] R/dQuote.ascii.R, R/read.xls.R, R/sheetCount.R,
+	  R/xls2sep.R: - Move xls2csv(), xls2tab(), xls2sep() to a separate
+	  file
+	  - Move qQuote.ascii to a separate file
+	  
+	  - Bug Fix: xls2csv(), xls2tab() failed to pass the provided
+	  'perl'
+	  parameter to xls2sep()
+	  
+	  - New Feature: xls2sep() (and hence xls2csv, xls2tab, and
+	  read.xls)
+	  now supports ftp URLs.
+
+2009-12-06 22:34  arnima
+
+	* [r1369] R/Args.R, man/Args.Rd: Minor improvements of Args().
+
+2009-12-06 03:12  arnima
+
+	* [r1368] R/ll.R, man/ll.Rd: Improved ll() so user can limit output
+	  to specified classes
+
+2009-11-16 12:57  arnima
+
+	* [r1366] R/ll.R: ll(.GlobalEnv) does not crash anymore
+
+2009-08-20 14:54  warnes
+
+	* [r1357] man/cbindX.Rd, man/getDateTimePart.Rd, man/mapLevels.Rd,
+	  man/nPairs.Rd, man/trim.Rd, man/trimSum.Rd, man/unknown.Rd,
+	  man/write.fwf.Rd: Replace \ldots with \dots to make the new R CMD
+	  CHECK happy.
+
+2009-08-19 17:39  warnes
+
+	* [r1355] DESCRIPTION: Update for 2.6.1 release
+
+2009-08-19 17:37  warnes
+
+	* [r1354] inst/unitTests/runit.getDateTimeParts.R: Modify unit
+	  tests to avoid issues related to zime zones.
+
+2009-08-05 01:57  warnes
+
+	* [r1353] inst/doc/mapLevels.pdf, inst/doc/unknown.pdf: Update
+	  vignettes for 2.6.0 release
+
+2009-08-05 01:57  warnes
+
+	* [r1352] man/frameApply.Rd: Fix formatting warning in frameApply
+	  man page
+
+2009-07-16 10:55  ggorjan
+
+	* [r1350] man/write.fwf.Rd: Reverting recent change and clarifying
+	  the meaning.
+
+2009-07-16 03:23  warnes
+
+	* [r1349] inst/doc/mapLevels.pdf, inst/doc/unknown.pdf,
+	  man/resample.Rd: Add contents of \value section for resample()
+	  man page
+
+2009-07-16 03:15  warnes
+
+	* [r1348] tests/tests.write.fwf.Rout.save: Update test output to
+	  remove R CMD check warning
+
+2009-07-16 03:10  warnes
+
+	* [r1347] inst/NEWS: Update ChangeLog and NEWS for gdata 2.6.0
+	  release
+
+2009-07-16 02:56  warnes
+
+	* [r1346] DESCRIPTION: Update DESCRIPTION file for gdata 2.6.0
+
+2009-07-16 02:55  warnes
+
+	* [r1345] inst/doc/gregmisc.tex, inst/doc/mapLevels.pdf,
+	  inst/doc/unknown.pdf, man/ConvertMedUnits.Rd,
+	  man/aggregate.table.Rd, man/combine.Rd, man/interleave.Rd,
+	  man/matchcols.Rd, man/nobs.Rd, man/rename.vars.Rd,
+	  man/reorder.Rd, man/trim.Rd, man/unmatrix.Rd,
+	  man/upperTriangle.Rd: Correct Greg's email address
+
+2009-07-16 02:52  warnes
+
+	* [r1344] man/write.fwf.Rd: Correct minor typos in write.fwf() man
+	  page
+
+2009-07-16 02:50  warnes
+
+	* [r1343] man/resample.Rd: Correct page for resample()
+
+2009-07-16 02:49  warnes
+
+	* [r1342] NAMESPACE, R/read.xls.R, inst/perl/xls2tab.pl,
+	  man/read.xls.Rd: Add support for using tab for field separator
+	  during translation from xls format in read.xls
+
+2009-04-19 23:25  arnima
+
+	* [r1314] R/env.R, R/ll.R: Changed object.size(object) to
+	  unclass(object.size(object)).
+
+2008-12-31 13:30  ggorjan
+
+	* [r1312] NAMESPACE, inst/NEWS: Documenting changes and exporting
+	  the functions.
+
+2008-12-31 13:30  ggorjan
+
+	* [r1311] R/object.size.R, man/humanReadable.Rd,
+	  man/object.size.Rd: Enhanced function object.size that returns
+	  the size of multiple objects. There is also a handy print method
+	  that can print size of an object in "human readable" format when
+	  options(humanReadable=TRUE) or print(object.size(x),
+	  humanReadable=TRUE).
+
+2008-12-31 13:29  ggorjan
+
+	* [r1310] R/wideByFactor.R, inst/unitTests/runit.wideByFactor.R,
+	  man/wideByFactor.Rd: New function wideByFactor that reshapes
+	  given dataset by a given factor - it creates a "multivariate"
+	  data.frame.
+
+2008-12-31 13:28  ggorjan
+
+	* [r1309] R/nPairs.R, inst/unitTests/runit.nPairs.R, man/nPairs.Rd:
+	  New function nPairs that gives the number of variable pairs in a
+	  data.frame or a matrix.
+
+2008-12-31 13:26  ggorjan
+
+	* [r1308] R/getDateTimeParts.R,
+	  inst/unitTests/runit.getDateTimeParts.R, man/getDateTimePart.Rd:
+	  New functions getYear, getMonth, getDay, getHour, getMin, and
+	  getSec for extracting the date/time parts from objects of a
+	  date/time class.
+
+2008-12-31 13:25  ggorjan
+
+	* [r1307] R/bindData.R, inst/unitTests/runit.bindData.R,
+	  man/bindData.Rd: New function bindData that binds two data frames
+	  into a multivariate data frame in a different way than merge.
+
+2008-12-31 13:24  ggorjan
+
+	* [r1306] R/runRUnitTests.R, inst/unitTests/Makefile,
+	  inst/unitTests/runRUnitTests.R, man/gdata-package.Rd,
+	  man/runRUnitTests.Rd, tests/doRUnit.R: New function
+	  .runRUnitTestsGdata that enables run of all RUnit tests during
+	  the R CMD check as well as directly from within R.
+
+2008-12-20 22:34  ggorjan
+
+	* [r1305] NAMESPACE, R/trimSum.R, inst/NEWS,
+	  inst/unitTests/runit.trimSum.R, man/trimSum.Rd:
+
+2008-12-20 22:28  ggorjan
+
+	* [r1304] tests/tests.write.fwf.Rout.save: To remove some output in
+	  the R CMD check
+
+2008-08-05 11:47  ggorjan
+
+	* [r1300] DESCRIPTION, NAMESPACE, R/cbindX.R, R/write.fwf.R,
+	  inst/NEWS, inst/doc/mapLevels.pdf, inst/doc/unknown.pdf,
+	  inst/unitTests/runit.cbindX.R, inst/unitTests/runit.write.fwf.R,
+	  man/cbindX.Rd, man/write.fwf.Rd, tests/tests.write.fwf.R,
+	  tests/tests.write.fwf.Rout.save: - Increased version to 2.5.0
+	  
+	  - New function cbindX that can bind objects with different number
+	  of rows.
+	  
+	  - write.fwf gains width argument. Unknown values can increase or
+	  decrease
+	  the width of the columns. Additional tests and documentation
+	  fixes.
+
+2008-06-30 22:29  arnima
+
+	* [r1299] R/env.R, R/ll.R, man/env.Rd, man/ll.Rd: Simplified
+	  default 'unit' argument from c("KB","MB","bytes") to "KB".
+
+2008-05-13 03:16  warnes
+
+	* [r1270] inst/NEWS, inst/doc/mapLevels.pdf, inst/doc/unknown.pdf:
+	  Update NEWS file for 2.4.2
+
+2008-05-13 03:09  warnes
+
+	* [r1269] R/read.xls.R: Use path.expand() to give proper full path
+	  to xls file to be translated by read.xls()
+
+2008-05-13 02:55  warnes
+
+	* [r1268] R/read.xls.R: Modifed read.xls() failed to return the
+	  converted data... fixed.
+
+2008-05-13 02:47  warnes
+
+	* [r1267] inst/perl/Spreadsheet/ParseExcel/Utility.pm: Correct
+	  broken patch for open-office support
+
+2008-05-13 02:40  warnes
+
+	* [r1266] DESCRIPTION, R/read.xls.R: For read.xls() and xls2csv():
+	  - Implement more informative log messages when verbose=TRUE
+	  - Quote temporary file name to avoid errors when calling perl to
+	  do the work.
+	  - Add better error messages, particularly when perl fails to
+	  generate an
+	  output .csv file.
+	  
+	  Update version number in DESCRIPTION.
+
+2008-05-12 00:00  warnes
+
+	* [r1265] inst/perl/Spreadsheet/ParseExcel/Utility.pm: Patch to
+	  correct issue with OpenOffice-created XLS files. Thanks to
+	  Robert Burns for pointing out the patch at
+	  http://rt.cpan.org/Public/Bug/Display.html?id=7206
+
+2008-03-25 01:01  warnes
+
+	* [r1250] DESCRIPTION, inst/NEWS, inst/doc/mapLevels.pdf,
+	  inst/doc/unknown.pdf: Update for version 2.4.1
+
+2008-03-25 00:57  warnes
+
+	* [r1249] inst/xls/iris.xls: Example iris.xls file didn't complete
+	  & properly formatted iris data set. Fixed.
+
+2008-03-25 00:51  warnes
+
+	* [r1248] inst/perl/IO/AtomicFile.pm, inst/perl/IO/InnerFile.pm,
+	  inst/perl/IO/Lines.pm, inst/perl/IO/Scalar.pm,
+	  inst/perl/IO/ScalarArray.pm, inst/perl/IO/Stringy.pm,
+	  inst/perl/IO/Wrap.pm, inst/perl/IO/WrapTie.pm,
+	  inst/perl/OLE/Storage_Lite.pm,
+	  inst/perl/Spreadsheet/ParseExcel.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Dump.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtDefault.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtJapan.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtJapan2.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtUnicode.pm,
+	  inst/perl/Spreadsheet/ParseExcel/SaveParser.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Utility.pm: Update perl modules
+	  to latest versions
+
+2008-03-24 23:56  warnes
+
+	* [r1247] man/read.xls.Rd: Fix typo in win32 example for read.xls()
+
+2008-03-11 20:22  warnes
+
+	* [r1246] NAMESPACE: Add xls2csv to exported function list
+
+2008-01-30 19:55  warnes
+
+	* [r1241] ChangeLog, DESCRIPTION, inst/NEWS: Update DESCRIPTION and
+	  NEWS for release 2.4.0
+
+2008-01-29 11:26  arnima
+
+	* [r1240] man/keep.Rd: Added argument 'all'.
+
+2008-01-29 11:09  arnima
+
+	* [r1239] R/keep.R: Added argument 'all'.
+
+2007-10-22 02:24  warnes
+
+	* [r1196] DESCRIPTION: Clarify GPL version
+
+2007-09-10 13:39  ggorjan
+
+	* [r1169] man/upperTriangle.Rd: removed unmatched brace
+
+2007-09-10 13:02  ggorjan
+
+	* [r1168] man/gdata-package.Rd: adding alias
+
+2007-09-06 14:06  ggorjan
+
+	* [r1162] man/gdata-package.Rd: keyword
+
+2007-08-21 15:36  ggorjan
+
+	* [r1154] man/gdata-package.Rd: package help page
+
+2007-08-21 15:30  ggorjan
+
+	* [r1153] NEWS, inst/NEWS: move
+
+2007-08-21 15:29  ggorjan
+
+	* [r1152] NEWS: move
+
+2007-08-20 10:18  ggorjan
+
+	* [r1151] inst/doc/mapLevels.tex: clean
+
+2007-08-20 10:17  ggorjan
+
+	* [r1150] inst/doc/mapLevels.Rnw, inst/doc/mapLevels.pdf,
+	  inst/doc/mapLevels.tex: a real vignette
+
+2007-08-20 10:00  ggorjan
+
+	* [r1149] inst/doc/unknown.Rnw, inst/doc/unknown.pdf,
+	  inst/doc/unknown.tex: a real vignette
+
+2007-08-20 08:18  ggorjan
+
+	* [r1148] man/unknown.Rd: additional keyword for searchig
+
+2007-08-17 12:40  ggorjan
+
+	* [r1147] man/unknown.Rd: keyword
+
+2007-07-22 09:27  arnima
+
+	* [r1103] R/Args.R, R/keep.R: Reverted back to
+	  as.character(substitute(x)), so user can run keep(x),
+	  keep("x"), Args(x), and Args("x").
+
+2007-07-21 18:57  arnima
+
+	* [r1102] R/keep.R: Changed as.character(substitute()) to
+	  deparse(substitute()), following
+	  help(substitute) recommendation.
+
+2007-07-21 18:49  arnima
+
+	* [r1101] R/Args.R: Changed as.character(substitute()) to
+	  deparse(substitute()), following
+	  help(substitute) recommendation.
+
+2007-07-10 17:51  warnes
+
+	* [r1099] R/read.xls.R, man/read.xls.Rd: Update read.xls() code and
+	  docs with enhacements by Gabor Grothendieck
+
+2007-06-06 10:24  ggorjan
+
+	* [r1097] inst/doc/unknown.pdf, inst/doc/unknown.tex: last edits
+	  from newsletter
+
+2007-06-06 10:19  ggorjan
+
+	* [r1096] R/drop.levels.R, man/drop.levels.Rd: drop levels as
+	  suggested by Brian Ripley
+
+2007-06-06 10:17  ggorjan
+
+	* [r1095] inst/unitTests/Makefile, tests/doRUnit.R: better
+	  integration of unit tests
+
+2007-06-06 10:15  ggorjan
+
+	* [r1094] R/mapLevels.R, R/unknown.R: making codetools happy
+
+2007-01-28 10:42  arnima
+
+	* [r1042] R/keep.R: Throw warnings rather than errors
+
+2007-01-27 11:36  arnima
+
+	* [r1041] R/keep.R: Meaningful error message is given when
+	  requested object does not exist
+
+2007-01-27 11:35  arnima
+
+	* [r1040] R/is.what.R: is.* tests that return NA are not reported
+	  is.what recursion is avoided
+
+2006-11-30 21:38  ggorjan
+
+	* [r1035] R/unknown.R: minor commet to the code
+
+2006-11-30 21:36  ggorjan
+
+	* [r1034] inst/doc/mapLevels.pdf, inst/doc/mapLevels.tex:
+	  description of mapLevels methods
+
+2006-11-30 21:32  ggorjan
+
+	* [r1033] inst/doc/unknown.pdf, inst/doc/unknown.tex: description
+	  of unknown methods
+
+2006-11-16 13:05  ggorjan
+
+	* [r1013] R/c.factor.R, man/c.factor.Rd: seems that c.factor was
+	  not a good idea and there were better examples posted on r-devel
+	  list
+
+2006-11-14 22:25  ggorjan
+
+	* [r1012] man/combine.Rd, man/frameApply.Rd: Removed executable
+	  property
+
+2006-11-10 23:51  ggorjan
+
+	* [r1004] NAMESPACE, NEWS: just formatting
+
+2006-11-02 15:08  ggorjan
+
+	* [r1002] man/mapLevels.Rd, man/unknown.Rd: typos
+
+2006-10-30 22:54  ggorjan
+
+	* [r1001] man/write.fwf.Rd: some more examples for use of read.fwf
+	  after write.fwf
+
+2006-10-30 22:34  ggorjan
+
+	* [r1000] inst/unitTests: ignore for report files
+
+2006-10-30 19:18  ggorjan
+
+	* [r999] tests/tests.write.fwf.Rout.save: Id tag from source
+
+2006-10-30 19:07  ggorjan
+
+	* [r998] NAMESPACE: removing unused import
+
+2006-10-30 19:04  ggorjan
+
+	* [r997] R/write.fwf.R, inst/unitTests/runit.write.fwf.R,
+	  man/write.fwf.Rd, tests/tests.write.fwf.R: Id tag
+
+2006-10-30 19:02  ggorjan
+
+	* [r996] NAMESPACE, NEWS, R/write.fwf.R,
+	  inst/unitTests/runit.write.fwf.R, man/write.fwf.Rd,
+	  tests/tests.write.fwf.R, tests/tests.write.fwf.Rout.save:
+	  write.fwf
+
+2006-10-30 17:27  ggorjan
+
+	* [r995] inst/unitTests/runit.reorder.factor.R: Id tag
+
+2006-10-30 17:26  ggorjan
+
+	* [r994] inst/unitTests/runit.reorder.factor.R: added unit tests
+	  for reorder.factor
+
+2006-10-30 17:10  ggorjan
+
+	* [r993] R/c.factor.R, R/mapLevels.R, R/unknown.R,
+	  inst/unitTests/runit.drop.levels.R,
+	  inst/unitTests/runit.mapLevels.R, inst/unitTests/runit.trim.R,
+	  inst/unitTests/runit.unknown.R, man/c.factor.Rd, man/unknown.Rd,
+	  tests/doRUnit.R: mapply keeps names in R 2.4; POSIX unit tests
+	  solved; $ should work now
+
+2006-10-29 16:08  ggorjan
+
+	* [r992] NEWS, R/unknown.R, inst/unitTests/runit.unknown.R,
+	  man/unknown.Rd: fixed problem in tests; added unknown methods and
+	  tests for matrices
+
+2006-10-29 15:47  ggorjan
+
+	* [r991] R/drop.levels.R, R/mapLevels.R,
+	  inst/unitTests/runit.mapLevels.R, man/mapLevels.Rd,
+	  tests/doRUnit.R: sort is generic now; mapply keeps names in R
+	  2.4.0; some codetools suggestions fixed
+
+2006-10-29 15:34  ggorjan
+
+	* [r990] DESCRIPTION, NAMESPACE: sort is generic from R 2.4.0
+
+2006-10-29 15:28  ggorjan
+
+	* [r989] DESCRIPTION, NEWS, R/trim.R, man/trim.Rd: trim() gains ...
+	  argument; version bump
+
+2006-10-29 12:55  ggorjan
+
+	* [r988] NEWS, R/reorder.R, man/reorder.Rd: Fixed collision bug
+	  with stats version of reorder.factor
+
+2006-10-27 21:15  warnes
+
+	* [r987] R/c.factor.R, man/c.factor.Rd: Add c() method for factor
+	  objects, submitted by Gregor Gorjanc
+
+2006-09-19 21:08  warnes
+
+	* [r986] NEWS: Update NEWS file for 2.3.0 release
+
+2006-09-19 20:52  warnes
+
+	* [r985] inst/unitTests/runit.trim.R: Explicitly set the local in
+	  runit.trim.R to one where leading spaces affect sort order so
+	  that the unit test works properly.
+
+2006-09-18 20:33  warnes
+
+	* [r984] inst/doc/Rnews.sty: Update Rnews.sty to the latest version
+
+2006-09-18 20:24  warnes
+
+	* [r983] R/trim.R, inst/unitTests/Makefile,
+	  inst/unitTests/runit.trim.R, man/trim.Rd, tests/doRUnit.R:
+	  Integrate fixes for trim() from Gregor and myself.
+
+2006-09-18 19:32  warnes
+
+	* [r982] inst/unitTests/report.html, inst/unitTests/report.txt:
+	  Remove unneeded files.
+
+2006-09-13 19:46  warnes
+
+	* [r981] R/unknown.R, inst/unitTests, inst/unitTests/Makefile,
+	  inst/unitTests/report.html, inst/unitTests/report.txt,
+	  inst/unitTests/runit.drop.levels.R,
+	  inst/unitTests/runit.mapLevels.R, inst/unitTests/runit.trim.R,
+	  inst/unitTests/runit.unknown.R, man/unknown.Rd, tests,
+	  tests/doRUnit.R: Add unknown() and unit test files
+
+2006-09-13 18:15  warnes
+
+	* [r980] NAMESPACE, R/drop.levels.R, R/mapLevels.R, R/trim.R: More
+	  fixes from Gregor Gorjanc
+
+2006-09-13 14:55  warnes
+
+	* [r979] DESCRIPTION, NAMESPACE, R/combineLevels.R, R/mapFactor.R,
+	  R/mapLevels.R, man/combineLevels.Rd, man/mapFactor.Rd,
+	  man/mapLevels.Rd: Add mapLevels functions from Gregor Gorjanc,
+	  along with associated unit tests.
+
+2006-08-03 22:26  warnes
+
+	* [r978] DESCRIPTION, NAMESPACE, R/combineLevels.R, R/mapFactor.R,
+	  man/combineLevels.Rd, man/mapFactor.Rd: Add Gregor Gorjanc's
+	  mapFactor() and combineLevels() functions.
+
+2006-08-02 22:21  warnes
+
+	* [r977] inst/doc/gregmisc.tex, man/ConvertMedUnits.Rd,
+	  man/aggregate.table.Rd, man/combine.Rd, man/interleave.Rd,
+	  man/matchcols.Rd, man/nobs.Rd, man/read.xls.Rd,
+	  man/rename.vars.Rd, man/reorder.Rd, man/trim.Rd, man/unmatrix.Rd,
+	  man/upperTriangle.Rd: Update my email address
+
+2006-08-02 21:03  warnes
+
+	* [r976] data/MedUnits.rda: Remove MedUnits.rda to convert to
+	  binary format
+
+2006-08-02 21:03  warnes
+
+	* [r975] data/MedUnits.rda: Remove MedUnits.rda to convert to
+	  binary format
+
+2006-08-02 19:06  warnes
+
+	* [r974] DESCRIPTION: Update version number
+
+2006-08-02 19:04  warnes
+
+	* [r973] NAMESPACE, R/drop.levels.R, R/trim.R, man/drop.levels.Rd,
+	  man/trim.Rd: Integrate changes suggested by Gregor Gorjanc
+
+2006-03-14 18:00  nj7w
+
+	* [r940] NAMESPACE, R/trim.R, man/resample.Rd: Fixed R CMD check
+	  errors and added trim.default to NAMESPACE
+
+2006-03-13 19:50  nj7w
+
+	* [r939] R/trim.R: Added trim.character and trim.factor as per
+	  Gregor's suggestions
+
+2006-01-03 20:20  warnes
+
+	* [r839] NAMESPACE, R/resample.R, man/resample.Rd: Add resample()
+	  function, which generates a random sample or
+	  permutation from the elements of the supplied vector, even if the
+	  vector has length 1. This avoide the problems caused by
+	  base::sample()'s special case for vectors of length 1, where it
+	  attempts to sample from 1:x.
+
+2005-12-13 15:56  nj7w
+
+	* [r806] ChangeLog, NEWS: Updated news and removed changelog
+
+2005-12-12 22:02  nj7w
+
+	* [r798] DESCRIPTION, man/interleave.Rd: Updated version number for
+	  CRAN release
+
+2005-12-08 20:18  warnes
+
+	* [r789] R/interleave.R: Andrew Burgess reported that interleave()
+	  converts 1-column matrixes
+	  to vectors and provided a patch. A slight modification of his
+	  patch
+	  has been applied. There is now a 'drop' argument, which controls
+	  whether 'unnecessary' dimensions are dropped. The default is
+	  FALSE.
+
+2005-12-04 03:02  warnes
+
+	* [r779] man/interleave.Rd: Andrew Burgess reported that
+	  interleave() converts 1-column matrixes
+	  to vectors and provided a patch. A slight modification of his
+	  patch
+	  has been applied. There is now a 'drop' argument, which controls
+	  whether 'unnecessary' dimensions are dropped. The default is
+	  FALSE.
+
+2005-12-01 16:41  nj7w
+
+	* [r775] man/combine.Rd, man/reorder.Rd: Updated Greg's email
+	  address
+
+2005-12-01 16:39  nj7w
+
+	* [r774] man/drop.levels.Rd, man/frameApply.Rd, man/ll.Rd,
+	  man/read.xls.Rd: Updated Jim's email address
+
+2005-11-21 18:20  arnima
+
+	* [r744] R/ll.R: Suppressed warning message in attach() call.
+
+2005-10-27 18:41  warnes
+
+	* [r716] DESCRIPTION: Bump version number again to show that I
+	  fixed a bug.
+
+2005-10-27 18:19  warnes
+
+	* [r715] DESCRIPTION, R/upperTriangle.R: Update version number
+
+2005-10-27 18:19  warnes
+
+	* [r714] man/frameApply.Rd, man/reorder.Rd: Remove explicit loading
+	  of gtools in examples, so that failure to
+	  import functions from gtools gets properly caught by running the
+	  examples.
+
+2005-10-27 18:18  warnes
+
+	* [r713] man/upperTriangle.Rd: Add missing close-bracket
+
+2005-10-27 18:17  warnes
+
+	* [r712] NAMESPACE: Add upperTriangle and friends
+
+2005-10-27 12:59  warnes
+
+	* [r711] R/upperTriangle.R, man/upperTriangle.Rd: Add functions for
+	  extracting, modifying upper and lower trianglular
+	  components of matrices.
+
+2005-10-19 16:36  arnima
+
+	* [r695] R/is.what.R: Replaced the "not.using" vector with a more
+	  robust try(get(test)) to find out whether a particular is.*
+	  function returns a logical of length one.
+
+2005-09-12 15:44  nj7w
+
+	* [r671] man/aggregate.table.Rd, man/interleave.Rd,
+	  man/matchcols.Rd, man/nobs.Rd, man/read.xls.Rd,
+	  man/rename.vars.Rd, man/trim.Rd, man/unmatrix.Rd: Updated Greg's
+	  email
+
+2005-09-06 15:43  nj7w
+
+	* [r661] man/reorder.Rd: Added library(gtools) in the example
+
+2005-09-06 15:41  nj7w
+
+	* [r660] NAMESPACE: Removed gtools dependency from NAMESPACE, as it
+	  was being used only in an example, and was giving warning
+
+2005-09-06 15:39  nj7w
+
+	* [r659] DESCRIPTION: Added Suggests field
+
+2005-09-02 23:23  nj7w
+
+	* [r658] man/frameApply.Rd: Updated the example in frameApply
+
+2005-09-02 23:14  nj7w
+
+	* [r656] NEWS: Added NEWS
+
+2005-09-02 23:00  nj7w
+
+	* [r654] ChangeLog: ChangeLog
+
+2005-08-31 16:28  nj7w
+
+	* [r644] DESCRIPTION: Added DESCRIPTION file
+
+2005-08-31 16:27  nj7w
+
+	* [r643] DESCRIPTION.in: removed DESCRIPTION.in
+
+2005-07-20 21:06  nj7w
+
+	* [r631] man/ll.Rd: updated documentation
+
+2005-07-20 21:05  nj7w
+
+	* [r630] R/Args.R: ## Args() was using a different search path from
+	  args(), e.g.
+	  rep <- function(local) return(NULL)
+	  args()
+	  Args()
+	  ## Fixed
+
+2005-07-20 21:05  nj7w
+
+	* [r629] R/is.what.R: ## is.what() was giving needless warnings for
+	  functions, e.g.
+	  is.what(plot)
+	  ## Fixed
+
+2005-07-20 21:04  nj7w
+
+	* [r628] R/ll.R: ## ll() was crashing if argument was a list of
+	  length zero, e.g.
+	  x <- list()
+	  ll(x)
+	  ## Fixed, and added sort.elements (see new help page)
+
+2005-06-09 14:20  nj7w
+
+	* [r625] R/Args.R, R/aggregate.table.R, R/combine.R, R/elem.R,
+	  R/env.R, R/frameApply.R, R/interleave.R, R/is.what.R, R/keep.R,
+	  R/ll.R, R/matchcols.R, R/nobs.R, R/read.xls.R, R/rename.vars.R,
+	  R/reorder.R, R/trim.R, R/unmatrix.R, inst/perl/IO/AtomicFile.pm,
+	  inst/perl/IO/InnerFile.pm, inst/perl/IO/Lines.pm,
+	  inst/perl/IO/Scalar.pm, inst/perl/IO/Scalar.pm.html,
+	  inst/perl/IO/ScalarArray.pm, inst/perl/IO/Stringy.pm,
+	  inst/perl/IO/Wrap.pm, inst/perl/IO/WrapTie.pm,
+	  man/aggregate.table.Rd, man/combine.Rd, man/drop.levels.Rd,
+	  man/interleave.Rd, man/nobs.Rd, man/rename.vars.Rd,
+	  man/reorder.Rd: Updating the version number, and various help
+	  files to synchronize splitting of gregmisc bundle in 4 individual
+	  components.
+
+2005-06-07 19:51  nj7w
+
+	* [r622] R/drop.levels.R: Reverting to the previous version of
+	  drop.levels.R by replacing
+	  sapply(...) with as.data.frame(lapply(...)) because sapply has
+	  the undesirable effect of converting the object to a matrix,
+	  which in turn coerces the factors to numeric.
+
+2005-05-13 18:59  nj7w
+
+	* [r621] R/read.xls.R: 1) Using dQuote.ascii function in read.xls
+	  as the new version of dQuote doesn't work proprly with UTF-8
+	  locale.
+	  2) Modified CrossTable.Rd usage in gmodels
+	  3) Modified heatmap.2 usage in gplots.
+
+2005-04-02 04:19  warnes
+
+	* [r600] NAMESPACE, R/drop.levels.R, man/drop.levels.Rd: Move
+	  drop.levels() from gtools to gdata.
+
+2005-04-02 04:14  warnes
+
+	* [r598] NAMESPACE, R/frameApply.R, man/frameApply.Rd: Move
+	  frameApply() to gdata package.
+
+2005-03-31 18:11  warnes
+
+	* [r586] man/elem.Rd: Comment out example to avoid R CMD check
+	  warnings
+
+2005-03-22 06:16  warnes
+
+	* [r578] NAMESPACE, R/ConvertMedUnits.R, data/MedUnits.Rda,
+	  data/MedUnits.rda, man/ConvertMedUnits.Rd, man/MedUnits.Rd: Fixes
+	  to pass `R CMD check'.
+
+2005-03-22 02:51  warnes
+
+	* [r577] R/Args.R, R/env.R, R/ll.R, man/Args.Rd: Integrated fixes
+	  from Arni.
+
+2005-03-22 02:50  warnes
+
+	* [r576] man/read.xls.Rd: Improve documentation of 'perl' argument
+	  and give examples.
+
+2005-03-09 23:39  warnes
+
+	* [r573] R/ConvertMedUnits.R, man/ConvertMedUnits.Rd,
+	  man/MedUnits.Rd: - Add ConvertMedUnits() plus documentation
+	  - Add documentation for MedUnits data set.
+
+2005-03-09 23:37  warnes
+
+	* [r572] data/MedUnits.Rda: Update MedUnits data file.
+
+2005-03-09 22:00  warnes
+
+	* [r571] data/MedUnits.tab: Don't need both .Rda and .tab forms of
+	  the data.
+
+2005-03-09 21:55  warnes
+
+	* [r570] data, data/MedUnits.Rda, data/MedUnits.tab: Add MedUnits
+	  data set, which provides conversions between American
+	  'Conventional' and Standard Intertional (SI) medical units.
+
+2005-03-01 17:59  warnes
+
+	* [r566] man/elem.Rd, man/ll.Rd: - Remove 'elem' call from ll
+	  example.
+	  - Add note to 'elem' man page that it is depreciated and 'll'
+	  should
+	  be used instead.
+
+2005-02-26 01:15  nj7w
+
+	* [r565] NAMESPACE, man/elem.Rd, man/env.Rd, man/ll.Rd,
+	  man/read.xls.Rd: *** empty log message ***
+
+2005-02-25 23:32  warnes
+
+	* [r564] NAMESPACE: Remove ll methods since the base function now
+	  handles lists and data frames.
+
+2005-02-25 23:22  warnes
+
+	* [r563] R/elem.R, R/env.R, R/ll.R, man/Args.Rd, man/env.Rd,
+	  man/ll.Rd: Integrate changes submitted by Arni Magnusson
+
+2005-01-31 22:22  warnes
+
+	* [r529] R/read.xls.R, man/read.xls.Rd: Add ability to specify the
+	  perl executable and path.
+
+2005-01-28 18:58  warnes
+
+	* [r526] DESCRIPTION.in, NAMESPACE: Add dependency on stats.
+
+2005-01-12 20:50  warnes
+
+	* [r515] DESCRIPTION.in: Add dependency on R 1.9.0+ to prevent
+	  poeple from installing on old
+	  versions of R which don't support namespaces.
+
+2004-12-27 22:09  warnes
+
+	* [r509] man/unmatrix.Rd: Update usage to match code.
+
+2004-12-27 22:05  warnes
+
+	* [r508] R/unmatrix.R: Replace 'F' with 'FALSE'.
+
+2004-10-12 14:57  warneg
+
+	* [r465] R/unmatrix.R, man/unmatrix.Rd: Add unmatrix() function
+
+2004-09-27 21:01  warneg
+
+	* [r461] DESCRIPTION, DESCRIPTION.in, NAMESPACE, man/.Rhistory:
+	  Updated to pass R CMD check.
+
+2004-09-03 23:08  warneg
+
+	* [r455] inst/xls, inst/xls/iris.xls: added to cvs.
+
+2004-09-03 22:58  warneg
+
+	* [r454] inst/perl/xls2csv.pl: Checkin xls2csv.pl. Should have been
+	  in long ago, must have been an oversight
+
+2004-09-03 22:46  warneg
+
+	* [r451] R/read.xls.R: Need to look for files using the new package
+	  name.
+
+2004-09-03 22:43  warneg
+
+	* [r449] man/read.xls.Rd: Need to use the new package name when
+	  looking for iris.xls.
+
+2004-09-03 22:42  warneg
+
+	* [r448] man/ll.Rd: Add ll.list to the to the list of functions
+	  described
+
+2004-09-03 22:42  warneg
+
+	* [r447] NAMESPACE: Add ll and friends to the namespace
+
+2004-09-03 17:27  warneg
+
+	* [r446] DESCRIPTION, DESCRIPTION.in, NAMESPACE, R/Args.R,
+	  R/aggregate.table.R, R/combine.R, R/elem.R, R/env.R,
+	  R/interleave.R, R/is.what.R, R/keep.R, R/ll.R, R/matchcols.R,
+	  R/nobs.R, R/read.xls.R, R/rename.vars.R, R/reorder.R, R/trim.R,
+	  man/reorder.Rd: initial bundle checkin
+
+2004-09-02 17:14  warneg
+
+	* [r442] DESCRIPTION, DESCRIPTION.in, NAMESPACE, man/.Rhistory:
+	  Initial revision
+
+2004-08-27 21:57  warnes
+
+	* [r441] R/reorder.R, man/reorder.Rd: Fixed bug in mixedsort, and
+	  modified reorder.factor to use mixedsort.
+
+2004-07-29 15:27  warnes
+
+	* [r427] inst/perl, inst/perl/IO, inst/perl/IO/AtomicFile.pm,
+	  inst/perl/IO/InnerFile.pm, inst/perl/IO/Lines.pm,
+	  inst/perl/IO/Scalar.pm, inst/perl/IO/Scalar.pm.html,
+	  inst/perl/IO/ScalarArray.pm, inst/perl/IO/Stringy.pm,
+	  inst/perl/IO/Wrap.pm, inst/perl/IO/WrapTie.pm, inst/perl/OLE,
+	  inst/perl/OLE/Storage_Lite.pm, inst/perl/Spreadsheet,
+	  inst/perl/Spreadsheet/ParseExcel,
+	  inst/perl/Spreadsheet/ParseExcel.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Dump.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtDefault.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtJapan.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtJapan2.pm,
+	  inst/perl/Spreadsheet/ParseExcel/FmtUnicode.pm,
+	  inst/perl/Spreadsheet/ParseExcel/SaveParser.pm,
+	  inst/perl/Spreadsheet/ParseExcel/Utility.pm: Add perl modules to
+	  CVS.
+
+2004-07-27 14:29  warnes
+
+	* [r425] man/read.xls.Rd: Fix typos/spelling.
+
+2004-07-27 14:25  warnes
+
+	* [r424] man/read.xls.Rd: Add note that Perl is required for
+	  read.xls to work properly.
+
+2004-07-16 19:28  warnes
+
+	* [r420] R/read.xls.R: Remove the temporary csv file if reading it
+	  in fails.
+
+2004-06-22 17:09  warnes
+
+	* [r377] R/ll.R, man/ll.Rd: Add S3 methods for data frames and
+	  lists.
+
+2004-06-08 03:54  warnes
+
+	* [r371] inst/bin, inst/bin/xls2csv, inst/bin/xls2csv.bat: Moved
+	  from gregmisc/src/.
+
+2004-06-08 03:44  warnes
+
+	* [r370] inst/tools: Remove the files in src, instead provide
+	  "pre-installed" perl packages
+	  in inst/perl.
+
+2004-06-05 05:42  warnes
+
+	* [r365] inst/tools/Makefile: Fix typo.
+
+2004-06-05 05:34  warnes
+
+	* [r364] inst/tools/Makefile: Fix Unix makefile so that it works
+	  when invoked directly.
+
+2004-06-05 05:30  warnes
+
+	* [r363] inst/tools/Makefile: Fixes for Windows
+
+2004-06-05 05:22  warnes
+
+	* [r362] man/read.xls.Rd: Minor enhancment to read.xls example.
+
+2004-06-05 04:05  warnes
+
+	* [r361] inst/tools/Makefile, inst/xls: - Merge Makefile.win into
+	  Makefile. Makefile.win now just redirects
+	  to Makefile.
+	  - Update xls2csv.bat and xls2csv shell script to correctly obtain
+	  thier installion path and infer the location of the perl code and
+	  libraries.
+	  - The xls2csv.pl script now assumes that the libraries it needs
+	  are
+	  installed into the same directory where it is.
+
+2004-06-04 20:42  warnes
+
+	* [r360] inst/tools/Makefile: More changes, indended to improve
+	  installation reliabilty and to make
+	  Makefile and Makefile.win as similar as possible.
+
+2004-05-27 22:39  warnes
+
+	* [r358] inst/tools/Makefile: Clean should remove scripts from
+	  source directory.
+
+2004-05-27 22:38  warnes
+
+	* [r357] inst/perl: Moved to xls2csv.pl.in.
+
+2004-05-27 22:20  warnes
+
+	* [r354] inst/perl/xls2csv.pl, inst/tools/Makefile: More fixes.
+
+2004-05-27 22:20  warnes
+
+	* [r353] man/elem.Rd: Fix missing brace.
+
+2004-05-27 21:43  warnes
+
+	* [r352] man/elem.Rd: Add explicit package name to see also links.
+
+2004-05-27 21:24  warnes
+
+	* [r351] inst/perl/xls2csv.pl, inst/tools/Makefile: More xls2csv
+	  perl module support changes.
+
+2004-05-27 20:37  warnes
+
+	* [r350] inst/tools/Makefile: More changes to fix local
+	  installation of perl modules.
+
+2004-05-26 13:40  warnes
+
+	* [r345] man/read.xls.Rd: Escape underscores in email addresses so
+	  Latex is happy.
+
+2004-05-25 18:45  warnes
+
+	* [r339] inst/perl/xls2csv.pl, inst/tools/Makefile: More changes to
+	  xls2csv code.
+
+2004-05-25 17:35  warnes
+
+	* [r337] R/Args.R, man/Args.Rd: Add Args() function contributed by
+	  Arni Magnusson <arnima@u.washington.edu>.
+
+2004-05-25 17:14  warnes
+
+	* [r335] R/read.xls.R: - Change to call perl directly rather than
+	  depending on the installed
+	  shell script. This should make the code more portable to
+	  MS-Windows
+	  systes.
+	  
+	  - Add additional commants..
+
+2004-05-25 14:53  warnes
+
+	* [r332] inst/tools/Makefile: Makefile now modifies xls2csv.bat
+	  xls2csv.pl and xls2csv to contain an
+	  explicit path to the perl script/libraries.
+
+2004-05-25 11:41  warnes
+
+	* [r330] inst/tools/Makefile: R CMD build calls the clean target to
+	  purge build files from the
+	  source tree when packaging. To get use this behavior correctly,
+	  I've
+	  renamed the clean target to cleanup and distclean target to
+	  clean.
+
+2004-05-25 11:35  warnes
+
+	* [r329] R/read.xls.R, man/read.xls.Rd: Add read.xls(), a function
+	  to read Microsoft Excel files by
+	  translating them to csv files via the xls2csv.pl script.
+
+2004-05-25 02:46  warnes
+
+	* [r326] inst/tools/Makefile: More fixes. Seems to work now.
+
+2004-05-24 23:46  warnes
+
+	* [r325] inst/perl, inst/perl/xls2csv.pl, inst/tools,
+	  inst/tools/Makefile, inst/xls, inst/xls/iris.xls: Add files to
+	  enable inclusion and installation of xls2csv.pl as part
+	  of the package.
+
+2004-04-01 20:23  warnes
+
+	* [r312] R/rename.vars.R, man/rename.vars.Rd: Add function
+	  remove.vars().
+
+2004-03-26 22:31  warnes
+
+	* [r307] man/reorder.Rd: Contents of package 'mva' moveed to
+	  'stats'.
+
+2004-03-26 22:02  warnes
+
+	* [r298] R/is.what.R: - Fix is.what() for use under R 1.9.0
+	  - is.what() now uses is.* functions found in any attached frame
+
+2004-01-21 12:06  warnes
+
+	* [r282] R/reorder.R, man/reorder.Rd: - Add ... argument to match
+	  generic provided in mva.
+
+2004-01-19 22:45  warnes
+
+	* [r275] R/elem.R, R/env.R, R/ll.R, man/keep.Rd, man/ll.Rd: -
+	  Integrated (partial) patch submitted by Arni Magnusson to clarify
+	  help text.
+	  - Modifed code to use match.arg().
+
+2003-12-15 21:07  warnes
+
+	* [r271] R/env.R: - Applied patch from Arni that fixed a bug that
+	  caused env() to crash
+	  if any environment was completely empty
+
+2003-12-03 02:46  warnes
+
+	* [r253] man/elem.Rd, man/ll.Rd: - match function argument defaults
+	  with 'usage'
+
+2003-12-02 17:00  warnes
+
+	* [r249] man/ll.Rd: Add one argument, to match code.
+
+2003-12-01 15:56  warnes
+
+	* [r244] R/elem.R, R/env.R, R/is.what.R, R/keep.R, R/ll.R: - Apply
+	  changes submitted by Arni Magnusson
+
+2003-11-19 14:54  warnes
+
+	* [r229] man/env.Rd, man/is.what.Rd, man/keep.Rd, man/ll.Rd:
+	  Changes to pass R CMD check.
+
+2003-11-18 18:45  warnes
+
+	* [r224] R/elem.R, R/env.R, R/is.what.R, R/keep.R, R/ll.R: -
+	  Convert from MS-Dos to Unix line endings.
+	  - Reformat to 80 columns.
+
+2003-11-17 22:09  warnes
+
+	* [r223] man/elem.Rd: Replace 'T' with 'TRUE' to remove R CMD check
+	  error.
+
+2003-11-17 22:09  warnes
+
+	* [r222] man/aggregate.table.Rd: Fix syntax error.
+
+2003-11-10 22:11  warnes
+
+	* [r220] R/elem.R, R/env.R, R/is.what.R, R/keep.R, R/ll.R,
+	  man/elem.Rd, man/env.Rd, man/is.what.Rd, man/keep.Rd, man/ll.Rd:
+	  - Add files contributed by Arni Magnusson
+	  <arnima@u.washington.edu>. As well as some of my own.
+
+2003-06-07 17:58  warnes
+
+	* [r198] man/aggregate.table.Rd, man/interleave.Rd: - Fixed error
+	  in examples. Had sqrt(var(x)/(n-1)) for the standard
+	  error of the mean instead of sqrt(var(x)/n).
+
+2003-05-23 18:32  warnes
+
+	* [r197] R/matchcols.R, man/matchcols.Rd: - Fixed typos
+
+2003-05-23 18:14  warnes
+
+	* [r196] R/matchcols.R, man/matchcols.Rd: - library() backported
+	  from 1.7-devel. This version of the function
+	  adds the "pos=" argument to specify where in the search path the
+	  library should be placed.
+	  
+	  - updated .First.lib to use library(...pos=3) for MASS to avoid
+	  the
+	  'genotype' data set in MASS from masking the genotype funciton in
+	  genetics when it loads gregmisc
+	  
+	  - Added logit() inv.logit() matchcols() function and
+	  corresponding docs
+
+2003-05-20 16:03  warnes
+
+	* [r195] R/interleave.R: - Omit NULL variables.
+
+2003-05-20 13:16  warnes
+
+	* [r194] R/trim.R, man/trim.Rd: - Added function trim() and
+	  assocated docs.
+
+2003-04-22 15:42  warnes
+
+	* [r188] R/reorder.R, man/reorder.Rd: - The mva package (which is
+	  part of recommended) now provides a
+	  generic 'reorder' function. Consequently, the 'reorder' function
+	  here has been renamed to 'reorder.factor'.
+	  
+	  - Removed check of whether the argument is a factor object.
+
+2003-03-03 17:48  warnes
+
+	* [r165] man/reorder.Rd: - Updated to match reorder.Rd which was
+	  exetended to handle factor
+	  label names in addition to numeric indices.
+
+2003-03-03 17:24  warnes
+
+	* [r164] R/reorder.R: - Added handling of factor level names in
+	  addition to numeric indexes.
+
+2002-09-23 14:02  warnes
+
+	* [r118] inst, inst/doc, inst/doc/Rnews.dtx, inst/doc/Rnews.sty,
+	  inst/doc/gregmisc.pdf, inst/doc/gregmisc.tex: Added inst/doc
+	  directory and contents to CVS.
+
+2002-09-23 13:59  warnes
+
+	* [r117] R/aggregate.table.R, R/combine.R, R/interleave.R,
+	  R/nobs.R, man/aggregate.table.Rd, man/combine.Rd,
+	  man/interleave.Rd, man/nobs.Rd, man/rename.vars.Rd,
+	  man/reorder.Rd: - Modified all files to include CVS Id and Log
+	  tags.
+
+2002-08-01 18:06  warnes
+
+	* [r112] R/reorder.R: Added reorder() function to reorder the
+	  levels of a factor.
+
+2002-04-09 00:51  warneg
+
+	* [r109] R/rename.vars.R, man/aggregate.table.Rd,
+	  man/interleave.Rd, man/reorder.Rd: Checkin for version 0.5.3
+
+2002-04-09 00:46  warneg
+
+	* [r108] R/interleave.R: - Properly handle case when some or all
+	  arguments are vectors.
+
+2002-03-26 21:22  warneg
+
+	* [r104] man/reorder.Rd: - Changed methods to include '...' to
+	  match the generic.
+	  - Updated for version 0.5.1
+
+2002-03-26 19:29  warneg
+
+	* [r102] R/nobs.R: Added ... to methods.
+
+2002-03-26 19:29  warneg
+
+	* [r101] man/nobs.Rd: Updated to add ... parameter to function
+	  calls.
+
+2002-03-26 15:27  warneg
+
+	* [r98] man/reorder.Rd: Initial checkin.
+
+2002-03-26 14:28  warneg
+
+	* [r95] R/nobs.R: - Added CVS tags
+
+2002-02-21 21:45  warneg
+
+	* [r87] R/aggregate.table.R: - Fixed bug where row and column
+	  labels didn't always correspond to the
+	  contents. This only occured when a factor was used for by1 or by2
+	  and
+	  the factors levels weren't in the default sort order.
+
+2002-02-20 22:10  warneg
+
+	* [r86] R/aggregate.table.R: New function.
+
+2002-02-20 22:09  warneg
+
+	* [r85] man/aggregate.table.Rd: Initial checkin.
+
+2002-02-20 21:42  warneg
+
+	* [r84] R/interleave.R, man/interleave.Rd: Initial checkin.
+
+2002-02-20 21:31  warneg
+
+	* [r83] man/nobs.Rd: Noted that specialized methods exist.
+
+2002-02-20 21:29  warneg
+
+	* [r82] man/nobs.Rd: Incorrectly had contents of nobs.R here
+	  instead of help text. Corrected.
+
+2002-02-20 20:09  warneg
+
+	* [r81] man/rename.vars.Rd: Minor changes, typo and formatting
+	  fixes.
+
+2002-02-20 20:03  warneg
+
+	* [r79] R/nobs.R, man/nobs.Rd: - initial checkin.
+
+2001-12-12 01:39  warneg
+
+	* [r53] man/rename.vars.Rd: Added omitted documentaton for 'info'
+	  parameter. Changed example code
+	  not to use 'Orthodont' data set so that the nlme package is not
+	  required.
+
+2001-12-08 01:54  warneg
+
+	* [r47] R/rename.vars.R: Changed 'T' to 'TRUE' in parameter list.
+
+2001-12-07 23:33  warneg
+
+	* [r45] man/rename.vars.Rd: - Fixed see also link. Mis-typed
+	  'data.frame' as 'dataframe'.
+
+2001-12-07 22:55  warneg
+
+	* [r44] R/rename.vars.R: Added attribution.
+
+2001-12-07 22:49  warneg
+
+	* [r43] man/rename.vars.Rd: Added proper attribution to Don
+	  MacQueen.
+
+2001-12-07 21:48  warneg
+
+	* [r39] man/rename.vars.Rd: Initial checkin. Unfortunately, I've
+	  lost the email of the person who
+	  sent this to me. I'll credit him/her when I find out who it was!
+
+2001-12-07 21:40  warneg
+
+	* [r38] R/rename.vars.R: Initial checkin
+
+2001-12-05 19:51  warneg
+
+	* [r34] R, R/combine.R: - Renamed 'concat' function to 'combine' to
+	  avoid name conflict with
+	  an existing S-Plus function.
+
+2001-12-05 19:44  warneg
+
+	* [r32] ., man, man/combine.Rd: - Changed function name 'concat' to
+	  'combine' and renamed concat.Rd to
+	  combine.Rd
+

@@ -1,0 +1,42 @@
+# NAMESPACE work by Robert Gentleman <rgentlem@fhcrc.org>
+# in e-mail on July 30, 2007.
+#
+# Extended by C Roosen, 30/01/2012
+
+importFrom("utils", toLatex)
+
+export("caption<-", "caption", "label", "label<-",
+   "align<-", "align", "digits<-", "digits", "display<-",
+   "display", "xtable", "print.xtable", "toLatex.xtable")
+
+S3method("print", "xtable")
+S3method("toLatex", "xtable")
+
+S3method("caption<-", "xtable")
+S3method("caption", "xtable")
+S3method("label", "xtable")
+S3method("label<-", "xtable")
+S3method("align<-", "xtable")
+S3method("align", "xtable")
+S3method("digits", "xtable")
+S3method("digits<-", "xtable")
+S3method("display<-", "xtable")
+S3method("display", "xtable")
+
+S3method("xtable", "data.frame")
+S3method("xtable", "matrix")
+S3method("xtable", "table")
+S3method("xtable", "anova")
+S3method("xtable", "aov")
+S3method("xtable", "summary.aov")
+S3method("xtable", "summary.aovlist")
+S3method("xtable", "aovlist")
+S3method("xtable", "lm")
+S3method("xtable", "summary.lm")
+S3method("xtable", "glm")
+S3method("xtable", "summary.glm")
+S3method("xtable", "prcomp")
+S3method("xtable", "summary.prcomp")
+S3method("xtable", "coxph")
+S3method("xtable", "ts")
+S3method("xtable", "zoo")

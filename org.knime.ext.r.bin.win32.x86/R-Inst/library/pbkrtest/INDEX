@@ -1,0 +1,13 @@
+KRmodcomp               Ftest and degrees of freedom based on
+                        Kenward-Roger approximation
+PBmodcomp               Model comparison of mixed models using
+                        parametric bootstrap methods.
+PBrefdist               Calculate reference distribution using
+                        parametric bootstrap
+beets                   Yield and sugar percentage in sugar beets from
+                        a split plot experiment.
+budworm                 Effect of Insecticide on survivial of tobacco
+                        budworms
+modcomp_init            Model input check
+vcovAdj                 Ajusted covariance matrix for linear mixed
+                        models according to Kenward and Roger

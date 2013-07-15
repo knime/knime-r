@@ -1,0 +1,498 @@
+
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Chapter Analysing Longitudinal Data II}
+%%\VignetteDepends{gee}
+\setcounter{chapter}{10}
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+
+\chapter[Analysing Longitudinal Data II]{
+         Analysing Longitudinal Data II -- Generalised Estimation Equations:
+         Treating Respiratory Illness and Epileptic Seizures
+         \label{ALDII}}
+
+\section{Introduction}
+
+
+\section{Generalised Estimating Equations}
+
+
+\section{Analysis Using \R{}}
+
+\subsection{Beat the Blues Revisited}
+
+
+To use the \Rcmd{gee} function, package \Rpackage{gee} \citep{PKG:gee}
+has to be installed and attached:
+<<ALDII-gee, echo = TRUE>>=
+library("gee")
+@
+The \Rcmd{gee} function is used in a similar way to the \Rcmd{lme} function 
+met in 
+Chapter 10,
+with the addition of the features of the
+\Rcmd{glm} function that specify the appropriate error distribution 
+for the response and the implied link function, and an argument 
+to specify the structure of the working correlation matrix. Here 
+we will fit an independence structure and then an exchangeable 
+structure. The \R{} code for fitting generalised estimation equations to the
+\Robject{BtheB\_long} data (as constructed in 
+Chapter 10,
+
+
+
+with
+idenity working correlation matrix is as follows (note that the \Rcmd{gee} function
+assumes the rows of the \Rclass{data.frame} \Robject{BtheB\_long} to be
+ordered with respect to subjects)
+<<ALDII-BtheB-data, echo = FALSE, results = hide>>=
+data("BtheB", package = "HSAUR")
+BtheB$subject <- factor(rownames(BtheB))
+nobs <- nrow(BtheB)
+BtheB_long <- reshape(BtheB, idvar = "subject",
+    varying = c("bdi.2m", "bdi.4m", "bdi.6m", "bdi.8m"),
+    direction = "long")
+BtheB_long$time <- rep(c(2, 4, 6, 8), rep(nobs, 4))
+@
+<<ALDII-BtheB-geefit-indep, echo = TRUE, results = hide>>=
+osub <- order(as.integer(BtheB_long$subject))
+BtheB_long <- BtheB_long[osub,]
+btb_gee <- gee(bdi ~ bdi.pre + treatment + length + drug, 
+    data = BtheB_long, id = subject, family = gaussian,
+    corstr = "independence")
+@
+and with exchangeable correlation matrix
+<<ALDII-BtheB-geefit-ex, echo = TRUE, results = hide>>=
+btb_gee1 <- gee(bdi ~ bdi.pre + treatment + length + drug, 
+    data = BtheB_long, id = subject, family = gaussian,
+    corstr = "exchangeable")
+@
+The \Rcmd{summary} method can be used to inspect the fitted models; the
+results are shown in Figures~\ref{ALDII-gee-summary} and
+\ref{ALDII-gee1-summary}
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method 
+                            for the \Robject{btb\_gee} model.
+                            \label{ALDII-gee-summary}}
+\SchunkLabel
+<<ALDII-BtheB-geesummary, echo = TRUE>>=
+summary(btb_gee)
+@
+\SchunkRaw
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method 
+                            for the \Robject{btb\_gee1} model.
+                            \label{ALDII-gee1-summary}}
+\SchunkLabel
+<<ALDII-BtheB-gee1summary, echo = TRUE>>=
+summary(btb_gee1)
+@
+\SchunkRaw
+
+
+\subsection{Respiratory Illness}
+
+
+The baseline status, i.e., the status for \Robject{month == 0}, will enter
+the models as an explanatory variable and thus we have to rearrange the
+\Rclass{data.frame} \Robject{respiratory} 
+in order to create a new variable \Robject{baseline}:
+<<ALDII-respiratory-data, echo = TRUE>>=
+data("respiratory", package = "HSAUR")
+resp <- subset(respiratory, month > "0")
+resp$baseline <- rep(subset(respiratory, month == "0")$status, rep(4, 111))
+resp$nstat <- as.numeric(resp$status == "good")
+@
+The new variable \Robject{nstat} is simply a dummy coding for a poor
+respiratory status. Now we can use the data \Robject{resp} to fit a logistic regression model
+and GEE models with an independent and an exchangeable correlation structure
+as follows;
+<<ALDII-respiratory-fit, echo = TRUE, results = hide>>=
+resp_glm <- glm(status ~ centre + treatment + sex + baseline + 
+    age, data = resp, family = "binomial")
+resp_gee1 <- gee(nstat ~ centre + treatment + sex + baseline + 
+    age, data = resp, family = "binomial", id = subject, 
+    corstr = "independence", scale.fix = TRUE, scale.value = 1)
+resp_gee2 <- gee(nstat ~ centre + treatment + sex + baseline + 
+    age, data = resp, family = "binomial", id = subject, 
+    corstr = "exchangeable", scale.fix = TRUE, scale.value = 1)
+@
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method
+                            for the \Robject{resp\_glm} model.
+                            \label{ALDII-resp-glm-summary}}
+\SchunkLabel
+<<ALDII-resp-glm-summary, echo = TRUE>>=
+summary(resp_glm)
+@
+\SchunkRaw
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method
+                            for the \Robject{resp\_gee1} model.
+                            \label{ALDII-resp-gee1-summary}}
+\SchunkLabel
+<<ALDII-resp-gee1summary, echo = TRUE>>=
+summary(resp_gee1)
+@
+\SchunkRaw
+
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method
+                            for the \Robject{resp\_gee2} model.
+                            \label{ALDII-resp-gee2-summary}}
+\SchunkLabel
+<<ALDII-resp-gee2-summary, echo = TRUE>>=
+summary(resp_gee2)
+@
+\SchunkRaw
+
+
+\clearpage
+
+The estimated treatment effect taken from the exchangeable 
+structure GEE model is \Sexpr{round(coef(resp_gee2)["treatmenttreatment"], 3)} 
+which, using the robust standard 
+errors, has an associated $95\%$ confidence interval 
+<<ALDII-resp-confint, echo = TRUE>>=
+se <- summary(resp_gee2)$coefficients["treatmenttreatment",
+                                      "Robust S.E."]
+coef(resp_gee2)["treatmenttreatment"] +  
+    c(-1, 1) * se * qnorm(0.975)
+@
+These values reflect effects on the log-odds scale. Interpretation 
+becomes simpler if we exponentiate the values to get the effects 
+in terms of odds. This gives a treatment effect of
+\Sexpr{round(exp(coef(resp_gee2)["treatmenttreatment"]), 3)}
+and a  $95\%$ confidence interval of 
+<<ALDII-resp-confint-exp, echo = TRUE>>=
+exp(coef(resp_gee2)["treatmenttreatment"] + 
+    c(-1, 1) * se * qnorm(0.975))
+@
+The odds of achieving a `good' respiratory status with the active treatment is between  %'
+about twice and seven times the corresponding odds for the placebo. 
+
+\subsection{Epilepsy} 
+
+Moving on to the count data in \Robject{epilepsy} from 
+Table~\ref{ALDII-epilepsy-tab}, we begin by calculating 
+the means and variances of the number of seizures for all treatment / period
+interactions
+<<ALDII-epilepsy, echo = TRUE>>=
+data("epilepsy", package = "HSAUR")
+itp <- interaction(epilepsy$treatment, epilepsy$period)
+tapply(epilepsy$seizure.rate, itp, mean)
+tapply(epilepsy$seizure.rate, itp, var)
+@
+Some of the variances are considerably larger than the corresponding means, which for 
+a Poisson variable may suggest that overdispersion may be a problem, see
+Chapter~\ref{GLM}.
+
+\begin{figure}
+\begin{center}
+<<ALDII-plot1, echo = TRUE, fig = TRUE, height = 4>>=
+layout(matrix(1:2, nrow = 1))
+ylim <- range(epilepsy$seizure.rate)
+placebo <- subset(epilepsy, treatment == "placebo")
+progabide <- subset(epilepsy, treatment == "Progabide")
+boxplot(seizure.rate ~ period, data = placebo,
+        ylab = "Number of seizures", 
+        xlab = "Period", ylim = ylim, main = "Placebo")
+boxplot(seizure.rate ~ period, data = progabide,
+        main  = "Progabide", ylab = "Number of seizures", 
+        xlab = "Period", ylim = ylim)
+@
+\caption{Boxplots of numbers of seizures in each two-week
+         period post randomisation for placebo and active treatments.
+         \label{ALDII-plot1}}
+\end{center}
+\end{figure}
+
+
+\begin{figure}
+\begin{center}
+<<ALDII-plot2, echo = TRUE, fig = TRUE, height = 4>>=
+layout(matrix(1:2, nrow = 1))
+ylim <- range(log(epilepsy$seizure.rate + 1))
+boxplot(log(seizure.rate + 1) ~ period, data = placebo,
+        main = "Placebo", ylab = "Log number of seizures", 
+        xlab = "Period", ylim = ylim)
+boxplot(log(seizure.rate + 1) ~ period, data = progabide,
+        main = "Progabide", ylab = "Log number of seizures", 
+        xlab = "Period", ylim = ylim)
+@
+\caption{Boxplots of log of numbers of seizures in
+         each two-week period post randomisation for placebo and active 
+         treatments. \label{ALDII-plot2}}
+\end{center}
+\end{figure}
+
+
+We can now fit a Poisson regression model to the data 
+assuming independence using the \Rcmd{glm} function. 
+We also use the GEE approach to fit an 
+independence structure, followed by an exchangeable structure
+using the following \R{} code:
+<<ALDII-epilepsy-gee, echo = TRUE, results = hide>>=
+per <- rep(log(2),nrow(epilepsy))
+epilepsy$period <- as.numeric(epilepsy$period)
+fm <- seizure.rate ~ base + age + treatment + offset(per)
+epilepsy_glm <- glm(fm, data = epilepsy, family = "poisson")
+epilepsy_gee1 <- gee(fm, data = epilepsy, family = "poisson", 
+    id = subject, corstr = "independence", scale.fix = TRUE, 
+    scale.value = 1)
+epilepsy_gee2 <- gee(fm, data = epilepsy, family = "poisson", 
+    id = subject, corstr = "exchangeable", scale.fix = TRUE, 
+    scale.value = 1)
+epilepsy_gee3 <- gee(fm, data = epilepsy, family = "poisson", 
+    id = subject, corstr = "exchangeable", scale.fix = FALSE, 
+    scale.value = 1)
+@
+As usual we inspect the fitted models using the \Rcmd{summary} method, the
+results are given in Figures~\ref{ALDII-epilepsy-glm-summary},
+\ref{ALDII-epilepsy-gee1-summary}, \ref{ALDII-epilepsy-gee2-summary}, and 
+\ref{ALDII-epilepsy-gee3-summary}.
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method   
+                            for the \Robject{epilepsy\_glm} model.
+                            \label{ALDII-epilepsy-glm-summary}}
+\SchunkLabel
+<<ALDII-espilepsy-glm-summary, echo = TRUE>>=
+summary(epilepsy_glm)
+@
+\SchunkRaw
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method   
+                            for the \Robject{epilepsy\_gee1} model.
+                            \label{ALDII-epilepsy-gee1-summary}}
+\SchunkLabel
+<<ALDII-espilepsy-gee1-summary, echo = TRUE>>=
+summary(epilepsy_gee1)
+@
+\SchunkRaw
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method   
+                            for the \Robject{epilepsy\_gee2} model.
+                            \label{ALDII-epilepsy-gee2-summary}}
+\SchunkLabel
+<<ALDII-espilepsy-gee2-summary, echo = TRUE>>=
+summary(epilepsy_gee2)
+@
+\SchunkRaw
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method   
+                            for the \Robject{epilepsy\_gee3} model.
+                            \label{ALDII-epilepsy-gee3-summary}}
+\SchunkLabel
+<<ALDII-espilepsy-gee3-summary, echo = TRUE>>=
+summary(epilepsy_gee3)
+@
+\SchunkRaw
+
+
+\bibliographystyle{LaTeXBibTeX/refstyle}
+\bibliography{LaTeXBibTeX/HSAUR}   
+\end{document}

@@ -1,0 +1,18 @@
+apply                   Apply Function
+as.fts                  Convert from/to fts
+event.dates             Extract Dates
+expanding               Expanding Window Functions
+fill                    Fill Missing Values
+frequency.convert       Change Frequencies
+fts                     Fts: a fast timeseries library
+fts.logical             Logical subsets of objects
+indicators              Trading indicators
+intersect.all           find date intersection among multiple fts
+                        objects
+lead.lag.fts            Shift an Fts ojbect in time
+lm.fts                  linear regression for fts objects
+moving.functions        Moving Functions
+pad                     pad and trim dates
+read.write.fts          Read / Write Files
+remove.rows             Remove Rows
+since.na                Count distance since an NA has occurred

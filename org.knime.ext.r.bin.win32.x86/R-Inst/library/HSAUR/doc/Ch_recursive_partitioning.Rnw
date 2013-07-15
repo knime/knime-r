@@ -1,0 +1,537 @@
+
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Chapter Recursive Partitioning}
+%%\VignetteDepends{vcd,lattice,randomForest,party}
+\setcounter{chapter}{7}
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+
+<<RP-setup, echo = FALSE, results = hide>>=
+library("vcd")
+library("lattice")
+library("randomForest")
+library("party")
+ltheme <- canonical.theme(color = FALSE)     ## in-built B&W theme  
+ltheme$strip.background$col <- "transparent" ## change strip bg  
+lattice.options(default.theme = ltheme) 
+mai <- par("mai")
+options(SweaveHooks = list(nullmai = function() { par(mai = rep(0, 4)) },
+                           twomai = function() { par(mai = c(0, mai[2], 0, 0)) },
+                           threemai = function() { par(mai = c(0, mai[2], 0.1, 0)) }))
+@
+
+\chapter[Recursive Partitioning]{Recursive Partitioning: 
+                                 Large Companies and Glaucoma Diagnosis \label{RP}}
+
+\section{Introduction}
+
+
+\section{Recursive Partitioning}
+
+
+\section{Analysis Using \R{}}
+
+\subsection{Forbes 2000 Data}
+
+\index{Forbes 2000 ranking|(}
+
+\index{Missing values}
+For some observations the profit is missing and we first remove those
+companies from the list
+<<RP-Forbes-na, echo = TRUE>>=
+data("Forbes2000", package = "HSAUR")
+Forbes2000 <- subset(Forbes2000, !is.na(profits))
+@
+
+The \Rcmd{rpart} function from \Rpackage{rpart} can be used to grow a
+regression tree. The response variable and the covariates are defined by a
+model formula in the same way as for \Rcmd{lm}, say. By default, a large
+initial tree is grown. 
+<<RP-Forbes-rpart, echo = TRUE>>=
+library("rpart")
+forbes_rpart <- rpart(profits ~ assets + marketvalue + sales, 
+                      data = Forbes2000)
+@
+A \Rcmd{print} method for \Rclass{rpart} objects is available, however, a
+graphical representation shown in Figure~\ref{RP:forbesL} is more
+convenient. Observations which satisfy the condition shown for each node 
+go to the left and
+observations which don't are element of the right branch in each node. %'
+The numbers plotted in the leaves are the mean profit for those
+observations satisfying the conditions stated above. For example, the
+highest profit is observed for companies with a market value greater than
+$89.33$ billion US dollars and with more than $91.92$ US dollars sales.
+
+\begin{figure}
+\begin{center}
+<<RP-Forbes-initial, echo = TRUE, fig = TRUE, nullmai = TRUE>>=
+plot(forbes_rpart, uniform = TRUE, margin = 0.1, branch = 0.5, 
+     compress = TRUE)
+text(forbes_rpart)
+@
+\caption{Large initial tree for Forbes 2000 data. \label{RP:forbesL}}
+\end{center}
+\end{figure}
+
+\index{Cross-validation!Forbes 2000 data}
+To determine if the tree is appropriate or if some of the branches need to 
+be subjected to pruning we can use the \Robject{cptable}
+element of the \Rclass{rpart} object:
+<<RP-Forbes-cp, echo = TRUE>>=
+print(forbes_rpart$cptable)
+opt <- which.min(forbes_rpart$cptable[,"xerror"])
+@
+The \Robject{xerror} column contains of estimates of cross-validated prediction error
+for different numbers of splits (\Robject{nsplit}). The best tree has
+%%\Sexpr{forbes_rpart$cptable[opt, "nsplit"]} 
+three
+splits. Now we can prune back the large
+initial tree using
+\index{Pruning!Forbes 2000 ranking}
+<<RP-Forbes-prune, echo = TRUE>>=
+cp <- forbes_rpart$cptable[opt, "CP"]
+forbes_prune <- prune(forbes_rpart, cp = cp)
+@
+The result is shown in Figure~\ref{RP:forbesS}. This tree is much smaller.
+From the sample sizes and boxplots shown for each leaf we see that the
+majority of companies is grouped together. However, a large market
+value, more that $32.72$ billion US dollars, seems to be a good indicator of
+large profits. 
+
+\begin{figure}
+\begin{center}
+<<RP-Forbes-plot, echo = TRUE, fig = TRUE, twomai = TRUE>>=
+layout(matrix(1:2, nc = 1))
+plot(forbes_prune, uniform = TRUE, margin = 0.1, branch = 0.5, 
+     compress = TRUE)
+text(forbes_prune)
+rn <- rownames(forbes_prune$frame)
+lev <- rn[sort(unique(forbes_prune$where))]
+where <- factor(rn[forbes_prune$where], levels = lev)
+n <- tapply(Forbes2000$profits, where, length)
+boxplot(Forbes2000$profits ~ where, varwidth = TRUE,
+        ylim = range(Forbes2000$profit) * 1.3, 
+        pars = list(axes = FALSE), 
+        ylab = "Profits in US dollars")
+abline(h = 0, lty = 3)
+axis(2)
+text(1:length(n), max(Forbes2000$profit) * 1.2, 
+     paste("n = ", n))
+@
+\caption{Pruned regression tree for Forbes 2000 data with the distribution
+         of the profit in each leaf depicted by a boxplot.
+         \label{RP:forbesS}}
+\end{center}
+\end{figure}
+\index{Forbes 2000 ranking|)}
+
+\subsection{Glaucoma Diagnosis}
+
+
+<<RP-seed-again, echo = FALSE, results = hide>>=
+set.seed(290875)
+@
+
+<<RP-glaucoma-rpart, echo = TRUE>>=
+data("GlaucomaM", package = "ipred")
+glaucoma_rpart <- rpart(Class ~ ., data = GlaucomaM, 
+              control = rpart.control(xval = 100))
+glaucoma_rpart$cptable
+opt <- which.min(glaucoma_rpart$cptable[,"xerror"])
+cp <- glaucoma_rpart$cptable[opt, "CP"]
+glaucoma_prune <- prune(glaucoma_rpart, cp = cp)
+@
+
+
+\begin{figure}
+\begin{center}
+<<RP-glaucoma-plot, echo = TRUE, fig = TRUE, threemai = TRUE>>=
+layout(matrix(1:2, nc = 1))
+plot(glaucoma_prune, uniform = TRUE, margin = 0.1, branch = 0.5, 
+     compress = TRUE)
+text(glaucoma_prune, use.n = TRUE)
+rn <- rownames(glaucoma_prune$frame)
+lev <- rn[sort(unique(glaucoma_prune$where))]
+where <- factor(rn[glaucoma_prune$where], levels = lev)
+mosaicplot(table(where, GlaucomaM$Class), main = "", xlab = "", 
+           las = 1)
+@
+\caption{Pruned classification tree of the glaucoma data with class
+         distribution in the leaves depicted by a mosaicplot. \label{RP:gl}}
+\end{center}
+\end{figure}
+
+\index{Classification tree!choice of tree size}
+\index{Tree size}
+As we discussed earlier, the choice of the appropriate sized tree is not a
+trivial problem. For the glaucoma data, the above choice of three leaves is
+very unstable across multiple runs of cross-validation. As an illustration
+of this problem we repeat the very same analysis as shown above and record
+the optimal number of splits as suggested by the cross-validation runs.
+<<RP-glaucoma-cp, echo = TRUE>>=
+nsplitopt <- vector(mode = "integer", length = 25)
+for (i in 1:length(nsplitopt)) {
+    cp <- rpart(Class ~ ., data = GlaucomaM)$cptable
+    nsplitopt[i] <- cp[which.min(cp[,"xerror"]), "nsplit"]
+}
+table(nsplitopt)
+@
+Although for \Sexpr{sum(nsplitopt == 1)} runs of cross-validation a simple
+tree with one split only is suggested, larger trees would have been favored
+in \Sexpr{sum(nsplitopt > 1)} of the cases. This short analysis shows that
+we should not trust the tree in Figure~\ref{RP:gl} too much.
+
+\index{Bagging}
+\index{Bootstrap approach!glaucoma diagnosis data}
+One way out of this dilemma is the aggregation of multiple trees via
+\stress{bagging}. 
+In \R{}, the bagging idea can be implemented by three or four lines
+of code. Case count or weight vectors representing the bootstrap samples can be drawn from the
+multinominal distribution with parameters $n$ and $p_1 = 1/n, \dots, p_n =
+1/n$ via the \Rcmd{rmultinom} function. For each weight vector, one large tree is
+constructed without pruning and the \Rclass{rpart} objects are stored in a
+list, here called \Robject{trees}:
+<<RP-glaucoma-bagg, echo = TRUE>>=
+trees <- vector(mode = "list", length = 25)
+n <- nrow(GlaucomaM)
+bootsamples <- rmultinom(length(trees), n, rep(1, n)/n)
+mod <- rpart(Class ~ ., data = GlaucomaM, 
+             control = rpart.control(xval = 0))
+for (i in 1:length(trees))
+    trees[[i]] <- update(mod, weights = bootsamples[,i])
+@
+The \Rcmd{update} function re-evaluates the call of \Robject{mod}, however,
+with the weights being altered, i.e., fits a tree to a bootstrap sample
+specified by the weights.
+It is interesting to have a look at the structures of the multiple trees.
+For example, the variable selected for splitting in the root of the tree is
+not unique as can be seen by
+<<RP-glaucoma-splits, echo = TRUE>>=
+table(sapply(trees, function(x) as.character(x$frame$var[1])))
+@
+Although \Robject{varg} is selected most of the time, other variables such
+as \Robject{vari} occur as well -- a further indication that the tree in
+Figure~\ref{RP:gl} is
+questionable and that hard decisions are not appropriate for the glaucoma
+data.
+
+In order to make use of the ensemble of trees in the list \Robject{trees}
+we estimate the conditional probability of suffering from glaucoma given the
+covariates for each observation in the original data set by
+<<RP-glaucoma-baggpred, echo = TRUE>>=
+classprob <- matrix(0, nrow = n, ncol = length(trees))
+for (i in 1:length(trees)) {
+    classprob[,i] <- predict(trees[[i]], 
+                             newdata = GlaucomaM)[,1]
+    classprob[bootsamples[,i] > 0,i] <- NA
+}
+@
+Thus, for each observation we get \Sexpr{length(trees)} estimates. However,
+each observation has been used for growing one of the trees with
+probability $0.632$ and thus was not used with probability $0.368$.
+Consequently, the estimate from a tree where an observation was not used for
+growing is better for judging the quality of the predictions and we label
+the other estimates with \Robject{NA}.
+
+Now, we can average the estimates and we vote for glaucoma when the average
+of the estimates of the conditional glaucoma probability exceeds $0.5$. The
+comparison between the observed and the predicted classes does not suffer from
+overfitting since the predictions are computed from those trees for which 
+each single observation was \stress{not} used for growing.
+<<RP-glaucoma-avg, echo = TRUE>>=
+avg <- rowMeans(classprob, na.rm = TRUE)
+predictions <- factor(ifelse(avg > 0.5, "glaucoma", "normal"))
+predtab <- table(predictions, GlaucomaM$Class)
+predtab
+@
+Thus, an honest estimate of the probability of
+a glaucoma prediction when the patient is actually suffering from glaucoma is
+<<RP-glaucoma-sens, echo = TRUE>>=
+round(predtab[1,1] / colSums(predtab)[1] * 100)
+@
+per cent. For 
+<<RP-glaucoma-spez, echo = TRUE>>=
+round(predtab[2,2] / colSums(predtab)[2] * 100)
+@
+per cent of normal eyes, the ensemble does not predict a glaucomateous
+damage.
+
+
+%% <FIXME> is this P(Glaucoma), not P(Normal) ??? </FIXME>
+
+\begin{figure}
+\begin{center}
+<<RP-glaucoma-baggplot, echo = TRUE, fig = TRUE, height = 4>>=
+library("lattice")
+gdata <- data.frame(avg = rep(avg, 2), 
+    class = rep(as.numeric(GlaucomaM$Class), 2),
+    obs = c(GlaucomaM[["varg"]], GlaucomaM[["vari"]]),
+    var = factor(c(rep("varg", nrow(GlaucomaM)), 
+                   rep("vari", nrow(GlaucomaM)))))
+panelf <- function(x, y) {
+           panel.xyplot(x, y, pch = gdata$class)
+           panel.abline(h = 0.5, lty = 2)
+       }
+print(xyplot(avg ~ obs | var, data = gdata, 
+       panel = panelf,
+       scales = "free", xlab = "", 
+       ylab = "Estimated Class Probability Glaucoma"))
+@
+\caption{Glaucoma data: Estimated class probabilities depending on two important
+         variables. The $0.5$ cut-off for the estimated glaucoma probability
+         is depicted as horizontal line. Glaucomateous eyes are plotted as
+         circles and normal eyes are triangles. \label{RP:glplot}}
+\end{center}
+\end{figure}
+
+\index{Random forest}
+The \stress{bagging} procedure is a special case of a more general approach
+called \stress{random forest} \citep{HSAUR:Breiman2001b}. The package
+\Rpackage{randomForest} \citep{PKG:randomForest}
+can be used to compute such ensembles via
+<<RP-glaucoma-rf, echo = TRUE>>=
+library("randomForest")
+rf <- randomForest(Class ~ ., data = GlaucomaM)
+@
+and we obtain out-of-bag estimates for the prediction error via
+<<RP-glaucoma-rf-oob, echo = TRUE>>=
+table(predict(rf), GlaucomaM$Class)
+@
+
+
+
+For the glaucoma data, such a \stress{conditional inference tree} 
+can be computed using
+the \Rcmd{ctree} function
+\index{Conditional tree}
+<<RP-glaucoma-ctree, echo = TRUE>>=
+library("party")
+glaucoma_ctree <- ctree(Class ~ ., data = GlaucomaM)
+@
+and a graphical representation is depicted in Figure~\ref{RP-glaucoma-ctree-plot} showing
+both the cutpoints and the $p$-values of the associated independence tests for each node. 
+The first split is performed using a cutpoint defined with respect to the
+volume of the optic nerve above some reference plane, but in the inferior part of
+the eye only (\Robject{vari}).
+
+\begin{figure}
+\begin{center}
+<<RP-glaucoma-ctree-plot, echo = TRUE, fig = TRUE, width = 10, height = 6>>=
+plot(glaucoma_ctree)
+@
+\caption{Glaucoma data: Conditional inference tree with the distribution 
+         of glaucomateous eyes shown for each terminal leaf.
+         \label{RP-glaucoma-ctree-plot}}
+\end{center}
+\end{figure}
+
+
+
+\bibliographystyle{LaTeXBibTeX/refstyle}
+\bibliography{LaTeXBibTeX/HSAUR}   
+\end{document}

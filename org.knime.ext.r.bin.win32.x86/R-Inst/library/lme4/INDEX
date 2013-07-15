@@ -1,0 +1,27 @@
+Dyestuff                Yield of dyestuff by batch
+HPDinterval             Highest Posterior Density intervals
+Pastes                  Paste strength by batch and cask
+Penicillin              Variation in penicillin testing
+VarCorr                 Extract variance and correlation components
+VarCorr-class           Class "VarCorr"
+VerbAgg                 Verbal Aggression item responses
+cake                    Breakage angle of chocolate cakes
+cbpp                    Contagious bovine pleuropneumonia
+cbpp_PB                 Stored parametric bootstrap samples for 'cbpp'
+                        data
+fixef                   Extract the fixed-effects estimates
+getME                   Extract or Get Generalize Components from a
+                        Fitted Mixed Effects Model
+lmList                  List of lm Objects with a Common Model
+lmList-class            Class "lmList"
+lmer                    Fit Mixed-Effects Models
+mcmcsamp                Generate an MCMC sample
+mer-class               Mixed Model Representations and *mer Methods
+merMCMC-class           Mixed-model Markov chain Monte Carlo results
+ranef                   Extract the modes of the random effects
+refit                   Re-fit a model to a new response vector
+sigma                   Extract residual standard error
+simulate-mer            Simulate based on mer fits
+sleepstudy              Reaction times in a sleep deprivation study
+sleepstudy_PB           Stored parametric bootstrap samples for the
+                        'sleepstudy' data

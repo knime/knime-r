@@ -1,0 +1,56 @@
+citHeader("There are several publications about strucchange which describe different aspects of the software. The main reference is the JSS paper.")
+
+citEntry(entry="Article",
+         title = "strucchange: An R Package for Testing
+                  for Structural Change in Linear Regression Models",
+         author = personList(as.person("Achim Zeileis"), 
+                             as.person("Friedrich Leisch"),
+			     as.person("Kurt Hornik"),
+			     as.person("Christian Kleiber")),
+         journal      = "Journal of Statistical Software",
+         year         = "2002",
+	 volume       = "7",
+	 number       = "2",
+	 pages        = "1--38",
+         url          = "http://www.jstatsoft.org/v07/i02/",
+         
+         textVersion = 
+         paste("Achim Zeileis, Friedrich Leisch, Kurt Hornik and Christian Kleiber (2002).", 
+               "strucchange: An R Package for Testing for Structural Change in Linear Regression Models.",
+               "Journal of Statistical Software, 7(2), 1-38.",
+	       "URL http://www.jstatsoft.org/v07/i02/"),
+	 header = "To cite strucchange in publications use:"
+)
+
+citEntry(entry="Article",
+         title = "Testing and Dating of Structural Changes in Practice",
+         author = personList(as.person("Achim Zeileis"), 
+	                     as.person("Christian Kleiber"),
+                             as.person("Walter Kr\\\"amer"),
+			     as.person("Kurt Hornik")),
+         journal      = "Computational Statistics \\& Data Analysis",
+         year         = "2003",
+	 volume       = "44",
+	 pages        = "109--123",
+         
+         textVersion = 
+         paste("Achim Zeileis, Christian Kleiber, Walter Kraemer and Kurt Hornik (2003).", 
+               "Testing and Dating of Structural Changes in Practice.",
+               "Computational Statistics & Data Analysis, 44, 109-123."),
+	 header = "If methods related to breakpoints() are used also cite:"
+)
+
+citEntry(entry        = "Article",
+         title        = "Implementing a Class of Structural Change Tests: An Econometric Computing Approach",
+         author       = "Achim Zeileis", 
+         journal      = "Computational Statistics \\& Data Analysis",
+         year         = "2006",
+	 volume       = "50",
+	 pages        = "2987--3008",
+         
+         textVersion = 
+         paste("Achim Zeileis (2006).", 
+               "Implementing a Class of Structural Change Tests: An Econometric Computing Approach.",
+               "Computational Statistics & Data Analysis, 50, 2987-3008."),
+         header = "If methods related to gefp() and efpFunctional() are used also cite:"
+)

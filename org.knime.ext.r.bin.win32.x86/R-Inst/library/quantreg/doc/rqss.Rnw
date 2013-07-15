@@ -1,0 +1,18 @@
+\documentclass[letterpaper]{article}
+%\VignetteIndexEntry{Additive Models for Conditional Quantiles}
+%\VignettePackage{quantreg}
+
+
+\usepackage{pdfpages}
+
+\begin{document}
+
+\newread\PDFtoInclude
+\openin\PDFtoInclude=rqss0.pdf
+\ifeof\PDFtoInclude
+\typeout{No file rqss0.pdf}
+\else
+\includepdf[fitpaper=true,pages=-]{rqss0.pdf}
+\fi
+
+\end{document}

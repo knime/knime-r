@@ -1,0 +1,426 @@
+
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Chapter Meta-Analysis}
+%%\VignetteDepends{rmeta}
+\setcounter{chapter}{11}
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+
+\chapter[Meta-Analysis]{Meta-Analysis: Nicotine Gum and Smoking Cessation and
+the Efficacy of BCG Vaccine in the Treatment of Tuberculosis \label{MA}}
+
+\section{Introduction}
+
+
+\section{Systematic Reviews and Meta-Analysis}
+
+
+\section{Analysis Using \R{}}
+
+
+The aim in collecting the results from the randomised trials 
+of using nicotine gum to help smokers quit was to estimate the 
+overall \stress{odds ratio}, the odds of quitting smoking for those 
+given the gum, divided by the odds of quitting for those not 
+receiving the gum. The odds ratios and corresponding confidence intervals 
+are computed by means of the \Rcmd{meta.MH} function for fixed effects
+meta-analysis as shown here
+<<MA-smoking-OR, echo = TRUE>>=
+library("rmeta")
+data("smoking", package = "HSAUR")
+smokingOR <- meta.MH(smoking[["tt"]], smoking[["tc"]],
+                     smoking[["qt"]], smoking[["qc"]], 
+                     names = rownames(smoking))
+@
+and the results can be inspected via a \Rcmd{summary} method -- 
+see Figure~\ref{MA-smoking-summary}.
+
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method 
+                            for \Robject{smokingOR}.
+                            \label{MA-smoking-summary}}
+\SchunkLabel
+<<MA-smoking-OR-summary, echo = TRUE>>=
+summary(smokingOR)
+@
+\SchunkRaw
+
+%% <FIXME> why do I need to force the figure placement here?
+%% \clearpage
+%% </FIXME>
+
+\begin{figure}
+\begin{center}
+<<MA-smoking-OR-plot, echo = TRUE, fig = TRUE, height = 8>>=
+plot(smokingOR, ylab = "")
+@
+\caption{Forest plot of observed effect sizes and $95\%$ confidence intervals for
+the nicotine gum studies. \label{MA:smokingplot}}
+\end{center}
+\end{figure}
+
+
+We shall use both the fixed effects and random effects approaches 
+here so that we can compare results. For the fixed effects model (see 
+Figure~\ref{MA-smoking-summary})
+the estimated overall log-odds ratio is \Sexpr{round(smokingOR$logMH, 3)} 
+with a standard error of \Sexpr{round(smokingOR$selogMH, 3)}.
+This leads to an estimate of the overall odds ratio 
+of \Sexpr{round(exp(smokingOR$logMH), 3)}, with a 95\% confidence interval
+as given above. For the random effects model 
+<<MA-smoking-random, echo = TRUE>>=
+smokingDSL <- meta.DSL(smoking[["tt"]], smoking[["tc"]], 
+                     smoking[["qt"]], smoking[["qc"]],
+                     names = rownames(smoking))
+print(smokingDSL)
+@
+the corresponding 
+estimate is \Sexpr{round(exp(smokingDSL$logDSL), 3)}. Both 
+models suggest that there is clear evidence that nicotine gum 
+increases the odds of quitting. The random effects confidence 
+interval is considerably wider than that from the fixed effects 
+model; here the test of homogeneity 
+of the studies is not 
+significant implying that we might use the fixed effects results. But the
+test is not particularly powerful and it is more sensible to assume a priori that
+heterogeneity is present and so we use the results from the random effects
+model.
+
+
+\section{Meta-Regression}
+
+The examination of heterogeneity of the effect sizes from the 
+studies in a meta-analysis begins with the formal test for its 
+presence, although in most meta-analyses such heterogeneity can 
+almost be assumed to be present. There will be many possible 
+sources of such heterogeneity and estimating how these various 
+factors affect the observed effect sizes in the studies chosen 
+is often of considerable interest and importance, indeed usually 
+more important than the relatively simplistic use of meta-analysis 
+to determine a single summary estimate of overall effect size. 
+We can illustrate the process using the BCG vaccine data. 
+We first find the estimate of the overall effect size from 
+applying the fixed effects and the random effects models described 
+previously:
+<<MA-BCG-odds, echo = TRUE>>=
+data("BCG", package = "HSAUR")
+BCG_OR <- meta.MH(BCG[["BCGVacc"]], BCG[["NoVacc"]],
+                  BCG[["BCGTB"]], BCG[["NoVaccTB"]],
+                  names = BCG$Study)
+BCG_DSL <- meta.DSL(BCG[["BCGVacc"]], BCG[["NoVacc"]],
+                  BCG[["BCGTB"]], BCG[["NoVaccTB"]],
+                  names = BCG$Study)
+@
+The results are inspected using the \Rcmd{summary} method as shown in
+Figures~\ref{MA-BCGOR-summary} and \ref{MA-BCGDSL-summary}.
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method
+                            for \Robject{BCG\_OR}.
+                            \label{MA-BCGOR-summary}}
+\SchunkLabel  
+<<MA-BCGOR-summary, echo = TRUE>>=
+summary(BCG_OR)
+@
+\SchunkRaw
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method
+                            for \Robject{BCG\_DSL}.
+                            \label{MA-BCGDSL-summary}}
+\SchunkLabel  
+<<MA-BCGDSL-summary, echo = TRUE>>=
+summary(BCG_DSL)
+@
+\SchunkRaw
+
+
+To assess how the two covariates, latitude and year, relate to 
+the observed effect sizes we shall use multiple linear regression 
+but will weight each observation by 
+$W_i = (\hat{\sigma}^2 + V_i^2)^{-1}, i = 1, \dots, 13$, where
+$\hat{\sigma}^2$
+is the estimated between-study variance and $V_i^2$ is the estimated 
+variance from the $i$th study. The required \R{} code to fit the linear
+model via weighted least squares is:
+\index{Weighted least squares regression}
+<<BCG-studyweights, echo = TRUE>>=
+studyweights <- 1 / (BCG_DSL$tau2 + BCG_DSL$selogs^2)
+y <- BCG_DSL$logs
+BCG_mod <- lm(y ~ Latitude + Year, data = BCG, 
+              weights = studyweights)
+@
+and the results of the \Rcmd{summary} method are shown in 
+Figure~\ref{MA-mod-summary}.
+There is some evidence that 
+latitude is associated with observed effect size, the log-odds 
+ratio becoming increasingly negative as latitude increases, as 
+we can see from a scatterplot of the two variables with the added 
+weighted regression fit seen in Figure~\ref{MA-BCG}. 
+
+\renewcommand{\nextcaption}{\R{} output of the \Rcmd{summary} method
+                            for \Robject{BCG\_mod}.
+                            \label{MA-mod-summary}}
+\SchunkLabel  
+<<MA-mod-summary, echo = TRUE>>=
+summary(BCG_mod)
+@
+\SchunkRaw
+
+\begin{figure}
+\begin{center}
+<<BCG-Latitude-plot, echo = TRUE, fig = TRUE>>=
+plot(y ~ Latitude, data = BCG, ylab = "Estimated log-OR")
+abline(lm(y ~ Latitude, data = BCG, weights = studyweights))
+@
+\caption{Plot of observed effect size for the \Robject{BCG} vaccine 
+         data against latitude, with a weighted least squares 
+         regression fit shown in addition. \label{MA-BCG}}
+\end{center}
+\end{figure}
+
+
+\section{Publication Bias}
+
+
+\begin{figure}
+\begin{center}
+<<MA-funnel-ex, echo = FALSE, fig = TRUE, height = 8>>=
+set.seed(290875)
+sigma <- seq(from = 1/10, to = 1, length.out = 35)
+y <- rnorm(35) * sigma
+gr <- (y > -0.5)
+layout(matrix(1:2, ncol = 1))
+plot(y, 1/sigma, xlab = "Effect size", ylab = "1 / standard error")
+plot(y[gr], 1/(sigma[gr]), xlim = range(y),
+     xlab = "Effect size", ylab = "1 / standard error")
+@
+\caption{Example funnel plots from simulated data. 
+         The asymmetry in the lower plot is a hint
+         that a publication bias might be a problem. \label{MA-funnel}}
+\end{center}
+\end{figure}
+
+We can construct a funnel plot for the nicotine gum data using the \R{} code
+depicted with Figure~\ref{MA:funnel}. There does not
+appear to be any strong evidence of publication bias here.
+
+\begin{figure}
+\begin{center}
+<<MA-smoking-funnel, echo = TRUE, fig = TRUE>>=
+funnelplot(smokingDSL$logs, smokingDSL$selogs, 
+           summ = smokingDSL$logDSL, xlim = c(-1.7, 1.7))
+abline(v = 0, lty = 2)
+@
+\caption{Funnel plot for nicotine gum data. \label{MA:funnel}}
+\end{center}
+\end{figure}
+\index{Funnel plots|)}
+
+
+%%\bibliographystyle{LaTeXBibTeX/refstyle}
+%%\bibliography{LaTeXBibTeX/HSAUR}   
+\end{document}

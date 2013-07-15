@@ -1,0 +1,563 @@
+
+		CHANGES in `coin' VERSION 1.0-21
+
+    o     move vignettes to vignettes
+
+    o     new CWD data
+
+
+		CHANGES in `coin' VERSION 1.0-20
+
+    o     report a warning for rank tests with weights
+
+
+		CHANGES in `coin' VERSION 1.0-19
+
+    o     no require() in .onLoad()
+
+
+		CHANGES in `coin' VERSION 1.0-18
+
+    o     exact() can not work for symmetry_test; spotted
+          by LE PAPE Gilles <lepape.gilles@neuf.fr>
+
+
+		CHANGES in `coin' VERSION 1.0-17
+
+    o     add dependencies required for tests/
+
+
+		CHANGES in `coin' VERSION 1.0-16
+
+    o     change `ties.method = c("HollanderWolfe", "Pratt")'
+          to `zero.method = c("Pratt", "Wilcoxon")' in `wilcoxsign_test'
+          following a suggestion by Fritz Scholz. A warning
+          is fired to avoid misleading and nonreproducible results.
+
+
+		CHANGES in `coin' VERSION 1.0-15
+
+    o     use `quantile(..., type = 1)' for computing approximate
+          quantiles (suggested by Fritz Scholz)
+
+
+		CHANGES in `coin' VERSION 1.0-14
+
+    o     documentation Biobase:expressionSet
+
+
+		CHANGES in `coin' VERSION 1.0-13
+
+    o    further checks and better error messages
+         for nonsense data in (paired) two-sample
+         tests
+
+
+		CHANGES in `coin' VERSION 1.0-12
+
+    o    better error message for
+         wilcoxsign_test(c(1, 1, 1) ~ c(1, 1, 1))
+
+
+		CHANGES in `coin' VERSION 1.0-11
+
+    o    bugfix in discrete MTP adjustment
+
+
+		CHANGES in `coin' VERSION 1.0-10
+
+    o    improve upon `qperm' for van de Wiel algorithm again.
+
+
+		CHANGES in `coin' VERSION 1.0-9
+
+    o    again precision problems in van de Wiel algorithm:
+         `qperm' suffered from too large tolerances of the
+         inverted probability function.
+
+
+		CHANGES in `coin' VERSION 1.0-8
+
+    o    precision problems in van de Wiel algorithm
+         fixed. In rare cases, P(T < t) was returned
+         as p-value instead of P(T <= t). Two statistics
+         are now considered equal (in all computations)
+         when the difference is smaller than
+         sqrt(.Machine$double.eps)
+
+
+		CHANGES in `coin' VERSION 1.0-7
+
+    o    dperm, pperm and qperm are vectorized also
+         for exact and approximate null distributions
+
+
+		CHANGES in `coin' VERSION 1.0-6
+
+    o    exact distribution for independent two-sample
+         problems with only two observations was wrong,
+         spotted by Fritz Scholz <fscholz@u.washington.edu>
+
+
+		CHANGES in `coin' VERSION 1.0-5
+
+    o    documentation updates
+
+
+		CHANGES in `coin' VERSION 1.0-4
+
+    o    evaluate all formulae in xxx_test's parent.frame
+
+
+		CHANGES in `coin' VERSION 1.0-3
+
+    o    add alternative ties handling to wilcoxsign_test
+         feature request by Fritz Scholz <fscholz@u.washington.edu>
+
+    o    vignette update
+
+
+		CHANGES in `coin' VERSION 1.0-2
+
+    o    fix location confidence interval problem
+         spotted by Fritz Scholz <fscholz@u.washington.edu>
+
+
+		CHANGES in `coin' VERSION 1.0-1
+
+    o    add average scores for logrank test
+
+    o    fix Rd problems
+
+		CHANGES in `coin' VERSION 1.0-0
+
+    o    JSS paper  http://www.jstatsoft.org/v28/i08/
+         documents version 1.0-0
+
+    o    set default for <IndependenceTest>@method to
+         "General Independence Test"
+
+    o    covariance() always returns a covariance matrix
+
+    o    add show() method for <IndependenceTest> objects
+
+    o    functions supplied via `distribution = ' doesn't need
+         to have a class
+
+    o    export all classes
+
+    o    compute linear statistics, expectations and (co)variances
+         when constructing <IndependenceLinearStatistic> instead
+         of <IndependenceTestStatistic> and define methods for this class.
+
+    o    maxstat_test() with integer weights gave NA or wrong cutpoints
+
+
+		CHANGES in `coin' VERSION 0.6-9
+
+    o    any() was misused in one place, spotted by
+         Kasper Daniel Hansen <khansen@stat.Berkeley.EDU>
+
+
+		CHANGES in `coin' VERSION 0.6-8
+
+    o    code cosmetics by Johannes Huesing <johannes@huesing.name>
+
+
+		CHANGES in `coin' VERSION 0.6-7
+
+    o    remove non_function entries from Rd files
+
+    o    disable Biobase example in vignette
+
+
+		CHANGES in `coin' VERSION 0.6-6
+
+    o    fix precision problems with exact p-values (spotted by 
+         Michael Fay <mfay@niaid.nih.gov>
+
+
+		CHANGES in `coin' VERSION 0.6-5
+
+    o    add new vignette on technical details; update to new mvtnorm 0.8-0
+
+    o    update to new mvtnorm 0.8-0
+
+    o    check for overflow errors in StreitbergRoehmel.c 
+         (thanks for Michael Fay <mfay@niaid.nih.gov> for spotting this)
+
+
+		CHANGES in `coin' VERSION 0.6-4
+
+    o    add new argument `ordered_trafo' to `trafo'
+         and deal with ordered factors in a more transparent 
+         way (via a new function `of_trafo')
+
+
+		CHANGES in `coin' VERSION 0.6-3
+
+    o    new vignette `MAXtest'
+
+
+		CHANGES in `coin' VERSION 0.6-2
+
+    o    print name of `x' variable and levels when `x' is a factor
+
+    o    new class IndependenceLinearStatistic
+
+
+		CHANGES in `coin' VERSION 0.6-1
+
+    o    LazyLoad: yes
+
+
+		CHANGES in `coin' VERSION 0.6-0
+
+    o    rename some C source files & update doxygen documentation
+
+    o    simplify some methods and the class structure
+
+    o    clean up code and simplify wrapper functions
+
+    o    documentation updates
+
+    o    deal with factors containing only one level
+
+    o    don't compute design matrices in `ModelEnvFormula'
+
+    o    expand weights if distribution = approximate()
+
+    o    assign names to user-specified transformation in case they are
+         missing
+
+    o    the `distribution' argument may now be a function with one
+         argument allowing for user-specified distributions.
+
+    o    surv_test() ignored the `alternative' argument
+
+
+		CHANGES in `coin' VERSION 0.5-2
+
+    o    maxstat_trafo did not always choose the correct maximal
+         cutpoint
+
+    o    formula evaluation without `data' argument was partially broken
+         (thanks to Achim for spotting this)
+
+
+		CHANGES in `coin' VERSION 0.5-1
+
+    o    improve formula interface for wilcoxsign_test
+
+
+		CHANGES in `coin' VERSION 0.5-0
+
+    o    implement exact distribution for symmetry problems (especially
+         wilcoxsign_test)
+
+    o    add more checks on StatXact examples
+
+
+		CHANGES in `coin' VERSION 0.4-14
+
+    o    fix problems reported by valgrind
+
+
+		CHANGES in `coin' VERSION 0.4-13
+
+    o    coin-Ex.R generated by R-2.4.0
+
+    o    Enhances: Biobase
+
+
+		CHANGES in `coin' VERSION 0.4-12
+
+    o    add $(FLIBS) to Makevars
+
+
+		CHANGES in `coin' VERSION 0.4-11
+
+    o    include doxygen documentation for C functions
+
+    o    documentation updates
+
+
+		CHANGES in `coin' VERSION 0.4-10
+
+    o    maxstat_test(y ~ x) is now able to deal with unordered x variables
+
+    o    maxstat_test returns estimates of both the selected variable and the
+         cutpoint in multivariate situations (as a list)
+
+    o    more checks for maxstat_test
+
+    o    add codetools checks to tests
+
+
+		CHANGES in `coin' VERSION 0.4-9
+
+    o    fix typo: Homegeneity
+
+    o    add ASA copyright to `LegoCondInf' vignette
+
+
+		CHANGES in `coin' VERSION 0.4-8
+
+    o    clarify that the Stuart-Maxwell test is computed by mh_test and add
+         a further example (thanks to Henric Nilsson <henric.nilsson@phadia.com>
+         for pointing this out!).
+
+
+		CHANGES in `coin' VERSION 0.4-7
+
+    o    improve `maxstat_trafo': some potential cutpoints could have been
+         overlooked in case of ties equal to the maxprob and minprob sample
+         quantiles.
+
+    o    reproduce two examples from Hothorn and Lausen (2003) in
+         ?maxstat_test (and added `hohnloser' data set)
+
+    o    add more regression tests on `maxstat_test'
+
+
+		CHANGES in `coin' VERSION 0.4-6
+
+    o    updated `LegoCondInf' vignette
+
+    o    printed names of test statistics are now 
+         `chi-squared', `maxT', or `Z' instead of `T'
+
+
+		CHANGES in `coin' VERSION 0.4-5
+
+    o    user-supplied transformations can return a vector which
+         is coerced to matrix(..., ncol = 1) internally
+
+    o    `ytrafo' and `xtrafo' may take functions like `rank' directly.
+         However, the use of `trafo' is recommended.
+
+    o    argument `teststat' may take values "max", "quad" or "scalar"
+
+    o    internal reimplementation of score handling for ordered factors
+         
+    o    handling of multiple ordered factors / ordered factors in
+         multivariate sitations implemented
+         
+
+		CHANGES in `coin' VERSION 0.4-4
+
+    o    f_trafo returns a design matrix with NA rows in case missing values
+         were present
+
+
+		CHANGES in `coin' VERSION 0.4-4
+
+
+    o    make R CMD check happy and move src/README to inst/README
+
+
+		CHANGES in `coin' VERSION 0.4-3
+
+    o    isequal must not check equality of attributes
+
+
+		CHANGES in `coin' VERSION 0.4-2
+
+    o    new data set `alpha'
+
+    o    data set `alzheimer' is now a data.frame, not a table
+
+    o    new vignette with more applications
+
+
+
+		CHANGES in `coin' VERSION 0.4-1
+
+    o    documentation updates
+
+    o    remove unused setAs definitions
+
+    o    expectation(), variance() and covariance() return 
+         named vectors or matrices. Names for objects returned
+         by statistic() have been partially improved.
+
+    o    all observations with NA's are removed now
+
+    o    some internal improvements (removed unused code, avoid duplicated
+         code chunks etc.)
+
+    o    more checks on NA's, blocks and multiple ordinal variables (one
+         univariate problems are currently allowed to have ordinal
+         variables)
+
+
+		CHANGES in `coin' VERSION 0.3-8
+
+    o    export `independence_test.table'
+
+    o    add `conf.level' attribute for `MCp' objects when quasi-randomized 
+         Monte-Carlo procedures (from `mvtnorm') have been used
+
+    o    add new `var_trafo' argument to `trafo'
+
+    o    documentation updates
+ 
+
+		CHANGES in `coin' VERSION 0.3-7
+
+    o    `statistic()' now returns correct linear and standardized 
+         statistics when scores are in play
+
+    o    `alzheimer' data added
+
+    o    `photocar' data added
+
+    o    documentation updates
+
+    o    `support()' and `dperm()' methods have been improved for asymptotic and
+         approximate null distributions
+
+
+		CHANGES in `coin' VERSION 0.3-6
+
+    o    internal C function `R_MonteCarloIndependenceTest' returns
+         a (pq x B) matrix instead of a list with B elements 
+         (the linear statistic for each random permutation of the data)
+
+    o    various simplifications for the computations of adjusted p-values
+
+    o    I() in formulae could still cause trouble with class `AsIs', now
+         fixed.
+
+    o    logical variables are now allowed in formulae 
+         (and are treated like factors)
+
+
+		CHANGES in `coin' VERSION 0.3-5
+
+    o    fix print method for marginal homogeneity tests 
+         (...stratified by block...)
+
+    o    R_kronecker in C now available
+
+    o    C versions of nrow and ncol return 1 or length for vectors
+
+    o    some internal optimisation
+
+
+		CHANGES IN `coin' VERSION 0.3-4
+
+    o    C functions `nrow(x)' and `ncol(x)' return LENGTH(x) or 1 when
+         x has no dim attribute
+
+    o    new R-interface function `R_kronecker' to `C_kronecker' (which
+         returns a _vector_!)
+
+    o    speedup of variance computations in internal functions
+
+
+		CHANGES IN `coin' VERSION 0.3-3
+
+
+    o    fix more problems reported by new `codetools'. Try to work around
+         the `terms(y ~ ., data = data.frame(1:10))' problem in R-2.2.0.
+
+
+		CHANGES IN `coin' VERSION 0.3-2
+
+
+    o   fix some problems reported by `codetools'
+
+
+		CHANGES IN `coin' VERSION 0.3-1
+
+
+    o   alternative = "less" and alternative = "greater" are now defined
+        for maxtype statistics as well
+
+    o   one- and two-sided single-step and step-down maxT p-value
+        adjustments are now available from the appropriate 
+        `pvalue' method (NOTE: those procedures have not been tested
+                         carefully, yet)
+
+        In addition, the Bonferroni-adjustment by Westfall & Wolfinger
+        (1997) is available now. Note that the interface to `pvalue'
+        changed slightly, `adjustment = TRUE' was replaced by
+        `method = "single-step"'.
+
+    o   more examples added to the vignette.
+
+
+		CHANGES IN `coin' VERSION 0.2-14
+
+
+    o   distribution = "approximate" for maxtype statistics was wrong
+        in case both xtrafo _and_ ytrafo were multivariate (the conditional
+        expectation was computed incorrectly)
+
+
+		CHANGES IN `coin' VERSION 0.2-13
+
+
+    o   I() in formulae returns objects of class `AsIs' which caused
+        troubles in `trafo'
+
+
+		CHANGES IN `coin' VERSION 0.2-12
+
+
+    o   functionality for formula parsing and evaluation is now imported
+        from package `modeltools'
+
+    o   `show()' returns objects (of class `htest', for example) invisibly,
+         really.
+
+    o   `maxstat_trafo' is much faster now and returns a matrix with
+        both row- and column names set appropriately
+
+
+		CHANGES IN `coin' VERSION 0.2-11
+
+
+    o   the `distribution' argument now takes the return values of
+        functions `exact()', `approximate()' or `asymptotic()' as well.
+        Those functions can be used to specify parameters, such as the
+        number of Monte-Carlo replications via
+        ..., distribution = approximate(B = 9999), ...
+
+    o   `show()' returns objects (of class `htest', for example) invisibly
+
+    o   `expectation()' returns a vector, not a matrix
+
+    o   new generic `variance()' for extracting the variance(s) of 
+        linear statistics
+
+    o   only variances (instead of the whole covariance matrix) is 
+        computed when the distribution of maximum type test statistics 
+        is to be _approximated_.
+
+    o   `data' may be an object of class `exprSet' (-> Biobase), the
+        vignette has an example
+
+    o   `logrank_trafo' (and `surv_test') now have a `ties.method' argument,
+        see ?surv_test for more information
+
+
+		CHANGES IN `coin' VERSION 0.2-10
+
+
+    o   asymptotical -> asymptotic in print methods
+
+    o   `mercuryfish' example added
+
+    o   {x,y}trafo now can return matrices with number of columns
+        different from the lhs and rhs of `formula'
+
+
+		CHANGES IN `coin' VERSION 0.2-9
+
+
+    o	`mergesort' is already defined in `/usr/include/stdlib.h:270' on
+	some platforms.
+
+    o	`delay' is deprecated in R 2.1.0

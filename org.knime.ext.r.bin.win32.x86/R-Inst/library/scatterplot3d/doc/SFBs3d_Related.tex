@@ -1,0 +1,45 @@
+\section{Other 3D tools in \RR\label{tools}}
+At the time of writing \sdd , the function \code{persp()} in the base
+package of \RR\ for three dimensional surface plots was available, but
+there was no way to generate 3D scatter plots in \RR\ itself.
+
+The data visualization system \emph{xgobi} (\cite{swayne98}) provides
+interactive visualization of multidimensional data, e.g. brush and spin,
+higher-dimensional rotation, grand tour, etc.  The \RR\ package
+\emph{xgobi} (\cite{swayne91}; we have to distinguish the visualization
+system and the package) provides an Interface to \emph{xgobi} and launches
+a \emph{xgobi} process appropriately.
+%%
+\emph{ggobi}\footnote{\url{http://www.ggobi.org}}
+(\cite{swayne02}) is the next edition of \emph{xgobi}.
+
+Analogously to \emph{xgobi} a \RR\ package \emph{Rggobi} (\cite{temple01})
+exists in the \emph{Omegahat} project\footnote{\url{http://www.omegahat.org}}
+(\cite{temple00}) that allows one to embed \emph{ggobi} within
+\RR\ and to both set and query the \emph{ggobi} contents.  All in all,
+\emph{ggobi} can be loaded dynamically into \RR\ (as well as into other
+software products, in principle), and \RR\ into \emph{ggobi}.  This
+provides interactive, direct manipulation, linked, high-dimensional
+graphics within \RR .
+
+The package \emph{rgl}\footnote{\url{http://wsopuppenkiste.wiso.uni-goettingen.de/~dadler/rgl/}}
+by \cite{AdlerNenadic2003} is a portable \RR\ programing interface to \emph{OpenGL}.
+Its features include, e.g., interactive viewpoint navigation,
+automatic data focus, up to 8 light sources, alpha-blending
+(transparency), and environmental effects like fogging.
+The package \emph{djmrgl}\footnote{This package was
+formerly called \emph{rgl}, similar to the other mentioned package
+by Daniel Adler and Oleg Nenadi\'{c}.
+\emph{djmrgl} is only available for the Windows operating system.}
+(\cite{murdoch}) also provides an \RR\ interface to \emph{OpenGL}.
+A huge collection of useful functions to generate,
+manipulate and interactively rotate 3D objects is available.
+Efforts are under way to merge these two packages.
+
+The function \code{cloud} in the lattice package is a 3D scatter plot function that works in the
+\emph{lattice} (\cite{sarkar02}) (and \emph{grid} (\cite{murrell01}))
+environment of \RR .
+\emph{Lattice} is an implementation of \emph{Trellis Graphics}, which is a
+framework for data visualization developed at the Bell Labs by
+\citeN{becker96}, extending ideas presented in \citeN{cleveland}.
+

@@ -1,0 +1,104 @@
+useDynLib(lme4, .registration=TRUE)
+
+import(Matrix)# including update()
+import(lattice)
+
+## Generics for which we define new methods:
+importFrom("nlme", fixef, ranef, VarCorr)
+importFrom("graphics", plot)
+importFrom("stats4", AIC, BIC, logLik)# so S4 methods are used!
+importFrom("stats",
+           anova,
+           coef,
+           confint,
+           deviance,
+           fitted,
+           formula,
+           model.frame,
+           model.matrix,
+           predict,
+           residuals, resid, # 'resid' needed too, unfortunately..
+           simulate,
+           terms,
+           ## update, -- already from 'Matrix'
+           vcov
+           )
+## but  import("stats") is not ok, because Matrix exports "better" versions of
+## update(), xtabs() and cov2cor()
+
+#exportPattern("^[^\\.]")
+
+## re-export imported S4 generics
+export(AIC, BIC, logLik)
+## and the rest (S3 generics; regular functions):
+export("HPDinterval", "getME",
+       "isLMM", "isGLMM", "isNLMM",
+       "isREML",
+       "glmer",
+       #"gsummary", "hatTrace",
+       "lmList",
+       "lmer", "lmer2",
+       "mcmcsamp",
+       "nlmer",
+       #"pooledSD",
+       "refit",
+       "sigma",
+       "VarCorr")
+
+
+
+exportClasses("lmList", "mer", "merMCMC", "summary.mer")
+
+exportMethods(
+              "HPDinterval",
+              "VarCorr",
+              "anova",
+              "as.matrix",
+              "as.data.frame",
+              "chol",
+              "coef",
+              "coerce",
+              "confint",
+              "densityplot",
+              "deviance",
+              "expand",
+              "fitted",
+              "fixef",
+              "formula",
+#              "gsummary",
+              "head",
+              "logLik",
+              "mcmcsamp",
+              "model.frame",
+              "model.matrix",
+              "plot",
+              "print",
+              "qqmath",
+              "ranef",
+              "refit",
+              "resid", "residuals",
+              "show",
+              "simulate",
+              "summary",
+              "tail",
+              "terms",
+              "update",
+              "vcov",
+              "with",
+              "xyplot"
+              )
+
+S3method(terms, mer)# even though we have it S4 method as well
+S3method(drop1, mer)
+S3method(extractAIC, mer)
+S3method(isLMM, mer)
+S3method(isGLMM, mer)
+S3method(isNLMM, mer)
+S3method(isREML, mer)
+
+S3method(plot, coef.mer)
+S3method(plot, ranef.mer)
+S3method(print, coef.mer)
+S3method(print, ranef.mer)
+S3method(qqmath, ranef.mer)
+S3method(dotplot, ranef.mer)

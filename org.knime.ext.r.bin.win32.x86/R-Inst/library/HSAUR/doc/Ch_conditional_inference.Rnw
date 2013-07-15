@@ -1,0 +1,439 @@
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Chapter Conditional Inference}
+%%\VignetteDepends{coin}
+\setcounter{chapter}{2}
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+
+\chapter[Conditional Inference]{Conditional Inference:  Guessing Lengths, Suicides, 
+         Gastrointestinal Damage, and Newborn Infants \label{CI}}
+
+<<CI-roomwidth-ties, echo = FALSE, results = hide>>=
+data("roomwidth", package = "HSAUR")
+nobs <- table(roomwidth$unit)
+ties <- tapply(roomwidth$width, roomwidth$unit, function(x) length(x) - length(unique(x)))
+library("coin")
+@
+
+\section{Introduction}
+
+
+\section{Conditional Test Procedures}
+
+
+\section{Analysis Using \R{}}
+
+\subsection{Estimating the Width of a Room Revised}
+
+The unconditional analysis of the room width estimated by two groups of students in
+Chapter~\ref{SI} lead to the conclusion that the estimates in metres are
+slightly larger than the estimates in feet. Here, we reanalyse these data in
+a conditional framework. First, we convert metres into feet and store the
+vector of observations in a variable \Robject{y}:
+<<CI-roomwidth-data, echo = TRUE>>=
+data("roomwidth", package = "HSAUR")
+convert <- ifelse(roomwidth$unit == "feet", 1, 3.28)
+feet <- roomwidth$unit == "feet"
+metre <- !feet
+y <- roomwidth$width * convert
+@
+The test statistic is simply the difference in means
+<<CI-roomwidth-teststat, echo = TRUE>>=
+T <- mean(y[feet]) - mean(y[metre])
+T
+@
+In order to approximate the conditional distribution of the test statistic
+$T$ we compute $9999$ test statistics for shuffled $y$ values. A
+permutation of the $y$ vector can be obtained from the \Rcmd{sample}
+function.
+<<CI-roomwidth-permutation, echo = TRUE>>=
+meandiffs <- double(9999)
+for (i in 1:length(meandiffs)) {   
+    sy <- sample(y)   
+    meandiffs[i] <- mean(sy[feet]) - mean(sy[metre])
+}
+@
+\begin{figure}
+\begin{center}
+<<CI-roomwidth-plot, echo = TRUE, fig = TRUE>>=
+hist(meandiffs)
+abline(v = T, lty = 2)  
+abline(v = -T, lty = 2) 
+@
+\caption{Approximated conditional distribution of the difference of mean
+         \Robject{roomwidth} estimates in the feet and metres group under 
+         the null hypothesis. The vertical lines show the
+         negative and positive absolute value of the test statistic 
+         $T$ obtained from the original data. \label{CI:perm}}
+\end{center}
+\end{figure}
+The distribution of the test statistic $T$ under the null hypothesis of
+independence of room width estimates and groups is depicted in Figure~\ref{CI:perm}. 
+Now, the value of the test statistic $T$ for the original
+unshuffled data can be compared with the distribution of $T$ under the null
+hypothesis (the vertical lines in Figure~\ref{CI:perm}). The $p$-value,
+i.e., the proportion of
+test statistics $T$ larger than \Sexpr{-round(T, 3)} or smaller than
+\Sexpr{round(T, 3)} is
+<<CI-roomwidth-pvalue, echo = TRUE>>=
+greater <- abs(meandiffs) > abs(T)
+mean(greater)
+@
+with a confidence interval of
+<<CI-roomwidth-pvalue, echo = TRUE>>=
+binom.test(sum(greater), length(greater))$conf.int
+@
+Note that the approximated conditional $p$-value is roughly the same as the 
+$p$-value reported by the $t$-test in 
+Chapter~2.
+
+\renewcommand{\nextcaption}{\R{} output of the exact permutation test applied to
+                            the \Robject{roomwidth} data. \label{CI-roomwidth-p-fig}}    
+\SchunkLabel
+<<CI-roomwidth-coin, echo = TRUE>>=
+library("coin")
+independence_test(y ~ unit, data = roomwidth, 
+                  distribution = exact())
+@
+\SchunkRaw
+
+
+\renewcommand{\nextcaption}{\R{} output of the exact conditional Wilcoxon
+rank sum test applied to the \Robject{roomwidth} data. \label{CI-roomwidth-w-fig}}    
+\SchunkLabel
+<<CI-roomwidth-coin, echo = TRUE>>=
+wilcox_test(y ~ unit, data = roomwidth, 
+            distribution = exact())
+@
+\SchunkRaw
+
+
+\subsection{Crowds and Threatened Suicide}
+
+
+\renewcommand{\nextcaption}{\R{} output of Fisher's exact test for the %'
+                            \Robject{suicides} data.
+                            \label{CI-suicides-fig}}
+\SchunkLabel
+<<CI-suicides-ft, echo = TRUE>>=
+data("suicides", package = "HSAUR")
+fisher.test(suicides)
+@
+\SchunkRaw
+<<CI-suicides-chisq, echo = FALSE, results = hide>>=
+ftp <- round(fisher.test(suicides)$p.value, 3)
+ctp <- round(chisq.test(suicides)$p.value, 3)
+@
+
+
+\subsection{Gastrointestinal Damages}
+
+Here we are interested in the comparison of two groups of patients,
+where one group received a placebo and the other one Misoprostol. In the
+trials shown here, the response variable is measured on an ordered scale 
+-- see Table~\ref{CI:scores}. 
+Data from four clinical studies are available and thus the
+observations are naturally grouped together. From the \Rclass{data.frame}
+\Robject{Lanza} we can construct a three-way table as follows:
+<<CI-Lanza-data, echo = TRUE>>=
+data("Lanza", package = "HSAUR")
+xtabs(~ treatment + classification + study, data = Lanza)
+@
+
+
+<<CI-width, echo = FALSE, results = hide>>=
+options(width = 65)
+@
+
+For the first study, the null hypothesis of independence of treatment and
+gastrointestinal damage, i.e., of no treatment effect of Misoprostol, is
+tested by
+<<CI-Lanza-singleI, echo = TRUE>>=
+library("coin")
+cmh_test(classification ~ treatment, data = Lanza, 
+         scores = list(classification = c(0, 1, 6, 17, 30)),
+         subset = Lanza$study == "I")
+@
+and, by default, the conditional distribution is approximated by the
+corresponding limiting distribution. The $p$-value indicates a strong
+treatment effect. For the second study, the asymptotic $p$-value is a little
+bit larger
+<<CI-Lanza-singleII, echo = TRUE>>=
+cmh_test(classification ~ treatment, data = Lanza, 
+         scores = list(classification = c(0, 1, 6, 17, 30)),
+         subset = Lanza$study == "II")
+@
+and we make sure that the implied decision is correct by calculating a
+confidence interval for the exact $p$-value
+<<CI-Lanza-singleIIa, echo = TRUE>>=
+p <- cmh_test(classification ~ treatment, data = Lanza, 
+         scores = list(classification = c(0, 1, 6, 17, 30)),
+         subset = Lanza$study == "II", distribution =
+         approximate(B = 19999))
+pvalue(p)
+@
+The third and fourth study indicate a strong treatment effect as well
+<<CI-Lanza-singleIII-IV, echo = TRUE>>=
+cmh_test(classification ~ treatment, data = Lanza, 
+         scores = list(classification = c(0, 1, 6, 17, 30)),
+         subset = Lanza$study == "III")
+cmh_test(classification ~ treatment, data = Lanza, 
+         scores = list(classification = c(0, 1, 6, 17, 30)),
+         subset = Lanza$study == "IV")
+@
+
+At the end, a separate analysis for each study is unsatisfactory. Because
+the design of the four studies is the same, we can use \Robject{study} as a 
+block variable and perform a global linear-association test investigating
+the treatment effect of Misoprostol in all four studies. The block variable
+can be incorporated into the \Rclass{formula} by the \texttt{|} symbol.
+<<CI-Lanza-all, echo = TRUE>>=
+cmh_test(classification ~ treatment | study, data = Lanza, 
+         scores = list(classification = c(0, 1, 6, 17, 30)))
+@
+Based on this result, a strong treatment effect can be established.
+
+\subsection{Teratogenesis}
+
+\index{Teratogenesis}
+In this example, the medical doctor (MD) and the research assistant (RA) 
+assessed the number of anomalies ($0, 1, 2$ or $3$) for each of $395$ babies:
+<<CI-anomalies, echo = TRUE>>=
+anomalies <- c(235, 23, 3, 0, 41, 35, 8, 0, 
+               20, 11, 11, 1, 2, 1, 3, 1)
+anomalies <- as.table(matrix(anomalies,
+    ncol = 4, dimnames = list(MD = 0:3, RA = 0:3)))
+anomalies
+@
+We are interested in testing whether the number of anomalies assessed by the
+medical doctor differs structurally from the number reported by the research
+assistant. Because we compare \stress{paired} observations, i.e., one pair
+of measurements for each newborn, a test of marginal homogeneity (a
+generalisation of McNemar's test, 
+see Chapter~2)
+needs to be applied: %%'
+\newpage
+<<CI-anomalies-mh, echo = TRUE>>=          
+mh_test(anomalies)
+@
+The $p$-value indicates a deviation from the null hypothesis. However, the
+levels of the response are not treated as ordered. Similar to the analysis
+of the gastrointestinal damage data above, we can take this information
+into account by the definition of an appropriate score. Here, the number of
+anomalies is a natural choice:
+<<CI-anomalies-ordered, echo = TRUE>>=
+mh_test(anomalies, scores = list(c(0, 1, 2, 3)))
+@
+In our case, both versions coincide and one can conclude that the
+assessment of the number of anomalies differs between the medical doctor
+and the research assistant.
+
+
+%%\bibliographystyle{LaTeXBibTeX/refstyle}
+%%\bibliography{LaTeXBibTeX/HSAUR}   
+\end{document}

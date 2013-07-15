@@ -1,0 +1,93 @@
+\section{Extensibility\label{extend}}
+Two kinds of extensibilities will be described in this section.
+On one hand, regarding the \sdd\ design, the extensibility of the \RR\ graphics system will be discussed;
+it provides the tools and features enabling the programmer to write complex
+high level plot functions in a very general manner.
+On the other hand we describe the extensibility of \sdd\ itself.
+
+
+\subsection{Extensibility of \RR\ graphics\label{exR}}
+\RR\ provides a huge collection of low level graphic functions like those
+for adding elements to an existing plot or for computations related to
+plotting.
+%
+These functions are used to build very general high level functions, at
+least for the two dimensional case, and without them, the ``\RR\ code
+only'' design of \sdd\ would be impossible.
+
+A selection of these low level functions begins with the functions to obtain $x$, $y$ (and~$z$) coordinates for plotting,
+namely {\tt xy.coords} and {\tt xyz.coords} (for the 3D case, cf.\ Section \ref{xyzcoords}).
+Further on, the functions {\tt plot.new} and {\tt plot.window} can be used to set up the plotting region appropriately,
+{\tt pretty} to calculate pretty axis tick marks,
+{\tt segments} to draw line segments between pairs of points,
+and functions like {\tt title}, {\tt axis}, {\tt points}, {\tt lines}, {\tt text} etc.~are self-explanatory.
+
+A huge collection of graphical parameters for \RR\ is documented in the
+help pages for {\tt par} and {\tt plot.default} (cf.\ R core \citeyear{r-ref}).
+Almost all low level graphic functions make use of the argument `\code{...}'
+which allows specifying most of these parameters in a very general manner.
+If this argument, `\code{...}', is also used in a high level function,
+arguments which are not \textsl{explicitly} introduced in the arguments list,
+can be passed through to lower level graphic functions as well;  this
+is a powerful feature of the \textsf{S} language.
+
+\enlargethispage{5mm}
+Since the \RR\ graphics system is designed for two dimensional graphics,
+it lacks of some features for the three dimensional case.
+%%
+Unfortunately, the {\tt axis} function works only for 2D graphics.
+Consequently a large amount of code was required to
+enable oblique axes for displaying the 3D scatter plot in an arbitrary
+angle.
+
+Locations in \RR\ graphics devices can be addressed with 2D coordinates,
+Thus the information on the projection has to be calculated by the 3D graphic functions internally.
+As described in Section \ref{design}, \sdd\ uses a parallel projection.
+Since the \RR\ graphics device does not know anything about the projection,
+without any appropriate additional tools it is not possible to add elements into an existing \sdd .
+
+
+\subsection{Extensibility of \sdd\label{exsdd}}
+In Sections \ref{introduction} and \ref{design} it was emphasized
+that the \sdd\ design was intended to be as general as possible.
+Some attempts to obtain this generality are described in Section \ref{design} and its subsections.
+%%
+Because of the missing projection information, the ability of adding
+elements to an already existing \sdd\ would be restricted, if only the
+already defined (and for the 2D case general) \RR\ functions could be used
+(cf.\ Section \ref{exR}).
+
+For this reason, \sdd\ (invisibly) returns a list of \textsl{function
+  closures} (cf.\ Section~\ref{structure}).
+A \textsl{function closure} is a function together with an
+\textsl{environment},  and an \textsl{environment} is a collection of
+symbols and associated values (i.e. \RR\ variables). Thus these properties
+  of \RR's scoping rules, called \textsl{Lexical Scoping}
+  (\cite{gentleman}), are extensively used in \sdd.
+%
+Notice that \textsl{Lexical Scoping} is a feature of \RR, not defined as
+such in the \textsf{S} language.
+
+In other words, the values returned by \sdd\ are functions together with
+the environment in which they (and the scatter plot) were created.
+The benefit of returning function closures is, that the function somehow
+``knows'' the values of variables (in the environment) that were assigned
+to those variables at the time when the function was created.  All in all,
+we made those functions know details about the axis scaling and the
+projection information that are required to add elements to an existing
+plot appropriately.
+
+The following functions are returned by \sdd , for details see the Appendix:\\ \vspace{-11mm}
+\begin{description} \setlength\itemsep{0.5ex plus0.2ex minus0.3ex}
+\item[{\tt xyz.convert}:] A function which converts 3D coordinates to the 2D parallel projection of the existing \sdd .
+                        It is useful to add arbitrary elements into the plot.
+\item[{\tt points3d}:]  A function which draws points or lines into the existing plot.
+\item[{\tt plane3d}:]   A function which draws a plane into the existing plot:\\
+    \verb+plane3d(Intercept, x.coef=NULL, y.coef=NULL, lty="dashed", ...)+.
+    Instead of an intercept, a vector containing three elements or an \textsf{(g)lm} object can be specified.
+\item[{\tt box3d}:]     This function draws a box (or ``refreshes'' an existing one) around the plot.
+\end{description}
+{\tt xyz.convert} is the most important function, because it does the parallel projection
+by converting the given 3D coordinates into the 2D coordinates needed for the \RR\ graphics devices.
+Examples how to use the mentioned function closures are given in Section \ref{examples}.
+

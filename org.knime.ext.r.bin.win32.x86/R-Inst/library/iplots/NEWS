@@ -1,0 +1,95 @@
+ NEWS/ChangeLog for iPlots package
+===================================
+
+1.1-4	2011-07-18
+     o	add a NAMESPACE since it becomes compulsory in new R versions
+	and we need to work around locked namespace environments
+
+
+1.1-3	2009-02-06
+     o	fix ibox and multivariate plots to accept ivars and a whole
+	iset as input (bug#60)
+
+     o	allow iplots to load when NOAWT=1 is set event if the JVM
+	does not support AWT in R (necessary to be able to install
+	iplots in Mac OS X 10.5 for JGR)
+
+
+1.1-2	2008-04-12
+     o	add iplot.size() to get/set the size of a plot
+
+     o  added Swing menu to ibase
+
+
+1.1-1	2007-09-07
+     o	allow the use of iplots within the R GUI on Mac OS X, but show a
+	warning on possible event loop deadlocks.
+
+     o	update docs to flag S3 methods correctly
+
+     o	map S4 show to S3 print so iset/ivar are shown correctly
+
+     o	add `$<-.iset` method, enhance and fix other accessor methods
+	for both iset and ivar. Added examples (in ?ivar and ?iset)
+
+     o	add iset.rm() which allows removal of iSets and all associated
+	plots
+
+     o	add iplot.location() which is experimental for now until nesting
+	of plots is defined properly
+
+
+1.1-0	2007-08-22
+     o	use S4 classes for ivar and iset
+
+     o	add subseting and subassignment operator support to ivar and
+	to allow users to treat them very much like data frames and
+	vectors repectively
+
+     o	move to rJava 0.5 registration facilities
+
+     o	add batch mode support to selection API
+
+
+1.0-8   2007-06-3
+     o  changes in ibase package
+
+
+1.0-7	2007-04-18
+     o	add support for imap
+
+
+1.0-6	2007-03-02
+     o	fix issues with compiling Common with certain compilers
+
+
+1.0-5	2006-10-11
+     o	ivar.new now compares the contents with existing variables and
+	will return original reference if the variable already exists
+
+     o	imosaic and ipcp support variable-length arguments
+
+     o	imosaic accepts additional "type" parameter to specify the
+	desired mosaic plot variation
+
+     o	iset, iplot and iopt handling ahs been streamlined and better
+	documented. It is now possible to obtain individual objects
+	for iset, ivar, iplot and iobj.
+
+     o	each plot type has a distinct subclass of "iplot" and thus can
+	be identified as such
+
+
+1.0-4	2006-08-29
+     o	several variations of mosaic plots exhibited incorrect
+	behavior with respect to empty cells, this has been now fixed
+
+
+1.0-3	2006-08-20
+     o	first CRAN release
+...
+
+
+0.1-0	2003/03/23
+     o	first RoSuDA release
+

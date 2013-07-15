@@ -1,0 +1,14 @@
+Changes in version 1.0-9 and 1.0-10
+    * Added PACKAGE argument to C calls.
+    * Added C routine symbols to NAMESPACE for arulesSequence
+
+Changes in version 1.0-8
+    * fixed memory problem in eclat with tidLists=TRUE
+    * added supportedTransactions()
+    * is.subset/is.superset can not return a sparse matrix
+    * added support to categorize continuous variables.
+
+Changes in version 1.0-7
+    * minor fixes (removed factor in dimnames for itemMatrix, warning in WRITE)
+    * read.transactions now accepts column names to specify user and item 
+	columns (by F. Leisch)

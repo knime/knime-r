@@ -1,0 +1,6 @@
+## package has a dynamic library
+useDynLib(digest)
+
+## and two exported functions
+export(digest,
+       hmac)

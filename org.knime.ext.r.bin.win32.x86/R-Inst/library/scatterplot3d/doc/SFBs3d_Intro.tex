@@ -1,0 +1,48 @@
+\section{Introduction\label{introduction}}
+\emph{Scatterplot3d} is an \RR\ package for the visualization of
+multivariate data in a three dimensional space.
+\RR\ itself is ``A Language and Environment for Statistical Computing'' (\cite{r-ref}) and a freely
+available statistical software package implementing that language, see
+\url{http://www.R-project.org/}.
+
+Basically \sdd\ generates a scatter plot in the 3D space using a parallel
+projection.  Higher dimensions (fourth, fifth, etc.) of the data can be
+visualized to some extent using, e.g. different colors, symbol types or
+symbol sizes.
+
+The following properties of \sdd\ will be further described and discussed
+in the present paper:
+%
+A plot is generated entirely by using interpreted \RR\ graphics functions,
+so the appearance of the plot is consistent with other \RR\ graphics.
+Such a behavior is % extremely
+important for publications.
+Most features of the \RR\ graphics system can be applied in \sdd , among
+them are vectorizing of colors or plotting symbols and mathematical
+annotation (\cite{murrell00}).
+The latter means whole formulas with e.g.\ greek letters and mathematical
+symbols inside can be added into plots using a \LaTeX\ like syntax.
+%
+\emph{Scatterplot3d} can be easily extended e.g., by adding additional
+points or drawing regression lines or planes into an already generated
+plot (via function closures, see below).
+The package is platform independent and can easily be installed,
+because it only requires an installed version of \RR.
+
+This paper is structured as follows:
+%
+In Section \ref{design} the design of \sdd\ will be described, followed by
+remarks on the extensibility of the function in Section \ref{extend}.
+%
+Some examples (including code and results) on generated and real world data
+are provided in Section \ref{examples}.
+%
+We present other \RR\ related 3D ``tools'' in Section \ref{tools}, followed
+by the conclusion in Section \ref{conclusion}.
+%
+In the Appendix the source code as well as the help page of \sdd\ are
+printed.
+
+\RR\ and \sdd\ are available from \emph{CRAN} (Common \RR\ Archive
+Network), i.e. \url{http://CRAN.R-Project.org } or one of its mirrors.
+

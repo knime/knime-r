@@ -1,0 +1,368 @@
+
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Errata}
+\setcounter{chapter}{15}
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+
+\chapter[Errata]{Errata}
+
+The document gives a list of typos, errors, inconsistencies etc. which have been spotted. 
+Moreover, small numeric output differences which are due to updated packages are reported here.
+To get a full list of differences run \Rcmd{R CMD check HSAUR} on the source package. 
+All issues marked with \textbf{R1}, \textbf{R2} etc have been silently fixed 
+in first reprint, second reprint etc.
+
+\section*{Preface}
+
+Typo in name of vignette for Chapter 1, should read
+<<pre-vignette, echo = TRUE, eval = FALSE>>=
+vignette("Ch_introduction_to_R", package = "HSAUR")
+@
+and
+<<pre-vignette, echo = TRUE, eval = FALSE>>=
+edit(vignette("Ch_introduction_to_R", package = "HSAUR"))
+@
+As of version 1.0-3, only the correctly named vignette is available (\textbf{R1}).
+
+\section{Introduction to R}
+
+\begin{itemize}
+\item Type at page 11: `.' needs to be double-quoted in \Rcmd{list.files} (\textbf{R1})
+\item Typo at page 20 (Ex. 1.5): number of companies, not number of countries (\textbf{R1}).
+
+\end{itemize}
+
+\section{Simple Inference}
+
+Typo at page 31, code line 4: use argument \Rcmd{varwidth = TRUE}, not \Rcmd{var.width = TRUE} (\textbf{R1}).
+
+\section{Conditional Inference}
+
+\begin{itemize}
+\item The names of the test statistics in the output have been changed from \Rcmd{T} to \Rcmd{Z} 
+or \Rcmd{chi-squared} throughout the chapter (\textbf{R1}).
+
+\item Reference \cite{HSAUR:Hothorn:2006:AmStat} updated (\textbf{R1})
+\end{itemize}
+
+\section{Analysis of Variance}
+
+Figure 4.3 had wrong line types in legend (Beef and Cereal interchanged) (\textbf{R2}).
+
+\section{Multiple Linear Regression}
+
+\begin{itemize}
+\item
+Page 74, Table 5.1: The values for \Robject{cloudcover} and \Robject{sne} had to be exchanged. 
+The corresponding coefficients and Figures in this chapter change accordingly (\textbf{R1}).
+\item 
+Page 83: both \Rcmd{fitted} and \Rcmd{predict} can be used to compute fitted values, the later on
+can be applied to new unseen data as well (\textbf{R1}).
+\item Page 87: $\hat{y}_i$ instead of $\hat{y}$ in the definition of
+      the standardized residual.
+\end{itemize}
+
+
+\section{Logistic Regression and Generalised Linear Models}
+
+\begin{itemize}
+\item page 97: predictions are to be computed for \Rcmd{plasma\_glm\_2},
+               not \Rcmd{plasma\_glm\_1} (affects Figure~6.4) (\textbf{R2}).
+\item Function \Rcmd{myplot} (page 100): the \Rcmd{vfont} argument in \Rcmd{text} has been changed 
+to \Rcmd{family = "HersheySerif"} (the resulting plots remain the same) (\textbf{R1}).
+\end{itemize}
+
+\section{Density Estimation}
+
+\begin{itemize}
+\item Page 117: typo: in instead of is
+\item Page 121: small numeric differences for the output of \Rcmd{optim}
+
+\item update to \Rpackage{mclust} version 3.0-0 (new names of parameters in \Robject{mclust}
+objects)
+
+\end{itemize}
+
+\section{Recursive Partitioning}
+
+\begin{itemize}
+\item Page 138: the probability for glaucoma is \Rcmd{predict(trees[[i]], newdata = GlaucomaM)[,1]}
+      and the code for converting average class probabilities in factors has to be reverted, too.
+      Affects Figure 8.4. (which is now in sync with the interpretation).
+\item Page 139: small differences in \Rcmd{predtab} 
+\item Page 140: small differences in table at bottom of this page
+\item Reference \cite{HSAUR:Hothorn:2006:JCGS} updated (\textbf{R1})
+\item Page 142, Ex. 8.1.: regression tree, not classification tree.
+\end{itemize}
+
+\section{Survival Analysis}
+
+\begin{itemize}
+\item The name of the test statistic in the output of \Rcmd{surv\_test} has been changed to
+\Rcmd{chi-squared} (\textbf{R1}).
+\item Denominator $s$ was missing from $h(t)$ (page 147) (\textbf{R2}).
+\end{itemize}
+
+\section{Analysing Longitudinal Data I}
+
+Page 168, Figure 10.2: \Rcmd{summary} does not provide degrees of freedom and p-values 
+in newer versions of \Rpackage{lme4}.
+
+\section{Analysing Longitudinal Data II}
+
+--nothing known--
+
+\section{Meta-Analysis}
+
+\begin{itemize}
+\item Page 202: $\mu_i \sim \N(\mu, \tau^2)$, not $N(\mu, \tau^2)$ (\textbf{R2}).
+\item Page 202: $W_i = 1/ (V_i + \hat{\tau}^2)$ since $V_i$ is the within-study variance.
+\item Page 207: square for \Rcmd{selogs} was missing (\textbf{R2}).
+\end{itemize}
+
+\section{Principal Component Analysis}
+
+--nothing known--
+
+\section{Multidimensional Scaling}
+
+In the formula for $b_{ij}$ on page 231 the last term in the 
+parentheses should have a plus sign not a minus sign.
+
+\section{Cluster Analysis}
+
+\begin{itemize}
+\item update to \Rpackage{mclust} version 3.0-0 (new plot method)
+\item Page 248: the likelihood needs $|\Sigma_j|^{-1/2}$
+\item Page 248: $W_j$ is a $q \times q$ matrix
+\item Page 248: $\Sigma_j = \Sigma, j = 1, \dots, c$.
+\item Page 248: 
+\begin{eqnarray*}
+l(\vartheta, \gamma) = -\frac{1}{2} \sum_{j = 1}^c \text{trace}(\W_j
+\Sigma_j^{-1}) + n_j \log |\Sigma_j|
+\end{eqnarray*}
+\item Page 248: $\sum_{j = 1}^c n_j \log | \W_j  / n_j|$
+\end{itemize}
+
+\section*{Thanks}
+
+We would like to thank the following people for pointing out errors, 
+typos etc and for making suggestions for improvements:
+\begin{itemize}
+\item Tobias Verbeke
+\item Brian D. Ripley
+\item Yihui Xie
+\item Mike Cheung
+\item Lothar H{\"a}berle
+\item Radoslav Harman
+\end{itemize}
+
+\bibliographystyle{LaTeXBibTeX/refstyle}
+\bibliography{LaTeXBibTeX/HSAUR}   
+\end{document}

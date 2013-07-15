@@ -1,0 +1,72 @@
+\NeedsTeXFormat{LaTeX2e}
+\documentclass[12pt,titlepage,oneside,a4paper]{article}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\usepackage{array}
+\usepackage[active]{srcltx}
+\usepackage[intlimits]{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[final]{graphicx}
+\usepackage{float}
+\usepackage{color}
+\usepackage{Rd}
+\usepackage{chicago}
+\usepackage{hyperref}
+  \definecolor{Blue}{rgb}{0,0,0.8}
+  \definecolor{Red}{rgb}{0.7,0,0}
+  \hypersetup{%
+    backref,
+    hyperindex,%
+    colorlinks,%
+    pagebackref,%
+    linktocpage,%
+    plainpages=false,%
+    linkcolor=Blue,%
+    citecolor=Blue,%
+    urlcolor=Red,%
+    pdfstartview=Fit,%
+    pdfview={XYZ null null null}
+    }
+
+\setlength{\paperwidth}{21cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\oddsidemargin}{0.46cm}
+\setlength{\topmargin}{-0.5cm}
+\setlength{\headheight}{1cm}
+\setlength{\headsep}{0cm}
+\setlength{\footskip}{2cm}
+\setlength{\textwidth}{15cm}
+\setlength{\textheight}{22cm}
+
+\setlength{\tabcolsep}{3mm}
+\setlength{\doublerulesep}{0.2mm}
+\parindent = 0em
+\parskip = 2ex plus0.3ex minus0.3ex
+\renewcommand{\baselinestretch}{1.3}
+\sloppy
+\raggedbottom
+
+\setlength{\partopsep}{0mm} \setlength\topsep{0mm} \setlength\parsep{0mm}
+
+\renewcommand{\cite}[1]{\shortciteANP{#1}, \citeyearNP{#1}}
+\renewcommand{\citeN}[1]{\shortciteN{#1}}
+
+\newcommand{\bmath}{\begin{eqnarray}}
+\newcommand{\emath}{\end{eqnarray}}
+\newcommand{\bmathn}{\begin{eqnarray*}}
+\newcommand{\emathn}{\end{eqnarray*}}
+\newcommand{\RR}{{\normalfont\textsf{R}}{}}
+\newcommand{\sdd}{\emph{scatterplot3d}}
+
+\newcommand{\D}{\displaystyle}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+
+\newcommand{\bi}{\begin{itemize} \setlength\itemsep{0.5ex plus0.2ex minus0.3ex}}
+\newcommand{\ei}{\end{itemize}}
+

@@ -1,0 +1,5 @@
+To build the vignette:
+
+* vignette building is now straightforward using R CMD build
+
+

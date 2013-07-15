@@ -1,0 +1,6 @@
+useDynLib(mvtnorm)
+
+import(stats)
+
+export(rmvnorm, dmvnorm, pmvnorm, pmvt, rmvt, qmvnorm, qmvt, dmvt,
+       GenzBretz, Miwa, TVPACK)

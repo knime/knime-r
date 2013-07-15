@@ -1,0 +1,180 @@
+import(stats)
+import(utils)
+import(graphics)
+
+useDynLib(tis)
+export(adjustableTierChart, asClassyList, asJul, asTi, assignList,
+       as.jul, as.ssDate,
+       as.ti, as.tis, basePeriod, basis, "basis<-", between,
+       blanks, columns, convert, couldBeTi, csv,
+       currentSunday, currentMonday, currentTuesday, currentWednesday,
+       currentThursday, currentFriday, currentSaturday,
+       currentJanuary, currentFebruary, currentMarch,
+       currentApril, currentMay, currentJune, currentJuly, currentAugust,
+       currentSeptember, currentOctober, currentNovember, currentDecember,
+       currentWeek, currentMonth, currentQuarter, currentHalf, currentQ4, currentYear,
+       currentMonthDay, currentQMonth,
+       dateRange, day, dayOfMonth, dayOfPeriod, dayOfWeek, dayOfYear,
+       description, "description<-", documentation, "documentation<-",
+       easter, evalOrEcho, fanSeries, federalHolidays,
+       firstBusinessDayOf, firstBusinessDayOfMonth, firstDayOf, fortify.tis,
+       frColors, goodFriday, growth.rate, "growth.rate<-", hms,
+       holidays, holidaysBetween,  hourly, ilspline, inaugurationDay, inferTi,
+       interpNA, isEaster, isGoodFriday, isHoliday,
+       isIntradayTif, is.jul,
+       isLeapYear, is.ssDate, is.ti, is.tis, jul,
+       lastDayOf, lags, Lag, Lags, lastBusinessDayOf, lastBusinessDayOfMonth,
+       latestSunday, latestMonday, latestTuesday, latestWednesday,
+       latestThursday, latestFriday, latestSaturday,
+       latestJanuary, latestFebruary, latestMarch,
+       latestApril, latestMay, latestJune, latestJuly, latestAugust,
+       latestSeptember, latestOctober, latestNovember, latestDecember,
+       latestWeek, latestMonth, latestQuarter, latestHalf, latestQ4, latestYear,
+       latestMonthDay, lintegrate, mergeSeries, minutely,
+       month, naWindow, nberDates, nberShade, nber.xy, nextBusinessDay,
+       observed, "observed<-",
+       period, plotWindow, POSIXct, POSIXlt, 
+       previousBusinessDay, 
+       quarter, romerLines,
+       RowMeans, RowSums, rows, 
+       scatterPlot, screenPage, secondly, setColors,
+       setDefaultFrequencies, ssDate,
+       "start<-", stripBlanks, stripClass, stripTis,
+       ti, tiBusiness, tiDaily, tierChart, tif, tifList,
+       tif2freq, tifName, tis, tisFilter, tisFromCsv, tisLegend, tisPlot, today, t.tis,
+       tunnelSeries, updateColumns, updateList, year, ymd)
+
+S3method("[", jul)
+S3method("[", ssDate)
+S3method("[", ti)
+S3method("[", tis)
+S3method("[<-", tis)
+S3method(aggregate, tis)
+S3method(aggregate, ts)
+S3method(as.character, jul)
+S3method(as.character, ti)
+S3method(as.data.frame, tis)
+S3method(as.Date, jul)
+S3method(as.Date, ti)
+S3method(as.list, jul)
+S3method(as.list, ti)
+S3method(as.matrix, tis)
+S3method(as.POSIXct, jul)
+S3method(as.POSIXct, ti)
+S3method(as.tis, default)
+S3method(as.tis, tis)
+S3method(as.tis, ts)
+S3method(as.tis, zoo)
+S3method(as.ts, tis)
+S3method(barplot, tis)
+S3method(cbind, tis)
+S3method(c, jul)
+S3method(c, ssDate)
+S3method(c, ti)
+S3method(cummax, tis)
+S3method(cummin, tis)
+S3method(cumprod, tis)
+S3method(cumsum, tis)
+S3method(cycle, ti)
+S3method(cycle, tis)
+S3method(deltat, ti)
+S3method(deltat, tis)
+S3method(diff, jul)
+S3method(diff, ti)
+S3method(diff, tis)
+S3method(edit, ti)
+S3method(edit, tis)
+S3method(end, tis)
+S3method(format, default)
+S3method(format, jul)
+S3method(format, POSIXct)
+S3method(format, POSIXlt)
+S3method(format, ti)
+S3method(frequency, ti)
+S3method(frequency, tis)
+S3method(jul, Date)
+S3method(jul, default)
+S3method(jul, jul)
+S3method(jul, POSIXct)
+S3method(jul, POSIXlt)
+S3method(jul, ssDate)
+S3method(jul, ti)
+S3method(jul, yearmon)
+S3method(jul, yearqtr)
+S3method(lag, tis)
+S3method(lines, tis)
+S3method(max, jul)
+S3method(max, ssDate)
+S3method(max, ti)
+S3method(min, jul)
+S3method(min, ssDate)
+S3method(min, ti)
+S3method(months, default)
+S3method(nberShade, default)
+S3method(nberShade, ggplot)
+S3method(Ops, jul)
+S3method(Ops, ssDate)
+S3method(Ops, ti)
+S3method(Ops, tis)
+S3method(points, tis)
+S3method(POSIXct, jul)
+S3method(POSIXct, numeric)
+S3method(POSIXct, ti)
+S3method(POSIXct, default)
+S3method(POSIXct, POSIXt)
+S3method(POSIXlt, jul)
+S3method(POSIXlt, ti)
+S3method(POSIXlt, POSIXt)
+S3method(POSIXlt, default)
+S3method(print, jul)
+S3method(print, ssDate)
+S3method(print, ti)
+S3method(print, tis)
+S3method(quarters, default)
+S3method(rep, jul)
+S3method(rep, ssDate)
+S3method(rep, ti)
+S3method(RowMeans, default)
+S3method(RowMeans, tis)
+S3method(RowSums, default)
+S3method(RowSums, tis)
+S3method(seq, jul)
+S3method(seq, ssDate)
+S3method(seq, ti)
+S3method(solve, tridiag)
+S3method(start, tis)
+S3method(ti, Date)
+S3method(ti, default)
+S3method(ti, jul)
+S3method(ti, POSIXct)
+S3method(ti, POSIXlt)
+S3method(ti, ssDate)
+S3method(ti, ti)
+S3method(ti, tis)
+S3method(ti, yearmon)
+S3method(ti, yearqtr)
+S3method(tifName, default)
+S3method(tifName, ti)
+S3method(tifName, tis)
+S3method(tif, default)
+S3method(tif, ti)
+S3method(tif, tis)
+S3method(tif, ts)
+S3method(time, jul)
+S3method(time, POSIXct)
+S3method(time, POSIXlt)
+S3method(time, ssDate)
+S3method(time, ti)
+S3method(time, tis)
+S3method(weekdays, default)
+S3method(window, tis)
+S3method(xtfrm, jul)
+S3method(xtfrm, ssDate)
+S3method(xtfrm, ti)
+S3method(xtfrm, tis)
+S3method(ymd, default)
+S3method(ymd, jul)
+S3method(ymd, ssDate)
+S3method(ymd, ti)
+## not exported
+## barplot2

@@ -1,0 +1,81 @@
+BGSall                  Berkeley guidance study
+BigMac2003              World cities data
+MWwords                 Word frequencies from Mosteller and Wallace
+Mitchell                Mitchell soil temperature
+UN1                     National statistics from the United Nations
+UN2                     National statistics from the United Nations
+UN3                     National statistics from the United Nations
+ais                     Australian institute of sport data
+allshoots               Apple shoots data
+alr3-deprecated         Deprecated Functions in the alr3 Package
+alr3-package            Companion to Applied Linear Regression
+alrWeb                  Access to the Applied Linear Regression website
+baeskel                 Surface tension
+banknote                Swiss banknote data
+blowdown                Blowdown data
+brains                  Mammal brain weights
+cakes                   Cakes data
+cathedral               Cathedrals
+caution                 Caution data
+challeng                Challenger data
+chloride                Chloride data
+cloud                   Florida area cumulus experiment, FACE I.
+domedata                Metrodome fan experiment
+donner                  Donner party
+downer                  Downer data
+drugcost                Drug cost.
+dwaste                  Crock data.
+florida                 Florida presidential election
+forbes                  Forbes data
+ftcollinssnow           Ft. Collins snowfall
+fuel2001                Fuel consumption
+galapagos               Galapagos species data
+galtonpeas              Galton's peas
+heights                 Pearson-Lee data
+highway                 Highway accidents
+hooker                  Hooker's data
+htwt                    Artificial height and weight data
+jevons                  Jevon's gold coin data
+lakemary                Lake Mary bluegills
+lakes                   Lake zooplankton diversity
+landrent                Land rent
+lathe1                  Lathe data
+mantel                  Mantel's artifical data for stepwise regression
+mile                    World records for the mile run
+npdata                  Northern pike catch per unit effort
+oldfaith                Old Faithful Geyser data
+physics                 Physics data
+pipeline                Alaska pipeline
+pod                     Fit partial one-dimensional, or POD models,
+                        based on a linear model
+prodscore               Soil productivity
+pureErrorAnova          Pure Error analysis of variance
+randomLinComb           Compute a random linear combination of the
+                        columns of a matrix or data frame
+rat                     Rat data
+salary                  Salary data
+salarygov               Government salary study
+segreg                  Energy consumption
+shocks                  Small electric shocks in dairy cows
+sleep1                  Sleep in mammals
+snake                   Snake river data
+sniffer                 Sniffer data
+snowgeese               Snow geese
+stopping                Stopping distances
+swan96                  Black crappie study on Swan Lake, Minnesota
+titanic                 Titanic
+transact                Transaction data
+turk0                   Turkey data, one source
+turkey                  Turkey data, all sources
+twins                   Burt's twin data
+ufc                     Height-diameter data for Upper Flat Creek,
+                        Idaho
+walleye                 Walleye length at age
+water                   California water
+wblake                  West Bearskin Lake small mouth bass data.
+wm1                     Simple windmill data
+wm2                     Windmill data with direction information
+wm3                     Binned wind speed data
+wm4                     Windmill data with direction information and
+                        four reference sites
+wool                    Wool data

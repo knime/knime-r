@@ -1,0 +1,9 @@
+dlogspline              Logspline Density Estimation
+doldlogspline           Logspline Density Estimation - 1992 version 
+logspline               Logspline Density Estimation 
+oldlogspline            Logspline Density Estimation - 1992 version 
+plot.logspline          Logspline Density Estimation 
+plot.oldlogspline       Logspline Density Estimation - 1992 version 
+summary.logspline       Logspline Density Estimation 
+summary.oldlogspline    Logspline Density Estimation - 1992 version 
+unstrip                 Reformat data as vector or matrix

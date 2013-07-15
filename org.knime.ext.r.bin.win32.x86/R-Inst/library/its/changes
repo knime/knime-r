@@ -1,0 +1,91 @@
+its package release notes
+1.1.8 2009-09-06
+1 patch from Maxim Krikun to fix union w/ 0 column argument
+2 testsuite cleanup
+3 format cleanup for some functions
+
+1.1.5 2006-09-09
+1 added its,numeric and numeric,its S4 methods for Arith
+
+1.1.3 2006-09-09
+1  changed old dates in test.r
+
+1.1.2 2006-09-09
+1   removed install.R
+2   removed README from top level
+
+1.1.1 2005-10-23
+1   fixed itsAccessor example (sometimes produced less than 10 date elements
+    due to DST changes in some European timezones.
+
+1.1.0 2005-10-01
+1   dropped resriction on using tzone attribute for dates
+
+1.0.8 2005-05-26
+1		made as.its generic
+2		added compression argument to priceIts contributed by
+		John Bollinger
+
+1.0.7 2005-05-22
+1			added as.list.its and as.data.frame.its to exported names
+
+1.0.6		2005-05-16
+1     added ... to the args of generic dates()
+2     fixed bug in locf() dates
+3     removal of tzone attribute from dates slot
+4     some changes to extractIts, including a bugfix (affected yearends in some cases)
+
+1.0.4   2004-12-01
+1	its now forces all tzones to be UTM, unless tzone is already an attribute of the dates
+	used to create the its object
+2	the Arith group now takes the intersection of the dates.  The past behavior was to fail
+	unless the dates matched exactly.
+
+1.0.3   2004-04-16
+1   fixed bug in priceIts() using patch from Dirk Eddelbuettel
+
+1.0.2   2004-04-16
+1   fixed bug in newIts()
+
+1.0.1   2004-03
+1   added require(stats) namespace directive for 1.9.0
+
+1.0.0   2004-02-12 [n.b. for version>=1.9.0 will need additional namespace directive import(stats)]
+0   licence changed to GPL Version 2
+1   new function 'locf()' (last observation carry forward)
+2   writecsvIts gets extra option 'split' to split large files
+3   as(its,"data.frame") implemented
+4   POSIXlt arguments are coerced to POSIXct
+5   NA handled properly in summary()
+6   new function priceIts()
+
+0.2.1   2004-01-06
+1   bugfix version to pass Rcmd check on R-devel (0.2.0 not released on CRAN)
+    some fixes to method documentation
+    removed direct calls to POSIX methods for format, plot, seq
+    replaced export() with exportClasses() in namespace
+
+0.2.0   2003-12-16
+1   new functions: newIts, extractIts, collapseIts
+2   new 'lab' option in plot for labelling series
+3   'leg' option in plot now uses labcurve(), not locator()
+4   renamed the function classifications in documentation (itsFunctions, not its-functions)
+5   dates() accessor & assignment methods for dates
+6   names() accessor & assignment functions for the dimnames(matrix)[[2]]
+7   core() accessor & assignment functions for the matrix
+8   revised summary()
+9   the package is now in a namespace - a number of internal functions have therefore been withdrawn
+10  added a 'dates' option for row selection using POSIXct in extractor: [i,j,dates]
+11  optional use of POSIXct dates in rangeIts
+12  CRAN package Hmisc is now required
+
+0.1.2   2003-09-20
+1   removed logic to take special action on logical subscripts
+2   allow append() to operate on NULL
+3   fix and extend documentation
+4   'at' passed to axis.POSIXct() by plot()
+5   'format' passed to axis.POSIXct() by plot()
+6   handling of NAs in plot() - options
+7   linetype options in plot()
+
+0.1.1   2003-07-22

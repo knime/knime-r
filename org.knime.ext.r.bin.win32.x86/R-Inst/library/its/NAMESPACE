@@ -1,0 +1,48 @@
+import(methods)
+import(stats)
+export( readcsvIts,
+       writecsvIts,
+       accrueIts,
+       its,
+       is.its,
+       as.its,
+       as.its.default,
+       as.its.zoo,
+       lagIts,
+       lagdistIts,
+       alignedIts,
+       appendIts,
+       daysecondIts,
+       weekdayIts,
+       rangeIts,
+       newIts,
+       extractIts,
+       collapseIts,
+       its.format,
+       locf,
+       priceIts,
+       as.list.its,
+       as.data.frame.its
+       )
+
+exportClasses("its")
+exportMethods(
+              Arith,
+              "[",
+              names,
+              "names<-",
+              dates,
+              "dates<-",
+              core,
+              "core<-",
+              plot,
+              print,
+              start, 
+              end,
+              summary,
+              cumsum,
+              diff,
+              union,
+              intersect,
+              coerce
+              )
