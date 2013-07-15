@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.knime.features.ext.r"
-      label="KNIME R Statistics Integration"
+      id="org.knime.features.r"
+      label="KNIME Interactive R Statistics Integration"
       version="2.8.0.qualifier"
       provider-name="KNIME GmbH, Konstanz, Germany"
-      plugin="org.knime.ext.r">
+      plugin="org.knime.r">
 
    <description url="http://www.knime.org/downloads/extensions">
-      This plugin contains the R integration for KNIME.
+      This plugin contains the interactive R integration for KNIME.
    </description>
 
    <copyright>
       Copyright, 2003 - 2013
-      University of Konstanz, Germany
-      KNIME GmbH, Konstanz, Germany
+University of Konstanz, Germany
+KNIME GmbH, Konstanz, Germany
    </copyright>
 
    <license>
@@ -359,7 +359,7 @@ Public License instead of this License.
    </license>
 
    <plugin
-         id="org.knime.ext.r"
+         id="org.knime.r"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -369,5 +369,56 @@ Public License instead of this License.
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.rosuda.rengine"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.rosuda.rengine.bin.linux.x86"
+         os="linux"
+         arch="x86"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.rosuda.rengine.bin.linux.x86_64"
+         os="linux"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.rosuda.rengine.bin.macosx.x86_64"
+         os="macosx"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.rosuda.rengine.bin.win32.x86"
+         os="win32"
+         arch="x86"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.rosuda.rengine.bin.win32.x86_64"
+         os="win32"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
 
 </feature>
