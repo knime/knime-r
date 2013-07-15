@@ -1,7 +1,0 @@
-useDynLib(gee)
-
-export(gee)
-
-S3method(print, gee)
-S3method(print, summary.gee)
-S3method(summary, gee)

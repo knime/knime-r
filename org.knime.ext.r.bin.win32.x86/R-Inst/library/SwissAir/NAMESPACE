@@ -1,8 +1,0 @@
-## this is a pure data package
-
-## import(graphics,grid,lattice)
-## export()
-
-## Export all names
-## exportPattern(".")
-
