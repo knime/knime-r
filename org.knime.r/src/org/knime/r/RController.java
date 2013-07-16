@@ -170,7 +170,7 @@ public class RController {
 			
 			m_rMajorVersion = m_rProps.get("major").toString().trim();			
 			if (!m_rMajorVersion.equals("2")) {
-				m_errors.add("Only R in version 2.x is supported. The R installation defined in the prefenrences is of version " + m_rMajorVersion + ".x.");
+				m_errors.add("Only R in version 2.x is supported. The R installation defined in the preferences is of version " + m_rMajorVersion + ".x.");
 				m_isRAvailable = false;
 				return;
 			}
