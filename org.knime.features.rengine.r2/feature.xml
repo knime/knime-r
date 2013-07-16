@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.knime.features.r"
-      label="KNIME Interactive R Statistics Integration"
+      id="org.knime.features.rengine.r2"
+      label="KNIME Interactive R Nodes - JRI Bridge for R v2.x"
       version="2.8.0.qualifier"
       provider-name="KNIME GmbH, Konstanz, Germany"
-      plugin="org.knime.r">
+      plugin="org.rosuda.rengine">
 
    <description url="http://www.knime.org/downloads/extensions">
-      This plugin contains the interactive R integration for KNIME.
+      Native libraries required to run interactive R nodes with R version 2.x.
    </description>
 
    <copyright>
@@ -359,15 +359,54 @@ Public License instead of this License.
    </license>
 
    <plugin
-         id="org.knime.r"
+         id="org.rosuda.rengine"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="org.rosuda.rengine"
+         id="org.rosuda.rengine.r2.bin.linux.x86"
+         os="linux"
+         arch="x86"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.rosuda.rengine.r2.bin.linux.x86_64"
+         os="linux"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.rosuda.rengine.r2.bin.macosx.x86_64"
+         os="macosx"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.rosuda.rengine.r2.bin.win32.x86"
+         os="win32"
+         arch="x86"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.rosuda.rengine.r2.bin.win32.x86_64"
+         os="win32"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
 
 </feature>
