@@ -391,35 +391,40 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 					try {
 						// release some references to prevent memory leaks
 						if (m_exec != null) {
-							m_exec.getProgressMonitor()
-									.removeAllProgressListener();
+							m_exec.getProgressMonitor().removeAllProgressListener();
 						}
-						m_exec = new ExecutionMonitor(
-								new DefaultNodeProgressMonitor());
+						m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
 						m_progressPanel.startMonitoring(m_exec);
-						RController.getDefault().clearWorkspace(m_exec);
-
+						
+						// is there any RPortObject input?
+						RPortObject inputRPortObject = null;
 						if (m_input != null) {
-							for (int i = 0; i < m_input.length; i++) {
-								if (m_input[i] instanceof RPortObject) {
-									m_exec.setMessage("Load R data from input.");
-									RPortObject port = (RPortObject) m_input[i];
-									RController.getDefault().loadWorkspace(
-											port.getFile(), m_exec);
-								}
-							}
+						    for (int i = 0; i < m_input.length; i++) {
+						        if (m_input[i] instanceof RPortObject) {
+						            m_exec.setMessage("Load R data from input.");
+						            if (inputRPortObject != null) {
+						                throw new IllegalStateException("Cannot have more than one R input port");
+						            }
+						            inputRPortObject = (RPortObject) m_input[i];
+						        }
+						    }
+						}
+						
+						final RController r = RController.getDefault();
+                        if (inputRPortObject != null) {
+						    r.clearAndReadWorkspace(inputRPortObject.getFile(), m_exec);
+						    r.loadLibraries(inputRPortObject.getLibraries());
+						} else {
+						    r.clearWorkspace(m_exec);
 						}
 
 						if (m_input != null && m_tableInPort >= 0) {
 							m_exec.setMessage("Send input table to R");
-							RController.getDefault().exportDataTable(
-									(BufferedDataTable) m_input[m_tableInPort],
-									"knime.in", m_exec);
+                            r.exportDataTable((BufferedDataTable) m_input[m_tableInPort], "knime.in", m_exec);
 						}
 
 						m_exec.setMessage("Send flow variables to R");
-						RController.getDefault().exportFlowVariables(
-								m_inputFlowVars, "knime.flow.in", m_exec);
+                        r.exportFlowVariables(m_inputFlowVars, "knime.flow.in", m_exec);
 						
 						workspaceChanged(null);
 

@@ -48,7 +48,6 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -71,15 +70,15 @@ import org.rosuda.REngine.REngineException;
  * @author Heiko Hofer
  */
 public class RSnippetNodeModel extends ExtToolOutputNodeModel {
-    private RSnippet m_snippet;
-	private RSnippetNodeConfig m_config;
+    private final RSnippet m_snippet;
+	private final RSnippetNodeConfig m_config;
     private static final NodeLogger LOGGER = NodeLogger.getLogger(
         "R Snippet");
     
     /**
      * The temp directory used as a working directory for R
      */
-    static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/');    
+//    private static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/'); 
     
     /**
      * Creates new instance of <code>RSnippetNodeModel</code> with one
@@ -226,17 +225,21 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
     		exec.setProgress(1.0 - importTime);
 
     		exec.setMessage("Import data from R");
+            RController r = RController.getDefault();
+    		List<String> librariesInR = r.clearAndReadWorkspace(tempWorkspaceFile, exec);
             Collection<PortObject> outPorts = new ArrayList<PortObject>(4);
             for (PortType portType : m_config.getOutPortTypes()) {
             	if (portType.equals(BufferedDataTable.TYPE)) {
-            		outPorts.add(importData(tempWorkspaceFile, exec.createSubExecutionContext(1.0)));
+            		outPorts.add(importDataFromR(r, exec.createSubExecutionContext(1.0)));
             	} else if (portType.equals(RPortObject.TYPE)) {
-            		outPorts.add(new RPortObject(tempWorkspaceFile));
+            	    if (librariesInR == null) {
+            	        librariesInR = importListOfLibrariesFromR(r);
+            	    }
+            		outPorts.add(new RPortObject(tempWorkspaceFile, librariesInR));
             	} 
             }
             exec.setMessage("Import flow variables from R");
-            // TODO tempWorkspaceFile is load twice in case that there is a data table outport
-            importFlowVariables(tempWorkspaceFile, flowVarRepo, exec);
+            importFlowVariablesFromR(r, flowVarRepo, exec);
 	        
 			return new ValueReport<PortObject[]>(outPorts.toArray(new PortObject[outPorts.size()]), errors, warnings);
 			
@@ -245,8 +248,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 				throw (CanceledExecutionException)e;
 			}
 			errors.add(e.getMessage());
-			// TODO: Remove later
-			e.printStackTrace();
 			LOGGER.error(e);
 			return new ValueReport<PortObject[]>(null, errors, warnings);
 		}
@@ -406,7 +407,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
      * @throws IOException If string could not be written to a file.
      */
     static File writeRcommandFile(final String cmd) throws IOException {
-        File tempCommandFile = File.createTempFile("R-inDataTempFile-", ".r", new File(TEMP_PATH));
+        File tempCommandFile = FileUtil.createTempFile("R-inDataTempFile-", ".r");
         tempCommandFile.deleteOnExit();
         FileWriter fw = new FileWriter(tempCommandFile);
         fw.write(cmd);
@@ -418,16 +419,18 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
     	StringBuilder rScript = new StringBuilder();
 		// set working directory
 		rScript.append("setwd(\"");
-		rScript.append(TEMP_PATH);
+		rScript.append(tempWorkspaceFile.getParentFile());
 		rScript.append("\");\n");
 		
 		// load workspaces from the input ports
 		for (PortObject port : inPorts) {
 			if (port instanceof RPortObject) {
-				File portFile = ((RPortObject)port).getFile();
+				final RPortObject rPortObject = (RPortObject)port;
+                File portFile = rPortObject.getFile();
 				rScript.append("load(\"");
 				rScript.append(portFile.getAbsolutePath().replace('\\', '/'));
 				rScript.append("\");\n");
+				rScript.append(RController.createLoadLibraryFunctionCall(rPortObject.getLibraries(), false));
 			}
 		}
 		// load workspace with data table input and flow variables
@@ -443,6 +446,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		rScript.append("\n");
 		// append node specific suffix
 		rScript.append(m_config.getScriptSuffix());
+		// assign list of loaded libraries so that we can read it out later
+		rScript.append("\n" + RController.R_LOADED_LIBRARIES_VARIABLE + " <- (.packages());\n");
 		// save workspace to temporary file
 		rScript.append("save.image(\"");
 		rScript.append(tempWorkspaceFile.getAbsolutePath().replace('\\', '/'));
@@ -451,39 +456,22 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		return rScript.toString();
 	}
 
-	private BufferedDataTable importData(final File tempWorkspaceFile, final ExecutionContext exec) throws REngineException, REXPMismatchException, CanceledExecutionException {
-    	RController r = RController.getDefault();
-    	// TODO: lock controller
-		r.clearWorkspace(exec);
-		
-		exec.setMessage("Loading workspace");		
-		r.loadWorkspace(tempWorkspaceFile, exec);
-		
+	private BufferedDataTable importDataFromR(final RController r, final ExecutionContext exec) 
+            throws REngineException, REXPMismatchException, CanceledExecutionException {
     	BufferedDataTable out = r.importBufferedDataTable("knime.out", exec);
-		
-    	// TODO: unlock controller
     	return out;
-	}
-	
+    }
 
-
-	private void importFlowVariables(final File tempWorkspaceFile, final FlowVariableRepository flowVarRepo,
+    private void importFlowVariablesFromR(final RController r, final FlowVariableRepository flowVarRepo,
 			final ExecutionContext exec) throws CanceledExecutionException {
-    	RController r = RController.getDefault();
-    	// TODO: lock controller
-		r.clearWorkspace(exec);
-		
-		r.loadWorkspace(tempWorkspaceFile, exec);
-		
     	Collection<FlowVariable> flowVars = r.importFlowVariables("knime.flow.out", exec);
     	for (FlowVariable flowVar : flowVars) {
     		flowVarRepo.put(flowVar);
     	}
-		
-    	// TODO: unlock controller
-    	
-		
-	}	
+    }
+    private List<String> importListOfLibrariesFromR(final RController r) {
+        return r.importListOfLibrariesAndDelete();
+    }
 
 	private File exportData(final PortObject[] inData, final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws REngineException, REXPMismatchException, IOException, CanceledExecutionException {
     	RController r = RController.getDefault();
@@ -500,9 +488,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		}
 		r.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
 		
-		File tempFolder = new File(TEMP_PATH);
 		// save workspace to temporary file
-		File tempWorkspaceFile = File.createTempFile("R-workspace", ".RData", tempFolder);
+		File tempWorkspaceFile = FileUtil.createTempFile("R-workspace", ".RData");
 		r.saveWorkspace(tempWorkspaceFile, exec);
 		
 		// TODO: unlock controller

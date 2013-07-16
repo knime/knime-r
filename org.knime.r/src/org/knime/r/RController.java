@@ -104,6 +104,8 @@ public class RController {
 
 	private boolean m_wasRAvailable;
 
+    static final String R_LOADED_LIBRARIES_VARIABLE = "knime.loaded.libraries";
+
     /**
      * The temp directory used as a working directory for R
      */
@@ -392,7 +394,6 @@ public class RController {
 		return m_isRAvailable ? m_lock.tryAcquire() : false;
 	}
 
-
     /**
      * see Semaphore.tryAcquire()
      */
@@ -518,8 +519,23 @@ public class RController {
 
 	}
 
-	public void clearWorkspace(final ExecutionMonitor exec) throws CanceledExecutionException {
-		monitoredEval("rm(list = ls())", exec);
+	void clearWorkspace(final ExecutionMonitor exec) throws CanceledExecutionException {
+	    StringBuilder b = new StringBuilder();
+	    b.append("unloader <- function() {\n");
+        b.append("  defaults = getOption(\"defaultPackages\")\n");
+        b.append("  installed = (.packages())\n");
+        b.append("  for (pkg in installed){\n");
+        b.append("      if (!(as.character(pkg) %in% defaults)) {\n");
+        b.append("          if(!(pkg == \"base\")){\n");
+        b.append("              package_name = paste(\"package:\", as.character(pkg), sep=\"\")\n");
+        b.append("              detach(package_name, character.only = TRUE)\n");        
+        b.append("          }\n");
+        b.append("      }\n");
+        b.append("  }\n");
+        b.append("}\n");
+        b.append("unloader();\n");
+        b.append("rm(list = ls());"); // also includes the unloader function
+		monitoredEval(b.toString(), exec);
 	}
 
 //	public void exportDataValue(final DataValue value, final String name) {
@@ -552,8 +568,6 @@ public class RController {
 		setVariableName(name, exec);
 	}
 
-
-
 	public Collection<FlowVariable> importFlowVariables(final String string,
 			final ExecutionContext exec) {
 		List<FlowVariable> flowVars = new ArrayList<FlowVariable>();
@@ -583,6 +597,24 @@ public class RController {
 		}
 		return flowVars;
 	}
+	
+    public List<String> importListOfLibrariesAndDelete() {
+        try {
+            REXP listAsREXP = eval(R_LOADED_LIBRARIES_VARIABLE);
+            eval("rm(" + R_LOADED_LIBRARIES_VARIABLE + ")");
+            if (!listAsREXP.isVector()) {
+                return Collections.emptyList();
+            } else {
+                return Arrays.asList(listAsREXP.asStrings());
+            }
+        } catch (REXPMismatchException e) {
+            LOGGER.error("Rengine error", e);
+        } catch (REngineException e) {
+            LOGGER.error("Rengine error", e);
+        }
+        return Collections.emptyList();
+    }
+
 
 	public void exportDataTable(final BufferedDataTable table,
 			final String name, final ExecutionMonitor exec)
@@ -1049,14 +1081,51 @@ public class RController {
 		monitoredEval("save.image(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec);
 	}
 
-	public void loadWorkspace(final File tempWorkspaceFile, final ExecutionMonitor exec) throws CanceledExecutionException {
-		// load workspace form file
-		monitoredEval("load(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec);
-	}
+    /**
+     * @param tempWorkspaceFile the workspace file
+     * @param exec ...
+     * @return
+     * @throws CanceledExecutionException
+     */
+    List<String> clearAndReadWorkspace(final File tempWorkspaceFile, final ExecutionMonitor exec)
+        throws CanceledExecutionException {
+        exec.setMessage("Clearing previous workspace");		
+    	clearWorkspace(exec);
+    	exec.setMessage("Loading workspace");		
+    	monitoredEval("load(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec);
+    	return importListOfLibrariesAndDelete();
+    }
+    
+    void loadLibraries(final List<String> listOfLibraries) throws REngineException, REXPMismatchException {
+        final String cmd = createLoadLibraryFunctionCall(listOfLibraries, true);
+        eval(cmd);
+    }
 
-//	public String newDev() {
-//		return "png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")\n";
-//	}
+    /** A function call that loads all libraries in the argument but checking if they are not loaded yet.
+     * @param listOfLibraries List of libraries from upstream node (e.g. randomForest, tree, ...)
+     * @param suppressMessages if true the library call is wrapped so that no output is printed
+     * @return The command string to be run in R (ends with newline)
+     */
+    static String createLoadLibraryFunctionCall(final List<String> listOfLibraries, boolean suppressMessages) {
+        StringBuilder functionBuilder = new StringBuilder();
+        functionBuilder.append("function(packages_to_install) {\n");
+        functionBuilder.append("  for (pkg in packages_to_install) {\n");
+        functionBuilder.append("      if(!(pkg %in% (.packages()))) {\n");
+        if (suppressMessages) {
+            functionBuilder.append("          suppressMessages(library(pkg, character.only = TRUE))\n");
+        } else {
+            functionBuilder.append("          library(pkg, character.only = TRUE)\n");
+        }
+        functionBuilder.append("      }\n");
+        functionBuilder.append("  }\n");
+        functionBuilder.append("}\n");
+        StringBuilder packageVector = new StringBuilder("c(");
+        for (int i = 0; i < listOfLibraries.size(); i++) {
+            packageVector.append(i == 0 ? "\"" : ", \"").append(listOfLibraries.get(i)).append("\"");
+        }
+        packageVector.append(")");
+        return "sapply(" + packageVector + ", " + functionBuilder.toString() + ")\n";
+    }
 }
 
 final class MonitoredEval {

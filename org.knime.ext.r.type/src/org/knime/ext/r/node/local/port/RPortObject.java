@@ -31,6 +31,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.zip.ZipEntry;
 
 import javax.swing.JComponent;
@@ -38,9 +41,9 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.apache.commons.io.IOUtils;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
@@ -64,6 +67,7 @@ public class RPortObject implements PortObject {
         NodeLogger.getLogger(RPortObject.class);
 
     private final File m_fileR;
+    private final List<String> m_libraries;
 
     /**
      * Creates an instance of <code>RPortObject</code> with given file.
@@ -71,7 +75,18 @@ public class RPortObject implements PortObject {
      * @param fileR The file containing a R model.
      */
     public RPortObject(final File fileR) {
+        this(fileR, Collections.<String>emptyList());
+    }
+    
+    /** 
+     * @param fileR The workspace file.
+     * @param libraries The list of libraries, not null.
+     * @since 2.8
+     */
+    public RPortObject(final File fileR, final List<String> libraries) {
         m_fileR = fileR;
+        m_libraries = libraries.isEmpty() ? Collections.<String>emptyList() 
+            : Collections.unmodifiableList(new ArrayList<String>(libraries));
     }
 
     /**
@@ -99,40 +114,59 @@ public class RPortObject implements PortObject {
         return m_fileR;
     }
 
+    /** Unmodifiable list of libraries needed in the workspace. (R workspaces don't persist their loaded libraries.)
+     * @return List of loaded libraries, not null.
+     * @since 2.8
+     */
+    public List<String> getLibraries() {
+        return m_libraries;
+    }
+
     /**
      * Serializer used to save this port object.
      * @return a {@link RPortObject}
      */
-    public static PortObjectSerializer<RPortObject>
-            getPortObjectSerializer() {
+    public static PortObjectSerializer<RPortObject> getPortObjectSerializer() {
         return new PortObjectSerializer<RPortObject>() {
             /** {@inheritDoc} */
             @Override
-            public void savePortObject(final RPortObject portObject,
-                    final PortObjectZipOutputStream out,
-                    final ExecutionMonitor exec)
-                    throws IOException, CanceledExecutionException {
+            public void savePortObject(final RPortObject portObject, final PortObjectZipOutputStream out,
+                final ExecutionMonitor exec)throws IOException, CanceledExecutionException {
                 out.putNextEntry(new ZipEntry("knime.R"));
                 FileInputStream fis = new FileInputStream(portObject.m_fileR);
                 FileUtil.copy(fis, out);
                 fis.close();
+                out.putNextEntry(new ZipEntry("library.list"));
+                IOUtils.writeLines(portObject.m_libraries, "\n", out, "UTF-8");
+                out.closeEntry();
                 out.close();
             }
 
             /** {@inheritDoc} */
+            @SuppressWarnings("unchecked")
             @Override
-            public RPortObject loadPortObject(
-                    final PortObjectZipInputStream in,
-                    final PortObjectSpec spec,
-                    final ExecutionMonitor exec)
-                    throws IOException, CanceledExecutionException {
-                in.getNextEntry();
-                File fileR = File.createTempFile("~knime", ".R", new File(KNIMEConstants.getKNIMETempDir()));
+            public RPortObject loadPortObject(final PortObjectZipInputStream in, final PortObjectSpec spec,
+                final ExecutionMonitor exec) throws IOException, CanceledExecutionException {
+                ZipEntry nextEntry = in.getNextEntry();
+                if (nextEntry == null || !"knime.R".equals(nextEntry.getName())) {
+                    throw new IOException("Expected zip entry \"knime.R\" but got " + nextEntry == null
+                        ? "<null>"
+                        : nextEntry.getName());
+                }
+                File fileR = FileUtil.createTempFile("~knime", ".R");
                 FileOutputStream fos = new FileOutputStream(fileR);
                 FileUtil.copy(in, fos);
+                nextEntry = in.getNextEntry();
+                List<String> libraries;
+                if (nextEntry == null) {
+                    // old style port object (2.7-)
+                    libraries = Collections.emptyList();
+                } else {
+                    libraries = IOUtils.readLines(in, "UTF-8");
+                }
                 in.close();
                 fos.close();
-                return new RPortObject(fileR);
+                return new RPortObject(fileR, libraries);
             }
         };
     }
