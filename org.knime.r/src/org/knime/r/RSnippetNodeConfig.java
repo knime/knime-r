@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.image.ImagePortObject;
 
 public class RSnippetNodeConfig {
     /**
@@ -56,10 +57,13 @@ public class RSnippetNodeConfig {
 			}
 		}
 		boolean outHasTable = false;
+		boolean outHasView = false;
 		for(PortType portType : getOutPortTypes()) {
 			if (portType.equals(BufferedDataTable.TYPE)) {
 				outHasTable = true;
 				break;
+			} else if (portType.equals(ImagePortObject.TYPE)) {
+			    outHasView = true;
 			}
 		}		
 		// the source nodes
@@ -70,7 +74,11 @@ public class RSnippetNodeConfig {
 				return "R <- data.frame()";
 			}
 		} else {
-			if (inHasTable && outHasTable) {
+		    if (inHasTable && outHasView) {
+		        return "plot(knime.in)";
+		    } else if (outHasView)  {
+		        return "plot(iris)";
+		    } else if (inHasTable && outHasTable) {
 				return "knime.out <- knime.in";
 			} else if (!inHasTable && outHasTable) {
 				return "knime.out <- R";
