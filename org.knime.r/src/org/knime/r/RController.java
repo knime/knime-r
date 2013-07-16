@@ -18,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.event.EventListenerList;
 
+import org.eclipse.core.runtime.IBundleGroup;
+import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
@@ -45,6 +47,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.ThreadUtils;
 import org.knime.r.preferences.RPreferenceInitializer;
+import org.rosuda.JRI.Rengine;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
 import org.rosuda.REngine.REXPFactor;
@@ -67,7 +70,11 @@ import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 public class RController {
-	NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
+    
+    /** ID of the feature contributing the rosuda platform libs (jri). */
+	private static final String FEATURE_ID_RENGINE_R2 = "org.knime.features.rengine.r2";
+
+    NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
 
 	private static final String TEMP_VARIABLE_NAME = "knimertemp836481";
 
@@ -168,9 +175,16 @@ public class RController {
 			m_rHome = rHome;
 			m_rProps = retrieveRProperties();
 			
-			m_rMajorVersion = m_rProps.get("major").toString().trim();			
-			if (!m_rMajorVersion.equals("2")) {
-				m_errors.add("Only R in version 2.x is supported. The R installation defined in the preferences is of version " + m_rMajorVersion + ".x.");
+			m_rMajorVersion = m_rProps.get("major").toString().trim();
+			boolean isR2RengineFeatureInstalled = isJRI_R2Installed();
+			if (isR2RengineFeatureInstalled && !m_rMajorVersion.equals("2")) {
+				m_errors.add("Only R in version 2.x is supported. The R installation defined in the preferences " 
+				        + "is of version " + m_rMajorVersion + ".x.\n" 
+				        + "You can fix the problem by pointing to a valid R v2 installation or by\n"
+				        + " - uninstalling the feature \"" + FEATURE_ID_RENGINE_R2 + "\"\n"
+				        + " - modifying your R installation and adding the package \"rJava\" (available from CRAN)\n"
+				        + " - add a line to knime.ini: -Djava.library.path=<R-install-folder>/site-library/rJava/jri\n"
+				        + "and restarting KNIME");
 				m_isRAvailable = false;
 				return;
 			}
@@ -191,7 +205,18 @@ public class RController {
 			LOGGER.debug("R_HOME: " + sysRHome);
 			String sysPATH = CLibrary.INSTANCE.getenv("PATH");
 			LOGGER.debug("PATH: " + sysPATH);
-			m_engine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
+			if (System.getProperty("jri.ignore.ule") == null) { // static init of Rengine.class checks this
+			    System.setProperty("jri.ignore.ule", "yes");
+			}
+			final JRIEngine jriEngine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
+			if (!Rengine.jriLoaded) {
+			    throw new Exception("JRI library ('jri') not loaded");
+			}
+			if (!Rengine.versionCheck()) {
+			    throw new Exception("Rengine library version conflict: Rengine version=" 
+			            + Rengine.getVersion()  + " vs. native-library-version=" + Rengine.rniGetVersion()); 
+			}
+            m_engine = jriEngine;
 
 			// attach a thread to the console controller to get notify when
 			// commands are executed via the console
@@ -232,6 +257,18 @@ public class RController {
 				throw new RuntimeException(e);
 			}
 		}
+	}
+	
+	private boolean isJRI_R2Installed() {
+	    for (IBundleGroupProvider provider : org.eclipse.core.runtime.Platform.getBundleGroupProviders()) {
+	        for (IBundleGroup feature : provider.getBundleGroups()) {
+	            String featureId = feature.getIdentifier();
+	            if (FEATURE_ID_RENGINE_R2.equals(featureId)) {
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
 	}
 
     private Properties retrieveRProperties() throws IOException, InterruptedException {
