@@ -25,7 +25,7 @@
             modified flow variables to the list at <i>knime.flow.out.</i></p>
             
             <p><b>Examples</b></p>
-			<p>Take the input "data" and send it to the ouput:</p>
+			<p>Take the input "data" and send it to the output:</p>
                      	        
 	        <i>knime.out &lt;- data.frame(data)</i>
 	                    
@@ -33,7 +33,7 @@
             <i>data &lt;- read.table(knime.flow.in[["fname"]])</i>
             
             <p>Compute students t-test and store the p-value in the flow variable p.value:</p>
-            <i>h &lt;- t.test(knime.in["d"])</i><br/>
+            <i>h &lt;- t.test(knime.in["d"])</i> <br />
 			<i>knime.flow.out &lt;- list(p.value = h[["p.value"]])</i>
           </option>
           <option name="Flow Variable List">

@@ -6,7 +6,7 @@
 	</shortDescription>
 	<fullDescription>
 		<intro>
-		Converts a KNIME data table into a data frame which is accessible within R using 
+		Converts a KNIME data table into a data frame which is accessible within R as 
          <i>knime.in</i>.
 		<br /><br />
 		More details about R:<br />
@@ -15,46 +15,44 @@
 		</intro>	
 		<tab name="R Snippet">
           <option name ="R Script">
-            <p>The R commands to run. The input table is accessible within R using 
-            the data frame stored in <i>knime.in</i>.</p>
-               
-            <p>The node also allows to access and modify flow variables. You can access
-            all flow variables at <i>knime.flow.in</i> and please add all new or
-            modified flow variables to the list at <i>knime.flow.out.</i> At the end
-            of the script, all R objects are automatically dumped to the output.</p>
-            
+             
             <p><b>Examples</b></p>
 			<p>Take the input column "d", compute students t-test and store the p-value in the flow variable p.value:</p>
             <i>h &lt;- t.test(knime.in["d"])</i><br/>
 			<i>knime.flow.out &lt;- list(p.value = h[["p.value"]])</i>
 			 
             <p>Read the data from the file defined by the flow variable fname. The data
-            ojbect will be sent to the ouput:</p>
+            object will be sent to the output:</p>
             <i>data &lt;- read.table(knime.flow.in[["fname"]])</i>
 
           </option>
           <option name="Column List">
-            The list contains the column that are available in the input table.
+            The list contains the columns that are available in the input table.
             Double click any of the column names to insert the respective field
-            in the expression editor. It will replace your current selection or
-            simply insert at the current caret position.
+            in the expression editor. 
           </option>
           <option name="Flow Variable List">
             The list contains the flow variables that are currently available at
             the node input. Double clicking any of the entries will insert the
-            respective identifier at the current cursor position (replacing the
-            selection, if any).
+            respective identifier at the current cursor position.
           </option>
         </tab>
         <tab name="Templates">
-          <option name="Category - Title">
-	          <p>A categorized list of R snippet templates. The apply button at the left 
-	          will replace the R Script and guide you to the R Snippet tab.</p>
-	          <p>Please use "Create Template..." button on the R Snippet tab to add the
-	          current R script to the list of templates.</p>
+		  <option name ="category">
+			A template category defined by the author.
+			 
+		  </option>
+		  <option name ="Title">
+			  Name of the template.
+		  </option>
+		  <option name ="Description">
+			  A brief overview of the purpose of the template.
+
           </option>
-        </tab>
-        
+		  <option name="Preview">
+			  The code to be applied to your expression editor.
+		  </option>
+	    </tab>
 	</fullDescription>
 	<ports>
         <inPort name="Data Input" index="0">Data Table Input</inPort>

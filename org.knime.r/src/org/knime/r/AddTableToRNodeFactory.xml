@@ -3,21 +3,23 @@
 <knimeNode type="Manipulator" icon="rsnippet.png">
 	<name>Add Table To R</name>
 	<shortDescription>
-	    Merges an optional data branch into an R workspace.
+	    Merges a KNIME table into an R workspace.
 	</shortDescription>
 	<fullDescription>
 		<intro>
-        Merges an optional data branch into an R workspace. 
-        The data table from the optional in-port is imported into the R workspace as variable R; 
-        existing R variables are overwritten.
+        The data table from the input port is imported into the R workspace as variable <i>knime.in</i>; 
+        existing variables are overwritten in case of a conflict.  The node outputs an R workspace 
+		containing the updated variables.
 		<br /><br />
 		More details about R:<br />
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 		<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-		<tab name="R Command">
-		  <option name ="R Snippet">
-            The R commands being executed in R.
+		<tab name="R Snippet">
+		  <option name ="Expression Editor">
+            The code being executed in R. Code may be executed in full or in part using the 
+			Evaluate Script and Evaluate Selection options respectively. Output will be printed to 
+			the console.
           </option>
           <option name="Column List">
             The list contains the column that are available in the input table.
@@ -26,33 +28,33 @@
             simply insert at the current caret position.
           </option>
           <option name="Flow Variable List">
-            The list contains the flow variables that are currently available at
-            the node input. Double clicking any of the entries will insert the
-            respective identifier at the current cursor position (replacing the
-            selection, if any).
-          </option>
-        </tab>
-        <tab name="R Binary">
-		  <option name ="R binary path">
-			Path to the local R executable. Note that it is possible to specify
-			the path to the local R executable also in the R section of the 
-			KNIME preferences.
+            The list contains the flow variables that are currently visible to the node. 
+			Double clicking any of the entries will insert the respective identifier at
+			the current cursor position in your expression editor, replacing the current 
+			selection.
+          </option>        
+	  	</tab>
+        <tab name="Templates">
+		  <option name ="category">
+			A template category defined by the author.
+			 
 		  </option>
-		  <option name ="Arguments for R binary">
-            Add additional arguments run together with the R binary. The 
-            '--vanilla' mode ensures a clean workspace and may cause problems 
-            when removed.
+		  <option name ="Title">
+			  Name of the template.
+		  </option>
+		  <option name ="Description">
+			  A brief overview of the purpose of the template.
+
           </option>
-		  <option name="Override default">
-			If checked, the specified file is used as R binary. If not checked, 
-			the file specified in the KNIME's R preferences is used.
+		  <option name="Preview">
+			  The code to be applied to your expression editor.
 		  </option>
 	    </tab>
-	</fullDescription>
+        </fullDescription>
 	<ports>
 	    <inPort index="0" name="R Input">R Input</inPort>
 	    <inPort index="1" name="Data Input">Data Table Input</inPort>
-        <outPort index="0" name="R Output">R Output with Data</outPort>
+        <outPort index="0" name="R Output">R Output with appended data</outPort>
 	</ports>
 	<views>
         <view index="0" name="R Std Output">

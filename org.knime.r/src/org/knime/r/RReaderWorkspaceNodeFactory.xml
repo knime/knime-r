@@ -9,8 +9,11 @@
     
     <fullDescription>
         <intro>
-        A source node for reading a diversity of data types from R into KNIME tables. Use this when there are R functions 
-        that you want to use to read a table into KNIME.  The foreign library provides an example of some such functions.
+        A source node for reading diverse data sources from R into an R Workspace Port. 
+		Use this when there are R functions that you want to use to read an exotic file into R but 
+		need to branch your workspace in R before bringing it completely into KNIME. The R library 
+		"foreign" provides support for some "exotic" data types.  Reasons for needing a workspace branch
+		include the generation of multiple visualizations from a single data frame. 
         <br />
         <br />
         More details about R:<br />
@@ -21,32 +24,6 @@
         <br />
         <br />
         <a href="http://cran.r-project.org/web/packages/foreign/index.html">library(foreign)</a>
-        <br />
-        <br />
-        Read .spss from SPSS
-        <br />
-        R = read.spss(path_to_spss_file)
-        <br />
-        <br />
-        Read xport from SAS xport format library
-        <br />
-        R = read.xport(path_to_SAS_xport_file)
-        <br />
-        <br />
-        Read Stata .dta files (binary file format)
-        <br />
-		R = read.dta(path_to_stata_file)
-		<br />
-        <br />
-        Read dbf from XBase family (Fox Pro et. al)
-        <br />
-		R = read.dbf(path_to_xbase_file)
-		<br />
-        <br />
-        Read a 'Minitab Portable Worksheet' file
-        <br />
-		R = read.mtp(path_to_mtp_file)
-
         </intro>
         		
 		<tab name="R Command">
@@ -60,27 +37,26 @@
             selection, if any).
           </option>
         </tab>
-        <tab name="R Binary">
-		  <option name ="R binary path">
-			Path to the local R executable. Note that it is possible to specify
-			the path to the local R executable also in the R section of the 
-			KNIME preferences.
+        <tab name="Templates">
+		  <option name ="category">
+			A template category defined by the author.
+			 
 		  </option>
-		  <option name ="Arguments for R binary">
-            Add additional arguments run together with the R binary. The 
-            '--vanilla' mode ensures a clean workspace and may cause problems 
-            when removed.
+		  <option name ="Title">
+			  Name of the template.
+		  </option>
+		  <option name ="Description">
+			  A brief overview of the purpose of the template.
+
           </option>
-		  <option name="Override default">
-			If checked, the specified file is used as R binary. If not checked, 
-			the file specified in the KNIME's R preferences is used.
+		  <option name="Preview">
+			  The code to be applied to your expression editor.
 		  </option>
 	    </tab>
-		
     </fullDescription>
     
     <ports>
-        <outPort index="0" name="Data that has been sourced from R">A table containing new data from R</outPort>
+        <outPort index="0" name="R Worrkspace">A workspace containing new data from within R</outPort>
     </ports>    
     <views>
         <view index="0" name="R Std Output">
