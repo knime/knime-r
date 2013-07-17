@@ -31,10 +31,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
+import org.knime.core.util.FileUtil;
 
 /**
  * Configurations for R nodes with image output.
@@ -45,7 +45,7 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(
 	        "R Snippet");
 	
-	private PortType m_inPortType;
+	private final PortType m_inPortType;
 	private File m_imageFile;
 
 	private RViewNodeSettings m_settings;
@@ -68,7 +68,7 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 	protected String getScriptPrefix() {
 		if (m_imageFile == null) {
 			try {
-				m_imageFile = File.createTempFile("R-view-", ".png", new File(KNIMEConstants.getKNIMETempDir()));
+				m_imageFile = FileUtil.createTempFile("R-view-", ".png");
 			} catch (IOException e) {
 				LOGGER.error("Cannot create temporary file.", e);
 				throw new RuntimeException(e);
