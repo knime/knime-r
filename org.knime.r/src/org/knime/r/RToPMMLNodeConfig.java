@@ -31,10 +31,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.pmml.PMMLPortObject;
+import org.knime.core.util.FileUtil;
 
 /**
  * Configurations for R To PMML node.
@@ -45,7 +45,7 @@ public class RToPMMLNodeConfig extends RSnippetNodeConfig {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(
 	        "R Snippet");
 	
-	private PortType m_inPortType;
+	private final PortType m_inPortType;
 	private File m_imageFile;
 
 	public RToPMMLNodeConfig(final PortType inPortType) {
@@ -67,7 +67,7 @@ public class RToPMMLNodeConfig extends RSnippetNodeConfig {
 	protected String getScriptSuffix() {
 		if (m_imageFile == null) {
 			try {
-				m_imageFile = File.createTempFile("R-to-pmml-", ".pmml", new File(KNIMEConstants.getKNIMETempDir()));
+				m_imageFile = FileUtil.createTempFile("R-to-pmml-", ".pmml");
 			} catch (IOException e) {
 				LOGGER.error("Cannot create temporary file.", e);
 				throw new RuntimeException(e);
@@ -76,7 +76,7 @@ public class RToPMMLNodeConfig extends RSnippetNodeConfig {
 		}		
         // generate and write pmml
         return "library(pmml);\n"
-        	+ "RPMML<-toString(pmml(R));\n"
+        	+ "RPMML<-toString(pmml(knime.model));\n"
         	+ "write(RPMML, file=\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")\n"
             + "\n";
 	}
