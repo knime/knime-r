@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
@@ -95,5 +96,14 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 
 	public void setSettings(final RViewNodeSettings settings) {
 		m_settings = settings;
+	}
+	
+	@Override
+	String getDefaultScript() {
+	    if (BufferedDataTable.TYPE.equals(m_inPortType)) {
+	        return "plot(knime.in)\n";
+	    } else {
+	        return "plot(iris)\n";
+	    }
 	}
 }

@@ -54,6 +54,12 @@ public class RLearnerNodeFactory extends RSnippetNodeFactory {
     		protected Collection<PortType> getOutPortTypes() {
     			return Collections.singleton(RPortObject.TYPE);
     		}
+    		@Override
+    		String getDefaultScript() {
+    		    return "library(rpart) # load the learner library\n"
+    		            + "data <- iris # use knime.in here and fix class column\n"
+    		            + "knime.model <- rpart(data$\"Species\" ~ ., data[1:(ncol(data) - 1)])\n";  
+    		}
     	});
     }
   

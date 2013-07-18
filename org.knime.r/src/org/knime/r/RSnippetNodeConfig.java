@@ -7,7 +7,8 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 
-public class RSnippetNodeConfig {
+class RSnippetNodeConfig {
+    
     /**
      * Get the input port definition
      * @return the input port definition
@@ -48,7 +49,7 @@ public class RSnippetNodeConfig {
 	 * The default script for this node.
 	 * @return the default script
 	 */
-	protected String getDefaultScript() {
+	String getDefaultScript() {
 		boolean inHasTable = false;
 		for(PortType portType : getInPortTypes()) {
 			if (portType.equals(BufferedDataTable.TYPE)) {

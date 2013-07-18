@@ -41,7 +41,7 @@ import org.knime.core.util.FileUtil;
  *
  * @author Heiko Hofer
  */
-public class RToPMMLNodeConfig extends RSnippetNodeConfig {
+final class RToPMMLNodeConfig extends RSnippetNodeConfig {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(
 	        "R Snippet");
 	
@@ -75,14 +75,17 @@ public class RToPMMLNodeConfig extends RSnippetNodeConfig {
 			m_imageFile.deleteOnExit();
 		}		
         // generate and write pmml
-        return "library(pmml);\n"
-        	+ "RPMML<-toString(pmml(knime.model));\n"
-        	+ "write(RPMML, file=\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")\n"
-            + "\n";
+        return "write(knime.model.pmml, file=\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")\n\n";
 	}
 
 	public File getImageFile() {
 		return m_imageFile;
+	}
+	
+	@Override
+	protected String getDefaultScript() {
+	    return "library(pmml)\n"
+	            + "knime.model.pmml <- toString(pmml(knime.model))\n";
 	}
 
 }
