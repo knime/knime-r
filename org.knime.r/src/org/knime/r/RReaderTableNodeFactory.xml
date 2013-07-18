@@ -9,7 +9,7 @@
     
     <fullDescription>
         <intro>
-        A source node for reading diverse data sources from R into a KNIME table. 
+        A node for reading diverse data sources from R into a KNIME table. 
 		Use this when there are R functions that you want to use to read an exotic file into KNIME.  
 		The R library "foreign" provides some examples of such functionality.
         <br />
@@ -24,8 +24,8 @@
         <a href="http://cran.r-project.org/web/packages/foreign/index.html">library(foreign)</a>
         </intro>
         		
-		<tab name="R Command">
-		  <option name ="R Snippet">
+		<tab name="R Editor">
+		  <option name ="R Script">
             The code being executed in R. The output to be picked up by KNIME must be a data 
 			frame named <i>knime.out</i>.
           </option>

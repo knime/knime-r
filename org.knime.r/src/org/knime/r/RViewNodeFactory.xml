@@ -14,8 +14,8 @@
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 		<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-		<tab name="R Command">
-		  <option name ="R Snippet">
+		<tab name="R Editor">
+		  <option name ="R Script">
             The code being executed in R.  Input data is available as a data frame named <i>knime.in</i>, 
 			while the desired output image must be generated as an R view (eg. don't use the R function
 			"png()" as this will likely result in a empty view).

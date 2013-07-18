@@ -9,7 +9,7 @@
     
     <fullDescription>
         <intro>
-        A source node for reading diverse data sources from R into an R Workspace Port. 
+        A  node for reading diverse data sources from R into an R Workspace Port. 
 		Use this when there are R functions that you want to use to read an exotic file into R but 
 		need to branch your workspace in R before bringing it completely into KNIME. The R library 
 		"foreign" provides support for some "exotic" data types.  Reasons for needing a workspace branch
@@ -26,9 +26,9 @@
         <a href="http://cran.r-project.org/web/packages/foreign/index.html">library(foreign)</a>
         </intro>
         		
-		<tab name="R Command">
-		  <option name ="R Snippet">
-            The R commands being executed in R.
+		<tab name="R Editor">
+		  <option name ="R Script">
+            The R commands being executed in R. Variables will be saved to the R Workspace port.
           </option>
           <option name="Flow Variable List">
             The list contains the flow variables that are currently available at

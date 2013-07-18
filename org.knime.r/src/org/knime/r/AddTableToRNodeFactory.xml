@@ -15,8 +15,8 @@
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 		<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-		<tab name="R Snippet">
-		  <option name ="Expression Editor">
+		<tab name="R Editor">
+		  <option name ="R Script">
             The code being executed in R. Code may be executed in full or in part using the 
 			Evaluate Script and Evaluate Selection options respectively. Output will be printed to 
 			the console.

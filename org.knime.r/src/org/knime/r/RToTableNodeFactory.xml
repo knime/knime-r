@@ -15,7 +15,7 @@
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 		<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-        <tab name="R Snippet">
+        <tab name="R Editor">
           <option name ="R Script">
             <p>The R commands to run. The data frame that
             should appear at the output is expected to be stored in <i>knime.out</i>.</p>
