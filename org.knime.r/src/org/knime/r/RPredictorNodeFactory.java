@@ -58,6 +58,10 @@ public class RPredictorNodeFactory extends RSnippetNodeFactory {
     		protected Collection<PortType> getOutPortTypes() {
     			return Collections.singleton(BufferedDataTable.TYPE);
     		}
+    		@Override
+    		String getDefaultScript() {
+    		    return "knime.out <- cbind(knime.in, predict(knime.model, knime.in))\n";
+    		}
     	});
     }
   

@@ -58,6 +58,10 @@ public class AddTableToRNodeFactory extends RSnippetNodeFactory {
     		protected Collection<PortType> getOutPortTypes() {
     			return Collections.singleton(RPortObject.TYPE);
     		}
+    		@Override
+    		String getDefaultScript() {
+    		    return "rframe <- knime.in\n";
+    		}
     	});
     }
   

@@ -46,12 +46,16 @@ public class RReaderWorkspaceNodeFactory extends RSnippetNodeFactory {
     	super(new RSnippetNodeConfig() {
     		@Override
     		protected Collection<PortType> getInPortTypes() {
-    			return Collections.EMPTY_LIST;
+    			return Collections.<PortType>emptyList();
     		}
     		
     		@Override
     		protected Collection<PortType> getOutPortTypes() {
     			return Collections.singleton(RPortObject.TYPE);
+    		}
+    		@Override
+    		String getDefaultScript() {
+    		    return "rframe <- iris";
     		}
     	});
     }

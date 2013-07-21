@@ -3,17 +3,13 @@
 <knimeNode type="Predictor" icon="rsnippet.png">
 	<name>R Predictor</name>
 	<shortDescription>
-	    Allows to import a R model and predict given data by the use of the 
-	    model.
+	    Allows execution of R code in a local R installation for predicting 
+		data attributes using new data and an existing model.
 	</shortDescription>
 	<fullDescription>
 		<intro>
-		Allows execution of R command to use the R model at the model in port
-		to predict the class of the data at in data in port. 
-		The predicted data is returned in the data output port.
-		All input data is written to a CSV file and imported into R, 
-		saved in the variable named RDATA. The model is imported into R
-		too saved in the variable named RMODEL.
+		Allows execution of an R script from within KNIME. The resulting table should contain 
+		predictions about data attributes based on a model generated with an R Learner node.
 		<br /><br />
 		More details about R:<br />
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
@@ -21,36 +17,35 @@
 		</intro>
 		<tab name="R Command">
 		  <option name ="R Snippet">
-            The R prediction commands to run, default: <br/>
-            <pre>R&lt;-cbind(RDATA, predict(RMODEL, RDATA))</pre>
-          </option>
-          <option name="Column List">
-            The list contains the column that are available in the input table.
-            Double click any of the column names to insert the respective field
-            in the expression editor. It will replace your current selection or
-            simply insert at the current caret position.
+            The code being executed in R.  New input data is available as a data frame named <i>knime.in</i>, 
+			while the desired model must be available as a variable in the workspace from a previously 
+			executed R Learner node.
           </option>
           <option name="Flow Variable List">
             The list contains the flow variables that are currently available at
             the node input. Double clicking any of the entries will insert the
-            respective identifier at the current cursor position (replacing the
-            selection, if any).
+            variable at the current cursor position.
+          </option>
+          <option name="Column List">
+            The list contains the column references that are currently available at
+            the node input. Double clicking any of the entries will insert the
+            respective identifier at the current cursor position.
           </option>
         </tab>
-        <tab name="R Binary">
-		  <option name ="R binary path">
-			Path to the local R executable. Note that it is possible to specify
-			the path to the local R executable also in the R section of the 
-			KNIME preferences.
+		<tab name="Templates">
+		  <option name ="category">
+			A template category defined by the author.
+			 
 		  </option>
-		  <option name ="Arguments for R binary">
-            Add additional arguments run together with the R binary. The 
-            '--vanilla' mode ensures a clean workspace and may cause problems 
-            when removed.
+		  <option name ="Title">
+			Names of the available templates.
+		  </option>
+		  <option name ="Description">
+			A brief overview of the purpose of the template.
+
           </option>
-		  <option name="Override default">
-			If checked, the specified file is used as R binary. If not checked, 
-			the file specified in the KNIME's R preferences is used.
+		  <option name="Preview">
+			The code to be applied to your expression editor.
 		  </option>
 	    </tab>
 	</fullDescription>

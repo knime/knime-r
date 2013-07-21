@@ -54,6 +54,10 @@ public class RToTableNodeFactory extends RSnippetNodeFactory {
     		protected Collection<PortType> getOutPortTypes() {
     			return Collections.singleton(BufferedDataTable.TYPE);
     		}
+    		@Override
+    		String getDefaultScript() {
+    		    return "knime.out <- iris # insert your data.frame here\n";
+    		}
     	});
     }
   

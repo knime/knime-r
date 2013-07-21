@@ -39,8 +39,8 @@ import org.knime.ext.r.node.local.port.RPortObject;
  *
  * @author Heiko Hofer
  */
-public class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> {
-	private RToPMMLNodeConfig m_config;
+public final class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> {
+	private final RToPMMLNodeConfig m_config;
 
     /**
      * Empty default constructor.

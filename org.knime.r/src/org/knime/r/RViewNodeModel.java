@@ -39,7 +39,6 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -58,7 +57,7 @@ import org.knime.core.util.FileUtil;
 public class RViewNodeModel extends RSnippetNodeModel {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger("R View");
 	
-	private RViewNodeSettings m_settings;
+	private final RViewNodeSettings m_settings;
 	
 	private Image m_resultImage;
 
@@ -152,7 +151,7 @@ public class RViewNodeModel extends RSnippetNodeModel {
 
         File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
         if (file.exists() && file.canRead()) {
-            File pngFile = File.createTempFile(INTERNAL_FILE_NAME, ".png", new File(KNIMEConstants.getKNIMETempDir()));
+            File pngFile = FileUtil.createTempFile(INTERNAL_FILE_NAME, ".png");
             FileUtil.copy(file, pngFile);
             InputStream is = new FileInputStream(pngFile);
             m_resultImage = new PNGImageContent(is).getImage();

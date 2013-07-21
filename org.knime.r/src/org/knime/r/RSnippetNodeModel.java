@@ -76,11 +76,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
         "R Snippet");
     
     /**
-     * The temp directory used as a working directory for R
-     */
-//    private static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/'); 
-    
-    /**
      * Creates new instance of <code>RSnippetNodeModel</code> with one
      * data in and data one out port.
      * @param pref R preference provider
