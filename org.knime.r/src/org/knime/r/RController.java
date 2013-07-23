@@ -125,8 +125,7 @@ public class RController {
 	}
 
 	private boolean rHomeChanged() {
-		String rHome = org.knime.r.preferences.RPreferenceInitializer
-				.getRProvider().getRHome();
+		final String rHome = Activator.getRHOME().getAbsolutePath();
 		return !m_rHome.equals(rHome);
 	}
 
@@ -162,7 +161,7 @@ public class RController {
 //				m_engine.close();
 //				m_consoleController.stop();
 				m_isRAvailable = false;
-				m_errors.add("You must restart. KNIME that the changes in R (labs) take effect.");
+				m_errors.add("You must restart KNIME in order for the changes in R (labs) to take effect.");
 				return;
 			}
 
@@ -185,8 +184,9 @@ public class RController {
 				        + "You can fix the problem by pointing to a valid R v2 installation or by\n"
 				        + " - uninstalling the feature \"" + FEATURE_ID_RENGINE_R2 + "\"\n"
 				        + " - modifying your R installation and adding the package \"rJava\" (available from CRAN)\n"
-				        + " - add a line to knime.ini: -Djava.library.path=<R-install-folder>/site-library/rJava/jri\n"
-				        + "and restarting KNIME");
+				        + " - add a line to knime.ini: -Djava.library.path=<R-install-folder>/library/rJava/jri/x64\n"
+				        + "   (path printed to console while running install.packages(\"rJava\") in R)\n"
+				        + "and restarting KNIME.");
 				m_isRAvailable = false;
 				return;
 			}
@@ -239,6 +239,7 @@ public class RController {
 				}
 			}.start();
 		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
 			m_errors.add(e.getMessage());
 			m_isRAvailable = false;
 			return;
@@ -274,11 +275,12 @@ public class RController {
 	}
 
     private Properties retrieveRProperties() throws IOException, InterruptedException {
-    	File propsFile = File.createTempFile("R-propsTempFile-", ".r", new File(TEMP_PATH));
+    	final File tmpPath = new File(TEMP_PATH);
+    	File propsFile = File.createTempFile("R-propsTempFile-", ".r", tmpPath);
     	propsFile.deleteOnExit();
 	
     	File rCommandFile = writeRcommandFile(
-    			"setwd(\"" + TEMP_PATH + "\");\n"
+    			"setwd(\"" + tmpPath.getAbsolutePath().replace('\\', '/') + "\");\n"
     		  +	"foo <- paste(names(R.Version()), R.Version(), sep=\"=\");\n"
     		  + "lapply(foo, cat, \"\\n\", file=\"" +  propsFile.getAbsolutePath().replace('\\', '/') + "\", append=TRUE);\n"
     		  + "foo <- paste(\"memory.limit\", memory.limit(), sep=\"=\");\n"
@@ -349,10 +351,10 @@ public class RController {
 
 	private boolean checkRHome(final String rHomePath) {
 		File rHome = new File(rHomePath);
-		String msgSuffix = "R_HOME is meant to be the path to the folder beeing the root of Rs installation tree. \n"
+		String msgSuffix = "R_HOME is meant to be the path to the folder which is the root of Rs installation tree. \n"
 				+ "It contains a bin folder which itself contains the R executable. \nPlease change the R settings in the preferences.";
 		if (!rHome.exists()) {
-			m_errors.add("R_HOME does not exists. \n" + msgSuffix);
+			m_errors.add("R_HOME does not exist. \n" + msgSuffix);
 			return false;
 		}
 		if (!rHome.isDirectory()) {
@@ -374,7 +376,7 @@ public class RController {
 	}
 
     /**
-     * returns true when R is available and correctly initilized.
+     * returns true when R is available and correctly initialized.
      */
     public ValueReport<Boolean> isRAvailable() {
     	return new ValueReport<Boolean>(m_isRAvailable, m_errors, m_warnings);

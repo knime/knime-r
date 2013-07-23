@@ -48,15 +48,11 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
     @Override
     public void initializeDefaultPreferences() {
         IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-        File rHomeFile = getDefaultRHome();
+        File rHomeFile = Activator.getDefaultRHOME();
         String rHome = rHomeFile == null ? "" : rHomeFile.getAbsolutePath();
         LOGGER.debug("Default R Home: " + rHome);
         store.setDefault(PREF_R_HOME, rHome);
     }
-
-    private File getDefaultRHome() {
-		return Activator.getRHOME();
-	}
 
 	/**
      * Returns a provider for the R executable.
@@ -67,9 +63,7 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
             @Override
             /** {@inheritDoc} */
             public String getRHome() {
-                final IPreferenceStore pStore =
-                    Activator.getDefault().getPreferenceStore();
-                return pStore.getString(PREF_R_HOME);
+                return Activator.getRHOME().getAbsolutePath();
             }
             
             /** {@inheritDoc} */

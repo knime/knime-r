@@ -414,7 +414,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
     	StringBuilder rScript = new StringBuilder();
 		// set working directory
 		rScript.append("setwd(\"");
-		rScript.append(tempWorkspaceFile.getParentFile());
+		rScript.append(tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/'));
 		rScript.append("\");\n");
 		
 		// load workspaces from the input ports

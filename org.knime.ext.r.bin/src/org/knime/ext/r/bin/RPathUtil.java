@@ -104,7 +104,11 @@ public final class RPathUtil {
         if (url != null) {
             try {
                 packagedRExecutable = new File(FileLocator.toFileURL(url).getFile());
-                packagedRHome = packagedRExecutable.getParentFile().getParentFile(); // this is /R-Inst
+                File RInstDir = packagedRExecutable.getParentFile(); // parent is either /bin or /i386
+                do {
+                   RInstDir = RInstDir.getParentFile();
+                } while(!"R-Inst".equals(RInstDir.getName()));
+                packagedRHome = RInstDir;
             } catch (IOException ex) {
                 NodeLogger.getLogger(RPathUtil.class).info("Could not locate packaged R executable", ex);
             }
