@@ -50,7 +50,7 @@
             category-path="/labs/r-interactive"
             factory-class="org.knime.r.AddTableToRNodeFactory"
             id="org.knime.r.AddTableToRNodeFactory"
-            after="org.knime.r.TableToRNodeFactory">
+            after="org.knime.r.RToRNodeFactory">
       </node>      
       <node
             category-path="/labs/r-interactive"
@@ -69,6 +69,12 @@
             factory-class="org.knime.r.RToPMMLNodeFactory"
             id="org.knime.r.RToPMMLNodeFactory"
             after="org.knime.r.RPredictorNodeFactory">
+      </node>
+      <node
+            after="org.knime.r.TableToRNodeFactory"
+            category-path="/labs/r-interactive"
+            factory-class="org.knime.r.RToRNodeFactory"
+            id="org.knime.r.RToRNodeFactory">
       </node>         
    </extension>
    <extension
