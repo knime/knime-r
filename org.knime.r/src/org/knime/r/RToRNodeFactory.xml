@@ -7,8 +7,8 @@
 	</shortDescription>
 	<fullDescription>
 		<intro>
-        Takes the R workspace as variable <i>knime.in</i> from the in-port, and modifies it according to the 
-        entered R script. The node outputs an R workspace as <i>knime.out</i> containing the updated variables.
+        Takes the R workspace from the input port and modifies it according to the 
+        entered R script. The node outputs an R workspace containing the updated variables.
 		<br /><br />
 		More details about R:<br />
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
@@ -17,7 +17,7 @@
 		<tab name="R Editor">
 		  <option name ="R Script">
             The code being executed in R. Code may be executed in full or in part using the Evaluate Script and 
-            Evaluate Selection options respectively. Output will be printed to the console.
+            Evaluate Selection options, respectively. Output is printed to the console.
           </option>
           <option name="Column List">
             The list contains the column that are available in the input table.
@@ -50,8 +50,8 @@
 	    </tab>
         </fullDescription>
 	<ports>
-	    <inPort index="0" name="R Input">R Input as <i>knime.in</i></inPort>
-        <outPort index="0" name="R Output">R Output as <i>knime.out</i></outPort>
+	    <inPort index="0" name="R Workspace">R Input (Workspace)</inPort>
+        <outPort index="0" name="R Workspace">R Output (Workspace)</outPort>
 	</ports>
 	<views>
         <view index="0" name="R Std Output">

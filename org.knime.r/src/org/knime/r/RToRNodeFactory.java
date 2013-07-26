@@ -58,7 +58,7 @@ public class RToRNodeFactory extends RSnippetNodeFactory {
     		}
     		@Override
     		String getDefaultScript() {
-    		    return "knime.out <- knime.in\n";
+    		    return "# call more functions\n";
     		}
     	});
     }
