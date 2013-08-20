@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KNIME R-Project nodes (new)
 Bundle-SymbolicName: org.knime.r;singleton:=true
-Bundle-Version: 2.8.0.qualifier
+Bundle-Version: 2.8.1.qualifier
 Bundle-ClassPath: org-knime-r.jar
 Bundle-Activator: org.knime.r.Activator
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
@@ -15,7 +15,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",
  com.sun.jna;bundle-version="3.5.2",
  org.knime.ext.r.type;bundle-version="[2.8.0,3.0.0)",
  org.knime.ext.r.bin;bundle-version="[2.8.0,3.0.0)"
+Eclipse-RegisterBuddy: org.knime.base
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Eclipse-RegisterBuddy: org.knime.base
-
