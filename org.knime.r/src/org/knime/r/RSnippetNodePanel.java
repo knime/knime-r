@@ -313,6 +313,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			consolePanel.setBorder(createEmptyTitledBorder("Console"));
 			mainSplitPane.setBottomComponent(consolePanel);
 			mainSplitPane.setOneTouchExpandable(true);
+			mainSplitPane.setResizeWeight(0.5);
 
 			JPanel centerPanel = new JPanel(new GridLayout(0, 1));
 			centerPanel.add(mainSplitPane);
