@@ -1,10 +1,12 @@
 package org.knime.r;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,6 +22,7 @@ import javax.swing.event.EventListenerList;
 
 import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IBundleGroupProvider;
+import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
@@ -45,6 +48,7 @@ import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.util.FileUtil;
 import org.knime.core.util.ThreadUtils;
 import org.knime.r.preferences.RPreferenceInitializer;
 import org.rosuda.JRI.Rengine;
@@ -70,7 +74,7 @@ import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 public class RController {
-    
+
     /** ID of the feature contributing the rosuda platform libs (jri). */
 	private static final String FEATURE_ID_RENGINE_R2 = "org.knime.features.rengine.r2";
 
@@ -93,7 +97,7 @@ public class RController {
 	private List<String> m_warnings;
 
 	private List<String> m_errors;
-	
+
 	private Properties m_rProps;
 
 	private String m_rMajorVersion;
@@ -109,7 +113,7 @@ public class RController {
     /**
      * The temp directory used as a working directory for R
      */
-    static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/');    
+    static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/');
 
 	public static synchronized RController getDefault() {
 		// TODO: recreate instance when R_HOME changes in the preferences.
@@ -151,11 +155,11 @@ public class RController {
 		m_isRAvailable = false;
 		initR();
 	}
-	
+
 	private void initR() {
 		try {
 			m_errors = new ArrayList<String>();
-			m_warnings = new ArrayList<String>();			
+			m_warnings = new ArrayList<String>();
 			if (m_wasRAvailable) {
 				// FIXME: Causes KNIME To crash, workaround is now to require a restart.
 //				m_engine.close();
@@ -165,22 +169,28 @@ public class RController {
 				return;
 			}
 
-			
+
 	    	String rHome = org.knime.r.preferences.RPreferenceInitializer
 					.getRProvider().getRHome();
-	    	
+
 			if (!checkRHome(rHome)) {
 				m_isRAvailable = false;
 				return;
-			}			
+			}
 			m_rHome = rHome;
 			m_rProps = retrieveRProperties();
-			
+
+			if (!m_rProps.containsKey("major")) {
+				m_errors.add("Cannot determine major version of R. Please check the R installation defined in the KNIME preferences.");
+				m_isRAvailable = false;
+				return;
+			}
+
 			m_rMajorVersion = m_rProps.get("major").toString().trim();
 			boolean isR2RengineFeatureInstalled = isJRI_R2Installed();
 			if (isR2RengineFeatureInstalled && !m_rMajorVersion.equals("2")) {
-				m_errors.add("Only R in version 2.x is supported. The R installation defined in the preferences " 
-				        + "is of version " + m_rMajorVersion + ".x.\n" 
+				m_errors.add("Only R in version 2.x is supported. The R installation defined in the preferences "
+				        + "is of version " + m_rMajorVersion + ".x.\n"
 				        + "You can fix the problem by pointing to a valid R v2 installation or by\n"
 				        + " - uninstalling the feature \"" + FEATURE_ID_RENGINE_R2 + "\"\n"
 				        + " - modifying your R installation and adding the package \"rJava\" (available from CRAN)\n"
@@ -191,7 +201,7 @@ public class RController {
 				return;
 			}
 			m_rMemoryLimit = m_rProps.get("memory.limit").toString().trim();
-			
+
 			m_lock = new Semaphore(1);
 			listenerList = new EventListenerList();
 
@@ -215,8 +225,8 @@ public class RController {
 			    throw new Exception("JRI library ('jri') not loaded");
 			}
 			if (!Rengine.versionCheck()) {
-			    throw new Exception("Rengine library version conflict: Rengine version=" 
-			            + Rengine.getVersion()  + " vs. native-library-version=" + Rengine.rniGetVersion()); 
+			    throw new Exception("Rengine library version conflict: Rengine version="
+			            + Rengine.getVersion()  + " vs. native-library-version=" + Rengine.rniGetVersion());
 			}
             m_engine = jriEngine;
 
@@ -246,11 +256,10 @@ public class RController {
 		}
 		// everything is ok.
 		m_isRAvailable = true;
-		m_wasRAvailable = true;
 
 		if (Platform.isWindows()) {
 			try {
-				// set memory to the one of the used R 
+				// set memory to the one of the used R
 				eval("memory.limit(" + m_rMemoryLimit + ");");
 			} catch (REngineException e) {
 				LOGGER.error("R initialisation failed.", e);
@@ -261,7 +270,7 @@ public class RController {
 			}
 		}
 	}
-	
+
 	private boolean isJRI_R2Installed() {
 	    for (IBundleGroupProvider provider : org.eclipse.core.runtime.Platform.getBundleGroupProviders()) {
 	        for (IBundleGroup feature : provider.getBundleGroups()) {
@@ -276,9 +285,9 @@ public class RController {
 
     private Properties retrieveRProperties() throws IOException, InterruptedException {
     	final File tmpPath = new File(TEMP_PATH);
-    	File propsFile = File.createTempFile("R-propsTempFile-", ".r", tmpPath);
-    	propsFile.deleteOnExit();
-	
+    	File propsFile = FileUtil.createTempFile("R-propsTempFile-", ".r", true);
+    	File rOutFile = FileUtil.createTempFile("R-propsTempFile-", ".Rout", tmpPath, true);
+
     	File rCommandFile = writeRcommandFile(
     			"setwd(\"" + tmpPath.getAbsolutePath().replace('\\', '/') + "\");\n"
     		  +	"foo <- paste(names(R.Version()), R.Version(), sep=\"=\");\n"
@@ -291,23 +300,67 @@ public class RController {
         shellCmd.append(rBinaryFile);
         shellCmd.append(" ");
         shellCmd.append(rCommandFile.getName());
-        
-    	Runtime rt = Runtime.getRuntime();
-		Process process = rt.exec(shellCmd.toString(), null, rCommandFile.getParentFile());
-		// wait for process to be ended
-		process.waitFor();
-		
+        shellCmd.append(" ");
+        shellCmd.append(rOutFile.getName());
+
+        CommandExecution cmdExec = new CommandExecution(shellCmd.toString());
+
+        cmdExec.setExecutionDir(rCommandFile.getParentFile());
+        try {
+			int exitValue = cmdExec.execute(new ExecutionMonitor());
+			if (exitValue != 0) {
+				StringBuilder stderr = new StringBuilder();
+				for (String s : cmdExec.getStdErr()) {
+					stderr.append(s);
+				}
+			    if (stderr.length() > 0) {
+			    	LOGGER.debug(stderr.toString());
+			    }
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e.getMessage(), e);
+			return new Properties();
+		}
+
 		// read propsFile
 		Properties props = new Properties();
         FileInputStream fis = new FileInputStream(propsFile);
-     
+
         // loading properties from properties file
         props.load(fis);
 
+        if (props.size() <= 0) {
+        	// Something went wrong, report R stdout und stderr.
+        	// The output and error streams are redirected to *.Rout when executing R with CMD BATCH
+        	File rOut = new File(rCommandFile.getAbsolutePath() + ".Rout");
+        	if (rOut.exists() && rOut.isFile()) {
+        		BufferedReader br = new BufferedReader(new FileReader(rOut));
+        	    try {
+        	        StringBuilder sb = new StringBuilder();
+        	        String line = br.readLine();
+
+        	        while (line != null) {
+        	            sb.append(line);
+        	            sb.append("\n");
+        	            line = br.readLine();
+        	        }
+        	        LOGGER.debug("Error while investigating the R environment. This is the ouput if R:\n" + sb.toString());
+        	    } catch(InvalidObjectException ioe) {
+        	    	LOGGER.debug("Error when reading file: " + rOut.getAbsolutePath());
+        	    } finally {
+        	    	try {
+        	    		br.close();
+        	    	} catch(InvalidObjectException ioe) {
+                	    // do nothing
+                    }
+        	    }
+        	}
+
+        }
 
 		return props;
 	}
-    
+
     /**
      * Writes the given string into a file and returns it.
      *
@@ -316,14 +369,13 @@ public class RController {
      * @throws IOException If string could not be written to a file.
      */
     private File writeRcommandFile(final String cmd) throws IOException {
-        File tempCommandFile = File.createTempFile("R-readPropsTempFile-", ".r", new File(TEMP_PATH));
-        tempCommandFile.deleteOnExit();
+        File tempCommandFile = FileUtil.createTempFile("R-readPropsTempFile-", ".r", new File(TEMP_PATH), true);
         FileWriter fw = new FileWriter(tempCommandFile);
         fw.write(cmd);
         fw.close();
         return tempCommandFile;
-    }    
-    
+    }
+
     /**
      * Path to R binary together with the R arguments <code>CMD BATCH</code> and
      * additional options.
@@ -347,7 +399,7 @@ public class RController {
      */
     private final String getRBinaryPath() {
     	return RPreferenceInitializer.getRProvider().getRBinPath();
-    }   
+    }
 
 	private boolean checkRHome(final String rHomePath) {
 		File rHome = new File(rHomePath);
@@ -361,16 +413,25 @@ public class RController {
 			m_errors.add("R_HOME is not a directory. \n" + msgSuffix);
 			return false;
 		}
-		String[] hasNameBin = rHome.list(new FilenameFilter() {
-			@Override
-			public boolean accept(final File dir, final String name) {
-				return name.equals("bin");
-			}
-		});
-
-		if (hasNameBin == null || hasNameBin.length == 0) {
+		File binDir = new File(rHome, "bin");
+		if (binDir.isDirectory()) {
 			m_errors.add("R_HOME does not contain a folder with name \"bin\". \n" + msgSuffix);
 			return false;
+		}
+		if (Platform.isWindows()) {
+        	if (Platform.is64Bit()) {
+        	    File expectedFolder = new File(binDir, "x64");
+        		if (expectedFolder.isDirectory()) {
+        			m_errors.add("R_HOME does not contain a folder with name \"bin\\x64\". Please install R 64-bit files. \n" + msgSuffix);
+        			return false;
+        		}
+        	} else {
+                File expectedFolder = new File(binDir, "i386");
+                if (expectedFolder.isDirectory()) {
+        			m_errors.add("R_HOME does not contain a folder with name \"bin\\i386\". Please install R 32-bit files. \n" + msgSuffix);
+        			return false;
+        		}
+        	}
 		}
 		return true;
 	}
@@ -530,7 +591,7 @@ public class RController {
         b.append("      if (!(as.character(pkg) %in% defaults)) {\n");
         b.append("          if(!(pkg == \"base\")){\n");
         b.append("              package_name = paste(\"package:\", as.character(pkg), sep=\"\")\n");
-        b.append("              detach(package_name, character.only = TRUE)\n");        
+        b.append("              detach(package_name, character.only = TRUE)\n");
         b.append("          }\n");
         b.append("      }\n");
         b.append("  }\n");
@@ -599,7 +660,7 @@ public class RController {
 		}
 		return flowVars;
 	}
-	
+
     public List<String> importListOfLibrariesAndDelete() {
         try {
             REXP listAsREXP = eval(R_LOADED_LIBRARIES_VARIABLE);
@@ -648,7 +709,7 @@ public class RController {
 	    }
 		exec.setProgress(1.0);
 	}
-	
+
 	private Object[] initializeColumns(final BufferedDataTable table) {
 		DataTableSpec spec = table.getDataTableSpec();
 
@@ -848,7 +909,7 @@ public class RController {
 					String[][] column = (String[][]) columns[c];
 					RList rList = new RList();
 					for (int i = 0; i < column.length; i++) {
-						if (column[i] != null) {							
+						if (column[i] != null) {
 							rList.add(new REXPFactor(new RFactor(column[i])));
 						} else {
 							rList.add(null);
@@ -879,7 +940,7 @@ public class RController {
 		exec.setProgress(1.0);
 		return content;
 	}
-	
+
 	private static REXPFactor createFactor(final String[] values) {
 	    LinkedHashMap<String, Integer> hash = new LinkedHashMap<String, Integer>();
 	    int[] valueIndices = new int[values.length];
@@ -1091,13 +1152,13 @@ public class RController {
      */
     List<String> clearAndReadWorkspace(final File tempWorkspaceFile, final ExecutionMonitor exec)
         throws CanceledExecutionException {
-        exec.setMessage("Clearing previous workspace");		
+        exec.setMessage("Clearing previous workspace");
     	clearWorkspace(exec);
-    	exec.setMessage("Loading workspace");		
+    	exec.setMessage("Loading workspace");
     	monitoredEval("load(\"" + tempWorkspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec);
     	return importListOfLibrariesAndDelete();
     }
-    
+
     void loadLibraries(final List<String> listOfLibraries) throws REngineException, REXPMismatchException {
         final String cmd = createLoadLibraryFunctionCall(listOfLibraries, true);
         eval(cmd);
@@ -1108,7 +1169,7 @@ public class RController {
      * @param suppressMessages if true the library call is wrapped so that no output is printed
      * @return The command string to be run in R (ends with newline)
      */
-    static String createLoadLibraryFunctionCall(final List<String> listOfLibraries, boolean suppressMessages) {
+    static String createLoadLibraryFunctionCall(final List<String> listOfLibraries, final boolean suppressMessages) {
         StringBuilder functionBuilder = new StringBuilder();
         functionBuilder.append("function(packages_to_install) {\n");
         functionBuilder.append("  for (pkg in packages_to_install) {\n");
@@ -1190,4 +1251,7 @@ final class MonitoredEval {
 		m_done = true;
 		m_exec.checkCanceled();
 	}
+
+
 }
+

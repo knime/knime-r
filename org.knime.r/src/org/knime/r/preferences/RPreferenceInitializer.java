@@ -30,6 +30,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.knime.core.node.NodeLogger;
 import org.knime.r.Activator;
 
+import com.sun.jna.Platform;
+
 /**
  *
  * @author Heiko Hofer
@@ -69,7 +71,15 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
             /** {@inheritDoc} */
             @Override
             public String getRBinPath() {
-            	return getRHome() + File.separator + "bin" + File.separator + "R";
+            	if (Platform.isWindows()) {
+	            	if (Platform.is64Bit()) {
+	            		return getRHome() + File.separator + "bin" + File.separator + "x64" + File.separator + "R";
+	            	} else {
+	            		return getRHome() + File.separator + "bin" + File.separator + "i386" + File.separator + "R";
+	            	}
+            	} else {
+            		return getRHome() + File.separator + "bin" + File.separator + "R";
+            	}
             }
         };
     }
