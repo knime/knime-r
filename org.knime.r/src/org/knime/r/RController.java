@@ -414,20 +414,20 @@ public class RController {
 			return false;
 		}
 		File binDir = new File(rHome, "bin");
-		if (binDir.isDirectory()) {
+		if (!binDir.isDirectory()) {
 			m_errors.add("R_HOME does not contain a folder with name \"bin\". \n" + msgSuffix);
 			return false;
 		}
 		if (Platform.isWindows()) {
         	if (Platform.is64Bit()) {
         	    File expectedFolder = new File(binDir, "x64");
-        		if (expectedFolder.isDirectory()) {
+        		if (!expectedFolder.isDirectory()) {
         			m_errors.add("R_HOME does not contain a folder with name \"bin\\x64\". Please install R 64-bit files. \n" + msgSuffix);
         			return false;
         		}
         	} else {
                 File expectedFolder = new File(binDir, "i386");
-                if (expectedFolder.isDirectory()) {
+                if (!expectedFolder.isDirectory()) {
         			m_errors.add("R_HOME does not contain a folder with name \"bin\\i386\". Please install R 32-bit files. \n" + msgSuffix);
         			return false;
         		}
