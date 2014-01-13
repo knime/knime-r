@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KNIME R-Project nodes
 Bundle-SymbolicName: org.knime.ext.r;singleton:=true
-Bundle-Version: 2.9.0.qualifier
+Bundle-Version: 2.10.0.qualifier
 Bundle-ClassPath: knime-r.jar,
  lib/Rserve-0.5-0.jar
 Bundle-Activator: org.knime.ext.r.RCorePlugin
