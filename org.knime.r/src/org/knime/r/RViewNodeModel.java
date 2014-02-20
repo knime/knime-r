@@ -56,16 +56,16 @@ import org.knime.core.util.FileUtil;
  */
 public class RViewNodeModel extends RSnippetNodeModel {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger("R View");
-	
+
 	private final RViewNodeSettings m_settings;
-	
+
 	private Image m_resultImage;
 
-    
+
     /** Output spec for a PNG image. */
     private static final ImagePortObjectSpec OUT_SPEC =
         new ImagePortObjectSpec(PNGImageContent.TYPE);
-    
+
     private static final String INTERNAL_FILE_NAME = "Rplot";
 
 	public RViewNodeModel(final RViewNodeConfig config) {
@@ -80,7 +80,7 @@ public class RViewNodeModel extends RSnippetNodeModel {
 			throws InvalidSettingsException {
 		return new PortObjectSpec[] {OUT_SPEC};
 	}
-	
+
 	@Override
 	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
 			throws Exception {
@@ -88,7 +88,7 @@ public class RViewNodeModel extends RSnippetNodeModel {
         return postExecuteInternal();
 
 	}
-	
+
 	private PortObject[] postExecuteInternal() throws Exception {
         if (getConfig().getImageFile().length() > 0) {
 	        // create image after execution.
@@ -98,7 +98,7 @@ public class RViewNodeModel extends RSnippetNodeModel {
 	        m_resultImage = content.getImage();
 	        return new PortObject[] {new ImagePortObject(content, OUT_SPEC)};
         } else {
-        	throw new RuntimeException("No Image was created by thr R-Script");
+        	throw new RuntimeException("No Image was created by the R-Script");
         }
 	}
 
@@ -125,7 +125,7 @@ public class RViewNodeModel extends RSnippetNodeModel {
         if (!colorCode.matches("^#[0-9aAbBcCdDeEfF]{6}")) {
             throw new InvalidSettingsException("Specified color code \""
                     + colorCode + "\" is not valid!");
-        }        
+        }
     }
 
     /**
@@ -137,7 +137,7 @@ public class RViewNodeModel extends RSnippetNodeModel {
         m_settings.loadSettings(settings);
         getRSnippet().getSettings().loadSettings(m_settings.getRSettings());
     }
-    
+
     /**
      * The saved image is loaded.
      *
@@ -187,15 +187,15 @@ public class RViewNodeModel extends RSnippetNodeModel {
 			try {
 				FileOutputStream erasor = new FileOutputStream(getConfig().getImageFile());
 				erasor.write((new String()).getBytes());
-			    erasor.close();    
+			    erasor.close();
 			} catch (FileNotFoundException e) {
 				LOGGER.error("Temporary file is removed.", e);
 			} catch (IOException e) {
 				LOGGER.error("Cannot write temporary file.", e);
 			}
-	    }  
+	    }
     }
-    
+
     private RViewNodeConfig getConfig() {
     	return (RViewNodeConfig)getRSnippetNodeConfig();
     }
