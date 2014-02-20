@@ -40,7 +40,7 @@ import org.knime.core.node.port.PortType;
  * @author Heiko Hofer
  */
 public class RViewNodeFactory extends NodeFactory<RViewNodeModel> {
-	private RViewNodeConfig m_portType;
+	private PortType m_portType;
 
     /**
      * Empty default constructor.
@@ -50,7 +50,7 @@ public class RViewNodeFactory extends NodeFactory<RViewNodeModel> {
     }
 
 	public RViewNodeFactory(final PortType inPortType) {
-		m_portType = new RViewNodeConfig(inPortType);
+		m_portType = inPortType;
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class RViewNodeFactory extends NodeFactory<RViewNodeModel> {
      */
     @Override
     protected NodeDialogPane createNodeDialogPane() {
-        return new RViewNodeDialog(this.getClass(), m_portType);
+        return new RViewNodeDialog(this.getClass(), new RViewNodeConfig(m_portType));
     }
 
     /**
@@ -66,7 +66,7 @@ public class RViewNodeFactory extends NodeFactory<RViewNodeModel> {
      */
     @Override
     public RViewNodeModel createNodeModel() {
-    	return new RViewNodeModel(m_portType);
+    	return new RViewNodeModel(new RViewNodeConfig(m_portType));
     }
     
     /**
