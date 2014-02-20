@@ -40,7 +40,7 @@ import org.knime.ext.r.node.local.port.RPortObject;
  * @author Heiko Hofer
  */
 public final class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> {
-	private final RToPMMLNodeConfig m_config;
+	private final PortType m_portType;
 
     /**
      * Empty default constructor.
@@ -50,7 +50,7 @@ public final class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> {
     }
 
 	public RToPMMLNodeFactory(final PortType inPortType) {
-		m_config = new RToPMMLNodeConfig(inPortType);
+		m_portType = inPortType;
 	}
 	
 
@@ -67,7 +67,7 @@ public final class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> {
      */
     @Override
     protected NodeDialogPane createNodeDialogPane() {
-        return new RSnippetNodeDialog(this.getClass(), m_config);
+        return new RSnippetNodeDialog(this.getClass(), new RToPMMLNodeConfig(m_portType));
     }
 
     /**
@@ -75,7 +75,7 @@ public final class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> {
      */
     @Override
     public RToPMMLNodeModel createNodeModel() {
-    	return new RToPMMLNodeModel(m_config);
+    	return new RToPMMLNodeModel(new RToPMMLNodeConfig(m_portType));
     }
     
     /**
