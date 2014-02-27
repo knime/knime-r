@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KNIME R-Project nodes (new)
 Bundle-SymbolicName: org.knime.r;singleton:=true
-Bundle-Version: 2.9.0.qualifier
+Bundle-Version: 2.9.2.qualifier
 Bundle-ClassPath: org-knime-r.jar
 Bundle-Activator: org.knime.r.Activator
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
