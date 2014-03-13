@@ -1,6 +1,6 @@
 /*
  * ------------------------------------------------------------------
- * Copyright by 
+ * Copyright by
  * University of Konstanz, Germany.
  * Chair for Bioinformatics and Information Mining
  * Prof. Dr. Michael R. Berthold
@@ -175,7 +175,7 @@ public class RLocalRViewsNodeModel2 extends RAbstractLocalNodeModel {
                 + ", bg=\"" + m_bgModel.getStringValue() + "\""
                 + ", res=" + m_resolutionModel.getStringValue() + ");\n"
                 + m_viewCmd + "\ndev.off();";
-            completeCmd.append(FlowVariableResolver.parse(command, this));
+            completeCmd.append(resolveVariablesInScript(command));
             completeCmd.append("\n");
 
             // write R command

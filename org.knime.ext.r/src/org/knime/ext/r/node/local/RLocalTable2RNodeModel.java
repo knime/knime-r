@@ -3,7 +3,7 @@
  * This source code, its documentation and all appendant files
  * are protected by copyright law. All rights reserved.
  *
- * Copyright by 
+ * Copyright by
  * University of Konstanz, Germany
  * Chair for Bioinformatics and Information Mining (Prof. M. Berthold)
  * and KNIME GmbH, Konstanz, Germany
@@ -118,7 +118,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append("\")\n");
 
             // write R command
-            String rCmd = FlowVariableResolver.parse(completeCmd.toString(), this);
+            String rCmd = resolveVariablesInScript(completeCmd.toString());
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");

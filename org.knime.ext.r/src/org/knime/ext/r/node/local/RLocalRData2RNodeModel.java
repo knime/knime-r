@@ -2,7 +2,7 @@
  * This source code, its documentation and all appendant files
  * are protected by copyright law. All rights reserved.
  *
- * Copyright by 
+ * Copyright by
  * University of Konstanz, Germany
  * Chair for Bioinformatics and Information Mining (Prof. M. Berthold)
  * and KNIME GmbH, Konstanz, Germany
@@ -112,7 +112,7 @@ public class RLocalRData2RNodeModel extends RAbstractLocalNodeModel {
             }
 
             // result R port
-            completeCmd.append(FlowVariableResolver.parse(m_rCommand.trim(), this));
+            completeCmd.append(resolveVariablesInScript(m_rCommand.trim()));
             completeCmd.append("\n");
 
             File outR = File.createTempFile("~knime", ".R", new File(KNIMEConstants.getKNIMETempDir()));

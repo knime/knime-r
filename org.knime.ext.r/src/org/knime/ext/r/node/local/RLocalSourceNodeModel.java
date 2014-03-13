@@ -63,7 +63,7 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(SET_WORKINGDIR_CMD);
 
             // result data
-            completeCmd.append(FlowVariableResolver.parse(m_rCommand.trim(), this));
+            completeCmd.append(resolveVariablesInScript(m_rCommand.trim()));
             completeCmd.append("\n");
 
             // write result data to csv

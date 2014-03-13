@@ -2,7 +2,7 @@
  * This source code, its documentation and all appendant files
  * are protected by copyright law. All rights reserved.
  *
- * Copyright by 
+ * Copyright by
  * University of Konstanz, Germany
  * Chair for Bioinformatics and Information Mining (Prof. M. Berthold)
  * and KNIME GmbH, Konstanz, Germany
@@ -89,7 +89,7 @@ public class RLocalR2TableNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
 
             // result data
-            completeCmd.append(FlowVariableResolver.parse(m_rCommand.trim(), this));
+            completeCmd.append(resolveVariablesInScript(m_rCommand.trim()));
             completeCmd.append("\n");
 
             // write result data to csv

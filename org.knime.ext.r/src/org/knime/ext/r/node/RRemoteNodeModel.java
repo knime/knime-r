@@ -1,7 +1,7 @@
 /*
  * ------------------------------------------------------------------------
  *
- *  Copyright by 
+ *  Copyright by
  *  University of Konstanz, Germany and
  *  KNIME GmbH, Konstanz, Germany
  *  Website: http://www.knime.org; Email: contact@knime.org
@@ -25,7 +25,9 @@ package org.knime.ext.r.node;
 
 import java.util.ArrayList;
 
-import org.knime.base.node.util.FlowVariableResolvable;
+import org.knime.base.util.flowvariable.FlowVariableProvider;
+import org.knime.base.util.flowvariable.FlowVariableResolver;
+import org.knime.base.util.flowvariable.FlowVariableResolver.FlowVariableEscaper;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeModel;
@@ -40,7 +42,7 @@ import org.rosuda.REngine.Rserve.RserveException;
  *
  * @author Thomas Gabriel, University of Konstanz
  */
-abstract class RRemoteNodeModel extends NodeModel implements FlowVariableResolvable {
+abstract class RRemoteNodeModel extends NodeModel implements FlowVariableProvider {
 
     /**
      * Used only in cases where Rserve runs on local host and windows in order
@@ -129,7 +131,13 @@ abstract class RRemoteNodeModel extends NodeModel implements FlowVariableResolva
             exps[i] = exps[i].trim();
             String help = parseLine(exps[i]);
             if (help.length() > 0) {
-                String command = FlowVariableResolver.parse(help, this);
+                String command = FlowVariableResolver.parse(help, this, new FlowVariableEscaper() {
+                    @Override
+                    public String readString(final FlowVariableProvider model, final String var) {
+                        // R needs it in quotes
+                        return "\"" + super.readString(model, var) + "\"";
+                    }
+                });
                 res.add(command);
             }
         }
@@ -209,28 +217,4 @@ abstract class RRemoteNodeModel extends NodeModel implements FlowVariableResolva
         RLoginSettings.validateSettings(settings);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final double delegatePeekFlowVariableDouble(final String name) {
-        return peekFlowVariableDouble(name);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final int delegatePeekFlowVariableInt(final String name) {
-        return peekFlowVariableInt(name);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final String delegatePeekFlowVariableString(final String name) {
-        // R needs it in quotes
-        return "\"" + peekFlowVariableString(name) + "\"";
-    }
 }

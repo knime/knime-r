@@ -2,7 +2,7 @@
  * This source code, its documentation and all appendant files
  * are protected by copyright law. All rights reserved.
  *
- * Copyright by 
+ * Copyright by
  * University of Konstanz, Germany
  * Chair for Bioinformatics and Information Mining (Prof. M. Berthold)
  * and KNIME GmbH, Konstanz, Germany
@@ -114,7 +114,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
 
             // predict data
             completeCmd.append("RMODEL<-R\n");
-            completeCmd.append(FlowVariableResolver.parse(m_rCommand.trim(), this));
+            completeCmd.append(resolveVariablesInScript(m_rCommand.trim()));
             completeCmd.append("\n");
 
             // write predicted data to csv

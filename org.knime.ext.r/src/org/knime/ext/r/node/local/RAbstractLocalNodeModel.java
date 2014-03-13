@@ -1,6 +1,6 @@
 /*
  * ------------------------------------------------------------------
- * Copyright by 
+ * Copyright by
  * University of Konstanz, Germany.
  * Chair for Bioinformatics and Information Mining
  * Prof. Dr. Michael R. Berthold
@@ -35,8 +35,9 @@ import org.knime.base.node.io.csvwriter.FileWriterSettings;
 import org.knime.base.node.io.filereader.FileAnalyzer;
 import org.knime.base.node.io.filereader.FileReaderNodeSettings;
 import org.knime.base.node.io.filereader.FileTable;
-import org.knime.base.node.util.FlowVariableResolvable;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
+import org.knime.base.util.flowvariable.FlowVariableProvider;
+import org.knime.base.util.flowvariable.FlowVariableResolver;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -81,8 +82,7 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
  * @author Kilian Thiel, University of Konstanz
  * @author Thomas Gabriel, University of Konstanz
  */
-public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
-        implements FlowVariableResolvable {
+public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel implements FlowVariableProvider {
 
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RAbstractLocalNodeModel.class);
@@ -421,29 +421,19 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel
         }
     }
 
-    /**
-     * {@inheritDoc}
+    /** Uses {@link FlowVariableResolver#parse(String, FlowVariableProvider, FlowVariableResolver.FlowVariableEscaper)}
+     * to replace variable placeholders with actual values.
+     * @param cmd The script string, including var placeholders.
+     * @return script with variable names replaced by their value.
      */
-    @Override
-    public final double delegatePeekFlowVariableDouble(final String name) {
-        return peekFlowVariableDouble(name);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final int delegatePeekFlowVariableInt(final String name) {
-        return peekFlowVariableInt(name);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final String delegatePeekFlowVariableString(final String name) {
-        // R needs it in quotes
-        return "\"" + peekFlowVariableString(name) + "\"";
+    protected String resolveVariablesInScript(final String cmd) {
+        return FlowVariableResolver.parse(cmd, this, new FlowVariableResolver.FlowVariableEscaper() {
+            @Override
+            public String readString(final FlowVariableProvider model, final String var) {
+                // R needs it in quotes
+                return "\"" + super.readString(model, var) + "\"";
+            }
+        });
     }
 
 }
