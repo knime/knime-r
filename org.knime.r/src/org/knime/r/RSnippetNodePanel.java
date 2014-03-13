@@ -1,6 +1,6 @@
 /*
  * ------------------------------------------------------------------
- * Copyright by 
+ * Copyright by
  * University of Konstanz, Germany.
  * Chair for Bioinformatics and Information Mining
  * Prof. Dr. Michael R. Berthold
@@ -145,11 +145,11 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	private JButton m_evalScriptButton;
 
 	private JButton m_resetWorkspace;
-	
+
 	private JButton m_showPlot;
 
 	private RPlotPreviewFrame m_previewFrame;
-	
+
 	private File m_imageFile;
 
     private final ReentrantLock m_lock;
@@ -277,7 +277,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 				}
 			});
 			objectBrowserButtons.add(m_resetWorkspace);
-			
+
 			m_showPlot = new JButton("Show Plot");
 			m_showPlot.addActionListener(new ActionListener() {
                 @Override
@@ -286,7 +286,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
                 }
             });
 			objectBrowserButtons.add(m_showPlot);
-			
+
 			objectBrowserContainer
 					.add(objectBrowserButtons, BorderLayout.SOUTH);
 
@@ -305,8 +305,8 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 			JPanel consolePanel = new JPanel(new BorderLayout());
 			JScrollPane consoleScroller = new JScrollPane(m_console);
-		    JPanel consoleButtons = createConsoleButtons(); 
-		    		
+		    JPanel consoleButtons = createConsoleButtons();
+
 
 		    consolePanel.add(consoleButtons, BorderLayout.WEST);
 		    consolePanel.add(consoleScroller, BorderLayout.CENTER);
@@ -345,24 +345,24 @@ public class RSnippetNodePanel extends JPanel implements RListener {
         c.gridx = 0;
         c.gridwidth = 1;
         c.weightx = 1;
-        
+
 		JButton consoleCancelButton = new JButton(RController.getDefault().getConsoleController().getCancelAction());
 		consoleCancelButton.setText("");
 		consoleCancelButton.setPreferredSize(new Dimension(
 				consoleCancelButton.getPreferredSize().height,
 				consoleCancelButton.getPreferredSize().height));
-		
+
 		p.add(consoleCancelButton, c);
-		
+
 		JButton consoleClearButton = new JButton(RController.getDefault().getConsoleController().getClearAction());
 		consoleClearButton.setText("");
 		consoleClearButton.setPreferredSize(new Dimension(
 				consoleClearButton.getPreferredSize().height,
 				consoleClearButton.getPreferredSize().height));
-		
+
 		c.gridy++;
 		p.add(consoleClearButton,c);
-		
+
 		c.gridy++;
 		c.weighty = 1;
 		p.add(new JPanel(), c);
@@ -374,7 +374,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	 */
 	private void resetWorkspace() {
 		new SwingWorkerWithContext<Void, Boolean>() {
-		    
+
 		    @Override
 		    protected void processWithContext(final List<Boolean> chunks) {
 		        m_resetWorkspace.setEnabled(chunks.get(chunks.size() - 1));
@@ -396,7 +396,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 						}
 						m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
 						m_progressPanel.startMonitoring(m_exec);
-						
+
 						// is there any RPortObject input?
 						RPortObject inputRPortObject = null;
 						if (m_input != null) {
@@ -410,7 +410,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 						        }
 						    }
 						}
-						
+
 						final RController r = RController.getDefault();
                         if (inputRPortObject != null) {
 						    r.clearAndReadWorkspace(inputRPortObject.getFile(), m_exec);
@@ -426,17 +426,17 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 						m_exec.setMessage("Send flow variables to R");
                         r.exportFlowVariables(m_inputFlowVars, "knime.flow.in", m_exec);
-						
+
 						workspaceChanged(null);
 
 
 					} finally {
 						if (m_exec != null) {
 							m_exec.getProgressMonitor().setExecuteCanceled();
+							// make sure the m_exec is at 100% at end
+							m_exec.setProgress(1);
 						}
 						m_lock.unlock();
-						// make sure the m_exec is at 100% at end
-						m_exec.setProgress(1);
 					}
 
 				} finally {
@@ -447,7 +447,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 		}.execute();
 	}
-	
+
 	private String setupPlotInitCommand() {
 	    StringBuilder b = new StringBuilder();
 	    if (m_imageFile != null) {
@@ -456,7 +456,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	    }
 	    return b.toString();
 	}
-	
+
 	private void showPlot() {
 	    boolean isToPack = false;
 	    if (m_previewFrame == null) {
@@ -768,7 +768,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
             if (isRAvailable.getValue()) {
                 if (!m_hasLock) {
                     new SwingWorkerWithContext<Void, Void>() {
-                        
+
                         @Override
                         protected Void doInBackgroundWithContext() throws Exception {
                             while (!m_lock.tryLock(100, TimeUnit.MILLISECONDS)) {
@@ -812,14 +812,14 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			    StyledDocument doc = m_console.getStyledDocument();
 				try {
 					doc.insertString(doc.getLength(), "R cannot be intialized.\n", m_console.getErrorStyle());
-					doc.insertString(doc.getLength(), ValueReport.joinString(isRAvailable.getErrors(), "\n"), 
+					doc.insertString(doc.getLength(), ValueReport.joinString(isRAvailable.getErrors(), "\n"),
 							m_console.getErrorStyle());
 				} catch (BadLocationException e) {
 					// never happens
 					throw new RuntimeException(e);
 				}
         	}
-        
+
 			return isRAvailable;
 		} else {
 			return new ValueReport<Boolean>(true, Collections.EMPTY_LIST,
@@ -868,7 +868,9 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 					// browser
 					RController.getDefault().removeRListener(this);
 					// Stop running tasks
-					m_exec.getProgressMonitor().setExecuteCanceled();
+					if (m_exec != null) {
+					    m_exec.getProgressMonitor().setExecuteCanceled();
+					}
 				}
 			} finally {
 				releaseRControllerLock();
