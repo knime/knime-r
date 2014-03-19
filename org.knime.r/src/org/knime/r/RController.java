@@ -403,8 +403,9 @@ public class RController {
 
 	private boolean checkRHome(final String rHomePath) {
 		File rHome = new File(rHomePath);
-		String msgSuffix = "R_HOME is meant to be the path to the folder which is the root of Rs installation tree. \n"
-				+ "It contains a bin folder which itself contains the R executable. \nPlease change the R settings in the preferences.";
+		String msgSuffix = "R_HOME ('" + rHomePath + "') is meant to be the path to the folder which is the root of Rs"
+		        + " installation tree. \nIt contains a bin folder which itself contains the R executable. \nPlease "
+		        + "change the R settings in the preferences.";
 		if (!rHome.exists()) {
 			m_errors.add("R_HOME does not exist. \n" + msgSuffix);
 			return false;
