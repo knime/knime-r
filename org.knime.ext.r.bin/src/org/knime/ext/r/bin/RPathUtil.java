@@ -1,7 +1,7 @@
 /*
  * ------------------------------------------------------------------------
  *
- *  Copyright by 
+ *  Copyright by
  *  University of Konstanz, Germany and
  *  KNIME GmbH, Konstanz, Germany
  *  Website: http://www.knime.org; Email: contact@knime.org
@@ -149,7 +149,9 @@ public final class RPathUtil {
             }
         }
 
-        searchPaths = new String[]{"/usr/lib64/R", "/usr/lib/R", "/usr/local/lib64/R", "/usr/local/lib/R"};
+        searchPaths =
+            new String[]{"/usr/lib64/R", "/usr/lib/R", "/usr/local/lib64/R", "/usr/local/lib/R",
+                "/Library/Frameworks/R.framework/Resources"};
         for (String s : searchPaths) {
             File f = new File(s);
             if (f.isDirectory()) {
