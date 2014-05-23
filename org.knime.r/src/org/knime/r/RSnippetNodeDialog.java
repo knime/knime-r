@@ -175,8 +175,8 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         c.gridwidth = 1;
         c.weightx = 1;
         
-        m_outNonNumbersAsMissing = new JCheckBox("Treat NaN, Inf and -Inf as missing values in the output table."
-        		+ " Check for backward compatibility with pre 2.9.2 release.");
+        m_outNonNumbersAsMissing = new JCheckBox("Treat NaN, Inf and -Inf as missing values in the output table.");
+        m_outNonNumbersAsMissing.setToolTipText("Check for backward compatibility with pre 2.10 releases.");
         p.add(m_outNonNumbersAsMissing, c);
 		
 		c.gridy++;
