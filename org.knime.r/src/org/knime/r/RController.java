@@ -976,7 +976,7 @@ public class RController {
 				+ TEMP_VARIABLE_NAME + ")", exec);
 	}
 
-	public BufferedDataTable importBufferedDataTable(final String string,
+	public BufferedDataTable importBufferedDataTable(final String string, boolean nonNumbersAsMissing,
 			final ExecutionContext exec) throws REngineException, REXPMismatchException, CanceledExecutionException {
 		REXP typeRexp = eval("class(" + string + ")");
 		if (typeRexp.isNull()) {
@@ -1027,12 +1027,12 @@ public class RController {
 						REXPVector colValue = (REXPVector)rexp;
 						DataCell[] listCells = new DataCell[colValue.length()];
 						for (int cc = 0; cc < colValue.length(); cc++) {
-							listCells[cc] = importCells(colValue, cc);
+							listCells[cc] = importCells(colValue, cc, nonNumbersAsMissing);
 						}
 						cells[i] = CollectionCellFactory.createListCell(Arrays.asList(listCells));
 					}
 				} else {
-					cells[i] = importCells(column, r);
+					cells[i] = importCells(column, r, nonNumbersAsMissing);
 				}
 				i++;
 			}
@@ -1046,7 +1046,7 @@ public class RController {
 
 	}
 
-	private DataCell importCells(final REXP rexp, final int r) throws REXPMismatchException {
+	private DataCell importCells(final REXP rexp, final int r, boolean nonNumbersAsMissing) throws REXPMismatchException {
 
 	     DataCell cells;
 
@@ -1078,9 +1078,11 @@ public class RController {
 				}
 			} else if (rexp.isNumeric()) {
 				double[] colValues = rexp.asDoubles();
-				if (colValues[r] == REXPDouble.NA
+				if (nonNumbersAsMissing && (REXPDouble.isNA(colValues[r])
 						|| Double.isNaN(colValues[r])
-					    || Double.isInfinite(colValues[r])) {
+					    || Double.isInfinite(colValues[r]))) {
+					cells = DataType.getMissingCell();
+				} else if (!nonNumbersAsMissing && REXPDouble.isNA(colValues[r])) {
 					cells = DataType.getMissingCell();
 				} else {
 					cells = new DoubleCell(colValues[r]);

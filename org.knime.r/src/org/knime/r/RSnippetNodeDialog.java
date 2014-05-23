@@ -51,9 +51,13 @@
 package org.knime.r;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import org.knime.core.data.DataTableSpec;
@@ -90,8 +94,9 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 	private final Class m_templateMetaCategory;
 	private final RSnippetNodeConfig m_config;
 	private int m_tableInPort;
-
-	private PortObject[] m_input;
+	private int m_tableOutPort;
+	
+	private JCheckBox m_outNonNumbersAsMissing;
 
     /**
      * Create a new Dialog.
@@ -110,7 +115,15 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         	}
     		i++;
     	}
-
+    	m_tableOutPort = -1;
+    	int k = 0;
+    	for (PortType portType : m_config.getOutPortTypes()) {
+    		if (portType.equals(BufferedDataTable.TYPE)) {
+    			m_tableOutPort = k;
+        	}
+    		k++;
+    	}
+    	
         m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, true) {
 
         	@Override
@@ -127,6 +140,10 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         // The preview does not have the templates tab
         addTab("Templates", createTemplatesPanel());
 
+        // currently ther is only one advanced option which applies only for R nodes with table output.
+        if (m_tableOutPort >= 0) {
+        	addTab("Advanced", createAdvancedPanel());
+        }
         m_panel.setPreferredSize(new Dimension(800, 600));
     }
 
@@ -141,6 +158,32 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
                 m_templatesController);
         return templatesPanel;
     }
+    
+	private JPanel createAdvancedPanel() {
+    	JPanel p = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.BASELINE;
+        c.insets = new Insets(5, 5, 0, 5);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.weighty = 0;
+
+        c.gridx = 0;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        
+        m_outNonNumbersAsMissing = new JCheckBox("Treat NaN, Inf and -Inf as missing values in the output table."
+        		+ " Check for backward compatibility with pre 2.9.2 release.");
+        p.add(m_outNonNumbersAsMissing, c);
+		
+		c.gridy++;
+		c.weighty = 1;
+		p.add(new JPanel(), c);
+		return p;
+	}    
 
     /**
      * {@inheritDoc}
@@ -156,8 +199,13 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
     protected void loadSettingsFrom(final NodeSettingsRO settings,
     		final PortObjectSpec[] specs) throws NotConfigurableException {
     	DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec)specs[m_tableInPort] : null;
-    	m_input = null;
         m_panel.updateData(settings, specs, getAvailableFlowVariables().values());
+        if (m_tableOutPort >= 0) {
+        	RSnippetSettings s = new RSnippetSettings();
+        	s.loadSettingsForDialog(settings);
+        	m_outNonNumbersAsMissing.setSelected(s.getOutNonNumbersAsMissing());
+        }
+        
 
         m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getAvailableFlowVariables());
@@ -167,8 +215,12 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
     protected void loadSettingsFrom(final NodeSettingsRO settings,
     		final PortObject[] input) throws NotConfigurableException {
     	DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable)input[m_tableInPort]).getSpec() : null;
-    	m_input = input;
         m_panel.updateData(settings, input, getAvailableFlowVariables().values());
+        if (m_tableOutPort >= 0) {
+        	RSnippetSettings s = new RSnippetSettings();
+        	s.loadSettingsForDialog(settings);
+        	m_outNonNumbersAsMissing.setSelected(s.getOutNonNumbersAsMissing());
+        }
 
         m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getAvailableFlowVariables());
@@ -204,6 +256,9 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings)
             throws InvalidSettingsException {
+    	if (m_tableOutPort >= 0) {
+    		m_panel.getRSnippet().getSettings().setOutNonNumbersAsMissing(m_outNonNumbersAsMissing.isSelected());
+        }    	
         m_panel.saveSettingsTo(settings);
     }
 

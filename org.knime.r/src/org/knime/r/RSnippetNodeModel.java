@@ -225,7 +225,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
             Collection<PortObject> outPorts = new ArrayList<PortObject>(4);
             for (PortType portType : m_config.getOutPortTypes()) {
             	if (portType.equals(BufferedDataTable.TYPE)) {
-            		outPorts.add(importDataFromR(r, exec.createSubExecutionContext(1.0)));
+            		outPorts.add(importDataFromR(r, m_snippet.getSettings().getOutNonNumbersAsMissing(),
+            				exec.createSubExecutionContext(1.0)));
             	} else if (portType.equals(RPortObject.TYPE)) {
             	    if (librariesInR == null) {
             	        librariesInR = importListOfLibrariesFromR(r);
@@ -451,9 +452,9 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		return rScript.toString();
 	}
 
-	private BufferedDataTable importDataFromR(final RController r, final ExecutionContext exec) 
+	private BufferedDataTable importDataFromR(final RController r, boolean nonNumbersAsMissing, final ExecutionContext exec) 
             throws REngineException, REXPMismatchException, CanceledExecutionException {
-    	BufferedDataTable out = r.importBufferedDataTable("knime.out", exec);
+    	BufferedDataTable out = r.importBufferedDataTable("knime.out", nonNumbersAsMissing, exec);
     	return out;
     }
 
