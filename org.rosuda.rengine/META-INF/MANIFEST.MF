@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KNIME JRI REngine
+Bundle-SymbolicName: org.rosuda.rengine;singleton:=true
+Bundle-Version: 1.7.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: KNIME GmbH, Konstanz, Germany
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: jri-0.5-5.jar,
+ rengine-1.7-0.jar,
+ jri-engine-1.7-0.jar
+Export-Package: org.rosuda.JRI,
+ org.rosuda.REngine,
+ org.rosuda.REngine.JRI
+Import-Package: org.osgi.framework
