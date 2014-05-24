@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.knime.features.rengine.r2"
-      label="KNIME Interactive R Nodes - JRI Bridge for R v2.x"
+      label="KNIME Interactive R Nodes - JRI Bridge for R v2.x only"
       version="2.10.0.qualifier"
-      provider-name="KNIME GmbH, Konstanz, Germany"
-      plugin="org.rosuda.rengine">
+      provider-name="KNIME GmbH, Konstanz, Germany">
 
    <description url="http://www.knime.org/downloads/extensions">
-      Native libraries required to run interactive R nodes with R version 2.x.
+      Native libraries required to run interactive R nodes with R version
+2.x. Do not install this feature if you intend to use R3!
    </description>
 
    <copyright>
@@ -357,12 +357,6 @@ consider it more useful to permit linking proprietary applications with the
 library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License.
    </license>
-
-   <plugin
-         id="org.rosuda.rengine"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.rosuda.rengine.r2.bin.linux.x86"
