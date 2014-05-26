@@ -1,0 +1,319 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: SQLite interface for R</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+<h1> SQLite interface for R
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]">
+</h1>
+<hr>
+<div align="center">
+<a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
+<a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
+</div><h2>Documentation for package &lsquo;RSQLite&rsquo; version 0.11.4</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p align="center">
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#F">F</a>
+<a href="#I">I</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#P">P</a>
+<a href="#S">S</a>
+<a href="#misc">misc</a>
+</p>
+
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="summary-methods.html">coerce-method</a></td>
+<td>Summarize an SQLite object</td></tr>
+<tr><td width="25%"><a href="summary-methods.html">coerce-methods</a></td>
+<td>Summarize an SQLite object</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="dbCommit-methods.html">dbBeginTransaction</a></td>
+<td>DBMS Transaction Management</td></tr>
+<tr><td width="25%"><a href="dbCommit-methods.html">dbBeginTransaction-method</a></td>
+<td>DBMS Transaction Management</td></tr>
+<tr><td width="25%"><a href="dbCommit-methods.html">dbBeginTransaction-methods</a></td>
+<td>DBMS Transaction Management</td></tr>
+<tr><td width="25%"><a href="dbBuildTableDefinition.html">dbBuildTableDefinition</a></td>
+<td>Build the SQL CREATE TABLE definition as a string</td></tr>
+<tr><td width="25%"><a href="dbCallProc-methods.html">dbCallProc-method</a></td>
+<td>Call an SQL stored procedure</td></tr>
+<tr><td width="25%"><a href="dbCallProc-methods.html">dbCallProc-methods</a></td>
+<td>Call an SQL stored procedure</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbClearResult-method</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbColumnInfo-method</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbColumnInfo-methods</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbCommit-methods.html">dbCommit-method</a></td>
+<td>DBMS Transaction Management</td></tr>
+<tr><td width="25%"><a href="dbCommit-methods.html">dbCommit-methods</a></td>
+<td>DBMS Transaction Management</td></tr>
+<tr><td width="25%"><a href="dbConnect-methods.html">dbConnect-method</a></td>
+<td>Create a connection object to an SQLite DBMS</td></tr>
+<tr><td width="25%"><a href="dbConnect-methods.html">dbConnect-methods</a></td>
+<td>Create a connection object to an SQLite DBMS</td></tr>
+<tr><td width="25%"><a href="dbDataType-methods.html">dbDataType-method</a></td>
+<td>Determine the SQL Data Type of an S object</td></tr>
+<tr><td width="25%"><a href="dbDataType-methods.html">dbDataType-methods</a></td>
+<td>Determine the SQL Data Type of an S object</td></tr>
+<tr><td width="25%"><a href="dbConnect-methods.html">dbDisconnect-method</a></td>
+<td>Create a connection object to an SQLite DBMS</td></tr>
+<tr><td width="25%"><a href="dbConnect-methods.html">dbDisconnect-methods</a></td>
+<td>Create a connection object to an SQLite DBMS</td></tr>
+<tr><td width="25%"><a href="dbDriver-methods.html">dbDriver-method</a></td>
+<td>SQLite implementation of the Database Interface (DBI) classes and drivers</td></tr>
+<tr><td width="25%"><a href="dbDriver-methods.html">dbDriver-methods</a></td>
+<td>SQLite implementation of the Database Interface (DBI) classes and drivers</td></tr>
+<tr><td width="25%"><a href="dbReadTable-methods.html">dbExistsTable-method</a></td>
+<td>Convenience functions for Importing/Exporting DBMS tables</td></tr>
+<tr><td width="25%"><a href="dbReadTable-methods.html">dbExistsTable-methods</a></td>
+<td>Convenience functions for Importing/Exporting DBMS tables</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbGetDBIVersion-methods</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbGetException-method</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbGetException-methods</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbGetInfo</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbGetInfo-method</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbGetPreparedQuery</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbGetPreparedQuery-method</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbGetPreparedQuery-methods</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbGetQuery-method</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbGetQuery-methods</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbGetRowCount-method</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbGetRowCount-methods</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbGetRowsAffected-method</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbGetRowsAffected-methods</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbGetStatement-method</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbGetStatement-methods</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbHasCompleted-method</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbGetInfo-methods.html">dbHasCompleted-methods</a></td>
+<td>Database interface meta-data</td></tr>
+<tr><td width="25%"><a href="dbListTables-methods.html">dbListConnections-method</a></td>
+<td>List items from an SQLite DBMS and from objects</td></tr>
+<tr><td width="25%"><a href="dbListTables-methods.html">dbListConnections-methods</a></td>
+<td>List items from an SQLite DBMS and from objects</td></tr>
+<tr><td width="25%"><a href="dbListTables-methods.html">dbListFields-method</a></td>
+<td>List items from an SQLite DBMS and from objects</td></tr>
+<tr><td width="25%"><a href="dbListTables-methods.html">dbListFields-methods</a></td>
+<td>List items from an SQLite DBMS and from objects</td></tr>
+<tr><td width="25%"><a href="dbListTables-methods.html">dbListResults-method</a></td>
+<td>List items from an SQLite DBMS and from objects</td></tr>
+<tr><td width="25%"><a href="dbListTables-methods.html">dbListResults-methods</a></td>
+<td>List items from an SQLite DBMS and from objects</td></tr>
+<tr><td width="25%"><a href="dbListTables-methods.html">dbListTables-method</a></td>
+<td>List items from an SQLite DBMS and from objects</td></tr>
+<tr><td width="25%"><a href="dbListTables-methods.html">dbListTables-methods</a></td>
+<td>List items from an SQLite DBMS and from objects</td></tr>
+<tr><td width="25%"><a href="dbObjectId-class.html">dbObjectId-class</a></td>
+<td>Class dbObjectId</td></tr>
+<tr><td width="25%"><a href="dbReadTable-methods.html">dbReadTable-method</a></td>
+<td>Convenience functions for Importing/Exporting DBMS tables</td></tr>
+<tr><td width="25%"><a href="dbReadTable-methods.html">dbReadTable-methods</a></td>
+<td>Convenience functions for Importing/Exporting DBMS tables</td></tr>
+<tr><td width="25%"><a href="dbReadTable-methods.html">dbRemoveTable-method</a></td>
+<td>Convenience functions for Importing/Exporting DBMS tables</td></tr>
+<tr><td width="25%"><a href="dbReadTable-methods.html">dbRemoveTable-methods</a></td>
+<td>Convenience functions for Importing/Exporting DBMS tables</td></tr>
+<tr><td width="25%"><a href="dbCommit-methods.html">dbRollback-method</a></td>
+<td>DBMS Transaction Management</td></tr>
+<tr><td width="25%"><a href="dbCommit-methods.html">dbRollback-methods</a></td>
+<td>DBMS Transaction Management</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbSendPreparedQuery</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbSendPreparedQuery-method</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbSendPreparedQuery-methods</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbSendQuery-method</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbSendQuery-methods.html">dbSendQuery-methods</a></td>
+<td>Execute a SQL statement on a database connection</td></tr>
+<tr><td width="25%"><a href="dbSetDataMappings-methods.html">dbSetDataMappings-method</a></td>
+<td>Set data mappings between SQLite and R/S-Plus</td></tr>
+<tr><td width="25%"><a href="dbSetDataMappings-methods.html">dbSetDataMappings-methods</a></td>
+<td>Set data mappings between SQLite and R/S-Plus</td></tr>
+<tr><td width="25%"><a href="dbDriver-methods.html">dbUnloadDriver-method</a></td>
+<td>SQLite implementation of the Database Interface (DBI) classes and drivers</td></tr>
+<tr><td width="25%"><a href="dbDriver-methods.html">dbUnloadDriver-methods</a></td>
+<td>SQLite implementation of the Database Interface (DBI) classes and drivers</td></tr>
+<tr><td width="25%"><a href="dbReadTable-methods.html">dbWriteTable-method</a></td>
+<td>Convenience functions for Importing/Exporting DBMS tables</td></tr>
+<tr><td width="25%"><a href="dbReadTable-methods.html">dbWriteTable-methods</a></td>
+<td>Convenience functions for Importing/Exporting DBMS tables</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="fetch-methods.html">fetch-method</a></td>
+<td>Fetch records from a previously executed query</td></tr>
+<tr><td width="25%"><a href="fetch-methods.html">fetch-methods</a></td>
+<td>Fetch records from a previously executed query</td></tr>
+<tr><td width="25%"><a href="summary-methods.html">format-method</a></td>
+<td>Summarize an SQLite object</td></tr>
+<tr><td width="25%"><a href="summary-methods.html">format-methods</a></td>
+<td>Summarize an SQLite object</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="isIdCurrent.html">isIdCurrent</a></td>
+<td>Check whether an dbObjectId handle object is valid or not</td></tr>
+<tr><td width="25%"><a href="make.db.names-methods.html">isSQLKeyword-method</a></td>
+<td>Make R/S-Plus identifiers into legal SQL identifiers</td></tr>
+<tr><td width="25%"><a href="make.db.names-methods.html">isSQLKeyword-methods</a></td>
+<td>Make R/S-Plus identifiers into legal SQL identifiers</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="sqliteSupport.html">last.warning</a></td>
+<td>Support Functions</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="make.db.names-methods.html">make.db.names-method</a></td>
+<td>Make R/S-Plus identifiers into legal SQL identifiers</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="summary-methods.html">print-method</a></td>
+<td>Summarize an SQLite object</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="summary-methods.html">show-method</a></td>
+<td>Summarize an SQLite object</td></tr>
+<tr><td width="25%"><a href="summary-methods.html">show-methods</a></td>
+<td>Summarize an SQLite object</td></tr>
+<tr><td width="25%"><a href="SQLite.html">SQLite</a></td>
+<td>Initialize the SQLite engine for the current R session.</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteCloseConnection</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteCloseDriver</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteCloseResult</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="SQLiteConnection-class.html">SQLiteConnection-class</a></td>
+<td>Class SQLiteConnection</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteConnectionInfo</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteCopyDatabase.html">sqliteCopyDatabase</a></td>
+<td>Copy a SQLite database</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteDataType</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteDescribeConnection</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteDescribeDriver</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteDescribeResult</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="SQLite.html">SQLiteDriver</a></td>
+<td>Initialize the SQLite engine for the current R session.</td></tr>
+<tr><td width="25%"><a href="SQLiteDriver-class.html">SQLiteDriver-class</a></td>
+<td>Class SQLiteDriver</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteDriverInfo</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteExecStatement</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteFetch</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteFetchOneColumn</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteImportFile</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteInitDriver</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteNewConnection</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="SQLiteObject-class.html">SQLiteObject-class</a></td>
+<td>Class SQLiteObject</td></tr>
+<tr><td width="25%"><a href="sqliteQuickColumn.html">sqliteQuickColumn</a></td>
+<td>Return an entire column from a SQLite database</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteQuickSQL</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteReadTable</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="SQLiteResult-class.html">SQLiteResult-class</a></td>
+<td>Class SQLiteResult</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteResultInfo</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteTableFields</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteTransactionStatement</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">sqliteWriteTable</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">SQLITE_RO</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">SQLITE_RW</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">SQLITE_RWC</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="make.db.names-methods.html">SQLKeywords-method</a></td>
+<td>Make R/S-Plus identifiers into legal SQL identifiers</td></tr>
+<tr><td width="25%"><a href="make.db.names-methods.html">SQLKeywords-methods</a></td>
+<td>Make R/S-Plus identifiers into legal SQL identifiers</td></tr>
+<tr><td width="25%"><a href="summary-methods.html">summary-method</a></td>
+<td>Summarize an SQLite object</td></tr>
+<tr><td width="25%"><a href="summary-methods.html">summary-methods</a></td>
+<td>Summarize an SQLite object</td></tr>
+</table>
+
+<h2><a name="misc">-- misc --</a></h2>
+
+<table width="100%">
+<tr><td width="25%"><a href="sqliteSupport.html">.conflicts.OK</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">.SQLite.NA.string</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">.SQLitePkgName</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">.SQLitePkgRCS</a></td>
+<td>Support Functions</td></tr>
+<tr><td width="25%"><a href="sqliteSupport.html">.SQLitePkgVersion</a></td>
+<td>Support Functions</td></tr>
+</table>
+</body></html>

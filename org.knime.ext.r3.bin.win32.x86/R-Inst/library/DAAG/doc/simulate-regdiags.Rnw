@@ -1,0 +1,365 @@
+\documentclass[nohyper,justified]{tufte-handout}
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Sampling Properties of Regression Diagnostics}
+% \usepackage{tufte-larger}
+\usepackage{amsmath, amssymb,txfonts,bm}
+\usepackage{scrhack}
+\usepackage{nextpage}
+\usepackage{fancyvrb}
+\usepackage[unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=true,bookmarksopenlevel=2,
+ breaklinks=true,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+\hypersetup{pdfstartview=FitH}
+\usepackage{breakurl}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+
+\title{Functions for Assessing the Sampling Properties
+     of plot.lm() Regression Diagnostics}
+\author{John Maindonald}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.8}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\floatpagefraction}{0.75}
+
+\usepackage[buttonsize=1em]{animate}
+
+\makeatother
+
+\newenvironment{itemizz}%
+  {\begin{itemize}%
+    \setlength{\itemsep}{2pt}%
+    \setlength{\parskip}{2pt}}%
+  {\end{itemize}}
+
+% Macros for typesetting the documentation
+\newcommand{\hlred}[1]{\textcolor{Maroon}{#1}}% prints in red
+\newcommand{\hangleft}[1]{\makebox[0pt][r]{#1}}
+\newcommand{\hairsp}{\hspace{1pt}}% hair space
+\newcommand{\hquad}{\hskip0.5em\relax}% half quad space
+\newcommand{\TODO}{\textcolor{red}{\bf TODO!}\xspace}
+\newcommand{\ie}{\textit{i.\hairsp{}e.}\xspace}
+\newcommand{\eg}{\textit{e.\hairsp{}g.}\xspace}
+\newcommand{\na}{\quad--}% used in tables for N/A cells
+\providecommand{\XeLaTeX}{X\lower.5ex\hbox{\kern-0.15em\reflectbox{E}}\kern-0.1em\LaTeX}
+\newcommand{\tXeLaTeX}{\XeLaTeX\index{XeLaTeX@\protect\XeLaTeX}}
+% \index{\texttt{\textbackslash xyz}@\hangleft{\texttt{\textbackslash}}\texttt{xyz}}
+\newcommand{\tuftebs}{\symbol{'134}}% a backslash in tt type in OT1/T1
+\newcommand{\doccmdnoindex}[2][]{\texttt{\tuftebs#2}}% command name -- adds backslash automatically (and doesn't add cmd to the index)
+\newcommand{\doccmddef}[2][]{%
+  \hlred{\texttt{\tuftebs#2}}\label{cmd:#2}%
+  \ifthenelse{\isempty{#1}}%
+    {% add the command to the index
+      \index{#2 command@\protect\hangleft{\texttt{\tuftebs}}\texttt{#2}}% command name
+    }%
+    {% add the command and package to the index
+      \index{#2 command@\protect\hangleft{\texttt{\tuftebs}}\texttt{#2} (\texttt{#1} package)}% command name
+      \index{#1 package@\texttt{#1} package}\index{packages!#1@\texttt{#1}}% package name
+    }%
+}% command name -- adds backslash automatically
+\newcommand{\doccmd}[2][]{%
+  \texttt{\tuftebs#2}%
+  \ifthenelse{\isempty{#1}}%
+    {% add the command to the index
+      \index{#2 command@\protect\hangleft{\texttt{\tuftebs}}\texttt{#2}}% command name
+    }%
+    {% add the command and package to the index
+      \index{#2 command@\protect\hangleft{\texttt{\tuftebs}}\texttt{#2} (\texttt{#1} package)}% command name
+      \index{#1 package@\texttt{#1} package}\index{packages!#1@\texttt{#1}}% package name
+    }%
+}% command name -- adds backslash automatically
+\newcommand{\docopt}[1]{\ensuremath{\langle}\textrm{\textit{#1}}\ensuremath{\rangle}}% optional command argument
+\newcommand{\docarg}[1]{\textrm{\textit{#1}}}% (required) command argument
+\newenvironment{docspec}{\begin{quotation}\ttfamily\parskip0pt\parindent0pt\ignorespaces}{\end{quotation}}% command specification environment
+\newcommand{\docenv}[1]{\texttt{#1}\index{#1 environment@\texttt{#1} environment}\index{environments!#1@\texttt{#1}}}% environment name
+\newcommand{\docenvdef}[1]{\hlred{\texttt{#1}}\label{env:#1}\index{#1 environment@\texttt{#1} environment}\index{environments!#1@\texttt{#1}}}% environment name
+\newcommand{\docpkg}[1]{\texttt{#1}\index{#1 package@\texttt{#1} package}\index{packages!#1@\texttt{#1}}}% package name
+\newcommand{\doccls}[1]{\texttt{#1}}% document class name
+\newcommand{\docclsopt}[1]{\texttt{#1}\index{#1 class option@\texttt{#1} class option}\index{class options!#1@\texttt{#1}}}% document class option name
+\newcommand{\docclsoptdef}[1]{\hlred{\texttt{#1}}\label{clsopt:#1}\index{#1 class option@\texttt{#1} class option}\index{class options!#1@\texttt{#1}}}% document class option name defined
+\newcommand{\docmsg}[2]{\bigskip\begin{fullwidth}\noindent\ttfamily#1\end{fullwidth}\medskip\par\noindent#2}
+\newcommand{\docfilehook}[2]{\texttt{#1}\index{file hooks!#2}\index{#1@\texttt{#1}}}
+\newcommand{\doccounter}[1]{\texttt{#1}\index{#1 counter@\texttt{#1} counter}}
+
+\setcounter{secnumdepth}{2}
+
+% Prints the month name (e.g., January) and the year (e.g., 2008)
+\newcommand{\monthyear}{%
+  \ifcase\month\or January\or February\or March\or April\or May\or June\or
+  July\or August\or September\or October\or November\or
+  December\fi\space\number\year
+}
+
+\renewcommand{\maketitlepage}[0]{%
+  \cleardoublepage%
+  {%
+  \sffamily%
+  \begin{fullwidth}%
+  \fontsize{18}{20}\selectfont\par\noindent\textcolor{darkgray}{{\thanklessauthor}}%
+  \vspace{11.5pc}%
+%  \fontsize{27}{30}\selectfont\par\noindent\textcolor{darkgray}{{\thanklesstitle}}%
+  \fontsize{40}{45}\selectfont\par\noindent\textcolor{darkgray}{{\thanklesstitle}}%
+  \vfill%
+  \fontsize{14}{16}\selectfont\par\noindent\allcaps{\thanklesspublisher}%
+  \end{fullwidth}%
+  }
+  \thispagestyle{empty}%
+  \clearpage%
+}
+
+
+\begin{document}
+
+\bmdefine\bX{\mathbf{X}}
+\bmdefine\bP{\mathbf{P}}
+\bmdefine\sfX{\bm{\textsf{\textmd{X}}}}
+\def\sx{\textsf{x}}
+\bmdefine\bI{\mathbf{I}}
+\def\bW{\boldsymbol{W}}
+\def\by{\boldsymbol{y}}
+\def\bSigma{\boldsymbol{\Sigma}}
+\def\beps{\boldsymbol{\epsilon}}
+\def\bbeta{\boldsymbol{\beta}}
+\def\bmu{\boldsymbol{\mu}}
+\def\bb{\boldsymbol{b}}
+\def\bx{\boldsymbol{x}}
+
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+options(replace.assign=TRUE,width=50)
+opts_chunk$set(fig.path='figs/gph-', cache.path='cache/gph-',
+               fig.align='center', dev='pdf', fig.width=5,
+               fig.height=5, fig.show='hold', cache=TRUE, par=TRUE)
+knit_hooks$set(par=function(before, options, envir){
+if (before && options$fig.show!='none') par(mar=c(4,4,1.6,.1),
+              cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
+}, crop=hook_pdfcrop)
+@
+
+\maketitle
+
+\section{Calibration of Regression Diagnostics}
+
+Indications of departures from regression assumptions in diagnostic
+plots may reflect sampling variation.  This is an especial issue for
+relatively small datasets.  Diagnostic plots for a number of sets of
+simulated data may be an essential aid to judgement.  In effect, the
+observed diagnostic plot is judged against a simulated sampling
+distribution for such plots.
+
+\subsection{A 'simple' straight line regression example}
+We use data, from the {\em DAAG} PACKAGE, that compares record times
+for Northern Island hill races between males and females:
+<<LOAD-DAAG>>=
+library(DAAG, warn.conflicts=FALSE)
+library(latticeExtra)
+@ %
+
+The data that are plotted in Figure \ref{fig:nimff} are, as they
+stand, problematic for least squares fitting. A least squares line has
+nevertheless been added to the plot.  The discussion that immediately
+follows is designed to highlight problems that would largely be
+avoided if a logarithmic transformation had first been applied to the
+data:
+
+<<nimff, eval=FALSE, echo=FALSE>>=
+plot(timef~time, data=nihills,
+     xlab="Male record times",
+     ylab="Female record times")
+mftime.lm <- lm(timef ~ time, data=nihills)
+abline(mftime.lm)
+plot(mftime.lm, which=1)
+@ %
+
+\begin{figure}
+<<nimff-do, ref.label="nimff", dev='pdf', fig.width=2.75, fig.height=2.85, eval=TRUE, echo=FALSE, out.width="0.47\\textwidth">>=
+@ %
+\caption{Record times for hill races are compared -- females versus
+  males.  A least squares line is added. The diagnostic plot of
+  residuals against fitted values (\texttt{which=1}), using the
+  \texttt{plot} method for an \texttt{lm} object, is shown alongside.
+  The ``curve'' is a crude attempt to identify any pattern in the
+  residuals.}\label{fig:nimff}
+\end{figure}
+
+Code is:
+<<code-nimff, ref.label="nimff", eval=FALSE, echo=TRUE, tidy=FALSE>>=
+@ %
+
+
+\subsection{The function \texttt{plotSimScat()}}
+
+The function \texttt{plotSimScat()} is designed for use with
+straight line regression.  It plots either actual data values
+and simulated values against the $x$-variable, or residuals and
+simulated residuals.
+
+Figure \ref{fig:4sim-nimff} shows four scatterplots that overlay
+residuals from the actual data with residuals that are simulated from
+the model.  The coefficients used are those for the fitted least
+squares line, and the standard deviation is the estimate that is
+returned by R's \texttt{lm()} function.
+
+\begin{figure}
+<<4sims-do-nimff, dev='pdf', fig.width=6.5, fig.height=2.875, eval=TRUE, echo=FALSE>>=
+mftime.lm <- lm(timef ~ time, data=nihills)
+gph <- plotSimScat(mftime.lm, layout=c(4,1), show="residuals")
+gph <- update(gph, xlab="Record times for males (h)",
+              ylab="Record times for females (h)")
+print(gph)
+@ %
+\vspace*{-15pt}
+
+\caption{The plots are four simulations of points.  The coefficients
+  used, and the standard deviation, are from the fitted least squares
+  line.}\label{fig:4sim-nimff}
+\end{figure}
+
+The largest simulated value lies consistently above the data value.
+Code is:
+<<4sims-do-nimff, ref.label="4sims-do-nimff", eval=FALSE, echo=TRUE>>=
+@
+
+
+\section{Diagnostic Plots for Simulated Data -- \texttt{plotSimDiags()}}
+
+The function \texttt{plotSimDiags()} can be used with any \texttt{lm}
+object, or object of a class that inherits from \texttt{lm}.
+For simplicity, the function is used here with a straight line
+regression object.  Here are the diagnostic plots, for the object
+\texttt{mftime.lm} that was created earlier, from use of
+\texttt{plot.lm()}.
+
+\begin{figure*}
+<<diag-logmftime, dev='pdf', fig.width=2.85, fig.height=3, eval=TRUE, echo=FALSE, out.width="0.24\\textwidth">>=
+plot(mftime.lm, cex.caption=0.8, ask=FALSE)
+@ %
+\vspace*{-9pt}
+
+\caption{Diagnostic plots from the regession of \texttt{timef} on
+  \texttt{time}.}\label{fig:diag-mftime}
+\end{figure*}
+
+\paragraph{Residuals versus fitted values:}
+
+Figure \ref{fig:simwhich1} shows simulations for the first panel
+(Residuals vs Fitted) above.  With just one explanatory variable, the
+difference between plotting against $\hat{\alpha} + \hat{\beta} x$ and
+plotting against $x$ (as in Figure \ref{fig:4sim-nimff} using
+\texttt{plotSimScat()}) amounts only to a change of labeling on the
+$x$-axis.  The plot against $x$-values in Figure \ref{fig:4sim-nimff}
+had the convenience that it allowed exactly the same $x$-axis labeling for
+each different simulation.
+
+\begin{figure}
+<<4sims-mftimesimdiag1, eval=TRUE, echo=FALSE, fig.width=6.25, fig.height=2.85>>=
+plotSimDiags(obj=mftime.lm, which=1, layout=c(4,1))
+@ %
+\caption{Residuals versus fitted values, for four sets of simulated
+  data.}\label{fig:simwhich1}
+\end{figure}
+Code is:
+<<4sims-mftimesimdiag1-code, ref.label="4sims-mftimesimdiag1", eval=FALSE, echo=TRUE, tidy=FALSE>>=
+@ %
+
+The simulations indicate that, in these circumstances, there can be
+a pattern in the smooth curve that is added that is largely due to
+the one data value is widely separated from other data values.
+
+\paragraph{A check for normality:}
+
+Figure \ref{fig:diag-mftime} (the second plot) identified two large
+negative residuals and one large positive residual.
+
+Are the deviations from a line much what might be expected given
+statistical variation?  Figure \ref{fig:mftimesimdiag2} shows
+normal probability plots for four sets of simulated data:
+
+\begin{figure}
+<<4sims-mftimesimdiag2, dev='pdf', fig.width=6.5, fig.height=2.65, eval=T, echo=FALSE>>=
+plotSimDiags(obj=mftime.lm, which=2, layout=c(4,1))
+@ %
+\caption{Normal probability plots for four sets of simulated
+  data.}\label{fig:mftimesimdiag2}
+\end{figure}
+
+\noindent
+Code is as for Figure \ref{fig:simwhich1}, but with the argument
+\texttt{which=2}.
+
+\paragraph{Is the variance constant?:}
+
+At the low end of the range in Figure \ref{fig:diag-mftime}
+(the third plot), the variance hardly changes with increasing fitted
+value.  The sudden bend upwards in the smooth curve is due to the
+large absolute values of the residuals for the three largest fitted
+values.
+
+Figure \ref{fig:mftimesimdiag3} shows the equivalent plots for four sets of
+simulated data.  None of the plots show the same increase in scale with
+fitted value as in the third panel of Figure \ref{fig:diag-mftime}.
+
+\begin{figure}
+<<4sims-mftimesimdiag3, dev='pdf', fig.width=6.5, fig.height=2.65, eval=T, echo=FALSE>>=
+plotSimDiags(obj=mftime.lm, which=3, layout=c(4,1))
+@ %
+\vspace*{-15pt}
+
+\caption{Scale-location plots for four sets of simulated
+  data.}\label{fig:mftimesimdiag3}
+\end{figure}
+Code is as for Figure \ref{fig:simwhich1}, but with the argument
+\texttt{which=3}.
+
+
+\paragraph{Issues of leverage:}
+
+Figure \ref{fig:diag-mftime} (the third plot) warned that there are severe
+problems with leverage, as was already obvious from the
+scatterplot in Figure \ref{fig:nimff}.  Here, there is not much point
+in doing a simulation.  We already know from the previous simulations
+that the large residual that is associated with the highest leverage
+point is unlikely to be due to statistical variation.
+
+Here, however, are plots for simulated data:
+
+\begin{figure}
+<<4sims-mftimesimdiag5, dev='pdf', fig.width=6.5, fig.height=2.65, eval=T, echo=FALSE>>=
+plotSimDiags(obj=mftime.lm, which=5, layout=c(4,1))
+@ %
+\vspace*{-15pt}
+
+\caption{Scale-location plots for four sets of simulated
+  data.}\label{fig:mftimesimdiag5}
+\end{figure}
+Code is as for Figure \ref{fig:simwhich1}, but with the argument
+\texttt{which=5}.
+
+\subsection{All 4 diagnostic plots in the same call}
+
+Do for example:
+<<all6, eval=T, echo=T>>=
+gphs1to6 <- plotSimDiags(obj=mftime.lm, which=1:6, layout=c(4,2))
+@
+
+Then do, for example:
+<<plot1, eval=T, fig.width=6.5, fig.height=4.2>>=
+update(gphs1to6[[1]], layout=c(4,2))
+@ %
+
+This way of proceeding has the advantage that the same simulated data
+values are used for all diagnostics, without the need to set a prior
+random number seed.
+
+\paragraph{Further checks:} It bears emphasizing that, depending on the
+nature of the data, there may be further checks and tests
+that should be applied.  Data that have been collected over a
+significant period of time is an important special case. Departures
+from a fitted line may well show a pattern with time. The functions
+\texttt{acf()} and \texttt{pacf()} should be used to check for
+autocorrelation in the residuals.
+
+\end{document}

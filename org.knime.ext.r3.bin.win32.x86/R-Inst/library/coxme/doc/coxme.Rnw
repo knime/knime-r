@@ -1,0 +1,577 @@
+\documentclass{article}
+\usepackage[pdftex]{graphicx}
+\usepackage{Sweave}
+\usepackage{amsmath}
+\addtolength{\textwidth}{1in}
+\addtolength{\oddsidemargin}{-.5in}
+\setlength{\evensidemargin}{\oddsidemargin}
+
+\SweaveOpts{keep.source=TRUE, fig=FALSE}
+%\VignetteIndexEntry{Mixed Effects Cox Models}
+%\VignetteDepends{coxme}
+%\VignetteDepends{kinship2}
+
+\newcommand{\myfig}[1]{\resizebox{\textwidth}{!}
+                        {\includegraphics{#1.pdf}}}
+\title{Mixed Effects Cox Models}
+\author{Terry Therneau \\Mayo Clinic}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+Like many other projects, this software library started
+with a data set and a problem. 
+From this came statistical ideas for a solution, followed by some initial
+programming --- which more than anything else helped to define the
+\emph{real} computational and statistical issues --- and then a more
+ambitious programming solution.
+The problem turned out to be harder than
+I thought; the first release-worthy code took over 3 years in gestation
+and resulted in the \emph{kinship} library.
+This in turn led to application to a larger set of problems, and
+a complete re-design of the underlying code.  It was then
+split into 
+separate libraries: coxme contains the central code for mixed effects
+Cox and linear models, kinship2 contains code for the construction and
+manipulation of pedigree data, and bdsmatrix contains underlying
+routines for block-diagonal sparse matrices.  
+
+\section{Model}
+The coxme function fits the model
+\begin{align*}
+  \lambda(t) &= \lambda_0(t) e^{X\beta + Zb} \\
+      b &\sim G(0, \Sigma(\theta))
+\end{align*}
+where $\lambda_0$ is an unspecified baseline hazard function,
+$X$ and $Z$ are the design matrices for the
+fixed and random effects, respectively,
+$\beta$ is the vector of fixed-effects coefficients and 
+$b$ is the vector of random effects coefficients.
+The random effects distribution $G$ is modeled as Gaussian with 
+mean zero and a variance matrix $\Sigma$,
+which in turn depends
+a vector of parameters $\theta$.  
+
+For any fixed values of $\beta$ and $b$ we define the usual
+Cox parial likelihood PL (often labeled as a log-likelihood in
+printouts) as
+\begin{equation*}
+\log[PL(\beta,b))] = \sum_{i=1}^n \int_0^\infty \left[
+     Y_i(t) \eta_i(t) - \log \left(\sum_j Y_j(t)e^{\eta_j(t)} \right)\right]
+\end{equation*}
+where $\eta_i(t) = X_i(t)\beta + Z_i(t)b$ is the linear score for
+subject $i$ at time $t$ and $Y_i(t)$ describes the risk set,
+$Y_i(t) = 1$ if subject $i$ is still under
+observation at time $t$ and 0 otherwise.
+For further details see chapter 3 of Therneau and Grambsch \cite{Therneau00}
+or any other mid-level survival text.     
+
+We can integrate out the random effects to create the integrated partial
+likelihood
+\begin{equation*}
+IPL(\beta, \theta) = \frac{1}{(2\pi)^{q/2}|\Sigma(\theta)|^{1/2}} 
+         \int PPL(\beta, b) e^{-b'\Sigma^{-1}(\theta)b/2}\,db
+\end{equation*} 
+where $q$ is the length of $b$, i.e., the number of random effects.
+Ripatti and Palmgren \cite{Ripatti02} showed that the IPL can be
+treated as a likelihood, just as integrated full likelihoods
+can.  An ML estimate is obtained by joint maximization over
+$\beta$ and $\theta$.
+We can compare a nested set of random or fixed effects Cix
+models using chi-square tests.
+
+The REML estimate is obtained by also integrating out the fixed effects
+\begin{equation*}
+REML(\theta) = \frac{1}{(2\pi)^{q/2}|\Sigma(\theta)|^{1/2}} 
+         \int PPL(\beta, b) e^{-b'\Sigma^{-1}(\theta)b/2}\,db \,d\beta
+\end{equation*}
+The REML estimate is obtained by maximization of this quantity over
+$\theta$.
+As in linear models, the REML estimate cannot be used for testing fixed
+effects, due to the lack of a proper prior distribution for 
+$\beta$.  
+For instance, assume that \texttt{age} were a candidate variable.  The
+REML value for a fit with age in days versus one with age in years
+will differ by the constant $\log(365.25)$;
+this has no impact on the estimate of $\theta$, but makes the comparison
+of two models, one with and one without age, completely arbitrary.
+
+In linear models the REML estimate is often preferred, since practical
+experience has shown it to be more reliable; the ML estimates are often
+  too large.  
+By analogy, some have recommended using a REML estimate for the mixed
+effects Cox model.  However, either theoretical and practical evidence for
+its superiority is sparse.   For one particular estimation problem,
+Cortinas has evidence that the REML estimate has greater bias than
+the ML.  The coxme function currently only provides an ML estimate. 
+ 
+For a very simple fit such as
+<<eval=FALSE, echo=TRUE>>=
+fit1 <- coxme(Surv(endage, cancer) ~ parity + (1| famid))
+@ 
+found below there will be one random intercept per
+group (family), and 
+$Z$ will be the usual design matrix for a
+one-way anova, i.e., the same design matrix as would
+be used by a linear model \texttt{lm(y $\sim$ factor(famid)-1)}.
+In this case $Z_{ij} =1$ iff subject $i$ is a member of family $j$.
+The variance of the random effects in this case is
+$\Sigma= \theta I$.
+
+Note that if there are $k$ groups the vector of random effects
+coefficients $b$ will have $k$ elements.
+Because of the shrinkage provided by the random effect
+they will satisfy $\sum b_k =0$, rather than having one of
+their members set to zero.
+With respect to the random effects the \texttt{contrasts}
+option has no relevance.
+
+\section{Simple Models}
+For many random effects models the random effects can be
+specified very simply in the model formula.
+As an example consider the \texttt{eortc} data set, which
+is included with the package for illustration.
+This is a simple simulated example, based on the results
+of a breast cancer trial undertaken by the 
+European Organization for Research and Treatment of Cancer.
+There are 37 enrolling centers with enrollments ranging from
+21 to 247 subjects.
+We start by fitting a simple model with a random intercept
+per center.
+<<>>=
+library(coxme)
+stem(table(eortc$center))
+
+efit1 <- coxph(Surv(y, uncens) ~ trt, eortc)
+efit2 <- coxme(Surv(y, uncens) ~ trt + (1|center), eortc)
+@ 
+Random effects are specified in the formula by a parenthesised
+expression which contains a vertical bar separating effects on
+the left from grouping variables on the right.
+In the case above we read it as an intercept (effect) per center (group).
+<<>>=
+print(efit2)
+@ 
+The components of the printout are
+\begin{itemize}
+  \item The total number of observations and the total number of events 
+(deaths) in the data set.
+  \item The computational effort, summarized as the number of iterations
+for the optim routine and the underlying Newton-Raphson iterations used.
+  \item The log partial likelihood for a model with no covariates or random
+effects, the fitted partial likelihood, and the value with the random effects
+integrated out.  We will normally be interested in the null and integrated
+values.  (The log values are printed, but labeled as PL and IPL for
+brevity).
+  \item Likelihood ratio tests based on the integrated and penalized views
+of the model, along with penalized values.  The AIC penalizes by twice the
+effective degrees of freedom, and the BIC by $\log(d)$ times the effective
+degrees of freedom, where $d$ is the number of events.
+\item A summary of the fixed effects
+\item A summary of the variances of the random effects
+\end{itemize}
+
+After integrating out the random effects, the log partial likelihood 
+for the mixed effects model is 
+\Sexpr{round(diff(efit2$loglik[1:2])*2, 1)}.
+As a test of the random effects, we would normally compare this to 
+\texttt{efit1}, the fit with no random effects which has a log
+partial likelihood of \Sexpr{round(diff(efit1$loglik)*2,1)}
+The estimated standard deviation between centers of .33 is
+fairly substantial (more on this below).
+The difference is $>100$ on one degree of freedom, which is highly
+significant.
+
+Another way to approach the fit is as a penalized model.
+The coefficients are viewed as the solution to a penalized
+problem $\log(PPL(\beta, b)) - \log(PL(\beta,b)) - p(\theta)$
+where the penalty function $p(\theta) =  b'\Sigma^{-1}(\theta)b/2$.
+In this case we use the ordinary $PL$ for assessment, but with
+an effective degrees of freedom which lies somewhere between
+the total number of coefficients $(\beta, b)$ of 38 and the
+degrees of freedom for the fixed effects of 1. 
+For this particular problem $\Sigma(\theta) = \theta I$,
+a multiple of the identity matrix and our penalty is
+$p(\theta) = -1/(2\theta) \sum{j=1}{37} b_j^2$. 
+As the penalty goes to zero the fit will be equivalent
+to treating factor(center) as a fixed effect with degrees
+of freedom equal to 38, 
+as the penalty becomes larger the effective degrees of 
+freedom will decrease.
+In this case a test for the random effects would be based
+on (319.7 - 105.7) on 27.7 degrees of freedom.  
+We do not normally use this test, but the adjusted degrees 
+of freedom is useful in summarizing the fit.
+
+The major components of the model can be extracted via the 
+following functions:
+\begin{center}
+\begin{tabular}{r|ccc} 
+  &\multicolumn{3}{c}{Method} \\
+  &lme/lmer & coxme $<2.2$ & coxme $\ge 2.2$ \\ \hline
+  fixed effects coefficients & fixef & fixef & fixef \\
+  random effects coefficients& ranef &  & ranef \\
+  fixed effects variance matrix& vcov&  & vcov \\
+  random effects parameters ($\theta$)   & VarCorr & ranef & VarCorr 
+\end{tabular}
+\end{center}
+Note that for version 2.2 and greater these follow the
+same pattern as the linear mixed effects models in R;
+prior to version 2.2 the ranef method was incorrectly assigned.
+
+One feature of the mixed effects Cox model is that the
+standard deviation of the random effect is directly
+interpretable.  
+The random effects $b_j$ for each center $j$ are in the 
+risk score, a value of .33 for instance (one standard deviation
+above the mean) corresponds to a relative risk of
+$\exp(.33)= 1.39$, an almost 40\% higher risk of death for subjects
+at that center.  
+(In real data sets we would of course have adjusted for imbalances
+ in patient risk factors between centers.)
+The random effects coefficients can be retrieved using the
+\texttt{ranef} function.
+The code below shows center effects ranging from less than 1/2 to
+over 1.6 times the average risk for the study.
+Because there may be multiple random effects in a model the 
+ranef function returns a list, with one element per random effect.
+We are interested in the first element (only element in this case)
+of the list.
+<<>>=
+stem(exp(ranef(efit2)[[1]]))
+@ 
+
+To look at random treatment effects within center we can add
+a nested effect
+<<>>=
+efit3 <- coxme(Surv(y, uncens) ~ trt + (1 | center/trt), eortc)
+efit3
+@ 
+This shows a further improvement in fit, but by much smaller
+amount.
+
+There is one important difference between how random effects in
+coxme and in lmer are handled concerning intercepts.
+Linear models have an implied intercept term.
+Unless explicitly removed, the model \verb!lm(y ~x)! will
+actually fit the model \verb!lm(y ~x +1)!.
+This carries forward into the notation of lmer where a random
+effect \verb!(age | group)! will automatically add the random
+intercept and fit \verb!(1 + age | group)!.
+Cox models do not have an intercept term, and an automatic
+``1'' is not added to either fixed effects \emph{or} random
+effects portions of the formula.
+
+
+\section{The Minnesota Breast Cancer Family Study}
+\subsection{Background}
+  Details of the study can be found in Sellers \cite{Sellers99}
+Briefly, in 1944 a family study of breast cancer was initiated at the
+Dight institute for Human Genetics at the University of Minnesota
+to examine the influence of heredity on the risk of breast cancer.
+Probands were a consecutive series of all breast cancer patients
+ascertained at the tumor clinic of the University hospital between
+1944 and 1952.  A total of 544 families were studied, representing
+data on 4418 family members.  Results of that early study
+provided some of the first evidence that breast cancer clusters in
+families \cite{Anderson58}.
+
+Records of the research then sat dormant for 40 years, until a series of
+follow-up studies was initiated in the late 1990s.  
+Prevalent cases ($n=40$) and families where most of the relatives other than
+the proband were deceased at baseline ($n=42$) were excluded.  Of the
+remainder 30 families could be contacted and 6 refused, leaving 426
+participating families.  After extending pedigrees to the current
+generation, the final data set has 28081 subjects.  
+The full set of subjects along with a few selected variables 
+is included in the \texttt{kinship2} package as the 
+\texttt{minnbreast} data set.
+The analysis of this data set was the original genesis of the coxme function.
+
+<<>>=
+library(coxme)
+library(kinship2)
+options(show.signif.stars=FALSE)
+makefig <- function(file) {
+    pdf(paste(file, "pdf", sep='.'), width=7, height=5)
+    par(mar=c(5.1, 4.1, .1, .1))
+}
+
+names(minnbreast)
+with(minnbreast, table(sex, cancer, exclude=NULL))
+
+mped <- with(minnbreast, pedigree(id, fatherid, motherid, sex,
+                                  affected=cancer, famid=famid,
+                                  status=proband))
+makefig("cfig1")
+plot(mped["8"])  #figure 1
+dev.off()
+@ 
+
+\begin{figure}
+  \myfig{cfig1}
+  \caption{Pedigree for family 8 of the Minnesota Breast Cancer Study.
+    Cancer cases are filled, the proband is marked with a slash}
+  \label{cfig1}
+\end{figure}
+
+Figure \ref{cfig1} shows the pedigree for family 8.  The original
+case (the proband) has a mother, daughter, and niece with breast cancer.
+This is a high risk family.  There is also a brother-in-law with
+prostate cancer. 
+
+An aside. Our first action was to turn off one of the most egregious
+abominations of statistical packages: using stars to train our users
+that ``$<.05$'' is all that matters, when in fact that is one of the
+most useless ways known to employ statistical methods.
+I also like to place my figures within the document using the
+latex \verb+\begin{figure}+ command, hence I use \texttt{fig=FALSE}
+as a default Sweave option and generate the pdfs directly.
+
+\subsection{Simple models}
+The simplest model is to look for a random intercept per family.
+<<>>=
+minnfemale <- minnbreast[minnbreast$sex == 'F' & !is.na(minnbreast$sex),]
+fit0 <- coxph(Surv(endage, cancer) ~ I(parity>0), minnfemale,
+              subset=(proband==0))
+summary(fit0)
+
+fit1 <- coxme(Surv(endage, cancer) ~ I(parity>0) + (1|famid),
+              minnfemale, subset=(proband==0))
+print(fit1)
+@ 
+Note that we don't include the proband in the model.  Because they
+are the index case that caused a family to be included, they have in
+a probability of 1 for cancer and don't fit into the predictive
+framework.
+
+From the simple Cox model we see that ever having a child is protective,
+reducing the risk of breast cancer by about 30\%. 
+A mixed effects model has nearly the same estimate for parity.
+The random family effect, an estimated intercept (excess risk) 
+for each family, has a standard deviation of .41.  
+We would expect about 15\% of the families to be 1 standard deviation
+or more above the mean, and these families will have a breast
+cancer risk that is exp(.41)=1.5 times the norm.  A similar fraction
+have lower risk.
+This is a modestly large familial effect.
+
+The result of \texttt{fit1} is also known as a \emph{shared frailty} model.
+The term originally arose in demography, where the excess risk $f_k=\exp(b_k)$ 
+for family $k$ could be thought of as an underlying propensity for failure
+or ``frailty'' for the subject. 
+The statistics literature is divided on the use of $f$ or frailty as the
+underlying random variable or using $b$.
+The first leads to investigation of random effects
+distributions that are $>0$ such as the gamma, positive stable, and log-normal.
+We strongly prefer the latter form, however, first since it ties into the
+very familiar notational structure of linear mixed effects models,
+and second because the Gaussian forms a simpler framework for multiple 
+and correlated random effects.  
+
+\begin{figure}
+  \myfig{cfig2}
+  \caption{The number of breast cancers in each family versus the
+    estimated familial risk}
+  \label{cfig2}
+\end{figure}
+
+<<>>=
+ncancer <- with(minnfemale, tapply(cancer, famid, sum, na.rm=T))
+pyears <-  with(minnfemale, tapply(endage -18, famid, sum, na.rm=T))
+count  <-  with(minnfemale, tapply(cancer, famid, 
+                                   function(x) sum(!is.na(x))))
+indx <- match(names(ranef(fit1)[[1]]), names(ncancer))                
+
+makefig("cfig2")
+plot(ncancer[indx], exp(ranef(fit1)[[1]]), log='y',
+     xlab="Number of cancers per family",
+     ylab="Estimated familial risk")
+abline(h=1, lty=2)
+text(c(8.1, 1.6), c(.85, 1.2), c("165", "72"))
+dev.off()
+
+indx <- match(c(72,165), names(ncancer))
+temp <- cbind(ncancer, count, pyears, 100*ncancer/pyears)[indx,]
+dimnames(temp) <- list(c(72, 165), 
+                       c("Cancers", "N", "Years of FU", "Rate"))
+print(round(temp,2))
+@ 
+
+Figure \ref{cfig2} shows number of cancers in each family versus the
+estimated excess risk from the model.  
+Family 72 has a high risk but only 2 cases; there are only 5 female
+relatives in the family and the cancers occur at ages 32 and 36. 
+Because the family is small the model has shrunk the estimated risk
+closer to the overall mean.
+Family 165 has 8 cancers but is has lower risk than the average
+Minnesota subject due to the large family size.
+
+\begin{figure}
+  \myfig{cfig3}
+  \caption{Profile likelihood for the per-family random effects
+    model}
+  \label{cfig3}
+\end{figure}
+There is not a good closed form formula for the variance of the
+variance estimates themselves, i.e., one that is both reliable and
+simple to compute. 
+Valid confidence intervals can be obtained from a profile likelihood,
+however.  We start by computing the likelihood over a range of 
+values for the variance.
+<<>>=
+estvar <- seq(.2, .6, length=15)^2  #range of std values
+loglik <- double(15)
+for (i in 1:15) {
+    tfit <- coxme(Surv(endage, cancer) ~ I(parity>0) + (1|famid),
+                  data=minnfemale, subset=(proband==0),
+                  vfixed=estvar[i])
+    loglik[i] <- 2*diff(tfit$loglik)[1]
+}
+makefig("cfig3")
+plot(sqrt(estvar), loglik, 
+     xlab="Std of the random effect", ylab="2 * loglik")
+abline(h=2*diff(fit1$loglik)[1] - qchisq(.95, 1), lty=2)
+dev.off()
+@ 
+The 95\% profile likelihood confidence interval is the region where
+the curve lies above the line, i.e., the set of values $x$ for
+which a 1 degree of freedom likelihood ratio test would not
+reject the hypothesis that the true standard deviation = $x$.
+(It will sometimes take a couple of tries to guess an appropriate
+range for the variance, for many data sets it will be considerably 
+wider than this one).  
+We can easily get a numeric estimate from the graph, giving
+a confidence interval from .28 to .53.
+<<>>=
+temp <- 2*diff(fit1$loglik)[1] - loglik
+approx(temp[1:8], sqrt(estvar[1:8]), 3.84)$y
+approx(temp[9:15], sqrt(estvar[9:15]), 3.84)$y
+@ 
+
+\subsection{Correlated Random Effects}
+The simple family intercept model has provided some insight, but it
+has two serious flaws.
+\begin{itemize}
+  \item Subjects will be counted in a family's risk who should actually   %'
+    be excluded.  In family 8 there are also 4 women who have married
+    into the family; they are not shown on figure \ref{cfig1} since
+    they have no children and hence have no \emph{genetic} relationship to
+    family 8 at all.  Yet they are counted in the familial risk.
+  \item More generally, the simple model cannot account 
+    for degrees of association.  In
+    figure \ref{cfig1} subject 162 is a marry-in and so does not share the
+    familial burden of the proband/mother/daughter cancers.  Yet she is
+    connected indirectly to the family through her high risk daughter.
+    The largest families have over 200 individuals, some of whom are only
+    distantly related while others are close.
+\end{itemize}
+
+We approach this by making use of the kinship matrix $K$. 
+Formally, $K_{ij}$ is the probability that for any given gene, an
+allele randomly chosen from subject $i$ and another randomly chosen from
+subject $j$ will be identical by descent, that is, have been passed
+down from a common ancestor.  Then $2K$ is a
+measure of the expected fraction of shared genes: 1 on the diagonal,
+1/2 for mother/daughter or sib/sib, 1/4 for grandparent/grandchild or
+uncle/niece, etc.  If subject $i$ and $j$ are from different families
+then $K_{ij}=0$ by definition, since they have no common ancestor.
+The relevant Cox model is
+\begin{align*}
+  \lambda_i(t) &= \lambda_0(t) e^{X\beta + b_i} \\
+  b_i &\sim N(0, \sigma^2 2K) 
+\end{align*}
+Each subject has an individual random genetic risk $b_i$, but those
+risks are correlated according to the strength of relationship.
+The model is easy to fit in \texttt{coxme}
+<<>>=
+kmat <- kinship(mped)
+fit2 <- coxme(Surv(endage, cancer) ~ I(parity>0) + (1|id),
+              data=minnfemale, varlist=coxmeMlist(2*kmat, rescale=F),
+              subset=(proband==0))
+print(fit2)
+@ 
+
+The estimated genetic effect is much larger, with a standard deviation
+of almost 0.9.  This means that there are multiple subjects in the study
+with quite large relative risks, exp(.9)= 2.5 fold greater than
+the average Minnesotan.
+
+Note that even though we are only interested in fitting the females,
+creation of the kinship matrix \texttt{kmat} requires use of all the 
+subjects in the pedigree.  
+When the model is fit appropriate rows/columns of the matrix are
+selected by matching its dimnames with the id variable.
+In fitting the model we have to explicitly describe the variance
+structure using one of a small set of variance functions.  The
+coxmeMlist function accepts a set of matrices $V_1$, $V_2$, \ldots
+as arguments and fits the an overall variance matrix
+$\sigma_1^2 V_1 + \sigma_2^2 V_2 + \ldots$, solving for the optimal
+values of $\sigma$.  
+A major portion of the code in the coxmeMlist function 
+is devoted to ensuring that each level of the grouping variable ---
+\texttt{id} in this instance --- exists in the matrix, that all matrices
+have the same row and column order, and other consistency checks.
+
+Since $K_{ij}=0$ for any unrelated individuals, the kinship matrix is
+mostly zeros.  Although it has a theoretical size of just under
+800 million elements (\texttt{prod(dim(kmat))}) only the 500,000 non-zero
+elements are stored (\texttt{length(kmat@x)}) using a sparse matrix form
+based on the Matrix package.
+To maximize storage efficiency families are clustered together in
+adjacent rows.  This carries through to the calculations, and
+thus it is the order of the elements in \texttt{kmat} which
+determines the order of the random effects coefficients $b$ in the
+fitted model.  Do not expect them to be sorted in the same way as
+as they were in the data set, nor in the sorted order found for a 
+factor variable in an ordinary Cox model.  
+(For a simple model like \texttt{fit1} which does not
+require sparse storage they will be in standard order, however.)
+
+\subsection{Breast and prostate cancer}
+An interesting genetic question is whether there might be a connection
+between various cancers. That is, inherited traits that predispose
+subjects to all or some subset of malignancies.
+Grabrick et al \cite{Grabrick03} undertook a sub study within the
+Minnesota Breast Family cohort of possible genetic connections between
+breast and prostate cancer. A subset of 206 families was selected, and
+all men in those families were invited to participate.  Living male members
+were sent a questionnaire, for those deceased or unable to answer a shortened
+form was sent to their spouse or close relative.
+
+  More to do for this section
+  
+\section{Random slopes} 
+Yet to be written.
+ 
+
+\begin{thebibliography}{9}
+    \bibitem{Anderson58}
+      V E Anderson, H O Goodman, S C Reed. \emph{Variables related to
+	human breast cancer}.  University of Minnesota Press, 1958.
+
+  \bibitem{Grabrick03} D M Grabrick, J R Cerhan, R A Veirkant,
+            T M Therneau, J C Cheville, D J Tindall, 
+            and T A Sellers, 
+            Evaluation of familial clustering of breast and prostate cancer
+          in the Minnesota Breast Cancer Family Study,
+    \emph{Cancer Detection and Prevention}, 27:30--36, 2003.
+
+\bibitem{Ripatti02}
+  S Ripatti and J Palmgren.  Estimation of multivariate frailty models
+  using penalized partial likelihood.  Biometics 56:1016--1022, 2002.
+     
+\bibitem{Sellers99}
+    T A Sellers, R A King, J R Cerhan, P L Chen, D M Grabrick, L H Kushi, 
+    W S Oetting, R A Vierkant, C M Vachon, F J Couch, T M Therneau, 
+    L C Hartman and V E Anderson.  Fifty year follow-up of cancer
+    incidence in a historical cohort of Minnesota breast cancer families.
+    \emph{Cancer Epid Biomarkers Prev} 8:1051--7, 1999.
+    
+\bibitem{Therneau00}
+  T M Therneau and P M Grambsch, Modeling Surivival Data: Extending the Cox
+ Model, Springer-Verlag, 2000.    
+ \end{thebibliography}
+\end{document}

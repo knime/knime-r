@@ -1,0 +1,9 @@
+exportPattern("^[^\\.]")
+
+import(lme4)
+import(MASS)
+
+importClassesFrom(Matrix, Matrix)
+importFrom(Matrix, Matrix, sparseMatrix)
+importMethodsFrom(Matrix, t, isSymmetric, "%*%", solve, diag)
+

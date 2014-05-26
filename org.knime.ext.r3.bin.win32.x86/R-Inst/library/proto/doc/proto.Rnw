@@ -1,0 +1,22 @@
+% To build the vignette:
+% 1. run Sweave("proto-raw") to create proto-raw.tex
+% 2. build as usual using Rcmd build proto
+%
+% To build vignette manually:
+% 1. Sweave("proto-raw") to create proto-raw.tex
+% 2. Sweave("proto.Rnw")
+% 3. pdflatex proto.tex
+%
+% To build manually using sweave.bat using batchfiles on Windows:
+% 1. sweave proto-raw --tex
+% 2. sweave proto
+
+\SweaveOpts{engine=R,eps=FALSE}
+
+%\VignetteIndexEntry{proto: An R Package for Prototype Programming}
+%\VignetteDepends{}
+%\VignetteKeywords{object oriented, prototype programming, S3, R}
+%\VignettePackage{proto}
+
+\input{proto-raw}
+

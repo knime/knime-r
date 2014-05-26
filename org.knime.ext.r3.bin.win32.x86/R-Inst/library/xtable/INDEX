@@ -1,0 +1,7 @@
+caption                 Retrieve and Set Options for Export Tables
+print.xtable            Print Export Tables
+string                  String handling functions
+tli                     Math scores from Texas Assessment of Academic
+                        Skills (TAAS)
+toLatex.xtable          Convert Table to Latex
+xtable                  Create Export Tables

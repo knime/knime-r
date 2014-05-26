@@ -1,0 +1,129 @@
+AR.2                    Asymptotic regression model
+BC.5                    The Brain-Cousens hormesis models
+CRS.4a                  The Cedergreen-Ritz-Streibig model
+CRS.5a                  Cedergreen-Ritz-Streibig dose-reponse model for
+                        describing hormesis
+ED.drc                  Estimating effective doses
+EXD.2                   Exponential decay model
+G.aparine               Herbicide applied to Galium aparine
+H.virescens             Mortality of tobacco budworms
+LL.2                    The two-parameter log-logistic function
+LL.3                    The three-parameter log-logistic function
+LL.4                    The four-parameter log-logistic function
+LL.5                    The five-parameter log-logistic function
+M.bahia                 Effect of an effluent on the growth of mysid
+                        shrimp
+MAX                     Maximum mean response
+MM.2                    Michaelis-Menten model
+NEC                     Dose-response model for estimation of no effect
+                        concentration (NEC).
+O.mykiss                Test data from a 21 day fish test
+P.promelas              Effect of sodium pentachlorophenate on growth
+                        of fathead minnow
+PR                      Expected or predicted response
+RScompetition           Competition between two biotypes
+S.alba                  Potency of two herbicides
+S.capricornutum         Effect of cadmium on growth of green alga
+SI                      Comparing selectivity indices across curves
+W1.2                    The two-parameter Weibull functions
+W1.3                    The three-parameter Weibull functions
+W1.4                    The four-parameter Weibull functions
+acidiq                  Acifluorfen and diquat tested on Lemna minor.
+algae                   Volume of algae as function of increasing
+                        concentrations of a herbicide
+anova.drc               ANOVA for dose-response model fits
+auxins                  Effect of technical grade and commercially
+                        formulated auxin herbicides
+backfit                 Calculation of backfit values from a fitted
+                        dose-response model
+baro5                   The modified baro5 function
+beetGrowth              Example of plant growth curve from Covarelli
+                        and Onofri (1998)
+boxcox.drc              Transform-both-sides Box-Cox transformation
+braincousens            The Brain-Cousens hormesis models
+bread.drc               Bread and meat for the sandwich
+cedergreen              The Cedergreen-Ritz-Streibig model
+chickweed               Germination of common chickweed (_Stellaria
+                        media_)
+coef.drc                Extract Model Coefficients
+compParm                Comparison of parameters
+comped                  Comparison of effective dose values
+confint.drc             Confidence Intervals for model parameters
+daphnids                Daphnia test
+deguelin                Deguelin applied to chrysanthemum aphis
+diagnostics             Information on estimation
+drm                     Fitting dose-response models
+drmc                    Sets control arguments
+earthworms              Earthworm toxicity test
+etmotc                  Effect of erythromycin on mixed sewage
+                        microorganisms
+finney71                Example from Finney (1971)
+fitted.drc              Extract fitted values from model
+fplogistic              Fractional polynomial-logistic dose-response
+                        models
+gaussian                Normal and log-normal biphasic dose-response
+                        models
+germination             Germination of three crops
+getInitial              Showing starting values used
+getMeanFunctions        Display available dose-response models
+glymet                  Glyphosate and metsulfuron-methyl tested on
+                        algae.
+gompGrowth.1            Gompertz growth models
+gompertz                Mean function for the Gompertz dose-response or
+                        growth curve
+gompertzd               The derivative of the Gompertz function
+hatvalues.drc           Model diagnostics for nonlinear dose-response
+                        models
+heartrate               Heart rate baroreflexes for rabbits
+isobole                 Creating isobolograms
+leaflength              Leaf length of barley
+lepidium                Dose-response profile of degradation of
+                        agrochemical using lepidium
+lettuce                 Hormesis in lettuce plants
+lin.test                Lack-of-fit test for the mean structure based
+                        on cumulated residuals
+llogistic               The log-logistic function
+lnormal                 Log-normal dose-response model
+logLik.drc              Extracting the log likelihood
+logistic                The logistic model
+maED                    Estimation of ED values using model-averaging
+mecter                  Mechlorprop and terbythylazine tested on Lemna
+                        minor
+methionine              Weight gain for different methionine sources
+mixture                 Fitting binary mixture models
+modelFit                Assessing the model fit
+mr.test                 Mizon-Richard test for dose-response models
+mrdrm                   Model-robust dose-response modelling
+mselect                 Dose-response model selection
+nasturtium              Dose-response profile of degradation of
+                        agrochemical using nasturtium
+neill.test              Neill's lack-of-fit test for dose-response
+                        models
+noEffect                Testing if there is a dose effect at all
+plot.drc                Plotting fitted curves for a 'drc' or 'mrdrc'
+                        object
+predict.drc             Prediction
+print.drc               Printing key features
+print.summary.drc       Printing summary of non-linear model fits
+rdrm                    Simulating a dose-response curve
+residuals.drc           Extracting residuals from the fitted
+                        dose-response model
+ryegrass                Effect of ferulic acid on growth of ryegrass
+searchdrc               Searching through a range of initial parameter
+                        values to obtain convergence
+secalonic               Root length measurements
+selenium                Data from toxicology experiments with selenium
+simDR                   Simulating ED values under various scenarios
+spinach                 Inhibition of photosynthesis
+summary.drc             Summarising non-linear model fits
+terbuthylazin           The effect of terbuthylazin on growth rate
+twophase                Two-phase dose-response model
+update.drc              Updating and re-fitting a model
+ursa                    Model function for the universal response
+                        surface approach (URSA) for the quantitative
+                        assessment of drug interaction
+vcov.drc                Calculating variance-covariance matrix for
+                        objects of class 'drc'
+vinclozolin             Vinclozolin from AR in vitro assay
+weibull1                Weibull model functions
+yieldLoss               Calculating yield loss parameters

@@ -1,0 +1,38 @@
+Package: mboost
+Title: Model-Based Boosting
+Version: 2.2-3
+Date: 2013-09-09
+Authors@R: c(person("Torsten", "Hothorn", role = c("aut", "cre"),
+                    email = "Torsten.Hothorn@R-project.org"),
+             person("Peter", "Buehlmann", role = "aut"),
+             person("Thomas", "Kneib", role = "aut"),
+             person("Matthias", "Schmid", role = "aut"),
+             person("Benjamin", "Hofner", role = "aut"),
+             person("Fabian", "Sobotka", role = "ctb"),
+             person("Fabian", "Scheipl", role = "ctb"))
+Description: Functional gradient descent algorithm
+  (boosting) for optimizing general risk functions utilizing
+  component-wise (penalised) least squares estimates or regression
+  trees as base-learners for fitting generalized linear, additive
+  and interaction models to potentially high-dimensional data.
+Depends: R (>= 2.14.0), methods, stats, parallel, survival
+Imports: Matrix, splines, lattice
+Suggests: party (>= 1.0-3), TH.data, MASS, fields, BayesX, gbm,
+        mlbench, RColorBrewer, rpart (>= 4.0-3)
+LazyData: yes
+License: GPL-2
+URL: http://r-forge.r-project.org/projects/mboost/
+Packaged: 2013-09-09 09:29:51 UTC; bhofner
+Author: Torsten Hothorn [aut, cre],
+  Peter Buehlmann [aut],
+  Thomas Kneib [aut],
+  Matthias Schmid [aut],
+  Benjamin Hofner [aut],
+  Fabian Sobotka [ctb],
+  Fabian Scheipl [ctb]
+Maintainer: Torsten Hothorn <Torsten.Hothorn@R-project.org>
+NeedsCompilation: yes
+Repository: CRAN
+Date/Publication: 2013-09-09 14:36:44
+Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-21 23:08:48 UTC; windows
+Archs: i386, x64

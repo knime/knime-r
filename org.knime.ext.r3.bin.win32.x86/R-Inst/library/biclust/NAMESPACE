@@ -1,0 +1,75 @@
+useDynLib(biclust)
+
+import(methods)
+
+importFrom(colorspace, diverge_hcl)
+importFrom(grid, grid.lines, unit, gpar)
+importFrom(MASS, sammon, isoMDS, Shepard)
+importFrom(lattice, barchart)
+
+export(	drawHeatmap,
+	drawHeatmap2,
+	bubbleplot,
+	parallelCoordinates,
+	BiclustResult,
+	binarize,
+	binarizeByPercentage,
+	densityOnes,
+	discretize,
+	jaccardind,
+	constantVariance,
+	additiveVariance,
+	multiplicativeVariance,
+	signVariance,
+	writeBiclusterResults,
+	BCBimax,
+	BCrepBimax,
+	BCCC,
+	BCXmotifs,
+	BCSpectral,
+	BCPlaid,
+	BCQuest,
+	BCQuestord,
+	BCQuestmet,
+	clustmember,
+	biclustmember,
+	plotclust,
+	writeclust,
+	bicorder,
+	predictBimax,
+	isoverlapp,
+        ensemble,
+       jaccard2,
+       plaid.grid,
+       bimax.grid,
+ #      xmotif.grid,
+ #      spectral.grid,
+ #      cc.grid,
+       bicluster,
+       biclusternumber,
+       ChiaKaruturi,
+       computeObservedFstat,
+       diagnoseColRow,
+       diagnosticPlot,
+       biclustbarchart,
+       heatmapBC
+	)
+
+exportClasses(
+		BiclustMethod,
+		Biclust,
+		BCBimax,
+		BCCC,
+		BCXmotifs,
+		BCSpectral,
+		BCPlaid
+		)
+
+exportMethods(
+		biclust,
+		show,
+		summary
+		)
+
+
+

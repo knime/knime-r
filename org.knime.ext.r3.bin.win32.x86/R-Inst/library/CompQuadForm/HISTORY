@@ -1,0 +1,44 @@
+2010-06-20
+----------
+
+Version 1.0 : First released version submitted to CRAN.
+
+2010-09-30
+----------
+
+Version 1.1 : 
+- I had forgotten to free some pointers in file imhof.cpp, in the function void f
+
+2011-02-14
+----------
+
+Version 1.2 :
+- I modified man file davies.Rd to add the outputs of function qfc, i.e. trace, ifault, Qq
+- I modified function davies in file qfc.R to only output trace, ifault, Qq. And note that out$res was renamed to out$Qq
+- I also modified function davies to change the type of ifault from double to integer
+
+2011-03-09
+----------
+
+Version 1.3 :
+- I removed the #include <malloc.h> line in the file qfc.cpp because it caused this package not to compile under MacOS
+
+2012-04-21
+----------
+
+Version 1.4:
+- I added a NAMESPACE file
+- I replaced .First.lib with .onLoad in file R/zzz.R
+
+2013-06-16
+----------
+
+Version 1.4.1:
+- I corrected an error in the documentation of Imhof function pointed out by Stefan Aulbach:
+  I changed "The variable \eqn{\chi^2_{h,\delta}}{chi^2_{h;delta}} is defined here by the
+  relation \eqn{\chi^2_{h,\delta}=(X_1 +   \delta)^2+\sum_{i=1}^hX_i^2}{chi^2_{h,delta}=(X_1 + delta)^2+
+  sum_{i=1}^h X_i^2}, where \eqn{X_1,\ldots,X_n}{X_1,...,X_n} are independent unit normal deviates." with 
+ "The variable \eqn{\chi^2_{h,\delta}}{chi^2_{h;delta}} is defined here by the
+  relation \eqn{\chi^2_{h,\delta}=(X_1 + \delta)^2+\sum_{i=2}^hX_i^2}{chi^2_{h,delta}=(X_1 + delta)^2+
+  sum_{i=2}^h X_i^2}, where \eqn{X_1,\ldots,X_h}{X_1,...,X_h} are independent unit normal deviates."
+

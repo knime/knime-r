@@ -1,0 +1,27 @@
+Package: HSAUR
+Title: A Handbook of Statistical Analyses Using R
+Date: 2013-08-30
+Version: 1.3-3
+Author: Brian S. Everitt and Torsten Hothorn
+Maintainer: Torsten Hothorn <Torsten.Hothorn@R-project.org>
+Description: Functions, data sets, analyses and examples from the book 
+  `A Handbook of Statistical Analyses Using R' (Brian S. Everitt and Torsten
+  Hothorn, Chapman & Hall/CRC, 2006). The first chapter
+  of the book, which is entitled `An Introduction to R', 
+  is completely included in this package, for all other chapters,
+  a vignette containing all data analyses is available.
+URL: The publishers web page is
+        http://www.crcpress.com/shopping_cart/products/product_detail.asp?sku=C5394
+Depends: R (>= 2.2.0), tools
+Suggests: lattice, MASS, scatterplot3d (>= 0.3-23), ape (>= 1.6), coin
+        (>= 0.3-3), flexmix (>= 1.1-0), gee (>= 4.13-10), ipred (>=
+        0.8-3), lme4 (>= 0.98-1), mclust (>= 3.0-0), party (>= 0.2-8),
+        randomForest (>= 4.5-12), rmeta (>= 2.12), vcd (>= 0.9-3),
+        survival, KernSmooth, rpart, mvtnorm, Matrix, boot, TH.data
+LazyData: yes
+License: GPL
+Packaged: 2013-09-03 10:34:43 UTC; hothorn
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2013-09-03 14:04:53
+Built: R 3.1.0; ; 2014-05-21 22:39:53 UTC; windows

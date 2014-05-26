@@ -1,0 +1,521 @@
+
+
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Chapter Analysis of Variance}
+\setcounter{chapter}{3}
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+
+\chapter[Analysis of Variance]{Analysis of Variance: Weight Gain, Foster
+Feeding in Rats, Water Hardness and Male Egyptian Skulls \label{ANOVA}}
+
+\section{Introduction}
+
+
+\section{Analysis of Variance}
+
+
+\section{Analysis Using \R{}}
+
+\subsection{Weight Gain in Rats \label{ANOVA:rats}}
+
+Before applying analysis of variance to the data in Table~\ref{ANOVA-weightgain-tab} 
+we should try to summarise the main features of the data 
+by calculating means and standard deviations and by producing some hopefully 
+informative graphs. The data is available in the \Rclass{data.frame} 
+\Robject{weightgain}. The following \R{} code produces the 
+required summary statistics 
+<<ANOVA-weightgain-mean-var, echo = TRUE>>=
+data("weightgain", package = "HSAUR")
+tapply(weightgain$weightgain, 
+       list(weightgain$source, weightgain$type), mean)
+tapply(weightgain$weightgain, 
+       list(weightgain$source, weightgain$type), sd)
+@
+
+\begin{figure}
+\begin{center}
+<<ANOVA-weightgain-plot, echo = TRUE, fig = TRUE>>=
+plot.design(weightgain)
+@
+\caption{Plot of mean weight gain for each level of the two factors.
+\label{ANOVA-weightgain-fig}}
+\end{center}
+\end{figure}
+
+
+
+To apply analysis of variance to the data we can use the \Rcmd{aov} 
+function in \R{} and then the \Rcmd{summary} method to give 
+us the usual analysis of variance table. The model \Rclass{formula}
+specifies a two-way layout with interaction terms, where the first
+factor is \Robject{source}, and the second factor is \Robject{type}.
+<<ANOVA-weightgain-aov, echo = TRUE>>=
+wg_aov <- aov(weightgain ~ source * type, data = weightgain)
+@
+
+\renewcommand{\nextcaption}{\R{} output of the ANOVA fit  
+                            for the \Robject{weightgain} data.
+                            \label{ANOVA-weightgain-output}}
+\SchunkLabel
+<<ANOVA-weightgain-aov-summary, echo = TRUE>>=
+summary(wg_aov)
+@
+\SchunkRaw
+
+
+\begin{figure}
+\begin{center}
+<<ANOVA-weightgain-iplot, echo = TRUE, fig = FALSE, eval = FALSE>>=
+interaction.plot(weightgain$type, weightgain$source, 
+                 weightgain$weightgain) 
+@
+<<ANOVA-weightgain-iplot-nice, echo = FALSE, fig = TRUE>>=
+interaction.plot(weightgain$type, weightgain$source, weightgain$weightgain,
+legend = FALSE)
+legend(1.5, 95, legend = levels(weightgain$source), title = "weightgain$source", 
+       lty = c(2,1), bty = "n")
+@
+\caption{Interaction plot of type $\times$ source. \label{ANOVA-weightgain-fig2}}
+\end{center}
+\end{figure}
+
+The estimates of the intercept and the main and interaction effects can be
+extracted from the model fit by
+<<ANOVA-weightgain-coef, echo = TRUE>>=
+coef(wg_aov)
+@
+Note that the model was fitted with the restrictions $\gamma_1 = 0$ 
+(corresponding to \Rlevel{Beef}) and
+$\beta_1 = 0$ (corresponding to \Rlevel{High}) because treatment contrasts
+were used as default as can be seen from
+<<ANOVA-weightgain-contrasts, echo = TRUE>>=
+options("contrasts")
+@
+Thus, the coefficient for \Robject{source} of $\Sexpr{coef(wg_aov)[2]}$ 
+can be interpreted as an estimate of the difference $\gamma_2 - \gamma_1$.
+Alternatively, we can use the restriction $\sum_i \gamma_i = 0$ by
+<<ANOVA-weightgain-coef-sum, echo = TRUE>>=
+coef(aov(weightgain ~ source + type + source:type, 
+    data = weightgain, contrasts = list(source = contr.sum)))
+@
+
+\subsection{Foster Feeding of Rats of Different Genotype}
+
+As in the previous subsection we will begin the analysis 
+of the foster feeding data in Table~\ref{ANOVA-foster-tab} 
+with a plot of the mean litter weight for the different genotypes 
+of mother and litter (see Figure~\ref{ANOVA-foster-fig}). 
+The data are in the \Rclass{data.frame}
+\Robject{foster}
+<<ANOVA-foster, echo = TRUE>>=
+data("foster", package = "HSAUR")
+@
+
+\begin{figure}
+\begin{center}
+<<ANOVA-foster-plot, echo = TRUE, fig = TRUE>>=
+plot.design(foster)
+@
+\caption{Plot of mean litter weight for each level of the two factors for
+the \Robject{foster} data. \label{ANOVA-foster-fig}}
+\end{center}
+\end{figure}
+
+
+We can derive the two analyses of variance tables for the 
+foster feeding example by applying the \R{} code
+<<ANOVA-foster-aov-one, echo = TRUE, eval = FALSE>>=
+summary(aov(weight ~ litgen * motgen, data = foster))
+@
+to give
+<<ANOVA-foster-aov-one, echo = FALSE>>=
+summary(aov(weight ~ litgen * motgen, data = foster))
+@
+and then the code
+<<ANOVA-foster-aov-two, echo = TRUE, eval = FALSE>>=
+summary(aov(weight ~ motgen * litgen, data = foster))
+@
+to give
+<<ANOVA-foster-aov-two, echo = FALSE>>=
+summary(aov(weight ~ motgen * litgen, data = foster))
+@
+There are (small) differences 
+in the sum of squares for the two main effects and, consequently, 
+in the associated $F$-tests and $p$-values. 
+\index{F-tests@$F$-tests}
+This would not be true 
+if in the previous example in Subsection~\ref{ANOVA:rats} 
+we had used the code
+<<ANOVA-weightgain-again, echo = TRUE, eval = FALSE>>=
+summary(aov(weightgain ~ type * source, data = weightgain))
+@
+instead of the code which produced Figure~\ref{ANOVA-weightgain-output}
+(readers should confirm that this is the case).
+
+
+We can investigate the effect of genotype B on litter weight
+in more detail by the use of \stress{multiple comparison procedures}
+\index{Multiple comparison procedures|(}
+\citep[see][]{HSAUR:Everitt1996}. Such procedures allow
+a comparison of all pairs of levels of a factor whilst maintaining
+the nominal significance level at its selected value and producing
+adjusted confidence intervals for mean differences. One such
+procedure is called \stress{Tukey honest significant differences} 
+\index{Tukey honest significant differences}
+suggested 
+by \cite{HSAUR:Tukey1953}, see \cite{HSAUR:HochbergTamhane1987} also. Here,
+we are interested in simultaneous confidence intervals for the weight
+differences between all four genotypes of the mother.
+First, an ANOVA model is fitted
+<<ANOVA-foster-aov, echo = TRUE>>=
+foster_aov <- aov(weight ~ litgen * motgen, data = foster)
+@
+which serves as the basis of the multiple comparisons, here with allpair
+differences by
+<<ANOVA-foster-tukeyHSD, echo = TRUE>>=
+foster_hsd <- TukeyHSD(foster_aov, "motgen")
+foster_hsd
+@
+A convenient \Rcmd{plot} method exists for this object and we can get a
+graphical representation of the multiple confidence intervals as shown in
+Figure~\ref{ANOVA-foster-mc}.
+It appears that there  is only evidence for a difference in the 
+B and J genotypes. 
+
+\begin{figure}
+\begin{center}
+<<ANOVA-foster-tukeyHSDplot, echo = TRUE, fig = TRUE>>= 
+plot(foster_hsd)
+@
+\caption{Graphical presentation of multiple comparison
+         results for the \Robject{foster} feeding data. \label{ANOVA-foster-mc}}
+\end{center}
+\end{figure}
+\index{Multiple comparison procedures|)}
+
+\subsection{Water Hardness and Mortality}
+
+The water hardness and mortality data for $61$ large towns in England and
+Wales (see 
+Table~2.3)
+was analysed in 
+Chapter~2
+and here
+we will extend the analysis by an assessment of the differences of both
+hardness and mortality in the North or South.  The hypothesis that the
+two-dimensional mean-vector of water hardness and mortality is the same for
+cities in the North and the South can be tested by \stress{Hotelling-Lawley}
+test in a multivariate analysis of variance framework. The \R{} function
+\Rcmd{manova} can be used to fit such a model and the corresponding
+\Rcmd{summary} method performs the test specified by the \Rcmd{test}
+argument
+<<ANOVA-water-manova, echo = TRUE>>=
+data("water", package = "HSAUR")
+summary(manova(cbind(hardness, mortality) ~ location, 
+    data = water), test = "Hotelling-Lawley")
+@
+The \Rcmd{cbind} statement in the left hand side of the formula indicates
+that a \stress{multivariate} response variable is to be modelled.
+\index{cbind function in formula@\texttt{cbind} function in \textit{formula}}
+The $p$-value associated with the \stress{Hotelling-Lawley} statistic is very small and
+there is strong evidence that the mean vectors of the two variables are not
+the same in the two regions. Looking at the sample means
+<<ANOVA-water-means, echo = TRUE>>=
+tapply(water$hardness, water$location, mean)
+tapply(water$mortality, water$location, mean)
+@
+we see large differences in the two regions both in water hardness and
+mortality, where low mortality is associated with hard water in the South
+and high mortality with soft water in the North (see Figure~\ref{SI-water-sp} also).
+
+\subsection{Male Egyptian Skulls}
+\index{Multivariate analysis of variance (MANOVA)|(}
+We can begin by looking at a table of mean values for the 
+four measurements within each of the five epochs. The measurements 
+are available in the \Rclass{data.frame} \Robject{skulls} and we can compute
+the means over all epochs by
+<<ANOVA-skulls-data, echo = TRUE>>=
+data("skulls", package = "HSAUR")
+means <- aggregate(skulls[,c("mb", "bh", "bl", "nh")], 
+                   list(epoch = skulls$epoch), mean)
+means
+@
+It may also be useful to look at these means graphically 
+and this could be done in a variety of ways. Here we construct 
+a scatterplot matrix of the means using the code attached to 
+Figure~\ref{ANOVA-skulls-fig}.
+
+\begin{figure}
+\begin{center}
+<<ANOVA-skulls-fig, echo = TRUE, fig = TRUE>>=
+pairs(means[,-1],
+    panel = function(x, y) {
+        text(x, y, abbreviate(levels(skulls$epoch)))
+    })
+@
+\caption{Scatterplot matrix of epoch means for Egyptian
+         \Robject{skulls} data. \label{ANOVA-skulls-fig}}
+\end{center}
+\end{figure}
+
+There appear to be quite large differences between the epoch 
+means, at least on some of the four measurements. We can now 
+test for a difference more formally by using MANOVA with the 
+following \R{} code to apply each of the four possible test criteria 
+mentioned earlier;
+<<ANOVA-skulls-manova, echo = TRUE>>=
+skulls_manova <- manova(cbind(mb, bh, bl, nh) ~ epoch, 
+                        data = skulls)
+summary(skulls_manova, test = "Pillai")
+summary(skulls_manova, test = "Wilks") 
+summary(skulls_manova, test = "Hotelling-Lawley")
+summary(skulls_manova, test = "Roy")
+@
+The $p$-value associated 
+with each four test criteria is very small and there is strong 
+evidence that the skull measurements differ between the five 
+epochs. We might now move on to investigate which epochs differ 
+and on which variables. We can look at the univariate $F$-tests 
+\index{F-tests@$F$-tests}
+for each of the four variables by using the code
+<<ANOVA-skulls-manova2, echo = TRUE>>=
+summary.aov(skulls_manova)
+@
+We see that the results for the maximum breadths (\Robject{mb}) and
+basialiveolar length (\Robject{bl}) are highly significant, with those for the other two 
+variables, in particular for nasal heights (\Robject{nh}), 
+suggesting little evidence of a difference. To look at the pairwise multivariate tests
+(any of the four test criteria are equivalent in the case of a one-way
+layout with two levels only) we can use the \Rcmd{summary} method and
+\Rcmd{manova} function as follows:
+<<ANOVA-skulls-manova3, echo = TRUE>>=
+summary(manova(cbind(mb, bh, bl, nh) ~ epoch, data = skulls, 
+               subset = epoch %in% c("c4000BC", "c3300BC")))
+summary(manova(cbind(mb, bh, bl, nh) ~ epoch, data = skulls, 
+               subset = epoch %in% c("c4000BC", "c1850BC")))
+summary(manova(cbind(mb, bh, bl, nh) ~ epoch, data = skulls, 
+               subset = epoch %in% c("c4000BC", "c200BC")))
+summary(manova(cbind(mb, bh, bl, nh) ~ epoch, data = skulls, 
+               subset = epoch %in% c("c4000BC", "cAD150")))
+@
+To keep the overall significance level for the set of all 
+pairwise multivariate tests under some control (and still maintain 
+a reasonable power), \cite{HSAUR:Stevens2001} recommends setting
+the nominal level $\alpha = 0.15$ 
+and carrying out each test at the $\alpha / m$ level 
+where $m$ s the number of tests performed. The 
+results of the four pairwise tests suggest that as the epochs become 
+further separated in time the four skull measurements become 
+increasingly distinct.
+\index{Multivariate analysis of variance (MANOVA)|)}
+
+
+\bibliographystyle{LaTeXBibTeX/refstyle}
+\bibliography{LaTeXBibTeX/HSAUR}   
+\end{document}

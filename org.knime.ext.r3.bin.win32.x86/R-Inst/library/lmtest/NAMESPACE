@@ -1,0 +1,38 @@
+import("stats", "graphics", "zoo")
+
+useDynLib("lmtest")
+
+export(
+  "bgtest",
+  "bptest",
+  "coeftest",
+  "coeftest.default",
+  "coxtest",
+  "dwtest",
+  "encomptest",
+  "gqtest",
+  "grangertest",
+  "grangertest.default",
+  "harvtest",
+  "hmctest",
+  "jtest",
+  "lrtest",
+  "lrtest.default",
+  "petest",
+  "raintest",
+  "resettest",
+  "reset",
+  "waldtest",
+  "waldtest.default")
+
+S3method("coeftest", "glm")
+S3method("coeftest", "mlm")
+S3method("coeftest", "survreg")
+S3method("coeftest", "breakpointsfull")
+S3method("print", "coeftest")
+S3method("grangertest", "formula")
+S3method("lrtest", "formula")
+S3method("waldtest", "formula")
+S3method("waldtest", "lm")
+S3method("df.residual", "bgtest")
+S3method("vcov", "bgtest")

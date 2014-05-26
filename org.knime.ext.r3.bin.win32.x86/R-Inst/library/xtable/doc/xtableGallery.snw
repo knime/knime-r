@@ -1,0 +1,585 @@
+%\VignetteIndexEntry{xtable Gallery}
+%\VignetteDepends{xtable}
+%\VignetteKeywords{LaTeX,HTML,table}
+%\VignettePackage{xtable}
+
+%**************************************************************************
+%
+% # $Id:$
+
+% $Revision:  $
+% $Author: $
+% $Date:  $
+
+<<echo=FALSE,eval=FALSE>>=
+makeme <- function() {
+	# I am a convenience function for debugging and can be ignored
+	setwd("C:/JonathanSwinton/PathwayModeling/src/R/SourcePackages/xtable/inst/doc")
+	Sweave("xtableGallery.RnW",stylepath=FALSE)
+}
+makeme()
+@
+
+\documentclass[letterpaper]{article}
+
+\title{
+The xtable gallery
+}
+\author{Jonathan Swinton <jonathan@swintons.net>\\ with small contributions from others}
+
+\usepackage{Sweave}
+\SweaveOpts{prefix.string=figdir/fig,debug=TRUE,eps=FALSE,echo=TRUE}
+\usepackage{rotating}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{tabularx}
+%\usepackage{hyperref}
+\begin{document}
+
+\maketitle
+\section{Summary}
+This document gives a gallery of tables which can be made
+by using the {\tt xtable} package to create \LaTeX\ output.
+It doubles as a regression check for the package.
+
+<<>>=
+library(xtable)
+@
+
+\section{Gallery}
+\subsection{Data frame}
+Load example dataset
+<<>>=
+data(tli)
+
+## Demonstrate data.frame
+tli.table <- xtable(tli[1:10,])
+digits(tli.table)[c(2,6)] <- 0
+@
+<<results=tex>>=
+print(tli.table,floating=FALSE)
+@
+
+\subsection{Matrix}
+<<>>=
+design.matrix <- model.matrix(~ sex*grade, data=tli[1:10,])
+design.table <- xtable(design.matrix)
+@
+<<results=tex>>=
+print(design.table,floating=FALSE)
+@
+
+\subsection{aov}
+<<>>=
+fm1 <- aov(tlimth ~ sex + ethnicty + grade + disadvg, data=tli)
+fm1.table <- xtable(fm1)
+@
+<<results=tex>>=
+print(fm1.table,floating=FALSE)
+@
+\subsection{lm}
+<<>>=
+fm2 <- lm(tlimth ~ sex*ethnicty, data=tli)
+fm2.table <- xtable(fm2)
+@
+<<results=tex>>=
+print(fm2.table,floating=FALSE)
+@
+\subsubsection{anova object}
+
+<<results=tex>>=
+print(xtable(anova(fm2)),floating=FALSE)
+@
+\subsubsection{Another anova object}
+<<>>=
+fm2b <- lm(tlimth ~ ethnicty, data=tli)
+@
+<<results=tex>>=
+print(xtable(anova(fm2b,fm2)),floating=FALSE)
+@
+
+
+\subsection{glm}
+
+<<>>=
+
+## Demonstrate glm
+fm3 <- glm(disadvg ~ ethnicty*grade, data=tli, family=binomial())
+fm3.table <- xtable(fm3)
+@
+<<results=tex>>=
+print(fm3.table,floating=FALSE)
+@
+
+\subsubsection{anova object}
+@
+<<results=tex>>=
+print(xtable(anova(fm3)),floating=FALSE)
+@
+
+
+\subsection{More aov}
+<<>>=
+
+## Demonstrate aov
+## Taken from help(aov) in R 1.1.1
+## From Venables and Ripley (1997) p.210.
+N <- c(0,1,0,1,1,1,0,0,0,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0)
+P <- c(1,1,0,0,0,1,0,1,1,1,0,0,0,1,0,1,1,0,0,1,0,1,1,0)
+K <- c(1,0,0,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,1,1,1,0,1,0)
+yield <- c(49.5,62.8,46.8,57.0,59.8,58.5,55.5,56.0,62.8,55.8,69.5,55.0,
+           62.0,48.8,45.5,44.2,52.0,51.5,49.8,48.8,57.2,59.0,53.2,56.0)
+npk <- data.frame(block=gl(6,4), N=factor(N), P=factor(P), K=factor(K), yield=yield)
+npk.aov <- aov(yield ~ block + N*P*K, npk)
+op <- options(contrasts=c("contr.helmert", "contr.treatment"))
+npk.aovE <- aov(yield ~  N*P*K + Error(block), npk)
+options(op)
+#summary(npk.aov)
+@
+<<results=tex>>=
+print(xtable(npk.aov),floating=FALSE)
+@
+
+\subsubsection{anova object}
+<<results=tex>>=
+print(xtable(anova(npk.aov)),floating=FALSE)
+@
+
+\subsubsection{Another anova object}
+<<results=tex>>=
+print(xtable(summary(npk.aov)),floating=FALSE)
+@
+
+<<>>=
+#summary(npk.aovE)
+@
+<<results=tex>>=
+print(xtable(npk.aovE),floating=FALSE)
+@
+
+
+<<results=tex>>=
+print(xtable(summary(npk.aovE)),floating=FALSE)
+@
+
+\subsection{More lm}
+<<>>=
+
+## Demonstrate lm
+## Taken from help(lm) in R 1.1.1
+## Annette Dobson (1990) "An Introduction to Generalized Linear Models".
+## Page 9: Plant Weight Data.
+ctl <- c(4.17,5.58,5.18,6.11,4.50,4.61,5.17,4.53,5.33,5.14)
+trt <- c(4.81,4.17,4.41,3.59,5.87,3.83,6.03,4.89,4.32,4.69)
+group <- gl(2,10,20, labels=c("Ctl","Trt"))
+weight <- c(ctl, trt)
+lm.D9 <- lm(weight ~ group)
+@
+<<results=tex>>=
+print(xtable(lm.D9),floating=FALSE)
+@
+
+
+<<results=tex>>=
+print(xtable(anova(lm.D9)),floating=FALSE)
+@
+
+\subsection{More glm}
+<<>>=
+
+## Demonstrate glm
+## Taken from help(glm) in R 1.1.1
+## Annette Dobson (1990) "An Introduction to Generalized Linear Models".
+## Page 93: Randomized Controlled Trial :
+counts <- c(18,17,15,20,10,20,25,13,12)
+outcome <- gl(3,1,9)
+treatment <- gl(3,3)
+d.AD <- data.frame(treatment, outcome, counts)
+glm.D93 <- glm(counts ~ outcome + treatment, family=poisson())
+@
+<<results=tex>>=
+print(xtable(glm.D93,align="r|llrc"),floating=FALSE)
+@
+
+\subsection{prcomp}
+<<prcomp>>=
+if(require(stats,quietly=TRUE)) {
+  ## Demonstrate prcomp
+  ## Taken from help(prcomp) in mva package of R 1.1.1
+  data(USArrests)
+  pr1 <- prcomp(USArrests)
+}
+@
+<<results=tex>>=
+if(require(stats,quietly=TRUE)) {
+  print(xtable(pr1),floating=FALSE)
+}
+@
+
+
+@
+<<results=tex>>=
+  print(xtable(summary(pr1)),floating=FALSE)
+@
+
+
+
+<<>>=
+#  ## Demonstrate princomp
+#  ## Taken from help(princomp) in mva package of R 1.1.1
+#  pr2 <- princomp(USArrests)
+#  print(xtable(pr2))
+@
+\subsection{Time series}
+
+<<>>=
+temp.ts <- ts(cumsum(1+round(rnorm(100), 0)), start = c(1954, 7), frequency=12)
+   temp.table <- xtable(temp.ts,digits=0)
+    caption(temp.table) <- "Time series example"
+@
+<<results=tex>>=
+    print(temp.table,floating=FALSE)
+@
+<<savetofile,echo=FALSE>>=
+if (FALSE) {
+  for(i in c("latex","html")) {
+    outFileName <- paste("xtable.",ifelse(i=="latex","tex",i),sep="")
+    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environments=NULL)
+    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environments="")
+    print(xtable(lm.D9),type=i,file=outFileName,append=TRUE,latex.environments="center")
+    print(xtable(anova(glm.D93,test="Chisq")),type=i,file=outFileName,append=TRUE)
+    print(xtable(anova(glm.D93)),hline.after=c(1),size="small",type=i,file=outFileName,append=TRUE)
+      # print(xtable(pr2),type=i,file=outFileName,append=TRUE)
+         }
+}
+@
+
+\section{Sanitization}
+<<>>=
+insane <- data.frame(Name=c("Ampersand","Greater than","Less than","Underscore","Per cent","Dollar","Backslash","Hash", "Caret", "Tilde","Left brace","Right brace"),
+				Character = I(c("&",">",		"<",		"_",		"%",		"$",		"\\", "#",	"^",		"~","{","}")))
+colnames(insane)[2] <- paste(insane[,2],collapse="")
+@
+
+<<pxti,results=tex>>=
+print( xtable(insane))
+@
+Sometimes you might want to have your own sanitization function
+<<>>=
+wanttex <- xtable(data.frame( label=paste("Value_is $10^{-",1:3,"}$",sep="")))
+@
+<<results=tex>>=
+print(wanttex,sanitize.text.function=function(str)gsub("_","\\_",str,fixed=TRUE))
+@
+
+\subsection{Markup in tables}
+
+Markup can be kept in tables, including column and row names, by using a custom sanitize.text.function:
+
+<<>>=
+mat <- round(matrix(c(0.9, 0.89, 200, 0.045, 2.0), c(1, 5)), 4)
+rownames(mat) <- "$y_{t-1}$"
+colnames(mat) <- c("$R^2$", "$\\bar{R}^2$", "F-stat", "S.E.E", "DW")
+mat <- xtable(mat)
+@
+<<results=tex>>=
+print(mat, sanitize.text.function = function(x){x})
+@
+
+% By David Dahl to demonstrate contribution from David Whitting, 2007-10-09.
+You can also have sanitize functions that are specific to column or row names.  In the table below, the row name is not sanitized but column names and table elements are:
+<<>>=
+money <- matrix(c("$1,000","$900","$100"),ncol=3,dimnames=list("$\\alpha$",c("Income (US$)","Expenses (US$)","Profit (US$)")))
+@
+<<results=tex>>=
+print(xtable(money),sanitize.rownames.function=function(x) {x})
+@
+
+\section{Format examples}
+\subsection{Adding a centering environment }
+<<results=tex>>=
+   print(xtable(lm.D9,caption="\\tt latex.environments=NULL"),latex.environments=NULL)
+    print(xtable(lm.D9,caption="\\tt latex.environments=\"\""),latex.environments="")
+    print(xtable(lm.D9,caption="\\tt latex.environments=\"center\""),latex.environments="center")
+@
+\subsection{Column alignment}
+
+<<>>=
+tli.table <- xtable(tli[1:10,])
+@
+<<>>=
+align(tli.table) <- rep("r",6)
+@
+<<results=tex>>=
+print(tli.table,floating=FALSE)
+@
+\subsubsection{Single string and column lines}
+<<>>=
+align(tli.table) <- "|rrl|l|lr|"
+@
+<<results=tex>>=
+print(tli.table,floating=FALSE)
+@
+\subsubsection{Fixed width columns}
+<<>>=
+align(tli.table) <- "|rr|lp{3cm}l|r|"
+@
+<<results=tex>>=
+print(tli.table,floating=FALSE)
+@
+
+\subsection{Significant digits}
+
+
+Specify with a single argument
+<<>>=
+digits(tli.table) <- 3
+@
+<<results=tex>>=
+print(tli.table,floating=FALSE,)
+@
+
+
+or one for each column, counting the row names
+<<>>=
+digits(tli.table) <- 1:(ncol(tli)+1)
+@
+<<results=tex>>=
+print(tli.table,floating=FALSE,)
+@
+
+
+or as a full matrix
+<<>>=
+digits(tli.table) <- matrix( 0:4, nrow = 10, ncol = ncol(tli)+1 )
+@
+<<results=tex>>=
+print(tli.table,floating=FALSE,)
+@
+
+\subsection{Suppress row names}
+<<results=tex>>=
+print((tli.table),include.rownames=FALSE,floating=FALSE)
+@
+
+If you want a vertical line on the left, you need to change the align attribute.
+<<>>=
+align(tli.table) <- "|r|r|lp{3cm}l|r|"
+@
+<<results=tex>>=
+print((tli.table),include.rownames=FALSE,floating=FALSE)
+@
+
+Revert the alignment to what is was before.
+<<>>=
+align(tli.table) <- "|rr|lp{3cm}l|r|"
+@
+
+\subsection{Suppress column names}
+<<results=tex>>=
+print((tli.table),include.colnames=FALSE,floating=FALSE)
+@
+\\
+Note the doubled header lines which can be suppressed with, eg,
+<<results=tex>>=
+print(tli.table,include.colnames=FALSE,floating=FALSE,hline.after=c(0,nrow(tli.table)))
+@
+
+\subsection{Suppress row and column names}
+<<results=tex>>=
+print((tli.table),include.colnames=FALSE,include.rownames=FALSE,floating=FALSE)
+@
+
+\subsection{Rotate row and column names}
+The {\tt rotate.rownames } and {\tt rotate.colnames} arguments can be
+used to rotate the row and/or column names.
+
+<<results=tex>>=
+print((tli.table),rotate.rownames=TRUE,rotate.colnames=TRUE)
+@
+
+\subsection{Horizontal lines}
+
+\subsubsection{Line locations}
+
+Use the {\tt hline.after} argument to specify the position of the horizontal lines.
+
+<<results=tex>>=
+print(xtable(anova(glm.D93)),hline.after=c(1),floating=FALSE)
+@
+
+\subsubsection{Line styles}
+
+The \LaTeX package {\tt booktabs} can be used to specify different
+line style tags for top, middle, and bottom lines.  Specifying
+{\tt booktabs = TRUE} will lead to separate tags being generated
+for the three line types.
+
+Insert \verb|\usepackage{booktabs}| in your \LaTeX preamble and define
+the {\tt toprule}, {\tt midrule}, and {\tt bottomrule} tags to specify
+the line styles. By default, when no value is given for
+\texttt{hline.after}, a \texttt{toprule} will be drawn above the
+table, a \texttt{midrule} after the table headings and a
+\texttt{bottomrule} below the table. The width of the top and bottom
+rules can be set by supplying a value to \verb+\heavyrulewidth+. The
+width of the midrules can be set by supplying a value to
+\verb+\lightrulewidth+. The following tables have
+\verb+\heavyrulewidth = 2pt+ and \verb+\lightrulewidth = 0.5pt+, to
+ensure the difference in weight is noticeable.
+
+There is no support for \verb+\cmidrule+ or \verb+\specialrule+
+although they are part of the \texttt{booktabs} package.
+
+\heavyrulewidth = 2pt
+\lightrulewidth = 0.5pt
+
+<<results=tex>>=
+print(tli.table, booktabs=TRUE, floating = FALSE)
+@
+
+\vspace{12pt}
+If \texttt{hline.after} includes $-1$, a \texttt{toprule} will be
+drawn above the table. If \texttt{hline.after} includes the number of
+rows in the table, a \texttt{bottomrule} will be drawn below the
+table. For any other values specified in \texttt{hline.after}, a
+\texttt{midrule} will be drawn after that line of the table.
+
+The next table has more than one \texttt{midrule}.
+
+<<>>=
+bktbs <- xtable(matrix(1:10, ncol = 2))
+hlines <- c(-1,0,1,nrow(bktbs))
+@
+This command produces the required table.
+<<results=tex>>=
+print(bktbs, booktabs = TRUE, hline.after = hlines, floating = FALSE)
+@
+
+
+\subsection{Table-level \LaTeX}
+<<results=tex>>=
+print(xtable(anova(glm.D93)),size="small",floating=FALSE)
+@
+
+
+\subsection{Long tables}
+Remember to insert \verb|\usepackage{longtable}| in your \LaTeX preamble.
+
+<<longtable>>=
+
+## Demonstration of longtable support.
+x <- matrix(rnorm(1000), ncol = 10)
+x.big <- xtable(x,label='tabbig',
+	caption='Example of longtable spanning several pages')
+@
+<<results=tex>>=
+print(x.big,tabular.environment='longtable',floating=FALSE)
+@
+
+%%
+%% The column name alignment is off in the following example.
+%% It needs some revision before exposing it. - CR, 7/2/2012
+%%
+%
+%\subsubsection{Long tables with the header on each page}
+%
+%The {\tt add.to.row} argument can be used to display the header
+%for a long table on each page, and to add a "continued" footer
+%on all pages except the last page.
+%
+%<<results=tex>>=
+%library(xtable)
+%x<-matrix(rnorm(1000), ncol = 10)
+%addtorow<-list()
+%addtorow$pos<-list()
+%addtorow$pos[[1]]<-c(0)
+%addtorow$command<-c(paste(
+%    "\\hline \n",
+%    "  \\endhead \n",
+%    "  \\hline \n",
+%    "  {\\footnotesize Continued on next page} \n",
+%    "  \\endfoot \n",
+%    "  \\endlastfoot \n",sep=""))
+%x.big2 <- xtable(x, label = "tabbig2",
+%    caption = "Example of longtable with the header on each page")
+%print(x.big2, tabular.environment = "longtable", floating = FALSE,
+%include.rownames=FALSE, add.to.row=addtorow, hline.after=c(-1) )
+%@
+
+\subsection{Sideways tables}
+Remember to insert \verb|\usepackage{rotating}| in your LaTeX preamble.
+Sideways tables can't be forced in place with the `H' specifier, but you can
+use the \verb|\clearpage| command to get them fairly nearby.
+
+<<>>=
+x <- x[1:30,]
+x.small <- xtable(x,label='tabsmall',caption='A sideways table')
+@
+
+<<results=tex>>=
+print(x.small,floating.environment='sidewaystable')
+@
+\clearpage
+
+\subsection{Rescaled tables}
+Specify a {\tt scalebox} value to rescale the table.
+
+<<>>=
+x <- x[1:20,]
+x.rescale <- xtable(x,label='tabrescaled',caption='A rescaled table')
+@
+
+<<results=tex>>=
+print(x.rescale, scalebox=0.7)
+@
+
+\subsection{Table Width}
+The {\tt tabularx} tabular environment provides more alignment options,
+and has a {\tt width} argument to specify the table width.
+
+Remember to insert \verb|\usepackage{tabularx}| in your \LaTeX preamble.
+
+<<>>=
+df.width <- data.frame(
+  "label 1 with much more text than is needed" = c("item 1", "A"),
+  "label 2 is also very long" = c("item 2","B"),
+  "label 3" = c("item 3","C"),
+  "label 4" = c("item 4 but again with too much text","D"),
+  check.names = FALSE)
+
+x.width <- xtable(df.width,
+  caption="Using the 'tabularx' environment")
+align(x.width) <- "|l|X|X|l|X|"
+@
+
+<<results=tex>>=
+print(x.width, tabular.environment="tabularx",
+  width="\\textwidth")
+@
+
+\section{Suppressing Printing}
+By default the {\tt print} method will print the LaTeX or HTML to standard
+output and also return the character strings invisibly.  The printing to
+standard output can be suppressed by specifying {\tt print.results = FALSE}.
+
+<<>>=
+x.out <- print(tli.table, print.results = FALSE)
+@
+
+Formatted output can also be captured without printing with the
+{\tt toLatex} method.  This function returns an object of class
+{\tt "Latex"}.
+
+<<>>=
+x.ltx <- toLatex(tli.table)
+class(x.ltx)
+x.ltx
+@
+
+\section{Acknowledgements}
+Most of the examples in this gallery are taken from the {\tt xtable} documentation.
+\section{R Session information}
+<<results=tex>>=
+toLatex(sessionInfo())
+@
+\end{document}

@@ -1,0 +1,120 @@
+Affairs                 Fair's Extramarital Affairs Data
+ArgentinaCPI            Consumer Price Index in Argentina
+Baltagi2002             Data and Examples from Baltagi (2002)
+BankWages               Bank Wages
+BenderlyZwick           Benderly and Zwick Data: Inflation, Growth and
+                        Stock Returns
+BondYield               Bond Yield Data
+CASchools               California Test Score Data
+CPS1985                 Determinants of Wages Data (CPS 1985)
+CPS1988                 Determinants of Wages Data (CPS 1988)
+CPSSW                   Stock and Watson CPS Data Sets
+CameronTrivedi1998      Data and Examples from Cameron and Trivedi
+                        (1998)
+CartelStability         CartelStability
+ChinaIncome             Chinese Real National Income Data
+CigarettesB             Cigarette Consumption Data
+CigarettesSW            Cigarette Consumption Panel Data
+CollegeDistance         College Distance Data
+ConsumerGood            Properties of a Fast-Moving Consumer Good
+CreditCard              Expenditure and Default Data
+DJFranses               Dow Jones Index Data (Franses)
+DoctorVisits            Australian Health Service Utilization Data
+DutchAdvert             TV and Radio Advertising Expenditures Data
+DutchSales              Dutch Retail Sales Index Data
+Electricity1955         Cost Function of Electricity Producers (1955,
+                        Nerlove Data)
+Electricity1970         Cost Function of Electricity Producers 1970
+EquationCitations       Number of Equations and Citations for
+                        Evolutionary Biology Publications
+Equipment               Transportation Equipment Manufacturing Data
+EuroEnergy              European Energy Consumption Data
+Fatalities              US Traffic Fatalities
+Fertility               Fertility and Women's Labor Supply
+Franses1998             Data and Examples from Franses (1998)
+FrozenJuice             Price of Frozen Orange Juice
+GSOEP9402               German Socio-Economic Panel 1994-2002
+GSS7402                 US General Social Survey 1974-2002
+GermanUnemployment      Unemployment in Germany Data
+Greene2003              Data and Examples from Greene (2003)
+GrowthDJ                Determinants of Economic Growth
+GrowthSW                Determinants of Economic Growth
+Grunfeld                Grunfeld's Investment Data
+Guns                    More Guns, Less Crime?
+HMDA                    Home Mortgage Disclosure Act Data
+HealthInsurance         Medical Expenditure Panel Survey Data
+HousePrices             House Prices in the City of Windsor, Canada
+Journals                Economics Journal Subscription Data
+KleinI                  Klein Model I
+Longley                 Longley's Regression Data
+MASchools               Massachusetts Test Score Data
+ManufactCosts           Manufacturing Costs Data
+MarkDollar              DEM/USD Exchange Rate Returns
+MarkPound               DEM/GBP Exchange Rate Returns
+Medicaid1986            Medicaid Utilization Data
+Mortgage                Fixed versus Adjustable Mortgages
+MotorCycles             Motor Cycles in The Netherlands
+Municipalities          Municipal Expenditure Data
+MurderRates             Determinants of Murder Rates in the United
+                        States
+NMES1988                Demand for Medical Care in NMES 1988
+NYSESW                  Daily NYSE Composite Index
+NaturalGas              Natural Gas Data
+OECDGas                 Gasoline Consumption Data
+OECDGrowth              OECD Macroeconomic Data
+OlympicTV               Television Rights for Olympic Games
+OrangeCounty            Orange County Employment
+PSID1976                Labor Force Participation Data
+PSID1982                PSID Earnings Data 1982
+PSID7682                PSID Earnings Panel Data (1976-1982)
+Parade2005              Parade Magazine 2005 Earnings Data
+PepperPrice             Black and White Pepper Prices
+PhDPublications         Doctoral Publications
+ProgramEffectiveness    Program Effectiveness Data
+RecreationDemand        Recreation Demand Data
+ResumeNames             Are Emily and Greg More Employable Than Lakisha
+                        and Jamal?
+SIC33                   SIC33 Production Data
+STAR                    Project STAR: Student-Teacher Achievement Ratio
+ShipAccidents           Ship Accidents
+SmokeBan                Do Workplace Smoking Bans Reduce Smoking?
+SportsCards             Endowment Effect for Sports Cards
+StockWatson2007         Data and Examples from Stock and Watson (2007)
+StrikeDuration          Strike Durations
+SwissLabor              Swiss Labor Market Participation Data
+TeachingRatings         Impact of Beauty on Instructor's Teaching
+                        Ratings
+TechChange              Technological Change Data
+TradeCredit             Trade Credit and the Money Market
+TravelMode              Travel Mode Choice Data
+UKInflation             UK Manufacturing Inflation Data
+UKNonDurables           Consumption of Non-Durables in the UK
+USAirlines              Cost Data for US Airlines
+USConsump1950           US Consumption Data (1940-1950)
+USConsump1979           US Consumption Data (1970-1979)
+USConsump1993           US Consumption Data (1950-1993)
+USCrudes                US Crudes Data
+USGasB                  US Gasoline Market Data (1950-1987, Baltagi)
+USGasG                  US Gasoline Market Data (1960-1995, Greene)
+USInvest                US Investment Data
+USMacroB                US Macroeconomic Data (1959-1995, Baltagi)
+USMacroG                US Macroeconomic Data (1950-2000, Greene)
+USMacroSW               US Macroeconomic Data (1957-2005, Stock &
+                        Watson)
+USMacroSWM              Monthly US Macroeconomic Data (1947-2004, Stock
+                        & Watson)
+USMacroSWQ              Quarterly US Macroeconomic Data (1947-2004,
+                        Stock & Watson)
+USMoney                 USMoney
+USProdIndex             Index of US Industrial Production
+USSeatBelts             Effects of Mandatory Seat Belt Laws in the US
+USStocksSW              Monthly US Stock Returns (1931-2002, Stock &
+                        Watson)
+WeakInstrument          Artificial Weak Instrument Data
+WinkelmannBoes2009      Data and Examples from Winkelmann and Boes
+                        (2009)
+dispersiontest          Dispersion Test
+ivreg                   Instrumental-Variable Regression
+ivreg.fit               Fitting Instrumental-Variable Regressions
+summary.ivreg           Methods for Instrumental-Variable Regression
+tobit                   Tobit Regression

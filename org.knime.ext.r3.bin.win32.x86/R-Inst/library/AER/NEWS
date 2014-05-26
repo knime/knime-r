@@ -1,0 +1,216 @@
+Changes in Version 1.2-2
+
+  o Another bug fix in the new summary(ivreg_object, diagnostics = TRUE). If
+    sandwich standard errors (or other vcov) were used, the chi-squared form
+    rather than the F form of the diagnostic Wald tests was computed and hence
+    the p-values were incorrect.
+    
+  o If there is more than one endogenous variable, summary(ivreg_object,
+    diagnostics = TRUE) now reports separate tests of weak instruments for
+    each endogenous variable.
+
+    
+Changes in Version 1.2-1
+
+  o Bug fix in the new summary(ivreg_object, diagnostics = TRUE). If there
+    is more than one endogenous variable, the degrees of freedom (and hence
+    the associated p-values) for the Sargan test were too large.
+    
+  o The examples employing "rgl" for 3d visualizations (e.g., for the SIC33
+    data) are not tested anymore in R CMD check (as "rgl" currently has some
+    problems on CRAN's checks for OS X).
+
+
+Changes in Version 1.2-0
+
+  o The summary() method for ivreg() now has a diagnostics=FALSE argument.
+    If set to TRUE, three diagnostic tests are performed: an F test of
+    the first stage regression for weak instruments, a Wu-Hausman test
+    for endogeneity, and a Sargan test of overidentifying restrictions
+    (only if there are more instruments than regressors).
+
+  o Added new data set EquationCitations provided by Fawcett & Higginson
+    (2012, PNAS).
+
+  o Changes in Depends/Imports/Suggests due to new CRAN check requirements.
+    In particular, the "Formula" package is now only imported (but not
+    loaded into the search path).
+
+
+Changes in Version 1.1-9
+
+  o Recompressed data sets in package to reduce file storage requirements.
+  
+  o ivreg() failed when used without instruments. Now fixed.
+
+  o The summary() for ivreg() displayed the degrees of freedom of the
+    overall Wald test incorrectly (although the p-value was computed
+    correctly).
+  
+  o Some technical changes for new R 2.14.0, e.g., adding Authors@R in
+    DESCRIPTION, recompressing data, etc.
+
+
+Changes in Version 1.1-8
+  
+  o The hat values for instrumental variables regressions are now
+    computed in the hatvalues() method and not within ivreg.fit()
+    to save computation time for large data sets.
+
+  o Added nobs() method for "survreg" objects (and thus "tobit" objects).
+    Modified "ivreg" objects so that default nobs() methods works.
+
+  o Labeling in coeftest() method for "multinom" objects with
+    binary responses has been fixed.
+  
+  o Example 21.4 in ?Greene2003 now employs the scaled regressor
+    fincome/10000.
+
+
+Changes in Version 1.1-7
+  
+  o Adapted some example in ?Greene2003 in order to work both with
+    the old and new "dynlm" package. dynlm() now provides convenient
+    support for linear time trends via dynlm(y ~ trend(y)) etc.    
+
+
+Changes in Version 1.1-6
+  
+  o Adapted code/examples/tests to new car version which has deprecated
+    linear.hypothesis() in favor of linearHypothesis().
+
+
+Changes in Version 1.1-5
+  
+  o CPS1985 now has 534 observations (not 533 as in prior releases),
+    the original observation 1 had been omitted inadvertently. See
+    also the errata in vignette("AER", package = "AER").
+
+  o Data and examples for Winkelmann and Boes (2009),
+    "Analysis of Microdata" (2nd ed.) have been added. For details and
+    extensive (but not quite complete) replication code see
+    help("WinkelmannBoes2009") as well as help("GSS7402") and
+    help("GSOEP9402").
+
+  o As announced in the changes for version 1.1-0 of the "AER" package,
+    the variable "earnings" has now been removed from the
+    PSID1976 (aka Mroz) data. In 1.1-0 it was renamed to "wage"
+    to avoid confusion with other data sets.
+
+  o The coeftest() method for "polr" objects used to return wrong
+    standard errors (and hence wrong z tests) for the last intercept.
+    This was caused by an inconsistency between the summary() and
+    vcov() methods for "polr" objects which has been improved in
+    recent versions of the "MASS" package. The correct results are
+    computed by coeftest() for "polr" objects computed with MASS
+    version >= 7.3-6. See also the errata in vignette("AER",
+    package = "AER")
+
+  o The paper describing the various versions of the Grunfeld data
+    has been accepted for publication in the German Economic Review.
+    An updated version of the manuscript and associated replication
+    files -- mostly based on data("Grunfeld", package = "AER") --
+    is available from http://statmath.wu.ac.at/~zeileis/grunfeld/.
+
+  o Added lrtest() method for "fitdistr" objects with intelligible
+    model name (instead of the usual formula for formula-based models).
+
+
+Changes in Version 1.1-4
+
+  o ivreg() now uses the "Formula" package (>= 0.2-0) for processing
+    of its model formulas. However, this only affects the internal
+    computations, the user interface has remained unchanged.
+    
+  o Numerous spelling improvements in the documentation (thanks to
+    the new aspell() functionality in base R).
+
+
+Changes in Version 1.1-3
+
+  o Added PSID7682 data set which contains the full Cornwell & Rupert
+    (1988) panel data for the years 1976-1982. This should be used
+    for estimation of the Hausman-Taylor model in Exercise 6 from
+    Chapter 3 (instead of PSID1982 which does not provide panel data
+    but only the cross-section for 1982). See the errata and the
+    manual page for more details.
+
+  o Fixed overall Wald test in summary() for "tobit" models
+    with intercept only.
+    
+
+Changes in Version 1.1-2
+
+  o New errata item in vignette("AER", package = "AER"): The comment
+    regarding the output from the Johansen test (p. 169) is in error.
+    The null hypothesis of no cointegration is not rejected at the
+    10% level (only at 15% level).
+
+  o Enhancements of the CigarettesSW examples from Stock & Watson.
+  
+  o Fixed overall Wald test in summary() for "tobit" models
+    without intercept.
+    
+  o Improved "rgl" code in the SIC33 example.
+
+  o The variable "gender" in the Parade2005 data set was
+    wrong for observation 70. It is now "male" (not "female"). 
+    
+
+Changes in Version 1.1-1
+
+  o A new improved version of the "plm" package is available
+    from CRAN (version 1.1-1). This fixes a bug in the summary()
+    of "plm" objects, see the vignette/errata for details.
+    Furthermore, there is now a vcovHC() method for "panelmodel"
+    objects: It gives equivalent results to pvcovHC() but
+    is now the recommended user interface and hence used
+    in the examples of some manual pages (see e.g. ?Fatalities).
+
+
+Changes in Version 1.1-0
+
+  o Some variable names in the PSID1976 (aka Mroz) data
+    have been renamed: "earnings" is now called "wage"
+    (to avoid confusion with other data sets), the previous
+    variable "wage" is renamed as "repwage" (reported wage).
+    Currently, "earnings" is kept; it will be removed in future
+    releases.
+
+  o Documentation of the Grunfeld data has been enhanced and
+    updated. Much more details are available in a recent
+    technical report: Kleiber and Zeileis (2008), "The
+    Grunfeld Data at 50", available from http://epub.wu-wien.ac.at/.
+    
+  o Multinomial logit examples using Yves Croissant's "mlogit"
+    package have been added for the TravelMode and BankWages
+    data sets.
+
+  o Vignette/errata updated.
+    
+
+Changes in Version 1.0-1
+
+  o Small changes for R 2.8.0.
+  
+
+Changes in Version 1.0-0
+
+  o official version accompanying the release of the
+    book (contains all code from the book in demos
+    and tests)
+
+  o See the new
+      vignette("AER", package = "AER")
+    for an overview of the package and a list of errata.
+
+
+Changes in Version 0.9-0
+
+  o release of the version used for compiling the final
+    version of the book for Springer
+
+
+Changes in Version 0.2-0
+
+  o first CRAN release of the AER package

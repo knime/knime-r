@@ -1,0 +1,10 @@
+useDynLib(mvtnorm)
+
+importFrom("stats",
+	   pnorm, qnorm, rnorm,
+	   pt, qt,
+	   rchisq,
+	   cov2cor)
+
+export(rmvnorm, dmvnorm, pmvnorm, pmvt, rmvt, qmvnorm, qmvt, dmvt,
+       GenzBretz, Miwa, TVPACK)

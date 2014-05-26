@@ -1,0 +1,63 @@
+Year Time Name Country Place Gender
+1861 286.00 "N.S. Greene" "IRL" NA Male
+1862 273.00 "George Farran" "IRL" NA Male
+1868 269.80 "Walter Chinnery" "GBR" NA Male
+1868 268.80 "William Gibbs" "GBR" NA Male
+1873 268.60 "Charles Gunton" "GBR" NA Male
+1874 266.00 "Walter Slade" "GBR" NA Male
+1875 264.50 "Walter Slade" "GBR" "London" Male
+1880 263.20 "Walter George" "GBR" NA Male
+1882 259.40 "Walter George" "GBR" NA Male
+1884 258.40 "Walter George" "GBR" NA Male
+1893 257.80 "Tom Conneff" "USA" NA Male
+1895 257.00 "Fred Bacon" "GBR" "London" Male
+1895 255.60 "Thomas Conneff" "USA" "New York" Male
+1911 255.40 "John Paul Jones" "USA" NA Male
+1913 254.40 "John Paul Jones" "USA" "Cambridge MA" Male
+1915 252.60 "Norman Taber" "USA" "Cambridge MA" Male
+1923 250.40 "Paavo Nurmi" "FIN" "Stockholm" Male
+1931 249.20 "Jules Ladoumegue" "FRA" "Paris" Male
+1933 247.60 "Jack Lovelock" "NZL" "Princeton NJ" Male
+1934 246.80 "Glenn Cunningham" "USA" "Princeton NJ" Male
+1937 246.40 "Sydney Wooderson" "GBR" "Motspur Park" Male
+1942 246.20 "Gunder Hagg" "SWE" "Goteborg" Male
+1942 246.20 "Arne Andersson" "SWE" "Stockholm" Male
+1942 244.60 "Gunder Hagg" "SWE" "Stockholm" Male
+1943 242.60 "Arne Andersson" "SWE" "Goteborg" Male
+1944 241.60 "Arne Andersson" "SWE" "Malmo" Male
+1945 241.40 "Gunder Hagg" "SWE" "Malmo" Male
+1954 239.40 "Roger Bannister" "GBR" "Oxford" Male
+1954 238.00 "John Paul Landy" "AUS" "Turku" Male
+1957 237.20 "Derek Ibbotson" "GBR" "London" Male
+1958 234.50 "Herb Elliott" "AUS" "Dublin" Male
+1962 234.40 "Peter Snell" "NZL" "Wanganui" Male
+1964 234.10 "Peter Snell" "NZL" "Auckland" Male
+1965 233.60 "Michel Jazy" "FRA" "Rennes" Male
+1966 231.30 "Jim Ryun" "USA" "Berkeley CA" Male
+1967 231.10 "Jim Ryun" "USA" "Bakersfield CA" Male
+1975 231.00 "Filbert Bayi" "TAN" "Kingston" Male
+1975 229.40 "John Walker" "NZL" "Goteborg" Male
+1979 228.95 "Sebastian Coe" "GBR" "Oslo" Male
+1980 228.80 "Steve Ovett" "GBR" "Oslo" Male
+1981 228.53 "Sebastian Coe" "GBR" "Zurich" Male
+1981 228.40 "Steve Ovett" "GBR" "Koblenz" Male
+1981 227.33 "Sebastian Coe" "GBR" "Bruxelles" Male
+1985 226.32 "Steve Cram" "GBR" "Oslo" Male
+1993 224.39 "Noureddine Morceli" "ALG" "Rieti" Male
+1999 223.13 "Hicham El Guerrouj" "MOR" "Roma" Male
+1967 277.00 "Anne Smith" "GBR" "London" Female
+1969 276.80 "Maria Gommers" "NED" "Leicester" Female
+1971 275.30 "Ellen Tittel" "FRG" "Sittard" Female
+1973 274.90 "Glenda Reiser" "CAN" "Victoria" Female
+1973 269.50 "Paola Cacchi" "ITA" "Viareggio" Female
+1977 263.80 "Natalya Marasescu" "ROM" "Bucuresti" Female
+1979 262.09 "Natalya Marasescu" "ROM" "Auckland" Female
+1980 261.68 "Mary Decker" "USA" "Auckland" Female
+1981 260.89 "Tatyana Veselkova" "SOV" "Bologna" Female
+1980 257.55 "Mary Decker" "USA" "Houston (unofficial)" Female
+1982 258.08 "Mary Decker" "USA" "Paris" Female
+1982 257.44 "Maricica Puica" "ROM" "Rieti" Female
+1984 255.80 "Natalja Artemova" "SOV" "Leningrad (unofficial)" Female
+1985 256.71 "Mary Decker" "USA" "Zurich" Female
+1989 255.61 "Paula Ivan" "ROM" "Nice" Female
+1996 252.56 "Svetlana Masterkova" "RUS" "Zurich" Female

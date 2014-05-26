@@ -1,0 +1,801 @@
+2014-04-17  warnes
+
+	* [r1808] DESCRIPTION, NAMESPACE, R/ASCIIfy.R, man/ASCIIfy.Rd: Add
+	  ASCIIfy function posted to RDevel by Arni Magnusson
+
+2014-03-01  warnes
+
+	* [r1776] tests/test_mixedorder.R: Fix cut-and-paste error.
+	* [r1775] DESCRIPTION, inst/NEWS: Update files for gtools 3.3.1
+	  release
+	* [r1774] R/mixedsort.R, tests/test_mixedorder.R: Fix bug in
+	  gtools::mixedorder regular expression for regognizing numbers.
+	  (Periods weren't escaped).
+
+2014-02-11  warnes
+
+	* [r1773] R/clean_up_dependencies2.R: Create and use locate copy of
+	  tools:::.split_op_version.
+	* [r1772] inst/NEWS: Update for gtools 3.3.0.
+	* [r1771] man/getDependencies.Rd: Fix arguments
+	* [r1770] man/getDependencies.Rd: Update arguments to match code.
+	* [r1769] DESCRIPTION, NAMESPACE, R/clean_up_dependencies2.R,
+	  R/getDependencies.R, man/getDependencies.Rd: Add
+	  getDependencies() function to return a list of package
+	  dependencies.
+
+2014-01-14  warnes
+
+	* [r1768] DESCRIPTION, inst/NEWS: Update for bug-fix release
+	* [r1767] tests, tests/test_binsearch.R: Add test file for
+	  binsearch() function.
+	* [r1766] R/binsearch.R: Fixed bug where binsearch() returned the
+	  wrong endpoint & value when the found value was at the upper
+	  endpoint.
+
+2014-01-13  warnes
+
+	* [r1765] man/smartbind.Rd: Fix typo
+
+2014-01-11  warnes
+
+	* [r1764] inst/NEWS: Update for gtools release 3.2.0
+	* [r1763] man/gtools-defunct.Rd: fixes for R CMD check
+	* [r1762] DESCRIPTION, NAMESPACE, R/capture.R, R/defunct.R,
+	  R/keywords.R, man/capture.Rd, man/gtools-defunct.Rd,
+	  man/stars.pval.Rd: Fixes for gtools release 3.2.0
+
+2013-12-23  warnes
+
+	* [r1761] R/keywords.R, man/keywords.Rd: Extend the keywords()
+	  function to return keywords associated with a specified topic via
+	  'keywords(topic)'.
+	* [r1760] man/stars.pval.Rd: Add keyword.
+	* [r1759] NAMESPACE, R/stars.pval.R, man/stars.pval.Rd: Add
+	  stars.pval() function to convert p-values into significance
+	  symbols.
+
+2013-11-26  warnes
+
+	* [r1748] R/mixedsort.R: mixedorder() was failing to correctly
+	  handle numbers including
+	  decimals due to a faulty regular expression. Prior to the fix:
+	  
+	  > drr
+	  [1] "Dose 0.3 mg" "Dose 0.04 mg" "Dose 0.5 mg"
+	  > gtools::mixedsort(drr)
+	  [1] "Dose 0.3 mg" "Dose 0.04 mg" "Dose 0.5 mg"
+	  
+	  After the fix:
+	  
+	  > drr
+	  [1] "Dose 0.3 mg" "Dose 0.04 mg" "Dose 0.5 mg"
+	  > mixedsort(drr)
+	  [1] "Dose 0.04 mg" "Dose 0.3 mg" "Dose 0.5 mg"
+	  
+	  In addition, an optimization was added that checked if the input
+	  vector
+	  was numeric. If so, simply use the existing base::order function.
+
+2013-11-18  warnes
+
+	* [r1747] R/capture.R: Use ".Deprecated" instead of warning.
+
+2013-11-06  warnes
+
+	* [r1746] DESCRIPTION, inst/NEWS: Update files for gtools 3.1.1
+	* [r1745] R/mixedsort.R: Fix problem with mixedorder/mixedsort when
+	  there is only zero or one elements in the vector.
+
+2013-09-23  warnes
+
+	* [r1716] man/gtools-deprecated.Rd: Comment out empty sections in
+	  gtools-deprecated.Rd
+	* [r1715] DESCRIPTION, inst/NEWS: Update files for gtools 3.1.0
+	  release
+	* [r1714] man/addLast-deprecated.Rd, man/gtools-defunct.Rd,
+	  man/gtools-deprecated.Rd, man/lastAdd.Rd: Make 'addLast()'
+	  defunct.
+	* [r1713] R/addLast.R, R/lastAdd.R: Mark 'addLast()' as defunct and
+	  move 'lastAdd()' function to a separate file.
+	* [r1712] DESCRIPTION, inst/NEWS: Update for gtools 3.0.1 release
+	* [r1711] R/mixedsort.R: Use 'suppressWarnings() instead of
+	  'options(warn=-1)' in 'mixedorder()'.
+
+2013-07-07  warnes
+
+	* [r1705] man/lastAdd.Rd: Fix typo.
+
+2013-07-06  warnes
+
+	* [r1704] man/lastAdd.Rd: Fix Rd warning.
+	* [r1703] NAMESPACE: Include lastAdd in NAMESPACE
+	* [r1702] R/deprecated.R: Change assert from deprecated to defunct.
+	* [r1701] R/addLast.R: Improve deprecation message
+	* [r1700] DESCRIPTION, inst/NEWS: Update for gtools 3.0.0
+	* [r1699] R/addLast.R, man/addLast-deprecated.Rd, man/addLast.Rd,
+	  man/gtools-defunct.Rd, man/gtools-deprecated.Rd, man/lastAdd.Rd:
+	  Create new function lastAdd to replace addLast and mark addLast
+	  as deprecated.
+
+2013-07-05  warnes
+
+	* [r1698] inst/NEWS: Point out that addLast() modifies the value of
+	  .Last in the global environment.
+	* [r1697] man/addLast.Rd: Point out that addLast() modifies the
+	  value of .Last in the global environment.
+	* [r1696] DESCRIPTION, inst/NEWS: Update for gtools 2.7.2 mark 2
+	* [r1695] man/logit.Rd: Remove cross-reference to (obsolete?) moc
+	  package
+	* [r1694] DESCRIPTION, inst/NEWS: Update for gtools 2.7.2
+	* [r1693] R/checkRVersion.R: Update for R version 3.0.0 and later
+
+2013-03-17  warnes
+
+	* [r1640] R/smartbind.R: Fix error in smartbind: factor levels were
+	  not being handled if the factor column was not present in the
+	  first data frame.
+
+2012-06-19  warnes
+
+	* [r1570] DESCRIPTION, inst/NEWS: Update for gtools 2.7.0.
+	* [r1569] man/smartbind.Rd: Document new 'verbose' argument to
+	  smartbind().
+	* [r1568] R/addLast.R, R/running.R: Clean up R CMD check warnings.
+
+2012-05-04  warnes
+
+	* [r1529] R/smartbind.R: smartbind(): Improve handling of factors
+	  and ordered factors.
+
+2011-10-05  warnes
+
+	* [r1518] DESCRIPTION: Update version number for release
+	* [r1517] R/smartbind.R, man/smartbind.Rd: Add 'sep' argument to
+	  smartbind() to allow specification of character used to separate
+	  components of constructed names
+
+2011-09-28  warnes
+
+	* [r1513] R/smartbind.R: smartbind(): Prevent coersion to data
+	  frame from mangling column names.
+	* [r1512] R/smartbind.R, inst/NEWS: Add 'fill' argument to
+	  smartbind() to specify a value to use for
+	  missing entries.
+	* [r1511] DESCRIPTION, man/smartbind.Rd: Add 'fill' argument to
+	  smartbind() to specify a value to use for
+	  missing entries.
+
+2010-08-14  warnes
+
+	* [r1451] R/mixedsort.R: Modify mixedorder()/mixedsort() to better
+	  handle strings containing multiple periods, like version numbers
+	  (e.g 1.1.2, 1.2.1. 1.1.1.1).
+
+2010-05-01  warnes
+
+	* [r1434] DESCRIPTION: Update version number for new release
+	* [r1433] DESCRIPTION, man/addLast.Rd, man/ask.Rd,
+	  man/binsearch.Rd, man/capture.Rd, man/combinations.Rd,
+	  man/defmacro.Rd, man/dirichlet.Rd, man/foldchange.Rd,
+	  man/invalid.Rd, man/keywords.Rd, man/logit.Rd, man/mixedsort.Rd,
+	  man/oddeven.Rd, man/permute.Rd, man/quantcut.Rd, man/running.Rd,
+	  man/scat.Rd, man/setTCPNoDelay.Rd, man/smartbind.Rd: Change
+	  Greg's email address to greg@warnes.net
+	* [r1432] R/checkRVersion.R: Fix error in checkRVersion()
+
+2010-04-28  ggrothendieck2
+
+	* [r1431] R/quantcut.R, R/strmacro.R, man/binsearch.Rd,
+	  man/capture.Rd, man/setTCPNoDelay.Rd: fixed problems with R CMD
+	  CHECK
+
+2009-05-09  warnes
+
+	* [r1328] man/keywords.Rd: Escape $ in .Rd file to avoid latex
+	  issues
+	* [r1327] ChangeLog, NEWS, inst/NEWS: Update NEWS and create
+	  softlinks for NEWS and ChangeLog in top level directory
+	* [r1326] NEWS, inst, inst/NEWS: Move actual NEWS file into inst.
+	* [r1325] DESCRIPTION, man/addLast.Rd, man/binsearch.Rd,
+	  man/capture.Rd, man/combinations.Rd, man/defmacro.Rd,
+	  man/dirichlet.Rd, man/foldchange.Rd, man/gtools-deprecated.Rd,
+	  man/invalid.Rd, man/logit.Rd, man/mixedsort.Rd, man/oddeven.Rd,
+	  man/permute.Rd, man/quantcut.Rd, man/running.Rd, man/scat.Rd,
+	  man/setTCPNoDelay.Rd, man/smartbind.Rd: Update Greg's email
+	  address and fix Rd syntax errors
+
+2009-02-16  warnes
+
+	* [r1313] src/Makevars.win: Correct windows make flags as suggested
+	  by Brian Ripley.
+
+2008-08-15  warnes
+
+	* [r1303] DESCRIPTION, NAMESPACE, R/keywords.R, man/keywords.Rd:
+	  Add keywords() function to show /doc/KEYWORDS file
+
+2008-05-29  warnes
+
+	* [r1285] R/newVersionAvailable.R: Add newVersionAvailable()
+	  function to compare running and latest available R versions
+
+2008-05-26  warnes
+
+	* [r1284] DESCRIPTION: Update license specification
+	* [r1283] man/assert-deprecated.Rd: Remove 'assert' man page
+
+2008-05-22  warnes
+
+	* [r1282] man/assert.R: Finish rename of assert.R to
+	  assert-depricated.Rd
+	* [r1281] R/checkRVersion.R: Add checkRVersion.R file
+	* [r1280] man/assert-deprecated.Rd: Rename again to get correct
+	  extension!
+	* [r1279] NEWS: Update NEWS for 2.5.0
+	* [r1278] man/checkRVersion.Rd: Add man page for checkRVersion
+	* [r1277] man/assert-deprecated.R, man/assert.R: Rename
+	  assert-deprecated.R to assert.R to meet R file name requirements.
+	* [r1276] DESCRIPTION, NAMESPACE: Add checkRVersion to NAMESPACE,
+	  and increment version in DESCRIPTION.
+	* [r1275] man/gtools-deprecated.Rd: Remove broken SEE LSO reference
+
+2008-04-12  warnes
+
+	* [r1259] man/defmacro.Rd: Improve text explanation of how
+	  defmacro() and strmacro() differ from
+	  function().
+	* [r1258] NEWS, man/assert-deprecated.R, man/assert.Rd,
+	  man/gtools-deprecated.Rd: assert() is now deprecated in favor of
+	  base::stopifnot()
+	* [r1257] R/assert.R, R/deprecated.R: Rename 'assert.R' to
+	  'deprecated.R'.
+	* [r1256] R/assert.R: Assert is now deprecated in favor of
+	  base::stopifnot(), so add call to
+	  .Deprecated() to inform the user.
+
+2007-11-30  warnes
+
+	* [r1228] R/oddeven.R: Update defnitions of odd() and even() to use
+	  modulus operator instead of division. Prettier, I think, :-D
+
+2007-08-08  warnes
+
+	* [r1121] DESCRIPTION, R/binsearch.R: Fix bug identified by R-2.6's
+	  check routings in binsearch()
+	* [r1120] DESCRIPTION, NAMESPACE, NEWS, R/binsearch.R,
+	  man/binsearch.Rd: Add the binsearch(), previously in the genetics
+	  package.
+
+2007-07-18  ggorjan
+
+	* [r1100] man/combinations.Rd: typo fixed
+
+2007-04-12  warnes
+
+	* [r1088] NAMESPACE, NEWS, R/ask.R, man/ask.Rd: Add ask() function
+	  to prompt the user and collect a single response.
+
+2007-04-07  warnes
+
+	* [r1087] DESCRIPTION, R/mixedsort.R: Fix improper escapes in
+	  regexp detected by R 2.5.0 package check.
+
+2007-03-23  warnes
+
+	* [r1083] R/combinations.R: Allow permutations for r>n provided
+	  repeats.allowed=TRUE
+
+2006-11-28  warnes
+
+	* [r1023] man/smartbind.Rd: Replace F with FALSE in smartbind
+	  example.
+
+2006-11-27  warnes
+
+	* [r1022] man/smartbind.Rd: Replace T with TRUE in smartbind
+	  example
+	* [r1021] data/ELISA.rda: Temprary remove to reset binary flag
+	* [r1020] data/ELISA.rda: Temprary remove to reset binary flag
+	* [r1019] DESCRIPTION, NAMESPACE, NEWS, R/smartbind.R,
+	  man/smartbind.Rd: Add smartbind() to list of exported functions,
+	  and add corresponding
+	  documentation file.
+	* [r1018] DESCRIPTION: Update my email address
+
+2006-11-14  ggorjan
+
+	* [r1012] R/combinations.R, R/running.R, man/ELISA.Rd,
+	  man/combinations.Rd: Removed executable property
+
+2006-08-02  warnes
+
+	* [r977] man/addLast.Rd, man/assert.Rd, man/capture.Rd,
+	  man/combinations.Rd, man/defmacro.Rd, man/dirichlet.Rd,
+	  man/foldchange.Rd, man/invalid.Rd, man/logit.Rd,
+	  man/mixedsort.Rd, man/oddeven.Rd, man/permute.Rd,
+	  man/quantcut.Rd, man/running.Rd, man/scat.Rd,
+	  man/setTCPNoDelay.Rd: Update my email address
+
+2006-05-05  nj7w
+
+	* [r958] man/combinations.Rd: Fixed minor typo - in {value} - n was
+	  replaced by r
+	* [r957] NAMESPACE, man/capture.Rd: Fixed minor typos
+
+2006-03-01  warnes
+
+	* [r903] R/smartbind.R: Add smartbind function
+
+2006-01-18  warnes
+
+	* [r845] man/mixedsort.Rd: Add concept tags to make mixedsort
+	  easier to locate.
+
+2005-12-21  warnes
+
+	* [r837] DESCRIPTION: Update version number and date
+	* [r836] NEWS: Note changes for 2.2.3
+	* [r835] src/Makevars.win, src/setTCPNoDelay.c: Should now work on
+	  Windows
+
+2005-12-20  warnes
+
+	* [r834] src/setTCPNoDelay.c: Temporary fix to allow
+	  setTCPNoDelay.c to compile on Windows. If compiled on windows
+	  calling setTCPNoDelay will just raise an error.
+
+2005-12-14  warnes
+
+	* [r813] src/setTCPNoDelay.c: Change C++ comment to standard
+	  comment
+
+2005-12-13  nj7w
+
+	* [r810] ChangeLog: *** empty log message ***
+	* [r809] NEWS: Updated NEWS and removed ChangeLog
+
+2005-12-12  nj7w
+
+	* [r800] DESCRIPTION: Updated version for CRAN release
+
+2005-12-08  warnes
+
+	* [r790] src, src/setTCPNoDelay.c: Add C source code for
+	  setTCPNoDelay.
+
+2005-12-01  nj7w
+
+	* [r776] man/combinations.Rd, man/foldchange.Rd, man/invalid.Rd,
+	  man/logit.Rd, man/mixedsort.Rd, man/oddeven.Rd, man/quantcut.Rd,
+	  man/running.Rd: Updated Greg's email address
+
+2005-11-29  warnes
+
+	* [r769] NAMESPACE: Add UseDynLib to NAMESPACE so the shared
+	  library gets properly loaded.
+	* [r768] R/setTCPNoDelay.R: - Remove debugging comments
+	  - Change return value on success to "Success".
+
+2005-11-22  warnes
+
+	* [r758] NAMESPACE: NAMESPACE
+	* [r757] NEWS: Update news for 2.2.1 release.
+	* [r756] man/addLast.Rd, man/setTCPNoDelay.Rd: Fixes for R CMD
+	  check
+	* [r755] DESCRIPTION, NAMESPACE, R/setTCPNoDelay.R,
+	  man/setTCPNoDelay.Rd: Add setTCPNoDelay() function and
+	  documentation
+	* [r745] R/addLast.R, man/addLast.Rd: New function 'addLast' that
+	  adds functions to R's .Last() so that
+	  they will be executed when R is terminating.
+
+2005-09-22  warnes
+
+	* [r678] DESCRIPTION, NAMESPACE, man/defmacro.Rd: More changes for
+	  strmacro(), also changes for 2.1.1 release
+	* [r677] R/defmacro.R, R/strmacro.R, man/defmacro.Rd: Add strmaco()
+	  which defines functions that use strings for macro definition
+
+2005-09-21  warnes
+
+	* [r676] DESCRIPTION, R/defmacro.R, man/defmacro.Rd: Add support
+	  for DOTS/... arguments to defmacro
+
+2005-09-12  nj7w
+
+	* [r671] man/assert.Rd, man/dirichlet.Rd, man/permute.Rd,
+	  man/scat.Rd: Updated Greg's email
+
+2005-09-02  nj7w
+
+	* [r653] NAMESPACE: Exported assert
+	* [r652] DESCRIPTION: Updated the version number
+	* [r651] NEWS: Added NEWS
+	* [r650] ChangeLog: Added ChangeLog
+	* [r649] man/assert.Rd: Fixed syntax errors
+
+2005-09-02  warnes
+
+	* [r648] R/assert.R, man/assert.Rd: Add assert() and documentation
+	* [r647] man/defmacro.Rd: Fix problem in defmacro.Rd file: don't
+	  use \code{} in the example section.
+
+2005-08-31  warnes
+
+	* [r645] DESCRIPTION, NAMESPACE, R/defmacro.R, man/defmacro.Rd:
+	  Adding the defmacro() function, extracted from
+	  
+	  Lumley T. "Programmer's Niche: Macros in {R}", R News, 2001, Vol
+	  1,
+	  No. 3, pp 11--13, \url{http://CRAN.R-project.org/doc/Rnews/}
+	* [r642] DESCRIPTION, DESCRIPTION.in: Add stand-alone DESCRIPTION
+	  file and remove old DESCRIPTION.in file.
+
+2005-06-13  nj7w
+
+	* [r626] R/mixedsort.R: Fixed a bug in mixedsort - check if
+	  "which.na" and "which.blank" is numeric(0) before subsetting the
+	  datasets.
+
+2005-06-09  nj7w
+
+	* [r625] R/RSCompat.S, R/combinations.R, R/dirichlet.R,
+	  R/foldchange.R, R/invalid.R, R/logit.R, R/mixedsort.R,
+	  R/oddeven.R, R/permute.R, R/quantcut.R, R/running.R, R/scat.R,
+	  man/ELISA.Rd, man/combinations.Rd, man/dirichlet.Rd,
+	  man/foldchange.Rd, man/invalid.Rd, man/logit.Rd,
+	  man/mixedsort.Rd, man/oddeven.Rd, man/permute.Rd,
+	  man/quantcut.Rd, man/running.Rd, man/scat.Rd: Updating the
+	  version number, and various help files to synchronize splitting
+	  of gregmisc bundle in 4 individual components.
+
+2005-05-10  warnes
+
+	* [r619] R/mixedsort.R: Fix handling of NA's in mixedorder. We were
+	  using a high UTF character to try
+	  to put NA's at the end of the sort order, but R 2.1.0 checks if
+	  characters
+	  are in the correct range. Instead, we explicitly force NA's to
+	  the end.
+
+2005-04-07  warnes
+
+	* [r606] NAMESPACE, R/scat.R, man/scat.Rd: - Add scat() function
+	  which writes its arguments to stderr and
+	  flushes so that output is immediately displayed, but only if
+	  'getOption("DEBUG")' is true.
+
+2005-04-02  warnes
+
+	* [r600] NAMESPACE, R/drop.levels.R, man/drop.levels.Rd: Move
+	  drop.levels() from gtools to gdata.
+	* [r599] R/mixedsort.R: Minor reordering of functions in file
+	* [r598] NAMESPACE, R/frameApply.R, man/frameApply.Rd: Move
+	  frameApply() to gdata package.
+	* [r597] R/mixedsort.R: Fix error if only one value passed to
+	  mixedorder.
+	* [r596] R/quantcut.R, man/quantcut.Rd: Add proper handling where
+	  more than one quantile obtains the same value
+
+2005-04-01  warnes
+
+	* [r595] man/ELISA.Rd, man/combinations.Rd, man/dirichlet.Rd,
+	  man/drop.levels.Rd, man/foldchange.Rd, man/invalid.Rd,
+	  man/logit.Rd, man/mixedsort.Rd, man/oddeven.Rd, man/permute.Rd,
+	  man/quantcut.Rd, man/running.Rd: Add CVS ID tag to file headers.
+	* [r594] R/frameApply.R, man/frameApply.Rd: Fixes from Jim Rogers
+	  for R CMD check problems in frameApply
+
+2005-03-31  warnes
+
+	* [r591] R/drop.levels.R, R/frameApply.R, man/drop.levels.Rd,
+	  man/frameApply.Rd: Updates to drop.levels() and frameApply() from
+	  Jim Rogers
+	* [r590] data, data/ELISA.rda, man/ELISA.Rd: Add ELISA data set
+	  used by frameApply and drop.levels examples
+
+2005-02-25  warnes
+
+	* [r562] man/frameApply.Rd: Replace 'T' with TRUE.
+	* [r561] man/frameApply.Rd: Remove dependency on ELISA data set for
+	  the example.
+	* [r558] NAMESPACE: Add drop.levels, frameApply to namespace
+	  export.
+
+2005-02-15  warnes
+
+	* [r542] R/drop.levels.R, R/frameApply.R, man/drop.levels.Rd,
+	  man/frameApply.Rd: Add frameApply and drop.levels contributed by
+	  Jim Rogers.
+
+2005-01-12  warnes
+
+	* [r515] DESCRIPTION.in: Add dependency on R 1.9.0+ to prevent
+	  poeple from installing on old
+	  versions of R which don't support namespaces.
+
+2004-09-27  warneg
+
+	* [r461] DESCRIPTION, DESCRIPTION.in, man/running.Rd: Updated to
+	  pass R CMD check.
+
+2004-09-03  warneg
+
+	* [r446] DESCRIPTION, NAMESPACE, R/dirichlet.R, R/foldchange.R,
+	  R/invalid.R, R/mixedsort.R, R/oddeven.R, R/permute.R,
+	  R/quantcut.R, R/running.R, man/running.Rd: initial bundle checkin
+
+2004-09-02  warneg
+
+	* [r442] DESCRIPTION, DESCRIPTION.in, NAMESPACE: Initial revision
+
+2004-08-27  warnes
+
+	* [r441] R/mixedsort.R, man/mixedsort.Rd: Fixed bug in mixedsort,
+	  and modified reorder.factor to use mixedsort.
+
+2004-08-26  warnes
+
+	* [r440] R/mixedsort.R: - Fix bug pointed out by Jim Rogers.
+	  - Use a more distictive internal separator: $@$ instead of just $
+	  - Capitalization is now irrelevent for search order (unlike
+	  ASCII).
+
+2004-06-08  warnes
+
+	* [r372] R/running.R, man/running.Rd: Nitin Jain added by=
+	  parameter to allow specifying separation between groups.
+
+2004-05-26  warnes
+
+	* [r345] man/combinations.Rd: Escape underscores in email addresses
+	  so Latex is happy.
+	* [r343] R/combinations.R: Replace 'T' with 'TRUE' to pass R CMD
+	  check.
+
+2004-05-25  warnes
+
+	* [r334] R/combinations.R: Remove extraneous comments.
+	* [r333] R/combinations.R: Fix an error in the code when using
+	  repeats.allow=T and r>2. Bug
+	  report and fix both due to Elizabeth Purdom
+	  <epurdom@stanford.edu>.
+
+2004-05-24  warnes
+
+	* [r323] R/invalid.R: Check if argument is a vector before doing
+	  is.na to avoid generating a warning.
+	* [r322] R/invalid.R, man/invalid.Rd: Add invalid() function for
+	  testing if a parameter value is non-missing, non-NA,
+	  non-NULL.
+
+2004-04-27  warnes
+
+	* [r321] R/running.R, man/running.Rd: Replaced argument `as.list'
+	  with `simplify'. Updated documentation,
+	  and updated examples appropriately.
+
+2004-04-26  warnes
+
+	* [r320] R/running.R, man/running.Rd: Added as.list argument to
+	  return one list element per evaluation.
+
+2004-03-26  warnes
+
+	* [r303] man/combinations.Rd: Uncomment and fix large 'n' example.
+	* [r301] man/running.Rd: - Update to match changes in running()
+	  - Add examples to illustrate new arguments.
+	  - Modify running correlation plot example to be more clear.
+	* [r299] R/running.R: More of the same.
+	* [r297] R/running.R: Fix bug discovered by Sean Davis
+	  <sdavis2@mail.nih.gov>. The running
+	  function took an improper shortcut. When allow.fewer=FALSE it was
+	  still passing shorter lists of elements to the called function,
+	  and
+	  then overwriting the results for the shorter lists with NAs. The
+	  code
+	  now skips evaluation of the function on lists shorter than the
+	  specified length when allow.fewer=FALSE.
+
+2004-01-21  warnes
+
+	* [r277] R/capture.R: - Mark sprint() as depreciated.
+	  - Replace references to sprint with capture.output()
+	  - Use match.arg for halign and valign arguments to
+	  textplot.default.
+	  - Fix textplot.character so that a vector of characters is
+	  properly
+	  displayed. Previouslt, character vectors were plotted on top of
+	  each
+	  other.
+
+2003-12-03  warnes
+
+	* [r253] man/foldchange.Rd: - match function argument defaults with
+	  'usage'
+
+2003-11-21  warnes
+
+	* [r237] man/foldchange.Rd: Removed 'deqn' call that was confusing
+	  things.
+	* [r234] man/logit.Rd: Add email address to author field
+	* [r233] R/foldchange.R, man/foldchange.Rd: - new files
+	* [r232] R/mixedsort.R, man/mixedsort.Rd: - Change 'T' to 'TRUE' in
+	  mixedsort.R
+	  - Add missing brace in mixedsort.Rd
+
+2003-11-20  warnes
+
+	* [r230] R/oddeven.R, man/oddeven.Rd: - Move 'odd' and 'even'
+	  functions to a separate file & provide documentation
+
+2003-11-18  warnes
+
+	* [r227] R/mixedsort.R, man/mixedsort.Rd: - Renamed smartsort to
+	  mixedsort and added documentation.
+
+2003-11-10  warnes
+
+	* [r220] R/capture.R, man/capture.Rd: - Add files contributed by
+	  Arni Magnusson
+	  <arnima@u.washington.edu>. As well as some of my own.
+
+2003-05-23  warnes
+
+	* [r196] R/logit.R, man/logit.Rd: - library() backported from
+	  1.7-devel. This version of the function
+	  adds the "pos=" argument to specify where in the search path the
+	  library should be placed.
+	  
+	  - updated .First.lib to use library(...pos=3) for MASS to avoid
+	  the
+	  'genotype' data set in MASS from masking the genotype funciton in
+	  genetics when it loads gregmisc
+	  
+	  - Added logit() inv.logit() matchcols() function and
+	  corresponding docs
+
+2003-04-22  warnes
+
+	* [r189] man/combinations.Rd: - Fixed tpyo in example that allowed
+	  combinations(500,2) to run when
+	  it should have been ignred for testing..
+
+2003-04-10  warnes
+
+	* [r186] man/combinations.Rd: - Added note about the need to
+	  increase options("expressions") to use
+	  large values for 'n'. Prompted by bug report from Huan Huang
+	  <huan.huang@bnpparibas.com
+
+2003-04-04  warnes
+
+	* [r183] R/RSCompat.S: - Replace 'T' with 'TRUE'
+	* [r182] R/dirichlet.R: - Change occurences of 'T' to 'TRUE'
+	* [r181] man/capture.Rd: - Allow optional arguments to sprint to be
+	  passed to print
+	  - Fix R CMD check errors
+	* [r180] R/capture.R: - Allow optional arguments to sprint to be
+	  passed to print
+
+2003-04-03  warnes
+
+	* [r177] man/capture.Rd: - Had mistyped 'sprint' as 'sprintf'.
+	* [r176] man/capture.Rd: - Add help file for capture and sprintf.
+
+2003-04-02  warnes
+
+	* [r174] R/capture.R: - Added file 'capture.R' containing capture()
+	  and sprint().
+
+2003-03-07  warnes
+
+	* [r168] R/RSCompat.S: - Minor changes to code to allow the package
+	  to be provided as an
+	  S-Plus chapter.
+
+2003-01-30  warnes
+
+	* [r161] man/running.Rd: - Fixed typo in email address.
+
+2003-01-02  warnes
+
+	* [r148] R/RSCompat.S: - Add nlevels function.
+
+2002-10-11  warnes
+
+	* [r133] R/permute.R, man/permute.Rd: - Add permute() function
+	  (wraper for sample) and man page
+	* [r132] man/dirichlet.Rd: - Escaped underscores in my email
+	  address that was causing a parse
+	  error in the {r,p}dirichlet man page.
+
+2002-09-30  warnes
+
+	* [r128] R/dirichlet.R, man/dirichlet.Rd: - Added rdirichlet() and
+	  ddirichlet() with accompaning help page and tests.
+
+2002-09-24  warnes
+
+	* [r122] R/running.R: - Fixed error where running was always
+	  calling running2 with
+	  'fun=mean', ignoring the specified funtion.
+
+2002-09-23  warnes
+
+	* [r117] man/combinations.Rd, man/quantcut.Rd: - Modified all files
+	  to include CVS Id and Log tags.
+	* [r116] R/combinations.R: - Added CrossTable() and barplot2() code
+	  and docs contributed by Marc Schwartz.
+	  - Permit combinations() to be used when r>n provided
+	  repeat.allowed=TRUE
+	  - Bumped up version number
+
+2002-08-01  warnes
+
+	* [r114] R/running.R: - Corrected documentation mismatch for ci,
+	  ci.default.
+	  
+	  - Replaced all occurences of '_' for assignment with '<-'.
+	  
+	  - Replaced all occurences of 'T' or 'F' for 'TRUE' and 'FALSE'
+	  with
+	  the spelled out version.
+	  
+	  - Updaded version number and date.
+
+2002-04-09  warneg
+
+	* [r109] R/combinations.R, man/combinations.Rd, man/running.Rd:
+	  Checkin for version 0.5.3
+
+2002-03-26  warneg
+
+	* [r97] man/quantcut.Rd: Initial Checkin
+	* [r96] R/quantcut.R: Initial checkin.
+
+2002-03-20  warneg
+
+	* [r91] R/RSCompat.S: - Added definition of is.R function.
+	  
+	  - Added boxplot.formula
+
+2002-03-07  warneg
+
+	* [r90] man/running.Rd: - Added documentation and example for
+	  running2
+	* [r89] R/running.R: - Added "running2", which handles both
+	  univariate and bivariate cases
+	  - Modified "running" to call "running2"
+
+2002-02-05  warneg
+
+	* [r75] R/RSCompat.S: - Fix typo that caused code meant to run only
+	  under S-Plus to run
+	  under R, causing problems.
+
+2001-12-19  warneg
+
+	* [r67] R/RSCompat.S: - Added code for %in%.
+
+2001-09-18  warneg
+
+	* [r18] R/RSCompat.S: Release 0.3.2
+
+2001-09-01  warneg
+
+	* [r17] R/RSCompat.S: Initial checkin.
+	* [r16] R/running.R, man/running.Rd: Release 0.3.0
+
+2001-08-25  warneg
+
+	* [r13] R/running.R: Initial CVS checkin.
+	* [r11] man/combinations.Rd: Fixed a typo and a syntax error.
+	* [r7] man/running.Rd: Initial Checkin
+
+2001-06-29  warneg
+
+	* [r6] ., R, R/combinations.R, man, man/combinations.Rd: Initial
+	  revision.
+

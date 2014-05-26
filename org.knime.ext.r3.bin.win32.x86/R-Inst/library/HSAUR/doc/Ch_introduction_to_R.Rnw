@@ -1,0 +1,1195 @@
+
+
+\documentclass{chapman}
+
+%%% copy Sweave.sty definitions
+
+%%% keeps `sweave' from adding `\usepackage{Sweave}': DO NOT REMOVE
+%\usepackage{Sweave} 
+
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx,ae,fancyvrb}
+\IfFileExists{upquote.sty}{\RequirePackage{upquote}}{}
+\usepackage{relsize}
+
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                              fontshape=it,
+                                              fontsize=\relsize{-1}}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{}
+\newenvironment{Schunk}{}{}
+
+%%% environment for raw output
+\newcommand{\SchunkRaw}{\renewenvironment{Schunk}{}{}
+    \DefineVerbatimEnvironment{Soutput}{Verbatim}{fontfamily=courier,
+                                                  fontshape=it,
+                                                  fontsize=\small}
+    \rawSinput
+}
+
+%%% environment for labeled output
+\newcommand{\nextcaption}{}
+\newcommand{\SchunkLabel}{
+  \renewenvironment{Schunk}{\begin{figure}[ht] }{\caption{\nextcaption}
+  \end{figure} }
+  \DefineVerbatimEnvironment{Sinput}{Verbatim}{frame = topline}
+  \DefineVerbatimEnvironment{Soutput}{Verbatim}{frame = bottomline, 
+                                                samepage = true,
+                                                fontfamily=courier,
+                                                fontshape=it,
+                                                fontsize=\relsize{-1}}
+}
+
+
+%%% S code with line numbers
+\DefineVerbatimEnvironment{Sinput}
+{Verbatim}
+{
+%%  numbers=left
+}
+
+\newcommand{\numberSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{numbers=left}
+}
+\newcommand{\rawSinput}{
+    \DefineVerbatimEnvironment{Sinput}{Verbatim}{}
+}
+
+
+%%% R / System symbols
+\newcommand{\R}{\textsf{R}}
+\newcommand{\rR}{{R}}
+\renewcommand{\S}{\textsf{S}}
+\newcommand{\SPLUS}{\textsf{S-PLUS}}
+\newcommand{\rSPLUS}{{S-PLUS}}
+\newcommand{\SPSS}{\textsf{SPSS}}
+\newcommand{\EXCEL}{\textsf{Excel}}
+\newcommand{\ACCESS}{\textsf{Access}}
+\newcommand{\SQL}{\textsf{SQL}}
+%%\newcommand{\Rpackage}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Robject}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\Rclass}[1]{\hbox{\rm\textit{#1}}}
+%%\newcommand{\Rcmd}[1]{\hbox{\rm\texttt{#1}}}
+\newcommand{\Rpackage}[1]{\index{#1 package@\textit{#1} package}\textit{#1}}
+\newcommand{\Robject}[1]{\texttt{#1}}
+\newcommand{\Rclass}[1]{\index{#1 class@\textit{#1} class}\textit{#1}}
+\newcommand{\Rcmd}[1]{\index{#1 function@\texttt{#1} function}\texttt{#1}}
+\newcommand{\Roperator}[1]{\texttt{#1}}
+\newcommand{\Rarg}[1]{\texttt{#1}}
+\newcommand{\Rlevel}[1]{\texttt{#1}}
+
+
+%%% other symbols
+\newcommand{\file}[1]{\hbox{\rm\texttt{#1}}}
+%%\newcommand{\stress}[1]{\index{#1}\textit{#1}} 
+\newcommand{\stress}[1]{\textit{#1}} 
+\newcommand{\booktitle}[1]{`#1'} %%'
+
+%%% Math symbols
+\newcommand{\E}{\mathsf{E}}   
+\newcommand{\Var}{\mathsf{Var}}   
+\newcommand{\Cov}{\mathsf{Cov}}   
+\newcommand{\Cor}{\mathsf{Cor}}   
+\newcommand{\x}{\mathbf{x}}   
+\newcommand{\y}{\mathbf{y}}   
+\renewcommand{\a}{\mathbf{a}}
+\newcommand{\W}{\mathbf{W}}   
+\newcommand{\C}{\mathbf{C}}   
+\renewcommand{\H}{\mathbf{H}}   
+\newcommand{\X}{\mathbf{X}}   
+\newcommand{\B}{\mathbf{B}}   
+\newcommand{\V}{\mathbf{V}}   
+\newcommand{\I}{\mathbf{I}}   
+\newcommand{\D}{\mathbf{D}}   
+\newcommand{\bS}{\mathbf{S}}   
+\newcommand{\N}{\mathcal{N}}   
+\renewcommand{\P}{\mathsf{P}}   
+\usepackage{amstext}
+
+%%% links
+\usepackage{hyperref}
+
+\hypersetup{%
+  pdftitle = {A Handbook of Statistical Analyses Using R},
+  pdfsubject = {Book},
+  pdfauthor = {Brian S. Everitt and Torsten Hothorn},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+
+%%% captions & tables
+%% <FIXME>: conflics with figure definition in chapman.cls
+%%\usepackage[format=hang,margin=10pt,labelfont=bf]{caption}
+%% </FIMXE>
+\usepackage{longtable}
+\usepackage{rotating}
+
+%%% R symbol in chapter 1
+\usepackage{wrapfig}
+
+%%% Bibliography
+\usepackage[round,comma]{natbib}
+\renewcommand{\refname}{References \addcontentsline{toc}{chapter}{References}}
+\citeindexfalse
+
+%%% texi2dvi complains that \newblock is undefined, hm...
+\def\newblock{\hskip .11em plus .33em minus .07em}
+
+%%% Example sections
+\newcounter{exercise}[chapter]
+\setcounter{exercise}{0}
+\newcommand{\exercise}{\item{\stepcounter{exercise} Ex.
+                       \arabic{chapter}.\arabic{exercise} }}
+
+
+%% URLs
+\newcommand{\curl}[1]{\begin{center} \url{#1} \end{center}}
+
+%%% for manual corrections
+%\renewcommand{\baselinestretch}{2}
+
+%%% plot sizes
+\setkeys{Gin}{width=0.95\textwidth}
+
+%%% color
+\usepackage{color}
+
+%%% hyphenations
+\hyphenation{drop-out}
+
+%%% new bidirectional quotes need 
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+%% Title page
+
+\title{A Handbook of Statistical Analyses Using \R}
+
+\author{Brian S. Everitt and Torsten Hothorn}
+
+\maketitle
+%%\VignetteIndexEntry{Chapter An Introduction to R}
+\setcounter{chapter}{0}
+
+
+
+\SweaveOpts{prefix.string=figures/HSAUR,eps=FALSE,keep.source=TRUE} 
+
+<<setup, echo = FALSE, results = hide>>=
+rm(list = ls())
+if (!file.exists("tables")) dir.create("tables")
+if (!file.exists("figures")) dir.create("figures")
+set.seed(290875)
+options(prompt = "R> ", continue = "+  ",
+    width = 63, # digits = 4, 
+    SweaveHooks = list(leftpar = function() 
+        par(mai = par("mai") * c(1, 1.05, 1, 1))))
+HSAURpkg <- require("HSAUR")
+if (!HSAURpkg) stop("cannot load package ", sQuote("HSAUR"))
+rm(HSAURpkg)
+a <- Sys.setlocale("LC_ALL", "C")
+book <- TRUE
+refs <- cbind(c("AItR", "SI", "CI", "ANOVA", "MLR", "GLM", 
+                "DE", "RP", "SA", "ALDI", "ALDII", "MA", "PCA", 
+                "MDS", "CA"), 1:15)
+ch <- function(x, book = TRUE) {
+    ch <- refs[which(refs[,1] == x),]
+    if (book) {
+        return(paste("Chapter~\\\\ref{", ch[1], "}", sep = ""))
+    } else {
+        return(paste("Chapter~\\\\ref{", ch[2], "}", sep = ""))
+    }
+}
+@
+
+\pagestyle{headings}
+<<singlebook, echo = FALSE>>=
+book <- FALSE
+@
+
+\chapter{An Introduction to \R{} \label{AItR}}
+
+\setcounter{page}{1}
+
+\section{What is \R{}?}
+
+The \R{} system for statistical computing is an environment for
+data analysis and graphics.
+%% #Z
+%% and an implementation of the \R{} programming language. 
+The root of \R{} is the \S{} language, developed by John
+Chambers and colleagues 
+\citep{HSAUR:Becker+Chambers+Wilks:1988,HSAUR:Chambers+Hastie:1992,HSAUR:Chambers:1998}
+at Bell Laboratories (formerly AT\&T, now owned by 
+Lucent Technologies) starting in the 1960s. The \S{} language was designed
+and developed as a programming language for data analysis tasks but in fact
+it is a full-featured programming language in its current implementations.
+
+The development of the \R{} system for statistical computing is heavily
+influenced by the open source idea: The base distribution of \R{} 
+\index{Base distribution}
+and a large number of
+user contributed extensions are available under the 
+terms of the Free Software Foundation's GNU General %%'
+Public License in source code form. 
+\index{GNU General Public License}
+This licence has two major implications
+for the data analyst working with \R. The complete source code is
+available and thus the practitioner can investigate the details of the
+implementation of a special method, can make changes and can distribute
+modifications to colleagues. As a side-effect, the \R{} system for statistical computing 
+is available to everyone. All scientists, especially including those
+working in developing countries, have access to state-of-the-art tools for
+statistical data analysis without additional costs. With the help of the
+\R{} system for statistical computing, research really becomes
+reproducible when both the data and the results of all data analysis steps reported in a paper
+are available to the readers through an \R{} transcript file. \R{} is
+most widely used for teaching undergraduate and graduate statistics classes
+at universities all over the world because students can freely use the 
+statistical computing tools.
+
+The base distribution of \R{} is maintained by a small group of statisticians,
+the \R{} Development Core Team. A huge amount of additional functionality is
+implemented in add-on packages 
+\index{Add-on packages} 
+authored and maintained by a large group of  
+volunteers. The main source of information about the \R{} system is the world 
+wide web with the official home page of the \R{} project being 
+\curl{http://www.R-project.org} 
+All resources are available from this page:
+the \R{} system itself, a collection of add-on packages, manuals,
+documentation and more.
+
+The intention of this chapter is to 
+give a rather informal introduction to basic concepts
+and data manipulation techniques for the \R{} novice. Instead of a rigid
+treatment of the technical background, the most common tasks are illustrated
+by practical examples and it is our hope that this will enable 
+readers to get started without too many problems.
+
+\section{Installing \R{}}
+
+\index{Base system|(}
+The \R{} system for statistical computing consists of two major parts: the
+base system and a collection of user contributed add-on packages. The \R{} language is
+implemented in the base system. 
+Implementations of statistical and graphical procedures are separated from
+the base system and are organised in the form of packages. A package is 
+a collection of functions, examples and documentation. The functionality of a
+package is often focused on a special statistical methodology. Both the base system
+and packages are distributed via the Comprehensive \R{} Archive 
+Network (CRAN) accessible under \curl{http://CRAN.R-project.org}
+\index{Comprehensive R Archive Network (CRAN)@Comprehensive \R{} Archive Network (CRAN)}
+
+\subsection{The Base System and the First Steps \label{AItR:Base}}
+
+The base system is available in source form and in precompiled form for
+various Unix systems, Windows platforms and Mac OS X. 
+For the data analyst, it
+is sufficient to download the precompiled binary distribution and install it
+locally. Windows users follow the link
+\curl{http://CRAN.R-project.org/bin/windows/base/release.htm} 
+download the
+corresponding file (currently named \file{\Sexpr{HSAUR:::exename()}}), execute it
+locally and follow the instructions given by the installer. 
+\index{Base system|)}
+
+\begin{wrapfigure}{l}{2cm}
+\includegraphics[width=1.95cm]{graphics/Rlogo_bw}
+\end{wrapfigure}
+\noindent
+
+Depending on the operating system, \R{} can be started either by typing
+`\texttt{R}' on the shell (Unix systems) or by clicking on the %'
+\R{} symbol (as shown left) created by the installer (Windows).
+\R{} comes without any frills and on start up shows simply
+a short introductory message including the version number 
+and a prompt `\texttt{>}': %'
+\index{Prompt}
+<<AItR-welcome, echo = FALSE>>=
+HSAUR:::Rwelcome()
+cat("\n>\n")
+options(prompt = "> ")
+@
+One can change the appearance of the prompt by
+<<AItR-welcome, echo = TRUE>>=
+options(prompt = "R> ")
+@
+and we will use the prompt \Rarg{R>} for the display of the code examples 
+throughout this book. 
+
+Essentially, the \R{} system evaluates
+commands typed on the \R{} prompt and returns the results of the computations.
+The end of a command is indicated by the return key. Virtually all
+introductory texts on \R{} start with an example using \R{} as pocket
+calculator, and so do we:
+<<AItR-firstex, echo = TRUE>>=
+x <- sqrt(25) + 2
+@
+This simple statement asks the \R{} interpreter to calculate $\sqrt{25}$ and
+then to add $2$. The result of the operation is assigned to
+an \R{} object
+\index{Object}
+with variable name \Robject{x}. The assignment operator
+\Roperator{<-} binds the value of its right hand side to a variable name on the
+left hand side. The value of the object \Robject{x} can be inspected 
+simply by typing 
+<<AItR-firstex-print, echo = TRUE>>=
+x
+@
+which, implicitly, calls the \Rcmd{print} method:
+<<AItR-firstex-print, echo = TRUE>>=
+print(x)
+@
+
+\subsection{Packages}
+
+The base distribution already comes with some high-priority add-on packages, namely
+\begin{center}
+\texttt{
+<<AItR-recommended, echo = FALSE, results=hide>>=
+colwidth <- 4
+ip <- installed.packages(priority = "high")
+pkgs <- unique(ip[,"Package"])
+nrows <- ceiling(length(pkgs) / colwidth)
+cat(paste(c("\\begin{tabular}{", paste(rep("l", colwidth), collapse=""), "}"), collapse = ""), 
+    "\n", file = "tables/rec.tex", append = FALSE)
+for (i in 1:(nrows-1)) {
+    cat(paste(pkgs[(1:colwidth) + (i-1)*colwidth], collapse = " & "), 
+        file = "tables/rec.tex", append = TRUE)
+    cat("\\\\ \n", file = "tables/rec.tex", append = TRUE)
+}
+rest <- pkgs[((nrows-1) * colwidth + 1):length(pkgs)]
+cat(paste(rest, collapse = " & "), file = "tables/rec.tex", append = TRUE)
+cat(paste(rep(" ", colwidth - length(rest)), collapse = " & "), "\\\\ \n",
+    file = "tables/rec.tex", append = TRUE)
+cat("\\end{tabular}\n", file = "tables/rec.tex", append = TRUE)
+rm(ip, nrows, rest)
+@
+\input{tables/rec}
+}
+\end{center}
+The packages listed here 
+%% #Z
+%% are maintained by members of the \R{} core development team and
+implement standard statistical functionality, for example linear models, 
+classical tests, a huge collection of high-level plotting functions or tools
+for survival analysis; many of these will be
+described and used in later chapters.
+
+<<AItR-CRAN, echo = FALSE, results = hide>>=
+cp <- available.packages(contriburl = "http://CRAN.r-project.org/src/contrib")
+ncp <- sum(!rownames(cp) %in% pkgs)
+rm(cp, pkgs)
+@
+
+Packages not included in the base distribution can be installed directly
+from the \R{} prompt. At the time of writing this chapter, 
+$\Sexpr{ncp}$ user contributed packages
+covering almost all fields of statistical methodology were available.
+
+<<AItR-rm, echo = FALSE, results = hide>>=
+rm(ncp, colwidth, i)
+@
+
+Given that an Internet connection is available, a package is installed 
+by supplying the name of the package to the function \Rcmd{install.packages}. 
+If, for example, 
+add-on functionality for robust estimation of covariance matrices via sandwich 
+estimators 
+\index{Sandwich estimators}
+is required (for example in \Sexpr{ch("ALDII")}),
+the \Rpackage{sandwich} package \citep{PKG:sandwich} 
+can be downloaded and installed via
+<<AItR-install-packages, echo = TRUE, eval = FALSE>>=
+install.packages("sandwich")
+@
+The package functionality is available after \stress{attaching} the package
+by
+<<AItR-library, echo = TRUE, eval = FALSE>>=
+library("sandwich")
+@
+A comprehensive list of available packages can be obtained from 
+\curl{http://CRAN.R-project.org/src/contrib/PACKAGES.html}
+Note that on
+Windows operating systems, precompiled versions of packages are downloaded
+and installed. 
+%%Currently, the service of over-night compilation of all packages on
+%%CRAN for the Windows platform is kindly offered by Uwe Ligges from the
+%%University of Dortmund, Germany. 
+In contrast, packages are compiled locally
+before they are installed on Unix systems.
+
+\section{Help and Documentation \label{AItR:HDN}}
+\index{Help system|(}
+Roughly, three different forms of documentation for the \R{} system for
+statistical computing may be distinguished: online help that comes with the
+base distribution or packages, electronic manuals and publications work 
+in the form of books etc. 
+
+The help system is a collection of manual pages describing each
+user-visible function and data set that comes with \R{}. 
+A manual page is shown in a pager or web browser when the name
+of the function we would like to get help for is supplied to the \Rcmd{help}
+function
+<<AItR-help, echo = TRUE, eval = FALSE>>=
+help("mean")
+@
+or, for short, 
+\begin{Verbatim}
+R> ?mean
+\end{Verbatim}
+Each manual page consists of a general description, the argument list of the
+documented function with a
+description of each single argument, information about the return value of
+the function and, optionally, references, cross-links and, in most cases,
+executable examples. The function \Rcmd{help.search} is helpful for searching within
+manual pages. An overview on documented topics in an add-on package is given,
+for example for the \Rpackage{sandwich} package, by
+<<AItR-help-lib, echo = TRUE, eval = FALSE>>=
+help(package = "sandwich")
+@
+Often a package comes along with an additional document describing the
+package functionality and giving examples. Such a document is called a
+\Rclass{vignette} \citep{HSAUR:Leisch2003,HSAUR:Gentleman2005}. 
+The \Rpackage{sandwich} package vignette is opened using
+<<AItR-help-lib, echo = TRUE, eval = FALSE>>=
+vignette("sandwich", package = "sandwich")
+@
+
+More extensive documentation is available electronically from the collection
+of manuals at \curl{http://CRAN.R-project.org/manuals.html} 
+For the
+beginner, at least the first and the second document
+of the following four manuals
+\citep{HSAUR:AItR,HSAUR:RDIE,HSAUR:RIA,HSAUR:WRE} are mandatory:
+\begin{description}
+\item[An Introduction to R:] A more formal introduction to data analysis
+                             with \R{} than this chapter.
+\item[R Data Import/Export:] A very useful description of how to read and
+                             write various external data formats.
+\item[R Installation and Administration:] Hints for installing \R{} on
+                                          special platforms.
+\item[Writing R Extensions:] The authoritative source on how to write \R{}
+                             programs and packages.
+\end{description}
+
+Both printed and online publications are available, the most important ones
+are \booktitle{Modern Applied Statistics with \S{}}
+\citep{HSAUR:VenablesRipley2002}, 
+\booktitle{Introductory Statistics with \R{}} \citep{HSAUR:Dalgaard2002},
+\booktitle{\R{} Graphics}
+\citep{HSAUR:Murrell2005} and the \R{} Newsletter, freely available from 
+\curl{http://CRAN.R-project.org/doc/Rnews/}
+In case the electronically available documentation and the answers to 
+frequently asked questions (FAQ), available from
+\curl{http://CRAN.R-project.org/faqs.html}
+\index{Frequently asked questions (FAQ)}
+have been consulted but a problem or question remains unsolved, the
+\texttt{r-help} email list is the right place to get answers to well-thought-out
+questions. It is helpful to read the posting guide
+\curl{http://www.R-project.org/posting-guide.html} 
+before starting to ask.
+\index{Help system|)}
+
+\section{Data Objects in \R{}}
+
+\index{Forbes 2000 ranking|(}
+The data handling and manipulation techniques explained in this chapter will
+be illustrated by means of a data set of $2000$ world leading companies, the
+Forbes 2000 list for the year 2004 collected by \booktitle{Forbes Magazine}.
+This list is originally available from
+\curl{http://www.forbes.com} 
+and, as an \R{} data object, it is part of the \Rpackage{HSAUR}
+package (\textit{Source}: From Forbes.com, New York, New York, 2004. With
+permission.). In a first step, we make the data available for computations within
+\R. The \Rcmd{data} function searches for data objects of the specified
+name (\Robject{"Forbes2000")} 
+in the package specified via the \Rarg{package} argument and, if the
+search was successful, attaches the data object to the global environment:
+\index{Forbes2000 data@\Robject{Forbes2000} data}
+<<AItR-Forbes2000, echo = TRUE>>=
+data("Forbes2000", package = "HSAUR")
+ls()
+@
+The output of the \Rcmd{ls} function lists the names of all objects
+currently stored in the global environment, and, as the result of the
+previous command, a variable named \Robject{Forbes2000} is available for
+further manipulation. The variable \Robject{x} arises from the pocket
+calculator example in Subsection~\ref{AItR:Base}. 
+
+As one can imagine, printing a list of $2000$
+companies via 
+<<AItR-Forbes2000-print, echo = TRUE, eval = FALSE>>=
+print(Forbes2000)
+@
+<<AItR-Forbes2000-print, echo = FALSE, eval = TRUE>>=
+print(Forbes2000[1:3,])
+cat("...\n")
+@
+will not be particularly helpful
+in gathering some initial information about the data; it is more  
+useful to look at a description of their structure found by using
+the following command
+<<AItR-Forbes2000-str, echo = TRUE, eval = FALSE>>=
+str(Forbes2000)
+@
+<<AItR-Forbes2000-str, echo = FALSE, eval = TRUE>>=
+str(Forbes2000, vec.len = 2)
+@
+The output of the \Rcmd{str} function 
+tells us that \Robject{Forbes2000} is an object of class 
+\Rclass{data.frame}, the most
+important data structure for handling tabular statistical data in \R. 
+As
+expected, information about $2000$ observations, i.e., companies, 
+are stored in this object.
+For each observation, the following eight variables are available:
+\begin{description}
+\item{\Robject{rank}}: the ranking of the company,
+\item{\Robject{name}}: the name of the company,
+\item{\Robject{country}}: the country the company is situated in,
+\item{\Robject{category}}: a category describing the products the company
+                           produces,
+\item{\Robject{sales}}: the amount of sales of the company in billion
+                        US dollars,
+\item{\Robject{profits}}: the profit of the company in billion US dollars,
+\item{\Robject{assets}}: the assets of the company in billion US dollars,
+\item{\Robject{marketvalue}}: the market value of the company in billion US dollars.
+\end{description}
+A similar but more detailed description is available from the help page for the
+\Robject{Forbes2000} object:
+<<AItR-Forbes2000-help, echo = TRUE, eval = FALSE>>=
+help("Forbes2000")
+@
+or
+\begin{Verbatim}
+R> ?Forbes2000
+\end{Verbatim}
+All information provided by \Rcmd{str} can be obtained by specialised
+functions as well and we will now have a closer look at the most important 
+of these.
+
+The \R{} language is an object-oriented programming language, 
+\index{Object-oriented programming language}
+so every object
+is an instance of a class. The name of the class of an object can be
+determined by 
+<<AItR-Forbes2000-df, echo = TRUE>>=
+class(Forbes2000)
+@
+Objects of class \Rclass{data.frame} represent data the traditional table
+oriented way. Each row is associated with one single observation and each
+column corresponds to one variable. The dimensions of such a table can be
+extracted using the \Rcmd{dim} function
+<<AItR-Forbes2000-dim, echo = TRUE>>=
+dim(Forbes2000)
+@
+Alternatively, the numbers of rows and columns
+can be found using
+<<AItR-Forbes2000-nrow-ncol, echo = TRUE>>=   
+nrow(Forbes2000)
+ncol(Forbes2000)
+@
+The results of both statements show that \Robject{Forbes2000} has
+$\Sexpr{nrow(Forbes2000)}$ rows, i.e., observations, the companies in our case,
+with eight variables describing the observations. 
+The variable names are accessible from
+<<AItR-Forbes2000-names, echo = TRUE>>=
+names(Forbes2000)
+@
+The values of single variables can be extracted from the 
+\Robject{Forbes2000} object by their names, for example the ranking of the
+companies
+<<AItR-Forbes2000-rank, echo = TRUE>>=
+class(Forbes2000[,"rank"])
+@
+is stored as an integer variable. Brackets \Robject{[]} always indicate 
+a subset 
+\index{Subset} of a
+larger object, in our case a single variable extracted from the whole table.
+Because \Rclass{data.frame}s have two dimensions, observations and
+variables, the comma is required in order to specify that we want a subset
+of the second dimension, i.e., the variables. The rankings for all
+$\Sexpr{nrow(Forbes2000)}$ companies are represented in a \Rclass{vector}
+structure the length of which is given by 
+<<AItR-Forbes2000-length, echo = TRUE>>=
+length(Forbes2000[,"rank"])
+@
+A \Rclass{vector} is the elementary structure for data handling in \R{} and is
+a set of simple elements, all being objects of the same class. For example,
+a simple vector of the numbers one to three can be constructed by one of the
+following commands
+<<AItR-Forbes2000-one-to-three, echo = TRUE>>=
+1:3
+c(1,2,3)
+seq(from = 1, to = 3, by = 1)
+@
+
+The unique names of all $\Sexpr{nrow(Forbes2000)}$ companies are stored in a
+character vector
+\index{character vector@\Rclass{character} vector}
+<<AItR-Forbes2000-name, echo = TRUE>>=
+class(Forbes2000[,"name"])
+length(Forbes2000[,"name"]) 
+@
+and the first element of this vector is 
+<<AItR-Forbes2000-first, echo = TRUE>>=
+Forbes2000[,"name"][1]
+@
+Because the companies are ranked, Citigroup is the world's largest %'
+company according to the Forbes 2000 list. Further details on vectors and 
+subsetting are given in Section~\ref{AItR:BDM}. 
+
+Nominal measurements are represented by \Rclass{factor} variables in \R,
+such as the category of the company's business segment %%'
+<<AItR-Forbes2000-category, echo = TRUE>>=
+class(Forbes2000[,"category"])
+@
+Objects of class \Rclass{factor} and \Rclass{character} basically differ in
+the way their values are stored internally. 
+Each element of a vector of
+class \Rclass{character} is stored as a \Rclass{character} variable whereas
+an integer variable indicating the level of a \Rclass{factor} is saved for
+\Rclass{factor} objects. In our case, there are 
+<<AItR-Forbes2000-nlevels, echo = TRUE>>=
+nlevels(Forbes2000[,"category"])
+@
+different levels, i.e., business categories, which can be extracted by
+<<AItR-Forbes2000-levels, echo = TRUE, eval = FALSE>>=             
+levels(Forbes2000[,"category"])
+@
+<<AItR-Forbes2000-levels, echo = FALSE>>=             
+levels(Forbes2000[,"category"])[1:3]
+cat("...\n")
+@
+As a simple summary statistic, 
+the frequencies of the levels of such a \Rclass{factor} variable can be
+found from 
+<<AItR-Forbes2000-table, echo = TRUE, eval = FALSE>>=
+table(Forbes2000[,"category"])
+@
+<<AItR-Forbes2000-table, echo = FALSE>>=
+table(Forbes2000[,"category"])[1:3]
+cat("...\n")
+@
+
+The sales, assets, profits and market value variables are of type
+\Robject{numeric}, the natural data type for continuous or discrete
+measurements, for example
+<<AItR-Forbes2000-sales, echo = TRUE>>=
+class(Forbes2000[,"sales"])
+@
+and simple summary statistics such as the mean, median and range can be
+found from
+<<AItR-Forbes2000-numsum, echo = TRUE>>=
+median(Forbes2000[,"sales"])
+mean(Forbes2000[,"sales"])
+range(Forbes2000[,"sales"])
+@
+The \Rcmd{summary} method can be applied to
+a numeric vector to give a set of useful summary statistics namely
+the minimum, maximum, mean, median and the $25\%$ and $75\%$ quartiles;
+for example
+<<AItR-Forbes2000-summary, echo = TRUE>>=       
+summary(Forbes2000[,"sales"])
+@
+
+\section{Data Import and Export}
+\index{Data import and export|(}
+
+In the previous section, the data from the Forbes 2000 list of the world's largest %%'
+companies were loaded into \R{} from the
+\Rpackage{HSAUR} package but we will now explore practically more relevant
+ways to import data into the \R{} system. The most frequent data formats
+the data analyst is confronted with are comma separated files, 
+\index{Comma separated files}
+\EXCEL{}
+spreadsheets, 
+\index{Excel spreadsheets@\EXCEL{} spreadsheets}
+files in \SPSS{} format 
+\index{Spss file format@\SPSS{} file format}
+and a variety of \SQL{} data base engines.
+\index{SQL data bases@\SQL{} data bases}
+Querying data bases is a non-trivial task and requires additional knowledge
+about querying languages and we therefore refer to the \booktitle{\R{} Data
+Import/Export} manual -- see Section~\ref{AItR:HDN}. 
+<<AItR-Forbes2000-files, echo = FALSE>>=
+pkgpath <- system.file(package = "HSAUR")
+mywd <- getwd()
+filep <- file.path(pkgpath, "rawdata")
+setwd(filep)
+@
+We assume that a comma separated file containing the Forbes 2000 list is
+available as \file{Forbes2000.csv} (such a file is part of the
+\Rpackage{HSAUR} source package in directory \file{HSAUR/inst/rawdata}). 
+When the fields are separated by commas and each row begins with a name
+(a text format typically created by \EXCEL{}), we can read in the data as
+follows using the \Rcmd{read.table} function
+<<AItR-Forbes2000-read.table, echo = TRUE>>=
+csvForbes2000 <- read.table("Forbes2000.csv", 
+    header = TRUE, sep = ",", row.names = 1)
+@
+The argument \Rarg{header = TRUE} indicates that the entries in the first line of the text
+file \Robject{"Forbes2000.csv"} should be interpreted as variable names.
+Columns are separated by a comma (\Rcmd{sep = ","}), users of continental
+versions of \EXCEL{} should take care of the character symbol coding for decimal points
+(by default \Rcmd{dec = "."}). Finally, the first column should be
+interpreted as row names but not as a variable (\Rarg{row.names = 1}).
+Alternatively, the function \Rcmd{read.csv} can be used to read comma
+separated files.
+The function \Rcmd{read.table} by default guesses the class of each variable from the
+specified file. In our case, character variables are stored as factors
+<<AItR-Forbes2000-csv-names, echo = TRUE>>=  
+class(csvForbes2000[,"name"])
+@
+which is only suboptimal since the names of the companies are unique. 
+However, we can supply the types for each variable to the \Rarg{colClasses}
+argument
+<<AItR-Forbes2000-read.table2, echo = TRUE>>=
+csvForbes2000 <- read.table("Forbes2000.csv",
+    header = TRUE, sep = ",", row.names = 1,
+    colClasses = c("character", "integer", "character", 
+        "factor", "factor", "numeric", "numeric", "numeric", 
+        "numeric"))
+class(csvForbes2000[,"name"])   
+@
+and check if this object is identical with our previous Forbes 2000 list
+object
+<<AItR-Forbes2000-all.equal, echo = TRUE>>=
+all.equal(csvForbes2000, Forbes2000)
+@
+The argument \Rarg{colClasses} expects a character vector of length equal to
+the number of columns in the file. Such a vector can be supplied by the
+\Rcmd{c} function that combines the objects given in the parameter list into
+a \Rclass{vector}
+<<AItR-Forbes2000-classes, echo = TRUE>>=
+classes <- c("character", "integer", "character", "factor", 
+    "factor", "numeric", "numeric", "numeric", "numeric")
+length(classes)
+class(classes)
+@
+
+An \R{} interface to the open data base
+connectivity standard (ODBC) 
+\index{Open data base connectivity standard (ODBC)}
+is available in package \Rpackage{RODBC} and
+its functionality can be used to assess \EXCEL{} and \ACCESS{} files directly:
+<<AItR-Forbes2000-RODBC, echo = TRUE, eval = FALSE>>=
+library("RODBC")
+cnct <- odbcConnectExcel("Forbes2000.xls")
+sqlQuery(cnct, "select * from \"Forbes2000\\$\"")
+@
+The function \Rcmd{odbcConnectExcel} opens a connection to the specified
+\EXCEL{} or \ACCESS{} file which can be used to send \SQL{} queries to the
+data base engine and retrieve the results of the query.
+<<AItR-Forbes2000-RODBC, echo = FALSE>>=
+setwd(mywd)
+@
+
+Files in \SPSS{} format are read in a way similar to reading comma separated files, using the
+function \Rcmd{read.spss} from package \Rpackage{foreign} (which comes with
+the base distribution).
+
+Exporting data from \R{} is now rather straightforward. A comma separated file
+readable by \EXCEL{} can be constructed from a \Rclass{data.frame} object via
+<<AItR-Forbes2000-write.table, echo = TRUE>>=
+write.table(Forbes2000, file = "Forbes2000.csv", sep = ",", 
+            col.names = NA)
+@
+The function \Rcmd{write.csv} is one alternative and the functionality implemented 
+in the \Rpackage{RODBC} package can be used to write data directly into \EXCEL{} 
+spreadsheets as well.
+
+\index{Saving R objects@Saving \R{} objects}
+Alternatively, when data should be saved for later processing in \R{} only,
+\R{} objects of arbitrary kind can be stored into an external binary file via 
+<<AItR-Forbes2000-save, echo = TRUE>>=
+save(Forbes2000, file = "Forbes2000.rda")
+@
+where the extension \file{.rda} is standard. We can get the file names of
+all files with extension \file{.rda} from the working directory 
+<<AItR-Forbes2000-list, echo = TRUE>>=
+list.files(pattern = "\\.rda")
+@
+and we can load the contents of the file into \R{} by
+<<AItR-Forbes2000-load, echo = TRUE>>=
+load("Forbes2000.rda")
+@
+\index{Data import and export|)}
+
+\section{Basic Data Manipulation \label{AItR:BDM}}
+
+\index{Data manipulation|(}
+The examples shown in the previous section have illustrated the 
+importance of \Rclass{data.frame}s for storing and handling 
+tabular data in \R. Internally, a \Rclass{data.frame} is a \Rclass{list} of vectors
+of a common length $n$, the number of rows of the table. Each of those vectors
+represents the measurements of one variable and we have seen that we 
+can access such a variable by its name, for example the names of the
+companies
+<<AItR-Forbes2000-vector-companies, echo = TRUE>>=
+companies <- Forbes2000[,"name"]
+@
+Of course, the \Robject{companies} vector is of class \Rclass{character} and 
+of length $\Sexpr{length(companies)}$. A subset
+\index{Subset}
+of the elements of the
+vector \Robject{companies} can be extracted using the \Rcmd{[]} subset 
+operator. For example, the largest of the $2000$ companies listed in
+the Forbes 2000 list is 
+<<AItR-Forbes2000-vector-indexing, echo = TRUE>>=
+companies[1]
+@
+and the top three companies can be extracted utilising an integer vector of
+the numbers one to three:
+<<AItR-Forbes2000-vector-indexing, echo = TRUE>>=
+1:3
+companies[1:3]
+@
+In contrast to indexing with positive integers, negative indexing returns
+\index{negative indexing}
+all elements which are \stress{not} part of the index vector given in brackets. For
+example, all companies except those with numbers four to two-thousand, i.e.,
+the top three companies, are again
+<<AItR-Forbes2000-vector-negative-indexing, echo = TRUE>>=
+companies[-(4:2000)]
+@
+
+The complete information about the top three companies can be printed in a
+similar way. Because \Rclass{data.frame}s have a concept of rows and
+columns, we need to separate the subsets corresponding to rows and columns
+by a comma. The statement
+<<AItR-Forbes2000-top-three, echo = TRUE>>=
+Forbes2000[1:3, c("name", "sales", "profits", "assets")]
+@
+extracts the variables \Robject{name}, \Robject{sales}, \Robject{profits} 
+and \Robject{assets}
+for the three largest companies. Alternatively, a single variable can be 
+extracted from a \Rclass{data.frame} by 
+<<AItR-Forbes2000-list-extract, echo = TRUE>>=
+companies <- Forbes2000$name
+@
+which is equivalent to the previously shown statement
+<<AItR-Forbes2000-vector-companies, echo = TRUE>>=
+companies <- Forbes2000[,"name"]
+@
+
+We might be interested in extracting the largest companies with respect to
+an alternative ordering. The three top selling companies can be computed
+along the following lines. 
+First, we need to compute the ordering of the companies' sales %%'
+<<AItR-Forbes2000-sales, echo = TRUE>>=
+order_sales <- order(Forbes2000$sales)
+@
+which returns the indices of the 
+ordered elements of the numeric vector \Robject{sales}. 
+Consequently the three companies with the lowest sales are
+<<AItR-Forbes2000-sales-small, echo = TRUE>>=
+companies[order_sales[1:3]]
+@
+The indices of the three top sellers are the elements $1998, 1999$ and $2000$
+of the integer vector \Robject{order\_sales}
+<<AItR-Forbes2000-order, echo = TRUE>>=
+Forbes2000[order_sales[c(2000, 1999, 1998)],
+           c("name", "sales", "profits", "assets")]
+@
+
+Another way of selecting vector elements is the use of a logical vector
+being \Robject{TRUE} when the corresponding element is to be selected and
+\Robject{FALSE} otherwise. The companies with assets of more than $1000$
+billion US dollars are
+<<AItR-Forbes2000-logical, echo = TRUE>>=
+Forbes2000[Forbes2000$assets > 1000,
+           c("name", "sales", "profits", "assets")]
+@
+where the expression \Robject{Forbes2000\$assets > 1000} indicates a logical
+vector of length $2000$ with 
+<<AItR-Forbes2000-logical2, echo = TRUE>>=
+table(Forbes2000$assets > 1000)
+@
+elements being either \Robject{FALSE} or \Robject{TRUE}. In fact, for some of the
+companies the measurement of the \Robject{profits} variable are missing. In
+\R, missing values are treated by a special symbol, \Robject{NA}, indicating
+\index{NA symbol@\Robject{NA} symbol}
+that this measurement is not available. 
+\index{Missing values}
+The observations with profit information missing can be obtained
+via
+<<AItR-Forbes2000-NA, echo = TRUE>>=
+na_profits <- is.na(Forbes2000$profits)
+table(na_profits)
+Forbes2000[na_profits, 
+           c("name", "sales", "profits", "assets")]
+@
+where the function \Rcmd{is.na} returns a logical vector being
+\Robject{TRUE} when the corresponding element of the supplied vector is
+\Robject{NA}. A more comfortable approach is available when we want to
+remove all observations with at least one missing value from a
+\Rclass{data.frame} object. The function \Rcmd{complete.cases} takes a
+\Rclass{data.frame} and returns a logical vector being \Robject{TRUE} when
+the corresponding observation does not contain any missing value:
+<<AItR-Forbes2000-complete-cases, echo = TRUE>>=
+table(complete.cases(Forbes2000))
+@
+
+Subsetting \Rclass{data.frame}s driven by logical expressions may induce a
+lot of typing which can be avoided. The \Rcmd{subset} function takes a
+\Rclass{data.frame} as first argument and a logical expression as second
+argument. For example, we can select a subset of the Forbes 2000 list
+consisting of all companies situated in the United Kingdom by 
+<<AItR-Forbes2000-UK, echo = TRUE>>=
+UKcomp <- subset(Forbes2000, country == "United Kingdom")
+dim(UKcomp)
+@
+i.e., $\Sexpr{nrow(UKcomp)}$ of the $2000$ companies are from the UK. Note
+that it is not necessary to extract the variable \Robject{country} from the
+\Rclass{data.frame} \Robject{Forbes2000} when formulating the logical
+expression.
+\index{Data manipulation|)}
+
+\section{Simple Summary Statistics}
+
+Two functions are helpful for getting an overview about \R{} objects:
+\Rcmd{str} and \Rcmd{summary}, where \Rcmd{str} is more detailed about data
+types and \Rcmd{summary} gives a collection of sensible summary statistics.
+For example, applying the \Rcmd{summary} method to the \Robject{Forbes2000}
+data set, 
+<<AItR-Forbes2000-summary, echo = TRUE, results = hide>>=
+summary(Forbes2000)
+@
+results in the following output
+<<AItR-Forbes2000-summary-output, echo = FALSE>>=
+summary(Forbes2000)
+@
+From this output we can immediately see 
+that most of the companies are situated in the US and
+that most of the companies are working in the banking sector as well as that
+negative profits, or losses, up to 
+$\Sexpr{abs(round(min(Forbes2000$profits, na.rm = TRUE)))}$ billion 
+US dollars occur.
+
+Internally, \Rcmd{summary} is a so-called \stress{generic function} 
+\index{Generic function} with
+methods for a multitude of classes, i.e., \Rcmd{summary} can be applied to
+objects of different classes and will report sensible results. Here, we supply a
+\Rclass{data.frame} object to \Rcmd{summary} where it is natural to apply
+\Rcmd{summary} to each of the variables in this \Rclass{data.frame}. Because
+a \Rclass{data.frame} is a \Rclass{list} with each variable being an element of
+that \Rclass{list}, the same effect can be achieved by 
+<<AItR-Forbes2000-lapply, echo = TRUE, eval = FALSE>>=
+lapply(Forbes2000, summary)
+@
+
+\index{apply family@\Rcmd{apply} family}
+The members of the \Rcmd{apply} family help to solve recurring tasks for each
+element of a \Rclass{data.frame}, \Rclass{matrix}, \Rclass{list} or for each
+level of a factor. It might be interesting to compare the profits in each of the 
+$\Sexpr{nlevels(Forbes2000$category)}$ categories. To do so, we first
+compute the median profit for each category from
+<<AItR-Forbes2000-tapply-category, echo = TRUE>>=
+mprofits <- tapply(Forbes2000$profits, 
+                   Forbes2000$category, median, na.rm = TRUE)
+@
+a command that should be read as follows. For each level of the factor
+\Robject{category}, determine the corresponding elements of the
+numeric vector \Robject{profits} and supply them to the
+\Rcmd{median} function with additional argument \Rarg{na.rm = TRUE}. The
+latter one is necessary because \Robject{profits} contains
+missing values which would lead to a non-sensible result of the
+\Rcmd{median} function
+<<AItR-Forbes2000-medianNA, echo = TRUE>>=
+median(Forbes2000$profits)
+@
+The three categories with highest median profit are computed from the vector
+of sorted median profits
+<<AItR-Forbes2000-mprofits, echo = TRUE>>=
+rev(sort(mprofits))[1:3]
+@
+where \Rcmd{rev} rearranges the vector of median profits 
+\Rcmd{sort}ed from smallest to largest. 
+Of course, we can replace the \Rcmd{median} function with \Rcmd{mean} or
+whatever is appropriate in the call to \Rcmd{tapply}. 
+In our situation, \Rcmd{mean} is not a good
+choice, because the distributions of profits or sales are naturally skewed.
+Simple graphical tools for the inspection of distributions are introduced in
+the next section.
+
+\subsection{Simple Graphics}
+
+The degree of skewness of a distribution can be investigated by constructing 
+histograms using the
+\Rcmd{hist} function. (More sophisticated alternatives
+such as smooth density estimates will be considered in 
+\Sexpr{ch("DE")}.)
+\begin{figure}
+\begin{center}
+<<AItR-Forbes2000-marketvalue, echo = TRUE, fig = TRUE>>=
+layout(matrix(1:2, nrow = 2))
+hist(Forbes2000$marketvalue)
+hist(log(Forbes2000$marketvalue))
+@
+\caption{Histograms of the market value and the
+logarithm of the market value for the companies contained in the Forbes 2000
+list. \label{AItR:densplot}}
+\end{center}
+\end{figure}
+For example, the code for producing 
+Figure~\ref{AItR:densplot} first divides the plot
+region into two equally spaced rows (the \Rcmd{layout} function) and then
+plots the histograms of the raw market
+values in the upper part using the \Rcmd{hist} function. 
+The lower part of the figure depicts the histogram 
+for the log transformed market values which appear to be more symmetric.
+
+Bivariate relationships of two continuous variables are usually
+depicted as scatterplots. In \R, regression relationships are specified by
+so-called \stress{model formulae} which, in a simple bivariate case, may look
+like
+<<AItR-Forbes2000-formula, echo = TRUE>>=
+fm <- marketvalue ~ sales
+class(fm)
+@
+with the dependent variable on the left hand side and the independent
+variable on the right hand side. The tilde separates left and right hand
+side. 
+Such a model formula can be passed to a model function (for example to
+the linear model function as explained in 
+\Sexpr{ch("MLR")}).
+The \Rcmd{plot} generic function implements a \Rclass{formula} method as well. Because
+the distributions of both market value and sales are skewed we choose to
+depict their logarithms. A raw scatterplot of $2000$ data points 
+(Figure~\ref{AItR:scatter-raw}) is
+rather uninformative due to areas with very high density. This problem can
+be avoided by choosing a transparent color for the dots (currently only
+possible with the PDF graphics device) as shown in Figure~\ref{AItR:scatter}.
+\begin{figure}
+\begin{center}
+<<AItR-Forbes2000-marketvalue-sales, echo = TRUE, fig = TRUE>>=
+plot(log(marketvalue) ~ log(sales), data = Forbes2000, 
+     pch = ".")
+@
+\caption{Raw scatterplot of the logarithms of market value and sales.
+\label{AItR:scatter-raw}}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+<<AItR-Forbes2000-marketvalue-sales-shading, echo = TRUE, fig = TRUE, pdf = FALSE, png = TRUE>>=
+plot(log(marketvalue) ~ log(sales), data = Forbes2000, 
+     col = rgb(0,0,0,0.1), pch = 16)
+@
+\caption{Scatterplot with transparent shading of points 
+         of the logarithms of market value and sales.
+\label{AItR:scatter}}
+\end{center}
+\end{figure}
+If the independent variable is a factor, a boxplot representation is a
+natural choice. For four selected countries, the distributions of the
+logarithms of the market value may be visually compared in 
+Figure~\ref{AItR:box}.
+\index{Boxplot}
+\begin{figure}
+\begin{center}
+<<AItR-Forbes2000-country-plot, echo = TRUE, eval = FALSE>>=
+boxplot(log(marketvalue) ~ country, data = 
+        subset(Forbes2000, country %in% c("United Kingdom", 
+            "Germany", "India", "Turkey")),
+        ylab = "log(marketvalue)", varwidth = TRUE)
+@
+<<AItR-Forbes2000-country-plot, echo = FALSE, fig = TRUE>>=
+tmp <- subset(Forbes2000, 
+    country %in% c("United Kingdom", "Germany", 
+                   "India", "Turkey"))
+tmp$country <- tmp$country[,drop = TRUE]
+boxplot(log(marketvalue) ~ country, data = tmp,
+        ylab = "log(marketvalue)", varwidth = TRUE)
+@
+\caption{Boxplots of the logarithms of the market value for four selected
+         countries, the width of the boxes is proportional to the
+         square-roots of the number of companies. \label{AItR:box}}
+\end{center}
+\end{figure}
+Here, the width of the boxes are proportional to the square root of the
+number of companies for each country and extremely large or small market values
+are depicted by single points. 
+\index{Forbes 2000 ranking|)}
+
+\section{Organising an Analysis}
+
+<<AItR-analysis1, echo = FALSE, results = hide>>=
+file.create("analysis.R")
+@
+
+Although it is possible to perform an analysis typing all commands directly
+on the \R{} prompt it is much more comfortable to maintain a separate text
+file collecting all steps necessary to perform a certain data analysis task.
+Such an \R{} transcript file, 
+for example \file{analysis.R} created with your favourite text editor, can be 
+sourced into \R{} using the \Rcmd{source} command
+<<AItR-analysis2, echo = TRUE, eval = FALSE>>=
+source("analysis.R", echo = TRUE)
+@
+When all steps of a data analysis, i.e.,
+data preprocessing, transformations, simple summary statistics and plots,
+model building and inference as well as reporting, are collected in such 
+an \R{} transcript file, the analysis can be reproduced at any time, maybe with
+modified data as it frequently happens in our consulting practice.
+
+<<AItR-analysis3, echo = FALSE, results = hide>>=
+file.remove("analysis.R")
+@
+
+\section{Summary}
+
+Reading data into \R{} is possible in many different ways, including direct
+connections to data base engines. Tabular data are handled by
+\Rclass{data.frame}s in \R{}, and the usual data manipulation techniques
+such as sorting, ordering or subsetting can be performed by simple \R{} statements.
+An overview on data stored in a \Rclass{data.frame} is given mainly by two
+functions: \Rcmd{summary} and \Rcmd{str}.
+Simple graphics such as histograms and scatterplots
+can be constructed by applying the appropriate \R{} functions 
+(\Rcmd{hist}  and \Rcmd{plot}) and we shall give many more examples 
+of these functions
+and those that produce more interesting graphics in later chapters.
+
+\section*{Exercises}
+
+\begin{description}
+
+\exercise 
+Calculate the median profit for the companies in the United States and the
+median profit for the companies in the UK, France and Germany. 
+
+\exercise
+Find all German companies with negative profit.
+
+\exercise
+Which business category are most of the companies situated at the Bermuda
+island working in?
+
+\exercise
+For the $50$ companies in the Forbes data set with the highest profits,
+plot sales against assets (or some suitable transformation of each
+variable), labelling each point with the appropriate country name which may
+need to be abbreviated (using \Rcmd{abbreviate}) to avoid making the 
+plot look too `messy'. %%'
+
+\exercise
+Find the average value of sales for the companies in each country in
+the Forbes data set, and find the number of companies in each country with
+profits above $5$ billion US dollars.
+
+\end{description}
+
+\bibliographystyle{LaTeXBibTeX/refstyle}
+\bibliography{LaTeXBibTeX/HSAUR}   
+\end{document}

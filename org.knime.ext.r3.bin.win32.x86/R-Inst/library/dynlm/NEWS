@@ -1,0 +1,59 @@
+Changes in Version 0.3-3
+
+  o Streamlined Depends/Imports/Suggests. Now "dynlm" only depends on zoo
+    but imports from stats, car, and lmtest. Packages datasets, strucchange,
+    sandwich, and TSA are suggested (for use in examples).
+
+  o Improved evaluation of pre-computed formulas (suggested by
+    Vaidotas Zemlys).
+
+  o Added tests/ with output from examples for R CMD check.
+
+
+Changes in Version 0.3-2
+
+  o Bug fix so that weights/offset can actually be used.
+
+
+Changes in Version 0.3-1
+
+  o Fixed bug in computation of R-squared values and Wald statistic
+    for two-stage least squares.
+
+
+Changes in Version 0.3-0
+
+  o Added new formula functions trend() and harmon() that
+    allow convenient specification of linear or cyclical
+    patterns.
+
+
+Changes in Version 0.2-3
+
+  o Fixed bug when lagged variables are used in instrumental
+    variables regression.
+
+
+Changes in Version 0.2-2
+
+  o Added CITATION file.
+
+
+Changes in Version 0.2-1
+
+  o Enhanced documentation ?dynlm.
+
+
+Changes in Version 0.2-0
+
+  o Added support for instrumental variables regression
+    (two-stage least squares) via formulas like
+      dynlm(y ~ x1 + x2 | z1 + z2 + z3, data = mydata)
+    where z1, z2, z3 are the instruments.
+  
+  o Enabled specification of multiple lags via formulas like
+      dynlm(y ~ L(x, 0:4), data = mydata)
+    where y is regressed on x and lags 1 through 4 of x.
+
+  o Fixed bug in time properties when there were leading
+    NAs in the data.

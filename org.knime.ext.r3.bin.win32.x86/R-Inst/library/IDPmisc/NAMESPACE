@@ -1,0 +1,19 @@
+##useDynLib(IDPmisc)
+import(graphics,grid,lattice)
+export(Arrows,poster.plot,zoom)
+export(data.sheet,NaRV.omit,ok)
+export(col2hsv,IDPcolorRamp,showColors)
+export(draw.leg, getXY)
+export(Image,iplot,ipairs,ilagplot,itermplot,ipanel.smooth,iplotLegend)
+export(peaks)
+export(longtsPlot)
+export(clock2cart,cart2clock)
+export(general.control, grid.control, title.control, key.control)
+export(rose)
+export(rfbaseline)
+export(rfbaselineScale)
+exportClasses("rose")
+exportMethods("plot")
+
+## defunct
+

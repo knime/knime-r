@@ -1,0 +1,97 @@
+Changes in version 3.14-4 (2014-04-13)
+   * rcspline.eval: stop new logic for ignoring outer values when there are many ties when there are also many ties on interior values.  Added new logic to use interior unique values of x when the number of unique x is small.
+   * latexBuild: generalized with insert argument
+   * latex.default: modified to use mods of latexBuild, fixed bug with caption.loc='bottom' (thanks: YacineH)
+   * latex.default: fixed bug where comma did not appear after caption={} for ctable (thanks: Johannes Hofrichter)
+   * tests: fit.mult.impute.bootstrap.r: added new example (thanks: Jane Cook)
+   * fit.mult.impute: added call for fit.mult.impute in returned object, replacing call from fitter; makes update work for fit.mult.impute
+   * summary.formula: fixed recognition of multiple left-hand-side variables to trigger call to summaryM (thanks: Kevin Thorpe)
+   * summaryM: changed group label to '' instead of 0 for formulas like age + sex ~ 1
+   * Ecdf: added what argument to all functions
+   * nobsY: return constructed id vector
+   * addMarginal: instead of .marginal. being logical, make it contain names of variables being marginalized over
+   * mChoice.c: fixed some inconsistencies
+
+Changes in version 3.14-3 (2014-03-02)
+   * format.df: clarified in help file that col.just can contain specifications other than l,r,c, e.g., "p{3in}" to get paragraph formatting in a column.  Thanks: Ben Bolker
+   * latex.default: added example for the above in tests
+   * label.Surv: got units from inputAttributes in addition, and added type argument
+
+Changes in version 3.14-2 (2014-02-26)
+   * latex.default: improved logic using new function in Misc: latexBuild
+	 * latex.default: fixed bug with ctable=TRUE with no caption by removing default label
+   * latex.default: improved formatting for insert.top
+   * latex.default: added tests, fixed insert.bottom
+   * latex.summaryM: return stat summary key as legend attribute, use this according to insert.bottom argument
+   * latex.summary.formula.response: fixed bug related to computation of cdec.  Thanks: Kevin Thorpe
+   * latex.default: added new argument star: ctables uses this to spread over two columns when the LaTeX document is in \twocolumn mode.  Thanks:  David Whiting
+
+Changes in version 3.14-1 (2014-02-25)
+   * Added latexNeedle function
+   * Change latexTherm, latexNeedle to use user LaTeX macro \tooltipn to do the pop-up
+   * latex.default: changed line breaks around \end{tabular}
+   * latex.summaryM: put insert.bottom text in minipage so \tooltip will not devote wide space to it
+   * sas.get: added defaultencoding argument and logic (Thanks: Reinhold Koch)
+   * plot.summaryP: omit tick marks for proportion > 1.0
+   * format.df (used by latex): fixed na.blank logic for character var
+   * latex: removed newlines when ending environments, added hyperref argument
+   * latex: added center='centerline', fixed 'centering'
+   * upData, cleanup.import, dataframeReduce: changed argument pr to print
+   * rcspline.eval: added more evasive action in case of extreme ties
+
+Changes in version 3.14-0 (2014-01-22)
+   * Added trans argument to varclus
+   * Removed recode, existsFunction functions, under.unix object, survfitKM, functions used only by S-Plus: comment, mem, mulbar.chart, p.sunflowers
+   * as.category, is.category, untangle.special: removed
+   * Removed reference to .R. from many functions
+   * Remove oldClass, oldUnclass, getFunction
+   * latex.default: changed 'rotate' to 'sideways' for ctable mode.  Thanks: Simon Zehnder <szehnder@uni-bonn.de>
+   * gView: removed
+   * ldBands: removed
+   * summaryP: new function - graphical replacement for tables of proportions
+   * ynbind: new function for combining related yes/no variables into a matrix with a label
+   * added file argument to prn
+   * summaryP: added autoarrange
+   * added addMarginal and nobsY functions
+   * pBlock: new function for blocking variables for summaryP
+   * summaryP: changed text positioning to grid absolutes, added text.at argument
+   * scat1d, histSpike: if grid used and y has grid units, fixed logic for frac
+   * plsmo, panel.plsmo: added scat1d.opts argument
+   * label.Surv, units.Surv: added, removed ::: in survival calls
+   * summarize: added keepcolnames argument
+   * Suppressed startup message unless options(Hverbose=TRUE) is set
+   * summaryS: new function - multi-panel lattice xy and dot plots
+   * summaryD: added ylab argument
+   * dotchart3: quit letting left margin be less than pre-existing one
+   * multLines: new function
+   * Improved nobsY to respect subject IDs when counting number of subjects, and to return an attribute 'formula' without id variable; changed bpplotM, summaryP, summaryS to use this
+   * Removed nobsY calculations from bpplotM, summaryP, summaryS, enhanced nobsY to allow stratification by treatment
+   * panel.bpplot: added violin and violin.opts arguments
+   * summaryS: added medvPanel support during-plot vertical violin plots
+   * plot.summaryP: padded x-axis limits
+   * latexTabular: added translate and hline arguments; moved to its own file and help page
+   * latexTherm: added tooltip using LaTeX ocgtools package
+   * summaryP: stopped reversing order of panels
+   * summaryM: added table.env argument, changed how model.frame built
+   * latex.summaryM: changed to print proportions by default, added round='auto'
+   * character.table: added xpd=NA; thanks: Dale
+   * summaryP: added latex method
+   * latex.default: added insert.top argument
+   * summaryM: added stratification (multiple tables)
+
+Changes in version 3.13-0 (2013-11-18)
+   * Changed n location (nloc argument) in bpplotM
+   * Improved dotchart3 to better compute string widths when there is a mixture of expressions and regular strings for auxdata/auxtitle
+   * Changed rlegend to not take logs if log axes are in effect.  Fixes Ecdf(..., log='x', label.curves=list(keys=1:3)).  Thanks: Bayazid Sarker <sarkarbayazid@gmail.com>
+	 * Extended non-panel (regular) version of plsmo to handle matrix y
+   * Likewise for summaryRc
+   * Added xlim to bpplotM
+   * Added latexTherm function to create LaTeX picture environments to add a series of thermometers to LaTeX text
+   * Fixed deff to handle the case where R^2 = 1.  Thanks: Matthieu Stigler <matthieu.stigler@gmail.com>
+   * Added new test file for wtd.mean, wtd.quantile
+   * New test aregImpute3.r for glm Poisson regression
+   * Improved describe.vector to format single unique values
+   * Took away warning about var, s.e., t, p in fit.mult.impute
+   * Switched from subversion to github repository
+   * Changed maintainer from Charles Dupont to Frank Harrell
+   * Changed wtd.loess.noiter to use loess instead of stats:::simpleLoess

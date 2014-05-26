@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Contributing to ggplot2 development</title>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Contributing to ggplot2 development}
+-->
+
+<h1>Contributing to ggplot2 development</h1>
+
+<p>The goal of this guide is to help you get up and contributing to ggplot2 as quickly as possible. It&#39;s still a work in progress and very rough. Your feedback is much appreciated and so are pull requests :).  Rather than emailing me directly about questions, please discuss ggplot2 development issues on the <a href="https://groups.google.com/forum/#!forum/ggplot2-dev">ggplot2-dev</a> mailing list. That way multiple people can learn at the same time.</p>
+
+<p>To contribute a change to ggplot2, you follow these steps:</p>
+
+<ol>
+<li>Set up a local ggplot2 development environment.</li>
+<li>Create a branch in git and make your changes.</li>
+<li>Push branch to github and issue pull request (PR).</li>
+<li>Discuss the pull request.</li>
+<li>Iterate until either we accept the PR or decide that it&#39;s not
+a good fit for ggplot2.</li>
+</ol>
+
+<p>Each of these steps are described in more detail below. This might feel overwhelming the first time you get set up, but it gets easier with practice. If you get stuck at any point, please reach out for help on the <a href="https://groups.google.com/forum/#!forum/ggplot2-dev">ggplot2-dev</a> mailing list</p>
+
+<h2>Basic setup</h2>
+
+<p>If you want to do development on ggplot2 and share the changes with other people, you&#39;ll have to set up an account on GitHub. You&#39;ll make a fork of Hadley&#39;s repository and store it on GitHub. You&#39;ll also make a copy of your repository on your local machine.</p>
+
+<ol>
+<li><p><a href="https://github.com/join">Join github</a>.</p></li>
+<li><p><a href="https://help.github.com/articles/set-up-git">Set up git and github</a>.</p></li>
+<li><p>Fork of the main repo by going to <a href="https://github.com/hadley/ggplot2/fork">https://github.com/hadley/ggplot2/fork</a>.
+A fork is a copy of ggplot2 that you can work on independently.
+See <a href="https://help.github.com/articles/fork-a-repo">fork a repo</a> for
+more details.</p></li>
+<li><p>Clone your fork to your local computer (change <code>myname</code> to your account
+name):</p>
+
+<pre><code>git clone git@github.com:myname/ggplot2.git
+cd ggplot2
+</code></pre></li>
+<li><p>Once you&#39;ve done that, add the main repository as a remote and set up
+the master branch to track the main ggplot2 repo. This will make it
+easier to keep up to date.</p>
+
+<pre><code>git remote add hadley git://github.com/hadley/ggplot2.git
+git branch --set-upstream master hadley/master
+</code></pre></li>
+</ol>
+
+<p>Now on your local machine you have the local repository and two remote repositories: <code>origin</code> (the default), which is your personal ggplot2 repo at GitHub, and <code>hadley</code> which is Hadley&#39;s. You&#39;ll be able to push changes to your own repository only.</p>
+
+<h3>Development environment</h3>
+
+<p>You&#39;ll also need a copy of the packages I use for package development. Get them by running the following R code:</p>
+
+<pre><code class="r">install.packages(c(&quot;devtools&quot;, &quot;testthat&quot;))
+devtools::install_github(&quot;klutometis/roxygen&quot;)
+</code></pre>
+
+<p>Next, install all the suggested packages that ggplot2 needs. To do this either open the ggplot2 rstudio project, or set your working directory to the ggplot2 directory, then run:</p>
+
+<pre><code class="r">install_deps(dep = T)
+</code></pre>
+
+<p>The key functions you&#39;ll use when working on ggplot2:</p>
+
+<ul>
+<li><code>devtools::load_all()</code>: loads all code into your current environment</li>
+<li><code>devtools::document()</code>: updates the roxygen comments</li>
+<li><code>devtools::test()</code>: run all unit tests</li>
+<li><code>devtools::check()</code>: runs R CMD check on the package to check for errors.</li>
+</ul>
+
+<p>If you&#39;re using Rstudio, I highly recommend learning the keyboard shortcuts for these commands. You can find them in the <code>Build</code> menu.</p>
+
+<h2>Making changes</h2>
+
+<p>When you want to make changes, you should work on a new branch. Otherwise things can get a bit confusing when it comes time to merge it into the main repo with a pull request. You probably want to start with the <code>master</code> branch.</p>
+
+<pre><code># Fetch the latest version of hadley/ggplot2
+git fetch hadley
+git checkout hadley/master
+</code></pre>
+
+<p>At this point it&#39;ll give you a warning about being in &ldquo;detached HEAD&rdquo; state. Don&#39;t worry about it. Just start a new branch with the current state as the starting point:</p>
+
+<pre><code>git checkout -b myfix
+</code></pre>
+
+<p>To check what branch you&#39;re currently on, run <code>git branch</code>.</p>
+
+<p>Now you can make your changes and commit them to this branch on your local repository. If you decide you want to start over, you can just check out <code>hadley/master</code> again, make a new branch, and begin anew.</p>
+
+<p>When you feel like sharing your changes, push them to your GitHub repo:</p>
+
+<pre><code>git push
+</code></pre>
+
+<p>Then you can submit a pull request if you want it to be integrated in the main branch.</p>
+
+<p>If you&#39;ve been working on your for a while, it&#39;s possible that it won&#39;t merge properly because something has changed in both the main repo and in your branch. You can test it out by checking out the main branch and merging yourself.</p>
+
+<p>First, make a new branch called <code>testmerge</code>, based off the main branch:</p>
+
+<pre><code>git fetch hadley
+git checkout hadley/master
+
+git checkout -b testmerge
+</code></pre>
+
+<p>Then try merging your branch into testmerge:</p>
+
+<pre><code>git merge myfix
+</code></pre>
+
+<p>If there are no errors, great. You can switch back to your <code>myfix</code> branch and delete <code>testmerge</code>:</p>
+
+<pre><code>git checkout myfix
+git branch -D testmerge
+</code></pre>
+
+<p>If there are any merge conflicts, you may want to rebase your changes on top of the current master version, or just resolve the conflicts and commit it to your branch. Rebasing may make for a somewhat cleaner commit history, but there is a possibility of messing things up. If you want to be safe, you can just make a new branch and rebase that on top of the current master.</p>
+
+<h2>What makes a good pull request?</h2>
+
+<!--
+* [ ] Motivate the change in one paragraph, and include it in NEWS.
+      In parentheses, reference your github user name and this issue:
+      `(@hadley, #1234)`
+* [ ] Check pull request only includes relevant changes.
+* [ ] Use the [official style](http://adv-r.had.co.nz/Style.html).
+* [ ] Update documentation and re-run roxygen2
+* [ ] Add test, if bug in non-graphical function
+* [ ] Add visual test, if bug in graphical function
+* [ ] Add minimal example, if new graphical feature
+
+See http://docs.ggplot2.org/dev/vignettes/development.html for more details.
+--->
+
+<p>Pull requests will be evaluated against the a seven point checklist:</p>
+
+<ol>
+<li><p><strong>Motivation</strong>. Your pull request must clearly and concisely motivates the
+need for change. Unfortunately neither Winston nor I have much time to
+work on ggplot2 these days, so you need to describe the problem and show
+how your pull request solves it as concisely as possible.</p>
+
+<p>Also include this motivation in <code>NEWS</code> so that when a new release of
+ggplot2 comes out it&#39;s easy for users to see what&#39;s changed. Add your
+item at the top of the file and use markdown for formatting. The
+news item should end with <code>(@yourGithubUsername, #the_issue_number)</code>.</p></li>
+<li><p><strong>Only related changes</strong>. Before you submit your pull request, please
+check to make sure that you haven&#39;t accidentally included any unrelated
+changes. These make it harder to see exactly what&#39;s changed, and to
+evaluate any unexpected side effects.</p>
+
+<p>Each PR corresponds to a git branch, so if you expect to submit
+multiple changes make sure to create multiple branches. If you have
+multiple changes that depend on each other, start with the first one
+and don&#39;t submit any others until the first one has been processed.</p></li>
+<li><p><strong>Use ggplot2 coding style</strong>. Please follow the
+<a href="http://adv-r.had.co.nz/Style.html">official ggplot2 style</a>. Maintaing
+a consistent style across the whole code base makes it much easier to
+jump into the code.</p></li>
+<li><p>If you&#39;re adding new parameters or a new function, you&#39;ll also need
+to document them with <a href="https://github.com/klutometis/roxygen">roxygen</a>.
+Make sure to re-run <code>devtools::document()</code> on the code before submitting.</p>
+
+<p>Currently, ggplot2 uses the development version of roxygen2, which you
+can get with <code>install_github(&quot;klutometis/roxygen&quot;)</code>. This will be
+available on CRAN in the near future.</p></li>
+<li><p>If fixing a bug or adding a new feature to a non-graphical function,
+please add a <a href="https://github.com/hadley/testthat">testthat</a> unit test.</p></li>
+<li><p>If fixing a bug in the visual output, please add a visual test.
+(Instructions to follow soon)</p></li>
+<li><p>If you&#39;re adding a new graphical feature, please add a short example
+to the appropriate function.</p></li>
+</ol>
+
+<p>This seems like a lot of work but don&#39;t worry if your pull request isn&#39;t perfect. It&#39;s a learning process and Winston and I will be on hand to help you out. A pull request is a process, and unless you&#39;ve submitted a few in the past it&#39;s unlikely that your pull request will be accepted as is.</p>
+
+<p>Finally, remember that ggplot2 is a mature package used by thousands of people. This means that it&#39;s extremely difficult (i.e. impossible) to change any existing functionality without breaking someone&#39;s code (or another package on CRAN). Please don&#39;t submit pull requests that change existing behaviour. Instead, think about how you can add a new feature in a minimally invasive way.</p>
+
+<h2>Advanced techniques</h2>
+
+<h3>Fetching a branch from someone else&#39;s repository</h3>
+
+<p>Sometimes you will want to fetch a branch from someone&#39;s repository, but without going to the trouble of seting it up as a remote. This is handy if you just want to quickly try out a someone&#39;s work.</p>
+
+<p>This will fetch a branch from someone&#39;s remote repository and check it out (replace <code>username</code> and <code>somebranch</code>):</p>
+
+<pre><code>git fetch https://github.com/username/ggplot2.git somebranch
+git checkout FETCH_HEAD
+</code></pre>
+
+<p>Just doing the above won&#39;t create a local branch &ndash; you&#39;ll be in &ldquo;detached HEAD&rdquo; state. If you&#39;d like to create a local branch to work on, run (you can replace <code>somebranch</code> with whatever name you like):</p>
+
+<pre><code>git checkout -b somebranch
+</code></pre>
+
+<h3>Adding other repositories as remotes</h3>
+
+<p>If you often work off of someone else&#39;s repository, it can be useful to add their repo as a <em>remote</em>. This makes it easier to fetch changes in their repository. If the person&#39;s GitHub account is <code>otherdevel</code>, you would do the following:</p>
+
+<pre><code>git remote add otherdevel git://github.com/otherdevel/ggplot2.git
+git fetch otherdevel
+
+git checkout otherdevel/somebranch
+</code></pre>
+
+<p>If you don&#39;t want to follow them any more, run:</p>
+
+<pre><code>git remote rm otherdevel
+</code></pre>
+
+<h3>Delete a branch from GitHub</h3>
+
+<p>If you pushed a branch to your GitHub repo but it&#39;s no longer needed there, you can remove it with:</p>
+
+<pre><code>git push origin :mybranch
+</code></pre>
+
+<h3>Visualizing the development tree</h3>
+
+<p>GitHub has a very nice <a href="https://github.com/hadley/ggplot2/">development tree view</a>, but it of course only shows commits that have been pushed to GitHub. You may also want to view the tree on your local machine, to see how your local changes relate to the main tree. There are a number of programs out there that will do this.</p>
+
+<p>Mac:</p>
+
+<ul>
+<li><p>gitk: Pretty basic, included with git. Run <code>gitk -a</code> to view all branches (by default it just shows you the current branch).</p></li>
+<li><p><a href="http://gitx.laullon.com/">gitx</a>: This is a bit nicer than gitk.</p></li>
+<li><p><a href="http://www.sourcetreeapp.com/">SourceTree</a>: This is also a nice program. Normally it costs money, but it is temporarily free from the web page or the <a href="http://itunes.apple.com/us/app/sourcetree/id411678673?mt=12&amp;ls=1">Mac App store</a>.</p></li>
+</ul>
+
+<p>Linux:</p>
+
+<ul>
+<li><p>gitk: (See gitk in Mac section)</p></li>
+<li><p>gitg: This is nicer than gitk. By default it only shows the current branch; select &ldquo;Local Branches&rdquo; or &ldquo;All Branches&rdquo; to view others.</p></li>
+</ul>
+
+</body>
+
+</html>

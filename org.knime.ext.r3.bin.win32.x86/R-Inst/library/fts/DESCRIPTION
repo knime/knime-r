@@ -1,0 +1,16 @@
+Package: fts
+Title: R interface to tslib (a time series library in c++)
+Version: 0.9.9
+Maintainer: Whit Armstrong <armstrong.whit@gmail.com>
+Author: Whit Armstrong <armstrong.whit@gmail.com>
+Depends: utils, stats, zoo
+LinkingTo: BH
+Description: fast operations for time series objects
+License: GPL-3
+BugReports: http://github.com/armstrtw/fts/issues
+Packaged: 2014-04-03 20:00:18 UTC; warmstrong
+NeedsCompilation: yes
+Repository: CRAN
+Date/Publication: 2014-04-04 15:05:39
+Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-21 22:56:43 UTC; windows
+Archs: i386, x64

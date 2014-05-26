@@ -1,0 +1,14 @@
+anova.coxme             Analysis of Deviance for a Cox model.
+coxme                   Fit a mixed effects Cox model
+coxme.control           Auxillary parameters for controlling coxme
+                        fits.
+coxmeFull               Variance family function for coxme fits.
+coxmeMlist              Coxme variance function
+eortc                   Simulated data set based on an EORTC trial
+expand.nested           Expand nested factors
+fixef.coxme             Extraction functions for Coxme
+fixef.lmekin            Extraction functions for Lmekin
+lmekin                  Fit a linear mixed effects model
+lmekin.object           lmekin object
+print.coxme             Print method for a coxme fit.
+print.lmekin            Print function for lmekin

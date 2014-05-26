@@ -1,0 +1,39 @@
+Package: arules
+Version: 1.1-2
+Date: 2014-2-21
+Title: Mining Association Rules and Frequent Itemsets
+Authors@R: c(person("Michael", "Hahsler", role = c("aut", "cre", "cph"),
+		email = "mhahsler@lyle.smu.edu"),
+	    person("Christian", "Buchta", role = c("aut", "cph")),
+	    person("Bettina", "Gruen", role = c("aut", "cph")),
+	    person("Kurt", "Hornik", role = c("aut", "cph")),
+	    person("Christian", "Borgelt", role = c("ctb", "cph")))
+Description: Provides the infrastructure for representing, 
+    manipulating and analyzing transaction data and patterns (frequent 
+    itemsets and association rules). Also provides interfaces to 
+    C implementations of the association mining algorithms Apriori and Eclat
+    by C. Borgelt.
+Classification/ACM: G.4, H.2.8, I.5.1
+URL: http://R-Forge.R-project.org/projects/arules/,
+        http://lyle.smu.edu/IDA/arules/
+Depends: R (>= 2.14.2), Matrix (>= 1.0-0)
+Imports: stats, methods
+Suggests: pmml, arulesViz, testthat
+License: GPL-2
+Copyright: The code for apriori and eclat in src/rapriori.c was
+        obtained from http://fuzzy.cs.uni-magdeburg.de/~borgelt/ and is
+        Copyright (C) 1996-2003 Christian Borgelt. All other code is
+        Copyright (C) Michael Hahsler, Christian Buchta, Bettina Gruen
+        and Kurt Hornik.
+Packaged: 2014-02-21 16:48:11 UTC; hahsler
+Author: Michael Hahsler [aut, cre, cph],
+  Christian Buchta [aut, cph],
+  Bettina Gruen [aut, cph],
+  Kurt Hornik [aut, cph],
+  Christian Borgelt [ctb, cph]
+Maintainer: Michael Hahsler <mhahsler@lyle.smu.edu>
+NeedsCompilation: yes
+Repository: CRAN
+Date/Publication: 2014-02-21 19:04:09
+Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-21 23:01:12 UTC; windows
+Archs: i386, x64

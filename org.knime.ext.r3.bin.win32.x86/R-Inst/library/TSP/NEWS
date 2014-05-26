@@ -1,0 +1,23 @@
+Changes in version 1.0-8
+    * service release.
+
+Changes in version 1.0-7
+    * Added PACKAGE argument to C calls.
+
+Changes in version 1.0-6
+    * Fixed bug in read_TSPLIB.
+
+Changes in version 1.0-5
+    * Changed constructor for TOUR to allow for method and tour_length.
+    * Bugfix: labels in creator ATSP() (reported by Tiffany Chen)
+
+Changes in version 1.0-4
+    * Fixed bug with missing row/column labels in as.ATSP() 
+	(reported by Ian Deters )
+
+Changes in version 1.0-3
+    * Service release
+
+Changes in version 1.0-2 
+    * Fixed Windows/R bug with temp files.
+    * Fixed the code for SpatialLines thanks to Roger Bivand.

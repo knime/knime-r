@@ -1,0 +1,14 @@
+akima                   Waveform Distortion Data for Bivariate
+                        Interpolation
+akima760                Sample data from Akima's Bicubic Spline
+                        Interpolation code (TOMS 760)
+aspline                 Univariate Akima interpolation
+bicubic                 Bivariate Interpolation for Data on a
+                        Rectangular grid
+bicubic.grid            Bivariate Interpolation for Data on a
+                        Rectangular grid
+interp                  Gridded Bivariate Interpolation for Irregular
+                        Data
+interp2xyz              From interp() Result, Produce 3-column Matrix
+interpp                 Pointwise Bivariate Interpolation for Irregular
+                        Data

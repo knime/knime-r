@@ -1,0 +1,67 @@
+Package: car
+Version: 2.0-20
+Date: 2014/04/23
+Title: Companion to Applied Regression
+Authors@R: c(person("John", "Fox", role = c("aut", "cre"), email = "jfox@mcmaster.ca"),
+	person("Sanford", "Weisberg", role = "aut", email = "sandy@umn.edu"),
+    person("Daniel", "Adler", role="ctb"),
+    person("Douglas", "Bates", role = "ctb"),
+    person("Gabriel", "Baud-Bovy", role = "ctb"),
+    person("Steve", "Ellison", role="ctb"),
+    person("David", "Firth", role = "ctb"),
+    person("Michael", "Friendly", role = "ctb"),
+    person("Gregor", "Gorjanc", role = "ctb"),
+    person("Spencer", "Graves", role = "ctb"),
+    person("Richard", "Heiberger", role = "ctb"),
+    person("Rafael", "Laboissiere", role = "ctb"),
+    person("Georges", "Monette", role = "ctb"),
+    person("Duncan", "Murdoch", role="ctb"),
+    person("Henric", "Nilsson", role = "ctb"),
+    person("Derek", "Ogle", role = "ctb"),
+    person("Brian", "Ripley", role = "ctb"),
+    person("William", "Venables", role = "ctb"),
+    person("Achim", "Zeileis", role = "ctb"),
+    person("R-Core", role="ctb"))
+Depends: R (>= 2.14.0), stats, graphics
+Imports: MASS, nnet
+Suggests: alr4, boot, leaps, lme4, lmtest, nlme, quantreg, sandwich,
+        mgcv, pbkrtest (>= 0.3-2), rgl (>= 0.93.960), survival, survey
+ByteCompile: yes
+LazyLoad: yes
+LazyData: yes
+Description: 
+  This package accompanies J. Fox and S. Weisberg, An R Companion to Applied Regression,
+  Second Edition, Sage, 2011.
+License: GPL (>= 2)
+URL: https://r-forge.r-project.org/projects/car/,
+        http://CRAN.R-project.org/package=car,
+        http://socserv.socsci.mcmaster.ca/jfox/Books/Companion/index.html
+Author: John Fox [aut, cre],
+  Sanford Weisberg [aut],
+  Daniel Adler [ctb],
+  Douglas Bates [ctb],
+  Gabriel Baud-Bovy [ctb],
+  Steve Ellison [ctb],
+  David Firth [ctb],
+  Michael Friendly [ctb],
+  Gregor Gorjanc [ctb],
+  Spencer Graves [ctb],
+  Richard Heiberger [ctb],
+  Rafael Laboissiere [ctb],
+  Georges Monette [ctb],
+  Duncan Murdoch [ctb],
+  Henric Nilsson [ctb],
+  Derek Ogle [ctb],
+  Brian Ripley [ctb],
+  William Venables [ctb],
+  Achim Zeileis [ctb],
+  R-Core [ctb]
+Maintainer: John Fox <jfox@mcmaster.ca>
+Repository: CRAN
+Repository/R-Forge/Project: car
+Repository/R-Forge/Revision: 370
+Repository/R-Forge/DateTimeStamp: 2014-04-23 21:13:23
+Date/Publication: 2014-04-28 07:10:18
+Packaged: 2014-04-23 22:36:00 UTC; rforge
+NeedsCompilation: no
+Built: R 3.1.0; ; 2014-05-21 22:53:01 UTC; windows

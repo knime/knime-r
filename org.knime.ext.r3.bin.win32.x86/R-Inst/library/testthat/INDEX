@@ -1,0 +1,56 @@
+ListReporter-class      List reporter: gather all test results along
+                        with elapsed time and file information.
+MinimalReporter-class   Test reporter: minimal.
+MultiReporter-class     Multi reporter: combine several reporters in
+                        one.
+Reporter-class          Stub object for managing a reporter of tests.
+SilentReporter-class    Test reporter: gather all errors silently.
+StopReporter-class      Test reporter: stop on error.
+SummaryReporter-class   Test reporter: summary of errors.
+TapReporter-class       Test reporter: TAP format.
+TeamcityReporter-class
+                        Test reporter: Teamcity format.
+auto_test               Watches code and tests for changes, rerunning
+                        tests as appropriate.
+auto_test_package       Watches a package for changes, rerunning tests
+                        as appropriate.
+colourise               Colourise text for display in the terminal.
+context                 Describe the context of a set of tests.
+equals                  Expectation: is the object equal (with
+                        numerical tolerance) to a value?
+evaluate_promise        Evaluate a promise, capturing all types of
+                        output.
+expect-compare          Expectation: is returned value less or greater
+                        than specified value?
+expect_that             Expect that a condition holds.
+fail                    A default expectation that always fails.
+gives_warning           Expectation: does expression give a warning?
+has_names               Expectation: does object have names?
+is_a                    Expectation: does the object inherit from a
+                        class?
+is_equivalent_to        Expectation: is the object equivalent to a
+                        value? This expectation tests for equivalency:
+                        are two objects equal once their attributes
+                        have been removed.
+is_false                Expectation: is the object false?
+is_identical_to         Expectation: is the object identical to
+                        another?
+is_null                 Expectation: is the object NULL?
+is_true                 Expectation: is the object true?
+library_if_available    Load package, if available.
+make_expectation        Make an equality test.
+matches                 Expectation: does string match regular
+                        expression?
+not                     Negate an expectation
+prints_text             Expectation: does printed output match a
+                        regular expression?
+shows_message           Expectation: does expression show a message?
+takes_less_than         Expectation: does expression take less than a
+                        fixed amount of time to run?
+test_dir                Run all of the tests in a directory.
+test_file               Run all tests in specified file.
+test_package            Run all tests in an installed package
+test_that               Create a test.
+throws_error            Expectation: does expression throw an error?
+watch                   Watch a directory for changes (additions,
+                        deletions & modifications).

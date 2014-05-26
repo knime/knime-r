@@ -1,0 +1,28 @@
+useDynLib(randomSurvivalForest)
+
+export(rsf.news, 
+       rsf,
+       randomSurvivalForest,
+       predict.rsf,
+       vimp,
+       plot.error.rsf,       
+       plot.error,
+       plot.ensemble.rsf,       
+       plot.ensemble,
+       plot.proximity.rsf,
+       plot.proximity,
+       plot.variable.rsf,       
+       plot.variable,
+       plot.rsf,
+       print.rsf,
+       find.interaction,
+       max.subtree.rsf,       
+       max.subtree,
+       rsf2rfz,
+       competing.risk,
+       varSel,
+       impute.rsf)
+
+S3method(print, rsf)
+S3method(plot, rsf)
+S3method(predict, rsf)

@@ -1,0 +1,26 @@
+Package: AER
+Version: 1.2-2
+Date: 2014-01-28
+Title: Applied Econometrics with R
+Authors@R: c(person(given = "Christian", family = "Kleiber", role = "aut", email = "Christian.Kleiber@unibas.ch"),
+             person(given = "Achim", family = "Zeileis", role = c("aut", "cre"), email = "Achim.Zeileis@R-project.org"))
+Description: Functions, data sets, examples, demos, and vignettes for the book
+             Christian Kleiber and Achim Zeileis (2008),
+	     Applied Econometrics with R, Springer-Verlag, New York.
+	     ISBN 978-0-387-77316-2. (See the vignette for a package overview.)
+LazyLoad: yes
+Depends: R (>= 2.13.0), car (>= 2.0-1), lmtest, sandwich, survival, zoo
+Suggests: boot, dynlm, effects, foreign, ineq, KernSmooth, lattice,
+        MASS, mlogit, nlme, nnet, np, plm, pscl, quantreg, ROCR,
+        sampleSelection, scatterplot3d, strucchange, systemfit, rgl,
+        truncreg, tseries, urca
+Imports: stats, Formula (>= 0.2-0)
+License: GPL-2
+Packaged: 2014-01-28 12:22:35 UTC; zeileis
+Author: Christian Kleiber [aut],
+  Achim Zeileis [aut, cre]
+Maintainer: Achim Zeileis <Achim.Zeileis@R-project.org>
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2014-01-28 17:50:48
+Built: R 3.1.0; ; 2014-05-21 23:08:31 UTC; windows

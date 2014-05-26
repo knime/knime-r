@@ -1,0 +1,10 @@
+pmmlTransformations-package	pmmlTransformations-package
+DiscretizeXform	pmmlTransformations.DiscretizeXform
+Initialize	pmmlTransformations.Initialize
+MapXform	pmmlTransformations.MapXform
+MinMaxXform	pmmlTransformations.MinMaxXform
+NormDiscreteXform	pmmlTransformations.NormDiscreteXform
+pmmlTransformations	pmmlTransformations-package
+RenameVar	pmmlTransformations.RenameVar
+WrapData	pmmlTransformations.WrapData
+ZScoreXform	pmmlTransformations.ZScoreXform

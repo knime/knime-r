@@ -1,0 +1,46 @@
+Arrows                  Pretty Open or Closed Arrows
+IDPcolorRamp            Color Ramp for Ordered Values
+IDPmisc-package         Utilities of Institute of Data Analyses and
+                        Process Design (www.idp.zhaw.ch)
+Image                   Display the Density of Points in a Scatter Plot
+                        by Colors
+MS                      Spectrum Measured by a SELDI TOF Mass
+                        Spectrometer
+NaRV.omit               Omit Observations with NA, NaN, Inf and -Inf
+                        Values
+cart2clock              Convert Cartesian Coordinates to Clock
+                        Coordinates
+clock2cart              Convert Clock Coordinates to Cartesian
+                        Coordinates
+col2hsv                 Convert Color to hsv Code
+data.sheet              Coerce a list to a data.frame
+draw.leg                Produce a Legend or Key (Grid Function)
+general.control         Auxilary for Controlling the General Appearance
+                        of a Rose Plot
+getXY                   Easy and Flexible Input for One- and Two
+                        Dimensional Data
+grid.control            Auxilary for Controlling the Grid Appearance of
+                        a Rose Plot
+ilagplot                Image Lag Plot Matrix for Large Time Series
+ipairs                  Image Scatter Plot Matrix for Large Datasets
+ipanel.smooth           Panelplot for itermplot
+iplot                   Image Scatter Plot for Large Datasets
+iplotLegend             Plots Legend for Color Ramp
+itermplot               Plot Regression Terms for Huge Datasets
+key.control             Auxilary for Controlling the Appearance of the
+                        Legend of a Rose Plot
+longtsPlot              Plot Very Long Regular Time Series
+ok                      Sets NAs in Logical Objects to FALSE
+peaks                   Finding Peaks in Raw Data
+plot.rose               Plot Method for Class "rose" (Grid Graphics
+                        Function)
+poster.plot             Convenient xyplot with Differently Colored
+                        Margin and Plot Region
+rfbaseline              Robust Fitting of Baselines
+rfbaselineScale         Estimation of the Scale Parameter
+rose                    Creates a rose object out of circular data
+rose-class              rose-class
+showColors              Displays vectors of colors
+title.control           Auxilary for Controlling the Title of a Rose
+                        Plot
+zoom                    Zooming in and out in a 2d-Plot

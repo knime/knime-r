@@ -1,0 +1,23 @@
+breast                  German Breast Cancer Data
+competing.risk          Summary Plots for Competing Risks
+find.interaction        Find Interactions Between Pairs of Variables
+follic                  Follicular Cell Lymphoma Data
+hd                      Hodgkin's Disease Data
+impute.rsf              Impute Only Mode
+max.subtree             Extract Maximal Subtree Information
+pbc                     Primary Biliary Cirrhosis (PBC) Data
+plot.ensemble           Plot Ensemble Estimates
+plot.error              Plot Error Rate and Variable Importance
+plot.proximity          Extract and Plot the Proximity Matrix
+plot.variable           Plot Survival Effect of Variables
+predict.rsf             Random Survival Forest Prediction
+print.rsf               Print Summary Output of Analysis
+rsf                     Random Survival Forests
+rsf.news                Show the NEWS file
+rsf2rfz                 Save Random Survival Forest as a .rfz
+                        Compressed File
+varSel                  Variable Selection for Random Survival Forests
+vdv                     van de Vijver Microarray Breast Cancer Data
+veteran                 Veteran's Administration Lung Cancer Trial Data
+vimp                    VIMP for Single or Grouped Variables
+wihs                    Women's Interagency HIV Study (WIHS)

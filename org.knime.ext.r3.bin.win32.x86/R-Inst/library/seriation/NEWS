@@ -1,0 +1,60 @@
+Changes in version 1.0-13 
+    * Fixed dependence on MASS
+
+Changes in version 1.0-12 (2/18/14)
+    * ser_permutation_vectors can now be reversed with rev
+    * get_order: removed the weird labels. 
+    * we use now testthat
+    * fixed bug with intra-cluster ordering using silhouette width 
+	(reported by Bettina Gruen)
+    * Cleaned up dependencies: TSP, grid, cluster, gclus and colorspace are
+	now imports instead of dependencies.
+
+Changes in version 1.0-11 (9/6/13)
+    * service release.
+
+Changes in version 1.0-10 (2/15/13)
+    * pimage has now a colorkey and a range argument
+    * fixed bug in ARSA when the distance matrix contains all 0s
+    * added PACKAGE argument to .Fortran calls
+
+Changes in version 1.0-8 and 1.0-9 (11/6/12)
+    * get_order: labels are now in the correct order (Bug report by Crt Ahlin)
+    * Replaced Fortran I/O with R I/O for verb=TRUE
+    * Fixed pop/newpage bug in pimage.dist (reported by Bettina Gruen)
+
+Changes in version 1.0-7 (9/25/12)
+    * Fixed out-of-bounds bug in arsa.f (reported by Rohan Shah)
+    * Fixed out-of-bounds bug in bburcg.f
+
+Changes in version 1.0-6 (10/19/11)
+    * removed deprecated parameter gamma for dissplot()
+
+Changes in version 1.0-5 (9/2/11)
+    * bertinplot(): fixed representation for 0, neg. values and highlight. 
+	(Bug report by G. Sawitzki).
+    * bertinplot(): added panel.blocks and option for shading
+    * bertinplot(): added bertin_cut_line()
+
+Changes in version 1.0-4 (6/28/11)
+    * pimage() now uses grid.raster.
+    * dissplot() now uses grid.raster.
+
+Changes in version 1.0-3 (1/14/11)
+    * improved validity check for permutations and added check for dist with 
+	neg. entries to seriate.dist.
+
+Changes in version 1.0-2 (3/13/10)
+    * service release
+
+Changes in version 1.0-1 (8/25/09)
+    * added drop=FALSE in permute for matrix.
+    * fixed reordering for labels.
+    * added permute for character.
+    * added different methods to calculate between cluster 
+	dissimilarities (min, max, avg, Hausdorff).
+    * dissplot has now additional options hue, power, gamma, flip and 
+	changed behavior for averages. dissplot depends now on colorspace.
+
+Version 1.0-0 (3/24/09)
+Version 0.1-1 (9/1/2007)

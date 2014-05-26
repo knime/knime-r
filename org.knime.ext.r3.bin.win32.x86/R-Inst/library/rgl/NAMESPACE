@@ -1,0 +1,75 @@
+export(.check3d, 
+        abclines3d, addNormals, asEuclidean, asHomogeneous, aspect3d, axes3d, axis3d, box3d,
+        bbox3d, bg3d, clear3d, clipplanes3d, cube3d, cuboctahedron3d, cylinder3d,
+        decorate3d, dodecahedron3d, dot3d, ellipse3d, extrude3d,
+	grid3d, icosahedron3d, identify3d, identityMatrix,  
+	light3d, lines3d, material3d, movie3d, mtext3d, octahedron3d, oh3d, open3d, 
+	par3d, par3dinterp, particles3d, persp3d, planes3d, play3d, plot3d, points3d, 
+	polygon3d, pop3d,
+	qmesh3d, quads3d, readSTL, rgl.abclines, rgl.bbox, rgl.bg, rgl.bringtotop, rgl.clear,
+	rgl.close, rgl.cur, rgl.ids, rgl.init, rgl.light, rgl.lines, rgl.linestrips,
+	rgl.clipplanes, rgl.material, rgl.open, rgl.pixels, rgl.planes, rgl.points, rgl.pop, rgl.postscript,
+	rgl.primitive, rgl.projection, rgl.quads, rgl.quit, rgl.Sweave, rgl.Sweave.off,
+	rgl.select, rgl.select3d, rgl.set, rgl.snapshot, rgl.spheres, rgl.sprites,
+	rgl.surface, rgl.texts, rgl.triangles, rgl.user2window,
+	rgl.attrib, rgl.attrib.count, rgl.dev.list, rgl.useNULL,
+	rgl.viewpoint, rgl.window2user, rglFonts, r3dDefaults, rotate3d, rotationMatrix,
+	scale3d, scaleMatrix, scene3d, segments3d, select3d, selectpoints3d,
+	rgl.setMouseCallbacks, shade3d, 
+	shapelist3d, snapshot3d, Sweave.snapshot,
+	spheres3d, spin3d, sprites3d, subdivision3d, surface3d, terrain3d, 
+	tetrahedron3d, text3d,
+	texts3d, title3d, triangulate, 
+	tmesh3d, transform3d, translate3d, translationMatrix, triangles3d,
+	turn3d, view3d, wire3d, writeOBJ, writePLY, writeSTL, writeWebGL)
+	
+if (.Platform$GUI == "AQUA") {
+  useDynLib(aglrgl, .registration = TRUE, .fixes = "")
+} else {
+  useDynLib(rgl, .registration = TRUE, .fixes = "")
+}
+
+ S3method(dot3d, shapelist3d)
+ S3method(wire3d, shapelist3d)
+ S3method(shade3d, shapelist3d)  
+ S3method(translate3d, shapelist3d)
+ S3method(rotate3d, shapelist3d)
+ S3method(scale3d, shapelist3d)
+ S3method(addNormals, shapelist3d)
+ 
+ S3method(dot3d, mesh3d)
+ S3method(translate3d, mesh3d)
+ S3method(rotate3d, mesh3d)
+ S3method(scale3d, mesh3d)
+ 
+ S3method(wire3d, mesh3d)
+ S3method(shade3d, mesh3d) 
+ S3method(subdivision3d, mesh3d)
+ S3method(addNormals, mesh3d)
+ 
+ S3method(plot3d, mesh3d)
+ 
+ S3method(translate3d, default)
+ S3method(rotate3d, default)
+ S3method(scale3d, default)
+ 
+ S3method(ellipse3d, default)
+ S3method(ellipse3d, lm)
+ S3method(ellipse3d, glm)
+ S3method(ellipse3d, nls)
+ 
+ S3method(plot3d, default)
+ S3method(persp3d, default)
+ 
+ S3method(plot3d, rglscene)
+ S3method(plot3d, rglobject)
+ S3method(plot3d, rglbboxdeco)
+ S3method(plot3d, rglbackground)
+ 
+ S3method(print, rglscene)
+ S3method(print, rglobject)
+ 
+ if(tools:::.OStype() == "windows") {
+   import(utils) # only needed for getWindowsHandle
+ }
+ 

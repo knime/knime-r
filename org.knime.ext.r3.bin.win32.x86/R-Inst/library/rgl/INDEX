@@ -1,0 +1,64 @@
+.check3d                Check for an open rgl window.
+addNormals              Add normal vectors to objects so they render
+                        more smoothly.
+aspect3d                Set the aspect ratios of the current plot
+axes3d                  Draw boxes, axes and other text outside the
+                        data
+cylinder3d              Create cylindrical or "tube" plots.
+ellipse3d               Make an ellipsoid
+extrude3d               Generate extrusion mesh
+grid3d                  Add a grid to a 3D plot
+identify3d              Identify points in plot.
+matrices                Work with homogeneous coordinates
+mesh3d                  3D Mesh objects
+par3d                   Set or Query RGL Parameters
+par3dinterp             Interpolator for par3d parameters
+persp3d                 Surface plots
+play3d                  Play animation of rgl scene
+plot3d                  3D Scatterplot
+points3d                add primitive set shape
+polygon3d               Triangulate and draw a polygon in three
+                        dimensions.
+r3d                     Generic 3D interface
+readSTL                 Read and write STL (stereolithography) format
+                        files
+rgl-package             3D visualization device system
+rgl.Sweave              Integrating 'rgl' with 'Sweave'
+rgl.abclines            Lines intersecting the bounding box
+rgl.attrib.count        Get information about shapes
+rgl.bbox                Set up Bounding Box decoration
+rgl.bg                  Set up Background
+rgl.bringtotop          Assign focus to an RGL window
+rgl.clear               scene management
+rgl.light               add light source
+rgl.material            Generic Appearance setup
+rgl.pixels              Extract pixel information from window
+rgl.planes              add planes
+rgl.postscript          export screenshot
+rgl.primitive           add primitive set shape
+rgl.select              Switch to select mode, and return the mouse
+                        position selected.
+rgl.setMouseCallbacks   User callbacks on mouse events
+rgl.snapshot            export screenshot
+rgl.spheres             add sphere set shape
+rgl.surface             add height-field surface shape
+rgl.texts               add text
+rgl.useNULL             Report default use of null device.
+rgl.user2window         Convert between rgl user and window coordinates
+rgl.viewpoint           Set up viewpoint
+scene3d                 Saves the current scene to a variable, and
+                        displays such variables.
+select3d                Select a rectangle in an RGL scene
+selectpoints3d          Select points from a scene
+shapelist3d             Create and plot a list of shapes
+spin3d                  Create a function to spin a scene at a fixed
+                        rate
+sprites3d               add sprite set shape
+subdivision3d           generic subdivision surface method
+surface3d               add height-field surface shape
+triangulate             Triangulate a two-dimensional polygon.
+turn3d                  Create a solid of rotation from a
+                        two-dimensional curve.
+writeOBJ                Write Wavefront OBJ format files
+writePLY                Write Stanford PLY format files
+writeWebGL              Write scene to HTML.

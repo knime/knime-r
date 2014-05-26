@@ -1,0 +1,31 @@
+Package: vcd
+Version: 1.3-1
+Date: 2013-09-11
+Title: Visualizing Categorical Data
+Authors@R: c(person(given = "David", family = "Meyer", role = c("aut", "cre"), email = "David.Meyer@R-project.org"),
+             person(given = "Achim", family = "Zeileis", role = c("aut")),
+             person(given = "Kurt", family = "Hornik", role = c("aut")),
+             person(given = "Florian", family = "Gerber", role = c("ctb")),
+             person(given = "Michael", family = "Friendly", role = "ctb"))
+Description: Visualization techniques, data sets, summary and inference
+        procedures aimed particularly at categorical data. Special
+        emphasis is given to highly extensible grid graphics. The
+        package was inspired by the book "Visualizing Categorical Data"
+        by Michael Friendly.
+LazyLoad: yes
+LazyData: yes
+Depends: R (>= 2.10), grid, stats
+Suggests: KernSmooth, mvtnorm, kernlab, HSAUR, coin
+Imports: utils, MASS, grDevices, colorspace
+License: GPL-2
+Packaged: 2013-09-11 13:39:47 UTC; hornik
+Author: David Meyer [aut, cre],
+  Achim Zeileis [aut],
+  Kurt Hornik [aut],
+  Florian Gerber [ctb],
+  Michael Friendly [ctb]
+Maintainer: David Meyer <David.Meyer@R-project.org>
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2013-09-11 19:01:10
+Built: R 3.1.0; ; 2014-05-21 22:39:05 UTC; windows

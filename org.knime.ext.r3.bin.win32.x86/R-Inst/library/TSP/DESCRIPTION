@@ -1,0 +1,30 @@
+Package: TSP
+Type: Package
+Title: Traveling Salesperson Problem (TSP)
+Version: 1.0-8
+Date: 2013-09-06
+Authors@R: c(
+	person("Michael", "Hahsler", role = c("aut", "cre", "cph"),
+	    email = "mhahsler@lyle.smu.edu"),
+	person("Kurt", "Hornik", role = c("aut", "cph")))
+Description: Basic infrastructure and some algorithms for the traveling
+    salesperson problem (also traveling salesman problem; TSP). 
+    The package provides some simple algorithms and
+    an interface to Concorde, the currently fastest TSP solver. Concorde
+    itself is not included in the package and has to be obtained separately.
+Classification/ACM: G.1.6, G.2.1, G.4
+URL: http://R-Forge.R-project.org/projects/tsp/,
+        http://lyle.smu.edu/IDA/seriation/
+Depends: R (>= 2.14.0)
+Suggests: maps, sp, maptools
+License: GPL-2
+Copyright: All code is Copyright (C) Michael Hahsler and Kurt Hornik.
+Packaged: 2013-09-06 16:44:14 UTC; hahsler
+Author: Michael Hahsler [aut, cre, cph],
+  Kurt Hornik [aut, cph]
+Maintainer: Michael Hahsler <mhahsler@lyle.smu.edu>
+NeedsCompilation: yes
+Repository: CRAN
+Date/Publication: 2013-09-06 20:45:49
+Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-21 22:38:34 UTC; windows
+Archs: i386, x64

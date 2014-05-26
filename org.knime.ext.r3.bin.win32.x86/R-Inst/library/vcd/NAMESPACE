@@ -1,0 +1,180 @@
+import(MASS)
+import(grDevices)
+import(colorspace)
+importFrom("utils","head","tail")
+
+export(
+## generic functions
+       "agreementplot",
+       "assoc",
+       "cd_plot",
+       "cotabplot",
+       "distplot",
+       "doubledecker",
+       "fourfold",
+       "goodfit",
+       "mosaic",
+       "oddsratio",
+       "rootogram",
+       "sieve",
+       "spine",
+       "tile",
+       "structable",
+
+## spacings
+       "spacing_conditional",
+       "spacing_equal",
+       "spacing_dimequal",
+       "spacing_increase",
+       "spacing_highlighting",
+
+## labelings
+       "labeling_lboxed",
+       "labeling_border",
+       "labeling_cboxed",
+       "labeling_left",
+       "labeling_cells",
+       "labeling_conditional",
+       "labeling_list",
+       "labeling_doubledecker",
+       "labeling_values",
+       "labeling_residuals",
+
+## legends
+       "legend_resbased",
+       "legend_fixed",
+
+# shadings
+       "shading_binary",
+       "shading_hcl",
+       "shading_hsv",
+       "shading_max",
+       "shading_Friendly",
+       "shading_sieve",
+       "hcl2hex",
+
+# core functions
+       "struc_mosaic",
+       "struc_assoc",
+       "struc_sieve",
+
+## panel functions
+       "pairs_barplot",
+       "pairs_text",
+       "pairs_diagonal_text",
+       "pairs_diagonal_mosaic",
+       "pairs_strucplot",
+       "pairs_mosaic",
+       "pairs_assoc",
+       "pairs_sieve",
+       "cotab_mosaic",
+       "cotab_assoc",
+       "cotab_sieve",
+       "cotab_fourfold",
+       "cotab_coindep",
+
+## `normal' functions
+       "Kappa",
+       "assocstats",
+       "table2d_summary",
+       "co_table",
+       "coindep_test",
+       "grid_barplot",
+       "hls",
+       "is.structable",
+       "independence_table",
+       "mar_table",
+       "Ord_estimate",
+       "Ord_plot",
+       "strucplot",
+       "ternaryplot",
+       "grid_legend",
+       "woolf_test")
+
+S3method("[", "structable")
+S3method("[[", "structable")
+S3method("[<-", "structable")
+S3method("[[<-", "structable")
+## We cannot do the following:
+## S3method("rbind", "structable")
+## S3method("cbind", "structable")
+## Instead, we currently have to use:
+export("rbind.structable")
+export("cbind.structable")
+
+S3method("str", "structable")
+S3method("is.na", "structable")
+S3method("length", "structable")
+S3method("as.table", "structable")
+S3method("as.matrix", "structable")
+S3method("as.vector", "structable")
+S3method("dim", "structable")
+S3method("t", "structable")
+S3method("dimnames", "structable")
+
+
+S3method("agreementplot", "default")
+S3method("agreementplot", "formula")
+
+S3method("assoc", "default")
+S3method("assoc", "formula")
+S3method("assoc", "loglm")
+
+S3method("cd_plot", "default")
+S3method("cd_plot", "formula")
+
+S3method("cotabplot", "default")
+S3method("cotabplot", "formula")
+
+S3method("doubledecker", "default")
+S3method("doubledecker", "formula")
+
+S3method("mosaic", "default")
+S3method("mosaic", "formula")
+S3method("mosaic", "loglm")
+
+S3method("tile", "default")
+S3method("tile", "formula")
+
+S3method("rootogram", "default")
+S3method("rootogram", "goodfit")
+
+S3method("sieve", "default")
+S3method("sieve", "formula")
+
+S3method("structable", "default")
+S3method("structable", "formula")
+
+S3method("spine", "default")
+S3method("spine", "formula")
+
+S3method("pairs", "table")
+S3method("pairs", "structable")
+
+S3method("fitted", "goodfit")
+S3method("fitted", "coindep_test")
+
+S3method("predict", "goodfit")
+
+S3method("confint", "Kappa")
+S3method("confint", "oddsratio")
+
+S3method("plot", "goodfit")
+S3method("plot", "oddsratio")
+S3method("plot", "loglm")
+S3method("plot", "structable")
+
+S3method("print", "Kappa")
+S3method("print", "summary.Kappa")
+S3method("print", "goodfit")
+S3method("print", "oddsratio")
+S3method("print", "summary.oddsratio")
+S3method("print", "assocstats")
+S3method("print", "summary.assocstats")
+S3method("print", "table2d_summary")
+S3method("print", "structable")
+
+S3method("summary", "Kappa")
+S3method("summary", "assocstats")
+S3method("summary", "goodfit")
+S3method("summary", "oddsratio")
