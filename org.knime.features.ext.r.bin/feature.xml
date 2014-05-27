@@ -2,7 +2,7 @@
 <feature
       id="org.knime.features.ext.r.bin"
       label="KNIME R Statistics Integration (Windows Binaries)"
-      version="2.15.2"
+      version="3.1.0.qualifier"
       provider-name="KNIME GmbH, Konstanz, Germany"
       plugin="org.knime.ext.r">
 
@@ -359,7 +359,7 @@ Public License instead of this License.
    </license>
 
    <plugin
-         id="org.knime.ext.r.bin.win32.x86"
+         id="org.knime.ext.r3.bin.win32.x86"
          os="win32"
          download-size="0"
          install-size="0"
