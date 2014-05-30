@@ -88,7 +88,7 @@ public final class RPathUtil {
 
     private static void findPackagedR() {
         Bundle bundle = FrameworkUtil.getBundle(RPathUtil.class);
-        Enumeration<URL> e = bundle.findEntries("/R-Inst/bin", "R.exe", true);
+        Enumeration<URL> e = bundle.findEntries("/R-Inst/bin", "R.exe", false);
         URL url = null;
         if ((e != null) && e.hasMoreElements()) {
             url = e.nextElement();
