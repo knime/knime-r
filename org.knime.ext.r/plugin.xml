@@ -81,6 +81,7 @@
             name="R"
             path="/"/>
       <category
+            after="local-interactive"
             icon="icons/missing.gif"
             level-id="local"
             name="Local"
@@ -98,12 +99,6 @@
             icon="icons/missing.gif"
             level-id="io"
             name="IO"
-            path="/r">
-      </category>
-      <category
-            icon="icons/missing.gif"
-            level-id="local"
-            name="Local"
             path="/r">
       </category>
    </extension>
