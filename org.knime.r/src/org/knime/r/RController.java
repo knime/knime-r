@@ -150,7 +150,7 @@ public class RController {
 
 	private String m_rHome;
 
-	private boolean m_wasRAvailable;
+	private final boolean m_wasRAvailable;
 
     static final String R_LOADED_LIBRARIES_VARIABLE = "knime.loaded.libraries";
 
@@ -199,6 +199,62 @@ public class RController {
 		m_isRAvailable = false;
 		initR();
 	}
+	
+	
+	/**
+	 * @throws RuntimeException when rJava.path property of m_rProps is empty string which means that rJava is not installed.
+	 */
+	private void loadJRI() {
+		// load jri
+		String rJavaPath = m_rProps.get("rJava.path").toString().trim();
+		// if rJavaPath is empty, means that rJava is not installed
+		if (rJavaPath.isEmpty()) {
+		  throw new RuntimeException("The KNIME R integration depends on rJava. Please use the command install.packages(\"rJava\") to install rJava in your R distribution.");
+		}
+				
+		List<String> jriRelativePaths = new ArrayList<String>(3);
+		if (Platform.isWindows()) {
+			if (Platform.is64Bit()) {
+				jriRelativePaths.add("\\jri\\x64\\jri.dll");
+			} else {
+				jriRelativePaths.add("\\jri\\i386\\jri.dll");
+			}
+		} else if (Platform.isLinux()) {
+			jriRelativePaths.add("\\jri\\libjri.so");
+			jriRelativePaths.add("\\jri\\jri.so");
+		} else if (Platform.isMac()) {
+			jriRelativePaths.add("\\jri\\libjri.jnilib");
+			jriRelativePaths.add("\\jri\\libjri.so");
+		} else {
+			// Platform is not supported
+			return;
+		}
+		
+		Iterator<String> iter = jriRelativePaths.iterator();
+		while (iter.hasNext() && !Rengine.jriLoaded) {
+			try {
+				final String path = rJavaPath + iter.next();
+                System.load(path);
+				LOGGER.debug("Loaded jri library from " + path); 
+				Rengine.jriLoaded = true;
+			} catch (UnsatisfiedLinkError e) {
+				// the file does not exist
+			}
+		}
+		if (!Rengine.jriLoaded) {
+			StringBuilder error_msg = new StringBuilder();
+			error_msg.append("Cannot load jri library from one of following locations:");
+			for(String path : jriRelativePaths) {
+				error_msg.append("\n");
+				error_msg.append(rJavaPath);
+				error_msg.append(path);
+			}
+			m_errors.add(error_msg.toString());
+		}
+		
+	}
+	
+	
 
 	private void initR() {
 		try {
@@ -259,14 +315,24 @@ public class RController {
 			}
 			String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
 			LOGGER.debug("R_HOME: " + sysRHome);
+			
+			
+			
+			
 			String sysPATH = CLibrary.INSTANCE.getenv("PATH");
-			LOGGER.debug("PATH: " + sysPATH);
-			if (System.getProperty("jri.ignore.ule") == null) { // static init of Rengine.class checks this
-			    System.setProperty("jri.ignore.ule", "yes");
-			}
-			final JRIEngine jriEngine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
+ 			LOGGER.debug("PATH: " + sysPATH);
+ 			if (System.getProperty("jri.ignore.ule") == null) { // static init of Rengine.class checks this
+				// Rengine should ignore when System.loadLibrary("jri") fails. We do this with System.load
+ 			    System.setProperty("jri.ignore.ule", "yes");
+ 			}
+			// if System.loadLibrary("jri") was not successful
 			if (!Rengine.jriLoaded) {
-			    throw new Exception("JRI library ('jri') not loaded");
+				loadJRI();
+			}
+			
+ 			final JRIEngine jriEngine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
+ 			if (!Rengine.jriLoaded) {
+ 			    throw new Exception("JRI library ('jri') not loaded. Please visit http://tech.knime.org/faq#q25 for more information.");
 			}
 			if (!Rengine.versionCheck()) {
 			    throw new Exception("Rengine library version conflict: Rengine version="
@@ -337,7 +403,10 @@ public class RController {
     		  +	"foo <- paste(names(R.Version()), R.Version(), sep=\"=\");\n"
     		  + "lapply(foo, cat, \"\\n\", file=\"" +  propsFile.getAbsolutePath().replace('\\', '/') + "\", append=TRUE);\n"
     		  + "foo <- paste(\"memory.limit\", memory.limit(), sep=\"=\");\n"
-    		  + "lapply(foo, cat, \"\\n\", file=\"" +  propsFile.getAbsolutePath().replace('\\', '/') + "\", append=TRUE);\n");
+    		  + "lapply(foo, cat, \"\\n\", file=\"" +  propsFile.getAbsolutePath().replace('\\', '/') + "\", append=TRUE);\n"
+    		  + "foo <- paste(\"rJava.path\", find.package(\"rJava\", quiet = TRUE), sep=\"=\");\n"
+    		  + "lapply(foo, cat, \"\\n\", file=\"" +  propsFile.getAbsolutePath().replace('\\', '/') + "\", append=TRUE);\n"  	      
+    		  + "");
     	// create shell command
         StringBuilder shellCmd = new StringBuilder();
     	String rBinaryFile = getRBinaryPathAndArguments();
