@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KNIME R-Project nodes
+Bundle-Name: KNIME R-Project - obsolete node definitions
 Bundle-SymbolicName: org.knime.ext.r;singleton:=true
 Bundle-Version: 2.10.0.qualifier
 Bundle-ClassPath: knime-r.jar,
@@ -9,7 +9,6 @@ Bundle-Activator: org.knime.ext.r.RCorePlugin
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
 Export-Package: org.knime.ext.r,
  org.knime.ext.r.node,
- org.knime.ext.r.node.io,
  org.knime.ext.r.node.local,
  org.knime.ext.r.preferences,
  org.rosuda.REngine,

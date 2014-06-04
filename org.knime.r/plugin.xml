@@ -6,76 +6,87 @@
    <extension
          point="org.knime.workbench.repository.nodes">
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.RReaderTableNodeFactory"
             id="org.knime.r.RReaderTableNodeFactory">
       </node>        
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.RReaderWorkspaceNodeFactory"
             id="org.knime.r.RReaderWorkspaceNodeFactory"
             after="org.knime.r.RReaderTableNodeFactory">
       </node>
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.RSnippetNodeFactory"
             id="org.knime.r.RSnippetNodeFactory"
             after="org.knime.r.RReaderWorkspaceNodeFactory">
       </node>
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.RViewNodeFactory"
             id="org.knime.r.RViewNodeFactory"
             after="org.knime.r.RSnippetNodeFactory">
       </node>   
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.RToViewNodeFactory"
             id="org.knime.r.RToViewNodeFactory"
             after="org.knime.r.RViewNodeFactory">
       </node>
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.RToTableNodeFactory"
             id="org.knime.r.RToTableNodeFactory"
             after="org.knime.r.RToViewNodeFactory">
       </node>         
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.TableToRNodeFactory"
             id="org.knime.r.TableToRNodeFactory"
             after="org.knime.r.RToTableNodeFactory">
       </node>                             
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.AddTableToRNodeFactory"
             id="org.knime.r.AddTableToRNodeFactory"
             after="org.knime.r.RToRNodeFactory">
       </node>      
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.RLearnerNodeFactory"
             id="org.knime.r.RLearnerNodeFactory"
             after="org.knime.r.AddTableToRNodeFactory">
       </node>         
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.RPredictorNodeFactory"
             id="org.knime.r.RPredictorNodeFactory"
             after="org.knime.r.RLearnerNodeFactory">
       </node>        
       <node
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.RToPMMLNodeFactory"
             id="org.knime.r.RToPMMLNodeFactory"
             after="org.knime.r.RPredictorNodeFactory">
       </node>
       <node
             after="org.knime.r.TableToRNodeFactory"
-            category-path="/r/local-interactive"
+            category-path="/r"
             factory-class="org.knime.r.RToRNodeFactory"
             id="org.knime.r.RToRNodeFactory">
       </node>         
+      <node
+            category-path="/r/io"
+            factory-class="org.knime.r.ionodes.RPortObjectReaderNodeFactory"
+            id="org.knime.r.ionodes.RPortObjectReaderNodeFactory">
+      </node>
+      <node
+            after="org.knime.r.ionodes.RPortObjectReaderNodeFactory"
+            category-path="/r/io"
+            factory-class="org.knime.r.ionodes.RPortObjectWriterNodeFactory"
+            id="org.knime.r.ionodes.RPortObjectWriterNodeFactory">
+      </node>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
@@ -107,9 +118,17 @@
    <extension
          point="org.knime.workbench.repository.categories">
       <category
+            description="R Statistics Integration"
             icon="icons/rsnippet.png"
-            level-id="local-interactive"
-            name="Local (Interactive)"
+            level-id="r"
+            locked="true"
+            name="R"
+            path="/">
+      </category>
+      <category
+            icon="icons/rsnippet_io.png"
+            level-id="io"
+            name="IO"
             path="/r">
       </category>
    </extension>   
