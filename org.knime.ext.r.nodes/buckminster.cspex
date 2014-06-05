@@ -6,31 +6,4 @@
     <dependency name="org.knime.workbench.help" componentType="osgi.bundle"/>
     <dependency name="org.knime.config" componentType="osgi.bundle"/>
   </dependencies>
-  <actions>
-    <!-- Dynamically build the files for the Eclipse help. -->
-    <private name="knime.create.helpfiles" actor="knime.docBuilder">
-      <!-- Example how to selectively build help
-				<actorProperties>
-					<property key="pluginPattern" value="\Qorg.knime.base\E" />
-				</actorProperties>
-			-->
-      <prerequisites>
-        <attribute name="eclipse.build.source"/>
-        <attribute name="manifest"/>
-      </prerequisites>
-      <products alias="action.output" base="${buckminster.output}/knime.helpfiles/" upToDatePolicy="ACTOR"/>
-    </private>
-  </actions>
-  <alterGroups>
-    <private name="jar.contents">
-      <attribute name="knime.create.helpfiles"/>
-    </private>
-  </alterGroups>
-  <alterArtifacts>
-    <private name="bin.includes">
-      <!-- The plugin.xml is taken from the created help files because the TOC 
-				entries were dynamically added. -->
-      <removePath path="plugin.xml"/>
-    </private>
-  </alterArtifacts>
 </cspecExtension>
