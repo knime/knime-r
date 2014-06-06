@@ -60,6 +60,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.preferences.RPreferenceProvider;
@@ -103,7 +104,7 @@ public class RLocalR2TableNodeModel extends RAbstractLocalNodeModel {
         try {
             // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
-            completeCmd.append(SET_WORKINGDIR_CMD);
+            completeCmd.append(getSetWorkingDirCmd());
 
             // load model
             File fileR = ((RPortObject)inPorts[0]).getFile();
@@ -116,7 +117,7 @@ public class RLocalR2TableNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append("\n");
 
             // write result data to csv
-            tempOutData = File.createTempFile("R-outDataTempFile-", ".csv", new File(TEMP_PATH));
+            tempOutData = FileUtil.createTempFile("R-outDataTempFile-", ".csv", new File(m_tempPath), true);
             completeCmd.append(WRITE_DATA_CMD_PREFIX);
             completeCmd.append(tempOutData.getAbsolutePath().replace('\\', '/'));
             completeCmd.append(WRITE_DATA_CMD_SUFFIX);

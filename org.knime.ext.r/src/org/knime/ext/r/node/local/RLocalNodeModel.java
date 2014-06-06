@@ -58,6 +58,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortType;
+import org.knime.core.util.FileUtil;
 import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
@@ -173,7 +174,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
             // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
-            completeCmd.append(SET_WORKINGDIR_CMD);
+            completeCmd.append(getSetWorkingDirCmd());
             completeCmd.append(READ_DATA_CMD_PREFIX);
             completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\',
                     '/'));
@@ -184,8 +185,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
             // write R data only into out file if data table out port exists
             if (m_hasDataTableOutPort) {
-                tempOutData = File.createTempFile("R-outDataTempFile-", ".csv", new File(TEMP_PATH));
-                tempOutData.deleteOnExit();
+                tempOutData = FileUtil.createTempFile("R-outDataTempFile-", ".csv", new File(m_tempPath), true);
                 completeCmd.append(WRITE_DATA_CMD_PREFIX);
                 completeCmd.append(
                         tempOutData.getAbsolutePath().replace('\\', '/'));

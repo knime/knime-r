@@ -146,15 +146,6 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel imp
      */
     static final String LOAD_MODEL_CMD_SUFFIX = "\");\n";
 
-    /**
-     * The temp directory used to save csv, script R output files temporarily.
-     */
-    static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/');
-
-    /** R commands to set working dir, write and reads csv files. */
-    static final String SET_WORKINGDIR_CMD =
-        "setwd(\"" + TEMP_PATH + "\");\n";
-
     /** The delimiter used for creation of csv files. */
     private static final String DELIMITER = ",";
 
@@ -174,6 +165,11 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel imp
     protected final SettingsModelString m_argumentsR = RLocalNodeDialogPane.createRargumentsModel();
 
     /**
+     * Temporary directory for this node.
+     */
+    protected final String m_tempPath;
+
+    /**
      * Constructor of <code>RAbstractLocalNodeModel</code> with given in- and
      * out-port specification.
      * @param inPorts in-port specification.
@@ -184,6 +180,16 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel imp
             final PortType[] outPorts, final RPreferenceProvider pref) {
         super(inPorts, outPorts);
         m_pref = pref;
+
+        String tmp;
+        try {
+            tmp = FileUtil.createTempDir("R-workspace").getAbsolutePath().replace('\\', '/');
+        } catch (IOException ex) {
+            NodeLogger.getLogger(getClass()).error(
+                "Could not create temp directory for R workspace: " + ex.getMessage());
+            tmp = KNIMEConstants.getKNIMETempDir().replace('\\', '/');
+        }
+        m_tempPath = tmp;
     }
 
     /**
@@ -326,9 +332,8 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel imp
      * @return The file containing the given string.
      * @throws IOException If string could not be written to a file.
      */
-    static File writeRcommandFile(final String cmd) throws IOException {
-        File tempCommandFile = File.createTempFile("R-inDataTempFile-", ".r", new File(TEMP_PATH));
-        tempCommandFile.deleteOnExit();
+    File writeRcommandFile(final String cmd) throws IOException {
+        File tempCommandFile = FileUtil.createTempFile("R-inDataTempFile-", ".r", new File(m_tempPath), true);
         FileWriter fw = new FileWriter(tempCommandFile);
         fw.write(cmd);
         fw.close();
@@ -350,8 +355,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel imp
             final ExecutionContext exec) throws IOException,
             CanceledExecutionException {
         // create Temp file
-        File tempInDataFile = File.createTempFile("R-inDataTempFile-", ".csv", new File(TEMP_PATH));
-        tempInDataFile.deleteOnExit();
+        File tempInDataFile = FileUtil.createTempFile("R-inDataTempFile-", ".csv", new File(m_tempPath), true);
 
         // write data to file
         FileWriter fw = new FileWriter(tempInDataFile);
@@ -454,4 +458,7 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel imp
         });
     }
 
+    protected String getSetWorkingDirCmd() {
+        return "setwd(\"" + m_tempPath + "\");\n";
+    }
 }

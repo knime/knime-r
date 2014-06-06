@@ -116,7 +116,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
         try {
             // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
-            completeCmd.append(SET_WORKINGDIR_CMD);
+            completeCmd.append(getSetWorkingDirCmd());
 
             // data in-port is optional
             if (inData[0] != null) {

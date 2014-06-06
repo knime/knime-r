@@ -103,7 +103,7 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
         try {
             // execute R cmd
             StringBuilder completeCmd = new StringBuilder();
-            completeCmd.append(SET_WORKINGDIR_CMD);
+            completeCmd.append(getSetWorkingDirCmd());
 
             // load model
             File fileR = ((RPortObject)inData[0]).getFile();
