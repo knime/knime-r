@@ -220,11 +220,11 @@ public class RController {
 				jriRelativePaths.add("\\jri\\i386\\jri.dll");
 			}
 		} else if (Platform.isLinux()) {
-			jriRelativePaths.add("\\jri\\libjri.so");
-			jriRelativePaths.add("\\jri\\jri.so");
+			jriRelativePaths.add("/jri/libjri.so");
+			jriRelativePaths.add("/jri/jri.so");
 		} else if (Platform.isMac()) {
-			jriRelativePaths.add("\\jri\\libjri.jnilib");
-			jriRelativePaths.add("\\jri\\libjri.so");
+			jriRelativePaths.add("/jri/libjri.jnilib");
+			jriRelativePaths.add("/jri/libjri.so");
 		} else {
 			// Platform is not supported
 			return;
