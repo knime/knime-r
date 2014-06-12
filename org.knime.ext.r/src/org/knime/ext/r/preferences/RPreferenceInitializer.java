@@ -45,11 +45,7 @@
  */
 package org.knime.ext.r.preferences;
 
-import java.io.File;
-
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.knime.core.node.NodeLogger;
 import org.knime.ext.r.RCorePlugin;
 
 /**
@@ -57,27 +53,27 @@ import org.knime.ext.r.RCorePlugin;
  * @author Kilian Thiel, University of Konstanz
  */
 public class RPreferenceInitializer extends AbstractPreferenceInitializer {
-    
-    private static final NodeLogger LOGGER = 
-        NodeLogger.getLogger(RPreferenceInitializer.class); 
 
-    /** Preference key for the path to the R executable setting. */
-    public static final String PREF_R_PATH = "knime.r.path";
+//    private static final NodeLogger LOGGER =
+//            NodeLogger.getLogger(RPreferenceInitializer.class);
+//
+//        /** Preference key for the path to the R executable setting. */
+//        public static final String PREF_R_PATH = "knime.r.path";
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void initializeDefaultPreferences() {
-        IPreferenceStore store = RCorePlugin.getDefault().getPreferenceStore();
-        File rPath = RCorePlugin.getRExecutable();
-        if (rPath != null) {
-            LOGGER.debug("Default R executable: " + rPath.getAbsolutePath());
-            store.setDefault(PREF_R_PATH, rPath.getAbsolutePath());
-        } else {
-            store.setDefault(PREF_R_PATH, "");
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void initializeDefaultPreferences() {
+//            IPreferenceStore store = RCorePlugin.getDefault().getPreferenceStore();
+//            File rPath = RCorePlugin.getRExecutable();
+//            if (rPath != null) {
+//                LOGGER.debug("Default R executable: " + rPath.getAbsolutePath());
+//                store.setDefault(PREF_R_PATH, rPath.getAbsolutePath());
+//            } else {
+//                store.setDefault(PREF_R_PATH, "");
+//            }
         }
-    }
 
     /**
      * Returns a provider for the R executable.
@@ -88,9 +84,8 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
             @Override
             /** {@inheritDoc} */
             public String getRPath() {
-                final IPreferenceStore pStore =
-                    RCorePlugin.getDefault().getPreferenceStore();
-                return pStore.getString(PREF_R_PATH);
+                return org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider(
+                    RCorePlugin.PLUGIN_ID).getRBinPath();
             }
         };
     }

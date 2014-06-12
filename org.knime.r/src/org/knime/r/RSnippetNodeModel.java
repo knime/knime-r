@@ -76,9 +76,9 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.FlowVariable.Type;
 import org.knime.core.util.FileUtil;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
-import org.knime.r.preferences.RPreferenceInitializer;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
 
@@ -411,7 +411,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
      * @return R binary path
      */
     protected final String getRBinaryPath() {
-    	return RPreferenceInitializer.getRProvider().getRBinPath();
+    	return RPreferenceInitializer.getRProvider(Activator.PLUGIN_ID).getRBinPath();
     }    
 
     /**
@@ -471,7 +471,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		return rScript.toString();
 	}
 
-	private BufferedDataTable importDataFromR(final RController r, boolean nonNumbersAsMissing, final ExecutionContext exec) 
+	private BufferedDataTable importDataFromR(final RController r, final boolean nonNumbersAsMissing, final ExecutionContext exec) 
             throws REngineException, REXPMismatchException, CanceledExecutionException {
     	BufferedDataTable out = r.importBufferedDataTable("knime.out", nonNumbersAsMissing, exec);
     	return out;

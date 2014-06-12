@@ -50,7 +50,7 @@ import java.io.File;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.knime.core.node.NodeFactory;
-import org.knime.ext.r.bin.RPathUtil;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.ext.r.node.RScriptingNodeFactory;
 import org.osgi.framework.BundleContext;
 
@@ -60,6 +60,8 @@ import org.osgi.framework.BundleContext;
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RCorePlugin extends AbstractUIPlugin {
+ // The plug-in ID
+    public static final String PLUGIN_ID = "org.knime.ext.r"; //$NON-NLS-1$
 
     // The shared instance.
     private static RCorePlugin plugin;
@@ -108,18 +110,13 @@ public class RCorePlugin extends AbstractUIPlugin {
      * @return the image descriptor
      */
     public static ImageDescriptor getImageDescriptor(final String path) {
-        return AbstractUIPlugin.imageDescriptorFromPlugin("org.knime.ext.r",
-                path);
+        return AbstractUIPlugin.imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
 
     /**
      * @return R executable
      */
     public static File getRExecutable() {
-        File packagedExecutable = RPathUtil.getPackagedRExecutable();
-        if (packagedExecutable != null) {
-            return packagedExecutable;
-        }
-        return RPathUtil.getSystemRExecutable();
+        return new File(RPreferenceInitializer.getRProvider(PLUGIN_ID).getRBinPath());
     }
 }

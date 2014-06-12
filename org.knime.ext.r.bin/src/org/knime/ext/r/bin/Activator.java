@@ -41,55 +41,80 @@
  *  may freely choose the license terms applicable to such Node, including
  *  when such Node is propagated with or for interoperation with KNIME.
  * ------------------------------------------------------------------------
- *
- * History
- *   19.09.2007 (thiel): created
  */
-package org.knime.ext.r.preferences;
+package org.knime.ext.r.bin;
 
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.knime.ext.r.RCorePlugin;
+import java.io.File;
+
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
+import org.osgi.framework.BundleContext;
 
 /**
- *
- * @author Kilian Thiel, University of Konstanz
+ * The activator class controls the plug-in life cycle
  */
-public class RPreferencePage extends FieldEditorPreferencePage
-implements IWorkbenchPreferencePage {
+public class Activator extends AbstractUIPlugin implements IPropertyChangeListener {
+
+	// The plug-in ID
+    public static final String PLUGIN_ID = "org.knime.ext.r.bin"; //$NON-NLS-1$
+
+	// The shared instance
+	private static Activator plugin;
+
+	/**
+	 * The constructor
+	 */
+	public Activator() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 */
+	@Override
+    public void start(final BundleContext context) throws Exception {
+		super.start(context);
+		plugin = this;
+		getPreferenceStore().addPropertyChangeListener(this);
+
+		R_HOME = new File(getPreferenceStore().getString(RPreferenceInitializer.PREF_R_HOME));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 */
+	@Override
+    public void stop(final BundleContext context) throws Exception {
+		getPreferenceStore().removePropertyChangeListener(this);
+		plugin = null;
+		super.stop(context);
+	}
+
+	/**
+	 * Returns the shared instance
+	 *
+	 * @return the shared instance
+	 */
+	public static Activator getDefault() {
+		return plugin;
+	}
+
+    private static File R_HOME;
 
     /**
-     * Creates a new preference page.
+     * @return R executable
      */
-    public RPreferencePage() {
-        super(GRID);
-
-        setPreferenceStore(RCorePlugin.getDefault().getPreferenceStore());
-        setDescription("KNIME R preferences");
+    public static File getRHOME() {
+    	return R_HOME;
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected void createFieldEditors() {
-        Composite parent = getFieldEditorParent();
-        FileFieldEditor rPath =
-                new FileFieldEditor(
-                        RPreferenceInitializer.PREF_R_PATH,
-                        "Path to R executable", parent);
-        addField(rPath);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init(final IWorkbench workbench) {
-        // nothing to do
+    public void propertyChange(final PropertyChangeEvent event) {
+    	if (RPreferenceInitializer.PREF_R_HOME.equals(event.getProperty())) {
+    		R_HOME = new File(event.getNewValue().toString());
+    	}
     }
 }

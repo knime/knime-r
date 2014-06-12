@@ -45,14 +45,8 @@
  */
 package org.knime.r.preferences;
 
-import java.io.File;
-
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.knime.core.node.NodeLogger;
-import org.knime.r.Activator;
-
-import com.sun.jna.Platform;
 
 /**
  *
@@ -71,38 +65,38 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
      */
     @Override
     public void initializeDefaultPreferences() {
-        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-        File rHomeFile = Activator.getDefaultRHOME();
-        String rHome = rHomeFile == null ? "" : rHomeFile.getAbsolutePath();
-        LOGGER.debug("Default R Home: " + rHome);
-        store.setDefault(PREF_R_HOME, rHome);
+//        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+//        File rHomeFile = Activator.getDefaultRHOME();
+//        String rHome = rHomeFile == null ? "" : rHomeFile.getAbsolutePath();
+//        LOGGER.debug("Default R Home: " + rHome);
+//        store.setDefault(PREF_R_HOME, rHome);
     }
 
-	/**
-     * Returns a provider for the R executable.
-     * @return provider to the path to the R executable
-     */
-    public static final RPreferenceProvider getRProvider() {
-        return new RPreferenceProvider() {
-            @Override
-            /** {@inheritDoc} */
-            public String getRHome() {
-                return Activator.getRHOME().getAbsolutePath();
-            }
-            
-            /** {@inheritDoc} */
-            @Override
-            public String getRBinPath() {
-            	if (Platform.isWindows()) {
-	            	if (Platform.is64Bit()) {
-	            		return getRHome() + File.separator + "bin" + File.separator + "x64" + File.separator + "R";
-	            	} else {
-	            		return getRHome() + File.separator + "bin" + File.separator + "i386" + File.separator + "R";
-	            	}
-            	} else {
-            		return getRHome() + File.separator + "bin" + File.separator + "R";
-            	}
-            }
-        };
-    }
+//	/**
+//     * Returns a provider for the R executable.
+//     * @return provider to the path to the R executable
+//     */
+//    public static final RPreferenceProvider getRProvider() {
+//        return new RPreferenceProvider() {
+//            @Override
+//            /** {@inheritDoc} */
+//            public String getRHome() {
+//                return Activator.getRHOME().getAbsolutePath();
+//            }
+//            
+//            /** {@inheritDoc} */
+//            @Override
+//            public String getRBinPath() {
+//            	if (Platform.isWindows()) {
+//	            	if (Platform.is64Bit()) {
+//	            		return getRHome() + File.separator + "bin" + File.separator + "x64" + File.separator + "R";
+//	            	} else {
+//	            		return getRHome() + File.separator + "bin" + File.separator + "i386" + File.separator + "R";
+//	            	}
+//            	} else {
+//            		return getRHome() + File.separator + "bin" + File.separator + "R";
+//            	}
+//            }
+//        };
+//    }
 }

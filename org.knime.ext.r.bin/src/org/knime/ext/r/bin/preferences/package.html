@@ -1,5 +1,5 @@
-/*
- * ------------------------------------------------------------------------
+<!--
+====================================================================
  *  Copyright by KNIME GmbH, Konstanz, Germany
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
@@ -40,26 +40,9 @@
  *  propagated with or for interoperation with KNIME.  The owner of a Node
  *  may freely choose the license terms applicable to such Node, including
  *  when such Node is propagated with or for interoperation with KNIME.
- * ------------------------------------------------------------------------
- * 
- */
-package org.knime.r.preferences;
+ ====================================================================
+-->
+<body>
+Registers a field to select a local R installation to the KNIME preference page.
+</body>
 
-/**
- * Class provides a path to an R home directory.
- * 
- * @author Heiko Hofer
- */
-public interface RPreferenceProvider {
-
-    /**
-     * @return path to RHome
-     */
-    public String getRHome();
-    
-    /**
-     * @return path to an R executable
-     */
-    public String getRBinPath();
-    
-}

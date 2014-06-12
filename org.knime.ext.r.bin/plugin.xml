@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.knime.workbench.ui.preferences"
+            class="org.knime.ext.r.bin.preferences.RPreferencePage"
+            id="org.knime.ext.r.bin.preferences.RPreferencePage"
+            name="R">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.knime.ext.r.bin.preferences.RPreferenceInitializer">
+      </initializer>
+   </extension>  
+
+</plugin>

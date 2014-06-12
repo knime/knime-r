@@ -94,7 +94,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.ThreadUtils;
-import org.knime.r.preferences.RPreferenceInitializer;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.rosuda.JRI.Rengine;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
@@ -173,7 +173,7 @@ public class RController {
 	}
 
 	private boolean rHomeChanged() {
-		final String rHome = Activator.getRHOME().getAbsolutePath();
+		final String rHome = RPreferenceInitializer.getRProvider(Activator.PLUGIN_ID).getRHome();
 		return !m_rHome.equals(rHome);
 	}
 
@@ -270,8 +270,8 @@ public class RController {
 			}
 
 
-	    	String rHome = org.knime.r.preferences.RPreferenceInitializer
-					.getRProvider().getRHome();
+	    	String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer
+					.getRProvider(Activator.PLUGIN_ID).getRHome();
 
 			if (!checkRHome(rHome)) {
 				m_isRAvailable = false;
@@ -511,7 +511,7 @@ public class RController {
      * @return R binary path
      */
     private final String getRBinaryPath() {
-    	return RPreferenceInitializer.getRProvider().getRBinPath();
+    	return RPreferenceInitializer.getRProvider(Activator.PLUGIN_ID).getRBinPath();
     }
 
 	private boolean checkRHome(final String rHomePath) {
@@ -1089,7 +1089,7 @@ public class RController {
 				+ TEMP_VARIABLE_NAME + ")", exec);
 	}
 
-	public BufferedDataTable importBufferedDataTable(final String string, boolean nonNumbersAsMissing,
+	public BufferedDataTable importBufferedDataTable(final String string, final boolean nonNumbersAsMissing,
 			final ExecutionContext exec) throws REngineException, REXPMismatchException, CanceledExecutionException {
 		REXP typeRexp = eval("class(" + string + ")");
 		if (typeRexp.isNull()) {
@@ -1159,7 +1159,7 @@ public class RController {
 
 	}
 
-	private DataCell importCells(final REXP rexp, final int r, boolean nonNumbersAsMissing) throws REXPMismatchException {
+	private DataCell importCells(final REXP rexp, final int r, final boolean nonNumbersAsMissing) throws REXPMismatchException {
 
 	     DataCell cells;
 
