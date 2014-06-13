@@ -154,9 +154,9 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
                 public String getRBinPath() {
                 	if (Platform.isWindows()) {
                     	if (Platform.is64Bit()) {
-                    		return getRHome() + File.separator + "bin" + File.separator + "x64" + File.separator + "R";
+                    		return getRHome() + File.separator + "bin" + File.separator + "x64" + File.separator + "R.exe";
                     	} else {
-                    		return getRHome() + File.separator + "bin" + File.separator + "i386" + File.separator + "R";
+                    		return getRHome() + File.separator + "bin" + File.separator + "i386" + File.separator + "R.exe";
                     	}
                 	} else {
                 		return getRHome() + File.separator + "bin" + File.separator + "R";
