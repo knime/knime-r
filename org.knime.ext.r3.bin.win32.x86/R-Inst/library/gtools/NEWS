@@ -1,3 +1,17 @@
+gtools 3.4.1 - 2014-05-27
+-------------------------
+
+Bug fixes:
+
+- smartbind() now converts all non-atomic type columns (except factor)
+  to type character instead of generating an opaque error message.
+
+Other changes:
+
+- the argument to ASCIIfy() is now named 'x' instead of 'string'.
+
+- minor formatting changes to ASCIIfy() man page.
+
 gtools 3.4.0 - 2014-04-14
 -------------------------
 

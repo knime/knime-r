@@ -30,20 +30,20 @@ class IsNa : public ::Rcpp::VectorBase< LGLSXP, false, IsNa<RTYPE,NA,VEC_TYPE> >
 public:
 	typedef typename traits::storage_type<RTYPE>::type STORAGE ;
 	typedef Rcpp::VectorBase<RTYPE,NA,VEC_TYPE> BASE ;
-	
+
 	IsNa( const BASE& obj_) : obj(obj_){}
-	
+
 	inline int operator[]( int i ) const {
 		return ::Rcpp::traits::is_na<RTYPE>( obj[i] ) ;
 	}
-	
+
 	inline int size() const { return obj.size() ; }
-	         
+
 private:
 	const BASE& obj ;
-	
+
 } ;
-      
+
 // specialization for the case where we already know
 // the result (FALSE) because it is embedded in the type
 // (the second template parameter of VectorBase)
@@ -52,33 +52,33 @@ class IsNa<RTYPE,false,VEC_TYPE> : public ::Rcpp::VectorBase< LGLSXP, false, IsN
 public:
 	typedef typename traits::storage_type<RTYPE>::type STORAGE ;
 	typedef Rcpp::VectorBase<RTYPE,false,VEC_TYPE> BASE ;
-	
+
 	IsNa( const BASE& obj_) : obj(obj_){}
-	
+
 	inline int operator[]( int i ) const {
 		return FALSE ;
 	}
-	
+
 	inline int size() const { return obj.size() ; }
-	
+
 private:
 	const BASE& obj ;
-	
+
 } ;
 
 template <typename T>
 class IsNa_Vector_is_na : public Rcpp::VectorBase<LGLSXP, false, IsNa_Vector_is_na<T> >{
    public:
        IsNa_Vector_is_na( const T& x) : ref(x){}
-       
+
        inline int operator[]( int i) const {
            return ref[i].is_na() ;
        }
-       
-       inline int size() const { return ref.size() ; } 
-       
+
+       inline int size() const { return ref.size() ; }
+
    private:
-        const T& ref ;       
+        const T& ref ;
 } ;
 
 } // sugar

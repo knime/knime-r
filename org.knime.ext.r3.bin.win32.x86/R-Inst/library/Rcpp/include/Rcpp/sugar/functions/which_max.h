@@ -31,7 +31,7 @@ public:
     typedef typename Rcpp::VectorBase<RTYPE,NA,T> VEC_TYPE ;
     typedef typename Rcpp::traits::storage_type<RTYPE>::type STORAGE ;
 	WhichMax(const VEC_TYPE& obj_ ) : obj(obj_){}
-	
+
 	int get() const {
 	    STORAGE current = obj[0] ;
 	    STORAGE min = current ;
@@ -48,19 +48,19 @@ public:
 		}
 		return index ;
 	}
-	
+
 private:
-    const VEC_TYPE& obj ;	
-	
+    const VEC_TYPE& obj ;
+
 } ;
-   
+
 template <int RTYPE, typename T>
 class WhichMax<RTYPE,false,T> {
 public:
     typedef typename Rcpp::VectorBase<RTYPE,false,T> VEC_TYPE ;
     typedef typename Rcpp::traits::storage_type<RTYPE>::type STORAGE ;
 	WhichMax(const VEC_TYPE& obj_ ) : obj(obj_){}
-	
+
 	int get() const {
 	    STORAGE current = obj[0] ;
 	    STORAGE min = current ;
@@ -75,22 +75,22 @@ public:
 		}
 		return index ;
 	}
-	
+
 private:
-    const VEC_TYPE& obj ;	
-	
+    const VEC_TYPE& obj ;
+
 } ;
 
-    
+
 } // sugar
 
 
 
 template <int RTYPE, bool NA, typename T>
 int which_max( const VectorBase<RTYPE,NA,T>& t ){
-	return sugar::WhichMax<RTYPE,NA,T>(t).get() ; 
+	return sugar::WhichMax<RTYPE,NA,T>(t).get() ;
 }
-  
+
 } // Rcpp
 #endif
 

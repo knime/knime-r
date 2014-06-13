@@ -7,14 +7,13 @@ assertCondition	assertCondition
 assertError	assertCondition
 assertWarning	assertCondition
 bibstyle	bibstyle
-buildVignette	buildVignette
 buildVignettes	buildVignettes
 charset_to_Unicode	charsets
 checkDocFiles	QC
 checkDocStyle	QC
 checkFF	checkFF
 checkMD5sums	checkMD5sums
-checkNEWS	tools-defunct
+checkNEWS	readNEWS
 checkPoFile	checkPoFiles
 checkPoFiles	checkPoFiles
 checkRd	checkRd
@@ -36,7 +35,6 @@ file_ext	fileutils
 file_path_as_absolute	fileutils
 file_path_sans_ext	fileutils
 findHTMLlinks	HTMLlinks
-find_gs_cmd	find_gs_cmd
 format.compactPDF	compactPDF
 getBibstyle	bibstyle
 getDepList	getDepList
@@ -82,7 +80,7 @@ RdTextFilter	RdTextFilter
 Rd_db	Rdutils
 Rd_parse	tools-defunct
 read.00Index	read.00Index
-readNEWS	tools-defunct
+readNEWS	readNEWS
 resaveRdaFiles	checkRdaFiles
 showNonASCII	showNonASCII
 showNonASCIIfile	showNonASCII

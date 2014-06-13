@@ -1,6 +1,6 @@
 Package: ape
-Version: 3.1-1
-Date: 2014-03-06
+Version: 3.1-2
+Date: 2014-05-27
 Title: Analyses of Phylogenetics and Evolution
 Authors@R: c(person("Emmanuel", "Paradis", role = c("aut", "cre", "cph"), email = "Emmanuel.Paradis@ird.fr"),
   person("Ben", "Bolker", role = "aut"),
@@ -21,14 +21,14 @@ Authors@R: c(person("Emmanuel", "Paradis", role = c("aut", "cre", "cph"), email 
   person("Klaus", "Schliep", role = "aut"),
   person("Korbinian", "Strimmer", role = "aut"),
   person("Damien", "de Vienne", role = "aut"))
-Depends: R (>= 2.6.0)
+Depends: R (>= 3.0.0)
 Suggests: gee, expm
 Imports: nlme, lattice, graphics, stats, tools, utils
 ZipData: no
 Description: ape provides functions for reading, writing, plotting, and manipulating phylogenetic trees, analyses of comparative data in a phylogenetic framework, ancestral character analyses, analyses of diversification and macroevolution, computing distances from allelic and nucleotide data, reading and writing nucleotide sequences, and several tools such as Mantel's test, generalized skyline plots, graphical exploration of phylogenetic data (alex, trex, kronoviz), estimation of absolute evolutionary rates and clock-like trees using mean path lengths and penalized likelihood. Phylogeny estimation can be done with the NJ, BIONJ, ME, MVR, SDM, and triangle methods, and several methods handling incomplete distance matrices (NJ*, BIONJ*, MVR*, and the corresponding triangle method). Some functions call external applications (PhyML, Clustal, T-Coffee, Muscle) whose results are returned into R.
 License: GPL (>= 2)
 URL: http://ape-package.ird.fr/
-Packaged: 2014-03-07 08:27:09 UTC; paradis
+Packaged: 2014-05-27 09:44:56 UTC; paradis
 Author: Emmanuel Paradis [aut, cre, cph],
   Ben Bolker [aut],
   Julien Claude [aut],
@@ -51,6 +51,6 @@ Author: Emmanuel Paradis [aut, cre, cph],
 Maintainer: Emmanuel Paradis <Emmanuel.Paradis@ird.fr>
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2014-03-07 11:43:42
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-21 23:06:53 UTC; windows
+Date/Publication: 2014-05-27 12:44:48
+Built: R 3.0.3; i386-w64-mingw32; 2014-06-12 06:02:12 UTC; windows
 Archs: i386, x64

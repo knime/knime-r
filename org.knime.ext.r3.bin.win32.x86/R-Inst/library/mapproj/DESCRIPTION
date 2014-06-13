@@ -12,5 +12,5 @@ Packaged: 2014-01-15 23:10:01 UTC; ray
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-01-16 07:14:39
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-04-10 19:34:38 UTC; windows
+Built: R 3.0.3; i386-w64-mingw32; 2014-06-03 05:32:11 UTC; windows
 Archs: i386, x64

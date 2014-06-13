@@ -1,3 +1,8 @@
+version 3.5-6
+
+	added optional radial lines to the radial.grid function (thanks to Darren Obbard)
+	fixed top.line bug in staxlab when using text rotation
+
 version 3.5-5
 
 	fixed the radial label bug in the radial.* functions (thanks to Mayeul Kauffmann)

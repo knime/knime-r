@@ -16,7 +16,7 @@
 // WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-//                         
+//
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -28,13 +28,13 @@ namespace traits{
 
     template <typename T>
     struct is_wide_string : public same_type< typename T::value_type, wchar_t > {} ;
-	
+
     template <> struct is_wide_string< const wchar_t* > : public true_type{} ;
     template <> struct is_wide_string< const char* > : public false_type{} ;
-    
+
     template <> struct is_wide_string< wchar_t > : public true_type{} ;
     template <> struct is_wide_string< char > : public false_type{} ;
-    
+
 } // traits
 } // Rcpp
 

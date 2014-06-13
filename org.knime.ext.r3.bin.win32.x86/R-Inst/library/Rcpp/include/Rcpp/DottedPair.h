@@ -22,24 +22,24 @@
 #ifndef Rcpp_DottedPair_h
 #define Rcpp_DottedPair_h
 
-namespace Rcpp{ 
+namespace Rcpp{
 
-RCPP_API_CLASS(DottedPair_Impl), 
-    public DottedPairProxyPolicy<DottedPair_Impl<StoragePolicy> >, 
+RCPP_API_CLASS(DottedPair_Impl),
+    public DottedPairProxyPolicy<DottedPair_Impl<StoragePolicy> >,
     public DottedPairImpl<DottedPair_Impl<StoragePolicy> > {
 public:
-    RCPP_GENERATE_CTOR_ASSIGN(DottedPair_Impl) 
-        
+    RCPP_GENERATE_CTOR_ASSIGN(DottedPair_Impl)
+
 	DottedPair_Impl(){}
-	
+
 	DottedPair_Impl(SEXP x) {
 	    Storage::set__(x) ;
-	} 
-	
-	#include <Rcpp/generated/DottedPair__ctors.h> 
+	}
+
+	#include <Rcpp/generated/DottedPair__ctors.h>
 
 	void update(SEXP){}
-	
+
 };
 
 typedef DottedPair_Impl<PreserveStorage> DottedPair ;

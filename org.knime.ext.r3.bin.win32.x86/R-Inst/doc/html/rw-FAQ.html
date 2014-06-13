@@ -70,7 +70,7 @@ p {
 </head>
 <body>
 <h1 class="settitle">R for Windows FAQ</h1>
-<h2>Version for <tt>R-3.1.0</tt></h2>
+<h2>Version for <tt>R-3.0.3</tt></h2>
 <address>B. D. Ripley and D. J. Murdoch</address>
 <hr>
 
@@ -92,7 +92,7 @@ p {
 <li><a href="#How-can-I-keep-workspaces-for-different-projects-in-different-directories_003f">2.10 How can I keep workspaces for different projects in different directories?</a>
 <li><a href="#How-do-I-print-from-R_003f">2.11 How do I print from R?</a>
 <li><a href="#Can-I-use-R-CMD-BATCH_003f">2.12 Can I use <code>R CMD BATCH</code>?</a>
-<li><a href="#Can-I-use-R_002d3_002e1_002e0-with-ESS-and-Emacs_003f">2.13 Can I use R-3.1.0 with ESS and Emacs?</a>
+<li><a href="#Can-I-use-R_002d3_002e0_002e3-with-ESS-and-Emacs_003f">2.13 Can I use R-3.0.3 with ESS and Emacs?</a>
 <li><a href="#What-are-HOME-and-working-directories_003f">2.14 What are HOME and working directories?</a>
 <li><a href="#How-do-I-set-environment-variables_003f">2.15 How do I set environment variables?</a>
 <li><a href="#R-can_0027t-find-my-file">2.16 R can't find my file, but I know it is there!</a>
@@ -124,7 +124,7 @@ p {
 <li><a name="toc_Packages" href="#Packages">4 Packages</a>
 <ul>
 <li><a href="#Can-I-install-packages-into-libraries-in-this-version_003f">4.1 Can I install packages into libraries in this version?</a>
-<li><a href="#I-don_0027t-have-permission-to-write-to-the-R_002d3_002e1_002e0_005clibrary-directory">4.2 I don't have permission to write to the <samp><span class="file">R-3.1.0\library</span></samp> directory.</a>
+<li><a href="#I-don_0027t-have-permission-to-write-to-the-R_002d3_002e0_002e3_005clibrary-directory">4.2 I don't have permission to write to the <samp><span class="file">R-3.0.3\library</span></samp> directory.</a>
 <li><a href="#The-packages-I-installed-do-not-appear-in-the-HTML-help-system">4.3 The packages I installed do not appear in the HTML help system.</a>
 <li><a href="#My-functions-are-not-found-by-the-HTML-help-search-system_002e">4.4 My functions are not found by the HTML help search system.</a>
 <li><a href="#Loading-a-package-fails_002e">4.5 Loading a package fails.</a>
@@ -202,7 +202,7 @@ that version.  The main R FAQ can be found at
 <p>Go to any CRAN site (see <a href="http://cran.r-project.org/mirrors.html">http://cran.r-project.org/mirrors.html</a>
 for a list), navigate to the <samp><span class="file">bin/windows/base</span></samp> directory and
 collect the file(s) you need.  The current release is distributed as an
-installer &lsquo;<samp><span class="samp">R-3.1.0-win.exe</span></samp>&rsquo; of about 54Mb.
+installer &lsquo;<samp><span class="samp">R-3.0.3-win.exe</span></samp>&rsquo; of about 54Mb.
 
 <p>There are also links on that page to the &lsquo;<samp><span class="samp">r-patched</span></samp>&rsquo; and
 &lsquo;<samp><span class="samp">r-devel</span></samp>&rsquo; snapshots.  These are frequently updated builds of
@@ -240,7 +240,7 @@ account with administrator rights<a rel="footnote" href="#fn-1" name="fnd-1"><su
 <code>\\machine\...</code>) is not supported: such paths will need to mapped
 to a network drive.
 
-<p>To install use &lsquo;<samp><span class="samp">R-3.1.0-win.exe</span></samp>&rsquo;.  Just double-click on the icon
+<p>To install use &lsquo;<samp><span class="samp">R-3.0.3-win.exe</span></samp>&rsquo;.  Just double-click on the icon
 and follow the instructions.  If you have an account with Administrator
 privileges you will be able to install R in the <samp><span class="file">Program Files</span></samp>
 area and to set all the optional registry entries; otherwise you will
@@ -464,10 +464,10 @@ batch file might contain (as one line)
 <p class="noindent">The purpose of <code>2&gt;&amp;1</code> is to redirect warnings and errors to the
 same file as normal output.
 
-<p><a name="Can-I-use-R-3.1.0-with-ESS-and-Emacs%3f"></a>
-<a name="Can-I-use-R_002d3_002e1_002e0-with-ESS-and-Emacs_003f"></a>
+<p><a name="Can-I-use-R-3.0.3-with-ESS-and-Emacs%3f"></a>
+<a name="Can-I-use-R_002d3_002e0_002e3-with-ESS-and-Emacs_003f"></a>
 
-<h3 class="section">2.13 Can I use R-3.1.0 with ESS and Emacs?</h3>
+<h3 class="section">2.13 Can I use R-3.0.3 with ESS and Emacs?</h3>
 
 <p>Yes.  ESS has for a long time supported R under Windows: it does so by
 running <code>Rterm.exe</code> without a visible console.
@@ -547,7 +547,7 @@ which these options are listed, that is the command line then
 
 <p>How did you specify it?  Backslashes have to be doubled in R character
 strings, so for example one needs
-&lsquo;<samp><span class="samp">"d:\\R-3.1.0\\library\\xgobi\\scripts\\xgobi.bat"</span></samp>&rsquo;.  You can make
+&lsquo;<samp><span class="samp">"d:\\R-3.0.3\\library\\xgobi\\scripts\\xgobi.bat"</span></samp>&rsquo;.  You can make
 life easier for yourself by using forward slashes as path separators:
 they do work under Windows.  You should include the file extension
 (e.g. &lsquo;<samp><span class="samp">"xgobi.bat"</span></samp>&rsquo; rather than just &lsquo;<samp><span class="samp">"xgobi"</span></samp>&rsquo;); sometimes
@@ -581,9 +581,9 @@ Administrator installs) &lsquo;<samp><span class="samp">Associate R with .RData 
 Windows registry:
      <ul>
 <li><code>HKEY_LOCAL_MACHINE\Software\R-core\R\Current Version</code>
-    contains the version number, currently 3.1.0. 
+    contains the version number, currently 3.0.3. 
 <li><code>HKEY_LOCAL_MACHINE\Software\R-core\R\[version]\InstallPath</code>
-    (where <code>[version]</code> is currently 3.1.0) contains the path to the R
+    (where <code>[version]</code> is currently 3.0.3) contains the path to the R
     home directory. 
 </ul>
 If you do not have administrative privileges on the machine while
@@ -782,7 +782,7 @@ just the Administrator group).
 install R.
 
      <p>For an installation to be used by a single user, the simplest way is to
-make use of a `personal library': See <a href="#I-don_0027t-have-permission-to-write-to-the-R_002d3_002e1_002e0_005clibrary-directory">I don't have permission to write to the R-3.1.0\library directory</a>.
+make use of a `personal library': See <a href="#I-don_0027t-have-permission-to-write-to-the-R_002d3_002e0_002e3_005clibrary-directory">I don't have permission to write to the R-3.0.3\library directory</a>.
 
      <p>For a site installation, you can create a site-wide library directory
 anywhere convenient, and add it to the default package search path for
@@ -1200,10 +1200,10 @@ are because people have not done so.
 system, you can try the automated Windows binary package builder
 documented at <a href="http://win-builder.r-project.org">http://win-builder.r-project.org</a>.
 
-<p><a name="I-don't-have-permission-to-write-to-the-R-3.1.0%5clibrary-directory"></a>
-<a name="I-don_0027t-have-permission-to-write-to-the-R_002d3_002e1_002e0_005clibrary-directory"></a>
+<p><a name="I-don't-have-permission-to-write-to-the-R-3.0.3%5clibrary-directory"></a>
+<a name="I-don_0027t-have-permission-to-write-to-the-R_002d3_002e0_002e3_005clibrary-directory"></a>
 
-<h3 class="section">4.2 I don't have permission to write to the <samp><span class="file">R-3.1.0\library</span></samp> directory.</h3>
+<h3 class="section">4.2 I don't have permission to write to the <samp><span class="file">R-3.0.3\library</span></samp> directory.</h3>
 
 <p>You can install packages anywhere and use the environment variable
 <samp><span class="env">R_LIBS</span></samp> (see <a href="#How-do-I-set-environment-variables_003f">How do I set environment variables?</a>) to point to
@@ -1504,7 +1504,7 @@ of <code>shell()</code>.
 
 <h3 class="section">5.2 I hear about some nifty features: please tell me about them!</h3>
 
-<p>You have read the file <samp><span class="file">README.R-3.1.0</span></samp>? There are file menus on
+<p>You have read the file <samp><span class="file">README.R-3.0.3</span></samp>? There are file menus on
 the R console, pager and graphics windows.  You can source and save from
 those menus, and copy the graphics to <code>png</code>, <code>jpeg</code>,
 <code>bmp</code>, <code>postscript</code>, <code>PDF</code> or <code>metafile</code>.  There are
@@ -1514,7 +1514,7 @@ toolbars with buttons giving shortcuts to frequent operations.
 <p>If you resize the R console the <code>options(width=)</code> is automatically
 set to the console width (unless disabled in the configuration file).
 
-<p>The graphics has a history mechanism.  As <samp><span class="file">README.R-3.1.0</span></samp> says:
+<p>The graphics has a history mechanism.  As <samp><span class="file">README.R-3.0.3</span></samp> says:
 
 <blockquote>
 `The History menu allows the recording of plots.  When plots have been
@@ -1780,14 +1780,14 @@ with debugging information as described below.
 <p class="noindent">You will need a suitable version of <samp><span class="command">gdb</span></samp> which matches your
 compiler.  Then you can debug by
 
-<pre class="example">     gdb /path/to/R-3.1.0/bin/x64/Rgui.exe
+<pre class="example">     gdb /path/to/R-3.0.3/bin/x64/Rgui.exe
 </pre>
 <p class="noindent">(or use <samp><span class="command">Rterm.exe</span></samp>.)  However, note
 
      <ul>
 <li><samp><span class="command">gdb</span></samp> may only be able to find the source code if we run in the
-location where the source was compiled (<samp><span class="file">R-3.1.0/src/gnuwin32</span></samp> for
-the main system, <samp><span class="file">R-3.1.0/src/library/mypkg/src</span></samp> for a package),
+location where the source was compiled (<samp><span class="file">R-3.0.3/src/gnuwin32</span></samp> for
+the main system, <samp><span class="file">R-3.0.3/src/library/mypkg/src</span></samp> for a package),
 unless told otherwise by the <samp><span class="command">directory</span></samp> command.  It is most
 convenient to set a list of code locations via <samp><span class="command">directory</span></samp> commands
 in the file <samp><span class="file">.gdbinit</span></samp> in the directory from which <samp><span class="command">gdb</span></samp> is

@@ -20,5 +20,5 @@ URL: http://www.rforge.net/Rserve/
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2013-08-21 23:35:21
-Built: R 3.1.0; i386-w64-mingw32; 2014-04-10 19:31:38 UTC; windows
+Built: R 3.0.1; i386-w64-mingw32; 2013-08-22 14:33:33 UTC; windows
 Archs: i386, x64

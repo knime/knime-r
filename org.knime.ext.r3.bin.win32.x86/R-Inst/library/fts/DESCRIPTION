@@ -12,5 +12,5 @@ Packaged: 2014-04-03 20:00:18 UTC; warmstrong
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-04-04 15:05:39
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-21 22:56:43 UTC; windows
+Built: R 3.0.3; i386-w64-mingw32; 2014-06-12 05:38:23 UTC; windows
 Archs: i386, x64

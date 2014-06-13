@@ -10,7 +10,7 @@
 <div align="center">
 <a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
 <a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
-</div><h2>Documentation for package &lsquo;grid&rsquo; version 3.1.0</h2>
+</div><h2>Documentation for package &lsquo;grid&rsquo; version 3.0.3</h2>
 
 <ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
 <li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
@@ -64,6 +64,8 @@
 <td>Draw a Curve Between Locations</td></tr>
 <tr><td width="25%"><a href="arrow.html">arrow</a></td>
 <td>Describe arrows to add to a line.</td></tr>
+<tr><td width="25%"><a href="grid.arrows.html">arrowsGrob</a></td>
+<td>Draw Arrows</td></tr>
 <tr><td width="25%"><a href="widthDetails.html">ascentDetails</a></td>
 <td>Width and Height of a grid grob</td></tr>
 </table>
@@ -83,13 +85,15 @@
 <tr><td width="25%"><a href="calcStringMetric.html">calcStringMetric</a></td>
 <td>Calculate Metric Information for Text</td></tr>
 <tr><td width="25%"><a href="grid.grob.html">childNames</a></td>
-<td>Create Grid Graphical Objects, aka "Grob"s</td></tr>
+<td>Create a Grid Graphical Object</td></tr>
 <tr><td width="25%"><a href="grid.circle.html">circleGrob</a></td>
 <td>Draw a Circle</td></tr>
 <tr><td width="25%"><a href="grid.clip.html">clipGrob</a></td>
 <td>Set the Clipping Region</td></tr>
 <tr><td width="25%"><a href="grid.convert.html">convertHeight</a></td>
 <td>Convert Between Different grid Coordinate Systems</td></tr>
+<tr><td width="25%"><a href="convertNative.html">convertNative</a></td>
+<td>Convert a Unit Object to Native units</td></tr>
 <tr><td width="25%"><a href="grid.convert.html">convertUnit</a></td>
 <td>Convert Between Different grid Coordinate Systems</td></tr>
 <tr><td width="25%"><a href="grid.convert.html">convertWidth</a></td>
@@ -98,10 +102,6 @@
 <td>Convert Between Different grid Coordinate Systems</td></tr>
 <tr><td width="25%"><a href="grid.convert.html">convertY</a></td>
 <td>Convert Between Different grid Coordinate Systems</td></tr>
-<tr><td width="25%"><a href="current.viewport.html">current.parent</a></td>
-<td>Get the Current Grid Viewport (Tree)</td></tr>
-<tr><td width="25%"><a href="current.viewport.html">current.rotation</a></td>
-<td>Get the Current Grid Viewport (Tree)</td></tr>
 <tr><td width="25%"><a href="current.viewport.html">current.transform</a></td>
 <td>Get the Current Grid Viewport (Tree)</td></tr>
 <tr><td width="25%"><a href="current.viewport.html">current.viewport</a></td>
@@ -121,16 +121,12 @@
 <td>Create a Viewport with Scales based on Data</td></tr>
 <tr><td width="25%"><a href="grid.delay.html">delayGrob</a></td>
 <td>Encapsulate calculations and generating a grob</td></tr>
-<tr><td width="25%"><a href="depth.html">depth</a></td>
-<td>Determine the number of levels in an object.</td></tr>
-<tr><td width="25%"><a href="depth.html">depth.path</a></td>
-<td>Determine the number of levels in an object.</td></tr>
-<tr><td width="25%"><a href="depth.html">depth.viewport</a></td>
-<td>Determine the number of levels in an object.</td></tr>
 <tr><td width="25%"><a href="widthDetails.html">descentDetails</a></td>
 <td>Width and Height of a grid grob</td></tr>
 <tr><td width="25%"><a href="viewports.html">downViewport</a></td>
 <td>Maintaining and Navigating the Grid Viewport Tree</td></tr>
+<tr><td width="25%"><a href="drawDetails.html">draw.details</a></td>
+<td>Customising grid Drawing</td></tr>
 <tr><td width="25%"><a href="drawDetails.html">drawDetails</a></td>
 <td>Customising grid Drawing</td></tr>
 </table>
@@ -144,19 +140,11 @@
 <td>Edit the Description of a Grid Graphical Object</td></tr>
 <tr><td width="25%"><a href="grid.display.list.html">engine.display.list</a></td>
 <td>Control the Grid Display List</td></tr>
-<tr><td width="25%"><a href="explode.html">explode</a></td>
-<td>Explode a path into its components.</td></tr>
-<tr><td width="25%"><a href="explode.html">explode.character</a></td>
-<td>Explode a path into its components.</td></tr>
-<tr><td width="25%"><a href="explode.html">explode.path</a></td>
-<td>Explode a path into its components.</td></tr>
 </table>
 
 <h2><a name="F">-- F --</a></h2>
 
 <table width="100%">
-<tr><td width="25%"><a href="grid.force.html">forceGrob</a></td>
-<td>Force a grob into its components</td></tr>
 <tr><td width="25%"><a href="grid.frame.html">frameGrob</a></td>
 <td>Create a Frame for Packing Objects</td></tr>
 <tr><td width="25%"><a href="grid.function.html">functionGrob</a></td>
@@ -177,7 +165,7 @@
 <tr><td width="25%"><a href="getNames.html">getNames</a></td>
 <td>List the names of grobs on the display list</td></tr>
 <tr><td width="25%"><a href="grid.grob.html">gList</a></td>
-<td>Create Grid Graphical Objects, aka "Grob"s</td></tr>
+<td>Create a Grid Graphical Object</td></tr>
 <tr><td width="25%"><a href="gpar.html">gpar</a></td>
 <td>Handling Grid Graphical Parameters</td></tr>
 <tr><td width="25%"><a href="gPath.html">gPath</a></td>
@@ -188,6 +176,8 @@
 <td>Draw a curve representing a function</td></tr>
 <tr><td width="25%"><a href="grid.add.html">grid.add</a></td>
 <td>Add a Grid Graphical Object</td></tr>
+<tr><td width="25%"><a href="grid.arrows.html">grid.arrows</a></td>
+<td>Draw Arrows</td></tr>
 <tr><td width="25%"><a href="grid.bezier.html">grid.bezier</a></td>
 <td>Draw a Bezier Curve</td></tr>
 <tr><td width="25%"><a href="grid.cap.html">grid.cap</a></td>
@@ -196,6 +186,18 @@
 <td>Draw a Circle</td></tr>
 <tr><td width="25%"><a href="grid.clip.html">grid.clip</a></td>
 <td>Set the Clipping Region</td></tr>
+<tr><td width="25%"><a href="grid.collection.html">grid.collection</a></td>
+<td>Create a Coherent Group of Grid Graphical Objects</td></tr>
+<tr><td width="25%"><a href="grid.convert.html">grid.convert</a></td>
+<td>Convert Between Different grid Coordinate Systems</td></tr>
+<tr><td width="25%"><a href="grid.convert.html">grid.convertHeight</a></td>
+<td>Convert Between Different grid Coordinate Systems</td></tr>
+<tr><td width="25%"><a href="grid.convert.html">grid.convertWidth</a></td>
+<td>Convert Between Different grid Coordinate Systems</td></tr>
+<tr><td width="25%"><a href="grid.convert.html">grid.convertX</a></td>
+<td>Convert Between Different grid Coordinate Systems</td></tr>
+<tr><td width="25%"><a href="grid.convert.html">grid.convertY</a></td>
+<td>Convert Between Different grid Coordinate Systems</td></tr>
 <tr><td width="25%"><a href="grid.copy.html">grid.copy</a></td>
 <td>Make a Copy of a Grid Graphical Object</td></tr>
 <tr><td width="25%"><a href="grid.curve.html">grid.curve</a></td>
@@ -211,12 +213,6 @@
 <tr><td width="25%"><a href="grid.edit.html">grid.edit</a></td>
 <td>Edit the Description of a Grid Graphical Object</td></tr>
 <tr><td width="25%"><a href="grid.force.html">grid.force</a></td>
-<td>Force a grob into its components</td></tr>
-<tr><td width="25%"><a href="grid.force.html">grid.force.default</a></td>
-<td>Force a grob into its components</td></tr>
-<tr><td width="25%"><a href="grid.force.html">grid.force.gPath</a></td>
-<td>Force a grob into its components</td></tr>
-<tr><td width="25%"><a href="grid.force.html">grid.force.grob</a></td>
 <td>Force a grob into its components</td></tr>
 <tr><td width="25%"><a href="grid.frame.html">grid.frame</a></td>
 <td>Create a Frame for Packing Objects</td></tr>
@@ -234,14 +230,12 @@
 <td>Grab the current grid output</td></tr>
 <tr><td width="25%"><a href="grid.remove.html">grid.gremove</a></td>
 <td>Remove a Grid Graphical Object</td></tr>
-<tr><td width="25%"><a href="grid.grep.html">grid.grep</a></td>
-<td>Search for grobs</td></tr>
 <tr><td width="25%"><a href="grid.grill.html">grid.grill</a></td>
 <td>Draw a Grill</td></tr>
+<tr><td width="25%"><a href="grid.grob.html">grid.grob</a></td>
+<td>Create a Grid Graphical Object</td></tr>
 <tr><td width="25%"><a href="grid.layout.html">grid.layout</a></td>
 <td>Create a Grid Layout</td></tr>
-<tr><td width="25%"><a href="legendGrob.html">grid.legend</a></td>
-<td>Constructing a Legend Grob</td></tr>
 <tr><td width="25%"><a href="grid.move.to.html">grid.line.to</a></td>
 <td>Move or Draw to a Specified Position</td></tr>
 <tr><td width="25%"><a href="grid.lines.html">grid.lines</a></td>
@@ -286,10 +280,6 @@
 <td>Reorder the children of a gTree</td></tr>
 <tr><td width="25%"><a href="grid.force.html">grid.revert</a></td>
 <td>Force a grob into its components</td></tr>
-<tr><td width="25%"><a href="grid.force.html">grid.revert.gPath</a></td>
-<td>Force a grob into its components</td></tr>
-<tr><td width="25%"><a href="grid.force.html">grid.revert.grob</a></td>
-<td>Force a grob into its components</td></tr>
 <tr><td width="25%"><a href="grid.roundrect.html">grid.roundrect</a></td>
 <td>Draw a rectangle with rounded corners</td></tr>
 <tr><td width="25%"><a href="grid.segments.html">grid.segments</a></td>
@@ -309,7 +299,7 @@
 <tr><td width="25%"><a href="grid.yaxis.html">grid.yaxis</a></td>
 <td>Draw a Y-Axis</td></tr>
 <tr><td width="25%"><a href="grid.grob.html">grob</a></td>
-<td>Create Grid Graphical Objects, aka "Grob"s</td></tr>
+<td>Create a Grid Graphical Object</td></tr>
 <tr><td width="25%"><a href="grobWidth.html">grobAscent</a></td>
 <td>Create a Unit Describing the Width of a Grob</td></tr>
 <tr><td width="25%"><a href="grobWidth.html">grobDescent</a></td>
@@ -321,7 +311,7 @@
 <tr><td width="25%"><a href="grid.ls.html">grobPathListing</a></td>
 <td>List the names of grobs or viewports</td></tr>
 <tr><td width="25%"><a href="grid.grob.html">grobTree</a></td>
-<td>Create Grid Graphical Objects, aka "Grob"s</td></tr>
+<td>Create a Grid Graphical Object</td></tr>
 <tr><td width="25%"><a href="grobWidth.html">grobWidth</a></td>
 <td>Create a Unit Describing the Width of a Grob</td></tr>
 <tr><td width="25%"><a href="grobX.html">grobX</a></td>
@@ -329,7 +319,7 @@
 <tr><td width="25%"><a href="grobX.html">grobY</a></td>
 <td>Create a Unit Describing a Grob Boundary Location</td></tr>
 <tr><td width="25%"><a href="grid.grob.html">gTree</a></td>
-<td>Create Grid Graphical Objects, aka "Grob"s</td></tr>
+<td>Create a Grid Graphical Object</td></tr>
 </table>
 
 <h2><a name="H">-- H --</a></h2>
@@ -343,14 +333,12 @@
 
 <table width="100%">
 <tr><td width="25%"><a href="grid.grob.html">is.grob</a></td>
-<td>Create Grid Graphical Objects, aka "Grob"s</td></tr>
+<td>Create a Grid Graphical Object</td></tr>
 </table>
 
 <h2><a name="L">-- L --</a></h2>
 
 <table width="100%">
-<tr><td width="25%"><a href="legendGrob.html">legendGrob</a></td>
-<td>Constructing a Legend Grob</td></tr>
 <tr><td width="25%"><a href="grid.lines.html">linesGrob</a></td>
 <td>Draw Lines in a Grid Viewport</td></tr>
 <tr><td width="25%"><a href="grid.move.to.html">lineToGrob</a></td>
@@ -396,12 +384,16 @@
 <td>Draw a Polygon</td></tr>
 <tr><td width="25%"><a href="grid.lines.html">polylineGrob</a></td>
 <td>Draw Lines in a Grid Viewport</td></tr>
+<tr><td width="25%"><a href="pop.viewport.html">pop.viewport</a></td>
+<td>Pop a Viewport off the Grid Viewport Stack</td></tr>
 <tr><td width="25%"><a href="viewports.html">popViewport</a></td>
 <td>Maintaining and Navigating the Grid Viewport Tree</td></tr>
 <tr><td width="25%"><a href="drawDetails.html">postDrawDetails</a></td>
 <td>Customising grid Drawing</td></tr>
 <tr><td width="25%"><a href="drawDetails.html">preDrawDetails</a></td>
 <td>Customising grid Drawing</td></tr>
+<tr><td width="25%"><a href="push.viewport.html">push.viewport</a></td>
+<td>Push a Viewport onto the Grid Viewport Stack</td></tr>
 <tr><td width="25%"><a href="viewports.html">pushViewport</a></td>
 <td>Maintaining and Navigating the Grid Viewport Tree</td></tr>
 </table>
@@ -419,12 +411,6 @@
 <td>Remove a Grid Graphical Object</td></tr>
 <tr><td width="25%"><a href="grid.reorder.html">reorderGrob</a></td>
 <td>Reorder the children of a gTree</td></tr>
-<tr><td width="25%"><a href="valid.just.html">resolveHJust</a></td>
-<td>Validate a Justification</td></tr>
-<tr><td width="25%"><a href="resolveRasterSize.html">resolveRasterSize</a></td>
-<td>Utility function to resolve the size of a raster grob</td></tr>
-<tr><td width="25%"><a href="valid.just.html">resolveVJust</a></td>
-<td>Validate a Justification</td></tr>
 <tr><td width="25%"><a href="grid.roundrect.html">roundrect</a></td>
 <td>Draw a rectangle with rounded corners</td></tr>
 <tr><td width="25%"><a href="grid.roundrect.html">roundrectGrob</a></td>

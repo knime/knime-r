@@ -1,19 +1,11 @@
 Package: randomForestSRC
-Version: 1.5.1
-BUILD: bld20140515
+Version: 1.4
+BUILD: bld20131210b
 
 ---------------------------------------------------------------------------------
-CHANGES TO RELEASE 1.5.1
+CHANGES TO RELEASE 1.4
 ---------------------------------------------------------------------------------
-RELEASE 1.5.1
-Significant improvements to CPU and RAM usage profiles in serial and
-OpenMP modes of execution.  Proxmity options allow inbag, oob and all.
-VIMP implements subsetting and conditional variable importance. NA
-options allow the split statistic to be based on non-missing values
-only.  In additon it allows random assignment of missing values.
-
----------------------------------------------------------------------------------
-RELEASE 1.4.0
+RELEASE 1.4
 Modification of terminal node imputation protocol.  We now assign all
 individuals the same value rather than sampling from the distribution.
 Implementation of split.null option.  Implementation of unsupervised
@@ -61,7 +53,7 @@ Replaced 'suggests multicore' with 'depends parallel'.  Followed
 protocol in parallel package for controlling number of cores, via
 options(), and environment variables.  Reduced [S] memory footprint by
 prematurely de-allocating terminal node information.
-
+ 
 ---------------------------------------------------------------------------------
 RELEASE 1.0.0 represents the first release of the
 package.  Please report bugs to commerce@kogalur.com

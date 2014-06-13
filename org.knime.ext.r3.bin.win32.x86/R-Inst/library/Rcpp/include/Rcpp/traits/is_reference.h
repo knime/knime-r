@@ -19,12 +19,12 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
-   
+
 #ifndef Rcpp__traits__is_reference__h
 #define Rcpp__traits__is_reference__h
 
 namespace Rcpp{ namespace traits {
-	
+
   template<typename>
     struct is_reference
     : public false_type { };
@@ -32,7 +32,7 @@ namespace Rcpp{ namespace traits {
   template<typename _Tp>
     struct is_reference<_Tp&>
     : public true_type { };
-	
+
 }}
 
 #endif

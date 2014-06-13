@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 //
-// converter.h: Rcpp R/C++ interface class library -- 
+// converter.h: Rcpp R/C++ interface class library --
 //
 // Copyright (C) 2012 Dirk Eddelbuettel and Romain Francois
 //
@@ -23,7 +23,7 @@
 #define Rcpp_internal_converter_h
 
 namespace Rcpp{
-namespace internal{	
+namespace internal{
 	class converter {
 	public:
 		converter( ) : x(R_NilValue){} ;
@@ -34,13 +34,13 @@ namespace internal{
 			return *this ;
 		}
 		~converter(){}
-	
+
 		template <typename T> operator T(){
-			return ::Rcpp::as<T>( x ) ;	
+			return ::Rcpp::as<T>( x ) ;
 		}
 	private:
 		SEXP x ;
-		
+
 	} ;
 } // namespace internal
 } // namespace Rcpp

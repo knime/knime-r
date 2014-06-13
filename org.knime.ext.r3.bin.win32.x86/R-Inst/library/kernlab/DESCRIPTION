@@ -21,5 +21,5 @@ Maintainer: Alexandros Karatzoglou <alexis@ci.tuwien.ac.at>
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2013-11-03 17:56:08
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-04-10 19:22:47 UTC; windows
+Built: R 3.0.2; x86_64-w64-mingw32; 2013-11-04 16:20:27 UTC; windows
 Archs: i386, x64

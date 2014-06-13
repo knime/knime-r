@@ -11,5 +11,5 @@ Packaged: 2013-08-01 15:28:43 UTC; root
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2013-08-01 18:50:17
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-04-10 19:16:36 UTC; windows
+Built: R 3.0.1; x86_64-w64-mingw32; 2013-08-02 12:14:38 UTC; windows
 Archs: i386, x64

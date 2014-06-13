@@ -159,7 +159,6 @@ dim                     Dimensions of an Object
 dimnames                Dimnames of an Object
 dir.create              Manipulaton of Directories and File Permissions
 do.call                 Execute a Function Call
-dontCheck               Identity Function to Suppress Checking
 double                  Double-Precision Vectors
 dput                    Write an Object to a File or Recreate it
 drop                    Drop Redundant Extent Information

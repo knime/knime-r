@@ -24,5 +24,5 @@ Author: Terry M Therneau [aut, cre],
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-01-22 17:49:47
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-04-10 19:16:07 UTC; windows
+Built: R 3.0.2; x86_64-w64-mingw32; 2014-01-22 23:20:31 UTC; windows
 Archs: i386, x64

@@ -137,22 +137,27 @@ table(table(paste(nc90$ST, nc90$CO, sep="")))
 
 
 ###################################################
-### code chunk number 18: combine_maptools.Rnw:216-217
+### code chunk number 18: combine_maptools.Rnw:216-219
 ###################################################
+if (rgeosStatus()) {
 nc90a <- unionSpatialPolygons(nc90, IDs=paste(nc90$ST, nc90$CO, sep=""))
+}
 
 
 ###################################################
-### code chunk number 19: combine_maptools.Rnw:227-230
+### code chunk number 19: combine_maptools.Rnw:229-234
 ###################################################
+if (rgeosStatus()) {
 nc90_df <- as(nc90, "data.frame")[!duplicated(nc90$CO),-(1:4)]
 row.names(nc90_df) <- paste(nc90_df$ST, nc90_df$CO, sep="")
 nc90b <- SpatialPolygonsDataFrame(nc90a, nc90_df)
+}
 
 
 ###################################################
-### code chunk number 20: combine_maptools.Rnw:250-257
+### code chunk number 20: combine_maptools.Rnw:254-263
 ###################################################
+if (rgeosStatus()) {
 va90a <- spChFIDs(va90, paste(va90$ST, va90$CO, sep=""))
 va90a <- va90a[,-(1:4)]
 va90_pl <- slot(va90a, "polygons")
@@ -160,26 +165,29 @@ va90_pla <- lapply(va90_pl, checkPolygonsHoles)
 p4sva <- CRS(proj4string(va90a))
 vaSP <- SpatialPolygons(va90_pla, proj4string=p4sva)
 va90b <- SpatialPolygonsDataFrame(vaSP, data=as(va90a, "data.frame"))
+}
 
 
 ###################################################
-### code chunk number 21: combine_maptools.Rnw:297-301
+### code chunk number 21: combine_maptools.Rnw:303-309
 ###################################################
+if (rgeosStatus()) {
 nc_sc_va90 <- spRbind(spRbind(nc90b, sc90a), va90b)
 FIPS <- row.names(nc_sc_va90)
 str(FIPS)
 length(slot(nc_sc_va90, "polygons"))
+}
 
 
 ###################################################
-### code chunk number 22: combine_maptools.Rnw:330-332
+### code chunk number 22: combine_maptools.Rnw:338-340
 ###################################################
 t1 <- read.fwf(system.file("share/90mfips.txt", package="maptools"), skip=21,
  widths=c(4,4,4,4,2,6,2,3,3,1,7,5,3,51), colClasses = "character")
 
 
 ###################################################
-### code chunk number 23: combine_maptools.Rnw:334-340
+### code chunk number 23: combine_maptools.Rnw:342-348
 ###################################################
 t2 <- t1[1:2004,c(1,7,8,14)]
 t3 <- t2[complete.cases(t2),]
@@ -190,43 +198,51 @@ cnty2$FIPS <- paste(cnty2$V7, cnty2$V8, sep="")
 
 
 ###################################################
-### code chunk number 24: combine_maptools.Rnw:360-365
+### code chunk number 24: combine_maptools.Rnw:368-375
 ###################################################
+if (rgeosStatus()) {
 MA_FIPS <- cnty2$V1[match(FIPS, cnty2$FIPS)]
 MA <- ma1$V14[match(MA_FIPS, ma1$V1)]
 MA_df <- data.frame(MA_FIPS=MA_FIPS, MA=MA, row.names=FIPS)
 nc_sc_va90a <- spCbind(nc_sc_va90, MA_df)
 ncscva_MA <- unionSpatialPolygons(nc_sc_va90a, nc_sc_va90a$MA_FIPS)
+}
 
 
 ###################################################
-### code chunk number 25: combine_maptools.Rnw:371-378
+### code chunk number 25: combine_maptools.Rnw:381-392
 ###################################################
 .PngNo <- .PngNo + 1; file <- paste("Fig-bitmap-", .PngNo, ".pdf", sep="")
 pdf(file=file, width = 6.5, height = 5, pointsize = 12, bg = "white")
 opar <- par(mar=c(3,3,1,1)+0.1)
+if (rgeosStatus()) {
 oopar <- par(mar=c(3,2,1,1)+0.1)
 plot(nc_sc_va90, border="grey", axes=TRUE)
 plot(ncscva_MA, lwd=2, add=TRUE)
 text(coordinates(ncscva_MA), labels=row.names(ncscva_MA), cex=0.6)
 par(oopar)
+} else {
+plot(1)
+}
 par(opar)
 dev.null <- dev.off()
 cat("\\includegraphics[width=0.95\\textwidth]{", file, "}\n\n", sep="")
 
 
 ###################################################
-### code chunk number 26: combine_maptools.Rnw:396-401
+### code chunk number 26: combine_maptools.Rnw:410-417
 ###################################################
+if (rgeosStatus()) {
 np <- sapply(slot(ncscva_MA, "polygons"), function(x) length(slot(x, "Polygons")))
 table(np)
 MA_fips <- row.names(ncscva_MA)
 MA_name <- ma1$V14[match(MA_fips, ma1$V1)]
 data.frame(MA_fips, MA_name)[np > 1,]
+}
 
 
 ###################################################
-### code chunk number 27: combine_maptools.Rnw:409-410
+### code chunk number 27: combine_maptools.Rnw:425-426
 ###################################################
 options("width"=owidth)
 

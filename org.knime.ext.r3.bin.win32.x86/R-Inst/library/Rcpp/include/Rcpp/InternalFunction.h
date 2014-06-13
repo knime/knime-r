@@ -26,27 +26,27 @@
 
 #include <Rcpp/grow.h>
 
-namespace Rcpp{ 
+namespace Rcpp{
 
     RCPP_API_CLASS(InternalFunction_Impl) {
     public:
-    
-        RCPP_GENERATE_CTOR_ASSIGN(InternalFunction_Impl) 
-            
-        #include <Rcpp/generated/InternalFunction__ctors.h>	
-    		
+
+        RCPP_GENERATE_CTOR_ASSIGN(InternalFunction_Impl)
+
+        #include <Rcpp/generated/InternalFunction__ctors.h>
+
     private:
-    	
+
         inline void set( SEXP xp){
             Environment RCPP = Environment::Rcpp_namespace() ;
             Function intf = RCPP["internal_function"] ;
-            Storage::set__( intf( xp ) ) ; 
+            Storage::set__( intf( xp ) ) ;
         }
-    	
+
     };
 
     typedef InternalFunction_Impl<PreserveStorage> InternalFunction ;
-    
+
 } // namespace Rcpp
 
 #endif

@@ -1,7 +1,7 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 /* :tabSize=4:indentSize=4:noTabs=false:folding=explicit:collapseFolds=1: */
 //
-// ListInitialization.h: Rcpp R/C++ interface class library -- 
+// ListInitialization.h: Rcpp R/C++ interface class library --
 //
 // Copyright (C) 2010 - 2011 Dirk Eddelbuettel and Romain Francois
 //
@@ -25,7 +25,7 @@
 
 namespace Rcpp{
 namespace internal{
-	
+
 template <typename iterator, typename value_type> class ListInitialization {
 public:
 	ListInitialization( iterator iter_ ) : iter(iter_) {} ;
@@ -33,8 +33,8 @@ public:
 		*iter = x ;
 		return ListInitialization<iterator,value_type>( iter + 1 );
 	}
-	
-private:	
+
+private:
 	iterator iter ;
 } ;
 

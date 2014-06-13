@@ -18,5 +18,5 @@ Maintainer: Kurt Hornik <Kurt.Hornik@R-project.org>
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2013-05-13 17:06:23
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-21 22:54:21 UTC; windows
+Built: R 3.0.3; i386-w64-mingw32; 2014-06-12 05:34:55 UTC; windows
 Archs: i386, x64

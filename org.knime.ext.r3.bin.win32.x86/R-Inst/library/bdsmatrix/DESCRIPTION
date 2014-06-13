@@ -19,5 +19,5 @@ Packaged: 2013-03-28 16:35:33 UTC; therneau
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2013-03-28 18:00:22
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-04-10 19:28:49 UTC; windows
+Built: R 3.0.0; x86_64-w64-mingw32; 2013-04-03 14:40:49 UTC; windows
 Archs: i386, x64

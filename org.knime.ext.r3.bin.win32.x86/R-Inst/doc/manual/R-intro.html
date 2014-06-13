@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- This manual is for R, version 3.1.0 (2014-04-10).
+<!-- This manual is for R, version 3.0.3 (2014-03-06).
 
 Copyright (C) 1990 W. N. Venables
 
@@ -386,7 +386,7 @@ analysis, classification, clustering, ...).
 <p>This manual provides information on data types, programming elements,
 statistical modelling and graphics.
 </p>
-<p>This manual is for R, version 3.1.0 (2014-04-10).
+<p>This manual is for R, version 3.0.3 (2014-03-06).
 </p>
 <p>Copyright &copy; 1990 W. N. Venables<br>
 Copyright &copy; 1992 W. N. Venables &amp; D. M. Smith<br>
@@ -1251,8 +1251,8 @@ the sequence respectively.  If neither of these is given, the default
 
 <p>generates the same vector in <code>s4</code>.
 </p>
-<p>The fifth parameter may be named <code>along=<var>vector</var></code>, which is
-normally used as the only parameter to create the sequence <code>1, 2,
+<p>The fifth parameter may be named <code>along=<var>vector</var></code>, which if
+used must be the only parameter, and creates a sequence <code>1, 2,
 &hellip;, length(<var>vector</var>)</code>, or the empty sequence if the vector is
 empty (as it can be).
 </p>
@@ -5847,10 +5847,9 @@ To obtain the approximate standard errors (SE) of the estimates we do:
 <pre class="example">&gt; sqrt(diag(2*out$minimum/(length(y) - 2) * solve(out$hessian)))
 </pre></div>
 
-<p>The <code>2</code> which is subtracted in the line above represents the number
-of parameters.  A 95% confidence interval would be the parameter
-estimate +/- 1.96 SE.  We can superimpose the least squares
-fit on a new plot:
+<p>The 2 in the line above represents the number of parameters.  A 95%
+confidence interval would be the parameter estimate +/- 1.96
+SE.  We can superimpose the least squares fit on a new plot:
 </p>
 <div class="example">
 <pre class="example">&gt; plot(x, y)

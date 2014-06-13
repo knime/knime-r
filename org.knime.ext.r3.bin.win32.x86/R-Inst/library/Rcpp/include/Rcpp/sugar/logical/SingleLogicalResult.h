@@ -1,6 +1,6 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
-// SingleLogicalResult.h: Rcpp R/C++ interface class library -- 
+// SingleLogicalResult.h: Rcpp R/C++ interface class library --
 //
 // Copyright (C) 2010 - 2012 Dirk Eddelbuettel and Romain Francois
 //
@@ -23,71 +23,71 @@
 #define Rcpp__sugar__SingleLogicalResult_h
 
 namespace Rcpp{
-namespace sugar{  
+namespace sugar{
 
-template <bool> 
+template <bool>
 class forbidden_conversion ;
 
-template <> 
+template <>
 class forbidden_conversion<true>{} ;
 
 template <bool x>
-class conversion_to_bool_is_forbidden : 
+class conversion_to_bool_is_forbidden :
 	forbidden_conversion<x>{
 	public:
 		void touch(){}
-}; 
+};
 
 template <bool NA,typename T>
 class SingleLogicalResult {
 public:
 	const static int UNRESOLVED = -5 ;
-	
+
 	SingleLogicalResult() : result(UNRESOLVED) {} ;
-	
+
 	void apply(){
 		if( result == UNRESOLVED ){
 			static_cast<T&>(*this).apply() ;
 		}
 	}
-	
+
 	inline bool is_true(){
 		apply() ;
 		return result == TRUE ;
 	}
-	
+
 	inline bool is_false(){
 		apply() ;
 		return result == FALSE ;
 	}
-	
+
 	inline bool is_na(){
 		apply() ;
 		return Rcpp::traits::is_na<LGLSXP>( result ) ;
 	}
-	
+
 	inline operator SEXP(){
 		return get_sexp() ;
 	}
-	
+
 	inline operator bool(){
 		conversion_to_bool_is_forbidden<!NA> x ;
 		x.touch() ;
 		return is_true() ;
 	}
-	
+
 	inline int size(){ return 1 ; }
-	
+
 	inline int get(){
 		apply();
 		return result;
 	}
-	
+
 	inline SEXP get_sexp(){
 	    apply() ;
 	    return Rf_ScalarLogical( result ) ;
 	}
-	
+
 protected:
 	int result ;
 	inline void set(int x){ result = x ;}

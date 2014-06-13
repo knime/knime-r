@@ -255,7 +255,7 @@ predict.smooth.spline   Predict from Smoothing Spline Fit
 preplot                 Pre-computations for a Plotting Object
 princomp                Principal Components Analysis
 print.power.htest       Print method for power calculation object
-print.ts                Printing and Formatting of Time-Series Objects
+print.ts                Printing Time-Series Objects
 printCoefmat            Print Coefficient Matrices
 profile                 Generic Function for Profiling Models
 profile.nls             Method for Profiling nls Objects

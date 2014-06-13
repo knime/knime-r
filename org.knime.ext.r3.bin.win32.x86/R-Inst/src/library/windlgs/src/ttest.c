@@ -1,22 +1,3 @@
-/*
- *  R : A Computer Language for Statistical Data Analysis
- *  Copyright (C) 2000--2013  The R Core Team
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, a copy is available at
- *  http://www.r-project.org/Licenses/
- */
-
 #include <R.h> /* for R_ProcessEvents */
 #include "ga.h"
 #include <R_ext/Utils.h> /* R_atof */
@@ -98,9 +79,9 @@ void menu_ttest(char **vars, int ints[], double level[])
     setaction(bCancel, cancel);
     show(win);
     for(;;) {
-    	R_WaitEvent();
 	R_ProcessEvents();
 	if(done > 0) break;
+	Sleep(100);
     }
     vars[0] = v[0]; vars[1] = v[1];
     ints[0] =  getlistitem(alt);
@@ -133,9 +114,9 @@ void menu_ttest2()
     setaction(bCancel, cancel2);
     show(win);
     for(;;) {
-    	R_WaitEvent();
 	R_ProcessEvents();
 	if(done > 0) break;
+	Sleep(100);
     }
     if(done == 1){
 	sprintf(cmd, "t.test(x=%s, y=%s, alternative=\"%s\",\n      paired=%s, var.equal=%s, conf.level=%s)\n", v[0], v[1],
@@ -167,9 +148,9 @@ SEXP menu_ttest3()
     setaction(bCancel, cancel2);
     show(win);
     for(;;) {
-    	R_WaitEvent();
 	R_ProcessEvents();
 	if(done > 0) break;
+	Sleep(100);
     }
     if(done == 1) {
 	sprintf(cmd, "t.test(x=%s, y=%s, alternative=\"%s\",\n      paired=%s, var.equal=%s, conf.level=%s)\n", v[0], v[1],

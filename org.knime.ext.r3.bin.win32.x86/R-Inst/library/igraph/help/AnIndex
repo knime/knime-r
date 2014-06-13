@@ -93,6 +93,7 @@ constraint	constraint
 contract.vertices	contract.vertices
 convex.hull	convex.hull
 count.multiple	is.multiple
+create.communities	communities
 crossing	communities
 cutat	communities
 decompose.graph	decompose.graph

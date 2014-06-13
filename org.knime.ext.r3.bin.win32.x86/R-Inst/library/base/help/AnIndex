@@ -5,7 +5,6 @@ base-package	base-package
 !=	Comparison
 "	Quotes
 $	Extract
-$.data.frame	Extract.data.frame
 $.DLLInfo	getLoadedDLLs
 $.package_version	numeric_version
 $<-	Extract
@@ -75,7 +74,7 @@ $<-.data.frame	Extract.data.frame
 .External	CallExternal
 .External.graphics	Foreign-internal
 .External2	Foreign-internal
-.find.package	base-defunct
+.find.package	base-deprecated
 .First	Startup
 .First.lib	base-defunct
 .First.sys	Startup
@@ -135,7 +134,7 @@ $<-.data.frame	Extract.data.frame
 .OptRequireMethods	Startup
 .packages	zpackages
 .packageStartupMessage	message
-.path.package	base-defunct
+.path.package	base-deprecated
 .Platform	Platform
 .popath	base-internal
 .POSIXct	base-internal
@@ -191,7 +190,6 @@ acosh	Hyperbolic
 addNA	factor
 addTaskCallback	taskCallback
 agrep	agrep
-agrepl	agrep
 alist	list
 all	all
 all.equal	all.equal
@@ -202,7 +200,7 @@ all.equal.formula	all.equal
 all.equal.language	all.equal
 all.equal.list	all.equal
 all.equal.numeric	all.equal
-all.equal.POSIXt	all.equal
+all.equal.POSIXct	all.equal
 all.equal.raw	all.equal
 all.names	allnames
 all.vars	allnames
@@ -212,10 +210,6 @@ anyDuplicated.array	duplicated
 anyDuplicated.data.frame	duplicated
 anyDuplicated.default	duplicated
 anyDuplicated.matrix	duplicated
-anyMissing	NA
-anyNA	NA
-anyNA.numeric_version	numeric_version
-anyNA.POSIXlt	DateTimeClasses
 aperm	aperm
 aperm.default	aperm
 aperm.table	aperm
@@ -468,7 +462,6 @@ copyright	copyright
 copyrights	copyright
 cos	Trig
 cosh	Hyperbolic
-cospi	Trig
 crossprod	crossprod
 Cstack_info	Cstack_info
 cummax	cumsum
@@ -524,7 +517,6 @@ DLLInfo	getLoadedDLLs
 DLLInfoList	getLoadedDLLs
 DLLpath	dynload
 do.call	do.call
-dontCheck	dontCheck
 double	double
 dput	dput
 dQuote	sQuote
@@ -942,7 +934,6 @@ objects	ls
 octmode	octmode
 oldClass	class
 oldClass<-	class
-OlsonNames	timezones
 on.exit	on.exit
 open	connections
 open.connection	connections
@@ -1246,7 +1237,6 @@ single	double
 sinh	Hyperbolic
 sink	sink
 sink.number	sink
-sinpi	Trig
 slice.index	slice.index
 socketConnection	connections
 socketSelect	socketSelect
@@ -1386,7 +1376,6 @@ table	table
 tabulate	tabulate
 tan	Trig
 tanh	Hyperbolic
-tanpi	Trig
 tapply	tapply
 taskCallbackManager	taskCallbackManager
 tcrossprod	crossprod

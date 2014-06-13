@@ -19,5 +19,5 @@ Packaged: 2014-01-04 15:45:42 UTC; murdoch
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-01-04 17:30:54
-Built: R 3.1.0; i386-w64-mingw32; 2014-05-21 22:37:32 UTC; windows
+Built: R 3.0.3; i386-w64-mingw32; 2014-06-12 05:34:58 UTC; windows
 Archs: i386, x64

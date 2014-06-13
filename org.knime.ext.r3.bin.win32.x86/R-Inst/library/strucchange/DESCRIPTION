@@ -33,4 +33,4 @@ Maintainer: Achim Zeileis <Achim.Zeileis@R-project.org>
 NeedsCompilation: no
 Repository: CRAN
 Date/Publication: 2013-10-29 01:44:28
-Built: R 3.1.0; ; 2014-05-21 23:07:01 UTC; windows
+Built: R 3.0.3; ; 2014-06-12 05:53:02 UTC; windows

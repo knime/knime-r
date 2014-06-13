@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- This manual is for R, version 3.1.0 (2014-04-10).
+<!-- This manual is for R, version 3.0.3 (2014-03-06).
 
 Copyright (C) 1999-2013 R Core Team
 
@@ -166,7 +166,7 @@ p {
       </ul></li>
       <li><a name="toc-Configure-example-1" href="#Configure-example">1.2.2 Configure example</a></li>
       <li><a name="toc-Using-F95-code-1" href="#Using-F95-code">1.2.3 Using F95 code</a></li>
-      <li><a name="toc-Using-C_002b_002b11-code-1" href="#Using-C_002b_002b11-code">1.2.4 Using C++11 code</a></li>
+      <li><a name="toc-Using-C_002b_002b11-code" href="#Using-C_002b11-code">1.2.4 Using C++11 code</a></li>
     </ul></li>
     <li><a name="toc-Checking-and-building-packages-1" href="#Checking-and-building-packages">1.3 Checking and building packages</a>
     <ul class="no-bullet">
@@ -405,7 +405,7 @@ Next: <a href="#Acknowledgements" accesskey="n" rel="next">Acknowledgements</a>,
 R add-on packages, writing R documentation, R&rsquo;s system and
 foreign language interfaces, and the R <acronym>API</acronym>.
 </p>
-<p>This manual is for R, version 3.1.0 (2014-04-10).
+<p>This manual is for R, version 3.0.3 (2014-03-06).
 </p>
 <p>Copyright &copy; 1999&ndash;2013 R Core Team
 </p>
@@ -1264,9 +1264,7 @@ R it would cause the specification to be ignored.)
 <p>Specifying a package in &lsquo;<samp>LinkingTo</samp>&rsquo; suffices if these are C++
 headers containing source code or static linking is done at
 installation: the packages do not need to be (and usually should not be)
-listed in the &lsquo;<samp>Depends</samp>&rsquo; or &lsquo;<samp>Imports</samp>&rsquo; fields.  This includes
-CRAN packages <a href="http://CRAN.R-project.org/package=BH"><strong>BH</strong></a> and almost all users of
-<a href="http://CRAN.R-project.org/package=RcppArmadillo"><strong>RcppArmadillo</strong></a> and <a href="http://CRAN.R-project.org/package=RcppEigen"><strong>RcppEigen</strong></a>.
+listed in the &lsquo;<samp>Depends</samp>&rsquo; or &lsquo;<samp>Imports</samp>&rsquo; fields.
 </p>
 <p>For another use of &lsquo;<samp>LinkingTo</samp>&rsquo; see <a href="#Linking-to-native-routines-in-other-packages">Linking to native routines in other packages</a>.
 </p>
@@ -1479,9 +1477,9 @@ exclude files from being installed, one can specify a list of exclude
 patterns in file <samp>.Rinstignore</samp> in the top-level source directory.
 These patterns should be Perl-like regular expressions (see the help for
 <code>regexp</code> in R for the precise details), one per line, to be
-matched case-insensitively<a name="DOCF16" href="#FOOT16"><sup>16</sup></a>
-against the file and directory paths, e.g. <samp>doc/.*[.]png$</samp> will
-exclude all PNG files in <samp>inst/doc</samp> based on the extension.
+matched<a name="DOCF16" href="#FOOT16"><sup>16</sup></a> against the file and
+directory paths, e.g. <samp>doc/.*[.]png$</samp> will exclude all PNG files
+in <samp>inst/doc</samp> based on the (lower-case) extension.
 </p>
 <p>Note that with the exceptions of <samp>INDEX</samp>,
 <samp>LICENSE</samp>/<samp>LICENCE</samp> and <samp>NEWS</samp>, information files at the
@@ -1922,7 +1920,7 @@ static library is to be used.
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Using-F95-code" accesskey="3">Using F95 code</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Using-C_002b_002b11-code" accesskey="4">Using C++11 code</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="#Using-C_002b11-code" accesskey="4">Using C+11 code</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
 
@@ -2529,7 +2527,7 @@ manager files by options like (lines broken for easier reading)
 <a name="Using-F95-code"></a>
 <div class="header">
 <p>
-Next: <a href="#Using-C_002b_002b11-code" accesskey="n" rel="next">Using C++11 code</a>, Previous: <a href="#Configure-example" accesskey="p" rel="prev">Configure example</a>, Up: <a href="#Configure-and-cleanup" accesskey="u" rel="up">Configure and cleanup</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Using-C_002b11-code" accesskey="n" rel="next">Using C+11 code</a>, Previous: <a href="#Configure-example" accesskey="p" rel="prev">Configure example</a>, Up: <a href="#Configure-and-cleanup" accesskey="u" rel="up">Configure and cleanup</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Using-F95-code-1"></a>
 <h4 class="subsection">1.2.3 Using F95 code</h4>
@@ -2586,93 +2584,40 @@ to contain something like
 </pre></div>
 
 <hr>
-<a name="Using-C_002b_002b11-code"></a>
+<a name="Using-C_002b11-code"></a>
 <div class="header">
 <p>
 Previous: <a href="#Using-F95-code" accesskey="p" rel="prev">Using F95 code</a>, Up: <a href="#Configure-and-cleanup" accesskey="u" rel="up">Configure and cleanup</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Using-C_002b_002b11-code-1"></a>
+<a name="Using-C_002b_002b11-code"></a>
 <h4 class="subsection">1.2.4 Using C++11 code</h4>
 
-<p>R can be built without a C++ compiler although one is available
-(but not necessarily installed) on all known R platforms.  
-For full portability across platforms, all
+<p>R can be built without a C++ compiler although one is available (but
+not necessarily installed) for all known Rplatforms.  However, all
 that can be assumed is approximate support for the C++98 standard (the
 widely used <code>g++</code> deviates considerably from the standard).
 Some compilers have a concept of &lsquo;C++03&rsquo; (&lsquo;essentially a bug fix&rsquo;) or
-&lsquo;C++ Technical Report 1&rsquo; (TR1), an optional addition to the &lsquo;C++03&rsquo; revision
+&lsquo;C++ Technical Report 1&rsquo;, an optional addition to the &lsquo;C++03&rsquo; revision
 which was published in 2007.  Finally a revised standard was published
 in 2011 and compilers with fairly complete implementations are becoming
 available.  C++11 added all of the C99 features which are not otherwise
 implemented in C++, and C++ compilers commonly accept C99 extensions to
 C++98.
 </p>
-<p>From version 3.1.0, R provides support for C++11 in packages, in
-addition to C++98.  This support is not consistent across platforms as
-it depends on the capabilities of the compiler (see below).  When R
-is configured, it will determine whether the C++ compiler supports C++11
-and which compiler flags, if any, are required to enable C++11 support.
-For example, recent versions of <code>g++</code> or <code>clang++</code>
-accept the compiler flag <samp>-std=c++11</samp>, and earlier versions
-support a flag <samp>-std=c++0x</samp>, but the latter only provides partial
-support for the C++11 standard.
+<p>It may be possible to compile C++11 code with recent versions of
+<code>g++</code> or <code>clang++</code> by including <samp>-std=c++11</samp> in
+&lsquo;<samp>PKG_CXXFLAGS</samp>&rsquo;, and earlier versions support a flag
+<samp>-std=c++0x</samp>.
 </p>
-<p>In order to use C++11 code in a package, the package&rsquo;s <samp>Makevars</samp>
-file (or <samp>Makevars.win</samp> on Windows) should include the line
-</p>
-<div class="example">
-<pre class="example">CXX_STD = CXX11
-</pre></div>
-
-<p>Compilation and linking will then be done with the C++11 compiler.  If
-any other value is given to the &lsquo;<samp>CXX_STD</samp>&rsquo; macro it will be ignored.
-(Further options may become available in the future depending on the
-evolution of the C++ standard.)
-</p>
-<p>Packages without a <samp>Makevars</samp> file may specify that they require
-C++11 by including &lsquo;<samp>C++11</samp>&rsquo; in the &lsquo;<samp>SystemRequirements</samp>&rsquo; field
-of the <samp>DESCRIPTION</samp> file, e.g.
-</p>
-<div class="example">
-<pre class="example">SystemRequirements: C++11
-</pre></div>
-
-<p>If a package does have a <samp>Makevars[.win]</samp> file then setting the
-make variable &lsquo;<samp>CXX_STD</samp>&rsquo; is preferred, as it allows <code>R CMD
-SHLIB</code> to work correctly in the package&rsquo;s <samp>src</samp> directory.
-</p>
-<p>The C++11 compiler will be used systematically by R for all C++ code
-if the environment variable <code>USE_CXX1X</code> is defined (with any
-value). Hence this environment variable should be defined when invoking
-<code>R CMD SHLIB</code> in the absence of a <samp>Makevars</samp> file (or
-<samp>Makevars.win</samp> on Windows) if a C++11 compiler is required.
-</p>
-<p>Further control over compilation of C++11 code can be obtained by
-specifying the macros &lsquo;<samp>CXX1X</samp>&rsquo; and &lsquo;<samp>CXX1XSTD</samp>&rsquo; when R is
-configured<a name="DOCF25" href="#FOOT25"><sup>25</sup></a>, or in a personal or site <samp>Makevars</samp> file.
-See <a href=" R-admin.html#Customizing-package-compilation">Customizing package compilation</a> in <cite>R Installation and Administration</cite>.
-If C++11 support is not available then these macros are both
-empty. Otherwise, &lsquo;<samp>CXX1X</samp>&rsquo; defaults to the same value as the C++
-compiler &lsquo;<samp>CXX</samp>&rsquo; and the flag &lsquo;<samp>CXX1XSTD</samp>&rsquo; defaults to
-<samp>-std=c++11</samp> or <samp>-std=c++0x</samp> (the latter on Windows).
-It is possible to specify &lsquo;<samp>CXX1X</samp>&rsquo; to be a distinct compiler just
-for C++11&ndash;using packages, e.g. <code>g++ 4.8.x</code> on Solaris.
-Note however that different C++ compilers (and even different versions
-of the same compiler) often differ in their ABI so their outputs can
-rarely be mixed. By setting &lsquo;<samp>CXX1XSTD</samp>&rsquo; it is also possible to
-choose a different dialect of the standard, such as
-<samp>-std=gnu++11</samp>, or enable experimental support for the next
-revision (tentatively planned for 2017) <samp>-std=c++1y</samp>.
-</p>
-<p>As noted above, support for C++11 varies across platforms.  The default
-compiler<a name="DOCF26" href="#FOOT26"><sup>26</sup></a> for OS X (&lt;=
-10.8) is based on GCC 4.2.1 and has no support for anything other than
-the GNU version of C++98 and GNU extensions (which include TR1).  The
-default compiler on Windows is GCC 4.6.x and supports the
-<samp>-std=c++0x</samp> flag and some C++11 features (see
-<a href="http://gcc.gnu.org/gcc-4.6/cxx0x_status.html">http://gcc.gnu.org/gcc-4.6/cxx0x_status.html</a>).  On these
-platforms, it is necessary to select a different compiler for C++11,
-<em>via</em> personal or site <samp>Makevars</samp> files.
+<p>Note that the default compiler for OS X is based on GCC 4.2.1 and has no
+support for anything other than the GNU version of C++98 and GNU
+extensions (which include TR1).  The default compiler on Windows is GCC
+4.6.x and supports the <samp>-std=c++0x</samp> flag and some C++11 features
+(see <a href="http://gcc.gnu.org/gcc-4.6/cxx0x_status.html">http://gcc.gnu.org/gcc-4.6/cxx0x_status.html</a>.  It is
+possible to select a different compiler <em>via</em> personal
+<samp>Makevars</samp> files.
+See <a href=" R-admin.html#Customizing-package-compilation">Customizing package compilation</a> in <cite>R Installation and Administration</cite>,
+For example, on OS X 10.7 or later one could select <code>clang++</code>.
 </p>
 <hr>
 <a name="Checking-and-building-packages"></a>
@@ -2709,7 +2654,7 @@ If you need <code>R_LIBS</code> set (to find packages in a non-standard
 library) you can set it in the environment: also you can use the check
 and build environment files (as specified by the environment variables
 <code>R_CHECK_ENVIRON</code> and <code>R_BUILD_ENVIRON</code>; if unset,
-files<a name="DOCF27" href="#FOOT27"><sup>27</sup></a>  <samp>~/.R/check.Renviron</samp> and
+files<a name="DOCF25" href="#FOOT25"><sup>25</sup></a>  <samp>~/.R/check.Renviron</samp> and
 <samp>~/.R/build.Renviron</samp> are used) to set environment variables when
 using these utilities.
 </p></blockquote>
@@ -2762,7 +2707,7 @@ operating system platforms.
 (Unix-alikes only).
 
 </li><li> The files are checked for binary executables, using a suitable version
-of <code>file</code> if available<a name="DOCF28" href="#FOOT28"><sup>28</sup></a>.  (There may
+of <code>file</code> if available<a name="DOCF26" href="#FOOT26"><sup>26</sup></a>.  (There may
 be rare false positives.)
 
 </li><li> The <samp>DESCRIPTION</samp> file is checked for completeness, and some of its
@@ -2846,7 +2791,7 @@ sections of <samp>Rd</samp> files are documented in the corresponding
 </li><li> The <samp>data</samp> directory is checked for non-<acronym>ASCII</acronym> characters
 and for the use of reasonable levels of compression.
 
-</li><li> C, C++ and FORTRAN source and header files<a name="DOCF29" href="#FOOT29"><sup>29</sup></a> are
+</li><li> C, C++ and FORTRAN source and header files<a name="DOCF27" href="#FOOT27"><sup>27</sup></a> are
 tested for portable (LF-only) line endings.  If there is a
 <samp>Makefile</samp> or <samp>Makefile.in</samp> or <samp>Makevars</samp> or
 <samp>Makevars.in</samp> file under the <samp>src</samp> directory, it is checked
@@ -2857,7 +2802,7 @@ for portable line endings and the correct use of &lsquo;<samp>$(BLAS_LIBS)</samp
 might terminate R or write to <samp>stdout</samp>/<samp>stderr</samp> instead of
 the console.  Note that the latter might give false positives in that
 the symbols might be pulled in with external libraries and could never
-be called.  Windows<a name="DOCF30" href="#FOOT30"><sup>30</sup></a> users
+be called.  Windows<a name="DOCF28" href="#FOOT28"><sup>28</sup></a> users
 should note that the Fortran and C++ runtime libraries are examples of
 such external libraries.
 </p>
@@ -2897,7 +2842,7 @@ recorded in the log file).  (If the vignette sources are in the
 deprecated location <samp>inst/doc</samp>, do mark such target output files to
 not be installed in <samp>.Rinstignore</samp>.)
 
-<p>If there is an error<a name="DOCF31" href="#FOOT31"><sup>31</sup></a> in executing the R code in vignette <samp><var>foo.ext</var></samp>, a log
+<p>If there is an error<a name="DOCF29" href="#FOOT29"><sup>29</sup></a> in executing the R code in vignette <samp><var>foo.ext</var></samp>, a log
 file <samp><var>foo.ext</var>.log</samp> is created in the check directory.  The
 vignette PDFs are re-made in a copy of the package sources in the
 <samp>vign_test</samp> subdirectory of the check directory, so for further
@@ -2924,11 +2869,7 @@ setting environment variables <code><span class="nolinebreak">_R_CHECK_*_</span>
 <a href="R-ints.html#Tools">Tools</a> in <cite>R Internals</cite>:
 a set of these customizations similar to those used by <acronym>CRAN</acronym>
 can be selected by the option <samp>--as-cran</samp> (which works best if
-Internet access is available<a name="DOCF32" href="#FOOT32"><sup>32</sup></a>).  Some Windows users may
-need to set environment variable <code>R_WIN_NO_JUNCTIONS</code> to a non-empty
-value.  The test of cyclic declarations<a name="DOCF33" href="#FOOT33"><sup>33</sup></a>in <samp>DESCRIPTION</samp> files needs
-repositories (including <acronym>CRAN</acronym>) set: do this in
-<samp>~/.Rprofile</samp>.
+Internet access is available<a name="DOCF30" href="#FOOT30"><sup>30</sup></a>).
 </p>
 <p>You do need to ensure that the package is checked in a suitable locale
 if it contains non-<acronym>ASCII</acronym> characters.  Such packages are likely
@@ -2955,7 +2896,7 @@ as <samp><var>R_HOME</var>/etc/i386/Renviron.site</samp>.
 to check the primary sub-architecture, and then to use something like
 <code>R --arch=x86_64 CMD check --extra-arch</code> or (Windows)
 <code>/path/to/R/bin/x64/Rcmd check --extra-arch</code> to run for each
-additional sub-architecture just the checks<a name="DOCF34" href="#FOOT34"><sup>34</sup></a> which differ by sub-architecture.  (This approach is
+additional sub-architecture just the checks<a name="DOCF31" href="#FOOT31"><sup>31</sup></a> which differ by sub-architecture.  (This approach is
 required for packages which are installed by <code>R CMD INSTALL
 --merge-multiarch</code>.)
 </p>
@@ -3003,15 +2944,17 @@ using <code>R CMD check</code> prior to invoking the final build procedure.
 of exclude patterns in file <samp>.Rbuildignore</samp> in the top-level source
 directory.  These patterns should be Perl-like regular expressions (see
 the help for <code>regexp</code> in R for the precise details), one per
-line, to be matched case-insensitively<a name="DOCF35" href="#FOOT35"><sup>35</sup></a> against the file and directory names relative to the
-top-level package source directory.  In addition, directories from
-source control systems<a name="DOCF36" href="#FOOT36"><sup>36</sup></a> or from <code>eclipse</code><a name="DOCF37" href="#FOOT37"><sup>37</sup></a>, directories with names ending <samp>.Rcheck</samp> or
-<samp>Old</samp> or <samp>old</samp> and files <samp>GNUMakefile</samp>,
-<samp>Read-and-delete-me</samp> or with base names starting with &lsquo;<samp>.#</samp>&rsquo;, or
-starting and ending with &lsquo;<samp>#</samp>&rsquo;, or ending in &lsquo;<samp>~</samp>&rsquo;, &lsquo;<samp>.bak</samp>&rsquo; or
-&lsquo;<samp>.swp</samp>&rsquo;, are excluded by default.  In addition, those files in the
-<samp>R</samp>, <samp>demo</samp> and <samp>man</samp> directories which are flagged by
-<code>R CMD check</code> as having invalid names will be excluded.
+line, to be matched<a name="DOCF32" href="#FOOT32"><sup>32</sup></a> against the file and directory names
+relative to the top-level package source directory.  In addition,
+directories from source control systems<a name="DOCF33" href="#FOOT33"><sup>33</sup></a> or from
+<code>eclipse</code><a name="DOCF34" href="#FOOT34"><sup>34</sup></a>, directories with
+names ending <samp>.Rcheck</samp> or <samp>Old</samp> or <samp>old</samp> and files
+<samp>GNUMakefile</samp>, <samp>Read-and-delete-me</samp> or with base names
+starting with &lsquo;<samp>.#</samp>&rsquo;, or starting and ending with &lsquo;<samp>#</samp>&rsquo;, or ending
+in &lsquo;<samp>~</samp>&rsquo;, &lsquo;<samp>.bak</samp>&rsquo; or &lsquo;<samp>.swp</samp>&rsquo;, are excluded by default.  In
+addition, those files in the <samp>R</samp>, <samp>demo</samp> and <samp>man</samp>
+directories which are flagged by <code>R CMD check</code> as having invalid
+names will be excluded.
 </p>
 <p>Use <kbd>R CMD build --help</kbd> to obtain more information about the usage
 of the R package builder.
@@ -3183,60 +3126,54 @@ provided), the file names should start with an <acronym>ASCII</acronym> letter
 and be comprised entirely of <acronym>ASCII</acronym> letters or digits or hyphen
 or underscore.
 </p>
-<p>A special case is <em>package vignettes</em>.  Vignettes are documents in
-PDF or <acronym>HTML</acronym> format obtained from plain text literate source files
-from which R knows how to extract R code and create output (in
-PDF/<acronym>HTML</acronym> or intermediate (La)TeX).  Vignette engines do this work,
-using &ldquo;tangle&rdquo; and &ldquo;weave&rdquo; functions respectively.  Sweave, provided
-by the R distribution, is the default engine.  Since R version 3.0.0,
-other vignette engines besides Sweave are supported; see <a href="#Non_002dSweave-vignettes">Non-Sweave vignettes</a>.
+<p>A special case is PDF documents with sources in Sweave, which we call
+<em>package vignettes</em>.  (Since R 3.0.0, other vignette formats are
+supported; see <a href="#Non_002dSweave-vignettes">Non-Sweave vignettes</a>.)  The preferred location for
+the sources is the subdirectory <samp>vignettes</samp> of the source package,
+but <em>pro tem</em><a name="DOCF35" href="#FOOT35"><sup>35</sup></a> for compatibility with the layout before R 2.14.0, vignette
+sources will be looked for in <samp>inst/doc</samp> if subdirectory
+<samp>vignettes</samp> does not exist.  Note that the location of the vignette
+sources only affects <code>R CMD build</code> and <code>R CMD check</code>:
+the tarball built by <code>R CMD build</code> includes in <samp>inst/doc</samp>
+the components<a name="DOCF36" href="#FOOT36"><sup>36</sup></a> intended to be
+installed.
 </p>
-<p>Package vignettes have their sources in subdirectory <samp>vignettes</samp> of
-the package sources.  Note that the location of the vignette sources
-only affects <code>R CMD build</code> and <code>R CMD check</code>: the
-tarball built by <code>R CMD build</code> includes in <samp>inst/doc</samp> the
-components intended to be installed.
+<p>Vignette sources are normally given the file extension <samp>.Rnw</samp> or
+<samp>.Rtex</samp>, but for historical reasons extensions<a name="DOCF37" href="#FOOT37"><sup>37</sup></a> <samp>.Snw</samp> and <samp>.Stex</samp> are also
+recognized as vignettes.  Sweave allows the integration of LaTeX
+documents: see the <code>Sweave</code> help page in R and the <code>Sweave</code>
+vignette in package <strong>utils</strong> for details on the document format.
+Package vignettes are tested by <code>R CMD check</code> by executing all R
+code chunks they contain (except those with option <code>eval=FALSE</code>).
+The R working directory for all vignette tests in <code>R CMD check</code>
+is a <em>copy</em> of the vignette source directory.  Make sure all files
+needed to run the R code in the vignette (data sets, &hellip;) are
+accessible by either placing them in the <samp>inst/doc</samp> hierarchy of
+the source package or by using calls to <code>system.file()</code>.  All other
+files needed to re-make the vignette PDFs (such as LaTeX style files,
+BiBTeX input files and files for any figures not created by running the
+code in the vignette) must be in the vignette source directory.
 </p>
-<p>Sweave vignette sources are normally given the file extension
-<samp>.Rnw</samp> or <samp>.Rtex</samp>, but for historical reasons
-extensions<a name="DOCF38" href="#FOOT38"><sup>38</sup></a> <samp>.Snw</samp> and
-<samp>.Stex</samp> are also recognized.  Sweave allows the integration of
-LaTeX documents: see the <code>Sweave</code> help page in R and the
-<code>Sweave</code> vignette in package <strong>utils</strong> for details on the
-source document format.
-</p>
-<p>Package vignettes are tested by <code>R CMD check</code> by executing all R
-code chunks they contain (except those marked for non-evaluation, e.g.,
-with option <code>eval=FALSE</code> for Sweave).  The R working directory
-for all vignette tests in <code>R CMD check</code> is a <em>copy</em> of the
-vignette source directory.  Make sure all files needed to run the R
-code in the vignette (data sets, &hellip;) are accessible by either
-placing them in the <samp>inst/doc</samp> hierarchy of the source package or
-by using calls to <code>system.file()</code>.  All other files needed to
-re-make the vignettes (such as LaTeX style files, BibTeX input
-files and files for any figures not created by running the code in the
-vignette) must be in the vignette source directory.
-</p>
-<p><code>R CMD build</code> will automatically<a name="DOCF39" href="#FOOT39"><sup>39</sup></a> create the
+<p><code>R CMD build</code> will automatically<a name="DOCF38" href="#FOOT38"><sup>38</sup></a> create the
 (PDF or <acronym>HTML</acronym> versions of the) vignettes in <samp>inst/doc</samp> for
 distribution with the package sources.  By including the vignette
 outputs in the package sources it is not necessary that these can be
 re-built at install time, i.e., the package author can use private R
 packages, screen snapshots and LaTeX extensions which are only
-available on his machine.<a name="DOCF40" href="#FOOT40"><sup>40</sup></a>
+available on his machine.<a name="DOCF39" href="#FOOT39"><sup>39</sup></a>
 </p>
 <p>By default <code>R CMD build</code> will run <code>Sweave</code> on all Sweave
-vignette source files in <samp>vignettes</samp>.  If <samp>Makefile</samp> is found
-in the vignette source directory, then <code>R CMD build</code> will try to
-run <code>make</code> after the <code>Sweave</code> runs, otherwise
-<code>texi2pdf</code> is run on each <samp>.tex</samp> file produced.
+vignette source files in the vignettes source directory.  If
+<samp>Makefile</samp> is found in the vignette source directory, then <code>R
+CMD build</code> will try to run <code>make</code> after the <code>Sweave</code> runs,
+otherwise <code>texi2pdf</code> is run on each <samp>.tex</samp> file produced.
 </p>
 <p>The first target in the <samp>Makefile</samp> should take care of both
 creation of PDF/<acronym>HTML</acronym> files and cleaning up afterwards (including
 after <code>Sweave</code>), i.e., delete all files that shall not appear in
 the final package archive.  Note that if the <code>make</code> step runs R
 it needs to be careful to respect the environment values of <code>R_LIBS</code>
-and <code>R_HOME</code><a name="DOCF41" href="#FOOT41"><sup>41</sup></a>.
+and <code>R_HOME</code><a name="DOCF40" href="#FOOT40"><sup>40</sup></a>.
 Finally, if there is a <samp>Makefile</samp> and it has a &lsquo;<samp>clean:</samp>&rsquo;
 target, <code>make clean</code> is run.
 </p>
@@ -3330,25 +3267,17 @@ to the encoding of the current R session.
 encoding: for a non-<acronym>ASCII</acronym> vignette what that is recorded in a
 comment at the top of the file.
 </p>
-<p><code>Sweave()</code> will produce a <samp>.tex</samp> file in the current
-encoding, or in UTF-8 if that is declared.  Non-<acronym>ASCII</acronym> encodings
-need to be declared to LaTeX via a line like
+<p><code>Sweave()</code> will produce a <samp>.tex</samp> file in the current locale&rsquo;s
+encoding.  That needs to be declared to LaTeX via a line like
 </p><div class="example">
 <pre class="example">\usepackage[utf8]{inputenc}
 </pre></div>
 <p>(It is also possible to use the more recent &lsquo;<samp>inputenx</samp>&rsquo; LaTeX
-package.)  If the encoding is UTF-8, this can also be declared using
-the declaration
-</p><div class="example">
-<pre class="example">%!\SweaveUTF8
-</pre></div>
-<p>but be aware that LaTeX may require the &lsquo;<samp>usepackage</samp>&rsquo; declaration.
-<code>R CMD check</code> will warn about any non-<acronym>ASCII</acronym>
-vignettes it finds which do not have one of these declarations.
+package.)  <code>R CMD check</code> will warn about any non-<acronym>ASCII</acronym>
+vignettes it finds which do not have such a declaration.
 </p>
 <p><code>Sweave()</code> will also parse and evaluate the R code in each
-chunk.  The R output will also be in the current locale (or <acronym>UTF-8</acronym>
-if so declared), and should
+chunk.  The R output will also be in the current locale, and should
 be covered by the &lsquo;<samp>inputenc</samp>&rsquo; declaration.  One thing people often
 forget is that the R output may not be <acronym>ASCII</acronym> even for
 <acronym>ASCII</acronym> R sources, for many possible reasons.  One common one
@@ -3639,7 +3568,7 @@ detached, and unloaded.  See <code>help(&quot;.onLoad&quot;)</code> for more det
 </p>
 <p>Since loading and attaching are distinct operations, separate hooks are
 provided for each.  These hook functions are called <code>.onLoad</code> and
-<code>.onAttach</code>.  They both take arguments<a name="DOCF42" href="#FOOT42"><sup>42</sup></a> <code>libname</code> and
+<code>.onAttach</code>.  They both take arguments<a name="DOCF41" href="#FOOT41"><sup>41</sup></a> <code>libname</code> and
 <code>pkgname</code>; they should be defined in the namespace but not
 exported.
 </p>
@@ -3684,14 +3613,14 @@ Next: <a href="#An-example" accesskey="n" rel="next">An example</a>, Previous: <
 
 <p>A <samp>NAMESPACE</samp> file can contain one or more <code>useDynLib</code>
 directives which allows shared objects that need to be
-loaded.<a name="DOCF43" href="#FOOT43"><sup>43</sup></a>  The directive
+loaded.<a name="DOCF42" href="#FOOT42"><sup>42</sup></a>  The directive
 </p>
 <a name="index-useDynLib"></a>
 <div class="example">
 <pre class="example">useDynLib(foo)
 </pre></div>
 
-<p>registers the shared object <code>foo</code><a name="DOCF44" href="#FOOT44"><sup>44</sup></a> for loading with <code>library.dynam</code>.
+<p>registers the shared object <code>foo</code><a name="DOCF43" href="#FOOT43"><sup>43</sup></a> for loading with <code>library.dynam</code>.
 Loading of registered object(s) occurs after the package code has been
 loaded and before running the load hook function.  Packages that would
 only need a load hook function to load a shared object can use the
@@ -3932,7 +3861,7 @@ Previous: <a href="#An-example" accesskey="p" rel="prev">An example</a>, Up: <a 
 <p>Some additional steps are needed for packages which make use of formal
 (S4-style) classes and methods (unless these are purely used
 internally).  The package should have <code>Depends: methods</code> in its
-<samp>DESCRIPTION</samp> file<a name="DOCF45" href="#FOOT45"><sup>45</sup></a> and <code>import(methods)</code> or
+<samp>DESCRIPTION</samp> file<a name="DOCF44" href="#FOOT44"><sup>44</sup></a> and <code>import(methods)</code> or
 <code>importFrom(methods, ...)</code> plus any classes and methods which are
 to be exported need to be declared in the <samp>NAMESPACE</samp> file.  For
 example, the <strong>stats4</strong> package has
@@ -3959,7 +3888,7 @@ export(AIC, BIC, nobs)
 <a name="index-exportClassPattern"></a>
 <p>All S4 classes to be used outside the package need to be listed in an
 <code>exportClasses</code> directive. Alternatively, they can be specified
-using <code>exportClassPattern</code><a name="DOCF46" href="#FOOT46"><sup>46</sup></a> in the same style as
+using <code>exportClassPattern</code><a name="DOCF45" href="#FOOT45"><sup>45</sup></a> in the same style as
 for <code>exportPattern</code>.  To export methods for generics from other
 packages an <code>exportMethods</code> directive can be used.
 </p>
@@ -3987,7 +3916,7 @@ functions, and <code>undoc</code> in package <strong>tools</strong> will not rep
 </p>
 <p>If a package uses S4 classes and methods exported from another package,
 but does not import the entire namespace of the other
-package<a name="DOCF47" href="#FOOT47"><sup>47</sup></a>, it needs
+package<a name="DOCF46" href="#FOOT46"><sup>46</sup></a>, it needs
 to import the classes and methods explicitly, with directives
 </p>
 <a name="index-importClassesFrom"></a>
@@ -4102,7 +4031,7 @@ results.
 <pre class="example">PKG_CPPFLAGS = `gsl-config --cflags`
 </pre></div>
 
-<p>which works in all versions of <code>make</code> known<a name="DOCF48" href="#FOOT48"><sup>48</sup></a> to be used
+<p>which works in all versions of <code>make</code> known<a name="DOCF47" href="#FOOT47"><sup>47</sup></a> to be used
 with R.
 </p>
 <p>If you really must assume GNU make, declare it in the <samp>DESCRIPTION</samp>
@@ -4141,10 +4070,8 @@ files.
 See <a href=" R-admin.html#Customizing-package-compilation">Customizing package compilation</a> in <cite>R Installation and Administration</cite>,
 
 <p>Although there is a 2011 version of the C++ standard, it is not yet
-fully implemented and partial implementations are not universally
-available. Portable C++ code needs to follow the 1998 standard (and not
-use features from C99). 
-See also <a href="#Using-C_002b_002b11-code">Using C++11 code</a> to specify a C++11 compiler.
+fully implemented<a name="DOCF48" href="#FOOT48"><sup>48</sup></a> and portable C++ code needs to follow the
+1998 standard (and not use features from C99).
 </p>
 <p>If you use FORTRAN 77, <code>ftnchek</code>
 (<a href="http://www.dsm.fordham.edu/~ftnchek/">http://www.dsm.fordham.edu/~ftnchek/</a>) provides thorough testing
@@ -4207,8 +4134,7 @@ good way to avoid this.
 ways.  Good ways to avoid trouble are to make as many symbols as
 possible static (check with <code>nm -pg</code>), and to use names which are
 clearly tied to your package (which also helps users if anything does go
-wrong).  Note that symbol names starting with <code>R_</code> are regarded as
-part of R&rsquo;s namespace and should not be used in packages.
+wrong).
 
 </li><li> It is not portable to call compiled code in R or other packages
 <em>via</em> <code>.Internal</code>, <code>.C</code>, <code>.Fortran</code>, <code>.Call</code> or
@@ -4253,10 +4179,9 @@ allow the use of extended precision.  In particular, ARM CPUs do not
 (currently) have extended precision nor long doubles.
 
 <p>If you must try to establish a tolerance empirically, configure and
-build R with <samp>--disable-long-double</samp> and use appropriate
-compiler flags (such as <samp>-ffloat-store</samp> and
-<samp>-fexcess-precision=standard</samp> for <code>gcc</code>) to mitigate the
-effects of extended-precision calculations.
+build R with <samp>--disable-long-doubles</samp> and use appropriate
+compiler flags (such as <samp>-ffloat-store</samp> for <code>gcc</code>) to
+mitigate the effects of extended-precision calculations.
 </p>
 </li></ul>
 
@@ -6413,10 +6338,9 @@ including the information in the <samp>DESCRIPTION</samp> files.
 </p>
 <a name="index-R-CMD-Sweave"></a>
 <a name="index-R-CMD-Stangle"></a>
-<p><code>R CMD Sweave</code> and <code>R CMD Stangle</code> process vignette-like
-documentation files (e.g. Sweave vignettes with extension
-&lsquo;<samp>.Snw</samp>&rsquo; or &lsquo;<samp>.Rnw</samp>&rsquo;, or other non-Sweave vignettes).
-<code>R CMD Stangle</code> is used to extract the R code fragments.
+<p><code>R CMD Sweave</code> and <code>R CMD Stangle</code> process &lsquo;<samp>Sweave</samp>&rsquo;
+documentation files (usually with extension &lsquo;<samp>.Snw</samp>&rsquo; or &lsquo;<samp>.Rnw</samp>&rsquo;):
+<code>R CMD Stangle</code> is use to extract the R code fragments.
 </p>
 <p>The exact usage and a detailed list of available options for all of
 these commands can be obtained by running <code>R CMD <var>command</var>
@@ -6992,7 +6916,7 @@ opreport -l /lib64/libc.so.6
 <samp>memory.c</samp>, 21% in <samp>datetime.c</samp> and 7% in <samp>Rstrptime.h</samp>.
 The analysis for <samp>libc</samp> showed that calls to <code>wcsftime</code>
 dominated, so those calls were cached for R 3.0.3: the time spent in
-<code>no-vmlinux</code> (the kernel) was reduced dramatically.
+<code>no-vmlinux</code> (the kernel) was the reduced dramatically.
 </p>
 <p>On platforms which support it, callgraphs can be produced by
 <code>opcontrol --callgraph</code> if collected via <code>operf
@@ -7550,6 +7474,10 @@ collections after objects have been deleted).
 Java-using packages: some at least of these seem to be intentional, and
 some are related to passing characters to Fortran.
 </p>
+<p>There are other memory-access-checking tools available: GCC supports
+<code>mudflap</code> and &lsquo;lightweight bounds checking&rsquo; (&lsquo;LBC&rsquo;) is
+promised as a plug-in.
+</p>
 <table class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Using-gctorture" accesskey="1">Using gctorture</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
@@ -7625,11 +7553,6 @@ message.
 
 </li></ul>
 
-<p><code>R CMD check --use-gct</code> can be set to use
-<code>gctorture2(<var>n</var>)</code> rather than <code>gctorture(TRUE)</code> by
-environment variable <code>_R_CHECK_GCT_N_</code> to a positive integer value
-to be used as <code><var>n</var></code>.
-</p>
 <p>Used with a debugger and with <code>gctorture</code> or <code>gctorture2</code> this
 mechanism can be helpful in isolating memory protect problems.
 </p>
@@ -7643,10 +7566,10 @@ Next: <a href="#Using-Address-Sanitizer" accesskey="n" rel="next">Using Address 
 <a name="Using-valgrind-1"></a>
 <h4 class="subsection">4.3.2 Using valgrind</h4>
 
-<p>If you have access to Linux on a common CPU type or OS X<a name="DOCF66" href="#FOOT66"><sup>66</sup></a> you can use <code>valgrind</code>
-(<a href="http://www.valgrind.org/">http://www.valgrind.org/</a>, pronounced to rhyme with &lsquo;tinned&rsquo;) to
-check for possible problems.  To run some examples under <code>valgrind</code>
-use something like
+<p>If you have access to Linux on a common platform or (some versions of)
+OS X you can use <code>valgrind</code> (<a href="http://www.valgrind.org/">http://www.valgrind.org/</a>,
+pronounced to rhyme with &lsquo;tinned&rsquo;) to check for possible problems.  To
+run some examples under <code>valgrind</code> use something like
 </p>
 <div class="example">
 <pre class="example">R -d valgrind --vanilla &lt; mypkg-Ex.R
@@ -7666,6 +7589,7 @@ versions of <code>valgrind</code> were not happy with some optimized BLASes
 that use <acronym>CPU</acronym>-specific instructions so you may need to build a
 version of R specifically to use with <code>valgrind</code>.
 </p>
+
 <p>On platforms supported by <code>valgrind</code> you can build a version of
 R with extra instrumentation to help <code>valgrind</code> detect errors in
 the use of memory allocated from the R heap.  The configure option is
@@ -7718,7 +7642,7 @@ C code can be inspected (see <a href="#Inspecting-R-objects">Inspecting R object
 <p><code>valgrind</code> is good at spotting the use of uninitialized values:
 use option <samp>--track-origins=yes</samp> to show where these originated
 from.  What it cannot detect is the misuse of arrays allocated on the
-stack: this includes C automatic variables and some<a name="DOCF67" href="#FOOT67"><sup>67</sup></a>
+stack: this includes C automatic variables and some<a name="DOCF66" href="#FOOT66"><sup>66</sup></a>
 Fortran arrays.
 </p>
 <p>It is possible to run all the examples, tests and vignettes covered by
@@ -7755,24 +7679,23 @@ Next: <a href="#Using-Undefined-Behaviour-Sanitizer" accesskey="n" rel="next">Us
 
 <p><code>AddressSanitizer</code> (&lsquo;ASan&rsquo;) is a tool with similar aims to the
 memory checker in <code>valgrind</code>.  It is available with suitable
-builds<a name="DOCF68" href="#FOOT68"><sup>68</sup></a> of
-<code>gcc</code> 4.8.0 or <code>clang</code> 3.1 and later on common Linux and
-OS X platforms.  See
+builds<a name="DOCF67" href="#FOOT67"><sup>67</sup></a> of <code>gcc</code> 4.8.0 or <code>clang</code> 3.1 and
+later on common Linux and OS X platforms.  See
 <a href="http://clang.llvm.org/docs/UsersManual.html#controlling-code-generation">http://clang.llvm.org/docs/UsersManual.html#controlling-code-generation</a>,
 <a href="http://clang.llvm.org/docs/AddressSanitizer.html">http://clang.llvm.org/docs/AddressSanitizer.html</a> and
 <a href="https://code.google.com/p/address-sanitizer/">https://code.google.com/p/address-sanitizer/</a>.
 </p>
 <p>It requires code to have been compiled <em>and linked</em> with
-<samp>-fsanitize=address</samp><a name="DOCF69" href="#FOOT69"><sup>69</sup></a>, and using <code>-fno-omit-frame-pointer</code> will give
+<samp>-fsanitize=address</samp><a name="DOCF68" href="#FOOT68"><sup>68</sup></a>, and using <code>-fno-omit-frame-pointer</code> will give
 more legible reports.  It has a runtime penalty of 2&ndash;3x, extended
 compilation times and uses substantially more memory, often 1&ndash;2GB, at
 run time.  By comparison with <code>valgrind</code>, it can detect misuse
 of stack and global variables but not the use of uninitialized memory.
 </p>
-<p>Most versions<a name="DOCF70" href="#FOOT70"><sup>70</sup></a> do not
+<p>Most versions<a name="DOCF69" href="#FOOT69"><sup>69</sup></a> do not
 return symbolic addresses for the location of the error.  One
 possibility is to use an external symbolizer such as
-<code>asan_symbolize.py</code><a name="DOCF71" href="#FOOT71"><sup>71</sup></a>.  For example,
+<code>asan_symbolize.py</code><a name="DOCF70" href="#FOOT70"><sup>70</sup></a>.  For example,
 the check output can be piped through <code>asan_symbolize.py</code> and
 perhaps then (for compiled C++ code) <code>c++filt</code>.
 </p>
@@ -7863,13 +7786,8 @@ float-divide-by-zero,function,integer-divide-by-zero,null,object-size,
 return,shift,signed-integer-overflow,unreachable,vla-bound,vptr
 </pre></div>
 
-<p>a subset of which could be combined with <code>address</code>, or use something
-like
+<p>a subset of which could be combined with <code>address</code>.
 </p>
-<div class="example">
-<pre class="example">-fsanitize=undefined -fno-sanitize=float-divide-by-zero
-</pre></div>
-
 <p>There is also the compiler flag <samp>-fcatch-undefined-behavior</samp>,
 said to be more reliable in <code>clang</code> than <code>gcc</code>.
 </p>
@@ -7890,7 +7808,7 @@ Next: <a href="#Fortran-array-bounds-checking" accesskey="n" rel="next">Fortran 
 
 <p>&lsquo;Dr. Memory&rsquo; from <a href="http://www.drmemory.org/">http://www.drmemory.org/</a> is a memory checker
 for (currently) 32-bit Windows and Linux with similar aims to
-<code>valgrind</code>.  It works with unmodified executables<a name="DOCF72" href="#FOOT72"><sup>72</sup></a>
+<code>valgrind</code>.  It works with unmodified executables<a name="DOCF71" href="#FOOT71"><sup>71</sup></a>
 and detects memory access errors, uninitialized reads and memory leaks.
 </p>
 <hr>
@@ -7927,7 +7845,7 @@ FFLAGS = -g -O2 -mtune=native -fbounds-check
 </p>
 <p>This may report incorrectly errors with the way that Fortran character
 variables are passed, particularly when Fortran subroutines are called
-from C code.  This may include<a name="DOCF73" href="#FOOT73"><sup>73</sup></a> the use of BLAS and LAPACK subroutines in R, so it is
+from C code.  This may include<a name="DOCF72" href="#FOOT72"><sup>72</sup></a> the use of BLAS and LAPACK subroutines in R, so it is
 not advisable to build R itself with bounds checking (and may not
 even be possible as these subroutines are called during the R build).
 </p>
@@ -8322,7 +8240,7 @@ can be used with other languages which can generate C interfaces, for
 example C++ (see <a href="#Interfacing-C_002b_002b-code">Interfacing C++ code</a>).
 </p>
 <p>The first argument to each function is a character string specifying the
-symbol name as known<a name="DOCF74" href="#FOOT74"><sup>74</sup></a> to C or
+symbol name as known<a name="DOCF73" href="#FOOT73"><sup>73</sup></a> to C or
 FORTRAN, that is the function or subroutine name.  (That the symbol is
 loaded can be tested by, for example, <code>is.loaded(&quot;cg&quot;)</code>.  Use the
 name you pass to <code>.C</code> or <code>.Fortran</code> rather than the translated
@@ -8390,6 +8308,11 @@ values <code>NaN</code>, <code>Inf</code> and <code>-Inf</code>, and the presenc
 of these generates an error.  If it is true, these values are passed
 unchecked.
 </p>
+<p>Argument <code>DUP</code> can be used to suppress copying.  It is dangerous:
+see the on-line help for arguments against its use.  It is not possible
+to pass numeric vectors as <code>float *</code> or <code>REAL</code> if
+<code>DUP = FALSE</code>, and character vectors cannot be used.
+</p>
 <p>Argument <code>PACKAGE</code> confines the search for the symbol name to a
 specific shared object (or use <code>&quot;base&quot;</code> for code compiled into
 R).  Its use is highly desirable, as there is no way to avoid two
@@ -8440,16 +8363,17 @@ storage mode before calling <code>.C</code>; mistakes in matching the types
 can lead to wrong results or hard-to-catch errors.
 </p>
 <p>Special care is needed in handling <code>character</code> vector arguments in
-C (or C++).  On entry the contents of the elements are duplicated and
-assigned to the elements of a <code>char **</code> array, and on exit the
-elements of the C array are copied to create new elements of a character
-vector.  This means that the contents of the character strings of the
-<code>char **</code> array can be changed, including to <code>\0</code> to shorten
-the string, but the strings cannot be lengthened.  It is
-possible<a name="DOCF75" href="#FOOT75"><sup>75</sup></a> to allocate a new string <em>via</em>
-<code>R_alloc</code> and replace an entry in the <code>char **</code> array by the
-new string.  However, when character vectors are used other than in a
-read-only way, the <code>.Call</code> interface is much to be preferred.
+C (or C++).  Since only <code>DUP = TRUE</code> is allowed, on entry the
+contents of the elements are duplicated and assigned to the elements of
+a <code>char **</code> array, and on exit the elements of the C array are
+copied to create new elements of a character vector.  This means that
+the contents of the character strings of the <code>char **</code> array can be
+changed, including to <code>\0</code> to shorten the string, but the strings
+cannot be lengthened.  It is possible<a name="DOCF74" href="#FOOT74"><sup>74</sup></a> to
+allocate a new string <em>via</em> <code>R_alloc</code> and replace an entry in
+the <code>char **</code> array by the new string.  However, when character
+vectors are used other than in a read-only way, the <code>.Call</code>
+interface is much to be preferred.
 </p>
 <p>Passing character strings to FORTRAN code needs even more care, and
 should be avoided where possible.  Only the first element of the
@@ -8716,7 +8640,7 @@ identifiers are provided in the following table:
 <p>One can also specify whether each argument is used simply as input, or
 as output, or as both input and output.  The style field in the
 description of a method is used for this.  The purpose is to
-allow<a name="DOCF76" href="#FOOT76"><sup>76</sup></a> R to transfer values
+allow<a name="DOCF75" href="#FOOT75"><sup>75</sup></a> R to transfer values
 more efficiently across the R-C/FORTRAN interface by avoiding copying
 values when it is not necessary. Typically, one omits this information
 in the registration data.
@@ -8898,9 +8822,9 @@ needs to declare them as a comma-separated list in the field
 that the <samp>include</samp> directories in the installed linked-to packages
 are added to the include paths for C and C++ code.
 </p>
-<p>It must specify<a name="DOCF77" href="#FOOT77"><sup>77</sup></a>
+<p>It must specify<a name="DOCF76" href="#FOOT76"><sup>76</sup></a>
 &lsquo;<samp>Imports</samp>&rsquo; or &lsquo;<samp>Depends</samp>&rsquo; of those packages, for they have to be
-loaded<a name="DOCF78" href="#FOOT78"><sup>78</sup></a> prior to this one
+loaded<a name="DOCF77" href="#FOOT77"><sup>77</sup></a> prior to this one
 (so the path to their compiled code has been registered).
 </p>
 
@@ -8936,7 +8860,6 @@ specify additional flags by setting some of the variables
 <a name="index-PKG_005fFFLAGS"></a>
 <a name="index-PKG_005fFCFLAGS"></a>
 <a name="index-PKG_005fOBJCFLAGS"></a>
-<a name="index-PKG_005fOBJCXXFLAGS"></a>
 <code>PKG_CFLAGS</code>, <code>PKG_CXXFLAGS</code>, <code>PKG_FFLAGS</code>,
 <code>PKG_FCFLAGS</code>, <code>PKG_OBJCFLAGS</code>, and <code>PKG_OBJCXXFLAGS</code>
 (for the C, C++, FORTRAN 77, Fortran 9x, Objective C, and Objective C++
@@ -9241,7 +9164,7 @@ PKG_LIBS=-L&quot;$(PKGB_PATH)$(R_ARCH)&quot; -lpackB
 
 <p>This will work for installation, but very likely not when package
 <code>packB</code> is loaded, as the path to package <strong>packB</strong>&rsquo;s <samp>libs</samp>
-directory is not in the <code>ld.so</code><a name="DOCF79" href="#FOOT79"><sup>79</sup></a>  search path.  You can arrange to
+directory is not in the <code>ld.so</code><a name="DOCF78" href="#FOOT78"><sup>78</sup></a>  search path.  You can arrange to
 put it there <strong>before</strong> R is launched by setting (on some
 platforms) <code>LD_RUN_PATH</code> or <code>LD_LIBRARY_PATH</code> or adding to the
 <code>ld.so</code> cache (see <code>man ldconfig</code>).  On platforms that
@@ -9413,7 +9336,7 @@ the arguments can be extracted.
 </p>
 <p>In each case the R objects are available for manipulation <em>via</em>
 a set of functions and macros defined in the header file
-<samp>Rinternals.h</samp> or some S-compatibility macros<a name="DOCF80" href="#FOOT80"><sup>80</sup></a> defined
+<samp>Rinternals.h</samp> or some S-compatibility macros<a name="DOCF79" href="#FOOT79"><sup>79</sup></a> defined
 in <samp>Rdefines.h</samp>.  See <a href="#Interface-functions-_002eCall-and-_002eExternal">Interface functions .Call and .External</a>
 for details on <code>.Call</code> and <code>.External</code>.
 </p>
@@ -9432,7 +9355,7 @@ interfaces as read-only.
 </p>
 <p>To handle R objects from within C code we use the macros and functions
 that have been used to implement the core parts of R.  A
-public<a name="DOCF81" href="#FOOT81"><sup>81</sup></a>  subset of these is defined in the header file
+public<a name="DOCF80" href="#FOOT80"><sup>80</sup></a>  subset of these is defined in the header file
 <samp>Rinternals.h</samp> in the directory <samp><var>R_INCLUDE_DIR</var></samp> (default
 <samp><var>R_HOME</var>/include</samp>) that should be available on any R
 installation.
@@ -9444,7 +9367,7 @@ make use of the source code for inspirational examples.
 </p>
 <p>It is necessary to know something about how R objects are handled in
 C code.  All the R objects you will deal with will be handled with
-the type <em>SEXP</em><a name="DOCF82" href="#FOOT82"><sup>82</sup></a>, which is a
+the type <em>SEXP</em><a name="DOCF81" href="#FOOT81"><sup>81</sup></a>, which is a
 pointer to a structure with typedef <code>SEXPREC</code>.  Think of this
 structure as a <em>variant type</em> that can handle all the usual types
 of R objects, that is vectors of various modes, functions,
@@ -9694,7 +9617,7 @@ object, you can change the type by using
 
 <p>Protection is needed as a new <em>object</em> is created; the object
 formerly pointed to by the <code>SEXP</code> is still protected but now
-unused.<a name="DOCF83" href="#FOOT83"><sup>83</sup></a>
+unused.<a name="DOCF82" href="#FOOT82"><sup>82</sup></a>
 </p>
 <p>All the coercion functions do their own error-checking, and generate
 <code>NA</code>s with a warning or stop with an error as appropriate.
@@ -10024,7 +9947,7 @@ creates a new binding or changes the value of an existing binding in the
 specified environment frame; it is the analogue of <code>assign(symbol,
 value, envir = rho, inherits = FALSE)</code>, but unlike <code>assign</code>,
 <code>defineVar</code> does not make a copy of the object
-<code>value</code>.<a name="DOCF84" href="#FOOT84"><sup>84</sup></a>  <code>setVar</code> searches for an existing
+<code>value</code>.<a name="DOCF83" href="#FOOT83"><sup>83</sup></a>  <code>setVar</code> searches for an existing
 binding for <code>symbol</code> in <code>rho</code> or its enclosing environments.
 If a binding is found, its value is changed to <code>value</code>.  Otherwise,
 a new binding with the specified value is created in the global
@@ -10203,9 +10126,10 @@ rebound immediately.  (Provided the remaining code in <code>&quot;foo&lt;-&quot;
 make no reference to <code>x</code>, and no one is going to attempt a direct
 call such as <code>y &lt;- &quot;foo&lt;-&quot;(x)</code>.)
 </p>
-<p>This mechanism is likely to be replaced in future versions of R.
+<p>Currently all arguments to a <code>.Call</code> call will have <code>NAMED</code>
+set to 2, and so users must assume that they need to be duplicated
+before alteration.
 </p>
-
 <hr>
 <a name="Interface-functions-_002eCall-and-_002eExternal"></a>
 <div class="header">
@@ -10799,7 +10723,7 @@ corresponding to the <code>i</code>&rsquo;th element of the <code>STRSXP</code>
 <code>theta</code>.  Here, <code>STRING_ELT(theta, i)</code> accesses the
 <code>i</code>&rsquo;th element of the <code>STRSXP</code> <code>theta</code>.  Macro
 <code>CHAR()</code> extracts the actual character
-representation<a name="DOCF85" href="#FOOT85"><sup>85</sup></a> of it: it returns a pointer.  We then
+representation<a name="DOCF84" href="#FOOT84"><sup>84</sup></a> of it: it returns a pointer.  We then
 install the name and use <code>findVar</code> to find its value.
 </p>
 <div class="example">
@@ -10861,7 +10785,7 @@ Next: <a href="#External-pointers-and-weak-references" accesskey="n" rel="next">
 user and evaluate it.  The previous section covered evaluation, but the
 expression will be entered as text and needs to be parsed first.  A
 small part of R&rsquo;s parse interface is declared in header file
-<samp>R_ext/Parse.h</samp><a name="DOCF86" href="#FOOT86"><sup>86</sup></a>.
+<samp>R_ext/Parse.h</samp><a name="DOCF85" href="#FOOT85"><sup>85</sup></a>.
 </p>
 <p>An example of the usage can be found in the (example) Windows package
 <strong>windlgs</strong> included in the R source tree.  The essential part is
@@ -11318,7 +11242,7 @@ user code, it is <em>essential</em> to include the appropriate header
 files when using these entry points.
 </p></blockquote>
 
-<p>This remapping can cause problems<a name="DOCF87" href="#FOOT87"><sup>87</sup></a>, and can be eliminated by defining <code>R_NO_REMAP</code> and
+<p>This remapping can cause problems<a name="DOCF86" href="#FOOT86"><sup>86</sup></a>, and can be eliminated by defining <code>R_NO_REMAP</code> and
 prepending &lsquo;<samp>Rf_</samp>&rsquo; to <em>all</em> the function names used from
 <samp>Rinternals.h</samp> and <samp>R_ext/Error.h</samp>.  These problems can
 usually be avoided by including other headers (such as system headers
@@ -11951,9 +11875,6 @@ functions available, and none of the non-central distributions have
 <code>qwilcox</code> the function <code>wilcox_free()</code> should be called, and
 similarly for the signed rank functions.
 </p>
-<p>(If remapping is suppressed, the Normal distribution names are
-<code>Rf_dnorm4</code>, <code>Rf_pnorm5</code> and <code>Rf_qnorm5</code>.)
-</p>
 <hr>
 <a name="Mathematical-functions"></a>
 <div class="header">
@@ -12081,31 +12002,6 @@ in <samp>Rmath.h</samp>, but is (probably) in <samp>math.h</samp> which
 <dt><a name="index-lgamma1p"></a>Function: <em>double</em> <strong>lgamma1p</strong> <em>(double <var>x</var>)</em></dt>
 <dd><p>Computes <code>log(gamma(<var>x</var> + 1))</code> (<em>log(gamma(1 <b>p</b>lus x))</em>),
 accurately even for small <var>x</var>, i.e., 0 &lt; x &lt; 0.5.
-</p></dd></dl>
-
-<dl>
-<dt><a name="index-cospi"></a>Function: <em>double</em> <strong>cospi</strong> <em>(double <var>x</var>)</em></dt>
-<dd><p>Computes <code>cos(pi * x)</code> (where <code>pi</code> is 3.14159...),
-accurately, notably for half integer <var>x</var>.
-</p>
-<p>This might be provided by your platform<a name="DOCF88" href="#FOOT88"><sup>88</sup></a>, in which case it is not included in <samp>Rmath.h</samp>, but is
-in <samp>math.h</samp> which <samp>Rmath.h</samp> includes.
-</p></dd></dl>
-
-<dl>
-<dt><a name="index-sinpi"></a>Function: <em>double</em> <strong>sinpi</strong> <em>(double <var>x</var>)</em></dt>
-<dd><p>Computes <code>sin(pi * x)</code> accurately, notably for (half) integer <var>x</var>.
-</p>
-<p>This might be provided by your platform, in which case it is not included
-in <samp>Rmath.h</samp>, but is in <samp>math.h</samp> which <samp>Rmath.h</samp> includes.
-</p></dd></dl>
-
-<dl>
-<dt><a name="index-tanpi"></a>Function: <em>double</em> <strong>tanpi</strong> <em>(double <var>x</var>)</em></dt>
-<dd><p>Computes <code>tan(pi * x)</code> accurately, notably for (half) integer <var>x</var>.
-</p>
-<p>This might be provided by your platform, in which case it is not included
-in <samp>Rmath.h</samp>, but is in <samp>math.h</samp> which <samp>Rmath.h</samp> includes.
 </p></dd></dl>
 
 <dl>
@@ -12654,7 +12550,7 @@ the code is indeed being used with R.
 <p>Header file <samp>Rconfig.h</samp> (included by <samp>R.h</samp>) is used to define
 platform-specific macros that are mainly for use in other header files.
 The macro <code>WORDS_BIGENDIAN</code> is defined on
-big-endian<a name="DOCF89" href="#FOOT89"><sup>89</sup></a>
+big-endian<a name="DOCF87" href="#FOOT87"><sup>87</sup></a>
 systems (e.g. most OSes on Sparc and PowerPC hardware) and not on
 little-endian systems (such as <code>i686</code> and <code>x86_64</code> on all
 OSes, and Linux on Alpha and Itanium).  It can be useful when
@@ -12910,8 +12806,7 @@ use.
 <p>Let us re-iterate the advice to include system headers before the R
 header files, especially <samp>Rinternals.h</samp> (included by
 <samp>Rdefines.h</samp>) and <samp>Rmath.h</samp>, which redefine names which may be
-used in system headers (fewer if &lsquo;<samp>R_NO_REMAP</samp>&rsquo; is defined, or
-&lsquo;<samp>R_NO_REMAP_RMATH</samp>&rsquo; for <samp>Rmath.h</samp>, as from R 3.1.0).
+used in system headers (fewer if &lsquo;<samp>R_NO_REMAP</samp>&rsquo; is defined).
 </p>
 <hr>
 <a name="Generic-functions-and-methods"></a>
@@ -13124,7 +13019,7 @@ Next: <a href="#Embedding-R-under-Windows" accesskey="n" rel="next">Embedding R 
 <a name="Embedding-R-under-Unix_002dalikes-1"></a>
 <h3 class="section">8.1 Embedding R under Unix-alikes</h3>
 
-<p>R can be built as a shared library<a name="DOCF90" href="#FOOT90"><sup>90</sup></a> if configured with <samp>--enable-R-shlib</samp>.  This
+<p>R can be built as a shared library<a name="DOCF88" href="#FOOT88"><sup>88</sup></a> if configured with <samp>--enable-R-shlib</samp>.  This
 shared library can be used to run R from alternative front-end
 programs.  We will assume this has been done for the rest of this
 section.  Also, it can be built as a static library if configured with
@@ -13191,7 +13086,7 @@ and R does look there for system components.)
 </p>
 <p>The other senses in which this example is too simple are that all the
 internal defaults are used and that control is handed over to the
-R main loop.  There are a number of small examples<a name="DOCF91" href="#FOOT91"><sup>91</sup></a> in the
+R main loop.  There are a number of small examples<a name="DOCF89" href="#FOOT89"><sup>89</sup></a> in the
 <samp>tests/Embedding</samp> directory.  These make use of
 <code>Rf_initEmbeddedR</code> in <samp>src/main/Rembedded.c</samp>, and essentially
 use
@@ -13301,9 +13196,9 @@ pkg-config --libs libR
 pkg-config --libs --static libR
 </pre></div>
 
-<p>However, a more comprehensive way is to set up a <samp>Makefile</samp> to
-compile the front-end.  Suppose file <samp>myfe.c</samp> is to be compiled to
-<samp>myfe</samp>. A suitable <samp>Makefile</samp> might be
+<p>However, these may not suffice and a more comprehensive way is to set up
+a <samp>Makefile</samp> to compile the front-end.  Suppose file <samp>myfe.c</samp>
+is to be compiled to <samp>myfe</samp>. A suitable <samp>Makefile</samp> might be
 </p>
 <div class="example">
 <pre class="example">include ${R_HOME}/etc${R_ARCH}/Makeconf
@@ -13690,7 +13585,7 @@ extern uintptr_t R_CStackStart; /* Initial stack address */
 defined in R, so your code needs to define <code>HAVE_UINTPTR_T</code>
 appropriately.
 </p>
-<p>These will be set<a name="DOCF92" href="#FOOT92"><sup>92</sup></a> when <code>Rf_initialize_R</code> is called, to values appropriate to the
+<p>These will be set<a name="DOCF90" href="#FOOT90"><sup>90</sup></a> when <code>Rf_initialize_R</code> is called, to values appropriate to the
 main thread.  Stack-checking can be disabled by setting
 <code>R_CStackLimit = (uintptr_t)-1</code>, but it is better to if possible
 set appropriate values.  (What these are and how to determine them are
@@ -13954,7 +13849,7 @@ and <code>select.list()</code>.  It would be possible to replace all of these,
 but it seems easier to allow GraphApp to handle most of them.
 </p>
 <p>It is possible to run R in a GUI in a single thread (as
-<samp>RGui.exe</samp> shows) but it will normally be easier<a name="DOCF93" href="#FOOT93"><sup>93</sup></a> to
+<samp>RGui.exe</samp> shows) but it will normally be easier<a name="DOCF91" href="#FOOT91"><sup>91</sup></a> to
 use multiple threads.
 </p>
 <p>Note that R&rsquo;s own front ends use a stack size of 10Mb, whereas MinGW
@@ -14197,7 +14092,6 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-CITATION-1"><code>CITATION</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Preparing-translations">Preparing translations</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-COPYRIGHTS"><code>COPYRIGHTS</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-DESCRIPTION-file">The DESCRIPTION file</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-COPYRIGHTS-1"><code>COPYRIGHTS</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Package-subdirectories">Package subdirectories</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-cospi"><code>cospi</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Numerical-Utilities">Numerical Utilities</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-cPsort"><code>cPsort</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Utility-functions">Utility functions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Function-and-variable-index_vr_letter-D">D</a></th><td></td><td></td></tr>
@@ -14302,7 +14196,6 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-PKG_005fFFLAGS"><code>PKG_FFLAGS</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Creating-shared-objects">Creating shared objects</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-PKG_005fLIBS"><code>PKG_LIBS</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Creating-shared-objects">Creating shared objects</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-PKG_005fOBJCFLAGS"><code>PKG_OBJCFLAGS</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Creating-shared-objects">Creating shared objects</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-PKG_005fOBJCXXFLAGS"><code>PKG_OBJCXXFLAGS</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Creating-shared-objects">Creating shared objects</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-prompt"><code>prompt</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rd-format">Rd format</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-PROTECT"><code>PROTECT</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Garbage-Collection">Garbage Collection</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-PROTECT_005fWITH_005fINDEX"><code>PROTECT_WITH_INDEX</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Garbage-Collection">Garbage Collection</a></td></tr>
@@ -14405,7 +14298,6 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-setAttrib"><code>setAttrib</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Attributes">Attributes</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-setVar"><code>setVar</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Finding-and-setting-variables">Finding and setting variables</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-sign"><code>sign</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Numerical-Utilities">Numerical Utilities</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-sinpi"><code>sinpi</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Numerical-Utilities">Numerical Utilities</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-summaryRprof"><code>summaryRprof</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Memory-statistics-from-Rprof">Memory statistics from Rprof</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-system"><code>system</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Operating-system-access">Operating system access</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-system_002etime"><code>system.time</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Operating-system-access">Operating system access</a></td></tr>
@@ -14414,7 +14306,6 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-S_005frealloc"><code>S_realloc</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Transient-storage-allocation">Transient storage allocation</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Function-and-variable-index_vr_letter-T">T</a></th><td></td><td></td></tr>
-<tr><td></td><td valign="top"><a href="#index-tanpi"><code>tanpi</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Numerical-Utilities">Numerical Utilities</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-tetragamma"><code>tetragamma</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Mathematical-functions">Mathematical functions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-tetragamma-1"><code>tetragamma</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Mathematical-functions">Mathematical functions</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-trace"><code>trace</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Debugging-R-code">Debugging R code</a></td></tr>
@@ -14818,7 +14709,7 @@ Apple-specific features, not the OS.  It is used in
 <p>the POSIX
 terminology, called &lsquo;make variables&rsquo; by GNU make.</p>
 <h3><a name="FOOT16" href="#DOCF16">(16)</a></h3>
-<p>on all platforms from R 3.1.0</p>
+<p>case-insensitively on Windows.</p>
 <h3><a name="FOOT17" href="#DOCF17">(17)</a></h3>
 <p>The best way to generate such a
 file is to copy the <samp>.Rout</samp> from a successful run of <code>R CMD
@@ -14849,93 +14740,93 @@ typo &lsquo;<samp>_REENTRANCE</samp>&rsquo; instead.</p>
 <p>Cygwin used <code>g77</code> up to 2011, and some pre-built
 versions of R for Unix OSes still do.</p>
 <h3><a name="FOOT25" href="#DOCF25">(25)</a></h3>
-<p>For
-details of these and related macros, see file <samp>config.site</samp> in
-the R sources.</p>
-<h3><a name="FOOT26" href="#DOCF26">(26)</a></h3>
-<p>OS X 10.7 and later have <code>clang++</code> but for
-10.7 and 10.8 it uses the <code>g++</code> 4.2.x headers.</p>
-<h3><a name="FOOT27" href="#DOCF27">(27)</a></h3>
 <p>On systems which use sub-architectures,
 architecture-specific versions such as <samp>~/.R/check.Renviron.i386</samp>
 take precedence.</p>
-<h3><a name="FOOT28" href="#DOCF28">(28)</a></h3>
+<h3><a name="FOOT26" href="#DOCF26">(26)</a></h3>
 <p>A suitable <code>file.exe</code> is
 part of the Windows toolset: it checks for <code>gfile</code> if a suitable
 <code>file</code> is not found: the latter is available in the OpenCSW
 collection for Solaris at <a href="http://www.opencsw.org">http://www.opencsw.org</a>.</p>
-<h3><a name="FOOT29" href="#DOCF29">(29)</a></h3>
+<h3><a name="FOOT27" href="#DOCF27">(27)</a></h3>
 <p>An exception is made
 for subdirectories with names starting &lsquo;<samp>win</samp>&rsquo; or &lsquo;<samp>Win</samp>&rsquo;.</p>
-<h3><a name="FOOT30" href="#DOCF30">(30)</a></h3>
+<h3><a name="FOOT28" href="#DOCF28">(28)</a></h3>
 <p>on most other platforms such runtime
 libraries are dynamic, but static libraries are currently used on
 Windows because the toolchain is not a standard part of the OS.</p>
-<h3><a name="FOOT31" href="#DOCF31">(31)</a></h3>
+<h3><a name="FOOT29" href="#DOCF29">(29)</a></h3>
 <p>or if option <samp>--use-valgrind</samp> is
 used or environment variable <code>_R_CHECK_ALWAYS_LOG_VIGNETTE_OUTPUT_</code>
 is set to a true value or if there are differences from a target output
 file</p>
-<h3><a name="FOOT32" href="#DOCF32">(32)</a></h3>
+<h3><a name="FOOT30" href="#DOCF30">(30)</a></h3>
 <p>Windows users behind proxies may
 want to set environment variable <code>R_WIN_INTERNET2</code> to a non-empty
-value, e.g. in <samp>~/.R/check_environ</samp>.</p>
-<h3><a name="FOOT33" href="#DOCF33">(33)</a></h3>
-<p>For example, in early
-2014 <a href="http://CRAN.R-project.org/package=gdata"><strong>gdata</strong></a> declared &lsquo;<samp>Imports: gtools</samp>&rsquo; and <a href="http://CRAN.R-project.org/package=gtools"><strong>gtools</strong></a>
-declared &lsquo;<samp>Imports: gdata</samp>&rsquo;.</p>
-<h3><a name="FOOT34" href="#DOCF34">(34)</a></h3>
+value, e.g. in <samp>~/.R/check_environ</samp>.  Some Windows users may need
+to set environment variable <code>R_WIN_NO_JUNCTIONS</code> to a non-empty
+value.</p>
+<h3><a name="FOOT31" href="#DOCF31">(31)</a></h3>
 <p>loading, examples,
 tests, vignettes</p>
+<h3><a name="FOOT32" href="#DOCF32">(32)</a></h3>
+<p>case-insensitively on Windows, and on all
+platforms from R 3.1.0.</p>
+<h3><a name="FOOT33" href="#DOCF33">(33)</a></h3>
+<p>called <samp>CVS</samp> or
+<samp>.svn</samp> or <samp>.arch-ids</samp> or <samp>.bzr</samp> or <samp>.git</samp> (but not
+files called <samp>.git</samp>) or <samp>.hg</samp>.</p>
+<h3><a name="FOOT34" href="#DOCF34">(34)</a></h3>
+<p>called <samp>.metadata</samp>.</p>
 <h3><a name="FOOT35" href="#DOCF35">(35)</a></h3>
-<p>on all platforms from
-R 3.1.0.</p>
+<p>This is expected to be removed in R
+3.1.0.</p>
 <h3><a name="FOOT36" href="#DOCF36">(36)</a></h3>
-<p>called <samp>CVS</samp> or <samp>.svn</samp> or
-<samp>.arch-ids</samp> or <samp>.bzr</samp> or <samp>.git</samp> (but not files called
-<samp>.git</samp>) or <samp>.hg</samp>.</p>
+<p>at least the PDF documents and the Sweave files
+so these can be tangled to produce the R code.</p>
 <h3><a name="FOOT37" href="#DOCF37">(37)</a></h3>
-<p>called
-<samp>.metadata</samp>.</p>
+<p>and to
+avoid problems with case-insensitive file systems, lower-case versions
+of all these extensions.</p>
 <h3><a name="FOOT38" href="#DOCF38">(38)</a></h3>
-<p>and to avoid problems with case-insensitive file
-systems, lower-case versions of all these extensions.</p>
-<h3><a name="FOOT39" href="#DOCF39">(39)</a></h3>
 <p>unless inhibited by using
 &lsquo;<samp>BuildVignettes: no</samp>&rsquo; in the <samp>DESCRIPTION</samp> file.</p>
-<h3><a name="FOOT40" href="#DOCF40">(40)</a></h3>
+<h3><a name="FOOT39" href="#DOCF39">(39)</a></h3>
 <p>provided the conditions of the
 package&rsquo;s license are met: many, including <acronym>CRAN</acronym>, see the
 omission of source components as incompatible with an Open Source
 license.</p>
-<h3><a name="FOOT41" href="#DOCF41">(41)</a></h3>
+<h3><a name="FOOT40" href="#DOCF40">(40)</a></h3>
 <p><code>R_HOME/bin</code> is prepended to the
 <code>PATH</code> so that references to <code>R</code> or <code>Rscript</code> in the
 <samp>Makefile</samp> do make use of the currently running version of R.</p>
-<h3><a name="FOOT42" href="#DOCF42">(42)</a></h3>
+<h3><a name="FOOT41" href="#DOCF41">(41)</a></h3>
 <p>they will be called
 with two unnamed arguments, in that order.</p>
-<h3><a name="FOOT43" href="#DOCF43">(43)</a></h3>
+<h3><a name="FOOT42" href="#DOCF42">(42)</a></h3>
 <p>NB: this will only be read in all versions of R if
 the package contains R code in a <samp>R</samp> directory.</p>
-<h3><a name="FOOT44" href="#DOCF44">(44)</a></h3>
+<h3><a name="FOOT43" href="#DOCF43">(43)</a></h3>
 <p>Note that this is the
 basename of the shared object, and the appropriate extension (<samp>.so</samp>
 or <samp>.dll</samp>) will be added.</p>
-<h3><a name="FOOT45" href="#DOCF45">(45)</a></h3>
+<h3><a name="FOOT44" href="#DOCF44">(44)</a></h3>
 <p>This was necessary at least prior to
 R 3.0.2 as the <strong>methods</strong> package looked for its own R code on
 the search path.</p>
-<h3><a name="FOOT46" href="#DOCF46">(46)</a></h3>
+<h3><a name="FOOT45" href="#DOCF45">(45)</a></h3>
 <p>This defaults to the same
 pattern as <code>exportPattern</code>: use something like
 <code>exportClassPattern(&quot;^$&quot;)</code> to override this.</p>
-<h3><a name="FOOT47" href="#DOCF47">(47)</a></h3>
+<h3><a name="FOOT46" href="#DOCF46">(46)</a></h3>
 <p>if it does, there will be opaque warnings about
 replacing imports if the classes/methods are also imported.</p>
-<h3><a name="FOOT48" href="#DOCF48">(48)</a></h3>
+<h3><a name="FOOT47" href="#DOCF47">(47)</a></h3>
 <p>GNU make,
 BSD make as in FreeBSD, AT&amp;T make as implemented on Solaris.</p>
+<h3><a name="FOOT48" href="#DOCF48">(48)</a></h3>
+<p>despite misleading claims by some compilers
+to be &lsquo;feature complete&rsquo;.</p>
 <h3><a name="FOOT49" href="#DOCF49">(49)</a></h3>
 <p>but
 note that <code>long long</code> is not a standard C++ type, and C++ compilers
@@ -15004,95 +14895,87 @@ time, and for Windows of elapsed time.</p>
 listed below: an object of such a name can be printed <em>via</em> an
 explicit call to <code>print</code>.</p>
 <h3><a name="FOOT66" href="#DOCF66">(66)</a></h3>
-<p>at the
-time of writing mainly for 10.7 with some support for 10.8, none for the
-current 10.9.</p>
-<h3><a name="FOOT67" href="#DOCF67">(67)</a></h3>
 <p>small
 fixed-size arrays by default in <code>gfortran</code>, for example.</p>
-<h3><a name="FOOT68" href="#DOCF68">(68)</a></h3>
+<h3><a name="FOOT67" href="#DOCF67">(67)</a></h3>
 <p>not including the versions distributed by Apple in
 <code>Xcode</code> 4.6 or 5, nor of <code>clang</code> in Fedora prior to an
-update in Fedora 19. On some platforms, e.g. Fedora, the runtime
-library, <strong>libasan</strong>, needs to be installed separately.</p>
-<h3><a name="FOOT69" href="#DOCF69">(69)</a></h3>
+update in Fedora 19.</p>
+<h3><a name="FOOT68" href="#DOCF68">(68)</a></h3>
 <p><samp>-faddress-sanitizer</samp> in
 <code>clang</code> 3.1</p>
-<h3><a name="FOOT70" href="#DOCF70">(70)</a></h3>
+<h3><a name="FOOT69" href="#DOCF69">(69)</a></h3>
 <p><code>gcc</code> will from version 4.9.0.</p>
-<h3><a name="FOOT71" href="#DOCF71">(71)</a></h3>
+<h3><a name="FOOT70" href="#DOCF70">(70)</a></h3>
 <p>installed on some Linux systems as
 <code>asan_symbolize</code>, and obtainable from
 <a href="https://llvm.org/svn/llvm-project/compiler-rt/trunk/lib/asan/scripts/asan_symbolize.py">https://llvm.org/svn/llvm-project/compiler-rt/trunk/lib/asan/scripts/asan_symbolize.py</a>:
 it makes use of <code>llvm-symbolizer</code> if available.</p>
-<h3><a name="FOOT72" href="#DOCF72">(72)</a></h3>
+<h3><a name="FOOT71" href="#DOCF71">(71)</a></h3>
 <p>but
 works better if inlining and frame pointer optimizations are disabled.</p>
-<h3><a name="FOOT73" href="#DOCF73">(73)</a></h3>
+<h3><a name="FOOT72" href="#DOCF72">(72)</a></h3>
 <p>depending on the compiler
 version, with <code>gfortran</code> <code>4.8.x</code> doing this less than
 <code>4.7.x</code>.</p>
-<h3><a name="FOOT74" href="#DOCF74">(74)</a></h3>
+<h3><a name="FOOT73" href="#DOCF73">(73)</a></h3>
 <p>possibly after some platform-specific
 translation, e.g. adding leading or trailing underscores.</p>
+<h3><a name="FOOT74" href="#DOCF74">(74)</a></h3>
+<p>Note that this is then
+not checked for over-runs by option <code>CBoundsCheck = TRUE</code>.</p>
 <h3><a name="FOOT75" href="#DOCF75">(75)</a></h3>
-<p>Note that this is then not checked for over-runs by
-option <code>CBoundsCheck = TRUE</code>.</p>
-<h3><a name="FOOT76" href="#DOCF76">(76)</a></h3>
 <p>but this is not currently done.</p>
-<h3><a name="FOOT77" href="#DOCF77">(77)</a></h3>
+<h3><a name="FOOT76" href="#DOCF76">(76)</a></h3>
 <p>whether or not &lsquo;<samp>LinkingTo</samp>&rsquo; is used.</p>
-<h3><a name="FOOT78" href="#DOCF78">(78)</a></h3>
+<h3><a name="FOOT77" href="#DOCF77">(77)</a></h3>
 <p>so there needs to be a corresponding <code>import</code> or
 <code>importFrom</code> entry in the <samp>NAMESPACE</samp> file.</p>
-<h3><a name="FOOT79" href="#DOCF79">(79)</a></h3>
+<h3><a name="FOOT78" href="#DOCF78">(78)</a></h3>
 <p><code>dyld</code> on OS X,
 and <code>DYLD_LIBRARY_PATHS</code> below.</p>
-<h3><a name="FOOT80" href="#DOCF80">(80)</a></h3>
+<h3><a name="FOOT79" href="#DOCF79">(79)</a></h3>
 <p>That is,
 similar to those defined in S version 4 from the 1990s: these are
 not kept up to date and are not recommended for new projects.</p>
-<h3><a name="FOOT81" href="#DOCF81">(81)</a></h3>
+<h3><a name="FOOT80" href="#DOCF80">(80)</a></h3>
 <p>see <a href="#The-R-API">The R API</a>: note that these are not all part of
 the API.</p>
-<h3><a name="FOOT82" href="#DOCF82">(82)</a></h3>
+<h3><a name="FOOT81" href="#DOCF81">(81)</a></h3>
 <p>SEXP is an acronym for <em>S</em>imple
 <em>EXP</em>ression, common in LISP-like language syntaxes.</p>
-<h3><a name="FOOT83" href="#DOCF83">(83)</a></h3>
+<h3><a name="FOOT82" href="#DOCF82">(82)</a></h3>
 <p>If no coercion was required, <code>coerceVector</code> would
 have passed the old object through unchanged.</p>
-<h3><a name="FOOT84" href="#DOCF84">(84)</a></h3>
+<h3><a name="FOOT83" href="#DOCF83">(83)</a></h3>
 <p>You can assign a <em>copy</em> of the object in the
 environment frame <code>rho</code> using <code>defineVar(symbol,
 duplicate(value), rho)</code>).</p>
-<h3><a name="FOOT85" href="#DOCF85">(85)</a></h3>
+<h3><a name="FOOT84" href="#DOCF84">(84)</a></h3>
 <p>see <a href="#Character-encoding-issues">Character encoding issues</a> for why this
 might not be what is required.</p>
-<h3><a name="FOOT86" href="#DOCF86">(86)</a></h3>
+<h3><a name="FOOT85" href="#DOCF85">(85)</a></h3>
 <p>This is only guaranteed to show the
 current interface: it is liable to change.</p>
-<h3><a name="FOOT87" href="#DOCF87">(87)</a></h3>
+<h3><a name="FOOT86" href="#DOCF86">(86)</a></h3>
 <p>Known problems are redefining
 <code>LENGTH</code>, <code>error</code>, <code>length</code>, <code>vector</code> and
 <code>warning</code></p>
-<h3><a name="FOOT88" href="#DOCF88">(88)</a></h3>
-<p>It is an optional C11
-extension.</p>
-<h3><a name="FOOT89" href="#DOCF89">(89)</a></h3>
+<h3><a name="FOOT87" href="#DOCF87">(87)</a></h3>
 <p><a href="http://en.wikipedia.org/wiki/Endianness">http://en.wikipedia.org/wiki/Endianness</a>.</p>
-<h3><a name="FOOT90" href="#DOCF90">(90)</a></h3>
+<h3><a name="FOOT88" href="#DOCF88">(88)</a></h3>
 <p>In the parlance of OS X
 this is a <em>dynamic</em> library, and is the normal way to build R on
 that platform.</p>
-<h3><a name="FOOT91" href="#DOCF91">(91)</a></h3>
+<h3><a name="FOOT89" href="#DOCF89">(89)</a></h3>
 <p>but these
 are not part of the automated test procedures and so little tested.</p>
-<h3><a name="FOOT92" href="#DOCF92">(92)</a></h3>
+<h3><a name="FOOT90" href="#DOCF90">(90)</a></h3>
 <p>at least on platforms where the values are
 available, that is having <code>getrlimit</code> and on Linux or having
 <code>sysctl</code> supporting <code>KERN_USRSTACK</code>, including FreeBSD and OS
 X.</p>
-<h3><a name="FOOT93" href="#DOCF93">(93)</a></h3>
+<h3><a name="FOOT91" href="#DOCF91">(91)</a></h3>
 <p>An
 attempt to use only threads in the late 1990s failed to work correctly
 under Windows 95, the predominant version of Windows at that time.</p>

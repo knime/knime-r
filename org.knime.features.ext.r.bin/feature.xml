@@ -2,7 +2,7 @@
 <feature
       id="org.knime.features.ext.r.bin"
       label="KNIME R Statistics Integration (Windows Binaries)"
-      version="3.1.0.qualifier"
+      version="3.0.3.qualifier"
       provider-name="KNIME GmbH, Konstanz, Germany"
       plugin="org.knime.ext.r">
 

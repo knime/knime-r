@@ -214,7 +214,9 @@ each \code{Polygons} object corresponds to one and only one county:
 
 \begin{footnotesize}
 <<echo=TRUE,results=hide,keep.source=FALSE>>= 
+if (rgeosStatus()) {
 nc90a <- unionSpatialPolygons(nc90, IDs=paste(nc90$ST, nc90$CO, sep=""))
+}
 @
 \end{footnotesize}
 
@@ -225,9 +227,11 @@ frame and put the pieces back together again:
 
 \begin{footnotesize}
 <<echo=TRUE,keep.source=FALSE>>= 
+if (rgeosStatus()) {
 nc90_df <- as(nc90, "data.frame")[!duplicated(nc90$CO),-(1:4)]
 row.names(nc90_df) <- paste(nc90_df$ST, nc90_df$CO, sep="")
 nc90b <- SpatialPolygonsDataFrame(nc90a, nc90_df)
+}
 @
 \end{footnotesize}
 
@@ -248,6 +252,7 @@ using functions from the \pkg{rgeos} package:
 
 \begin{footnotesize}
 <<echo=TRUE,keep.source=FALSE>>= 
+if (rgeosStatus()) {
 va90a <- spChFIDs(va90, paste(va90$ST, va90$CO, sep=""))
 va90a <- va90a[,-(1:4)]
 va90_pl <- slot(va90a, "polygons")
@@ -255,6 +260,7 @@ va90_pla <- lapply(va90_pl, checkPolygonsHoles)
 p4sva <- CRS(proj4string(va90a))
 vaSP <- SpatialPolygons(va90_pla, proj4string=p4sva)
 va90b <- SpatialPolygonsDataFrame(vaSP, data=as(va90a, "data.frame"))
+}
 @
 \end{footnotesize}
 
@@ -295,10 +301,12 @@ involves repeating calls to the method:
 
 \begin{footnotesize}
 <<echo=TRUE,keep.source=FALSE>>= 
+if (rgeosStatus()) {
 nc_sc_va90 <- spRbind(spRbind(nc90b, sc90a), va90b)
 FIPS <- row.names(nc_sc_va90)
 str(FIPS)
 length(slot(nc_sc_va90, "polygons"))
+}
 @
 \end{footnotesize}
 
@@ -358,11 +366,13 @@ metro areas, using \code{unionSpatialPolygons}:
 
 \begin{footnotesize}
 <<echo=TRUE,keep.source=FALSE>>= 
+if (rgeosStatus()) {
 MA_FIPS <- cnty2$V1[match(FIPS, cnty2$FIPS)]
 MA <- ma1$V14[match(MA_FIPS, ma1$V1)]
 MA_df <- data.frame(MA_FIPS=MA_FIPS, MA=MA, row.names=FIPS)
 nc_sc_va90a <- spCbind(nc_sc_va90, MA_df)
 ncscva_MA <- unionSpatialPolygons(nc_sc_va90a, nc_sc_va90a$MA_FIPS)
+}
 @
 \end{footnotesize}
 
@@ -370,11 +380,15 @@ ncscva_MA <- unionSpatialPolygons(nc_sc_va90a, nc_sc_va90a$MA_FIPS)
 \centering
 <<echo=FALSE,results=tex>>= 
 <<bfig>>
+if (rgeosStatus()) {
 oopar <- par(mar=c(3,2,1,1)+0.1)
 plot(nc_sc_va90, border="grey", axes=TRUE)
 plot(ncscva_MA, lwd=2, add=TRUE)
 text(coordinates(ncscva_MA), labels=row.names(ncscva_MA), cex=0.6)
 par(oopar)
+} else {
+plot(1)
+}
 <<zfig>>
 @
 \caption{The
@@ -394,11 +408,13 @@ multiple polygons:
 
 \begin{footnotesize}
 <<echo=TRUE,keep.source=FALSE>>= 
+if (rgeosStatus()) {
 np <- sapply(slot(ncscva_MA, "polygons"), function(x) length(slot(x, "Polygons")))
 table(np)
 MA_fips <- row.names(ncscva_MA)
 MA_name <- ma1$V14[match(MA_fips, ma1$V1)]
 data.frame(MA_fips, MA_name)[np > 1,]
+}
 @
 \end{footnotesize}
 

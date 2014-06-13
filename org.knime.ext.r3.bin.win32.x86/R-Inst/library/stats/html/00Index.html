@@ -10,7 +10,7 @@
 <div align="center">
 <a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
 <a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
-</div><h2>Documentation for package &lsquo;stats&rsquo; version 3.1.0</h2>
+</div><h2>Documentation for package &lsquo;stats&rsquo; version 3.0.3</h2>
 
 <ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
 <li><a href="../demo">Code demos</a>.  Use <a href="../../utils/help/demo">demo()</a> to run them.</li>
@@ -559,6 +559,8 @@
 <td>The Logistic Distribution</td></tr>
 <tr><td width="25%"><a href="logLik.html">logLik</a></td>
 <td>Extract Log-Likelihood</td></tr>
+<tr><td width="25%"><a href="logLik.html">logLik.lm</a></td>
+<td>Extract Log-Likelihood</td></tr>
 <tr><td width="25%"><a href="loglin.html">loglin</a></td>
 <td>Fitting Log-Linear Models</td></tr>
 <tr><td width="25%"><a href="Lognormal.html">Lognormal</a></td>
@@ -779,6 +781,8 @@
 <td>Plotting Time-Series Objects</td></tr>
 <tr><td width="25%"><a href="kernel.html">plot.tskernel</a></td>
 <td>Smoothing Kernel Objects</td></tr>
+<tr><td width="25%"><a href="TukeyHSD.html">plot.TukeyHSD</a></td>
+<td>Compute Tukey Honest Significant Differences</td></tr>
 <tr><td width="25%"><a href="NegBinomial.html">pnbinom</a></td>
 <td>The Negative Binomial Distribution</td></tr>
 <tr><td width="25%"><a href="Normal.html">pnorm</a></td>
@@ -843,6 +847,8 @@
 <td>Pre-computations for a Plotting Object</td></tr>
 <tr><td width="25%"><a href="princomp.html">princomp</a></td>
 <td>Principal Components Analysis</td></tr>
+<tr><td width="25%"><a href="anova.html">print.anova</a></td>
+<td>Anova Tables</td></tr>
 <tr><td width="25%"><a href="aov.html">print.aov</a></td>
 <td>Fit an Analysis of Variance Model</td></tr>
 <tr><td width="25%"><a href="ar.html">print.ar</a></td>
@@ -851,24 +857,36 @@
 <td>ARIMA Modelling of Time Series - Preliminary Version</td></tr>
 <tr><td width="25%"><a href="dendrogram.html">print.dendrogram</a></td>
 <td>General Tree Structures</td></tr>
+<tr><td width="25%"><a href="density.html">print.density</a></td>
+<td>Kernel Density Estimation</td></tr>
 <tr><td width="25%"><a href="dist.html">print.dist</a></td>
 <td>Distance Matrix Computation</td></tr>
 <tr><td width="25%"><a href="ecdf.html">print.ecdf</a></td>
 <td>Empirical Cumulative Distribution Function</td></tr>
+<tr><td width="25%"><a href="family.html">print.family</a></td>
+<td>Family Objects for Models</td></tr>
 <tr><td width="25%"><a href="formula.html">print.formula</a></td>
 <td>Model Formulae</td></tr>
 <tr><td width="25%"><a href="read.ftable.html">print.ftable</a></td>
 <td>Manipulate Flat Contingency Tables</td></tr>
+<tr><td width="25%"><a href="glm.html">print.glm</a></td>
+<td>Fitting Generalized Linear Models</td></tr>
 <tr><td width="25%"><a href="hclust.html">print.hclust</a></td>
 <td>Hierarchical Clustering</td></tr>
 <tr><td width="25%"><a href="HoltWinters.html">print.HoltWinters</a></td>
 <td>Holt-Winters Filtering</td></tr>
+<tr><td width="25%"><a href="influence.measures.html">print.infl</a></td>
+<td>Regression Deletion Diagnostics</td></tr>
 <tr><td width="25%"><a href="integrate.html">print.integrate</a></td>
 <td>Integration of One-Dimensional Functions</td></tr>
 <tr><td width="25%"><a href="kmeans.html">print.kmeans</a></td>
 <td>K-Means Clustering</td></tr>
+<tr><td width="25%"><a href="lm.html">print.lm</a></td>
+<td>Fitting Linear Models</td></tr>
 <tr><td width="25%"><a href="loadings.html">print.loadings</a></td>
 <td>Print Loadings in Factor Analysis</td></tr>
+<tr><td width="25%"><a href="logLik.html">print.logLik</a></td>
+<td>Extract Log-Likelihood</td></tr>
 <tr><td width="25%"><a href="print.power.htest.html">print.power.htest</a></td>
 <td>Print method for power calculation object</td></tr>
 <tr><td width="25%"><a href="prcomp.html">print.prcomp</a></td>
@@ -893,8 +911,12 @@
 <td>Principal Components Analysis</td></tr>
 <tr><td width="25%"><a href="summary.princomp.html">print.summary.princomp</a></td>
 <td>Summary method for Principal Components Analysis</td></tr>
+<tr><td width="25%"><a href="terms.html">print.terms</a></td>
+<td>Model Terms</td></tr>
 <tr><td width="25%"><a href="print.ts.html">print.ts</a></td>
-<td>Printing and Formatting of Time-Series Objects</td></tr>
+<td>Printing Time-Series Objects</td></tr>
+<tr><td width="25%"><a href="TukeyHSD.html">print.TukeyHSD</a></td>
+<td>Compute Tukey Honest Significant Differences</td></tr>
 <tr><td width="25%"><a href="xtabs.html">print.xtabs</a></td>
 <td>Cross Tabulation</td></tr>
 <tr><td width="25%"><a href="printCoefmat.html">printCoefmat</a></td>
@@ -1022,6 +1044,8 @@
 <tr><td width="25%"><a href="residuals.html">resid</a></td>
 <td>Extract Model Residuals</td></tr>
 <tr><td width="25%"><a href="residuals.html">residuals</a></td>
+<td>Extract Model Residuals</td></tr>
+<tr><td width="25%"><a href="residuals.html">residuals.default</a></td>
 <td>Extract Model Residuals</td></tr>
 <tr><td width="25%"><a href="glm.summaries.html">residuals.glm</a></td>
 <td>Accessing Generalized Linear Model Fits</td></tr>
@@ -1162,6 +1186,8 @@
 <td>Seasonal Decomposition of Time Series by Loess</td></tr>
 <tr><td width="25%"><a href="dendrogram.html">str.dendrogram</a></td>
 <td>General Tree Structures</td></tr>
+<tr><td width="25%"><a href="logLik.html">str.logLik</a></td>
+<td>Extract Log-Likelihood</td></tr>
 <tr><td width="25%"><a href="StructTS.html">StructTS</a></td>
 <td>Fit Structural Time Series</td></tr>
 <tr><td width="25%"><a href="summary.aov.html">summary.aov</a></td>
@@ -1170,6 +1196,8 @@
 <td>Empirical Cumulative Distribution Function</td></tr>
 <tr><td width="25%"><a href="summary.glm.html">summary.glm</a></td>
 <td>Summarizing Generalized Linear Model Fits</td></tr>
+<tr><td width="25%"><a href="influence.measures.html">summary.infl</a></td>
+<td>Regression Deletion Diagnostics</td></tr>
 <tr><td width="25%"><a href="summary.lm.html">summary.lm</a></td>
 <td>Summarizing Linear Model Fits</td></tr>
 <tr><td width="25%"><a href="summary.manova.html">summary.manova</a></td>
@@ -1304,12 +1332,8 @@
 <td>Functions to Check the Type of Variables passed to Model Frames</td></tr>
 <tr><td width="25%"><a href="checkMFClasses.html">.getXlevels</a></td>
 <td>Functions to Check the Type of Variables passed to Model Frames</td></tr>
-<tr><td width="25%"><a href="lmfit.html">.lm.fit</a></td>
-<td>Fitter Functions for Linear Models</td></tr>
 <tr><td width="25%"><a href="checkMFClasses.html">.MFclass</a></td>
 <td>Functions to Check the Type of Variables passed to Model Frames</td></tr>
-<tr><td width="25%"><a href="print.ts.html">.preformat.ts</a></td>
-<td>Printing and Formatting of Time-Series Objects</td></tr>
 <tr><td width="25%"><a href="acf.html">[.acf</a></td>
 <td>Auto- and Cross- Covariance and -Correlation Function Estimation</td></tr>
 <tr><td width="25%"><a href="formula.html">[.formula</a></td>

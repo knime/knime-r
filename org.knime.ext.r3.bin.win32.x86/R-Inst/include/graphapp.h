@@ -6,7 +6,6 @@
  *  This header file is designed to be platform-independent.
  *
  *  Copyright 2006-8	The R Foundation
- *  Copyrigth 2013	The R Core Team
  *
  */
 
@@ -596,7 +595,6 @@ typedef void (*imfn)(control c, font *f, point *xy);
 #define undotext		GA_undotext
 #define unhighlight		GA_unhighlight
 #define updatestatus		GA_updatestatus
-#define waitevent		GA_waitevent
 
 #define ColorName		GA_ColorName
 #define Courier			GA_Courier
@@ -674,7 +672,6 @@ void	exitapp(void);
 
 void	drawall(void);
 int	peekevent(void);
-void	waitevent(void);
 int	doevent(void);
 void	mainloop(void);
 

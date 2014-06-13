@@ -14,5 +14,5 @@ Packaged: 2013-04-24 15:55:03 UTC; clk
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2013-04-24 18:10:07
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-04-10 20:03:21 UTC; windows
+Built: R 3.0.0; x86_64-w64-mingw32; 2013-04-25 15:20:40 UTC; windows
 Archs: i386, x64

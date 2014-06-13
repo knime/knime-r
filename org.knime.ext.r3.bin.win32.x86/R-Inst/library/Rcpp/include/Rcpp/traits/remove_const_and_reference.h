@@ -19,17 +19,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
-   
+
 #ifndef Rcpp__traits__remove_const_and_reference__h
 #define Rcpp__traits__remove_const_and_reference__h
 
 namespace Rcpp{ namespace traits {
-	
+
 	template <typename T>
 	struct remove_const_and_reference {
 		typedef typename remove_const< typename remove_reference<T>::type >::type type ;
 	} ;
-	
+
 }}
 
 #endif

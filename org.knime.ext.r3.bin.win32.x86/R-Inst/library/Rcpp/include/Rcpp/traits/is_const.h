@@ -19,12 +19,12 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
-   
+
 #ifndef Rcpp__traits__is_const__h
 #define Rcpp__traits__is_const__h
 
 namespace Rcpp{ namespace traits {
-	
+
   /// @brief  type properties [4.5.3].
   template<typename>
     struct is_const
@@ -34,7 +34,7 @@ namespace Rcpp{ namespace traits {
     struct is_const<_Tp const>
     : public true_type { };
 
-	
+
 }}
 
 #endif

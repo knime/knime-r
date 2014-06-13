@@ -35,5 +35,5 @@ Author: Roger Koenker [cre, aut],
     everlasting shame -- how could I have been so slow to adopt R!) and
     for numerous other suggestions and useful advice)
 NeedsCompilation: yes
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-21 22:37:54 UTC; windows
+Built: R 3.0.3; i386-w64-mingw32; 2014-06-12 05:34:37 UTC; windows
 Archs: i386, x64

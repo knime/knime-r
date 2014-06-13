@@ -19,12 +19,12 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rcpp.  If not, see <http://www.gnu.org/licenses/>.
-   
+
 #ifndef Rcpp__traits__remove_const__h
 #define Rcpp__traits__remove_const__h
 
 namespace Rcpp{ namespace traits {
-	
+
   /// @brief  const-volatile modifications [4.7.1].
   template<typename _Tp>
     struct remove_const
@@ -33,7 +33,7 @@ namespace Rcpp{ namespace traits {
   template<typename _Tp>
     struct remove_const<_Tp const>
     { typedef _Tp     type; };
- 	
+
 }}
 
 #endif

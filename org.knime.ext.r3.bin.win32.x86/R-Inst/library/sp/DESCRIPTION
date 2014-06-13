@@ -45,5 +45,5 @@ Maintainer: Edzer Pebesma <edzer.pebesma@uni-muenster.de>
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-04-09 21:46:41
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-21 22:53:08 UTC; windows
+Built: R 3.0.3; i386-w64-mingw32; 2014-06-12 05:33:52 UTC; windows
 Archs: i386, x64

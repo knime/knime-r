@@ -1,9 +1,55 @@
+		CHANGES IN APE VERSION 3.1-2
+
+
+NEW FEATURES
+
+    o plot.phylo: the option 'open.angle' now works also when type =
+      "radial". The option 'lab4ut' now works also for type = "radial"
+      or "fan"; the default is now NULL since it will behave
+      differently depending on 'type'.
+
+    o ace(, type = "discrete") gains an option 'marginal' (FALSE by
+      default). The default is now to do a joint reconstruction of
+      ancestral states.
+
+
+BUG FIXES
+
+    o chronos: the gradients were not correctly computed when the age
+      of the root was unknown.
+
+    o prop.part() did not work with objects of class composite like
+      c("chronos", "phylo"). (Thanks to Steve Walker for the fix.)
+
+    o bionjs: a bug was fixed in the C code.
+
+    o read.GenBank() failed if a line starts with "ORIGIN" in the
+      description of the sequence (thanks to Sofia Sal Bregua for the
+      fix).
+
+    o cophyloplot() works better with length.line = 0.
+
+    o The internal function clado.build used to return trees with the
+      'edge' matrix stored as double instead of integer.
+
+
+OTHER CHANGES
+
+    o base.freq() now checks the class of the data.
+
+
+
 		CHANGES IN APE VERSION 3.1-1
 
 
 BUG FIXES
 
     o rTraitCont: a bug was introduced in the previous release.
+
+
+OTHER CHANGES
+
+    o ape now requires R 3.0.0 or higher.
 
 
 

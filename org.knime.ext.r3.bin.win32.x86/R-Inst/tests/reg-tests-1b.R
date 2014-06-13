@@ -7,8 +7,7 @@ options(stringsAsFactors = TRUE)
 ## .Machine
 (Meps <- .Machine$double.eps)# and use it in this file
 
-assertWarning <- tools::assertWarning
-assertError <- tools::assertError
+assertCondition <- tools::assertCondition
 
 ## str() for list-alikes :
 "[[.foo" <- function(x,i) x
@@ -719,9 +718,9 @@ stopifnot(length(lf <- levels(fi)) == 3, lf[1] == "a.b.c",
 levs <- c("A","A")
 ## warnings for now {errors in the future}
 local({
-    assertWarning(gl(2,3, labels = levs))
-    assertWarning(factor(levs, levels=levs))
-    assertWarning(factor(1:2,	 labels=levs))
+    assertCondition(gl(2,3, labels = levs),    "warning")
+    assertCondition(factor(levs, levels=levs), "warning")
+    assertCondition(factor(1:2,	 labels=levs), "warning")
     })
 ## failed in R < 2.10.0
 L <- c("no", "yes")
@@ -742,8 +741,8 @@ stopifnot(identical(factor(c(2, 1:2), labels = L),
 
 
 ## "misuses" of sprintf()
-assertError(sprintf("%S%"))
-assertError(sprintf("%n %g", 1))
+assertCondition(sprintf("%S%"), "error")
+assertCondition(sprintf("%n %g", 1), "error")
 ## seg.faulted in R <= 2.9.0
 
 
@@ -1142,7 +1141,7 @@ lapply("forward", switch, forward = "posS", reverse = "negS")
 
 
 ## evaluation of arguments of log2
-assertError(tryCatch(log2(quote(1:10))))
+assertCondition(tryCatch(log2(quote(1:10))), "error")
 ## 'worked' in 2.10.x by evaluting the arg twice.
 
 
@@ -1595,7 +1594,6 @@ if(FALSE) { ## if you want to see how it *did* go wrong:
     ff1 <- function(x) {r <- log(g(x)); print(c(x,r)); r}
     str(ur <- uniroot(ff1, c(-90,100)))
 }
-assertWarning(uniroot(function(x) log(g(x)), c(-90,100)))
 str(ur <- uniroot(function(x) log(g(x)), c(-90,100)))# -> 2 warnings .. -Inf replaced ..
 stopifnot(abs(ur$root) < 0.001)
 ## failed badly in R < 2.13.0, as -Inf was replaced by +1e308
@@ -1739,9 +1737,9 @@ try(format(d0))
 
 
 ## options("max.print") :
-tools::assertCondition(options(max.print = Inf), "warning") # and then error
-assertError(options(max.print = -2))
-tools::assertCondition(options(max.print = 1e100), "warning")
+assertCondition(options(max.print = Inf), "warning")
+assertCondition(options(max.print = -2), "error")
+assertCondition(options(max.print = 1e100), "warning")
 ## gave only warnings (every print() time, ...)  in R <= 2.14.2
 
 
@@ -2086,9 +2084,9 @@ stopifnot(identical(sQuote(x), x), identical(dQuote(x), x))
 a <- matrix(1:6, 2, dimnames=list(A=NULL, B=NULL))
 stopifnot(identical(unname(aperm(a, c("B","A"))),
 		    matrix(1:6, 3, byrow=TRUE)))# worked
-assertError(aperm(a, c("C","A")))# fine, but
+assertCondition(aperm(a, c("C","A")), "error")# fine, but
 ## forgetting one had been detrimental:
-assertError( aperm(a, "A"))
+assertCondition( aperm(a, "A"), "error")
 ## seg.faulted in 2.15.2 and earlier
 
 ## enc2utf8 failed on NA in non-UTF-8 locales PR#15201

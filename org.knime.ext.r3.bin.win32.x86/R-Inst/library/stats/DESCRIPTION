@@ -1,9 +1,9 @@
 Package: stats
-Version: 3.1.0
+Version: 3.0.3
 Priority: base
 Title: The R Stats Package
 Author: R Core Team and contributors worldwide
 Maintainer: R Core Team <R-core@r-project.org>
 Description: R statistical functions
-License: Part of R 3.1.0
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-04-11 14:06:21 UTC; windows
+License: Part of R 3.0.3
+Built: R 3.0.3; x86_64-w64-mingw32; 2014-03-06 11:48:12 UTC; windows

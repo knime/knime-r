@@ -32,16 +32,15 @@
 #define RMATH_H
 
 /* Note that on some systems we need to include math.h before the
-   defines below. */
+   defines below, to avoid redefining ftrunc */
 #ifndef NO_C_HEADERS
-# define __STDC_WANT_IEC_60559_TYPES_EXT__ 1
 # include <math.h>
 #endif
 
 /*-- Mathlib as part of R --  define this for standalone : */
 /* #undef MATHLIB_STANDALONE */
 
-#define R_VERSION_STRING "3.1.0"
+#define R_VERSION_STRING "3.0.3"
 
 #ifndef HAVE_EXPM1
 # define HAVE_EXPM1 1
@@ -68,16 +67,14 @@ double  Rlog1p(double);
 
 	/* Undo SGI Madness */
 
-#ifdef __sgi
-# ifdef ftrunc
-#  undef ftrunc
-# endif
-# ifdef qexp
-#  undef qexp
-# endif
-# ifdef qgamma
-#  undef qgamma
-# endif
+#ifdef ftrunc
+# undef ftrunc
+#endif
+#ifdef qexp
+# undef qexp
+#endif
+#ifdef qgamma
+# undef qgamma
 #endif
 
 
@@ -172,10 +169,6 @@ double  Rlog1p(double);
 #endif
 
 
-#ifndef M_LN_2PI
-#define M_LN_2PI	1.837877066409345483560659472811	/* log(2*pi) */
-#endif
-
 #ifndef M_LN_SQRT_PI
 #define M_LN_SQRT_PI	0.572364942924700087071713675677	/* log(sqrt(pi))
 								   == log(pi)/2 */
@@ -187,8 +180,7 @@ double  Rlog1p(double);
 #endif
 
 #ifndef M_LN_SQRT_PId2
-#define M_LN_SQRT_PId2	0.225791352644727432363097614947	/* log(sqrt(pi/2))
-								   == log(pi/2)/2 */
+#define M_LN_SQRT_PId2	0.225791352644727432363097614947	/* log(sqrt(pi/2)) */
 #endif
 
 
@@ -205,7 +197,7 @@ double  Rlog1p(double);
 #endif
 
 
-#if !defined(MATHLIB_STANDALONE) && !defined(R_NO_REMAP_RMATH)
+#ifndef MATHLIB_STANDALONE
 #define bessel_i	Rf_bessel_i
 #define bessel_j	Rf_bessel_j
 #define bessel_k	Rf_bessel_k
@@ -345,9 +337,13 @@ double  Rlog1p(double);
 #define trigamma	Rf_trigamma
 #endif
 
-#define dnorm dnorm4
-#define pnorm pnorm5
-#define qnorm qnorm5
+#if !defined(__cplusplus)
+// NB: these remappings were deprecated for R 3.0.3.
+#define	rround	fround
+#define	prec	fprec
+#undef trunc
+#define	trunc	ftrunc
+#endif
 
 #ifdef  __cplusplus
 extern "C" {
@@ -368,6 +364,10 @@ void	get_seed(unsigned int *, unsigned int *);
 #endif
 
 	/* Normal Distribution */
+
+#define pnorm pnorm5
+#define qnorm qnorm5
+#define dnorm dnorm4
 
 double	dnorm(double, double, double, int);
 double	pnorm(double, double, double, int, int);
@@ -601,18 +601,6 @@ double	ftrunc(double);
 double  log1pmx(double); /* Accurate log(1+x) - x, {care for small x} */
 double  lgamma1p(double);/* accurate log(gamma(x+1)), small x (0 < x < 0.5) */
 
-/* More accurate cos(pi*x), sin(pi*x), tan(pi*x)
-
-   In future these declarations could clash with system headers if
-   someone had already included math.h with
-   __STDC_WANT_IEC_60559_TYPES_EXT__ defined.
-   We can add a check for that via the value of
-   __STDC_IEC_60559_FUNCS__ (>= 201ymmL, exact value not yet known).
-*/
-double cospi(double);
-double sinpi(double);
-double tanpi(double);
-
 /* Compute the log of a sum or difference from logs of terms, i.e.,
  *
  *     log (exp (logx) + exp (logy))
@@ -622,6 +610,8 @@ double tanpi(double);
  */
 double  logspace_add(double logx, double logy);
 double  logspace_sub(double logx, double logy);
+
+
 
 
 /* ----------------- Private part of the header file ------------------- */

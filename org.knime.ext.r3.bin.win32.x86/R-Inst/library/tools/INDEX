@@ -12,7 +12,6 @@ SweaveTeXFilter         Strip R code out of Sweave file
 add_datalist            Add a 'datalist' File to a Package
 assertCondition         Asserting Error Conditions
 bibstyle                Select or define a bibliography style.
-buildVignette           Build one vignette
 buildVignettes          List and Build Package Vignettes
 checkFF                 Check Foreign Function Calls
 checkMD5sums            Check and Create MD5 Checksum Files
@@ -32,7 +31,6 @@ dependsOnPkgs           Find Reverse Dependencies
 encoded_text_to_latex   Translate non-ASCII Text to LaTeX Escapes
 file_ext                File Utilities
 findHTMLlinks           Collect HTML Links from Package Documentation
-find_gs_cmd             Find a GhostScript Executable
 getDepList              Functions to Retrieve Dependency Information
 getVignetteInfo         Get information on installed vignettes.
 installFoundDepends     A function to install unresolved dependencies
@@ -48,6 +46,7 @@ parse_Rd                Parse an Rd file
 pskill                  Kill a Process
 psnice                  Get or Set the Priority (Niceness) of a Process
 read.00Index            Read 00Index-style Files
+readNEWS                Read R's NEWS file or a similar one
 showNonASCII            Pick Out Non-ASCII Characters
 startDynamicHelp        Start the Dynamic HTML Help System
 testInstalledPackage    Test Installed Packages

@@ -20,19 +20,19 @@ SweaveSyntConv(rnwfile, SweaveSyntaxLatex)
 
 
 ###################################################
-### code chunk number 4: Sweave.Rnw:481-482 (eval = FALSE)
+### code chunk number 4: Sweave.Rnw:470-471 (eval = FALSE)
 ###################################################
 ## help("Sweave")
 
 
 ###################################################
-### code chunk number 5: Sweave.Rnw:491-492 (eval = FALSE)
+### code chunk number 5: Sweave.Rnw:480-481 (eval = FALSE)
 ###################################################
 ## help("RweaveLatex")
 
 
 ###################################################
-### code chunk number 6: Sweave.Rnw:605-606 (eval = FALSE)
+### code chunk number 6: Sweave.Rnw:594-595 (eval = FALSE)
 ###################################################
 ## help("Rtangle")
 

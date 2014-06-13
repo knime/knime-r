@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- This manual is for R, version 3.1.0 (2014-04-10).
+<!-- This manual is for R, version 3.0.3 (2014-03-06).
 
 Copyright (C) 1999-2013 R Core Team
 
@@ -270,7 +270,7 @@ Next: <a href="#R-Internal-Structures" accesskey="n" rel="next">R Internal Struc
 <p>This is a guide to the internal structures of R and coding standards for
 the core team working on R itself.
 </p>
-<p>This manual is for R, version 3.1.0 (2014-04-10).
+<p>This manual is for R, version 3.0.3 (2014-03-06).
 </p>
 <p>Copyright &copy; 1999&ndash;2013 R Core Team
 </p>
@@ -322,7 +322,6 @@ approved by the R Core Team.
 <tr><td align="left" valign="top">&bull; <a href="#Concept-index">Concept index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
-
 <hr>
 <a name="R-Internal-Structures"></a>
 <div class="header">
@@ -525,7 +524,7 @@ Next: <a href="#The-_0027data_0027" accesskey="n" rel="next">The 'data'</a>, Pre
     unsigned int mark  :  1;  /* <span class="roman">mark object as &lsquo;in use&rsquo; in GC</span> */
     unsigned int debug :  1;
     unsigned int trace :  1;
-    unsigned int spare :  1;  /* <span class="roman">debug once</span> */
+    unsigned int spare :  1;  /* <span class="roman">unused</span> */
     unsigned int gcgen :  1;  /* <span class="roman">generation for GC</span> */
     unsigned int gccls :  3;  /* <span class="roman">class of node for GC</span> */
 };  /*              Tot: 32 */
@@ -541,10 +540,6 @@ single-step mode.
 <a name="index-trace-bit"></a>
 <p>The <code>trace</code> bit is used for functions for <code>trace()</code> and for
 other objects when tracing duplications (see <code>tracemem</code>).
-</p>
-<a name="index-spare-bit"></a>
-<p>The <code>spare</code> bit is used for closures to mark them for one
-time debugging.
 </p>
 <a name="index-named-bit"></a>
 <a name="index-NAMED"></a>
@@ -827,15 +822,11 @@ Previous: <a href="#The-_0027data_0027" accesskey="p" rel="prev">The 'data'</a>,
 <a name="index-allocation-classes"></a>
 <p>As we have seen, the field <code>gccls</code> in the header is three bits to
 label up to 8 classes of nodes.  Non-vector nodes are of class 0, and
-&lsquo;small&rsquo; vector nodes are of classes 1 to 5, with a class for custom
-allocator vector nodes 6 and &lsquo;large&rsquo; vector nodes being of class 7.  The
-&lsquo;small&rsquo; vector nodes are able to store vector data of up to 8, 16, 32,
-64 and 128 bytes: larger vectors are <code>malloc</code>-ed individually
-whereas the &lsquo;small&rsquo; nodes are allocated from pages of about 2000
-bytes. Vector nodes allocated using custom allocators (via
-<code>allocVector3</code>) are not counted in the gc memory usage statistics
-since their memory semantics is not under R&rsquo;s control and may be
-non-standard (e.g., memory could be partially shared across nodes).
+&lsquo;small&rsquo; vector nodes are of classes 1 to 6, with &lsquo;large&rsquo; vector nodes
+being of class 7.  The &lsquo;small&rsquo; vector nodes are able to store vector
+data of up to 8, 16, 32, 48, 64 and 128 bytes: larger vectors are
+<code>malloc</code>-ed individually whereas the &lsquo;small&rsquo; nodes are allocated
+from pages of about 2000 bytes.
 </p>
 
 <hr>
@@ -2514,7 +2505,6 @@ cos     sin     tan
 acos    asin    atan
 cosh    sinh    tanh
 acosh   asinh   atanh
-cospi   sinpi   tanpi
 </pre><pre class="example">
 </pre><pre class="example">gamma   lgamma  digamma trigamma
 </pre><pre class="example">
@@ -4453,17 +4443,8 @@ Default: true iff <code>.Platform$OS.type == &quot;unix&quot;</code>.
 <dt><code>_R_CHECK_FF_CALLS_</code>
 <a name="index-_005fR_005fCHECK_005fFF_005fCALLS_005f"></a>
 </dt>
-<dd><p>Allows turning off <code>checkFF()</code> testing. If set to
-&lsquo;<samp>registration</samp>&rsquo;, checks the registration information (number of
-arguments, correct choice of <code>.C/.Fortran/.Call/.External</code>) for
-such calls provided the package is installed.
+<dd><p>Allows turning off <code>checkFF()</code> testing.  Legacy mostly.
 Default: true.
-</p></dd>
-<dt><code>_R_CHECK_FF_DUP_</code>
-<a name="index-_005fR_005fCHECK_005fFF_005fDUP_005f"></a>
-</dt>
-<dd><p>Controls <code>checkFF(check_DUP)</code>
-Default: true (and forced to be true for CRAN submission checks).
 </p></dd>
 <dt><code>_R_CHECK_LICENSE_</code>
 <a name="index-_005fR_005fCHECK_005fLICENSE_005f"></a>
@@ -4665,9 +4646,9 @@ is available to those who first install recording to a log, then call
 with <code>.libPaths()</code> containing just a temporary library directory
 and <code>.Library</code>.  The temporary library is populated by symbolic
 links<a name="DOCF23" href="#FOOT23"><sup>23</sup></a> to the installed copies of
-all the Depends/Imports and (for the second only) Suggests packages
-which are not in <code>.Library</code>.  Default: false (but
-<code>_R_CHECK_SUGGESTS_ONLY_</code> is true for CRAN checks).
+all the Depends/Imports/LinkingTo and (for the second only) Suggests
+packages which are not in <code>.Library</code>.  Default: false (but true for
+CRAN checks).
 </p>
 </dd>
 <dt><code>_R_CHECK_NO_RECOMMENDED_</code>
@@ -4755,26 +4736,8 @@ Default: false (but true for CRAN submission checks).
 <a name="index-_005fR_005fCHECK_005fDEPRECATED_005fDEFUNCT_005f"></a>
 </dt>
 <dd><p>Should the package code be checked for the presence of recently deprecated
-or defunct functions (including completely removed functions).  Also for
-platform-specific graphics devices.
+or defunct functions (including completely removed functions). 
 Default: false (but true for CRAN submission checks).
-</p>
-</dd>
-<dt><code>_R_CHECK_SCREEN_DEVICE_</code>
-<a name="index-_005fR_005fCHECK_005fSCREEN_005fDEVICE_005f"></a>
-</dt>
-<dd><p>If set to &lsquo;<samp>warn</samp>&rsquo;, give a warning if examples etc open a screen
-device.  If set to &lsquo;<samp>stop</samp>&rsquo;, give an error.
-Default: empty (but &lsquo;<samp>stop</samp>&rsquo; for CRAN submission checks).
-</p>
-</dd>
-<dt><code>_R_CHECK_WINDOWS_DEVICE_</code>
-<a name="index-_005fR_005fCHECK_005fWINDOWS_005fDEVICE_005f"></a>
-</dt>
-<dd><p>If set to &lsquo;<samp>stop</samp>&rsquo;, give an error if a Windows-only device is used in
-example etc.  This is only useful on Windows: the devices do not exist
-elsewhere.
-Default: empty (but &lsquo;<samp>stop</samp>&rsquo; for CRAN submission checks on Windows).
 </p>
 </dd>
 <dt><code>_R_CHECK_TOPLEVEL_FILES_</code>
@@ -4786,14 +4749,7 @@ in &lsquo;Writing R Extensions&rsquo; nor are commonly understood (like
 <samp>COPYRIGHT</samp>) are also reported.
 Default: false (but true for CRAN submission checks).
 </p>
-</dd>
-<dt><code>_R_CHECK_GCT_N_</code>
-<a name="index-_005fR_005fCHECK_005fGCT_005fN_005f"></a>
-</dt>
-<dd><p>Should the <samp>--use-gct</samp> use <code>gctorture2(<var>n</var>)</code> rather than
-<code>gctorture(TRUE)</code>?  Use to a positive integer to enable this.
-Default: <code>0</code>.
-</p>
+
 </dd>
 <dt><code>_R_CHECK_LIMIT_CORES_</code>
 <a name="index-_005fR_005fCHECK_005fLIMIT_005fCORES_005f"></a>
@@ -4823,7 +4779,6 @@ _R_CHECK_CODE_DATA_INTO_GLOBALENV_=TRUE
 _R_CHECK_DOT_FIRSTLIB_=TRUE
 _R_CHECK_DEPRECATED_DEFUNCT_=TRUE
 _R_CHECK_REPLACING_IMPORTS_=TRUE
-_R_CHECK_SCREEN_DEVICE_=stop
 _R_CHECK_TOPLEVEL_FILES_=TRUE
 </pre></div>
 
@@ -5301,9 +5256,7 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fEXECUTABLES_005f"><code>_R_CHECK_EXECUTABLES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fEXECUTABLES_005fEXCLUSIONS_005f"><code>_R_CHECK_EXECUTABLES_EXCLUSIONS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fFF_005fCALLS_005f"><code>_R_CHECK_FF_CALLS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fFF_005fDUP_005f"><code>_R_CHECK_FF_DUP_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fFORCE_005fSUGGESTS_005f"><code>_R_CHECK_FORCE_SUGGESTS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fGCT_005fN_005f"><code>_R_CHECK_GCT_N_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fINSTALL_005fDEPENDS_005f"><code>_R_CHECK_INSTALL_DEPENDS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fLICENSE_005f"><code>_R_CHECK_LICENSE_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fLIMIT_005fCORES_005f"><code>_R_CHECK_LIMIT_CORES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
@@ -5317,7 +5270,6 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fRD_005fSTYLE_005f"><code>_R_CHECK_RD_STYLE_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fRD_005fXREFS_005f"><code>_R_CHECK_RD_XREFS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fREPLACING_005fIMPORTS_005f"><code>_R_CHECK_REPLACING_IMPORTS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSCREEN_005fDEVICE_005f"><code>_R_CHECK_SCREEN_DEVICE_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSKIP_005fARCH_005f"><code>_R_CHECK_SKIP_ARCH_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSKIP_005fEXAMPLES_005fARCH_005f"><code>_R_CHECK_SKIP_EXAMPLES_ARCH_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSKIP_005fTESTS_005fARCH_005f"><code>_R_CHECK_SKIP_TESTS_ARCH_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
@@ -5334,7 +5286,6 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fVC_005fDIRS_005f"><code>_R_CHECK_VC_DIRS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fVIGNETTES_005fNLINES_005f"><code>_R_CHECK_VIGNETTES_NLINES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fWALL_005fFORTRAN_005f"><code>_R_CHECK_WALL_FORTRAN_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fWINDOWS_005fDEVICE_005f"><code>_R_CHECK_WINDOWS_DEVICE_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fXREFS_005fREPOSITORIES_005f"><code>_R_CHECK_XREFS_REPOSITORIES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fXREFS_005fUSE_005fALIASES_005fFROM_005fCRAN_005f"><code>_R_CHECK_XREFS_USE_ALIASES_FROM_CRAN_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fSHLIB_005fBUILD_005fOBJECTS_005fSYMBOL_005fTABLES_005f"><code>_R_SHLIB_BUILD_OBJECTS_SYMBOL_TABLES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
@@ -5414,7 +5365,6 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-SET_005fDDVAL"><code>SET_DDVAL</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rest-of-header">Rest of header</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SET_005fMISSING"><code>SET_MISSING</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rest-of-header">Rest of header</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SET_005fNAMED"><code>SET_NAMED</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rest-of-header">Rest of header</a></td></tr>
-<tr><td></td><td valign="top"><a href="#index-spare-bit"><code>spare bit</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rest-of-header">Rest of header</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Function-and-variable-index_vr_letter-T">T</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-trace-bit"><code>trace bit</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rest-of-header">Rest of header</a></td></tr>

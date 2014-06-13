@@ -14,5 +14,5 @@ Packaged: 2014-05-04 15:51:54 UTC; hothorn
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-05-05 15:10:34
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-05 22:20:24 UTC; windows
+Built: R 3.0.3; i386-w64-mingw32; 2014-05-06 05:20:30 UTC; windows
 Archs: i386, x64

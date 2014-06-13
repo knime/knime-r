@@ -1,5 +1,20 @@
+2014-05-28  warnes
+
+	* [r1815] tests/smartbind_Dates.R: Add test to ensure smartbind()
+	  properly handles Date columns.
+	* [r1814] R/smartbind.R: smartbind: Convert non-native type columns
+	  (except factor) to character.
+
+2014-04-18  arnima
+
+	* [r1813] R/ASCIIfy.R, man/ASCIIfy.Rd: Main arg is 'x' like
+	  showNonASCII(x), preformatted notes instead of verb
+
 2014-04-17  warnes
 
+	* [r1810] man/ASCIIfy.Rd: Update ASCIIfy man page to match source
+	  code and add keywords
+	* [r1809] inst/NEWS: Update NEWS for gtools 3.4.0
 	* [r1808] DESCRIPTION, NAMESPACE, R/ASCIIfy.R, man/ASCIIfy.Rd: Add
 	  ASCIIfy function posted to RDevel by Arni Magnusson
 

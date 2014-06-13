@@ -1,7 +1,7 @@
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; tab-width: 8 -*-
 //
 // if.h: Rcpp R/C++ interface class library -- dispatch
-//                                                                      
+//
 // Copyright (C) 2010 - 2011 Dirk Eddelbuettel and Romain Francois
 //
 // This file is part of Rcpp.
@@ -24,8 +24,8 @@
 
 namespace Rcpp{
 namespace traits{
-	
-template <bool COND, typename LHS, typename RHS> 
+
+template <bool COND, typename LHS, typename RHS>
 struct if_ {
 	typedef LHS type ;
 } ;
@@ -34,7 +34,7 @@ template <typename LHS, typename RHS>
 struct if_<false,LHS,RHS> {
 	typedef RHS type ;
 } ;
-	
+
 }
 }
 

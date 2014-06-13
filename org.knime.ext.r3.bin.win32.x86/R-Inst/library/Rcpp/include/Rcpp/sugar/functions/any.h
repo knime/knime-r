@@ -31,7 +31,7 @@ public:
 	typedef Rcpp::VectorBase<LGLSXP,NA,T> VEC_TYPE ;
 	typedef SingleLogicalResult< true , Any<NA,T> > PARENT ;
 	Any( const VEC_TYPE& t ) : PARENT() , object(t) {}
-	
+
 	void apply(){
 		int n = object.size() ;
 		int current = 0 ;
@@ -39,7 +39,7 @@ public:
 		for( int i=0 ; i<n ; i++){
 			current = object[i] ;
 			if( current == TRUE ) {
-				PARENT::set_true() ; 
+				PARENT::set_true() ;
 				return ;
 			}
 			if( Rcpp::traits::is_na<LGLSXP>(current)  ) {
@@ -49,8 +49,8 @@ public:
 		if( PARENT::is_unresolved() ){
 			PARENT::set_false() ;
 		}
-	}	
-private:		
+	}
+private:
 	const VEC_TYPE& object ;
 } ;
 
@@ -60,18 +60,18 @@ public:
 	typedef Rcpp::VectorBase<LGLSXP,false,T> VEC_TYPE ;
 	typedef SingleLogicalResult< false , Any<false,T> > PARENT ;
 	Any( const VEC_TYPE& t ) : PARENT() , object(t) {}
-	
+
 	void apply(){
 		int n = object.size() ;
 		PARENT::set_false() ;
 		for( int i=0 ; i<n ; i++){
 			if( object[i] == TRUE ) {
-				PARENT::set_true() ; 
+				PARENT::set_true() ;
 				return ;
 			}
 		}
-	}	
-private:		
+	}
+private:
 	const VEC_TYPE& object ;
 } ;
 

@@ -23,5 +23,5 @@ License: GPL (>= 3)
 Packaged: 2012-11-01 18:46:42 UTC; User
 Repository: CRAN
 Date/Publication: 2012-11-02 09:14:18
-Built: R 3.1.0; x86_64-w64-mingw32; 2014-05-21 22:39:45 UTC; windows
+Built: R 3.0.3; i386-w64-mingw32; 2014-06-12 05:38:16 UTC; windows
 Archs: i386, x64

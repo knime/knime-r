@@ -6,12 +6,9 @@
 \setboolean{Sweave@gin}{true}
 \newboolean{Sweave@ae}
 \setboolean{Sweave@ae}{true}
-\newboolean{Sweave@inconsolata}
-\setboolean{Sweave@inconsolata}{false}
 
 \DeclareOption{nogin}{\setboolean{Sweave@gin}{false}}
 \DeclareOption{noae}{\setboolean{Sweave@ae}{false}}
-\DeclareOption{inconsolata}{\setboolean{Sweave@ae}{false}\setboolean{Sweave@inconsolata}{true}}
 \ProcessOptions
 
 \RequirePackage{graphicx,fancyvrb,textcomp}
@@ -26,8 +23,6 @@
   \RequirePackage[T1]{fontenc}
   \RequirePackage{ae}
 }{}%
-\ifthenelse{\boolean{Sweave@inconsolata}}{%
- \IfFileExists{inconsolata.sty}{\usepackage{inconsolata}}{\usepackage{zi4}}}{}
 
 \DefineVerbatimEnvironment{Sinput}{Verbatim}{fontshape=sl}
 \DefineVerbatimEnvironment{Soutput}{Verbatim}{}

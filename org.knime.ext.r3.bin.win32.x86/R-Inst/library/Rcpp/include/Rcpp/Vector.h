@@ -28,7 +28,7 @@
 
 namespace Rcpp{
     namespace traits{
-         template <int RTYPE, bool NA, typename VECTOR> struct Extractor ;  
+         template <int RTYPE, bool NA, typename VECTOR> struct Extractor ;
     }
     template <int RTYPE> class MatrixRow ;
     template <int RTYPE> class MatrixColumn ;
@@ -65,4 +65,7 @@ namespace Rcpp{
 #include <Rcpp/vector/LazyVector.h>
 #include <Rcpp/vector/swap.h>
 
-#endif 
+#include <Rcpp/vector/ChildVector.h>
+#include <Rcpp/vector/ListOf.h>
+
+#endif

@@ -85,7 +85,7 @@ rock                    Measurements on Petroleum Rock Samples
 sleep                   Student's Sleep Data
 stackloss               Brownlee's Stack Loss Plant Data
 state                   US State Facts and Figures
-sunspot.month           Monthly Sunspot Data, from 1749 to "Present"
+sunspot.month           Monthly Sunspot Data, 1749-1997
 sunspot.year            Yearly Sunspot Data, 1700-1988
 sunspots                Monthly Sunspot Numbers, 1749-1983
 swiss                   Swiss Fertility and Socioeconomic Indicators

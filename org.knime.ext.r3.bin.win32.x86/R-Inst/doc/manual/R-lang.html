@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- This manual is for R, version 3.1.0 (2014-04-10).
+<!-- This manual is for R, version 3.0.3 (2014-03-06).
 
 Copyright (C) 2000-2013 R Core Team
 
@@ -324,7 +324,7 @@ Next: <a href="#Introduction" accesskey="n" rel="next">Introduction</a>, Previou
 parsing, object oriented programming, computing on the language, and so
 forth.
 </p>
-<p>This manual is for R, version 3.1.0 (2014-04-10).
+<p>This manual is for R, version 3.0.3 (2014-03-06).
 </p>
 <p>Copyright &copy; 2000&ndash;2013 R Core Team
 </p>
@@ -1473,7 +1473,7 @@ used for their side effects, e.g., printing and plotting functions.
 <a name="index-function-7"></a>
 <a name="index-function-arguments"></a>
 <p>Function calls can have <em>tagged</em> (or <em>named</em>) arguments, as in
-<code>plot(x, y, pch = 3)</code>.  Arguments without tags are known as
+<code>plot(x, y, pch = 3)</code> arguments without tags are known as
 <em>positional</em> since the function must distinguish their meaning from
 their sequential positions among the arguments of the call, e.g., that
 <code>x</code> denotes the abscissa variable and <code>y</code> the ordinate.  The
@@ -1705,10 +1705,10 @@ Only the first element of <var>value1</var> is used.  All other elements are
 ignored.  If <var>value1</var> has any type other than a logical or a numeric
 vector an error is signalled.
 </p>
-<p><code>if</code>/<code>else</code> statements can be used to avoid numeric problems
-such as taking the logarithm of a negative number.  Because
-<code>if</code>/<code>else</code> statements are the same as other statements you
-can assign the value of them.  The two examples below are equivalent.
+<p>If/else statements can be used to avoid numeric problems such as taking
+the logarithm of a negative number.  Because if/else statements are the
+same as other statements you can assign the value of them.  The two
+examples below are equivalent.
 </p>
 <div class="example">
 <pre class="example">&gt; if( any(x &lt;= 0) ) y &lt;- log(1+x) else y &lt;- log(x)
@@ -1724,7 +1724,7 @@ complete statement that is evaluated.  A simple solution is to use a
 compound statement wrapped in braces, putting the <code>else</code> on the
 same line as the closing brace that marks the end of the statement.
 </p>
-<p><code>if</code>/<code>else</code> statements can be nested.
+<p>If/else statements can be nested.
 </p>
 <div class="example">
 <pre class="example">if ( <var>statement1</var> ) {
@@ -1739,7 +1739,7 @@ same line as the closing brace that marks the end of the statement.
 
 <p>One of the even numbered statements will be evaluated and the resulting
 value returned.  If the optional <code>else</code> clause is omitted and all
-the odd numbered <var>statement</var>s evaluate to <code>FALSE</code> no statement
+the odd numbered <var>statement</var>&rsquo;s evaluate to <code>FALSE</code> no statement
 will be evaluated and <code>NULL</code> is returned.
 </p>
 <p>The odd numbered <var>statement</var>s are evaluated, in order, until one
@@ -1780,7 +1780,7 @@ causes control to return to the start of the loop.  The next iteration
 of the loop (if there is one) is then executed.  No statement below
 <code>next</code> in the current loop is evaluated.
 </p>
-<p>The value returned by a loop statement is always <code>NULL</code>
+<p>The value returned by a loop statement statement is always <code>NULL</code>
 and is returned invisibly.
 </p>
 <hr>
@@ -1874,7 +1874,7 @@ languages.
 <p>where the elements of <var>list</var> may be named.  First, <var>statement</var>
 is evaluated and the result, <var>value</var>, obtained.  If <var>value</var> is a
 number between 1 and the length of <var>list</var> then the corresponding
-element of <var>list</var> is evaluated and the result returned.  If <var>value</var>
+element <var>list</var> is evaluated and the result returned.  If <var>value</var>
 is too large or too small <code>NULL</code> is returned.
 </p>
 <div class="example">
@@ -1968,6 +1968,9 @@ vector is not a multiple of the shorter one, a warning is given.
 </p>
 <p>As from R 1.4.0, any arithmetic operation involving a zero-length
 vector has a zero-length result.
+</p>
+<p>One exception is that when adding vectors to matrices, a warning is not
+given if the lengths are incompatible.
 </p>
 <hr>
 <a name="Propagation-of-names"></a>
@@ -2312,7 +2315,7 @@ the same way as the basic methods, for example with respect to partial
 matching.
 </p>
 <p>The most important example of a class method for <code>[</code> is that used
-for data frames.  It is not described in detail here (see the help
+for data frames.  It is not be described in detail here (see the help
 page for <code>[.data.frame</code>, but in broad terms, if two indices are
 supplied (even if one is empty) it creates matrix-like indexing for a
 structure that is basically a list of vectors of the same length.  If a
@@ -2341,7 +2344,7 @@ mechanism for complex assignment:
 </p><div class="example">
 <pre class="example">x[3:5] &lt;- 13:15
 </pre></div>
-<p>The result of this command is as if the following had been executed
+<p>The result of this commands is as if the following had been executed
 </p><div class="example">
 <pre class="example">`*tmp*` &lt;- x
 x &lt;- &quot;[&lt;-&quot;(`*tmp*`, 3:5, value=13:15)
@@ -2419,9 +2422,9 @@ value of <code>e</code> on the RHS of the superassignment statement.  It sets
 </pre></div>
 <p>That is, the superassignment is equivalent to the four lines
 </p><div class="example">
-<pre class="example">`*tmp*` &lt;- get(e, envir=parent.env(), inherits=TRUE)
+<pre class="example">`*tmp*` &lt;- get(x,envir=parent.env(), inherits=TRUE)
 `*tmp*`[i] &lt;- e[i]+1
-e &lt;&lt;- `*tmp*`
+x &lt;&lt;- `*tmp*`
 rm(`*tmp*`)
 </pre></div>
 
@@ -2748,7 +2751,7 @@ The value returned by the call to <code>function</code> is a function.  If
 this is not given a name it is referred to as an
 <a name="index-function_002c-anonymous"></a>
 anonymous
-function. Anonymous functions are most frequently used as arguments to
+function. Anonymous functions are most frequently used as arguments
 other functions such as the <code>apply</code> family or <code>outer</code>.
 </p>
 <p>Here is a simple function: <code>echo &lt;- function(x) print(x)</code>.  So
@@ -2992,7 +2995,7 @@ to the local environment.
 <p>The process of filling the value slot of a promise by
 <a name="index-evaluation-2"></a>
 evaluating the
-contents of the expression slot in the promise&rsquo;s environment is called
+contents of the expression slot in the promises environment is called
 <em>forcing</em> the promise.  A promise will only be forced once, the
 value slot content being used directly later on.
 </p>
@@ -3228,10 +3231,10 @@ objects are <code>.Generic</code>, <code>.Class</code>, <code>.Method</code> and
 functions and types that will be discussed elsewhere.
 </p>
 <p>The class system is facilitated through the <code>class</code> attribute.
-This attribute is a character vector of class names.  So to create an
-object of class <code>&quot;foo&quot;</code> one simply attaches a class attribute with
-the string &lsquo;<samp>&quot;foo&quot;</samp>&rsquo; in it.  Thus, virtually anything can be turned
-in to an object of class <code>&quot;foo&quot;</code>.
+This attribute is a list of class names.  So to create an object of
+class <code>&quot;foo&quot;</code> one simply attaches a class attribute with the string
+&lsquo;<samp>&quot;foo&quot;</samp>&rsquo; in it.  Thus, virtually anything can be turned in to an
+object of class <code>&quot;foo&quot;</code>.
 </p>
 <p>The object system makes use of
 <a name="index-function_002c-generic-1"></a>
@@ -3329,7 +3332,7 @@ new generic function only the methods.  This makes it easy to add to
 existing systems since the user is only responsible for dealing with the
 new representation and not with any of the existing representations.
 </p>
-<p>The bulk of the uses of this methodology are to provide specialized
+<p>The bulk of the uses of this methodology are to provided specialized
 printing for objects of different types; there are about 40 methods for
 <code>print</code>.
 </p>
@@ -3473,6 +3476,10 @@ return to the generic and hence any expressions after a call to
 <p>Any arguments to the generic that were evaluated prior to the call to
 <code>UseMethod</code> remain evaluated.
 </p>
+<p>The arguments in the call to the generic are rematched with the
+arguments for the method using the standard argument matching mechanism.
+The first argument, i.e. the object, will have been evaluated.
+</p>
 <p>If the first argument to <code>UseMethod</code> is not supplied it is assumed
 to be the name of the current function.  If two arguments are supplied
 to <code>UseMethod</code> then the first is the name of the method and the
@@ -3480,7 +3487,7 @@ second is assumed to be the object that will be dispatched on.  It is
 evaluated so that the required method can be determined.  In this case
 the first argument in the call to the generic is not evaluated and is
 discarded.  There is no way to change the other arguments in the call to
-the method; these remain as they were in the call to the generic.  This
+the method these remain as they were in the call to the generic.  This
 is in contrast to <code>NextMethod</code> where the arguments in the call to
 the next method can be altered.
 </p>
@@ -3582,9 +3589,9 @@ possible to write methods specific to any function within a group.
 </p>
 <dl compact="compact">
 <dt>&lsquo;<samp>Math</samp>&rsquo;</dt>
-<dd><p>abs, acos, acosh, asin, asinh, atan, atanh, ceiling, cos, cosh, cospi, cumsum,
-exp, floor, gamma, lgamma, log, log10, round, signif, sin, sinh, sinpi, 
-tan, tanh, tanpi, trunc
+<dd><p>abs, acos, acosh, asin, asinh, atan, atanh, ceiling, cos, cosh, cumsum,
+exp, floor, gamma, lgamma, log, log10, round, signif, sin, sinh, tan,
+tanh, trunc
 </p>
 </dd>
 <dt>&lsquo;<samp>Summary</samp>&rsquo;</dt>
@@ -3947,7 +3954,7 @@ evaluation that comes as a surprise to some.  Consider
 
 <p>This looks straightforward, but one will discover that the y label
 becomes an ugly <code>c(...)</code> expression.  It happens because the rules
-of lazy evaluation cause the evaluation of the <code>ylab</code> expression
+of lazy evaluation causes the evaluation of the <code>ylab</code> expression
 to happen <em>after</em> <code>y</code> has been modified.  The solution is to
 force <code>ylab</code> to be evaluated first, i.e.,
 </p>
@@ -4596,7 +4603,7 @@ Previous: <a href="#on_002eexit" accesskey="p" rel="prev">on.exit</a>, Up: <a hr
 <h3 class="section">8.4 Error options</h3>
 
 <p>There are a number of <code>options</code> variables that can be used to
-control how R handles errors and warnings.  They are listed in the
+control how R handles errors and warnings.  The are listed in the
 table below.
 </p>
 <dl compact="compact">
@@ -5153,8 +5160,8 @@ Next: <a href="#Reserved-words" accesskey="n" rel="next">Reserved words</a>, Pre
 
 <a name="index-identifier"></a>
 <p>Identifiers consist of a sequence of letters, digits, the period
-(&lsquo;<samp>.</samp>&rsquo;) and the underscore.  They must not start with a digit or
-an underscore, or with a period followed by a digit.
+(&lsquo;<samp>.</samp>&rsquo;) and the underscore.  They must not start with a digit nor
+underscore, nor with a period followed by a digit.
 </p>
 <p>The definition of a letter depends on the current locale: the precise
 set of characters allowed is given by the C expression <code>(isalnum(c)
@@ -5309,7 +5316,7 @@ Previous: <a href="#Grouping" accesskey="p" rel="prev">Grouping</a>, Up: <a href
 <a name="Indexing-tokens-1"></a>
 <h4 class="subsection">10.3.8 Indexing tokens</h4>
 
-<p>Indexing of arrays and vectors is performed using the single and double
+<p>Indexing of arrays and vectors performed using the single and double
 brackets, &lsquo;<samp>[]</samp>&rsquo; and &lsquo;<samp>[[]]</samp>&rsquo;.  Also, indexing tagged lists
 may be done using the &lsquo;<samp>$</samp>&rsquo; operator.
 </p>
@@ -5396,7 +5403,7 @@ Next: <a href="#Index-constructions" accesskey="n" rel="next">Index construction
 <a name="Infix-and-prefix-operators-1"></a>
 <h4 class="subsection">10.4.2 Infix and prefix operators</h4>
 
-<p>The order of precedence (highest first) of the operators is
+<p>The order of precedence (highest first) of the operators are
 </p>
 <div class="example">
 <pre class="example">::
@@ -5416,12 +5423,10 @@ $ @
 =                  <span class="roman">(as assignment)</span>
 &lt;- &lt;&lt;-
 </pre></div>
-<p>Note that <code>:</code> precedes binary +/-, but not <code>^</code>. Hence,
-<code>1:3-1</code> is <em>0 1 2</em>, but <code>1:2^3</code> is <code>1:8</code>. 
-</p>
+
 <p>The exponentiation operator &lsquo;<samp>^</samp>&rsquo; and the
 <a name="index-assignment-11"></a>
-left assignment plus minus operators
+left assignment operators
 &lsquo;<samp>&lt;- - = &lt;&lt;-</samp>&rsquo; group right to left, all other operators group left to
 right.  That is, <code>2 ^ 2 ^ 3</code> is <em>2 ^ 8</em>, not <em>4 ^ 3</em>,
 whereas <code>1 - 1 - 1</code> is <em>-1</em>, not 1.
@@ -5449,7 +5454,7 @@ operator precedence (e.g., <code>a * (b + c)</code>).
 <p>Notice that the
 <a name="index-assignment-12"></a>
 assignment symbols are operators just like the arithmetic, relational,
-and logical ones.  Any expression is allowed also on the target side of
+and logical ones.  Any expressions is allowed also on the target side of
 an assignment, as far as the parser is concerned (<code>2 + 2 &lt;- 5</code> is a
 valid expression as far as the parser is concerned.  The evaluator will
 object, though).  Similar comments apply to the model formula operator.

@@ -5,7 +5,7 @@
 int bar( int x){
     return x*2 ;
 }
-        
+
 double foo( int x, double y){
     return x * y ;
 }
@@ -17,7 +17,7 @@ void bla( ){
 void bla1( int x){
     Rprintf( "hello (x = %d)\\n", x ) ;
 }
-  
+
 void bla2( int x, double y){
     Rprintf( "hello (x = %d, y = %5.2f)\\n", x, y ) ;
 }
@@ -36,18 +36,18 @@ private:
 
 RCPP_MODULE(yada){
     using namespace Rcpp ;
-	                  
+
     function( "bar"   , &bar   ) ;
     function( "foo"   , &foo   ) ;
     function( "bla"   , &bla   ) ;
     function( "bla1"  , &bla1   ) ;
     function( "bla2"  , &bla2   ) ;
-	
+
     class_<World>( "World" )
-	
+
         .default_constructor()
-	    
+
         .method( "greet", &World::greet )
         .method( "set", &World::set )
 	;
-}                     
+}

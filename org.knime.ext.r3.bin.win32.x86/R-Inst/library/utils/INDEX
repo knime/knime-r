@@ -36,7 +36,6 @@ bug.report              Send a Bug Report
 build                   Utilities for Building and Checking Add-on
                         Packages
 capture.output          Send Output to a Character String or File
-changedFiles            Detect which files have changed
 choose.dir              Choose a Folder Interactively
 choose.files            Choose a List of Files Interactively
 chooseBioCmirror        Select a Bioconductor Mirror
@@ -80,7 +79,8 @@ getWindowsHandle        Get a Windows Handle
 getWindowsHandles       Get handles of windows.
 glob2rx                 Change Wildcard or Globbing Pattern into
                         Regular Expression
-globalVariables         Declarations Used in Checking a Package
+globalVariables         Declare Variables to be Treated as Global in
+                        Checking a Package
 head                    Return the First or Last Part of an Object
 help                    Documentation
 help.request            Send a Post to R-help
