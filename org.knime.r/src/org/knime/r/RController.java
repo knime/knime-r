@@ -150,7 +150,7 @@ public class RController {
 
 	private String m_rHome;
 
-	private final boolean m_wasRAvailable;
+	private boolean m_wasRAvailable;
 
     static final String R_LOADED_LIBRARIES_VARIABLE = "knime.loaded.libraries";
 
@@ -265,7 +265,7 @@ public class RController {
 //				m_engine.close();
 //				m_consoleController.stop();
 				m_isRAvailable = false;
-				m_errors.add("You must restart KNIME in order for the changes in R (labs) to take effect.");
+				m_errors.add("You must restart KNIME in order for the changes in R to take effect.");
 				return;
 			}
 
@@ -366,6 +366,7 @@ public class RController {
 		}
 		// everything is ok.
 		m_isRAvailable = true;
+		m_wasRAvailable = true;
 
 		if (Platform.isWindows()) {
 			try {
