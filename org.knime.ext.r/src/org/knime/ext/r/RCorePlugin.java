@@ -117,6 +117,6 @@ public class RCorePlugin extends AbstractUIPlugin {
      * @return R executable
      */
     public static File getRExecutable() {
-        return new File(RPreferenceInitializer.getRProvider(PLUGIN_ID).getRBinPath());
+        return new File(RPreferenceInitializer.getRProvider().getRBinPath());
     }
 }

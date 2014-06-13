@@ -46,11 +46,14 @@
 package org.knime.ext.r.bin.preferences;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.knime.core.node.NodeLogger;
 import org.knime.ext.r.bin.Activator;
+import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.RPathUtil;
 
 import com.sun.jna.Platform;
@@ -67,23 +70,23 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
     /** Preference key for the path to the R executable setting. */
     public static final String PREF_R_HOME = "knime.r.home";
 
-    /** Preference key for for property if a custom setting should be allowed for R nodes which have been deprecated
-     * in v2.10.
-     */
-    public static String PREF_PRE_V2_10_SUPPORT = "knime.r.pre-v2.10-support";
-
-    /** Preference key for Path to R binary. */
-    public static final String PREF_R_BIN = "knime.r.bin";
-
     /**
      * @return default R_HOME from 2.9 settings, package bundle or system default
      */
     private File getDefaultRHOME() {
-        // R_HOME value
-        String rHome_v29 = org.eclipse.core.runtime.Platform.getPreferencesService().getString(
+        // R_HOME value from KNIME 2.9
+        String rHomeV29 = org.eclipse.core.runtime.Platform.getPreferencesService().getString(
             "org.knime.r", "knime.r.home", "", null);
-        if (rHome_v29 != null && !rHome_v29.isEmpty()) {
-            return new File(rHome_v29);
+        if (rHomeV29 != null && !rHomeV29.isEmpty()) {
+            File rHomeFile = new File(rHomeV29);
+            if (rHomeFile.exists() && rHomeFile.isDirectory()) {
+                return rHomeFile;
+            }
+        }
+        // Try R binary settings from KNIME 2.9
+        String rHomeV29FromRBin = determineRHomeFromRBinSetting();
+        if (rHomeV29FromRBin != null && !rHomeV29FromRBin.isEmpty()) {
+            return new File(rHomeV29FromRBin);
         } else {
             File packagedExecutable = RPathUtil.getPackagedRHome();
             if (packagedExecutable != null) {
@@ -91,6 +94,50 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
             }
             return RPathUtil.getSystemRHome();
         }
+
+    }
+
+    private String determineRHomeFromRBinSetting() {
+        final String rBinPathV29 = org.eclipse.core.runtime.Platform.getPreferencesService().getString(
+            "org.knime.ext.r", "knime.r.path", "", null);
+        if (rBinPathV29 == null || rBinPathV29.isEmpty()) {
+            return null;
+        }
+
+        Properties rProps = null;
+        try {
+            rProps = RBinUtil.getDefault().retrieveRProperties(new RPreferenceProvider() {
+
+                @Override
+                /** {@inheritDoc} */
+                public String getRHome() {
+                    throw new UnsupportedOperationException("Please use getRBinPath() with this provider, only.");
+                }
+
+                /** {@inheritDoc} */
+                @Override
+                public String getRBinPath() {
+                    return rBinPathV29;
+                }
+            });
+        } catch (IOException e) {
+            return null;
+        } catch (InterruptedException e) {
+            return null;
+        }
+
+        if (rProps != null && rProps.containsKey("rhome")) {
+            File rhomeFile = new File(rProps.getProperty("rhome"));
+            if (rhomeFile.exists()) {
+                try {
+                    // determine canonical path since R does not provide it.
+                    return rhomeFile.getCanonicalPath();
+                } catch (IOException e) {
+                    // do nothing
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -103,66 +150,33 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
         String rHome = rHomeFile == null ? "" : rHomeFile.getAbsolutePath();
         LOGGER.debug("Default R Home: " + rHome);
         store.setDefault(PREF_R_HOME, rHome);
-
-        // preferences for backward compatibility for KNIME < v2.10
-        String rBin_v29 = org.eclipse.core.runtime.Platform.getPreferencesService().getString(
-            "org.knime.ext.r", "knime.r.path", "", null);
-        boolean enablePreV210Support = rBin_v29 != null && !rBin_v29.isEmpty();
-
-        store.setDefault(PREF_PRE_V2_10_SUPPORT, enablePreV210Support);
-        if (enablePreV210Support) {
-            store.setDefault(PREF_R_BIN, rBin_v29);
-        }
     }
 
 	/**
      * Returns a provider for the R executable.
-     * @param plugin the id of the plugin requesting the preference provider.
-     *  If null the default preference provider is returned.
      * @return provider to the path to the R executable
      */
-    public static final RPreferenceProvider getRProvider(final String plugin) {
-        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-        boolean enablePreV210Support = store.getBoolean(PREF_PRE_V2_10_SUPPORT);
+    public static final RPreferenceProvider getRProvider() {
+        return new RPreferenceProvider() {
+            @Override
+            /** {@inheritDoc} */
+            public String getRHome() {
+                return Activator.getRHOME().getAbsolutePath();
+            }
 
-        if (enablePreV210Support && plugin != null && plugin.equals("org.knime.ext.r")) {
-            final String rBinPath = store.getString(PREF_R_BIN);
-            return new RPreferenceProvider() {
-                @Override
-                /** {@inheritDoc} */
-                public String getRHome() {
-                    throw new UnsupportedOperationException("Please use getRBinPath() with this provider, only.");
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public String getRBinPath() {
-                    return rBinPath;
-                }
-            };
-        }
-        else {
-            return new RPreferenceProvider() {
-                @Override
-                /** {@inheritDoc} */
-                public String getRHome() {
-                    return Activator.getRHOME().getAbsolutePath();
-                }
-
-                /** {@inheritDoc} */
-                @Override
-                public String getRBinPath() {
-                	if (Platform.isWindows()) {
-                    	if (Platform.is64Bit()) {
-                    		return getRHome() + File.separator + "bin" + File.separator + "x64" + File.separator + "R.exe";
-                    	} else {
-                    		return getRHome() + File.separator + "bin" + File.separator + "i386" + File.separator + "R.exe";
-                    	}
+            /** {@inheritDoc} */
+            @Override
+            public String getRBinPath() {
+            	if (Platform.isWindows()) {
+                	if (Platform.is64Bit()) {
+                		return getRHome() + File.separator + "bin" + File.separator + "x64" + File.separator + "R.exe";
                 	} else {
-                		return getRHome() + File.separator + "bin" + File.separator + "R";
+                		return getRHome() + File.separator + "bin" + File.separator + "i386" + File.separator + "R.exe";
                 	}
-                }
-            };
-        }
+            	} else {
+            		return getRHome() + File.separator + "bin" + File.separator + "R";
+            	}
+            }
+        };
     }
 }

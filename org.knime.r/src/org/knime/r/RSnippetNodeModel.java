@@ -411,7 +411,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
      * @return R binary path
      */
     protected final String getRBinaryPath() {
-    	return RPreferenceInitializer.getRProvider(Activator.PLUGIN_ID).getRBinPath();
+    	return RPreferenceInitializer.getRProvider().getRBinPath();
     }    
 
     /**

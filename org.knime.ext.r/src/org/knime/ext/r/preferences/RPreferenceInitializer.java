@@ -46,7 +46,6 @@
 package org.knime.ext.r.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.knime.ext.r.RCorePlugin;
 
 /**
  *
@@ -84,8 +83,7 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
             @Override
             /** {@inheritDoc} */
             public String getRPath() {
-                return org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider(
-                    RCorePlugin.PLUGIN_ID).getRBinPath();
+                return org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRBinPath();
             }
         };
     }

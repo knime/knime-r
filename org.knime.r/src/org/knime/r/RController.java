@@ -94,6 +94,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.ThreadUtils;
+import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.rosuda.JRI.Rengine;
 import org.rosuda.REngine.REXP;
@@ -154,10 +155,7 @@ public class RController {
 
     static final String R_LOADED_LIBRARIES_VARIABLE = "knime.loaded.libraries";
 
-    /**
-     * The temp directory used as a working directory for R
-     */
-    static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/');
+
 
 	public static synchronized RController getDefault() {
 		// TODO: recreate instance when R_HOME changes in the preferences.
@@ -173,7 +171,7 @@ public class RController {
 	}
 
 	private boolean rHomeChanged() {
-		final String rHome = RPreferenceInitializer.getRProvider(Activator.PLUGIN_ID).getRHome();
+		final String rHome = RPreferenceInitializer.getRProvider().getRHome();
 		return !m_rHome.equals(rHome);
 	}
 
@@ -271,14 +269,14 @@ public class RController {
 
 
 	    	String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer
-					.getRProvider(Activator.PLUGIN_ID).getRHome();
+					.getRProvider().getRHome();
 
 			if (!checkRHome(rHome)) {
 				m_isRAvailable = false;
 				return;
 			}
 			m_rHome = rHome;
-			m_rProps = retrieveRProperties();
+			m_rProps = RBinUtil.getDefault().retrieveRProperties();
 
 			if (!m_rProps.containsKey("major")) {
 				m_errors.add("Cannot determine major version of R. Please check the R installation defined in the KNIME preferences.");
@@ -394,126 +392,6 @@ public class RController {
 	    return false;
 	}
 
-    private Properties retrieveRProperties() throws IOException, InterruptedException {
-    	final File tmpPath = new File(TEMP_PATH);
-    	File propsFile = FileUtil.createTempFile("R-propsTempFile-", ".r", true);
-    	File rOutFile = FileUtil.createTempFile("R-propsTempFile-", ".Rout", tmpPath, true);
-
-    	File rCommandFile = writeRcommandFile(
-    			"setwd(\"" + tmpPath.getAbsolutePath().replace('\\', '/') + "\");\n"
-    		  +	"foo <- paste(names(R.Version()), R.Version(), sep=\"=\");\n"
-    		  + "lapply(foo, cat, \"\\n\", file=\"" +  propsFile.getAbsolutePath().replace('\\', '/') + "\", append=TRUE);\n"
-    		  + "foo <- paste(\"memory.limit\", memory.limit(), sep=\"=\");\n"
-    		  + "lapply(foo, cat, \"\\n\", file=\"" +  propsFile.getAbsolutePath().replace('\\', '/') + "\", append=TRUE);\n"
-    		  + "foo <- paste(\"rJava.path\", find.package(\"rJava\", quiet = TRUE), sep=\"=\");\n"
-    		  + "lapply(foo, cat, \"\\n\", file=\"" +  propsFile.getAbsolutePath().replace('\\', '/') + "\", append=TRUE);\n"  	      
-    		  + "");
-    	// create shell command
-        StringBuilder shellCmd = new StringBuilder();
-    	String rBinaryFile = getRBinaryPathAndArguments();
-        shellCmd.append(rBinaryFile);
-        shellCmd.append(" ");
-        shellCmd.append(rCommandFile.getName());
-        shellCmd.append(" ");
-        shellCmd.append(rOutFile.getName());
-
-        CommandExecution cmdExec = new CommandExecution(shellCmd.toString());
-
-        cmdExec.setExecutionDir(rCommandFile.getParentFile());
-        try {
-			int exitValue = cmdExec.execute(new ExecutionMonitor());
-			if (exitValue != 0) {
-				StringBuilder stderr = new StringBuilder();
-				for (String s : cmdExec.getStdErr()) {
-					stderr.append(s);
-				}
-			    if (stderr.length() > 0) {
-			    	LOGGER.debug(stderr.toString());
-			    }
-			}
-		} catch (Exception e) {
-			LOGGER.debug(e.getMessage(), e);
-			return new Properties();
-		}
-
-		// read propsFile
-		Properties props = new Properties();
-        FileInputStream fis = new FileInputStream(propsFile);
-
-        // loading properties from properties file
-        props.load(fis);
-
-        if (props.size() <= 0) {
-        	// Something went wrong, report R stdout und stderr.
-        	// The output and error streams are redirected to *.Rout when executing R with CMD BATCH
-        	File rOut = new File(rCommandFile.getAbsolutePath() + ".Rout");
-        	if (rOut.exists() && rOut.isFile()) {
-        		BufferedReader br = new BufferedReader(new FileReader(rOut));
-        	    try {
-        	        StringBuilder sb = new StringBuilder();
-        	        String line = br.readLine();
-
-        	        while (line != null) {
-        	            sb.append(line);
-        	            sb.append("\n");
-        	            line = br.readLine();
-        	        }
-        	        LOGGER.debug("Error while investigating the R environment. This is the ouput if R:\n" + sb.toString());
-        	    } catch(InvalidObjectException ioe) {
-        	    	LOGGER.debug("Error when reading file: " + rOut.getAbsolutePath());
-        	    } finally {
-        	    	try {
-        	    		br.close();
-        	    	} catch(InvalidObjectException ioe) {
-                	    // do nothing
-                    }
-        	    }
-        	}
-
-        }
-
-		return props;
-	}
-
-    /**
-     * Writes the given string into a file and returns it.
-     *
-     * @param cmd The string to write into a file.
-     * @return The file containing the given string.
-     * @throws IOException If string could not be written to a file.
-     */
-    private File writeRcommandFile(final String cmd) throws IOException {
-        File tempCommandFile = FileUtil.createTempFile("R-readPropsTempFile-", ".r", new File(TEMP_PATH), true);
-        FileWriter fw = new FileWriter(tempCommandFile);
-        fw.write(cmd);
-        fw.close();
-        return tempCommandFile;
-    }
-
-    /**
-     * Path to R binary together with the R arguments <code>CMD BATCH</code> and
-     * additional options.
-     * @return R binary path and arguments
-     */
-    private final String getRBinaryPathAndArguments() {
-        String argR = retRArguments();
-        if (!argR.isEmpty()) {
-            argR = " " + argR;
-        }
-        return getRBinaryPath() + " CMD BATCH" + argR;
-    }
-
-    private String retRArguments() {
-		return "--vanilla";
-	}
-
-	/**
-     * Path to R binary.
-     * @return R binary path
-     */
-    private final String getRBinaryPath() {
-    	return RPreferenceInitializer.getRProvider(Activator.PLUGIN_ID).getRBinPath();
-    }
 
 	private boolean checkRHome(final String rHomePath) {
 		File rHome = new File(rHomePath);

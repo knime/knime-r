@@ -47,10 +47,8 @@
  */
 package org.knime.ext.r.bin.preferences;
 
-import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -83,16 +81,6 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
         DirectoryFieldEditor rHomePath = new DirectoryFieldEditor(
                         RPreferenceInitializer.PREF_R_HOME, "Path to R Home", parent);
         addField(rHomePath);
-
-        BooleanFieldEditor preV210Support = new BooleanFieldEditor(
-            RPreferenceInitializer.PREF_PRE_V2_10_SUPPORT,
-            "Use custom R binary for R nodes deprecated in KNIME v2.10", parent);
-        addField(preV210Support);
-
-        FileFieldEditor rBinPath = new FileFieldEditor(RPreferenceInitializer.PREF_R_BIN,
-                        "Custom R binary", parent);
-        addField(rBinPath);
-
     }
 
     /**
