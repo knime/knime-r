@@ -56,8 +56,6 @@ import org.knime.ext.r.bin.Activator;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.RPathUtil;
 
-import com.sun.jna.Platform;
-
 /**
  *
  * @author Heiko Hofer
@@ -157,26 +155,6 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
      * @return provider to the path to the R executable
      */
     public static final RPreferenceProvider getRProvider() {
-        return new RPreferenceProvider() {
-            @Override
-            /** {@inheritDoc} */
-            public String getRHome() {
-                return Activator.getRHOME().getAbsolutePath();
-            }
-
-            /** {@inheritDoc} */
-            @Override
-            public String getRBinPath() {
-            	if (Platform.isWindows()) {
-                	if (Platform.is64Bit()) {
-                		return getRHome() + File.separator + "bin" + File.separator + "x64" + File.separator + "R.exe";
-                	} else {
-                		return getRHome() + File.separator + "bin" + File.separator + "i386" + File.separator + "R.exe";
-                	}
-            	} else {
-            		return getRHome() + File.separator + "bin" + File.separator + "R";
-            	}
-            }
-        };
+        return new DefaultRPreferenceProvider(Activator.getRHOME().getAbsolutePath());
     }
 }

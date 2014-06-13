@@ -47,19 +47,42 @@
  */
 package org.knime.ext.r.bin.preferences;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Properties;
+
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.knime.core.node.NodeLogger;
 import org.knime.ext.r.bin.Activator;
-
+import org.knime.ext.r.bin.RBinUtil;
 
 /**
+ * Preference page for settings the R installation directory.
  *
  * @author Heiko Hofer
  */
 public class RPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+    private class MyDirectoryFieldEditor extends DirectoryFieldEditor {
+        MyDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
+            super(name, labelText, parent);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        protected void valueChanged() {
+            super.valueChanged();
+            checkRVersion(getStringValue());
+        }
+    }
 
     /**
      * Creates a new preference page.
@@ -71,16 +94,38 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
         setDescription("KNIME R preferences");
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
     protected void createFieldEditors() {
         Composite parent = getFieldEditorParent();
-        DirectoryFieldEditor rHomePath = new DirectoryFieldEditor(
-                        RPreferenceInitializer.PREF_R_HOME, "Path to R Home", parent);
+        DirectoryFieldEditor rHomePath =
+            new MyDirectoryFieldEditor(RPreferenceInitializer.PREF_R_HOME, "Path to R Home", parent);
         addField(rHomePath);
+
+        checkRVersion(Activator.getRHOME().getAbsolutePath());
+    }
+
+    void checkRVersion(final String rHome) {
+        Path rHomePath = Paths.get(rHome);
+        if (!Files.isDirectory(rHomePath)) {
+            return;
+        }
+
+        RPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
+        try {
+            Properties props = RBinUtil.getDefault().retrieveRProperties(prefProvider);
+            String version = props.getProperty("major") + "." + props.getProperty("minor");
+            version = version.replace(" ", ""); // the version numbers may contains spaces
+            if ("3.1.0".equals(version)) {
+                setMessage("You have selected an R 3.1.0 installation. "
+                    + "Please see http://tech.knime.org/faq#q26 for details.", IMessageProvider.WARNING);
+            }
+        } catch (IOException | InterruptedException ex) {
+            // too bad
+            NodeLogger.getLogger(getClass()).info("Could not determine R version: " + ex.getMessage(), ex);
+        }
     }
 
     /**
