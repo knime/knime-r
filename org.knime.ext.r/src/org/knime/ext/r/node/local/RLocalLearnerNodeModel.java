@@ -123,7 +123,7 @@ public class RLocalLearnerNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(getSetWorkingDirCmd());
             completeCmd.append(READ_DATA_CMD_PREFIX);
             completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(READ_DATA_CMD_SUFFIX);
+            completeCmd.append(getReadCSVCommandSuffix(((BufferedDataTable) inDataTables[0]).getDataTableSpec()));
 
             completeCmd.append(m_rCommand.trim());
             completeCmd.append("\n");

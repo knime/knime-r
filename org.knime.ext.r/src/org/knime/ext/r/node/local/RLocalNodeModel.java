@@ -176,9 +176,8 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(getSetWorkingDirCmd());
             completeCmd.append(READ_DATA_CMD_PREFIX);
-            completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\',
-                    '/'));
-            completeCmd.append(READ_DATA_CMD_SUFFIX);
+            completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
+            completeCmd.append(getReadCSVCommandSuffix(((BufferedDataTable) inDataTables[0]).getDataTableSpec()));
 
             completeCmd.append(getCommand().trim());
             completeCmd.append("\n");

@@ -127,7 +127,7 @@ public class RLocalPredictorNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(getSetWorkingDirCmd());
             completeCmd.append(READ_DATA_CMD_PREFIX);
             completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(READ_DATA_CMD_SUFFIX);
+            completeCmd.append(getReadCSVCommandSuffix(((BufferedDataTable) inDataTables[1]).getDataTableSpec()));
             completeCmd.append("RDATA<-R\n");
 
             // load model

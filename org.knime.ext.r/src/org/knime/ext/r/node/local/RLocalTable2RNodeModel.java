@@ -128,7 +128,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
                 // write data into R
                 completeCmd.append(READ_DATA_CMD_PREFIX);
                 completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
-                completeCmd.append(READ_DATA_CMD_SUFFIX);
+                completeCmd.append(getReadCSVCommandSuffix(((BufferedDataTable) inDataTables[0]).getDataTableSpec()));
             }
             completeCmd.append(m_rCommand.trim());
             completeCmd.append("\n");

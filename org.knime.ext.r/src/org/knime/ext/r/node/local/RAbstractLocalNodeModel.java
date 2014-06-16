@@ -56,7 +56,11 @@ import org.knime.base.node.io.filereader.FileTable;
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.base.util.flowvariable.FlowVariableProvider;
 import org.knime.base.util.flowvariable.FlowVariableResolver;
+import org.knime.core.data.BooleanValue;
+import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataTableSpec;
+import org.knime.core.data.DoubleValue;
+import org.knime.core.data.IntValue;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -109,12 +113,6 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel imp
      * The R expression prefix to read data.
      */
     static final String READ_DATA_CMD_PREFIX = "R <- read.csv(\"";
-
-    /**
-     * The R expression suffix to read data.
-     */
-    static final String READ_DATA_CMD_SUFFIX =
-        "\", header = TRUE, row.names = 1);\n";
 
     /**
      * The R expression prefix to write data.
@@ -458,7 +456,36 @@ public abstract class RAbstractLocalNodeModel extends ExtToolOutputNodeModel imp
         });
     }
 
+    /**
+     * Returns the command for setting the working directory.
+     *
+     * @return an R command
+     */
     protected String getSetWorkingDirCmd() {
         return "setwd(\"" + m_tempPath + "\");\n";
+    }
+
+    /**
+     * Creates a the suffix of the "read.csv" command. It adds the column type specification as part of the command.
+     *
+     * @param spec the spec of the table that has been written into a file
+     * @return the command suffix
+     */
+    protected static String getReadCSVCommandSuffix(final DataTableSpec spec) {
+        StringBuilder buf = new StringBuilder();
+        buf.append("\", header = TRUE, row.names = 1, colClasses = c(\"character\"");
+        for (DataColumnSpec cs : spec) {
+            if (cs.getType().isCompatible(IntValue.class)) {
+                buf.append(", \"integer\"");
+            } else if (cs.getType().isCompatible(DoubleValue.class)) {
+                buf.append(", \"numeric\"");
+            } else if (cs.getType().isCompatible(BooleanValue.class)) {
+                buf.append(", \"logical\"");
+            } else {
+                buf.append(", NA");
+            }
+        }
+        buf.append("));\n");
+        return buf.toString();
     }
 }
