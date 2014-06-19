@@ -44,13 +44,7 @@
  */
 package org.knime.r;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -66,7 +60,6 @@ import javax.swing.event.EventListenerList;
 
 import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IBundleGroupProvider;
-import org.knime.base.node.util.exttool.CommandExecution;
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
@@ -89,10 +82,8 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
-import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
-import org.knime.core.util.FileUtil;
 import org.knime.core.util.ThreadUtils;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
@@ -197,8 +188,8 @@ public class RController {
 		m_isRAvailable = false;
 		initR();
 	}
-	
-	
+
+
 	/**
 	 * @throws RuntimeException when rJava.path property of m_rProps is empty string which means that rJava is not installed.
 	 */
@@ -209,13 +200,13 @@ public class RController {
 		if (rJavaPath.isEmpty()) {
 		  throw new RuntimeException("The KNIME R integration depends on rJava. Please use the command install.packages(\"rJava\") to install rJava in your R distribution.");
 		}
-				
+
 		List<String> jriRelativePaths = new ArrayList<String>(3);
 		if (Platform.isWindows()) {
 			if (Platform.is64Bit()) {
-				jriRelativePaths.add("\\jri\\x64\\jri.dll");
+				jriRelativePaths.add("/jri/x64/jri.dll");
 			} else {
-				jriRelativePaths.add("\\jri\\i386\\jri.dll");
+				jriRelativePaths.add("/jri/i386/jri.dll");
 			}
 		} else if (Platform.isLinux()) {
 			jriRelativePaths.add("/jri/libjri.so");
@@ -227,21 +218,22 @@ public class RController {
 			// Platform is not supported
 			return;
 		}
-		
+
 		Iterator<String> iter = jriRelativePaths.iterator();
 		while (iter.hasNext() && !Rengine.jriLoaded) {
+		    final String path = rJavaPath + iter.next();
 			try {
-				final String path = rJavaPath + iter.next();
                 System.load(path);
-				LOGGER.debug("Loaded jri library from " + path); 
+				LOGGER.debug("Loaded jri library from " + path);
 				Rengine.jriLoaded = true;
 			} catch (UnsatisfiedLinkError e) {
+			    LOGGER.info("Could not load jri library from '" + path + "': " + e.getMessage(), e);
 				// the file does not exist
 			}
 		}
 		if (!Rengine.jriLoaded) {
 			StringBuilder error_msg = new StringBuilder();
-			error_msg.append("Cannot load jri library from one of following locations:");
+			error_msg.append("Cannot load jri library from any of following locations:");
 			for(String path : jriRelativePaths) {
 				error_msg.append("\n");
 				error_msg.append(rJavaPath);
@@ -249,10 +241,10 @@ public class RController {
 			}
 			m_errors.add(error_msg.toString());
 		}
-		
+
 	}
-	
-	
+
+
 
 	private void initR() {
 		try {
@@ -313,10 +305,10 @@ public class RController {
 			}
 			String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
 			LOGGER.debug("R_HOME: " + sysRHome);
-			
-			
-			
-			
+
+
+
+
 			String sysPATH = CLibrary.INSTANCE.getenv("PATH");
  			LOGGER.debug("PATH: " + sysPATH);
  			if (System.getProperty("jri.ignore.ule") == null) { // static init of Rengine.class checks this
@@ -327,7 +319,7 @@ public class RController {
 			if (!Rengine.jriLoaded) {
 				loadJRI();
 			}
-			
+
  			final JRIEngine jriEngine = new JRIEngine(new String[] { "--no-save"}, m_consoleController);
  			if (!Rengine.jriLoaded) {
  			    throw new Exception("JRI library ('jri') not loaded. Please visit http://tech.knime.org/faq#q25 for more information.");
