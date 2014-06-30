@@ -69,7 +69,7 @@ public class RLocalSourceNodeDialogPane extends RLocalNodeDialogPane {
      */
     public RLocalSourceNodeDialogPane() {
         m_dialogPanel = new RDialogPanel();
-        addTabAt(0, "R Command", m_dialogPanel);
+        addTabAt(0, "R Command", m_dialogPanel, false);
         setSelected("R Command");
     }
 

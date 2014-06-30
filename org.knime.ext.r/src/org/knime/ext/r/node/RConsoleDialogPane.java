@@ -68,7 +68,7 @@ public class RConsoleDialogPane extends RNodeDialogPane {
     protected RConsoleDialogPane() {
         super();
         m_dialogPanel = new RDialogPanel();
-        this.addTab("R Command", m_dialogPanel);
+        this.addTab("R Command", m_dialogPanel, false);
         super.addLoginTab();
     }
 

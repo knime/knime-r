@@ -83,7 +83,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
         setSelected(TAB_TITLE);
 
         m_viewPngPanel = new RViewsPngDialogPanel();
-        addTabAt(1, RViewsPngDialogPanel.TAB_PNG_TITLE, m_viewPngPanel);
+        addTabAt(1, RViewsPngDialogPanel.TAB_PNG_TITLE, m_viewPngPanel, false);
     }
 
     /**

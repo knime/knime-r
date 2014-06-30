@@ -73,7 +73,7 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
     public RLocalScriptingNodeDialogPane() {
         super();
         m_dialogPanel = new RDialogPanel();
-        addTabAt(0, "R Command", m_dialogPanel);
+        addTabAt(0, "R Command", m_dialogPanel, false);
         setSelected("R Command");
     }
 
