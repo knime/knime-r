@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.knime.org/2008/09/XMLConfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.knime.org/2008/09/XMLConfig http://www.knime.org/XMLConfig_2008_09.xsd" key="settings.xml">
+<entry key="node_file" type="xstring" value="settings.xml"/>
+<config key="flow_stack"/>
+<config key="internal_node_subsettings">
+<entry key="memory_policy" type="xstring" value="CacheSmallInMemory"/>
+</config>
+<config key="model">
+<entry key="Image width" type="xint" value="800"/>
+<entry key="Image height" type="xint" value="600"/>
+<entry key="Image resolution" type="xstring" value=""/>
+<entry key="Image background color" type="xstring" value="#ffffff"/>
+<entry key="Text point size" type="xint" value="12"/>
+<config key="R settings">
+<entry key="script" type="xstring" value="# This example relies on ggplot2 and grid, if these packages are not part of %%00010# your R installation, please add them!%%00010require(ggplot2)%%00010require(grid)%%00010%%00010title %%00009= knime.flow.in[[&quot;title&quot;]]%%00010%%00010color_in%%00009%%00009= knime.in[knime.flow.in[[&quot;color&quot;]]]%%00010x_in %%00009 %%00009= knime.in[knime.flow.in[[&quot;x&quot;]]]%%00010y_in %%00009 %%00009= knime.in[knime.flow.in[[&quot;y&quot;]]]%%00009%%00010%%00010color = as.factor(as.matrix(color_in))%%00010x %%00009 = as.numeric(as.matrix(x_in))%%00010y%%00009 = as.numeric(as.matrix(y_in))%%00010%%00010# define a plot theme%%00010# http://docs.ggplot2.org/0.9.2.1/theme.html for more options%%00010clean_theme = theme(panel.background = element_blank(),%%00010%%00009%%00009%%00009%%00009plot.title = element_text(size=20, face=&quot;bold&quot;, colour = &quot;black&quot;),%%00010%%00009%%00009%%00009%%00009panel.border = element_rect(color = &quot;white&quot;, linetype = &quot;solid&quot;, fill = &quot;transparent&quot;),%%00010%%00009%%00009%%00009%%00009axis.title.x = element_text(size=18, face=&quot;italic&quot;, colour = &quot;black&quot;),%%00010%%00009%%00009%%00009%%00009axis.title = element_text(size=18, face=&quot;italic&quot;, colour = &quot;black&quot;),%%00010%%00009%%00009%%00009%%00009axis.text = element_text(size=18, face=&quot;italic&quot;, colour = &quot;black&quot;),%%00010%%00009%%00009%%00009%%00009axis.text.x = element_text(size=14, face=&quot;italic&quot;, colour = &quot;black&quot;, angle = 45),%%00010%%00009%%00009%%00009%%00009legend.text = element_text(size=18, face=&quot;italic&quot;, colour = &quot;black&quot;),%%00010%%00009%%00009%%00009%%00009legend.title = element_text(size=18, face=&quot;italic&quot;, colour = &quot;black&quot;),%%00010%%00009%%00009%%00009%%00009panel.grid = element_blank()%%00010%%00009%%00009%%00009%%00009)%%00010%%00010%%00010labels = labs(list(%%00009title %%00009= knime.flow.in[[&quot;title&quot;]], %%00010%%00009%%00009%%00009%%00009x %%00009%%00009= knime.flow.in[[&quot;x&quot;]],%%00010%%00009%%00009%%00009%%00009y %%00009%%00009= knime.flow.in[[&quot;y&quot;]],%%00010%%00009%%00009%%00009%%00009color %%00009= knime.flow.in[[&quot;color&quot;]]%%00010%%00009%%00009%%00009%%00009)%%00010%%00009%%00009%%00009)%%00010%%00009%%00009%%00009%%00009%%00010qplot(x,y,color=color) + labels + clean_theme"/>
+<entry key="templateUUID" type="xstring" value="64af685c-b86f-4ec5-8cd2-e6b5d1cd8794"/>
+<entry key="version" type="xstring" value="version 1.x"/>
+<entry key="Output non numbers (NaN, Inf, -Inf) as missing cells" type="xboolean" value="true"/>
+</config>
+</config>
+<entry key="customDescription" type="xstring" isnull="true" value=""/>
+<entry key="state" type="xstring" value="EXECUTED"/>
+<entry key="factory" type="xstring" value="org.knime.r.RViewNodeFactory"/>
+<entry key="node-name" type="xstring" value="R View (Table)"/>
+<entry key="node-bundle-name" type="xstring" value="KNIME R-Project nodes"/>
+<entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.r"/>
+<entry key="node-bundle-vendor" type="xstring" value="KNIME GmbH, Konstanz, Germany"/>
+<entry key="node-bundle-version" type="xstring" value="2.10.0.0043148"/>
+<config key="factory_settings"/>
+<entry key="name" type="xstring" value="R View (Table)"/>
+<entry key="hasContent" type="xboolean" value="true"/>
+<entry key="isInactive" type="xboolean" value="false"/>
+<config key="ports">
+<config key="port_1">
+<entry key="index" type="xint" value="1"/>
+<entry key="port_spec_class" type="xstring" value="org.knime.core.node.port.image.ImagePortObjectSpec"/>
+<entry key="port_object_class" type="xstring" value="org.knime.core.node.port.image.ImagePortObject"/>
+<entry key="port_object_summary" type="xstring" value="PNG Image 800 x 600 with 82 KB"/>
+<entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
+<entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
+<entry key="port_dir_location" type="xstring" value="port_1"/>
+</config>
+</config>
+<config key="filestores">
+<entry key="file_store_location" type="xstring" isnull="true" value=""/>
+<entry key="file_store_id" type="xstring" value="928904ae-2cb5-4df2-a314-5f94458e081f"/>
+</config>
+</config>

@@ -1,0 +1,80 @@
+#############################################
+#
+# Content of .Rout file: 
+#
+#############################################
+ 
+
+R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin10.8.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> setwd("/var/folders/1c/ttd7z6wx6z9by2mrdjs48_c00000gp/T/knime_R_Metanodes53681");
+> load("/var/folders/1c/ttd7z6wx6z9by2mrdjs48_c00000gp/T/knime_R_Metanodes53681/R-workspace168979204008083349.RData");
+> png("/var/folders/1c/ttd7z6wx6z9by2mrdjs48_c00000gp/T/knime_R_Metanodes53681/R-view-4001608535141134840.png", width=800, height=600, pointsize=12, bg="#ffffff", res=);
+> # This example relies on ggplot2 and grid, if these packages are not part of 
+> # your R installation, please add them!
+> require(ggplot2)
+Loading required package: ggplot2
+> require(grid)
+Loading required package: grid
+> 
+> title 	= knime.flow.in[["title"]]
+> 
+> color_in		= knime.in[knime.flow.in[["color"]]]
+> x_in 	 	= knime.in[knime.flow.in[["x"]]]
+> y_in 	 	= knime.in[knime.flow.in[["y"]]]	
+> 
+> color = as.factor(as.matrix(color_in))
+> x 	 = as.numeric(as.matrix(x_in))
+> y	 = as.numeric(as.matrix(y_in))
+> 
+> # define a plot theme
+> # http://docs.ggplot2.org/0.9.2.1/theme.html for more options
+> clean_theme = theme(panel.background = element_blank(),
++ 				plot.title = element_text(size=20, face="bold", colour = "black"),
++ 				panel.border = element_rect(color = "white", linetype = "solid", fill = "transparent"),
++ 				axis.title.x = element_text(size=18, face="italic", colour = "black"),
++ 				axis.title = element_text(size=18, face="italic", colour = "black"),
++ 				axis.text = element_text(size=18, face="italic", colour = "black"),
++ 				axis.text.x = element_text(size=14, face="italic", colour = "black", angle = 45),
++ 				legend.text = element_text(size=18, face="italic", colour = "black"),
++ 				legend.title = element_text(size=18, face="italic", colour = "black"),
++ 				panel.grid = element_blank()
++ 				)
+> 
+> 
+> labels = labs(list(	title 	= knime.flow.in[["title"]], 
++ 				x 		= knime.flow.in[["x"]],
++ 				y 		= knime.flow.in[["y"]],
++ 				color 	= knime.flow.in[["color"]]
++ 				)
++ 			)
+> 				
+> qplot(x,y,color=color) + labels + clean_theme
+Warning message:
+Removed 615 rows containing missing values (geom_point). 
+> 
+> dev.off();
+null device 
+          1 
+> knime.loaded.libraries <- (.packages());
+> save.image("/var/folders/1c/ttd7z6wx6z9by2mrdjs48_c00000gp/T/knime_R_Metanodes53681/R-workspace168979204008083349.RData");
+> 
+> proc.time()
+   user  system elapsed 
+  1.100   0.054   1.150 

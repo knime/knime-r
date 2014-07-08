@@ -116,10 +116,34 @@
             path="/">
       </category>
       <category
+            after="r-metanodes"
             icon="icons/rsnippet_io.png"
             level-id="io"
             name="IO"
             path="/r">
       </category>
-   </extension>   
+      <category
+            icon="icons/meta.png"
+            level-id="r-metanodes"
+            name="Meta Nodes"
+            path="/r">
+      </category>
+   </extension>
+   <extension
+         point="org.knime.workbench.repository.metanode">
+      <PersistedMetaNode
+            category-path="/r/r-metanodes"
+            icon="icons/rsnippet.png"
+            id="grouped_scatterplot"
+            name="Grouped ScatterPlot"
+            workflowDir="metanode_templates/Grouped ScatterPlot/">
+      </PersistedMetaNode>
+      <PersistedMetaNode
+            category-path="/r/r-metanodes"
+            icon="icons/rsnippet.png"
+            id="stacked_barchart"
+            name="Stacked BarChart"
+            workflowDir="metanode_templates/Stacked BarChart/">
+      </PersistedMetaNode>
+   </extension>
 </plugin>
