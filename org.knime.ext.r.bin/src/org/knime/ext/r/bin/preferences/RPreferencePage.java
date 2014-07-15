@@ -115,12 +115,18 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
 
         RPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
         try {
-            Properties props = RBinUtil.getDefault().retrieveRProperties(prefProvider);
-            String version = props.getProperty("major") + "." + props.getProperty("minor");
-            version = version.replace(" ", ""); // the version numbers may contains spaces
-            if ("3.1.0".equals(version)) {
-                setMessage("You have selected an R 3.1.0 installation. "
-                    + "Please see http://tech.knime.org/faq#q26 for details.", IMessageProvider.WARNING);
+            String rHomeCheck = RBinUtil.getDefault().checkRHome(rHome);
+            if (rHomeCheck != null) {
+                int index = rHomeCheck.indexOf('.');
+                setMessage(rHomeCheck.substring(0, index + 1), IMessageProvider.ERROR);
+            } else {
+                Properties props = RBinUtil.getDefault().retrieveRProperties(prefProvider);
+                String version = props.getProperty("major") + "." + props.getProperty("minor");
+                version = version.replace(" ", ""); // the version numbers may contains spaces
+                if ("3.1.0".equals(version)) {
+                    setMessage("You have selected an R 3.1.0 installation. "
+                        + "Please see http://tech.knime.org/faq#q26 for details.", IMessageProvider.WARNING);
+                }
             }
         } catch (IOException | InterruptedException ex) {
             // too bad

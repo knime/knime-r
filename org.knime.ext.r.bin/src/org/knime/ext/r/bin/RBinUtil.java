@@ -62,8 +62,11 @@ import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
+import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.ext.r.bin.preferences.RPreferenceProvider;
+
+import com.sun.jna.Platform;
 
 /**
  * Utility class with methods to call R binary.
@@ -230,4 +233,56 @@ public class RBinUtil {
         return "--vanilla";
     }
 
+
+    /**
+     * Checks whether the given path is a valid R_HOME directory. It checks the presence of the bin and library folder.
+     * The methods returns <code>null</code> if the directory is valid, otherwise a detailed error message.
+     *
+     * @param rHomePath path to R_HOME
+     * @return <code>null</code> in case the directory is valid, an error message otherwise
+     */
+    public String checkRHome(final String rHomePath) {
+        File rHome = new File(rHomePath);
+        String msgSuffix =
+            "R_HOME ('" + rHomePath + "') is meant to be the path to the folder which is the root of Rs"
+                + " installation tree. \nIt contains a 'bin' folder which itself contains the R executable and a "
+                + "'library' folder containing the R-Java bridge library.\n"
+                + "Please change the R settings in the preferences.";
+        if (!rHome.exists()) {
+            return "R_HOME does not exist. \n" + msgSuffix;
+        }
+        if (!rHome.isDirectory()) {
+            return "R_HOME is not a directory. \n" + msgSuffix;
+        }
+        File binDir = new File(rHome, "bin");
+        if (!binDir.isDirectory()) {
+            return "R_HOME does not contain a folder with name 'bin'.\n" + msgSuffix;
+        }
+
+        File rExecutable = new File(new DefaultRPreferenceProvider(rHomePath).getRBinPath());
+        if (!rExecutable.exists()) {
+            return "R_HOME does not contain an R executable.\n" + msgSuffix;
+        }
+
+        File libraryDir = new File(rHome, "library");
+        if (!libraryDir.isDirectory()) {
+            return "R_HOME does not contain a folder with name 'library'.\n" + msgSuffix;
+        }
+        if (Platform.isWindows()) {
+            if (Platform.is64Bit()) {
+                File expectedFolder = new File(binDir, "x64");
+                if (!expectedFolder.isDirectory()) {
+                    return "R_HOME does not contain a folder with name 'bin\\x64'. Please install R 64-bit files.\n"
+                        + msgSuffix;
+                }
+            } else {
+                File expectedFolder = new File(binDir, "i386");
+                if (!expectedFolder.isDirectory()) {
+                    return "R_HOME does not contain a folder with name 'bin\\i386'. Please install R 32-bit files.\n"
+                        + msgSuffix;
+                }
+            }
+        }
+        return null;
+    }
 }
