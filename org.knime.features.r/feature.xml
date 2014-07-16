@@ -356,6 +356,10 @@ library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License.
    </license>
 
+   <requires>
+      <import plugin="org.knime.quickform.nodes"/>
+   </requires>
+
    <plugin
          id="org.knime.r"
          download-size="0"
