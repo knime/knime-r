@@ -263,7 +263,9 @@ public class RController {
 	    	String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer
 					.getRProvider().getRHome();
 
-			if (!checkRHome(rHome)) {
+	    	String rHomeCheck = RBinUtil.getDefault().checkRHome(rHome);
+			if (rHomeCheck != null) {
+			    m_errors.add(rHomeCheck);
 				m_isRAvailable = false;
 				return;
 			}
@@ -382,43 +384,6 @@ public class RController {
 	        }
 	    }
 	    return false;
-	}
-
-
-	private boolean checkRHome(final String rHomePath) {
-		File rHome = new File(rHomePath);
-		String msgSuffix = "R_HOME ('" + rHomePath + "') is meant to be the path to the folder which is the root of Rs"
-		        + " installation tree. \nIt contains a bin folder which itself contains the R executable. \nPlease "
-		        + "change the R settings in the preferences.";
-		if (!rHome.exists()) {
-			m_errors.add("R_HOME does not exist. \n" + msgSuffix);
-			return false;
-		}
-		if (!rHome.isDirectory()) {
-			m_errors.add("R_HOME is not a directory. \n" + msgSuffix);
-			return false;
-		}
-		File binDir = new File(rHome, "bin");
-		if (!binDir.isDirectory()) {
-			m_errors.add("R_HOME does not contain a folder with name \"bin\". \n" + msgSuffix);
-			return false;
-		}
-		if (Platform.isWindows()) {
-        	if (Platform.is64Bit()) {
-        	    File expectedFolder = new File(binDir, "x64");
-        		if (!expectedFolder.isDirectory()) {
-        			m_errors.add("R_HOME does not contain a folder with name \"bin\\x64\". Please install R 64-bit files. \n" + msgSuffix);
-        			return false;
-        		}
-        	} else {
-                File expectedFolder = new File(binDir, "i386");
-                if (!expectedFolder.isDirectory()) {
-        			m_errors.add("R_HOME does not contain a folder with name \"bin\\i386\". Please install R 32-bit files. \n" + msgSuffix);
-        			return false;
-        		}
-        	}
-		}
-		return true;
 	}
 
     /**
