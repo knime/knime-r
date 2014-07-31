@@ -1012,11 +1012,11 @@ public class RController {
 				}
 			} else if (rexp.isFactor()) {
 				RFactor factor = rexp.asFactor();
-				String[] colValues = factor.asStrings();
-				if (colValues[r] == null) {
+				String colValue = factor.at(r);
+				if (colValue == null) {
 					cells = DataType.getMissingCell();
 				} else {
-					cells = new StringCell(colValues[r]);
+					cells = new StringCell(colValue);
 				}
 			} else if (rexp.isInteger()) {
 				int[] colValues = rexp.asIntegers();
