@@ -232,13 +232,13 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
             	}
             }
     		exec.setProgress(0.0);
-    		exec.setMessage("Export data do to R");
+    		exec.setMessage("Exporting data to R");
     		tempWorkspaceFile = exportData(inData, flowVarRepo, exec.createSubExecutionContext(0.6 - importTime));
     		exec.setMessage("Run R");
     		runRScript(inData, tempWorkspaceFile, exec.createSubExecutionContext(1.0 - importTime));    	
     		exec.setProgress(1.0 - importTime);
 
-    		exec.setMessage("Import data from R");
+    		exec.setMessage("Importing data from R");
             RController r = RController.getDefault();
     		List<String> librariesInR = r.clearAndReadWorkspace(tempWorkspaceFile, exec);
             Collection<PortObject> outPorts = new ArrayList<PortObject>(4);
@@ -253,7 +253,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
             		outPorts.add(new RPortObject(tempWorkspaceFile, librariesInR));
             	} 
             }
-            exec.setMessage("Import flow variables from R");
+            exec.setMessage("Importing flow variables from R");
             importFlowVariablesFromR(r, flowVarRepo, exec);
 	        
 			return new ValueReport<PortObject[]>(outPorts.toArray(new PortObject[outPorts.size()]), errors, warnings);
