@@ -860,7 +860,7 @@ public class RController {
 					RList rList = new RList();
 					for (int i = 0; i < column.length; i++) {
 						if (column[i] != null) {
-							rList.add(new REXPFactor(new RFactor(column[i])));
+							rList.add(createFactor(column[i]));
 						} else {
 							rList.add(null);
 						}
@@ -882,7 +882,7 @@ public class RController {
 					content.put(colNames[c], ri);
 				} else {
 					String[] column = (String[]) columns[c];
-					REXPFactor ri = new REXPFactor(new RFactor(column));
+					REXPFactor ri = createFactor(column);
 					content.put(colNames[c], ri);
 				}
 			}
@@ -891,19 +891,31 @@ public class RController {
 		return content;
 	}
 
+	/** Creates factor variable efficiently (based on the implementation of 
+	 * {@link RFactor#RFactor(String[], int)}). Fixes bug 5576: 
+	 * New R nodes: String columns with many and/or long values take long to load into R.
+	 * @param values non null column values
+	 * @return the factor
+	 */
 	private static REXPFactor createFactor(final String[] values) {
 	    LinkedHashMap<String, Integer> hash = new LinkedHashMap<String, Integer>();
 	    int[] valueIndices = new int[values.length];
 	    for (int i = 0; i < values.length; i++) {
-	        Integer index = hash.get(values[i]);
-            if (index == null) {
-                index = hash.size() + 1;
-                hash.put(values[i], index);
-            }
-            valueIndices[i] = index.intValue();
+	        int valueIndex;
+	        if (values[i] == null) { // missing
+	            valueIndex = REXPInteger.NA;
+	        } else {
+    	        Integer index = hash.get(values[i]);
+                if (index == null) {
+                    index = hash.size() + 1;
+                    hash.put(values[i], index);
+                }
+                valueIndex = index.intValue();
+	        }
+            valueIndices[i] = valueIndex;
 	    }
-	    String[] categories = hash.keySet().toArray(new String[hash.size()]);
-	    return new REXPFactor(valueIndices, categories);
+	    String[] levels = hash.keySet().toArray(new String[hash.size()]);
+	    return new REXPFactor(valueIndices, levels);
 	}
 
 	public static REXP createDataFrame(final RList l, final REXP rownames, final ExecutionMonitor exec) throws REXPMismatchException {
