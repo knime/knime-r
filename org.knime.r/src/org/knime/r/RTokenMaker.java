@@ -13,8 +13,8 @@ import java.io.IOException;
 import javax.swing.text.Segment;
 
 import org.fife.ui.rsyntaxtextarea.AbstractJFlexCTokenMaker;
-import org.fife.ui.rsyntaxtextarea.DefaultToken;
 import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenImpl;
 
 
 /**
@@ -393,10 +393,9 @@ public class RTokenMaker extends AbstractJFlexCTokenMaker {
 	 *         it out.
 	 */
 	@Override
-	public String[] getLineCommentStartAndEnd() {
+	public String[] getLineCommentStartAndEnd(final int languageIndex) {
 		return new String[] { "#", null };
 	}
-
 
 	/**
 	 * Returns the first token in the linked list of tokens generated
@@ -438,7 +437,7 @@ public class RTokenMaker extends AbstractJFlexCTokenMaker {
 			return yylex();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			return new DefaultToken();
+			return new TokenImpl();
 		}
 
 	}
