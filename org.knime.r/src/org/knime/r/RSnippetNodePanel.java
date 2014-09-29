@@ -830,7 +830,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
         	if (isRAvailable.hasErrors()) {
 			    StyledDocument doc = m_console.getStyledDocument();
 				try {
-					doc.insertString(doc.getLength(), "R cannot be intialized.\n", m_console.getErrorStyle());
+					doc.insertString(doc.getLength(), "R cannot be initialized.\n", m_console.getErrorStyle());
 					doc.insertString(doc.getLength(), ValueReport.joinString(isRAvailable.getErrors(), "\n"),
 							m_console.getErrorStyle());
 				} catch (BadLocationException e) {
