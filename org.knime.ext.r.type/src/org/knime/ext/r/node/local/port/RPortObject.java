@@ -51,6 +51,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -97,15 +98,15 @@ public class RPortObject implements PortObject {
     public RPortObject(final File fileR) {
         this(fileR, Collections.<String>emptyList());
     }
-    
-    /** 
+
+    /**
      * @param fileR The workspace file.
      * @param libraries The list of libraries, not null.
      * @since 2.8
      */
     public RPortObject(final File fileR, final List<String> libraries) {
         m_fileR = fileR;
-        m_libraries = libraries.isEmpty() ? Collections.<String>emptyList() 
+        m_libraries = libraries.isEmpty() ? Collections.<String>emptyList()
             : Collections.unmodifiableList(new ArrayList<String>(libraries));
     }
 
@@ -222,15 +223,13 @@ public class RPortObject implements PortObject {
     String getModelData() {
         StringBuffer buf = new StringBuffer();
         if (m_fileR != null && m_fileR.exists() && m_fileR.canRead()) {
-            try {
-                BufferedReader reader =
-                        new BufferedReader(new FileReader(m_fileR));
+            try (BufferedReader reader = new BufferedReader(new FileReader(m_fileR))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     buf.append(line);
                 }
             } catch (Exception e) {
-                LOGGER.warn("R model could not be read from file!");
+                LOGGER.warn("R model could not be read from file!", e);
                 buf.append("R model could no be read from file!");
             }
         }
@@ -247,7 +246,17 @@ public class RPortObject implements PortObject {
             return false;
         }
         RPortObject rPort = (RPortObject) obj;
-        return m_fileR.equals(rPort.m_fileR);
+        if (m_fileR.equals(rPort.m_fileR)) {
+            return true;
+        }
+
+        try (InputStream in1 = new FileInputStream(m_fileR); InputStream in2 = new FileInputStream(rPort.m_fileR)) {
+            return IOUtils.contentEquals(in1, in2);
+        } catch (IOException ex) {
+            LOGGER.warn("R models in '" + m_fileR + "' and '" + rPort.m_fileR + "' could not be compared: "
+                                + ex.getMessage(), ex);
+            return false;
+        }
     }
 
     /** {@inheritDoc} */
