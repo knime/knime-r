@@ -1,0 +1,167 @@
+Version 4.4 (2014-09)
+    o add option for using transformation of variables in the hierarchical 
+      initialization step.
+    o add quantileMclust for computing the quantiles from a univariate 
+      Gaussian mixture distribution.
+    o bug fixes on summaryMclustBIC, summaryMclustBICn, Mclust to return a 
+      matrix of 1s on a single column for z even in the case of G = 1. This 
+      is to avoid error on some plots.
+    o pdf files (previously included as vignettes) moved to inst/doc with 
+      corresponding index.html.
+
+Version 4.3 (2014-03)
+    o bug fix for logLik.MclustDA() in the univariate case. 
+    o add argument "what" to predict.densityMclust() function for choosing
+      what to retrieve, the mixture density or component density.
+    o hc function has an additional parameter to control if the original
+      variables or a transformation of them should be used for
+      hierarchical clustering.
+    o included "hcUse" in mclust.options to be passed as default to hc().
+    o original data (and class for classification models) are stored in the
+      object returned by the main functions.
+    o add component "hypvol"" to Mclust object which provide the hypervolume
+      of the noise component when required, otherwise is set to NA.
+    o add a warning when prior is used and BIC returns NAs.
+    o bug fixes for summary.Mclust(), print.summary.Mclust(), plot.Mclust() 
+      and icl() in the case of presence of a noise component.
+    o some plots on plot.MclustDR() require plot.new() before calling
+      plot.window().      
+    o bug fixes for MclustDR() when p=1.
+    o correction to Mclust man page.
+    o bug fixes.
+
+Version 4.2 (2013-07)
+    o fix bug in sim* functions when no obs are assigned to a component.
+    o MclustDA allows to fit a single class model.
+    o fix bug in summary.Mclust when a subset is used for initialization.
+    o fix a bug in the function qclass when ties are present in quantiles, 
+      so it always return the required number of classes.
+    o various small bug fixes.
+
+Version 4.1 (2013-04)
+    o new icl function for computing the integrated complete-data likelihood
+    o new mclustICL function with associated print and plot methods
+    o print.mclustBIC shows also the top models based on BIC
+    o modified summary.Mclust to return also the icl
+    o rewrite of adjustedRandIndex function. This version is more efficient 
+      for large vectors
+    o updated help for adjustedRandIndex
+    o modifications to MclustDR and its summary method
+    o changed behavior of plot.MclustDR(..., what = "contour")
+    o improved plot of uncertainty for plot.MclustDR(..., what = "boundaries")
+    o corrected a bug for malformed GvHD data
+    o corrected version of qclass for selecting initial values in 
+      case of 1D data when successive quantiles coincide
+    o corrected version of plot BIC values when only a single G component 
+      models are fitted
+    o various bug fixes 
+
+Version 4.0  (2012-08)
+    o new summary and print methods for Mclust.
+    o new summary and print methods for densityMclust.
+    o included MclustDA function and methods.
+    o included MclustDR function and methods.
+    o included me.weighted function.
+    o restored hierarchical clustering capability for the EEE model (hcEEE).
+    o included vignettes for mclust version 4 from Technical Report No. 597 
+      and for using weights in mclust.
+    o adoption of GPL (>= 2) license.
+
+Version 3.5  (2012-07)
+    o added summary.Mclust
+    o new functions for plotting and summarizing density estimation
+    o various bug fixes
+    o clustCombi (code and doc provided by Jean-Patrick Baudry)
+    o bug fix: variable names lost when G = 1
+
+Version 3.4.11  (2012-01)
+    o added NAMESPACE
+
+Version 3.4.10  (2011-05)
+    o removed intrinsic gamma
+
+Version 3.4.9  (2011-05)
+    o fixed hypvol function to avoid overflow
+    o fixed hypvol helpfile value description
+    o removed unused variables and tabs from source code
+    o switched to intrinsic gamma in source code
+    o fixed default warning in estepVEV and mstepVEV
+
+Version 3.4.8  (2010-12)
+    o fixed output when G = 1 (it had NA for the missing "z" component)
+
+Version 3.4.7  (2010-10)
+    o removed hierarchical clustering capability for the EEE model (hcEEE)
+    o The R 2.12.0 build failed due to a 32-bit Windows compiler error, 
+      forcing removal of the underlying Fortran code for hcEEE from the 
+      package, which does not contain errors and compiles on other platforms.
+
+Version 3.4.6  (2010-08)
+    o added description of parameters output component to Mclust and
+    o summary.mclustBIC help files
+
+Version 3.4.5  (2010-07)
+    o added densityMclust function
+
+Version 3.4.4  (2010-04)
+    o fixed bug in covariance matrix output for EEV and VEV models
+
+Version 3.4.3  (2010-02)
+    o bug fixes
+
+Version 3.4.2  (2010-02)
+    o moved CITATION to inst and used standard format
+    o BibTex entries are in inst/cite
+    o fixed bug in handling missing classes in mclustBIC
+    o clarified license wording
+
+Version 3.4.1  (2010-01)
+    o corrected output description in mclustModel help file
+    o updated mclust manual reference to show revision
+
+Version 3.4  (2009-12)
+    o updated defaultPrior help file
+    o added utility functions for imputing missing data with the mix package
+    o changed default max # of mixture components in each class from 9 to 3
+
+Version 3.3.2  (2009-10)
+    o fixed problems with \cr in mclustOptions help file
+
+Version 3.3.1  (2009-06)
+    o fixed plot.mclustBIC/plot.Mclust to handle modelNames
+    o changed "orientation" for VEV, VVV models to be consistent with R eigen() and the literature
+    o fixed some problems including doc for the noise option
+    o updated the unmap function to optionally include missing groups
+
+Version 3.3  (2009-06)
+    o fixed bug in the "errors" option for randProj
+    o fixed boundary cases for the "noise" option
+
+Version 3.2  (2009-04)
+    o added permission for CRAN distribution to LICENSE
+    o fixed problems with help files found by new parser
+    o changed PKG_LIBS order in src/Makevars
+    o fixed Mclust to handle sampling in data expression in call
+
+Version 3.1.10  (2008-11)
+    o added EXPR = to all switch functions that didn't already have it
+
+Version 3.1.9  (2008-10)
+    o added pro component to parameters in dens help file 
+    o fixed some problems with the noise option
+
+Version 3.1.1  (2007-03)
+    o Default seed changed in sim functions.
+    o Model name check added to various functions. 
+    o Otherwise backward compatible with version 3.0
+ 
+Version 3.1  (2007-01)
+    o Most plotting functions changed to use color.
+    o Mclust/mclustBIC fixed to work with G=1
+    o Otherwise backward compatible with version 3.0.
+
+Version 3.0  (2006-10)
+    o New functionality added, including conjugate priors for Bayesian
+      regularization. 
+    o Backward compatibility is not guaranteed since the implementation 
+      of some functions has changed to make them easier to use or maintain.
