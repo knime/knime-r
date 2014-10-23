@@ -45,6 +45,9 @@
 package org.knime.r;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -219,29 +222,27 @@ public class RController {
 			return;
 		}
 
+		StringBuilder error_msg = new StringBuilder("Cannot load jri library from any of following locations:");
 		Iterator<String> iter = jriRelativePaths.iterator();
 		while (iter.hasNext() && !Rengine.jriLoaded) {
-		    final String path = rJavaPath + iter.next();
-			try {
-                System.load(path);
-				LOGGER.debug("Loaded jri library from " + path);
-				Rengine.jriLoaded = true;
-			} catch (UnsatisfiedLinkError e) {
-			    LOGGER.info("Could not load jri library from '" + path + "': " + e.getMessage(), e);
-				// the file does not exist
-			}
-		}
-		if (!Rengine.jriLoaded) {
-			StringBuilder error_msg = new StringBuilder();
-			error_msg.append("Cannot load jri library from any of following locations:");
-			for(String path : jriRelativePaths) {
-				error_msg.append("\n");
-				error_msg.append(rJavaPath);
-				error_msg.append(path);
-			}
-			m_errors.add(error_msg.toString());
+		    Path path = Paths.get(rJavaPath + iter.next());
+		    if (Files.exists(path)) {
+    			try {
+                    System.load(path.toString());
+    				LOGGER.debug("Loaded jri library from " + path);
+    				Rengine.jriLoaded = true;
+    			} catch (UnsatisfiedLinkError e) {
+    			    LOGGER.warn("Could not load jri library from '" + path + "': " + e.getMessage(), e);
+    			    error_msg.append('\n').append(path).append(" (load error: ").append(e.getMessage()).append(')');
+    			}
+		    } else {
+		        error_msg.append('\n').append(path).append(" (not found)");
+		    }
 		}
 
+		if (!Rengine.jriLoaded) {
+			m_errors.add(error_msg.toString());
+		}
 	}
 
 
@@ -891,8 +892,8 @@ public class RController {
 		return content;
 	}
 
-	/** Creates factor variable efficiently (based on the implementation of 
-	 * {@link RFactor#RFactor(String[], int)}). Fixes bug 5576: 
+	/** Creates factor variable efficiently (based on the implementation of
+	 * {@link RFactor#RFactor(String[], int)}). Fixes bug 5576:
 	 * New R nodes: String columns with many and/or long values take long to load into R.
 	 * @param values non null column values
 	 * @return the factor
