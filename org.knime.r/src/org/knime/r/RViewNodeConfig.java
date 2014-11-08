@@ -86,17 +86,8 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 	
 	@Override
 	protected String getScriptPrefix() {
-		if (m_imageFile == null) {
-			try {
-				m_imageFile = FileUtil.createTempFile("R-view-", ".png");
-			} catch (IOException e) {
-				LOGGER.error("Cannot create temporary file.", e);
-				throw new RuntimeException(e);
-			}
-			m_imageFile.deleteOnExit();
-		}
-
-        return "png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\""
+	    final File imageFile = getImageFile();
+        return "png(\"" + imageFile.getAbsolutePath().replace('\\', '/') + "\""
         + ", width=" + m_settings.getImageWidth()
         + ", height=" + m_settings.getImageHeight()
         + ", pointsize=" + m_settings.getTextPointSize()
@@ -109,7 +100,17 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 		return "\ndev.off();";
 	}
 
+	/** Non-null image file to use for this current node. Lazy-initialized to temp location.*/
 	public File getImageFile() {
+	    if (m_imageFile == null) {
+	        try {
+	            m_imageFile = FileUtil.createTempFile("R-view-", ".png");
+	        } catch (IOException e) {
+	            LOGGER.error("Cannot create temporary file.", e);
+	            throw new RuntimeException(e);
+	        }
+	        m_imageFile.deleteOnExit();
+	    }
 		return m_imageFile;
 	}
 

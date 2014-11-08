@@ -170,11 +170,11 @@ public class RViewNodeModel extends RSnippetNodeModel {
 
         File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
         if (file.exists() && file.canRead()) {
-            File pngFile = FileUtil.createTempFile(INTERNAL_FILE_NAME, ".png");
+            File pngFile = getConfig().getImageFile();
             FileUtil.copy(file, pngFile);
-            InputStream is = new FileInputStream(pngFile);
-            m_resultImage = new PNGImageContent(is).getImage();
-            is.close();
+            try (InputStream is = new FileInputStream(pngFile)) {
+                m_resultImage = new PNGImageContent(is).getImage();
+            }
         }
     }
 
