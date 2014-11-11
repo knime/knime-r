@@ -87,6 +87,7 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.util.CLibrary;
 import org.knime.core.util.ThreadUtils;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
@@ -108,8 +109,6 @@ import org.rosuda.REngine.RFactor;
 import org.rosuda.REngine.RList;
 import org.rosuda.REngine.JRI.JRIEngine;
 
-import com.sun.jna.Library;
-import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 public class RController {
@@ -172,19 +171,7 @@ public class RController {
 	// This is the standard, stable way of mapping, which supports extensive
     // customization and mapping of Java to native types.
 
-    public interface CLibrary extends Library {
-        CLibrary INSTANCE = (CLibrary)
-            Native.loadLibrary((Platform.isWindows() ? "msvcrt" : "c"),
-                               CLibrary.class);
-
-        void printf(String format, Object... args);
-        void setenv(String env, String value, int replace);
-        int _putenv(String name);
-        String getenv(String name);
-    }
-
-
-	private RController() {
+    private RController() {
 		m_commandQueue = new RCommandQueue();
 		m_consoleController = new RConsoleController();
 		m_wasRAvailable = false;
@@ -298,21 +285,19 @@ public class RController {
 			m_lock = new Semaphore(1);
 			listenerList = new EventListenerList();
 
+			CLibrary.getInstance().setenv("R_HOME", m_rHome);
 			if (Platform.isWindows()) {
-				CLibrary.INSTANCE._putenv("R_HOME" + "=" + m_rHome);
-				String path = CLibrary.INSTANCE.getenv("PATH");
+				String path = System.getenv("PATH");
 				String rdllPath = getWinRDllPath(m_rHome);
-				CLibrary.INSTANCE._putenv("PATH" + "=" + path + ";" + rdllPath);
-			} else {
-				CLibrary.INSTANCE.setenv("R_HOME", m_rHome, 1);
+				CLibrary.getInstance().setenv("PATH", path + ";" + rdllPath);
 			}
-			String sysRHome = CLibrary.INSTANCE.getenv("R_HOME");
+			String sysRHome = System.getenv("R_HOME");
 			LOGGER.debug("R_HOME: " + sysRHome);
 
 
 
 
-			String sysPATH = CLibrary.INSTANCE.getenv("PATH");
+			String sysPATH = System.getenv("PATH");
  			LOGGER.debug("PATH: " + sysPATH);
  			if (System.getProperty("jri.ignore.ule") == null) { // static init of Rengine.class checks this
 				// Rengine should ignore when System.loadLibrary("jri") fails. We do this with System.load
