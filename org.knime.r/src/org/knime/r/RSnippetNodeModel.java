@@ -263,7 +263,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 				throw (CanceledExecutionException)e;
 			}
 			errors.add(e.getMessage());
-			LOGGER.error(e);
+			LOGGER.error(e.getMessage(), e);
 			return new ValueReport<PortObject[]>(null, errors, warnings);
 		}
 	}
