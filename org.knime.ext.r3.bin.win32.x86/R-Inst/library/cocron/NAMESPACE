@@ -1,0 +1,5 @@
+export(cocron)
+export(cocron.n.coefficients)
+export(cocron.two.coefficients)
+export(cronbach.alpha)
+export(cronbach.alpha.CI)
