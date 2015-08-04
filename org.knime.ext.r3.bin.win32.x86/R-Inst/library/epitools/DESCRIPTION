@@ -1,0 +1,20 @@
+Package: epitools
+Version: 0.5-7
+Date: 2012-09-30
+Title: Epidemiology Tools
+Authors@R: c(person("Tomas J. Aragon", "Developer", role = c("aut",
+        "cre"), email = "aragon@berkeley.edu"), person("Michael P.
+        Fay", "User", role = "ctb", email = "mfay@niaid.nih.gov"),
+        person("Daniel Wollschlaeger", "User", role = "ctb", email =
+        "dwoll@psychologie.uni-kiel.de"))
+Depends: R (>= 2.1.0)
+Description: EpiTools: R Package for Epidemiologic Data and Graphics
+License: GPL (>= 2)
+URL: http://medepi.com/epitools/
+Packaged: 2012-09-30 09:01:55 UTC; tja
+Author: Tomas J. Aragon Developer [aut, cre], Michael P. Fay User
+        [ctb], Daniel Wollschlaeger User [ctb]
+Maintainer: Tomas J. Aragon Developer <aragon@berkeley.edu>
+Repository: CRAN
+Date/Publication: 2012-09-30 09:29:17
+Built: R 3.0.0; ; 2013-04-03 14:39:17 UTC; windows

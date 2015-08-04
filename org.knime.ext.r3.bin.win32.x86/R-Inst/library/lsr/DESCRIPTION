@@ -1,0 +1,16 @@
+Package: lsr
+Type: Package
+Title: Companion to "Learning Statistics with R"
+Version: 0.5
+Date: 2015-03-01
+Author: Daniel Navarro
+Maintainer: Daniel Navarro <daniel.navarro@adelaide.edu.au>
+Description: A collection of tools intended to make introductory statistics easier to teach, including wrappers for common hypothesis tests and basic data manipulation. It accompanies Navarro, D. J. (2015). Learning Statistics with R: A Tutorial for Psychology Students and Other Beginners, Version 0.5. [Lecture notes] School of Psychology, University of Adelaide, Adelaide, Australia. ISBN: 978-1-326-18972-3. URL: http://health.adelaide.edu.au/psychology/ccs/teaching/lsr/.
+URL: http://health.adelaide.edu.au/psychology/ccs/teaching/lsr/
+License: GPL-3
+LazyLoad: yes
+Packaged: 2015-03-02 01:25:45 UTC; dan
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2015-03-02 08:03:10
+Built: R 3.0.3; ; 2015-03-02 07:20:33 UTC; windows
