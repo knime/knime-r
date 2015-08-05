@@ -4,6 +4,6 @@ Bundle-Name: KNIME JRI R2 binaries for 64bit Linux
 Bundle-SymbolicName: org.rosuda.rengine.r2.bin.linux.x86_64;singleton:=true
 Bundle-Version: 1.7.0.qualifier
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
-Fragment-Host: org.knime.r;bundle-version="[2.10.0,3.0.0)"
+Fragment-Host: org.knime.r;bundle-version="[3,4)"
 Eclipse-PlatformFilter: (&(osgi.os=linux)(osgi.arch=x86_64))
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

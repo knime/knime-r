@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KNIME JRI R2 binaries for 64bit MacOSX
 Bundle-SymbolicName: org.rosuda.rengine.r2.bin.macosx.x86_64;singleton:=true
 Bundle-Version: 1.7.0.qualifier
-Fragment-Host: org.knime.r;bundle-version="[2.10.0,3.0.0)"
+Fragment-Host: org.knime.r;bundle-version="[3,4)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Eclipse-PlatformFilter: (&(osgi.os=macosx)(osgi.arch=x86_64))
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
