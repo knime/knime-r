@@ -51,7 +51,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.fife.rsyntaxarea.internal.RSyntaxAreaActivator;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Theme;
 import org.knime.core.node.NodeLogger;
@@ -67,10 +66,6 @@ import org.knime.r.RSnippetDocument;
 public class RSnippetTextArea extends RSyntaxTextArea {
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RSnippetTextArea.class);
-
-    static {
-        RSyntaxAreaActivator.ensureWorkaroundBug3692Applied();
-    }
 
     /**
      * Create a new component.
