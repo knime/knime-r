@@ -6,84 +6,84 @@
    <extension
          point="org.knime.workbench.repository.nodes">
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.RReaderTableNodeFactory"
             id="org.knime.r.RReaderTableNodeFactory">
       </node>        
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.RReaderWorkspaceNodeFactory"
             id="org.knime.r.RReaderWorkspaceNodeFactory"
             after="org.knime.r.RReaderTableNodeFactory">
       </node>
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.RSnippetNodeFactory"
             id="org.knime.r.RSnippetNodeFactory"
             after="org.knime.r.RReaderWorkspaceNodeFactory">
       </node>
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.RViewNodeFactory"
             id="org.knime.r.RViewNodeFactory"
             after="org.knime.r.RSnippetNodeFactory">
       </node>   
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.RToViewNodeFactory"
             id="org.knime.r.RToViewNodeFactory"
             after="org.knime.r.RViewNodeFactory">
       </node>
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.RToTableNodeFactory"
             id="org.knime.r.RToTableNodeFactory"
             after="org.knime.r.RToViewNodeFactory">
       </node>         
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.TableToRNodeFactory"
             id="org.knime.r.TableToRNodeFactory"
             after="org.knime.r.RToTableNodeFactory">
       </node>                             
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.AddTableToRNodeFactory"
             id="org.knime.r.AddTableToRNodeFactory"
             after="org.knime.r.RToRNodeFactory">
       </node>      
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.RLearnerNodeFactory"
             id="org.knime.r.RLearnerNodeFactory"
             after="org.knime.r.AddTableToRNodeFactory">
       </node>         
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.RPredictorNodeFactory"
             id="org.knime.r.RPredictorNodeFactory"
             after="org.knime.r.RLearnerNodeFactory">
       </node>        
       <node
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.RToPMMLNodeFactory"
             id="org.knime.r.RToPMMLNodeFactory"
             after="org.knime.r.RPredictorNodeFactory">
       </node>
       <node
             after="org.knime.r.TableToRNodeFactory"
-            category-path="/r"
+            category-path="/scripting/r"
             factory-class="org.knime.r.RToRNodeFactory"
             id="org.knime.r.RToRNodeFactory">
       </node>         
       <node
-            category-path="/r/io"
+            category-path="/scripting/r/io"
             factory-class="org.knime.r.ionodes.RPortObjectReaderNodeFactory"
             id="org.knime.r.ionodes.RPortObjectReaderNodeFactory">
       </node>
       <node
             after="org.knime.r.ionodes.RPortObjectReaderNodeFactory"
-            category-path="/r/io"
+            category-path="/scripting/r/io"
             factory-class="org.knime.r.ionodes.RPortObjectWriterNodeFactory"
             id="org.knime.r.ionodes.RPortObjectWriterNodeFactory">
       </node>
@@ -113,33 +113,33 @@
             level-id="r"
             locked="true"
             name="R"
-            path="/">
+            path="/scripting">
       </category>
       <category
             after="r-metanodes"
             icon="icons/rsnippet_io.png"
             level-id="io"
             name="IO"
-            path="/r">
+            path="/scripting/r">
       </category>
       <category
             icon="icons/meta.png"
             level-id="r-metanodes"
             name="Meta Nodes"
-            path="/r">
+            path="/scripting/r">
       </category>
    </extension>
    <extension
          point="org.knime.workbench.repository.metanode">
       <PersistedMetaNode
-            category-path="/r/r-metanodes"
+            category-path="/scripting/r/r-metanodes"
             icon="icons/rsnippet.png"
             id="grouped_scatterplot"
             name="Grouped ScatterPlot"
             workflowDir="metanode_templates/Grouped ScatterPlot/">
       </PersistedMetaNode>
       <PersistedMetaNode
-            category-path="/r/r-metanodes"
+            category-path="/scripting/r/r-metanodes"
             icon="icons/rsnippet.png"
             id="stacked_barchart"
             name="Stacked BarChart"
