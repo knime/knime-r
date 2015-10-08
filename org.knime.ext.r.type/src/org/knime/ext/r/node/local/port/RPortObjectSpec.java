@@ -73,26 +73,22 @@ public final class RPortObjectSpec implements PortObjectSpec {
 
     /**
      * Serializer used to save this port object spec.
-     * @return a {@link RPortObjectSpec}
      */
-    public static PortObjectSpecSerializer<RPortObjectSpec>
-            getPortObjectSpecSerializer() {
-        return new PortObjectSpecSerializer<RPortObjectSpec>() {
-            /** {@inheritDoc} */
-            @Override
-            public RPortObjectSpec loadPortObjectSpec(
-                    final PortObjectSpecZipInputStream in)
-                    throws IOException {
-                return INSTANCE;
-            }
-            /** {@inheritDoc} */
-            @Override
-            public void savePortObjectSpec(final RPortObjectSpec portObjectSpec,
-                    final PortObjectSpecZipOutputStream out)
-                    throws IOException {
-                // empty
-            }
-        };
+    public static final class Serializer extends PortObjectSpecSerializer<RPortObjectSpec> {
+        /** {@inheritDoc} */
+        @Override
+        public RPortObjectSpec loadPortObjectSpec(
+                final PortObjectSpecZipInputStream in)
+                throws IOException {
+            return INSTANCE;
+        }
+        /** {@inheritDoc} */
+        @Override
+        public void savePortObjectSpec(final RPortObjectSpec portObjectSpec,
+                final PortObjectSpecZipOutputStream out)
+                throws IOException {
+            // empty
+        }
     }
 
     /**

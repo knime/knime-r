@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.knime.core.PortType">
+      <portType
+            hidden="false"
+            name="R Workspace"
+            objectClass="org.knime.ext.r.node.local.port.RPortObject"
+            objectSerializer="org.knime.ext.r.node.local.port.RPortObject$Serializer"
+            specClass="org.knime.ext.r.node.local.port.RPortObjectSpec"
+            specSerializer="org.knime.ext.r.node.local.port.RPortObjectSpec$Serializer">
+      </portType>
+   </extension>
+
+</plugin>

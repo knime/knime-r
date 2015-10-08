@@ -147,49 +147,46 @@ public class RPortObject implements PortObject {
      * Serializer used to save this port object.
      * @return a {@link RPortObject}
      */
-    public static PortObjectSerializer<RPortObject> getPortObjectSerializer() {
-        return new PortObjectSerializer<RPortObject>() {
-            /** {@inheritDoc} */
-            @Override
-            public void savePortObject(final RPortObject portObject, final PortObjectZipOutputStream out,
-                final ExecutionMonitor exec)throws IOException, CanceledExecutionException {
-                out.putNextEntry(new ZipEntry("knime.R"));
-                FileInputStream fis = new FileInputStream(portObject.m_fileR);
-                FileUtil.copy(fis, out);
-                fis.close();
-                out.putNextEntry(new ZipEntry("library.list"));
-                IOUtils.writeLines(portObject.m_libraries, "\n", out, "UTF-8");
-                out.closeEntry();
-                out.close();
-            }
+    public static final class Serializer extends PortObjectSerializer<RPortObject> {
+        /** {@inheritDoc} */
+        @Override
+        public void savePortObject(final RPortObject portObject, final PortObjectZipOutputStream out,
+            final ExecutionMonitor exec)throws IOException, CanceledExecutionException {
+            out.putNextEntry(new ZipEntry("knime.R"));
+            FileInputStream fis = new FileInputStream(portObject.m_fileR);
+            FileUtil.copy(fis, out);
+            fis.close();
+            out.putNextEntry(new ZipEntry("library.list"));
+            IOUtils.writeLines(portObject.m_libraries, "\n", out, "UTF-8");
+            out.closeEntry();
+            out.close();
+        }
 
-            /** {@inheritDoc} */
-            @SuppressWarnings("unchecked")
-            @Override
-            public RPortObject loadPortObject(final PortObjectZipInputStream in, final PortObjectSpec spec,
-                final ExecutionMonitor exec) throws IOException, CanceledExecutionException {
-                ZipEntry nextEntry = in.getNextEntry();
-                if (nextEntry == null || !"knime.R".equals(nextEntry.getName())) {
-                    throw new IOException("Expected zip entry \"knime.R\" but got " + nextEntry == null
-                        ? "<null>"
-                        : nextEntry.getName());
-                }
-                File fileR = FileUtil.createTempFile("~knime", ".R");
-                FileOutputStream fos = new FileOutputStream(fileR);
-                FileUtil.copy(in, fos);
-                nextEntry = in.getNextEntry();
-                List<String> libraries;
-                if (nextEntry == null) {
-                    // old style port object (2.7-)
-                    libraries = Collections.emptyList();
-                } else {
-                    libraries = IOUtils.readLines(in, "UTF-8");
-                }
-                in.close();
-                fos.close();
-                return new RPortObject(fileR, libraries);
+        /** {@inheritDoc} */
+        @Override
+        public RPortObject loadPortObject(final PortObjectZipInputStream in, final PortObjectSpec spec,
+            final ExecutionMonitor exec) throws IOException, CanceledExecutionException {
+            ZipEntry nextEntry = in.getNextEntry();
+            if (nextEntry == null || !"knime.R".equals(nextEntry.getName())) {
+                throw new IOException("Expected zip entry \"knime.R\" but got " + nextEntry == null
+                    ? "<null>"
+                    : nextEntry.getName());
             }
-        };
+            File fileR = FileUtil.createTempFile("~knime", ".R");
+            FileOutputStream fos = new FileOutputStream(fileR);
+            FileUtil.copy(in, fos);
+            nextEntry = in.getNextEntry();
+            List<String> libraries;
+            if (nextEntry == null) {
+                // old style port object (2.7-)
+                libraries = Collections.emptyList();
+            } else {
+                libraries = IOUtils.readLines(in, "UTF-8");
+            }
+            in.close();
+            fos.close();
+            return new RPortObject(fileR, libraries);
+        }
     }
 
     /**
