@@ -67,6 +67,7 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortObjectRegistry;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
@@ -82,7 +83,7 @@ public class RPortObject implements PortObject {
 
     /** Convenience access member for
      * <code>new PortType(RPortObject.class)</code>. */
-    public static final PortType TYPE = new PortType(RPortObject.class);
+    public static final PortType TYPE = PortObjectRegistry.getInstance().getPortType(RPortObject.class);
 
     private static final NodeLogger LOGGER =
         NodeLogger.getLogger(RPortObject.class);

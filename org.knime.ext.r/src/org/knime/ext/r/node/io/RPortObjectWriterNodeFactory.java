@@ -45,22 +45,19 @@
 package org.knime.ext.r.node.io;
 
 import org.knime.base.node.io.portobject.PortObjectWriterNodeFactory;
-import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.local.port.RPortObject;
 
 /**
- * 
+ *
  * @author Bernd Wiswedel, University of Konstanz
  */
 public class RPortObjectWriterNodeFactory extends
         PortObjectWriterNodeFactory {
-    
+
     /**
-     * 
+     *
      */
     public RPortObjectWriterNodeFactory() {
-        // TODO replace arg by RPortObject.TYPE (one it is API standard)
-        super(new PortType(RPortObject.class));
+        super(RPortObject.TYPE);
     }
-
 }

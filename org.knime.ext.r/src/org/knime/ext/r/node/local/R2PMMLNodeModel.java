@@ -79,7 +79,7 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
      */
     public R2PMMLNodeModel(final RPreferenceProvider pref) {
         super(new PortType[]{RPortObject.TYPE},
-                new PortType[]{new PortType(PMMLPortObject.class)}, pref);
+                new PortType[]{PMMLPortObject.TYPE}, pref);
     }
 
     /**
