@@ -70,19 +70,19 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
  * "R". Additional R commands to modify and process this data can be specified
  * by a class extending <code>RLocalNodeModel</code>. To access i.e. the
  * first three columns of a table and reference them by another variable "a" the
- * R command "a <- R[1:3]" can be used.<br/>
+ * R command "a <- R[1:3]" can be used.<br>
  * Further, this class writes the data
  * referenced by the R variable "R" after execution of the additional commands
  * into a csv file and generates an outgoing <code>DataTable</code> out of it,
  * which is returned by this node. This means, the user has to take care that
  * the processed data have to be referenced by the variable "R".
- * <br />
+ * <br>
  * Note that the number of input data tables is one and can not be modified when
  * extending this node model. The number of output data tables can be specified
  * but only one or zero will make any sense since only the data referenced by
  * the "R" variable will be exported as output data table if the number of
  * output tables is greater than zero.
- * <br/>
+ * <br>
  * Additionally this class provides a preprocessing method
  * {@link RLocalNodeModel#preprocessDataTable(PortObject[], ExecutionContext)}
  * which can be overwritten to preprocess that input data, as well as a
