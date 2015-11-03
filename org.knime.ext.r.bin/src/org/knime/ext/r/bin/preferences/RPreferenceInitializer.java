@@ -117,6 +117,11 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
                 public String getRBinPath() {
                     return rBinPathV29;
                 }
+
+                @Override
+                public String getRServeBinPath() {
+                    throw new UnsupportedOperationException("Please use getRBinPath() with this provider, only.");
+                }
             });
         } catch (IOException e) {
             return null;

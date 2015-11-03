@@ -56,6 +56,7 @@ import com.sun.jna.Platform;
  * Default provider for R preferences. I determines the R binary path based on the R home given in the constructor.
  *
  * @author Thorsten Meinl, KNIME.com, Zurich, Switzerland
+ * @author Jonathan Hale
  */
 public class DefaultRPreferenceProvider implements RPreferenceProvider {
     private final String m_rHome;
@@ -69,17 +70,11 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
         m_rHome = rHome;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getRHome() {
         return m_rHome;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getRBinPath() {
         if (Platform.isWindows()) {
@@ -90,6 +85,19 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
             }
         } else {
             return getRHome() + File.separator + "bin" + File.separator + "R";
+        }
+    }
+
+    @Override
+    public String getRServeBinPath() {
+        if (Platform.isWindows()) {
+            if (Platform.is64Bit()) {
+                return getRHome() + File.separator + "library" + File.separator + "Rserve" + File.separator + "libs" + File.separator + "x64" + File.separator + "Rserve.exe";
+            } else {
+                return getRHome() + File.separator + "library" + File.separator + "Rserve" + File.separator + "libs" + File.separator + "i386" + File.separator + "Rserve.exe";
+            }
+        } else {
+            return getRHome() + File.separator + "library" + File.separator + "Rserve" + File.separator + "libs" + File.separator + "Rserve";
         }
     }
 }

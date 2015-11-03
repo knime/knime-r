@@ -57,7 +57,7 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin implements IPropertyChangeListener {
 
-	// The plug-in ID
+	/** The plug-in ID. <code>"org.knime.ext.r.bin"</code> */
     public static final String PLUGIN_ID = "org.knime.ext.r.bin"; //$NON-NLS-1$
 
 	// The shared instance
