@@ -58,238 +58,246 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 
 /**
- * The R snippet which can be controlled by changing the settings
- * or by changing the contents of the snippets document.
+ * The R snippet which can be controlled by changing the settings or by changing
+ * the contents of the snippets document.
  *
  * @author Heiko Hofer
  */
 public final class RSnippet {
-    /** Identifier for row index (starting with 0). */
-    public static final String ROWINDEX = "ROWINDEX";
-    /** Identifier for row ID. */
-    public static final String ROWID = "ROWID";
-    /** Identifier for row count. */
-    public static final String ROWCOUNT = "ROWCOUNT";
+	/** Identifier for row index (starting with 0). */
+	public static final String ROWINDEX = "ROWINDEX";
+	/** Identifier for row ID. */
+	public static final String ROWID = "ROWID";
+	/** Identifier for row count. */
+	public static final String ROWCOUNT = "ROWCOUNT";
 
-    /** The version 1.x of the java snippet. */
-    public static final String VERSION_1_X = "version 1.x";
+	/** The version 1.x of the java snippet. */
+	public static final String VERSION_1_X = "version 1.x";
 
-    private RSyntaxDocument m_document;
+	private RSyntaxDocument m_document;
 
+	private RSnippetSettings m_settings;
 
-    private RSnippetSettings m_settings;
+	private NodeLogger m_logger;
 
-    private NodeLogger m_logger;
-    
-    public RSnippet() {
+	public RSnippet() {
 		m_settings = new RSnippetSettings() {
-        	
-        	@Override
-        	String getScript() {
-        		if (m_document != null) {
-        			try {
+
+			@Override
+			String getScript() {
+				if (m_document != null) {
+					try {
 						return m_document.getText(0, m_document.getLength());
-					} catch (BadLocationException e) {
+					} catch (final BadLocationException e) {
 						// never happens
 						throw new RuntimeException(e);
-					}  			
-        		} else {
-        			return super.getScript();
-        		}
-        	}
-        	
-        	@Override
-        	void setScript(final String script) {        
-        		if (m_document != null) {
-        	        try {
-        	        	String s = m_document.getText(0, m_document.getLength());
-        	        	if (!s.equals(script)) {
-        	        		m_document.replace(0, m_document.getLength(), script, null);
-        	        	}
-        	        } catch (BadLocationException e) {
-        	            throw new IllegalStateException(e.getMessage(), e);
-        	        }		
-        		}
-        		super.setScript(script);
-        	}
+					}
+				} else {
+					return super.getScript();
+				}
+			}
+
+			@Override
+			void setScript(final String script) {
+				if (m_document != null) {
+					try {
+						final String s = m_document.getText(0, m_document.getLength());
+						if (!s.equals(script)) {
+							m_document.replace(0, m_document.getLength(), script, null);
+						}
+					} catch (final BadLocationException e) {
+						throw new IllegalStateException(e.getMessage(), e);
+					}
+				}
+				super.setScript(script);
+			}
 		};
-		
+
 	}
 
-    /**
-     * Get the updated settings java snippet.
-     * @return the settings
-     */
-    public RSnippetSettings getSettings() {
-    	return m_settings;
-    }
-    
-    /**
-     * Get the document with the code of the snippet.
-     * @return the document
-     */
-    public RSyntaxDocument getDocument() {
-        // Lazy initialization of the document
-        if (m_document == null) {
-        	String initScript = m_settings.getScript();
-            m_document = createDocument();
-            // this changes the document to, if present
-            m_settings.setScript(initScript);
-        }
-        return m_document;
-    }
+	/**
+	 * Get the updated settings java snippet.
+	 *
+	 * @return the settings
+	 */
+	public RSnippetSettings getSettings() {
+		return m_settings;
+	}
 
+	/**
+	 * Get the document with the code of the snippet.
+	 *
+	 * @return the document
+	 */
+	public RSyntaxDocument getDocument() {
+		// Lazy initialization of the document
+		if (m_document == null) {
+			final String initScript = m_settings.getScript();
+			m_document = createDocument();
+			// this changes the document to, if present
+			m_settings.setScript(initScript);
+		}
+		return m_document;
+	}
 
-    /** Create the document with the default skeleton. */
-    private RSyntaxDocument createDocument() {
-    	RSyntaxDocument doc = new RSnippetDocument();
-        return doc;
-    }
+	/** Create the document with the default skeleton. */
+	private RSyntaxDocument createDocument() {
+		final RSyntaxDocument doc = new RSnippetDocument();
+		return doc;
+	}
 
-    /**
-     * Create the outspec of the java snippet node. This method is typically
-     * used in the configure of a node.
-     * @param spec the spec of the data table at the inport
-     * @param flowVariableRepository the flow variables at the inport
-     * @return the spec at the output
-     * @throws InvalidSettingsException when settings are inconsistent with
-     *  the spec or the flow variables at the inport
-     */
-    public ValueReport<DataTableSpec> configure(final DataTableSpec spec,
-            final FlowVariableRepository flowVariableRepository)
-            throws InvalidSettingsException {
-        List<String> errors = new ArrayList<String>();
-        List<String> warnings = new ArrayList<String>();
-        DataTableSpec outSpec = spec;
-        
-//            createRearranger(spec, flowVariableRepository, -1).createSpec();
-//        // populate flowVariableRepository with new flow variables having
-//        // default values
-//        for (OutVar outVar : m_fields.getOutVarFields()) {
-//            FlowVariable flowVar = null;
-//            if (outVar.getKnimeType().equals(
-//                    org.knime.core.node.workflow.FlowVariable.Type.INTEGER)) {
-//                flowVar = new FlowVariable(outVar.getKnimeName(), -1);
-//            } else if (outVar.getKnimeType().equals(
-//                    org.knime.core.node.workflow.FlowVariable.Type.DOUBLE)) {
-//                flowVar = new FlowVariable(outVar.getKnimeName(), -1.0);
-//            } else {
-//                flowVar = new FlowVariable(outVar.getKnimeName(), "");
-//            }
-//            flowVariableRepository.put(flowVar);
-//        }
-        return new ValueReport<DataTableSpec>(outSpec, errors, warnings);
-    }
+	/**
+	 * Create the outspec of the java snippet node. This method is typically
+	 * used in the configure of a node.
+	 *
+	 * @param spec
+	 *            the spec of the data table at the inport
+	 * @param flowVariableRepository
+	 *            the flow variables at the inport
+	 * @return the spec at the output
+	 * @throws InvalidSettingsException
+	 *             when settings are inconsistent with the spec or the flow
+	 *             variables at the inport
+	 */
+	public ValueReport<DataTableSpec> configure(final DataTableSpec spec,
+			final FlowVariableRepository flowVariableRepository) throws InvalidSettingsException {
+		final List<String> errors = new ArrayList<String>();
+		final List<String> warnings = new ArrayList<String>();
+		final DataTableSpec outSpec = spec;
 
+		// createRearranger(spec, flowVariableRepository, -1).createSpec();
+		// // populate flowVariableRepository with new flow variables having
+		// // default values
+		// for (OutVar outVar : m_fields.getOutVarFields()) {
+		// FlowVariable flowVar = null;
+		// if (outVar.getKnimeType().equals(
+		// org.knime.core.node.workflow.FlowVariable.Type.INTEGER)) {
+		// flowVar = new FlowVariable(outVar.getKnimeName(), -1);
+		// } else if (outVar.getKnimeType().equals(
+		// org.knime.core.node.workflow.FlowVariable.Type.DOUBLE)) {
+		// flowVar = new FlowVariable(outVar.getKnimeName(), -1.0);
+		// } else {
+		// flowVar = new FlowVariable(outVar.getKnimeName(), "");
+		// }
+		// flowVariableRepository.put(flowVar);
+		// }
+		return new ValueReport<DataTableSpec>(outSpec, errors, warnings);
+	}
 
-    /**
-     * Execute the snippet.
-     * @param table the data table at the inport
-     * @param flowVariableRepository the flow variables at the inport
-     * @param exec the execution context to report progress
-     * @return the table for the output
-     * @throws InvalidSettingsException when settings are inconsistent with
-     * the table or the flow variables at the input
-     * @throws CanceledExecutionException when execution is canceled by the user
-     */
-//    public ValueReport<BufferedDataTable> execute(
-//            final BufferedDataTable table,
-//            final FlowVariableRepository flowVariableRepository,
-//            final ExecutionContext exec) throws CanceledExecutionException,
-//            InvalidSettingsException  {
-//    	List<String> errors = new ArrayList<String>();
-//        List<String> warnings = new ArrayList<String>();
-//        
-//    	try {
-//	    	RController r = RController.getDefault();
-//	    	// TODO: lock controller
-//			r.clearWorkspace();
-//			if (table != null) {
-//				r.exportDataTable(table, "knime.in", exec);
-//			}
-//			
-//			r.timedEval(getDocument().getText(0, getDocument().getLength()));
-//			
-//			BufferedDataTable out = r.importBufferedDataTable("knime.out", exec);
-//			// TODO: unlock controller
-//			return new ValueReport<BufferedDataTable>(out, errors, warnings);
-//			
-//		} catch (Exception e) {
-//			errors.add(e.getMessage());
-//			m_logger.error(e);
-//			return new ValueReport<BufferedDataTable>(null, errors, warnings);
-//		}
-//    }
+	/**
+	 * Execute the snippet.
+	 *
+	 * @param table
+	 *            the data table at the inport
+	 * @param flowVariableRepository
+	 *            the flow variables at the inport
+	 * @param exec
+	 *            the execution context to report progress
+	 * @return the table for the output
+	 * @throws InvalidSettingsException
+	 *             when settings are inconsistent with the table or the flow
+	 *             variables at the input
+	 * @throws CanceledExecutionException
+	 *             when execution is canceled by the user
+	 */
+	// public ValueReport<BufferedDataTable> execute(
+	// final BufferedDataTable table,
+	// final FlowVariableRepository flowVariableRepository,
+	// final ExecutionContext exec) throws CanceledExecutionException,
+	// InvalidSettingsException {
+	// List<String> errors = new ArrayList<String>();
+	// List<String> warnings = new ArrayList<String>();
+	//
+	// try {
+	// RController r = RController.getDefault();
+	// // TODO: lock controller
+	// r.clearWorkspace();
+	// if (table != null) {
+	// r.exportDataTable(table, "knime.in", exec);
+	// }
+	//
+	// r.timedEval(getDocument().getText(0, getDocument().getLength()));
+	//
+	// BufferedDataTable out = r.importBufferedDataTable("knime.out", exec);
+	// // TODO: unlock controller
+	// return new ValueReport<BufferedDataTable>(out, errors, warnings);
+	//
+	// } catch (Exception e) {
+	// errors.add(e.getMessage());
+	// m_logger.error(e);
+	// return new ValueReport<BufferedDataTable>(null, errors, warnings);
+	// }
+	// }
 
-//    /**
-//     * The execution method when no input table is present. I.e. used by
-//     * the java edit variable node.
-//     * @param flowVariableRepository flow variables at the input
-//     * @param exec the execution context to report progress, may be null when
-//     * this method is called from configure
-//     */
-//    public void execute(final FlowVariableRepository flowVariableRepository,
-//            final ExecutionContext exec) {
-//        DataTableSpec spec = new DataTableSpec();
-//        CellFactory factory = new JavaSnippetCellFactory(this, spec,
-//                flowVariableRepository, 1);
-//        factory.getCells(new DefaultRow(RowKey.createRowKey(0),
-//                new DataCell[0]));
-//    }
+	// /**
+	// * The execution method when no input table is present. I.e. used by
+	// * the java edit variable node.
+	// * @param flowVariableRepository flow variables at the input
+	// * @param exec the execution context to report progress, may be null when
+	// * this method is called from configure
+	// */
+	// public void execute(final FlowVariableRepository flowVariableRepository,
+	// final ExecutionContext exec) {
+	// DataTableSpec spec = new DataTableSpec();
+	// CellFactory factory = new JavaSnippetCellFactory(this, spec,
+	// flowVariableRepository, 1);
+	// factory.getCells(new DefaultRow(RowKey.createRowKey(0),
+	// new DataCell[0]));
+	// }
 
-//    /** The rearranger is the working horse for creating the ouput table. */
-//    private ColumnRearranger createRearranger(final DataTableSpec spec,
-//            final FlowVariableRepository flowVariableRepository,
-//            final int rowCount)
-//        throws InvalidSettingsException {
-//        int offset = spec.getNumColumns();
-//        CellFactory factory = new JavaSnippetCellFactory(this, spec,
-//                flowVariableRepository, rowCount);
-//        ColumnRearranger c = new ColumnRearranger(spec);
-//        // add factory to the column rearranger
-//        c.append(factory);
-//
-//        // define which new columns do replace others
-//        OutColList outFields = m_fields.getOutColFields();
-//        for (int i = outFields.size() - 1; i >= 0; i--) {
-//            OutCol field = outFields.get(i);
-//            int index = spec.findColumnIndex(field.getKnimeName());
-//            if (index >= 0) {
-//                if (field.getReplaceExisting()) {
-//                    c.remove(index);
-//                    c.move(offset + i - 1, index);
-//                } else {
-//                    throw new InvalidSettingsException("Field \""
-//                            + field.getJavaName() + "\" is configured to "
-//                            + "replace no existing columns.");
-//                }
-//            }
-//        }
-//
-//        return c;
-//    }
+	// /** The rearranger is the working horse for creating the ouput table. */
+	// private ColumnRearranger createRearranger(final DataTableSpec spec,
+	// final FlowVariableRepository flowVariableRepository,
+	// final int rowCount)
+	// throws InvalidSettingsException {
+	// int offset = spec.getNumColumns();
+	// CellFactory factory = new JavaSnippetCellFactory(this, spec,
+	// flowVariableRepository, rowCount);
+	// ColumnRearranger c = new ColumnRearranger(spec);
+	// // add factory to the column rearranger
+	// c.append(factory);
+	//
+	// // define which new columns do replace others
+	// OutColList outFields = m_fields.getOutColFields();
+	// for (int i = outFields.size() - 1; i >= 0; i--) {
+	// OutCol field = outFields.get(i);
+	// int index = spec.findColumnIndex(field.getKnimeName());
+	// if (index >= 0) {
+	// if (field.getReplaceExisting()) {
+	// c.remove(index);
+	// c.move(offset + i - 1, index);
+	// } else {
+	// throw new InvalidSettingsException("Field \""
+	// + field.getJavaName() + "\" is configured to "
+	// + "replace no existing columns.");
+	// }
+	// }
+	// }
+	//
+	// return c;
+	// }
 
+	/**
+	 * Create a template for this snippet.
+	 *
+	 * @param metaCategory
+	 *            the meta category of the template
+	 * @return the template with a new uuid.
+	 */
+	@SuppressWarnings("rawtypes")
+	public RSnippetTemplate createTemplate(final Class metaCategory) {
+		final RSnippetTemplate template = new RSnippetTemplate(metaCategory, getSettings());
+		return template;
+	}
 
-    /**
-     * Create a template for this snippet.
-     * @param metaCategory the meta category of the template
-     * @return the template with a new uuid.
-     */
-    @SuppressWarnings("rawtypes")
-    public RSnippetTemplate createTemplate(final Class metaCategory) {
-        RSnippetTemplate template = new RSnippetTemplate(metaCategory,
-                getSettings());
-        return template;
-    }
-    
-    /**
-     * Attach logger to be used by this java snippet instance.
-     * @param logger the node logger
-     */
-    public void attachLogger(final NodeLogger logger) {
-        m_logger = logger;
-    }
+	/**
+	 * Attach logger to be used by this java snippet instance.
+	 *
+	 * @param logger
+	 *            the node logger
+	 */
+	public void attachLogger(final NodeLogger logger) {
+		m_logger = logger;
+	}
 
 }
-
-

@@ -49,8 +49,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
@@ -69,89 +67,88 @@ import org.knime.core.node.util.ImageViewPanel;
 import org.knime.core.node.util.ImageViewPanel.ScaleType;
 import org.knime.core.util.SimpleFileFilter;
 
-/** Frame showing PNG preview plot. Watches the RController image file.
- * 
+/**
+ * Frame showing PNG preview plot. Watches the RController image file.
+ *
  * @author Bernd Wiswedel, KNIME.com, Zurich, Switzerland
  *
  */
 final class RPlotPreviewFrame extends JDialog {
-    
-    private final ImageViewPanel m_plotPreviewPanel;
-    private final JPanel m_cardLayoutPanel;
-    private static final String NO_PLOT = "<no plot>";
-    private static final String PLOT = "<plot>";
-    
-    public RPlotPreviewFrame(Frame parentFrame) {
-        super(parentFrame, "R Plot", ModalityType.MODELESS);
-        JPanel fullPanel = new JPanel(new BorderLayout());
 
-        CardLayout cardLayout = new CardLayout();
-        m_cardLayoutPanel = new JPanel(cardLayout);
-        JPanel noPlotPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        noPlotPanel.add(new JLabel(NO_PLOT));
-        m_cardLayoutPanel.add(noPlotPanel, NO_PLOT);
+	/** Generated serialVersionUID */
+	private static final long serialVersionUID = -754394465820493813L;
 
-        m_plotPreviewPanel = new ImageViewPanel();
-        m_cardLayoutPanel.add(new JScrollPane(m_plotPreviewPanel), PLOT);
-        fullPanel.add(m_cardLayoutPanel, BorderLayout.CENTER);
-        
-        JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        final JButton closeButton = new JButton("Close");
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onClose();
-            }
-        });
-        southPanel.add(closeButton);
-        fullPanel.add(southPanel, BorderLayout.SOUTH);
-        getContentPane().add(fullPanel);
-    }
-    
-    private void onClose() {
-        setVisible(false);
-    }
-    
-    public void setSource(final File pngFile) throws IOException {
-        BufferedImage image;
-        CardLayout cardLayout= (CardLayout) m_cardLayoutPanel.getLayout();
-        if (pngFile != null && pngFile.length() > 0) {
-            try {
-                image = ImageIO.read(pngFile);
-            } catch (IOException e) {
-                m_plotPreviewPanel.setImage(null);
-                cardLayout.show(m_cardLayoutPanel, NO_PLOT);
-                throw e;
-            }
-            m_plotPreviewPanel.setImage(image);
-            cardLayout.show(m_cardLayoutPanel, PLOT);
-        } else {
-            m_plotPreviewPanel.setImage(null);
-            cardLayout.show(m_cardLayoutPanel, NO_PLOT);
-        }
-    }
-    
-    public static void main(String[] args) {
-        JFileChooser jFileChooser = new JFileChooser();
-        jFileChooser.setFileFilter(new SimpleFileFilter(".png", ".PNG"));
-        int showOpenDialog = jFileChooser.showOpenDialog(null);
-        if (showOpenDialog != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        RPlotPreviewFrame rPlotPreviewFrame = new RPlotPreviewFrame(null);
-        rPlotPreviewFrame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentHidden(ComponentEvent e) {
-                System.exit(0);
-            }
-        });
-        try {
-            rPlotPreviewFrame.setSource(jFileChooser.getSelectedFile());
-            rPlotPreviewFrame.m_plotPreviewPanel.setScaleType(ScaleType.None);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        rPlotPreviewFrame.pack();
-        rPlotPreviewFrame.setVisible(true);
-    }
+	private final ImageViewPanel m_plotPreviewPanel;
+	private final JPanel m_cardLayoutPanel;
+	private static final String NO_PLOT = "<no plot>";
+	private static final String PLOT = "<plot>";
+
+	public RPlotPreviewFrame(final Frame parentFrame) {
+		super(parentFrame, "R Plot", ModalityType.MODELESS);
+		final JPanel fullPanel = new JPanel(new BorderLayout());
+
+		final CardLayout cardLayout = new CardLayout();
+		m_cardLayoutPanel = new JPanel(cardLayout);
+		final JPanel noPlotPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		noPlotPanel.add(new JLabel(NO_PLOT));
+		m_cardLayoutPanel.add(noPlotPanel, NO_PLOT);
+
+		m_plotPreviewPanel = new ImageViewPanel();
+		m_cardLayoutPanel.add(new JScrollPane(m_plotPreviewPanel), PLOT);
+		fullPanel.add(m_cardLayoutPanel, BorderLayout.CENTER);
+
+		final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		final JButton closeButton = new JButton("Close");
+		closeButton.addActionListener(e -> onClose());
+		southPanel.add(closeButton);
+		fullPanel.add(southPanel, BorderLayout.SOUTH);
+		getContentPane().add(fullPanel);
+	}
+
+	private void onClose() {
+		setVisible(false);
+	}
+
+	public void setSource(final File pngFile) throws IOException {
+		BufferedImage image;
+		final CardLayout cardLayout = (CardLayout) m_cardLayoutPanel.getLayout();
+		if (pngFile != null && pngFile.length() > 0) {
+			try {
+				image = ImageIO.read(pngFile);
+			} catch (final IOException e) {
+				m_plotPreviewPanel.setImage(null);
+				cardLayout.show(m_cardLayoutPanel, NO_PLOT);
+				throw e;
+			}
+			m_plotPreviewPanel.setImage(image);
+			cardLayout.show(m_cardLayoutPanel, PLOT);
+		} else {
+			m_plotPreviewPanel.setImage(null);
+			cardLayout.show(m_cardLayoutPanel, NO_PLOT);
+		}
+	}
+
+	public static void main(final String[] args) {
+		final JFileChooser jFileChooser = new JFileChooser();
+		jFileChooser.setFileFilter(new SimpleFileFilter(".png", ".PNG"));
+		final int showOpenDialog = jFileChooser.showOpenDialog(null);
+		if (showOpenDialog != JFileChooser.APPROVE_OPTION) {
+			return;
+		}
+		final RPlotPreviewFrame rPlotPreviewFrame = new RPlotPreviewFrame(null);
+		rPlotPreviewFrame.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentHidden(final ComponentEvent e) {
+				System.exit(0);
+			}
+		});
+		try {
+			rPlotPreviewFrame.setSource(jFileChooser.getSelectedFile());
+			rPlotPreviewFrame.m_plotPreviewPanel.setScaleType(ScaleType.None);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		rPlotPreviewFrame.pack();
+		rPlotPreviewFrame.setVisible(true);
+	}
 }

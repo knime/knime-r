@@ -44,7 +44,29 @@
  */
 package org.knime.r;
 
-public class REvent {
-	
+import java.util.EventListener;
 
+/**
+ * REvent. Currently empty.
+ *
+ * @author Heiko Hofer
+ * @author Jonathan Hale
+ */
+public class REvent {
+	/**
+	 * Listener listening for {@link REvent}s.
+	 *
+	 * @author Heiko Hofer
+	 * @author Jonathan Hale
+	 */
+	public interface RListener extends EventListener {
+
+		/**
+		 * Fired when a R workspace changed.
+		 *
+		 * @param e
+		 *            A R event
+		 */
+		public void workspaceChanged(REvent e);
+	}
 }

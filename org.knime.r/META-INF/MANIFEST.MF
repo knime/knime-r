@@ -6,8 +6,8 @@ Bundle-Version: 3.1.0.qualifier
 Bundle-ClassPath: org-knime-r.jar,
  lib/jri-0.5-5.jar,
  lib/jri-engine-1.7-0.jar,
- lib/rengine-1.7-0.jar,
- lib/rserve-engine-1.7-0.jar
+ lib/rengine-1.8.4.jar,
+ lib/rserve-engine-1.8.4.jar
 Bundle-Activator: org.knime.r.Activator
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
 Export-Package: org.knime.r.ionodes
@@ -23,6 +23,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",
  com.fifesoft.rstaui;bundle-version="[2.5.7,3.0.0)",
  com.fifesoft.rsyntaxtextarea;bundle-version="[2.5.7,3.0.0)",
  com.fifesoft.spellchecker;bundle-version="[2.5.7,3.0.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.knime.base

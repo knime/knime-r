@@ -49,8 +49,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
 public class RObjectBrowser extends JTable {
+	/** Generated serialVersionUID */
+	private static final long serialVersionUID = 7537899041950123910L;
+
 	RObjectBrowserModel m_model;
-	
+
 	public RObjectBrowser() {
 		m_model = new RObjectBrowserModel();
 		setModel(m_model);
@@ -60,11 +63,14 @@ public class RObjectBrowser extends JTable {
 	public void updateData(final String[] objectNames, final String[] objectClasses) {
 		m_model.updateData(objectNames, objectClasses);
 	}
-	
+
 	private static class RObjectBrowserModel extends AbstractTableModel {
+		/** Generated serialVersionUID */
+		private static final long serialVersionUID = -4121185930197219249L;
+
 		private String[] m_objectNames;
 		private String[] m_objectClasses;
-		
+
 		public RObjectBrowserModel() {
 			m_objectNames = new String[0];
 			m_objectClasses = new String[0];
@@ -88,7 +94,7 @@ public class RObjectBrowser extends JTable {
 				return "Type";
 			}
 		}
-		
+
 		@Override
 		public Object getValueAt(final int rowIndex, final int columnIndex) {
 			if (columnIndex == 0) {
@@ -97,7 +103,7 @@ public class RObjectBrowser extends JTable {
 				return m_objectClasses[rowIndex];
 			}
 		}
-		
+
 		public void updateData(final String[] objectNames, final String[] objectClasses) {
 			if (objectNames != null && objectClasses != null) {
 				m_objectNames = objectNames;
@@ -107,8 +113,8 @@ public class RObjectBrowser extends JTable {
 				m_objectClasses = new String[0];
 			}
 			fireTableDataChanged();
-		}		
-		
+		}
+
 	}
 
 }

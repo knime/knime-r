@@ -136,14 +136,14 @@ public final class TemplateProvider extends TemplateRepository
 
     /**
      * Get all categories.
-     * @param metaCategories only categories that hold templates in this
+     * @param m_metaCategories only categories that hold templates in this
      * meta categories will be displayed.
      * @return the categories
      */
-    public Set<String> getCategories(final Collection<Class> metaCategories) {
-        initTemplates(metaCategories);
+    public Set<String> getCategories(final Collection<Class<?>> m_metaCategories) {
+        initTemplates(m_metaCategories);
         Set<String> categories = new LinkedHashSet<String>();
-        for (Class c : metaCategories) {
+        for (Class c : m_metaCategories) {
             if (m_templates.containsKey(c)) {
                 categories.addAll(m_templates.get(c).keySet());
             }
@@ -156,7 +156,7 @@ public final class TemplateProvider extends TemplateRepository
      */
     @Override
     public Collection<RSnippetTemplate> getTemplates(
-            final Collection<Class> metaCategories) {
+            final Collection<Class<?>> metaCategories) {
         initTemplates(metaCategories);
         Set<RSnippetTemplate> templates = new LinkedHashSet<RSnippetTemplate>();
         for (Class c : metaCategories) {
@@ -175,7 +175,7 @@ public final class TemplateProvider extends TemplateRepository
      * @return the {@link RSnippetTemplate}s in the given category
      */
     public Collection<RSnippetTemplate> getTemplates(
-            final Collection<Class> metaCategories,
+            final Collection<Class<?>> metaCategories,
             final String category) {
         initTemplates(metaCategories);
         Set<RSnippetTemplate> templates = new LinkedHashSet<RSnippetTemplate>();
@@ -188,11 +188,11 @@ public final class TemplateProvider extends TemplateRepository
     }
 
     /** Load templates for the given meta categories.
-     * @param metaCategories the meta categories
+     * @param m_metaCategories the meta categories
      */
-    private void initTemplates(final Collection<Class> metaCategories) {
+    private void initTemplates(final Collection<Class<?>> m_metaCategories) {
         // reset data
-        for (Class key : metaCategories) {
+        for (Class key : m_metaCategories) {
             if (m_templates.containsKey(key)) {
                 m_templates.remove(key);
             }
@@ -202,7 +202,7 @@ public final class TemplateProvider extends TemplateRepository
             m_templates.put(key, templates);
         }
         for (TemplateRepository repo : m_repos) {
-            appendTemplates(repo.getTemplates(metaCategories));
+            appendTemplates(repo.getTemplates(m_metaCategories));
         }
     }
 

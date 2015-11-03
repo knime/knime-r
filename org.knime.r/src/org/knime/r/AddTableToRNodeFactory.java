@@ -60,28 +60,29 @@ import org.knime.ext.r.node.local.port.RPortObject;
  */
 public class AddTableToRNodeFactory extends RSnippetNodeFactory {
 
-    /**
-     * Empty default constructor.
-     */
-    public AddTableToRNodeFactory() {
-    	super(new RSnippetNodeConfig() {
-    		@Override
-    		protected Collection<PortType> getInPortTypes() {
-    			Collection<PortType> ports = new ArrayList<PortType>();
-    			ports.add(RPortObject.TYPE);
-    			ports.add(BufferedDataTable.TYPE);
-    			return ports; 
-    		}
-    		
-    		@Override
-    		protected Collection<PortType> getOutPortTypes() {
-    			return Collections.singleton(RPortObject.TYPE);
-    		}
-    		@Override
-    		String getDefaultScript() {
-    		    return "rframe <- knime.in\n";
-    		}
-    	});
-    }
-  
+	/**
+	 * Empty default constructor.
+	 */
+	public AddTableToRNodeFactory() {
+		super(new RSnippetNodeConfig() {
+			@Override
+			protected Collection<PortType> getInPortTypes() {
+				final Collection<PortType> ports = new ArrayList<PortType>();
+				ports.add(RPortObject.TYPE);
+				ports.add(BufferedDataTable.TYPE);
+				return ports;
+			}
+
+			@Override
+			protected Collection<PortType> getOutPortTypes() {
+				return Collections.singleton(RPortObject.TYPE);
+			}
+
+			@Override
+			String getDefaultScript() {
+				return "rframe <- knime.in\n";
+			}
+		});
+	}
+
 }

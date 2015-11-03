@@ -77,195 +77,161 @@ import org.knime.r.template.TemplatesPanel;
  * The dialog of the R nodes.
  *
  * @author Heiko Hofer
+ * @author Jonathan Hale
  */
 public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
-    private static final NodeLogger LOGGER = NodeLogger.getLogger(
-            RSnippetNodeDialog.class);
+	private static final NodeLogger LOGGER = NodeLogger.getLogger(RSnippetNodeDialog.class);
 
-    private static final String SNIPPET_TAB = "R Snippet";
-
+	private static final String SNIPPET_TAB = "R Snippet";
 
 	private final RSnippetNodePanel m_panel;
 	private DefaultTemplateController m_templatesController;
 
-	private final Class m_templateMetaCategory;
+	private final Class<?> m_templateMetaCategory;
 	private final RSnippetNodeConfig m_config;
 	private int m_tableInPort;
 	private int m_tableOutPort;
-	
+
 	private JCheckBox m_outNonNumbersAsMissing;
 
-    /**
-     * Create a new Dialog.
-     * @param templateMetaCategory the meta category used in the templates
-     * tab or to create templates
-     */
-    @SuppressWarnings("rawtypes")
-    protected RSnippetNodeDialog(final Class templateMetaCategory, final RSnippetNodeConfig config) {
-    	m_templateMetaCategory = templateMetaCategory;
-    	m_config = config;
-    	m_tableInPort = -1;
-    	int i = 0;
-    	for (PortType portType : m_config.getInPortTypes()) {
-    		if (portType.equals(BufferedDataTable.TYPE)) {
-    			m_tableInPort = i;
-        	}
-    		i++;
-    	}
-    	m_tableOutPort = -1;
-    	int k = 0;
-    	for (PortType portType : m_config.getOutPortTypes()) {
-    		if (portType.equals(BufferedDataTable.TYPE)) {
-    			m_tableOutPort = k;
-        	}
-    		k++;
-    	}
-    	
-        m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, true) {
+	/**
+	 * Create a new Dialog.
+	 *
+	 * @param templateMetaCategory
+	 *            the meta category used in the templates tab or to create
+	 *            templates
+	 */
+	protected RSnippetNodeDialog(final Class<?> templateMetaCategory, final RSnippetNodeConfig config) {
+		m_templateMetaCategory = templateMetaCategory;
+		m_config = config;
+		m_tableInPort = -1;
+		int i = 0;
+		for (final PortType portType : m_config.getInPortTypes()) {
+			if (portType.equals(BufferedDataTable.TYPE)) {
+				m_tableInPort = i;
+			}
+			++i;
+		}
 
-        	@Override
-			public void applyTemplate(final RSnippetTemplate template,
-                    final DataTableSpec spec,
-                    final Map<String, FlowVariable> flowVariables) {
-        		super.applyTemplate(template, spec, flowVariables);
-        		setSelected(SNIPPET_TAB);
-        	}
+		m_tableOutPort = -1;
+		i = 0;
+		for (final PortType portType : m_config.getOutPortTypes()) {
+			if (portType.equals(BufferedDataTable.TYPE)) {
+				m_tableOutPort = i;
+			}
+			++i;
+		}
 
-        };
+		m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, true) {
 
-        addTab(SNIPPET_TAB, m_panel);
-        // The preview does not have the templates tab
-        addTab("Templates", createTemplatesPanel());
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = 6934850660800321248L;
 
-        // currently ther is only one advanced option which applies only for R nodes with table output.
-        if (m_tableOutPort >= 0) {
-        	addTab("Advanced", createAdvancedPanel());
-        }
-        m_panel.setPreferredSize(new Dimension(800, 600));
-    }
+			@Override
+			public void applyTemplate(final RSnippetTemplate template, final DataTableSpec spec,
+					final Map<String, FlowVariable> flowVariables) {
+				super.applyTemplate(template, spec, flowVariables);
+				setSelected(SNIPPET_TAB);
+			}
 
-    /** Create the templates tab. */
-    private JPanel createTemplatesPanel() {
-        RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, m_config, true, false);
+		};
 
-        m_templatesController = new DefaultTemplateController(
-                m_panel, preview);
-        TemplatesPanel templatesPanel = new TemplatesPanel(
-                Collections.singleton(m_templateMetaCategory),
-                m_templatesController);
-        return templatesPanel;
-    }
-    
+		addTab(SNIPPET_TAB, m_panel);
+		// The preview does not have the templates tab
+		addTab("Templates", createTemplatesPanel());
+
+		// currently there is only one advanced option which applies only for R
+		// nodes with table output.
+		if (m_tableOutPort >= 0) {
+			addTab("Advanced", createAdvancedPanel());
+		}
+		m_panel.setPreferredSize(new Dimension(800, 600));
+	}
+
+	/** Create the templates tab. */
+	private JPanel createTemplatesPanel() {
+		final RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, m_config, true, false);
+
+		m_templatesController = new DefaultTemplateController(m_panel, preview);
+		final TemplatesPanel templatesPanel = new TemplatesPanel(
+				Collections.<Class<?>> singleton(m_templateMetaCategory), m_templatesController);
+		return templatesPanel;
+	}
+
 	private JPanel createAdvancedPanel() {
-    	JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.BASELINE;
-        c.insets = new Insets(5, 5, 0, 5);
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 1;
-        c.weightx = 0;
-        c.weighty = 0;
+		final GridBagConstraints gbc_nonNums = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.BASELINE,
+				GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0);
+		final GridBagConstraints gbc_filler = new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.BASELINE,
+				GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0);
 
-        c.gridx = 0;
-        c.gridwidth = 1;
-        c.weightx = 1;
-        
-        m_outNonNumbersAsMissing = new JCheckBox("Treat NaN, Inf and -Inf as missing values in the output table.");
-        m_outNonNumbersAsMissing.setToolTipText("Check for backward compatibility with pre 2.10 releases.");
-        p.add(m_outNonNumbersAsMissing, c);
-		
-		c.gridy++;
-		c.weighty = 1;
-		p.add(new JPanel(), c);
+		m_outNonNumbersAsMissing = new JCheckBox("Treat NaN, Inf and -Inf as missing values in the output table.");
+		m_outNonNumbersAsMissing.setToolTipText("Check for backwards compatibility with pre 2.10 releases.");
+
+		final JPanel p = new JPanel(new GridBagLayout());
+		p.add(m_outNonNumbersAsMissing, gbc_nonNums);
+		p.add(new JPanel(), gbc_filler); // Panel to fill up remaining space
 		return p;
-	}    
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean closeOnESC() {
-        // do not close on ESC, since ESC is used to close autocomplete popups
-        // in the snippets textarea.
-        return false;
-    }
-
-    @Override
-    protected void loadSettingsFrom(final NodeSettingsRO settings,
-    		final PortObjectSpec[] specs) throws NotConfigurableException {
-    	DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec)specs[m_tableInPort] : null;
-        m_panel.updateData(settings, specs, getAvailableFlowVariables().values());
-        if (m_tableOutPort >= 0) {
-        	RSnippetSettings s = new RSnippetSettings();
-        	s.loadSettingsForDialog(settings);
-        	m_outNonNumbersAsMissing.setSelected(s.getOutNonNumbersAsMissing());
-        }
-        
-
-        m_templatesController.setDataTableSpec(spec);
-        m_templatesController.setFlowVariables(getAvailableFlowVariables());
-    }
-
-    @Override
-    protected void loadSettingsFrom(final NodeSettingsRO settings,
-    		final PortObject[] input) throws NotConfigurableException {
-    	DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable)input[m_tableInPort]).getSpec() : null;
-        m_panel.updateData(settings, input, getAvailableFlowVariables().values());
-        if (m_tableOutPort >= 0) {
-        	RSnippetSettings s = new RSnippetSettings();
-        	s.loadSettingsForDialog(settings);
-        	m_outNonNumbersAsMissing.setSelected(s.getOutNonNumbersAsMissing());
-        }
-
-        m_templatesController.setDataTableSpec(spec);
-        m_templatesController.setFlowVariables(getAvailableFlowVariables());
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onOpen() {
-        ViewUtils.invokeAndWaitInEDT(new Runnable() {
-            @Override
-            public void run() {
-                m_panel.onOpen();
-            }
-        });
-    }
+	}
 
 	@Override
-    public void onClose() {
-	    ViewUtils.invokeAndWaitInEDT(new Runnable() {
-	        @Override
-	        public void run() {
-	            m_panel.onClose();
-	        }
-	    });
-    }
+	public boolean closeOnESC() {
+		// do not close on ESC, since ESC is used to close autocomplete popups
+		// in the snippets textarea.
+		return false;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings)
-            throws InvalidSettingsException {
-    	if (m_tableOutPort >= 0) {
-    		m_panel.getRSnippet().getSettings().setOutNonNumbersAsMissing(m_outNonNumbersAsMissing.isSelected());
-        }    	
-        m_panel.saveSettingsTo(settings);
-    }
+	@Override
+	protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
+			throws NotConfigurableException {
+		final DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec) specs[m_tableInPort] : null;
+		m_panel.updateData(settings, specs, getAvailableFlowVariables().values());
+		if (m_tableOutPort >= 0) {
+			final RSnippetSettings s = new RSnippetSettings();
+			s.loadSettingsForDialog(settings);
+			m_outNonNumbersAsMissing.setSelected(s.getOutNonNumbersAsMissing());
+		}
 
+		m_templatesController.setDataTableSpec(spec);
+		m_templatesController.setFlowVariables(getAvailableFlowVariables());
+	}
 
-    /**
-     * Called right before storing the settings object. Gives subclasses
-     * the chance to modify the settings object.
-     * @param s the settings
-     */
-    protected void preSaveSettings(final RSnippetSettings s) {
-        // just a place holder.
-    }
+	@Override
+	protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObject[] input)
+			throws NotConfigurableException {
+		final DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable) input[m_tableInPort]).getSpec() : null;
+		m_panel.updateData(settings, input, getAvailableFlowVariables().values());
+		if (m_tableOutPort >= 0) {
+			final RSnippetSettings s = new RSnippetSettings();
+			s.loadSettingsForDialog(settings);
+			m_outNonNumbersAsMissing.setSelected(s.getOutNonNumbersAsMissing());
+		}
+
+		m_templatesController.setDataTableSpec(spec);
+		m_templatesController.setFlowVariables(getAvailableFlowVariables());
+	}
+
+	@Override
+	public void onOpen() {
+		ViewUtils.invokeAndWaitInEDT(() -> {
+			m_panel.onOpen();
+		});
+	}
+
+	@Override
+	public void onClose() {
+		ViewUtils.invokeAndWaitInEDT(() -> {
+			m_panel.onClose();
+		});
+	}
+
+	@Override
+	protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
+		if (m_tableOutPort >= 0) {
+			m_panel.getRSnippet().getSettings().setOutNonNumbersAsMissing(m_outNonNumbersAsMissing.isSelected());
+		}
+		m_panel.saveSettingsTo(settings);
+	}
+
 }

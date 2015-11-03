@@ -55,77 +55,81 @@ import java.util.List;
  * @author Heiko Hofer
  */
 public class ValueReport<T> {
-    private String[] m_errors;
-    private String[] m_warnings;
-    
-    private T m_value;
+	private String[] m_errors;
+	private String[] m_warnings;
 
-    /**
-     * Creates a new report object.
-     *
-     * @param value the value
-     * @param errors the errors
-     * @param warnings the warnings
-     */
-    public ValueReport(final T value, final String[] errors, final String[] warnings) {
-        super();
-        m_errors = errors;
-        m_warnings = warnings;
-        m_value = value;
-    }
+	private T m_value;
 
-    public ValueReport(final T value, final List<String> errors, final List<String> warnings) {
-    	this(value, errors.toArray(new String[errors.size()]), warnings.toArray(new String[warnings.size()]));
+	/**
+	 * Creates a new report object.
+	 *
+	 * @param value
+	 *            the value
+	 * @param errors
+	 *            the errors
+	 * @param warnings
+	 *            the warnings
+	 */
+	public ValueReport(final T value, final String[] errors, final String[] warnings) {
+		super();
+		m_errors = errors;
+		m_warnings = warnings;
+		m_value = value;
+	}
+
+	public ValueReport(final T value, final List<String> errors, final List<String> warnings) {
+		this(value, errors.toArray(new String[errors.size()]), warnings.toArray(new String[warnings.size()]));
 	}
 
 	/**
-     * @return the value
-     */
-    public T getValue() {
-        return m_value;
-    }
-    
-    /**
-     * @return the errors
-     */
-    public String[] getErrors() {
-        return m_errors;
-    }
+	 * @return the value
+	 */
+	public T getValue() {
+		return m_value;
+	}
 
+	/**
+	 * @return the errors
+	 */
+	public String[] getErrors() {
+		return m_errors;
+	}
 
-    /**
-     * @return the warnings
-     */
-    public String[] getWarnings() {
-        return m_warnings;
-    }
+	/**
+	 * @return the warnings
+	 */
+	public String[] getWarnings() {
+		return m_warnings;
+	}
 
-    /**
-     * @return true when there are one or more errors.
-     */
-    public boolean hasErrors() {
-        return m_errors != null && m_errors.length > 0;
-    }
+	/**
+	 * @return true when there are one or more errors.
+	 */
+	public boolean hasErrors() {
+		return m_errors != null && m_errors.length > 0;
+	}
 
-    /**
-     * @return true when there are one or more warnings.
-     */
-    public boolean hasWarnings() {
-        return m_warnings != null && m_warnings.length > 0;
-    }
-    
+	/**
+	 * @return true when there are one or more warnings.
+	 */
+	public boolean hasWarnings() {
+		return m_warnings != null && m_warnings.length > 0;
+	}
 
-    /**
-     * Concatenate strings with delimiter.
-     * @param strings the string
-     * @param delim the delimiter
-     * @return concatenated string
-     */
-    public static String joinString(final String[] strings, final String delim) {
-    	if (null == strings || strings.length == 0) {
-    		return "";
-    	}
-		StringBuilder b = new StringBuilder();
+	/**
+	 * Concatenate strings with delimiter.
+	 *
+	 * @param strings
+	 *            the string
+	 * @param delim
+	 *            the delimiter
+	 * @return concatenated string
+	 */
+	public static String joinString(final String[] strings, final String delim) {
+		if (null == strings || strings.length == 0) {
+			return "";
+		}
+		final StringBuilder b = new StringBuilder();
 		b.append(strings[0]);
 		for (int i = 1; i < strings.length; i++) {
 			b.append(delim);

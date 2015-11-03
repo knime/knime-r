@@ -58,62 +58,59 @@ import org.knime.core.node.NodeView;
  */
 public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel> {
 	private RSnippetNodeConfig m_config = new RSnippetNodeConfig();
-	
-    /**
-     * Empty default constructor.
-     */
-    public RSnippetNodeFactory() {
-    }
-    
-    public RSnippetNodeFactory(final RSnippetNodeConfig rSnippetModelConfig) {
-    	m_config = rSnippetModelConfig;
+
+	/**
+	 * Empty default constructor.
+	 */
+	public RSnippetNodeFactory() {
+	}
+
+	public RSnippetNodeFactory(final RSnippetNodeConfig rSnippetModelConfig) {
+		m_config = rSnippetModelConfig;
 	}
 
 	/**
-     * {@inheritDoc}
-     */
-    @Override
-    protected NodeDialogPane createNodeDialogPane() {
-        return new RSnippetNodeDialog(this.getClass(), m_config);
-    }
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected NodeDialogPane createNodeDialogPane() {
+		return new RSnippetNodeDialog(this.getClass(), m_config);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public RSnippetNodeModel createNodeModel() {
-    	return new RSnippetNodeModel(m_config);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getNrNodeViews() {
-        return 2;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RSnippetNodeModel createNodeModel() {
+		return new RSnippetNodeModel(m_config);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public NodeView<RSnippetNodeModel> createNodeView(final int viewIndex,
-            final RSnippetNodeModel nodeModel) {
-        if (viewIndex == 0) {
-            return
-                new ExtToolStdoutNodeView<RSnippetNodeModel>(nodeModel);
-        } else if (viewIndex == 1) {
-            return
-                new ExtToolStderrNodeView<RSnippetNodeModel>(nodeModel);
-        }
-        return null;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getNrNodeViews() {
+		return 2;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean hasDialog() {
-        return true;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public NodeView<RSnippetNodeModel> createNodeView(final int viewIndex, final RSnippetNodeModel nodeModel) {
+		if (viewIndex == 0) {
+			return new ExtToolStdoutNodeView<RSnippetNodeModel>(nodeModel);
+		} else if (viewIndex == 1) {
+			return new ExtToolStderrNodeView<RSnippetNodeModel>(nodeModel);
+		}
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected boolean hasDialog() {
+		return true;
+	}
 }

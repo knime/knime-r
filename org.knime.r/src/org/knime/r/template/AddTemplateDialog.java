@@ -75,8 +75,6 @@ import javax.swing.WindowConstants;
 import org.knime.r.RSnippetTemplate;
 import org.knime.r.RSnippet;
 
-
-
 /**
  * A dialog with most basic settings for an output field.
  *
@@ -84,215 +82,205 @@ import org.knime.r.RSnippet;
  */
 @SuppressWarnings("serial")
 public final class AddTemplateDialog extends JDialog {
-    private RSnippetTemplate m_result;
+	private RSnippetTemplate m_result;
 
-    private JComboBox m_category;
-    private JTextField m_name;
-    private JTextArea m_description;
-    private RSnippet m_settings;
-    @SuppressWarnings("rawtypes")
-    private Class m_metaCategory;
+	private JComboBox<String> m_category;
+	private JTextField m_name;
+	private JTextArea m_description;
+	private RSnippet m_settings;
+	private Class<?> m_metaCategory;
 
+	/**
+	 * Create a new dialog.
+	 *
+	 * @param parent
+	 *            frame who owns this dialog
+	 * @param snippet
+	 *            the snippet to create the template
+	 * @param metaCategories
+	 *            the meta category
+	 */
+	private AddTemplateDialog(final Frame parent, final RSnippet snippet, final Class<?> metaCategories) {
+		super(parent, true);
 
+		m_settings = snippet;
+		m_metaCategory = metaCategories;
 
-    /**
-     * Create a new dialog.
-     *
-     * @param parent frame who owns this dialog
-     * @param snippet the snippet to create the template
-     * @param metaCategories the meta category
-     */
-    @SuppressWarnings("rawtypes")
-    private AddTemplateDialog(final Frame parent,
-            final RSnippet snippet,
-            final Class metaCategories) {
-        super(parent, true);
+		setTitle("Add a Java snippet template.");
+		// instantiate the components of the dialog
+		JPanel p = createPanel();
 
-        m_settings = snippet;
-        m_metaCategory = metaCategories;
+		// the OK and Cancel button
+		JPanel control = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JButton ok = new JButton("OK");
+		// add action listener
+		ok.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+				onOK();
+			}
+		});
+		JButton cancel = new JButton("Cancel");
+		// add action listener
+		cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent event) {
+				onCancel();
+			}
+		});
+		control.add(ok);
+		control.add(cancel);
 
-        setTitle("Add a Java snippet template.");
-        // instantiate the components of the dialog
-        JPanel p = createPanel();
+		// add dialog and control panel to the content pane
+		Container cont = getContentPane();
+		cont.setLayout(new BorderLayout());
+		cont.add(p, BorderLayout.CENTER);
+		cont.add(control, BorderLayout.SOUTH);
 
-        // the OK and Cancel button
-        JPanel control = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton ok = new JButton("OK");
-        // add action listener
-        ok.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                onOK();
-            }
-        });
-        JButton cancel = new JButton("Cancel");
-        // add action listener
-        cancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent event) {
-                onCancel();
-            }
-        });
-        control.add(ok);
-        control.add(cancel);
+		setModal(true);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        // add dialog and control panel to the content pane
-        Container cont = getContentPane();
-        cont.setLayout(new BorderLayout());
-        cont.add(p, BorderLayout.CENTER);
-        cont.add(control, BorderLayout.SOUTH);
+	}
 
-        setModal(true);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	private JPanel createPanel() {
+		JPanel p = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;
+		c.anchor = GridBagConstraints.BASELINE;
+		c.insets = new Insets(2, 2, 2, 2);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.weightx = 0;
+		c.weighty = 0;
 
-    }
+		Insets leftInsets = new Insets(3, 8, 3, 8);
+		Insets rightInsets = new Insets(3, 0, 3, 8);
+		Insets leftCategoryInsets = new Insets(11, 8, 3, 8);
+		Insets rightCategoryInsets = new Insets(11, 0, 3, 8);
 
-    private JPanel createPanel() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
-        c.anchor = GridBagConstraints.BASELINE;
-        c.insets = new Insets(2, 2, 2, 2);
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 1;
-        c.weightx = 0;
-        c.weighty = 0;
+		c.gridx = 0;
+		c.insets = leftCategoryInsets;
+		c.gridwidth = 1;
+		c.weightx = 0;
+		c.weighty = 0;
 
-        Insets leftInsets = new Insets(3, 8, 3, 8);
-        Insets rightInsets = new Insets(3, 0, 3, 8);
-        Insets leftCategoryInsets = new Insets(11, 8, 3, 8);
-        Insets rightCategoryInsets = new Insets(11, 0, 3, 8);
+		TemplateProvider provider = TemplateProvider.getDefault();
+		m_category = new JComboBox<>();
+		m_category.setEditable(true);
+		Set<String> categories = provider.getCategories(Collections.<Class<?>> singletonList(m_metaCategory));
+		categories.remove(TemplateProvider.ALL_CATEGORY);
+		for (String category : categories) {
+			m_category.addItem(category);
+		}
+		p.add(new JLabel("Category:"), c);
 
-        c.gridx = 0;
-        c.insets = leftCategoryInsets;
-        c.gridwidth = 1;
-        c.weightx = 0;
-        c.weighty = 0;
+		c.gridx++;
+		c.insets = rightCategoryInsets;
+		p.add(m_category, c);
 
-        TemplateProvider provider = TemplateProvider.getDefault();
-        m_category = new JComboBox();
-        m_category.setEditable(true);
-        Set<String> categories = provider.getCategories(
-                Collections.singletonList(m_metaCategory));
-        categories.remove(TemplateProvider.ALL_CATEGORY);
-        for (String category : categories) {
-            m_category.addItem(category);
-        }
-        p.add(new JLabel("Category:"), c);
+		c.gridy++;
+		c.gridx = 0;
+		c.insets = leftInsets;
+		p.add(new JLabel("Title:"), c);
 
-        c.gridx++;
-        c.insets = rightCategoryInsets;
-        p.add(m_category, c);
+		c.gridx++;
+		c.insets = rightInsets;
+		m_name = new JTextField("");
+		p.add(m_name, c);
 
-        c.gridy++;
-        c.gridx = 0;
-        c.insets = leftInsets;
-        p.add(new JLabel("Title:"), c);
+		c.gridy++;
+		c.gridx = 0;
+		c.insets = leftInsets;
 
-        c.gridx++;
-        c.insets = rightInsets;
-        m_name = new JTextField("");
-        p.add(m_name, c);
+		c.gridwidth = 2;
+		c.weightx = 1.0;
+		c.weighty = 1.0;
+		m_description = new JTextArea();
+		JScrollPane descScroller = new JScrollPane(m_description);
+		descScroller.setBorder(BorderFactory.createTitledBorder("Description"));
+		p.add(descScroller, c);
 
-        c.gridy++;
-        c.gridx = 0;
-        c.insets = leftInsets;
+		p.setPreferredSize(new Dimension(400, 300));
 
-        c.gridwidth = 2;
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        m_description = new JTextArea();
-        JScrollPane descScroller = new JScrollPane(m_description);
-        descScroller.setBorder(
-                BorderFactory.createTitledBorder("Description"));
-        p.add(descScroller, c);
+		return p;
+	}
 
-        p.setPreferredSize(new Dimension(400, 300));
+	/** Save settings in field m_result. */
+	private RSnippetTemplate takeOverSettings() {
+		RSnippetTemplate template = m_settings.createTemplate(m_metaCategory);
+		template.setCategory((String) m_category.getSelectedItem());
+		template.setName(m_name.getText());
+		template.setDescription(m_description.getText());
+		return template;
+	}
 
-        return p;
-    }
+	/**
+	 * Called when user presses the ok button.
+	 */
+	void onOK() {
+		m_result = takeOverSettings();
+		if (m_result != null) {
+			shutDown();
+		}
+	}
 
+	/**
+	 * Called when user presses the cancel button or closes the window.
+	 */
+	void onCancel() {
+		m_result = null;
+		shutDown();
+	}
 
-    /** Save settings in field m_result. */
-    private RSnippetTemplate takeOverSettings() {
-        RSnippetTemplate template = m_settings.createTemplate(m_metaCategory);
-        template.setCategory((String)m_category.getSelectedItem());
-        template.setName(m_name.getText());
-        template.setDescription(m_description.getText());
-        return template;
-    }
+	/** Blows away the dialog. */
+	private void shutDown() {
+		setVisible(false);
+	}
 
-    /**
-     * Called when user presses the ok button.
-     */
-    void onOK() {
-        m_result = takeOverSettings();
-        if (m_result != null) {
-            shutDown();
-        }
-    }
+	/**
+	 * Opens a Dialog to receive user settings. If the user cancels the dialog
+	 * <code>null</code> will be returned. If okay is pressed, the settings from
+	 * the dialog will be stored in a new {@link RSnippetTemplate} object.<br>
+	 * If user's settings are incorrect an error dialog pops up and the user
+	 * values are discarded.
+	 *
+	 * @param parent
+	 *            frame who owns this dialog
+	 * @param snippet
+	 *            the snippet to creat the template
+	 * @param metaCategories
+	 *            the meta category
+	 * @return new template are null in case of cancellation
+	 */
+	public static RSnippetTemplate openUserDialog(final Frame parent, final RSnippet snippet,
+			final Class<?> metaCategories) {
+		AddTemplateDialog dialog = new AddTemplateDialog(parent, snippet, metaCategories);
+		return dialog.showDialog();
+	}
 
-    /**
-     * Called when user presses the cancel button or closes the window.
-     */
-    void onCancel() {
-        m_result = null;
-        shutDown();
-    }
+	/**
+	 * Shows the dialog and waits for it to return. If the user pressed Ok it
+	 * returns the OutCol definition
+	 */
+	private RSnippetTemplate showDialog() {
+		pack();
+		centerDialog();
 
-    /** Blows away the dialog. */
-    private void shutDown() {
-        setVisible(false);
-    }
+		setVisible(true);
+		/* ---- won't come back before dialog is disposed -------- */
+		/* ---- on Ok we transfer the settings into the m_result -- */
+		return m_result;
+	}
 
-
-    /**
-     * Opens a Dialog to receive user settings. If the user cancels the dialog
-     * <code>null</code> will be returned. If okay is pressed, the
-     * settings from the dialog will be stored in a new
-     * {@link RSnippetTemplate} object.<br>
-     * If user's settings are incorrect an error
-     * dialog pops up and the user values are discarded.
-     *
-     * @param parent frame who owns this dialog
-     * @param snippet the snippet to creat the template
-     * @param metaCategories the meta category
-     * @return new template are null in case of cancellation
-     */
-    @SuppressWarnings("rawtypes")
-    public static RSnippetTemplate openUserDialog(final Frame parent,
-            final RSnippet snippet,
-            final Class metaCategories) {
-        AddTemplateDialog dialog = new AddTemplateDialog(parent, snippet,
-                metaCategories);
-        return dialog.showDialog();
-    }
-
-    /**
-     * Shows the dialog and waits for it to return. If the user
-     * pressed Ok it returns the OutCol definition
-     */
-    private RSnippetTemplate showDialog() {
-        pack();
-        centerDialog();
-
-        setVisible(true);
-        /* ---- won't come back before dialog is disposed -------- */
-        /* ---- on Ok we transfer the settings into the m_result -- */
-        return m_result;
-    }
-
-    /**
-     * Sets this dialog in the center of the screen observing the current screen
-     * size.
-     */
-    private void centerDialog() {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension size = getSize();
-        setBounds(Math.max(0, (screenSize.width - size.width) / 2), Math.max(0,
-                (screenSize.height - size.height) / 2), Math.min(
-                screenSize.width, size.width), Math.min(screenSize.height,
-                size.height));
-    }
+	/**
+	 * Sets this dialog in the center of the screen observing the current screen
+	 * size.
+	 */
+	private void centerDialog() {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension size = getSize();
+		setBounds(Math.max(0, (screenSize.width - size.width) / 2), Math.max(0, (screenSize.height - size.height) / 2),
+				Math.min(screenSize.width, size.width), Math.min(screenSize.height, size.height));
+	}
 }

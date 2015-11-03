@@ -68,7 +68,6 @@ import org.knime.r.RSnippetTemplate;
  *
  * @author Heiko Hofer
  */
-@SuppressWarnings("rawtypes")
 public final class FileTemplateRepository extends TemplateRepository {
     private static NodeLogger logger
         = NodeLogger.getLogger(FileTemplateRepository.class);
@@ -77,7 +76,7 @@ public final class FileTemplateRepository extends TemplateRepository {
     private boolean m_readonly;
 
     /** Templates grouped by meta category. */
-    private Map<Class, Collection<RSnippetTemplate>> m_templates;
+    private Map<Class<?>, Collection<RSnippetTemplate>> m_templates;
 
 
     /**
@@ -94,7 +93,7 @@ public final class FileTemplateRepository extends TemplateRepository {
         m_folder = folder;
         m_readonly = readonly;
 
-        m_templates = new HashMap<Class, Collection<RSnippetTemplate>>();
+        m_templates = new HashMap<>();
 
         Collection<RSnippetTemplate> templates =
             new ArrayList<RSnippetTemplate>();
@@ -139,7 +138,7 @@ public final class FileTemplateRepository extends TemplateRepository {
      */
     private void appendTemplates(final Collection<RSnippetTemplate> templates) {
         for (RSnippetTemplate template : templates) {
-            Class key = template.getMetaCategory();
+            Class<?> key = template.getMetaCategory();
             Collection<RSnippetTemplate> collection = m_templates.get(key);
             if (null == collection) {
                 collection = new ArrayList<RSnippetTemplate>();
@@ -178,13 +177,13 @@ public final class FileTemplateRepository extends TemplateRepository {
      */
     @Override
     public Collection<RSnippetTemplate> getTemplates(
-            final Collection<Class> metaCategories) {
+            final Collection<Class<?>> metaCategories) {
         if (metaCategories.size() == 1) {
             return m_templates.get(metaCategories.iterator().next());
         } else {
             Collection<RSnippetTemplate> templates =
                 new ArrayList<RSnippetTemplate>();
-            for (Class c : metaCategories) {
+            for (Class<?> c : metaCategories) {
                 if (m_templates.containsKey(c)) {
                     templates.addAll(m_templates.get(c));
                 }

@@ -85,15 +85,15 @@ import org.knime.r.RSnippetTemplate;
  *
  * @author Heiko Hofer
  */
-@SuppressWarnings({"rawtypes", "serial" })
+@SuppressWarnings("serial")
 public class TemplatesPanel extends JPanel {
     private static final String CARD_EMPTY_SELECTION = "CARD_EMPTY_SELECTION";
     private static final String CARD_PREVIEW = "CARD_PREVIEW";
-    private JComboBox m_categories;
+    private JComboBox<String> m_categories;
     /** Displays templates that are in the currently selected category. */
-    private JList m_templates;
+    private JList<RSnippetTemplate> m_templates;
     private JTextPane m_description;
-    private Collection<Class> m_metaCategories;
+    private Collection<Class<?>> m_metaCategories;
     private JPanel m_previewPanel;
     private JPanel m_previewPane;
     private TemplateController m_controller;
@@ -103,21 +103,22 @@ public class TemplatesPanel extends JPanel {
 
     /**
      * Create a new instance.
-     * @param metaCategories the meta categories to display
+     * @param set the meta categories to display
      * @param controller the controller used to create the preview and to apply
      * template to the java snippet node
      */
-    public TemplatesPanel(final Collection<Class> metaCategories,
+    public TemplatesPanel(final Set<Class<?>> set,
             final TemplateController controller) {
         super(new BorderLayout());
         m_controller = controller;
-        m_metaCategories = metaCategories;
+        m_metaCategories = set;
 
-        m_categories = new JComboBox();
+        m_categories = new JComboBox<String>();
         m_categoriesListener = new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
+                @SuppressWarnings("unchecked") // listener only added to m_categories
+				JComboBox<String> cb = (JComboBox<String>)e.getSource();
                 String category = (String)cb.getSelectedItem();
                 updateTemplatesList(category);
             }
@@ -125,7 +126,7 @@ public class TemplatesPanel extends JPanel {
         m_categories.addActionListener(m_categoriesListener);
         updateCategories();
 
-        m_templates = new JList(new DefaultListModel());
+        m_templates = new JList<>(new DefaultListModel<RSnippetTemplate>());
         m_templates.setSelectionMode(
                 ListSelectionModel.SINGLE_SELECTION);
         m_templates.setCellRenderer(new TemplateListCellRenderer());
@@ -140,7 +141,7 @@ public class TemplatesPanel extends JPanel {
             }
         });
         m_description = new JTextPane();
-        HTMLEditorKit kit = new HTMLEditorKit();
+        final HTMLEditorKit kit = new HTMLEditorKit();
         m_description.setEditorKit(kit);
         m_description.setEditable(false);
 
@@ -154,13 +155,13 @@ public class TemplatesPanel extends JPanel {
             }
         });
 
-        JSplitPane mainSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        JPanel templatesPanel = new JPanel(new BorderLayout());
+        final JSplitPane mainSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        final JPanel templatesPanel = new JPanel(new BorderLayout());
         templatesPanel.add(createTemplatesPanel(), BorderLayout.CENTER);
         mainSplit.setTopComponent(templatesPanel);
         m_previewPanel = new JPanel(new BorderLayout());
         m_previewPane = new JPanel(new CardLayout());
-        JPanel p = new JPanel(new GridBagLayout());
+        final JPanel p = new JPanel(new GridBagLayout());
         p.add(new JLabel("Please select a template."));
         m_previewPane.add(p, CARD_EMPTY_SELECTION);
         m_previewPane.add(m_previewPanel, CARD_PREVIEW);
@@ -214,7 +215,7 @@ public class TemplatesPanel extends JPanel {
 
     private void updateTemplatesList(final String category) {
         Object selected = m_templates.getSelectedValue();
-        DefaultListModel model = (DefaultListModel)m_templates.getModel();
+        DefaultListModel<RSnippetTemplate> model = (DefaultListModel<RSnippetTemplate>)m_templates.getModel();
         model.clear();
         TemplateProvider provider = TemplateProvider.getDefault();
         for (RSnippetTemplate template : provider.getTemplates(

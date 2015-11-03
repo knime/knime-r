@@ -54,11 +54,11 @@ import org.knime.ext.r.node.local.port.RPortObject;
  */
 public class RToViewNodeFactory extends RViewNodeFactory {
 
-    /**
-     * Empty default constructor.
-     */
-    public RToViewNodeFactory() {
-    	super(RPortObject.TYPE);
-    }
-  
+	/**
+	 * Empty default constructor.
+	 */
+	public RToViewNodeFactory() {
+		super(RPortObject.TYPE);
+	}
+
 }

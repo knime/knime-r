@@ -61,9 +61,8 @@ import org.knime.core.util.FileUtil;
  * @author Heiko Hofer
  */
 final class RToPMMLNodeConfig extends RSnippetNodeConfig {
-	private static final NodeLogger LOGGER = NodeLogger.getLogger(
-	        "R Snippet");
-	
+	private static final NodeLogger LOGGER = NodeLogger.getLogger("R Snippet");
+
 	private final PortType m_inPortType;
 	private File m_imageFile;
 
@@ -75,36 +74,34 @@ final class RToPMMLNodeConfig extends RSnippetNodeConfig {
 	protected Collection<PortType> getInPortTypes() {
 		return Collections.singleton(m_inPortType);
 	}
-	
+
 	@Override
 	protected Collection<PortType> getOutPortTypes() {
 		return Collections.singleton(PMMLPortObject.TYPE);
 	}
-	
-	
+
 	@Override
 	protected String getScriptSuffix() {
 		if (m_imageFile == null) {
 			try {
 				m_imageFile = FileUtil.createTempFile("R-to-pmml-", ".pmml");
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				LOGGER.error("Cannot create temporary file.", e);
 				throw new RuntimeException(e);
 			}
 			m_imageFile.deleteOnExit();
-		}		
-        // generate and write pmml
-        return "write(knime.model.pmml, file=\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")\n\n";
+		}
+		// generate and write pmml
+		return "write(knime.model.pmml, file=\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")\n\n";
 	}
 
 	public File getImageFile() {
 		return m_imageFile;
 	}
-	
+
 	@Override
 	protected String getDefaultScript() {
-	    return "library(pmml)\n"
-	            + "knime.model.pmml <- toString(pmml(knime.model))\n";
+		return "library(pmml)\n" + "knime.model.pmml <- toString(pmml(knime.model))\n";
 	}
 
 }

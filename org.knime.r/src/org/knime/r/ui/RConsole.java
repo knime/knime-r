@@ -50,24 +50,34 @@ import javax.swing.JTextPane;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 
-public class RConsole extends JTextPane  {
-	private Style m_errorStyle;
-	private Style m_normalStyle;
-	private Style m_commandStyle;
-	private Style m_resultStyle;
-	
+/**
+ * {@link JTextPane} with special styling to hold the R output.
+ * 
+ * @author Heiko Hofer
+ * @author Jonathan Hale
+ */
+public class RConsole extends JTextPane {
+
+	/** Generated serialVersionUID */
+	private static final long serialVersionUID = 4957382192224648665L;
+
+	private final Style m_errorStyle;
+	private final Style m_normalStyle;
+	private final Style m_commandStyle;
+	private final Style m_resultStyle;
+
 	public RConsole() {
-        m_errorStyle = addStyle("Error Style", null);
-        StyleConstants.setForeground(m_errorStyle, Color.red);
-        m_normalStyle = addStyle("Normal Style", null);
-        StyleConstants.setForeground(m_normalStyle, Color.black);
-        m_commandStyle = addStyle("Command Style", null);
-        StyleConstants.setForeground(m_commandStyle, Color.darkGray);
-        m_resultStyle = addStyle("Result Style", null);
-        StyleConstants.setForeground(m_resultStyle, Color.black);   
-        
-        setEditable(false);
-        setDragEnabled(true);
+		m_errorStyle = addStyle("Error Style", null);
+		StyleConstants.setForeground(m_errorStyle, Color.red);
+		m_normalStyle = addStyle("Normal Style", null);
+		StyleConstants.setForeground(m_normalStyle, Color.black);
+		m_commandStyle = addStyle("Command Style", null);
+		StyleConstants.setForeground(m_commandStyle, Color.darkGray);
+		m_resultStyle = addStyle("Result Style", null);
+		StyleConstants.setForeground(m_resultStyle, Color.black);
+
+		setEditable(false);
+		setDragEnabled(true);
 	}
 
 	/**

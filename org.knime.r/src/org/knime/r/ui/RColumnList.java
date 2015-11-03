@@ -66,16 +66,17 @@ import org.knime.core.node.util.DataColumnSpecListCellRenderer;
  * A component that presents a list of input columns for the snippet dialogs.
  *
  * @author Heiko Hofer
+ * @author Jonathan Hale
  */
 @SuppressWarnings("serial")
-public class RColumnList extends JList {
+public class RColumnList extends JList<DataColumnSpec> {
     private RSnippetTextArea m_snippet;
 
     /**
-     *
+     * Constructor
      */
     public RColumnList() {
-        super(new DefaultListModel());
+        super(new DefaultListModel<DataColumnSpec>());
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         addKeyListener(new KeyAdapter() {
             /** {@inheritDoc} */
@@ -160,14 +161,13 @@ public class RColumnList extends JList {
      * @param spec the data table spec of the input
      */
     public void setSpec(final DataTableSpec spec) {
-        DefaultListModel listModel = (DefaultListModel)getModel();
+        DefaultListModel<DataColumnSpec> listModel = (DefaultListModel<DataColumnSpec>)getModel();
         listModel.removeAllElements();
 //        listModel.addElement(RSnippet.ROWID);
 //        listModel.addElement(RSnippet.ROWINDEX);
 //        listModel.addElement(RSnippet.ROWCOUNT);
 	    if (spec != null) {	
-	        for (int i = 0; i < spec.getNumColumns(); i++) {
-	            DataColumnSpec colSpec = spec.getColumnSpec(i);
+	        for (DataColumnSpec colSpec : spec) {
 	            listModel.addElement(colSpec);
 	        }
 	    }

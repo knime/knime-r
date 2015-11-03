@@ -66,14 +66,14 @@ import org.knime.core.node.workflow.FlowVariable;
  * @author Heiko Hofer
  */
 @SuppressWarnings("serial")
-public class RFlowVariableList extends JList {
+public class RFlowVariableList extends JList<FlowVariable> {
     private RSnippetTextArea m_snippet;
 
     /**
      *
      */
     public RFlowVariableList() {
-        super(new DefaultListModel());
+        super(new DefaultListModel<FlowVariable>());
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setToolTipText(""); // enable tooltip
         addKeyListener(new KeyAdapter() {
@@ -133,10 +133,10 @@ public class RFlowVariableList extends JList {
      * @param flowVars the flow variables.
      */
     public void setFlowVariables(final Collection<FlowVariable> flowVars) {
-        DefaultListModel fvListModel =
-            (DefaultListModel)getModel();
+        DefaultListModel<FlowVariable> fvListModel =
+            (DefaultListModel<FlowVariable>)getModel();
         fvListModel.removeAllElements();
-        for (FlowVariable v : flowVars) {
+        for (final FlowVariable v : flowVars) {
             fvListModel.addElement(v);
         }
 

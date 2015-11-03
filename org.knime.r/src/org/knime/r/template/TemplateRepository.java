@@ -71,9 +71,8 @@ public abstract class TemplateRepository {
      * meta categories will be returned.
      * @return the {@link RSnippetTemplate}s in the given meta category
      */
-    @SuppressWarnings("rawtypes")
     public abstract Collection<RSnippetTemplate> getTemplates(
-            final Collection<Class> metaCategories);
+            final Collection<Class<?>> metaCategories);
 
     /**
      * Test if a template can be removed. Returns only true if the template

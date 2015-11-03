@@ -69,6 +69,9 @@ import org.knime.core.node.workflow.NodeProgressListener;
  * @author Heiko Hofer
  */
 public class RProgressPanel extends JPanel implements NodeProgressListener {
+	/** Generated serialVersionUID */
+	private static final long serialVersionUID = -1900970914267712698L;
+	
 	private ExecutionMonitor m_exec;
 	private JButton m_cancelButton;
 	private JProgressBar m_progressBar;
@@ -131,11 +134,15 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 	}
 
 	public void startMonitoring(final ExecutionMonitor exec) {
-	    m_exec.getProgressMonitor().removeProgressListener(this);		
+		m_exec.getProgressMonitor().removeProgressListener(this);		
 		m_exec = exec;
 		m_exec.getProgressMonitor().addProgressListener(this);
 		m_message.setText("");
-		m_progressBar.setIndeterminate(m_exec.getProgressMonitor().getProgress() != null);
+		if (m_exec.getProgressMonitor().getProgress() == null) {
+			m_progressBar.setIndeterminate(true);
+		} else {
+			progressChangedInternal();
+		}
 		m_cancelButton.setEnabled(true);
 		m_cardLayout.show(this, "progress");
 		m_updateInProgress.set(false);

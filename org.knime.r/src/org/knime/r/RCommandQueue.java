@@ -46,29 +46,259 @@ package org.knime.r;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
+import org.knime.core.node.CanceledExecutionException;
+import org.knime.core.node.ExecutionMonitor;
+import org.knime.r.RConsoleController.ExecutionMonitorFactory;
+import org.rosuda.REngine.REXP;
+
+/**
+ * A {@link LinkedBlockingQueue} which contains {@link RCommand} and as means of
+ * starting a thread which will sequentially execute the RCommands in the queue.
+ * 
+ * @author Jonathan Hale
+ * @author Heiko Hofer
+ */
 public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
-	
-    /**
-     * Inserts the specified script at the tail of this queue, waiting if
-     * necessary for space to become available.
-     * @param showInConsole If the command should be copied into the R console.
-     *
-     * @throws InterruptedException {@inheritDoc}
-     * @throws NullPointerException {@inheritDoc}
-     */	
-	public void putRScript(final String rScript, boolean showInConsole) throws InterruptedException {
-		Collection<RCommand> cmds = new ArrayList<RCommand>();
-		StringTokenizer tokenizer = new StringTokenizer(rScript, "\n");
-		int c = 1;
-		while(tokenizer.hasMoreTokens()) {
-			String cmd = tokenizer.nextToken();
-			cmds.add(new RCommand(cmd.trim(), c, showInConsole));
-			c++;
+
+	/** Generated serialVersionUID */
+	private static final long serialVersionUID = 1850919045704831064L;
+
+	private RCommandConsumer m_thread = null;
+
+	private final RController m_controller;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param controller
+	 *            {@link RController} for evaluating R code in the execution
+	 *            thread.
+	 */
+	public RCommandQueue(final RController controller) {
+		m_controller = controller;
+	}
+
+	/**
+	 * Inserts the specified script at the tail of this queue, waiting if
+	 * necessary for space to become available.
+	 *
+	 * @param showInConsole
+	 *            If the command should be copied into the R console.
+	 * @return {@link RCommand} describing the last command of
+	 *         <code>rScript</code>. Since the commands are executed stricly
+	 *         sequentially, all commands will have completed once this returned
+	 *         command has. Use {@link RCommand#get()} to wait for execution and
+	 *         fetch the result of evaluation if any.
+	 * @throws InterruptedException
+	 *             {@inheritDoc}
+	 * @throws NullPointerException
+	 *             {@inheritDoc}
+	 */
+	public RCommand putRScript(final String rScript, final boolean showInConsole) throws InterruptedException {
+		final ArrayList<RCommand> cmds = new ArrayList<>();
+		final StringTokenizer tokenizer = new StringTokenizer(rScript, "\n");
+
+		while (tokenizer.hasMoreTokens()) {
+			final String cmd = tokenizer.nextToken();
+			cmds.add(new RCommand(cmd.trim(), showInConsole));
 		}
 		put(cmds);
+
+		// return last element
+		return cmds.get(cmds.size() - 1);
+	}
+
+	/**
+	 * Interface for classes listening to the exection of commands in a
+	 * {@link RCommandQueue}.
+	 * 
+	 * @author Jonathan Hale
+	 */
+	public interface RCommandExecutionListener {
+
+		/**
+		 * Called before execution of a command is started.
+		 * 
+		 * @param command
+		 *            the command to be executed
+		 */
+		public void onCommandExecutionStart(RCommand command);
+
+		/**
+		 * Called after a command has been completed.
+		 * 
+		 * @param command
+		 *            command which has been completed
+		 */
+		public void onCommandExecutionEnd(RCommand command);
+
+		/**
+		 * Called when a command is cancelled.
+		 */
+		public void onCommandExecutionCanceled();
+
+	}
+
+	private final Set<RCommandExecutionListener> m_listeners = new HashSet<>();
+
+	/**
+	 * Add a {@link RCommandExecutionListener} to listen to this RCommandQueue.
+	 * 
+	 * @param l
+	 *            the Listener
+	 */
+	public void addRCommandExecutionListener(final RCommandExecutionListener l) {
+		m_listeners.add(l);
+	}
+
+	/**
+	 * Remove a {@link RCommandExecutionListener} from this RCommandQueue.
+	 * 
+	 * @param l
+	 *            the Listener
+	 */
+	public void removeRCommandExecutionListener(final RCommandExecutionListener l) {
+		m_listeners.remove(l);
+	}
+
+	/**
+	 * Thread which executes RCommands from the command queue.
+	 * 
+	 * @author Jonathan Hale
+	 */
+	protected class RCommandConsumer extends Thread {
+
+		private ExecutionMonitorFactory m_execMonitorFactory;
+
+		public RCommandConsumer(final ExecutionMonitorFactory execMonitorFactory) {
+			m_execMonitorFactory = execMonitorFactory;
+		}
+
+		@Override
+		public void run() {
+			ExecutionMonitor progress = null;
+			try {
+				while (!isInterrupted()) {
+					// interrupted flag is checked every 100 milliseconds while
+					// command queue is empty.
+					final Collection<RCommand> nextCommands = poll(100, TimeUnit.MILLISECONDS);
+
+					if (nextCommands == null) {
+						/* queue was empty */
+						continue;
+					}
+
+					for (RCommand rCmd : nextCommands) {
+						m_listeners.stream().forEach((l) -> l.onCommandExecutionStart(rCmd));
+						// catch textual output from command with
+						// paste/capture
+						final String cmd = rCmd.isShowInConsole()
+								? "paste(capture.output(" + rCmd.getCommand() + "),collapse='\\n')\n"
+								// textual output not needed:
+								: rCmd.getCommand();
+
+						progress = m_execMonitorFactory.create(1.0);
+						progress.setProgress(0.0, "Executing command...");
+
+						// execute command
+						final REXP ret = m_controller.monitoredEval(cmd, progress.createSubProgress(0.9), false);
+
+						progress.setProgress(0.9, "Processing output...");
+						// complete Future to notify all threads waiting on it
+						rCmd.complete(ret);
+
+						m_listeners.stream().forEach((l) -> l.onCommandExecutionEnd(rCmd));
+						progress.setProgress(1.0, "Done!");
+						progress = null;
+					}
+				}
+			} catch (InterruptedException | CanceledExecutionException e) {
+				try {
+					if (progress != null && progress.getProgressMonitor().getProgress() != 1.0) {
+						m_controller.terminateAndRelaunch();
+					}
+				} catch (final Exception e1) {
+					// Could not terminate Rserve properly. Terminate manually?
+					e1.printStackTrace(); // TODO find better way than printing
+											// stacktrace
+				}
+
+				if (progress != null) {
+					progress.setProgress(1.0);
+				}
+
+				m_listeners.stream().forEach((l) -> l.onCommandExecutionCanceled());
+			}
+		}
+	}
+
+	/**
+	 * Start this queues execution thread (Thread which executes the queues
+	 * {@link RCommand}s).
+	 * 
+	 * @param controller
+	 *            Controller to use for execution of R code
+	 * @param factory
+	 *            Factory creating {@link ExecutionMonitor}s
+	 * @see #startExecutionThread(RController, ExecutionMonitorFactory)
+	 * @see #stopExecutionThread()
+	 * @see #isExecutionThreadRunning()
+	 */
+	public void startExecutionThread() {
+		startExecutionThread((maxProgress) -> {
+			return new ExecutionMonitor();
+		});
+	}
+
+	/**
+	 * @return <code>true</code> if the execution thread is currently running.
+	 * @see #startExecutionThread(RController)
+	 * @see #startExecutionThread(RController, ExecutionMonitorFactory)
+	 * @see #stopExecutionThread()
+	 */
+	public boolean isExecutionThreadRunning() {
+		return m_thread != null && m_thread.isAlive();
+	}
+
+	/**
+	 * Start this queues execution thread (Thread which executes the queues
+	 * {@link RCommand}s).
+	 * 
+	 * @param controller
+	 *            Controller to use for execution of R code
+	 * @param factory
+	 *            Factory creating {@link ExecutionMonitor}s
+	 * @see #startExecutionThread(RController)
+	 * @see #stopExecutionThread()
+	 * @see #isExecutionThreadRunning()
+	 */
+	public void startExecutionThread(final ExecutionMonitorFactory factory) {
+		if (m_thread != null && m_thread.isAlive()) {
+			throw new IllegalStateException("Can only launch one R execution thread on a RCommandQueue.");
+		}
+
+		m_thread = new RCommandConsumer(factory);
+		m_thread.start();
+	}
+
+	/**
+	 * Stop the queues execution thread. Does nothing if the queue is already
+	 * stopped.
+	 * 
+	 * @see #startExecutionThread(RController)
+	 * @see #startExecutionThread(RController, ExecutionMonitorFactory)
+	 * @see #isExecutionThreadRunning()
+	 */
+	public void stopExecutionThread() {
+		if (m_thread != null && m_thread.isAlive()) {
+			m_thread.interrupt();
+		}
 	}
 
 }
