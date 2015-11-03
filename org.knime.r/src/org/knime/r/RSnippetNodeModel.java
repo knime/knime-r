@@ -89,6 +89,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	private final RSnippetNodeConfig m_config;
 	private static final NodeLogger LOGGER = NodeLogger.getLogger("R Snippet");
 
+	private boolean m_hasROutPorts = true;
+
 	/**
 	 * Creates new instance of <code>RSnippetNodeModel</code> with one data in
 	 * and data one out port.
@@ -135,12 +137,14 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			}
 		}
 
+		m_hasROutPorts = false;
 		final Collection<PortObjectSpec> outSpec = new ArrayList<PortObjectSpec>(4);
 		for (final PortType portType : m_config.getOutPortTypes()) {
 			if (portType.equals(BufferedDataTable.TYPE)) {
 				outSpec.add(null);
 			} else if (portType.equals(RPortObject.TYPE)) {
 				outSpec.add(RPortObjectSpec.INSTANCE);
+				m_hasROutPorts = true;
 			}
 		}
 		return outSpec.toArray(new PortObjectSpec[outSpec.size()]);
@@ -253,8 +257,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		}
 	}
 
-	private void runRScript(final RController controller, final File tempWorkspaceFile, final PortObject[] inData, final ExecutionContext exec)
-			throws Exception {
+	private void runRScript(final RController controller, final File tempWorkspaceFile, final PortObject[] inData,
+			final ExecutionContext exec) throws Exception {
 
 		final String rScript = buildRScript(inData, tempWorkspaceFile);
 
@@ -362,9 +366,12 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		// assign list of loaded libraries so that we can read it out later
 		rScript.append(RController.R_LOADED_LIBRARIES_VARIABLE + " <- (.packages());\n");
 
-		// save workspace to temporary file
-		rScript.append("save.image(\"").append(tempWorkspaceFile.getAbsolutePath().replace('\\', '/')).append("\");\n");
-
+		if (m_hasROutPorts) {
+			// save workspace to temporary file
+			rScript.append("save.image(\"").append(tempWorkspaceFile.getAbsolutePath().replace('\\', '/'))
+					.append("\");\n");
+		}
+		
 		return rScript.toString();
 	}
 

@@ -250,8 +250,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 							try {
 								m_controller.getCommandQueue().putRScript(cmd, true);
 							} catch (final InterruptedException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
+								/* nothing to do */
 							}
 						}
 					}

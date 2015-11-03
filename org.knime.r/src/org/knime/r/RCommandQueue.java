@@ -54,6 +54,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.NodeLogger;
 import org.knime.r.RConsoleController.ExecutionMonitorFactory;
 import org.rosuda.REngine.REXP;
 
@@ -68,6 +69,8 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 
 	/** Generated serialVersionUID */
 	private static final long serialVersionUID = 1850919045704831064L;
+
+	private final NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
 
 	private RCommandConsumer m_thread = null;
 
@@ -187,14 +190,25 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 				while (!isInterrupted()) {
 					// interrupted flag is checked every 100 milliseconds while
 					// command queue is empty.
-					final Collection<RCommand> nextCommands = poll(100, TimeUnit.MILLISECONDS);
+					Collection<RCommand> nextCommands = poll(100, TimeUnit.MILLISECONDS);
 
 					if (nextCommands == null) {
 						/* queue was empty */
 						continue;
 					}
 
-					for (RCommand rCmd : nextCommands) {
+					// we fetch the entire contents of the queue to be able to
+					// show progress for all commands currently in queue
+					final ArrayList<RCommand> commands = new ArrayList<>(nextCommands);
+					while ((nextCommands = poll()) != null) {
+						commands.addAll(nextCommands);
+					}
+
+					progress = m_execMonitorFactory.create(1.0);
+					int curCommandIndex = 0;
+					final int numCommands = commands.size();
+					progress.setProgress(0.0, "Executing commands...");
+					for (RCommand rCmd : commands) {
 						m_listeners.stream().forEach((l) -> l.onCommandExecutionStart(rCmd));
 						// catch textual output from command with
 						// paste/capture
@@ -203,20 +217,17 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 								// textual output not needed:
 								: rCmd.getCommand();
 
-						progress = m_execMonitorFactory.create(1.0);
-						progress.setProgress(0.0, "Executing command...");
-
 						// execute command
-						final REXP ret = m_controller.monitoredEval(cmd, progress.createSubProgress(0.9), false);
+						final REXP ret = m_controller.monitoredEval(cmd, progress, false);
 
-						progress.setProgress(0.9, "Processing output...");
 						// complete Future to notify all threads waiting on it
 						rCmd.complete(ret);
 
 						m_listeners.stream().forEach((l) -> l.onCommandExecutionEnd(rCmd));
-						progress.setProgress(1.0, "Done!");
-						progress = null;
+						progress.setProgress((float)++curCommandIndex / numCommands);
 					}
+					progress.setProgress(1.0, "Done!");
+					progress = null;
 				}
 			} catch (InterruptedException | CanceledExecutionException e) {
 				try {
@@ -224,9 +235,10 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 						m_controller.terminateAndRelaunch();
 					}
 				} catch (final Exception e1) {
-					// Could not terminate Rserve properly. Terminate manually?
-					e1.printStackTrace(); // TODO find better way than printing
-											// stacktrace
+					// Could not terminate Rserve properly. Politely ask user to
+					// do it manually. Should basically never happen.
+					LOGGER.error(
+							"Could not properly terminate Rserve process. It may still be running in the background. Please try to terminate it manually.");
 				}
 
 				if (progress != null) {

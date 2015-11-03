@@ -128,7 +128,7 @@ final class RPlotPreviewFrame extends JDialog {
 		}
 	}
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws IOException {
 		final JFileChooser jFileChooser = new JFileChooser();
 		jFileChooser.setFileFilter(new SimpleFileFilter(".png", ".PNG"));
 		final int showOpenDialog = jFileChooser.showOpenDialog(null);
@@ -142,12 +142,8 @@ final class RPlotPreviewFrame extends JDialog {
 				System.exit(0);
 			}
 		});
-		try {
-			rPlotPreviewFrame.setSource(jFileChooser.getSelectedFile());
-			rPlotPreviewFrame.m_plotPreviewPanel.setScaleType(ScaleType.None);
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
+		rPlotPreviewFrame.setSource(jFileChooser.getSelectedFile());
+		rPlotPreviewFrame.m_plotPreviewPanel.setScaleType(ScaleType.None);
 		rPlotPreviewFrame.pack();
 		rPlotPreviewFrame.setVisible(true);
 	}

@@ -45,6 +45,7 @@
 package org.knime.r;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -175,8 +176,7 @@ public class RController implements AutoCloseable {
 	private RConnection initRConnection() throws Exception {
 		final RConnection connection = RConnectionFactory.createConnection();
 		if (!connection.isConnected()) {
-			throw new Exception(
-					"RServe could not connect. Please visit http://tech.knime.org/faq#q25 for more information."); // TODO
+			throw new Exception("RServe could not connect.");
 		}
 		return connection;
 	}
@@ -355,6 +355,7 @@ public class RController implements AutoCloseable {
 	 *
 	 * @param cmd
 	 * @param exec
+	 *            only used for checking if execution is cancelled.
 	 * @param withContext
 	 *            Whether the NodeContext is required.
 	 * @return
@@ -364,8 +365,8 @@ public class RController implements AutoCloseable {
 			throws CanceledExecutionException {
 		try {
 			return new MonitoredEval(exec, withContext).run(cmd);
-		} catch (REngineException | REXPMismatchException e) {
-			LOGGER.error("REngine error" + e.getMessage());
+		} catch (REngineException | REXPMismatchException | IOException e) {
+			LOGGER.error("Error during R code evaluation: " + e.getMessage());
 			return new REXPNull();
 		}
 	}
@@ -382,8 +383,8 @@ public class RController implements AutoCloseable {
 			throws CanceledExecutionException {
 		try {
 			new MonitoredEval(exec, false).assign(symbol, value);
-		} catch (REngineException | REXPMismatchException e) {
-			LOGGER.error("REngine error" + e.getMessage());
+		} catch (REngineException | REXPMismatchException | IOException e) {
+			LOGGER.error("Error during assignment of R variable: " + e.getMessage());
 		}
 	}
 
@@ -543,7 +544,7 @@ public class RController implements AutoCloseable {
 		final String[] rowNames = new String[rowCount];
 
 		final Collection<Object> columns = initializeAndFillColumns(table, rowNames, exec.createSubProgress(0.7));
-		final RList content = createContent(table, columns, exec.createSubProgress(0.9));
+		final RList content = createRListFromBufferedDataTable(table, columns, exec.createSubProgress(0.9));
 
 		if (content.size() > 0) {
 			final REXPString rexpRowNames = new REXPString(rowNames);
@@ -742,7 +743,7 @@ public class RController implements AutoCloseable {
 	 * @return The created RList
 	 * @throws CanceledExecutionException
 	 */
-	private RList createContent(final BufferedDataTable table, final Collection<Object> columns,
+	private RList createRListFromBufferedDataTable(final BufferedDataTable table, final Collection<Object> columns,
 			final ExecutionMonitor exec) throws CanceledExecutionException {
 		final DataTableSpec tableSpec = table.getDataTableSpec();
 		final int numColumns = tableSpec.getNumColumns();
@@ -1107,7 +1108,8 @@ public class RController implements AutoCloseable {
 	 *            printed
 	 * @return The command string to be run in R (ends with newline)
 	 */
-	public static String createLoadLibraryFunctionCall(final List<String> listOfLibraries, final boolean suppressMessages) {
+	public static String createLoadLibraryFunctionCall(final List<String> listOfLibraries,
+			final boolean suppressMessages) {
 		final StringBuilder functionBuilder = new StringBuilder();
 		functionBuilder.append("function(packages_to_install) {\n");
 		functionBuilder.append("  for (pkg in packages_to_install) {\n");
@@ -1191,16 +1193,23 @@ public class RController implements AutoCloseable {
 		 * @throws REngineException
 		 * @throws REXPMismatchException
 		 * @throws CanceledExecutionException
+		 * @throws IOException
 		 */
-		public REXP run(final String cmd) throws REngineException, REXPMismatchException, CanceledExecutionException {
+		public REXP run(final String cmd)
+				throws REngineException, REXPMismatchException, CanceledExecutionException, IOException {
 			final Future<REXP> future = startMonitoredThread(() -> {
 				return eval(cmd);
 			});
 
 			try {
+				// wait for evaluation to complete
 				return future.get();
 			} catch (InterruptedException | ExecutionException e) {
 				return null;
+			} finally {
+				// Make sure to recover in case user terminated or crashed our
+				// server
+				checkConnectionAndRecover();
 			}
 		}
 
@@ -1212,17 +1221,23 @@ public class RController implements AutoCloseable {
 		 * @throws REngineException
 		 * @throws REXPMismatchException
 		 * @throws CanceledExecutionException
+		 * @throws IOException
 		 */
 		public void assign(final String symbol, final REXP value)
-				throws REngineException, REXPMismatchException, CanceledExecutionException {
+				throws REngineException, REXPMismatchException, CanceledExecutionException, IOException {
 			final Future<REXP> future = startMonitoredThread(() -> {
 				m_engine.assign(symbol, value);
 				return null;
 			});
 
 			try {
+				// wait for evaluation to complete
 				future.get();
 			} catch (InterruptedException | ExecutionException e) {
+			} finally {
+				// Make sure to recover in case user terminated or crashed our
+				// server
+				checkConnectionAndRecover();
 			}
 		}
 
@@ -1257,12 +1272,16 @@ public class RController implements AutoCloseable {
 	 *
 	 * @throws Exception
 	 */
-	public void terminateAndRelaunch() throws Exception {
+	public void terminateAndRelaunch() throws IOException {
 		LOGGER.debug("Terminating R process");
 
 		RConnectionFactory.terminateProcessOf((RConnection) m_engine);
 		m_engine.close();
-		m_engine = initRConnection();
+		try {
+			m_engine = initRConnection();
+		} catch (Exception e) {
+			throw new IOException("Could not connect to Rserve.", e);
+		}
 	}
 
 	/**
@@ -1270,6 +1289,22 @@ public class RController implements AutoCloseable {
 	 */
 	public void terminateRProcess() {
 		RConnectionFactory.terminateProcessOf((RConnection) m_engine);
+	}
+
+	/**
+	 * Check if the connection is still valid and recover if not.
+	 * 
+	 * @throws IOException
+	 */
+	public void checkConnectionAndRecover() throws IOException {
+		if (m_engine != null) {
+			if (m_engine.isConnected() && RConnectionFactory.isProcessesOfConnectionAlive(m_engine)) {
+				// connection is fine.
+				return;
+			}
+			m_engine.close();
+		}
+		terminateAndRelaunch();
 	}
 
 }

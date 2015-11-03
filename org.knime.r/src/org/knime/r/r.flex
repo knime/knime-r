@@ -167,15 +167,9 @@ import org.fife.ui.rsyntaxtextarea.*;
 //		}
 
 		s = text;
-		try {
-			yyreset(zzReader);
-			yybegin(state);
-			return yylex();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			return new DefaultToken();
-		}
-
+		yyreset(zzReader);
+		yybegin(state);
+		return yylex();
 	}
 
 
@@ -184,9 +178,8 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @return      <code>true</code> if EOF was reached, otherwise
 	 *              <code>false</code>.
-	 * @exception   IOException  if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill(){
 		return zzCurrentPos>=s.offset+s.count;
 	}
 
@@ -201,7 +194,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 	 *
 	 * @param reader   the new input stream 
 	 */
-	public final void yyreset(java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*

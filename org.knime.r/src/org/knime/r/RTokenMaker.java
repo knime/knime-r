@@ -386,15 +386,9 @@ public class RTokenMaker extends AbstractJFlexCTokenMaker {
 		// }
 
 		s = text;
-		try {
-			yyreset(zzReader);
-			yybegin(state);
-			return yylex();
-		} catch (final IOException ioe) {
-			ioe.printStackTrace();
-			return new TokenImpl();
-		}
-
+		yyreset(zzReader);
+		yybegin(state);
+		return yylex();
 	}
 
 	/**
@@ -405,7 +399,7 @@ public class RTokenMaker extends AbstractJFlexCTokenMaker {
 	 * @exception IOException
 	 *                if any I/O-Error occurs.
 	 */
-	private boolean zzRefill() throws java.io.IOException {
+	private boolean zzRefill() {
 		return zzCurrentPos >= s.offset + s.count;
 	}
 
@@ -420,7 +414,7 @@ public class RTokenMaker extends AbstractJFlexCTokenMaker {
 	 * @param reader
 	 *            the new input stream
 	 */
-	public final void yyreset(final java.io.Reader reader) throws java.io.IOException {
+	public final void yyreset(final java.io.Reader reader) {
 		// 's' has been updated.
 		zzBuffer = s.array;
 		/*
@@ -651,10 +645,8 @@ public class RTokenMaker extends AbstractJFlexCTokenMaker {
 	 * input is encountered or an I/O-Error occurs.
 	 *
 	 * @return the next token
-	 * @exception java.io.IOException
-	 *                if any I/O-Error occurs
 	 */
-	public org.fife.ui.rsyntaxtextarea.Token yylex() throws java.io.IOException {
+	public org.fife.ui.rsyntaxtextarea.Token yylex() {
 		int zzInput;
 		int zzAction;
 
