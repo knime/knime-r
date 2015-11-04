@@ -66,9 +66,10 @@ public class RCommandQueueTest {
 	 * 
 	 * @throws InterruptedException
 	 * @throws ExecutionException
+	 * @throws TimeoutException 
 	 */
 	@Test
-	public void consoleExecution() throws InterruptedException, ExecutionException {
+	public void consoleExecution() throws InterruptedException, ExecutionException, TimeoutException {
 		final RCommandQueue queue = m_controller.getCommandQueue();
 
 		final RConsole console = new RConsole();
@@ -84,7 +85,7 @@ public class RCommandQueueTest {
 		}
 
 		/* check that the console read thread survives bad commands */
-		queue.putRScript("<?hello.y!.üa", true).get();
+		queue.putRScript("<?hello.y!.üa", true).get(1, TimeUnit.SECONDS);
 
 		assertTrue("Execution thread did not survive evaluation of garbage.", queue.isExecutionThreadRunning());
 
@@ -93,7 +94,7 @@ public class RCommandQueueTest {
 		assertTrue("Clearing the console failed.", console.getText().isEmpty());
 
 		/* check execution of a simple command, and it's output */
-		m_controller.getCommandQueue().putRScript("print(\"Hello World!\")", true).get();
+		m_controller.getCommandQueue().putRScript("print(\"Hello World!\")", true).get(1, TimeUnit.SECONDS);
 
 		// wait for console to update
 		Thread.sleep(10);
