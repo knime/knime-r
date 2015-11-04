@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,7 +26,7 @@ import org.rosuda.REngine.Rserve.protocol.RTalk;
 public class RCommandQueueTest {
 
 	private RController m_controller;
-	
+
 	@Before
 	public void before() {
 		m_controller = new RController();
@@ -113,9 +115,10 @@ public class RCommandQueueTest {
 	 * 
 	 * @throws InterruptedException
 	 * @throws ExecutionException
+	 * @throws TimeoutException 
 	 */
-	@Test(timeout = 5000L)
-	public void testConcurrency() throws InterruptedException, ExecutionException {
+	@Test
+	public void testConcurrency() throws InterruptedException, ExecutionException, TimeoutException {
 		final RCommandQueue queue = m_controller.getCommandQueue();
 		final RConsole console = new RConsole();
 
@@ -135,10 +138,8 @@ public class RCommandQueueTest {
 		} , "testConcurrency - Command Executor");
 		t.start();
 
-		queue.putRScript("print(\"Hey!\")", true);
-		final String tempDevOffOutputVar2 = "temp321";
-		queue.putRScript(tempDevOffOutputVar2 + "<- dev.off()\nrm(" + tempDevOffOutputVar2 + ")", false).get();
-		t.join();
+		queue.putRScript("print(\"Hey!\")", true).get(10, TimeUnit.SECONDS); // should never take that long
+		t.join(10000); // should also never take that long
 
 		consoleController.clear();
 		assertTrue(queue.isEmpty());
