@@ -176,7 +176,7 @@ public class RController implements AutoCloseable {
 	private RConnection initRConnection() throws Exception {
 		final RConnection connection = RConnectionFactory.createConnection();
 		if (!connection.isConnected()) {
-			throw new Exception("RServe could not connect.");
+			throw new Exception("Could not connect to RServe.");
 		}
 		return connection;
 	}
@@ -251,7 +251,7 @@ public class RController implements AutoCloseable {
 			try {
 				// set memory to the one of the used R
 				eval("memory.limit(" + m_rMemoryLimit + ");");
-			} catch (REngineException | REXPMismatchException e) {
+			} catch (Exception e) {
 				LOGGER.error("R initialisation failed." + e.getMessage());
 				throw new RuntimeException(e);
 			}
@@ -330,9 +330,9 @@ public class RController implements AutoCloseable {
 	 * @throws REngineException
 	 * @throws REXPMismatchException
 	 */
-	public REXP eval(final String cmd) throws REngineException, REXPMismatchException {
-		if (getREngine() == null) {
-			throw new REngineException(null, "REngine not available");
+	public REXP eval(final String cmd) throws REngineException {
+		if (getREngine() == null || !getREngine().isConnected()) {
+			throw new REngineException(null, "Not connected to Rserve.");
 		}
 		final REXP x = getREngine().parseAndEval(cmd, null, true);
 		return x;
@@ -365,7 +365,7 @@ public class RController implements AutoCloseable {
 			throws CanceledExecutionException {
 		try {
 			return new MonitoredEval(exec, withContext).run(cmd);
-		} catch (REngineException | REXPMismatchException | IOException e) {
+		} catch (Exception e) {
 			LOGGER.error("Error during R code evaluation: " + e.getMessage());
 			return new REXPNull();
 		}
@@ -383,7 +383,7 @@ public class RController implements AutoCloseable {
 			throws CanceledExecutionException {
 		try {
 			new MonitoredEval(exec, false).assign(symbol, value);
-		} catch (REngineException | REXPMismatchException | IOException e) {
+		} catch (Exception e) {
 			LOGGER.error("Error during assignment of R variable: " + e.getMessage());
 		}
 	}
@@ -558,7 +558,7 @@ public class RController implements AutoCloseable {
 			try {
 				// create a new empty data.frame
 				eval("knime.in <- data.frame()");
-			} catch (REngineException | REXPMismatchException e) {
+			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -1191,12 +1191,14 @@ public class RController implements AutoCloseable {
 		 * @param cmd
 		 * @return Result of the code
 		 * @throws REngineException
-		 * @throws REXPMismatchException
-		 * @throws CanceledExecutionException
+		 * @throws REXPMismatchException 
+		 * @throws CanceledExecutionException when execution was cancelled
 		 * @throws IOException
+		 *             when initialization of R or Rserve failed when attempting
+		 *             to recover
 		 */
 		public REXP run(final String cmd)
-				throws REngineException, REXPMismatchException, CanceledExecutionException, IOException {
+				throws REngineException, REXPMismatchException, CanceledExecutionException, Exception {
 			final Future<REXP> future = startMonitoredThread(() -> {
 				return eval(cmd);
 			});
@@ -1221,10 +1223,10 @@ public class RController implements AutoCloseable {
 		 * @throws REngineException
 		 * @throws REXPMismatchException
 		 * @throws CanceledExecutionException
-		 * @throws IOException
+		 * @throws Exception
 		 */
 		public void assign(final String symbol, final REXP value)
-				throws REngineException, REXPMismatchException, CanceledExecutionException, IOException {
+				throws REngineException, REXPMismatchException, CanceledExecutionException, Exception {
 			final Future<REXP> future = startMonitoredThread(() -> {
 				m_engine.assign(symbol, value);
 				return null;
@@ -1272,7 +1274,7 @@ public class RController implements AutoCloseable {
 	 *
 	 * @throws Exception
 	 */
-	public void terminateAndRelaunch() throws IOException {
+	public void terminateAndRelaunch() throws Exception {
 		LOGGER.debug("Terminating R process");
 
 		RConnectionFactory.terminateProcessOf((RConnection) m_engine);
@@ -1280,7 +1282,7 @@ public class RController implements AutoCloseable {
 		try {
 			m_engine = initRConnection();
 		} catch (Exception e) {
-			throw new IOException("Could not connect to Rserve.", e);
+			throw new Exception("Initializing R with Rserve failed.", e);
 		}
 	}
 
@@ -1296,7 +1298,7 @@ public class RController implements AutoCloseable {
 	 * 
 	 * @throws IOException
 	 */
-	public void checkConnectionAndRecover() throws IOException {
+	public void checkConnectionAndRecover() throws Exception {
 		if (m_engine != null) {
 			if (m_engine.isConnected() && RConnectionFactory.isProcessesOfConnectionAlive(m_engine)) {
 				// connection is fine.

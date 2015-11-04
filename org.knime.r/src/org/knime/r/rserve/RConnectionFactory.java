@@ -55,15 +55,17 @@ public class RConnectionFactory {
 	}
 
 	/**
-	 * attempt to start Rserve. Note: parameters are <b>not</b> quoted, so avoid
-	 * using any quotes in arguments
+	 * Attempt to start Rserve and create a connection to it.
 	 *
 	 * @param cmd
-	 *            command necessary to start Rserve ("Rserve.exe")
+	 *            command necessary to start Rserve ("Rserve.exe" on Windows)
 	 * @return <code>true</code> if Rserve is running or was successfully
 	 *         started, <code>false</code> otherwise.
+	 * @throws IOException
+	 *             if Rserve could not be launched. This may be the case if R is
+	 *             either not found or does not have Rserve package installed.
 	 */
-	private static RInstance launchRserve(final String cmd, final String host, final Integer port) {
+	private static RInstance launchRserve(final String cmd, final String host, final Integer port) throws IOException {
 		try {
 			Process p;
 
@@ -100,9 +102,8 @@ public class RConnectionFactory {
 
 			return rInstance;
 		} catch (Exception x) {
-			LOGGER.error(
+			throw new IOException(
 					"Could not start Rserve process. This may be caused by Rserve package not installed or an invalid or broken R Home.");
-			return null;
 		}
 	}
 
@@ -114,9 +115,14 @@ public class RConnectionFactory {
 	 * 
 	 * The method does not check {@link RConnection#isConnected()}.
 	 * 
+	 * @return an RConnection, never <code>null</code>
 	 * @throws RserveException
+	 * @throws IOException
+	 *             if Rserve could not be launched. This may be the case if R is
+	 *             either not found or does not have Rserve package installed.
+	 *             Or if there was no open port found.
 	 */
-	public static synchronized RConnection createConnection() throws RserveException {
+	public static synchronized RConnection createConnection() throws RserveException, IOException {
 		// try to reuse an existing instance. Ensures there is max one R
 		// instance per parallel executed node.
 		for (RInstance inst : m_instances) {
@@ -131,13 +137,10 @@ public class RConnectionFactory {
 		try (ServerSocket socket = new ServerSocket(0)) {
 			port = socket.getLocalPort();
 		} catch (IOException e) {
-			LOGGER.error("Could not find a free port for Rserve. Is KNIME not permitted to open ports?");
-			return null;
+			throw new IOException("Could not find a free port for Rserve. Is KNIME not permitted to open ports?", e);
 		}
 		return launchRserve(org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRServeBinPath(),
-				"127.0.0.1", port).getLastConnection(); // connection was
-														// already created for
-														// us.
+				"127.0.0.1", port).getLastConnection();
 	}
 
 	public static void terminateProcessOf(final RConnection connection) {
