@@ -49,10 +49,11 @@ public class RControllerTest {
 	public void testInitialization() {
 		/* Check underlying RConnection */
 		RConnection rEngine = (RConnection) m_controller.getREngine();
-		assertNotNull(rEngine);
+		assertNotNull("No RConnection exists, most likely cause is that R or Rserve are not installed or found.",
+				rEngine);
 		// this assertion is theoretically covered by the
 		// RConnectionFactoryTest, but you never know what could go wrong.
-		assertTrue(rEngine.isConnected());
+		assertTrue("Could not connect to Rserve.", rEngine.isConnected());
 	}
 
 	/**
