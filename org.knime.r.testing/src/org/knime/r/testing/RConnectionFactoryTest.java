@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.junit.Test;
@@ -25,9 +26,10 @@ public class RConnectionFactoryTest {
 	 * 
 	 * @throws RserveException
 	 * @throws InterruptedException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testConnection() throws RserveException, InterruptedException {
+	public void testConnection() throws RserveException, InterruptedException, IOException {
 		try {
 			m_connection = RConnectionFactory.createConnection();
 			// connection was created in before()
@@ -82,9 +84,10 @@ public class RConnectionFactoryTest {
 	 * 
 	 * @throws RserveException
 	 * @throws InterruptedException
+	 * @throws IOException 
 	 */
 	@Test
-	public void testRserveTermination() throws InterruptedException, RserveException {
+	public void testRserveTermination() throws InterruptedException, RserveException, IOException {
 		m_connection = RConnectionFactory.createConnection();
 		RConnectionFactory.terminateProcessOf(m_connection);
 		Thread.sleep(50); // give the OS some time to react
