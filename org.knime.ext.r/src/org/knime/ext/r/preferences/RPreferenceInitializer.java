@@ -83,7 +83,7 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
             @Override
             /** {@inheritDoc} */
             public String getRPath() {
-                return org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRBinPath();
+                return org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRBinPath("R");
             }
         };
     }

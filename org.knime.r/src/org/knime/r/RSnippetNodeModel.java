@@ -190,16 +190,16 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 	/**
 	 * Execute the R snippet stored in the node settings
-	 * 
+	 *
 	 * @param controller
 	 *            RController to use for execution
-	 * 
+	 *
 	 * @param inData
 	 *            input ports to pass to R
-	 * 
+	 *
 	 * @param flowVarRepo
 	 *            flow variables to pass to R
-	 * 
+	 *
 	 * @param exec
 	 *            ExecutionContext which enables cancelling of the execution.
 	 */
@@ -228,6 +228,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 			exec.setMessage("Running R");
 			tempWorkspaceFile = FileUtil.createTempFile("R-workspace", ".RData");
+			controller.saveWorkspace(tempWorkspaceFile, exec);
 			runRScript(controller, tempWorkspaceFile, inData, exec.createSubExecutionContext(1.0 - importTime));
 			exec.setProgress(1.0 - importTime);
 
@@ -327,7 +328,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	 * @return R binary path
 	 */
 	protected final String getRBinaryPath() {
-		return RPreferenceInitializer.getRProvider().getRBinPath();
+		return RPreferenceInitializer.getRProvider().getRBinPath("R");
 	}
 
 	/*
@@ -371,7 +372,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			rScript.append("save.image(\"").append(tempWorkspaceFile.getAbsolutePath().replace('\\', '/'))
 					.append("\");\n");
 		}
-		
+
 		return rScript.toString();
 	}
 

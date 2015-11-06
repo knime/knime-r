@@ -62,7 +62,7 @@ import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
-import org.knime.base.node.util.FlowVariableResolvable.FlowVariableResolver;
+import org.knime.base.util.flowvariable.FlowVariableResolver;
 import org.knime.core.data.DataColumnSpec;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
@@ -93,11 +93,11 @@ public class RDialogPanel extends JPanel {
 
     private final JEditorPane m_textExpression;
 
-    private final JList m_list;
-    private final DefaultListModel m_listModel;
+    private final JList<DataColumnSpec> m_list;
+    private final DefaultListModel<DataColumnSpec> m_listModel;
 
-    private final JList m_listVars;
-    private final DefaultListModel m_listModelVars;
+    private final JList<FlowVariable> m_listVars;
+    private final DefaultListModel<FlowVariable> m_listModelVars;
 
     private String m_defaultCommand = DEFAULT_R_COMMAND;
 
@@ -134,8 +134,8 @@ public class RDialogPanel extends JPanel {
         textPanel.setMaximumSize(new Dimension(0, 0));
 
         // init column list
-        m_listModel = new DefaultListModel();
-        m_list = new JList(m_listModel);
+        m_listModel = new DefaultListModel<>();
+        m_list = new JList<>(m_listModel);
         m_list.setBorder(BorderFactory.createTitledBorder(" Column List"));
         m_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         m_list.setCellRenderer(new DataColumnSpecListCellRenderer());
@@ -159,8 +159,8 @@ public class RDialogPanel extends JPanel {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         // init variable list
-        m_listModelVars = new DefaultListModel();
-        m_listVars = new JList(m_listModelVars);
+        m_listModelVars = new DefaultListModel<>();
+        m_listVars = new JList<>(m_listModelVars);
 
         final JSplitPane allSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         allSplit.setResizeWeight(0.25);

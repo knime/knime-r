@@ -88,6 +88,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.ThreadUtils;
 import org.knime.ext.r.bin.RBinUtil;
+import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.r.REvent.RListener;
 import org.knime.r.rserve.RConnectionFactory;
@@ -199,15 +200,10 @@ public class RController implements AutoCloseable {
 			}
 
 			final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
+			RBinUtil.checkRHome(rHome);
 
-			final String rHomeCheck = RBinUtil.getDefault().checkRHome(rHome);
-			if (rHomeCheck != null) {
-				m_errors.add(rHomeCheck);
-				m_isRAvailable = false;
-				return;
-			}
 			m_rHome = rHome;
-			m_rProps = RBinUtil.getDefault().retrieveRProperties();
+			m_rProps = RBinUtil.retrieveRProperties();
 
 			if (!m_rProps.containsKey("major")) {
 				m_errors.add(
@@ -237,12 +233,16 @@ public class RController implements AutoCloseable {
 					}
 				}
 			}.start();
+		} catch (final InvalidRHomeException ex) {
+			m_errors.add(ex.getMessage());
+			m_isRAvailable = false;
+			return;
 		} catch (final Exception e) {
-			LOGGER.error(e.getMessage(), e);
 			m_errors.add(e.getMessage());
 			m_isRAvailable = false;
 			return;
 		}
+
 		// everything is ok.
 		m_isRAvailable = true;
 		m_wasRAvailable = true;
@@ -252,7 +252,7 @@ public class RController implements AutoCloseable {
 				// set memory to the one of the used R
 				eval("memory.limit(" + m_rMemoryLimit + ");");
 			} catch (Exception e) {
-				LOGGER.error("R initialisation failed." + e.getMessage());
+				LOGGER.error("R initialisation failed. " + e.getMessage());
 				throw new RuntimeException(e);
 			}
 		}
@@ -276,7 +276,7 @@ public class RController implements AutoCloseable {
 	/**
 	 * This is the controller scope command queue. If the evaluation thread is
 	 * running, the commands in the queue will be continuously executed.
-	 * 
+	 *
 	 * @return
 	 */
 	public RCommandQueue getCommandQueue() {
@@ -292,7 +292,7 @@ public class RController implements AutoCloseable {
 
 	/**
 	 * Add a listener which is notified of workspace changes.
-	 * 
+	 *
 	 * @param l
 	 *            the listener
 	 */
@@ -302,7 +302,7 @@ public class RController implements AutoCloseable {
 
 	/**
 	 * Remove a listener.
-	 * 
+	 *
 	 * @param l
 	 *            the listener
 	 * @see #addRListener(RListener)
@@ -323,7 +323,7 @@ public class RController implements AutoCloseable {
 
 	/**
 	 * Evaluate R code.
-	 * 
+	 *
 	 * @param cmd
 	 *            the R code
 	 * @return
@@ -373,7 +373,7 @@ public class RController implements AutoCloseable {
 
 	/**
 	 * Assign an R variable in a separate thread to be able to cancel it.
-	 * 
+	 *
 	 * @param symbol
 	 * @param value
 	 * @param exec
@@ -390,7 +390,7 @@ public class RController implements AutoCloseable {
 
 	/**
 	 * Clear the R workspace (remove all variables and imported packages).
-	 * 
+	 *
 	 * @param exec
 	 * @throws CanceledExecutionException
 	 */
@@ -435,7 +435,7 @@ public class RController implements AutoCloseable {
 
 	/**
 	 * Write R variables into a R variable in the current workspace
-	 * 
+	 *
 	 * @param inFlowVariables
 	 * @param name
 	 * @param exec
@@ -837,7 +837,7 @@ public class RController implements AutoCloseable {
 
 	/**
 	 * Create a new R <code>data.frame</code> from the given list and rownames.
-	 * 
+	 *
 	 * @param l
 	 * @param rownames
 	 * @param exec
@@ -920,7 +920,7 @@ public class RController implements AutoCloseable {
 		final ArrayList<DataCell>[] columns = new ArrayList[numCells];
 
 		int cellIndex = 0; // column index without the omitted column
-		for (int columnIndex = 0; columnIndex < numCells; columnIndex++) {
+		for (int columnIndex = 0; columnIndex < numCells; ++columnIndex) {
 			exec.checkCanceled();
 			exec.setProgress(cellIndex / (double) numCells);
 
@@ -956,11 +956,11 @@ public class RController implements AutoCloseable {
 					importCells(column, columns[columnIndex], nonNumbersAsMissing);
 				}
 			}
-			cellIndex++;
+			++cellIndex;
 		}
 
 		final Iterator<DataCell>[] itors = new Iterator[numCells];
-		for (int i = 0; i < numCells; i++) {
+		for (int i = 0; i < numCells; ++i) {
 			itors[i] = columns[i].iterator();
 		}
 
@@ -1004,7 +1004,7 @@ public class RController implements AutoCloseable {
 				}
 			}
 		} else if (rexp.isFactor()) {
-			for (int r = 0; r < rexp.length(); r++) {
+			for (int r = 0; r < rexp.length(); ++r) {
 				final String colValue = rexp.asFactor().at(r);
 				column.add((colValue == null) ? DataType.getMissingCell() : new StringCell(colValue));
 			}
@@ -1074,7 +1074,7 @@ public class RController implements AutoCloseable {
 
 	/**
 	 * Save the current R session to a workspace file
-	 * 
+	 *
 	 * @param workspaceFile
 	 * @param exec
 	 * @throws CanceledExecutionException
@@ -1086,7 +1086,7 @@ public class RController implements AutoCloseable {
 
 	/**
 	 * Load a list of R libraries: <code>library(libname)</code>.
-	 * 
+	 *
 	 * @param listOfLibraries
 	 * @throws REngineException
 	 * @throws REXPMismatchException
@@ -1191,8 +1191,9 @@ public class RController implements AutoCloseable {
 		 * @param cmd
 		 * @return Result of the code
 		 * @throws REngineException
-		 * @throws REXPMismatchException 
-		 * @throws CanceledExecutionException when execution was cancelled
+		 * @throws REXPMismatchException
+		 * @throws CanceledExecutionException
+		 *             when execution was cancelled
 		 * @throws IOException
 		 *             when initialization of R or Rserve failed when attempting
 		 *             to recover
@@ -1277,7 +1278,7 @@ public class RController implements AutoCloseable {
 	public void terminateAndRelaunch() throws Exception {
 		LOGGER.debug("Terminating R process");
 
-		RConnectionFactory.terminateProcessOf((RConnection) m_engine);
+		RConnectionFactory.terminateProcessOf(m_engine);
 		m_engine.close();
 		try {
 			m_engine = initRConnection();
@@ -1290,12 +1291,12 @@ public class RController implements AutoCloseable {
 	 * Terminate the R process started for this RController
 	 */
 	public void terminateRProcess() {
-		RConnectionFactory.terminateProcessOf((RConnection) m_engine);
+		RConnectionFactory.terminateProcessOf(m_engine);
 	}
 
 	/**
 	 * Check if the connection is still valid and recover if not.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void checkConnectionAndRecover() throws Exception {

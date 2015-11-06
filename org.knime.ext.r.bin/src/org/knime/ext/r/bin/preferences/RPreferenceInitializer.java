@@ -62,8 +62,7 @@ import org.knime.ext.r.bin.RPathUtil;
  */
 public class RPreferenceInitializer extends AbstractPreferenceInitializer {
 
-    private static final NodeLogger LOGGER =
-        NodeLogger.getLogger(RPreferenceInitializer.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RPreferenceInitializer.class);
 
     /** Preference key for the path to the R executable setting. */
     public static final String PREF_R_HOME = "knime.r.home";
@@ -73,8 +72,8 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
      */
     private File getDefaultRHOME() {
         // R_HOME value from KNIME 2.9
-        String rHomeV29 = org.eclipse.core.runtime.Platform.getPreferencesService().getString(
-            "org.knime.r", "knime.r.home", "", null);
+        String rHomeV29 = org.eclipse.core.runtime.Platform.getPreferencesService().getString("org.knime.r",
+            "knime.r.home", "", null);
         if (rHomeV29 != null && !rHomeV29.isEmpty()) {
             File rHomeFile = new File(rHomeV29);
             if (rHomeFile.exists() && rHomeFile.isDirectory()) {
@@ -96,38 +95,29 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
     }
 
     private String determineRHomeFromRBinSetting() {
-        final String rBinPathV29 = org.eclipse.core.runtime.Platform.getPreferencesService().getString(
-            "org.knime.ext.r", "knime.r.path", "", null);
+        final String rBinPathV29 = org.eclipse.core.runtime.Platform.getPreferencesService()
+            .getString("org.knime.ext.r", "knime.r.path", "", null);
         if (rBinPathV29 == null || rBinPathV29.isEmpty()) {
             return null;
         }
 
-        Properties rProps = null;
-        try {
-            rProps = RBinUtil.getDefault().retrieveRProperties(new RPreferenceProvider() {
+        Properties rProps = RBinUtil.retrieveRProperties(new RPreferenceProvider() {
 
-                @Override
-                /** {@inheritDoc} */
-                public String getRHome() {
-                    throw new UnsupportedOperationException("Please use getRBinPath() with this provider, only.");
-                }
+            @Override
+            public String getRHome() {
+                throw new UnsupportedOperationException("Please use getRBinPath() with this provider, only.");
+            }
 
-                /** {@inheritDoc} */
-                @Override
-                public String getRBinPath() {
-                    return rBinPathV29;
-                }
+            @Override
+            public String getRBinPath(final String command) {
+                return rBinPathV29;
+            }
 
-                @Override
-                public String getRServeBinPath() {
-                    throw new UnsupportedOperationException("Please use getRBinPath() with this provider, only.");
-                }
-            });
-        } catch (IOException e) {
-            return null;
-        } catch (InterruptedException e) {
-            return null;
-        }
+            @Override
+            public String getRServeBinPath() {
+                throw new UnsupportedOperationException("Please use getRBinPath() with this provider, only.");
+            }
+        });
 
         if (rProps != null && rProps.containsKey("rhome")) {
             File rhomeFile = new File(rProps.getProperty("rhome"));
@@ -155,8 +145,9 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PREF_R_HOME, rHome);
     }
 
-	/**
+    /**
      * Returns a provider for the R executable.
+     *
      * @return provider to the path to the R executable
      */
     public static final RPreferenceProvider getRProvider() {

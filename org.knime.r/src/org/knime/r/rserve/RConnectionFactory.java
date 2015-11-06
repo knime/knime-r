@@ -1,7 +1,10 @@
 package org.knime.r.rserve;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,9 +19,9 @@ import com.sun.jna.Platform;
 
 /**
  * RConnectionFactory
- * 
+ *
  * Factory for {@link RConnection} and R processes.
- * 
+ *
  * @author Jonathan Hale
  */
 public class RConnectionFactory {
@@ -29,7 +32,7 @@ public class RConnectionFactory {
 
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			for (RInstance inst : m_instances) {
+			for (final RInstance inst : m_instances) {
 				inst.close();
 			}
 		}));
@@ -37,13 +40,13 @@ public class RConnectionFactory {
 
 	/**
 	 * For testing purposes.
-	 * 
+	 *
 	 * @return Read only collection of currently running Rserve processes.
 	 */
 	public static Collection<Process> getRunningRProcesses() {
 		final ArrayList<Process> list = new ArrayList<>();
 
-		for (RInstance inst : m_instances) {
+		for (final RInstance inst : m_instances) {
 			final Process p = inst.getProcess();
 
 			if (p.isAlive()) {
@@ -69,10 +72,9 @@ public class RConnectionFactory {
 		try {
 			Process p;
 
-			final String rargs = "--no-save --slave";
+			final String rargs = "--vanilla";
 			if (Platform.isWindows()) {
-				final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(),
-						"--RS-host", host, rargs);
+				final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), rargs);
 				builder.environment()
 						.put("path",
 								org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome()
@@ -83,38 +85,70 @@ public class RConnectionFactory {
 										+ System.getenv("path"));
 				builder.environment().put("R_HOME",
 						org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome());
-				builder.directory(new File(cmd.replaceAll("Rserve.exe", "")));
+				builder.directory(new File(cmd).getParentFile());
 				p = builder.start();
 			} else /* unix startup */ {
-				final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(),
-						"--RS-host", host, rargs);
+				final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), rargs);
 				builder.environment().put("R_HOME",
 						org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome());
-				builder.directory(new File(cmd.replaceAll("Rserve", "")));
+				builder.directory(new File(cmd).getParentFile());
 				p = builder.start();
+
+				new StreamReaderThread(p.getInputStream(), "R Output Reader") {
+
+					@Override
+					public void processLine(final String line) {
+						// discard
+					}
+				}.start();
+
+				new StreamReaderThread(p.getErrorStream(), "R Error Reader") {
+
+					@Override
+					public void processLine(final String line) {
+						LOGGER.debug(line);
+					}
+				}.start();
+
+			}
+			final RInstance rInstance = new RInstance(p, host, port);
+
+			// try connecting up to 5 times over the course of 500ms. Attempts
+			// may fail if Rserve is currently starting up.
+			for (int i = 1; i <= 5; i++) {
+				try {
+					RConnection connection = rInstance.createConnection();
+					if (connection != null) {
+						LOGGER.debug("Connected to Rserve in " + i + " attempts.");
+						break;
+					}
+				} catch (RserveException e) {
+					Thread.sleep(100);
+				}
 			}
 
-			final RInstance rInstance = RInstance.createRInstance(p, host, port); // also
-																					// creates
-																					// first
-																					// connection
+			if (rInstance.getLastConnection() == null) {
+				throw new IOException("Could not connect to RServe.");
+			}
+
 			m_instances.add(rInstance);
 
 			return rInstance;
 		} catch (Exception x) {
 			throw new IOException(
-					"Could not start Rserve process. This may be caused by Rserve package not installed or an invalid or broken R Home.");
+					"Could not start Rserve process. This may be caused by Rserve package not installed or an invalid or broken R Home.",
+					x);
 		}
 	}
 
 	/**
 	 * Create a new {@link RConnection}, creating a new R instance beforehand,
 	 * if on windows, for every single connection, unless a connection of an
-	 * existing instance has been closed in which case an R instance will be
-	 * reused.
-	 * 
+	 * existing instance has been closed in which case an R instance
+	 * weleratorConfiguration, org.eclipse.ui.contexts.will be reused.
+	 *
 	 * The method does not check {@link RConnection#isConnected()}.
-	 * 
+	 *
 	 * @return an RConnection, never <code>null</code>
 	 * @throws RserveException
 	 * @throws IOException
@@ -161,11 +195,11 @@ public class RConnectionFactory {
 
 	/**
 	 * Get the {@link RInstance} belonging to the given {@link RConnection}.
-	 * 
+	 *
 	 * @param connection
 	 * @return the R instance
 	 */
-	private static RInstance getRInstOfConnection(RConnection connection, boolean remove) {
+	private static RInstance getRInstOfConnection(final RConnection connection, final boolean remove) {
 		final Iterator<RInstance> itor = m_instances.iterator();
 		RInstance inst = null;
 		while (itor.hasNext()) {
@@ -184,7 +218,7 @@ public class RConnectionFactory {
 	/**
 	 * An instance of R running in an external process. The process is
 	 * terminated on {@link #close()}.
-	 * 
+	 *
 	 * @author Jonathan Hale
 	 */
 	private static class RInstance implements AutoCloseable {
@@ -193,13 +227,6 @@ public class RConnectionFactory {
 		private final int m_port;
 
 		private RConnection m_lastConnection = null;
-
-		public static RInstance createRInstance(final Process p, final String host, final int port)
-				throws RserveException {
-			final RInstance inst = new RInstance(p, host, port);
-			inst.createConnection();
-			return inst;
-		}
 
 		private RInstance(final Process p, final String host, final int port) {
 			m_process = p;
@@ -244,6 +271,34 @@ public class RConnectionFactory {
 	public static boolean isProcessesOfConnectionAlive(final RConnection connection) {
 		RInstance inst = getRInstOfConnection(connection, false);
 		return inst != null && inst.getProcess().isAlive();
+	}
+
+	private static abstract class StreamReaderThread extends Thread {
+
+		private final InputStream m_stream;
+
+		/**
+		 *
+		 */
+		public StreamReaderThread(final InputStream stream, final String name) {
+			super(name);
+			m_stream = stream;
+		}
+
+		@Override
+		public void run() {
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(m_stream));
+			try {
+				String line;
+				while ((line = reader.readLine()) != null && !isInterrupted()) {
+					processLine(line);
+				}
+			} catch (IOException e) {
+				// nothing to do
+			}
+		}
+
+		public abstract void processLine(final String line);
 	}
 
 }

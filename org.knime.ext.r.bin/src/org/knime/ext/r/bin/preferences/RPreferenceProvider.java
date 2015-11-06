@@ -59,9 +59,10 @@ public interface RPreferenceProvider {
     public String getRHome();
 
     /**
-     * @return path to an R executable
+     * @param command R command ("R" or "Rscript" for example)
+     * @return path to the command executable
      */
-    public String getRBinPath();
+    public String getRBinPath(String command);
 
     /**
      * @return path to an Rserve executable

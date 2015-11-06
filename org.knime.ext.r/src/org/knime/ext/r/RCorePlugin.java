@@ -60,7 +60,8 @@ import org.osgi.framework.BundleContext;
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RCorePlugin extends AbstractUIPlugin {
- // The plug-in ID
+
+    /** The plugin ID. <code>"org.knime.ext.r"</code> */
     public static final String PLUGIN_ID = "org.knime.ext.r"; //$NON-NLS-1$
 
     // The shared instance.
@@ -117,6 +118,6 @@ public class RCorePlugin extends AbstractUIPlugin {
      * @return R executable
      */
     public static File getRExecutable() {
-        return new File(RPreferenceInitializer.getRProvider().getRBinPath());
+        return new File(RPreferenceInitializer.getRProvider().getRBinPath("R"));
     }
 }

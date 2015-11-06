@@ -49,6 +49,10 @@
 package org.knime.ext.r.bin.preferences;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
+import org.knime.ext.r.bin.RBinUtil;
 
 import com.sun.jna.Platform;
 
@@ -60,14 +64,18 @@ import com.sun.jna.Platform;
  */
 public class DefaultRPreferenceProvider implements RPreferenceProvider {
     private final String m_rHome;
+    private final Properties m_properties;
 
     /**
      * Creates a new preference provider based on the given R home directory.
      *
      * @param rHome R's home directory
+     * @throws InterruptedException
+     * @throws IOException
      */
     public DefaultRPreferenceProvider(final String rHome) {
         m_rHome = rHome;
+        m_properties = RBinUtil.retrieveRProperties(this);
     }
 
     @Override
@@ -76,28 +84,30 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
     }
 
     @Override
-    public String getRBinPath() {
+    public String getRBinPath(final String command) {
+        final String binPath = getRHome() + File.separator + "bin" + File.separator;
         if (Platform.isWindows()) {
             if (Platform.is64Bit()) {
-                return getRHome() + File.separator + "bin" + File.separator + "x64" + File.separator + "R.exe";
+                return binPath + "x64" + File.separator + command + ".exe";
             } else {
-                return getRHome() + File.separator + "bin" + File.separator + "i386" + File.separator + "R.exe";
+                return binPath + "i386" + File.separator + command + "R.exe";
             }
         } else {
-            return getRHome() + File.separator + "bin" + File.separator + "R";
+            return binPath + command;
         }
     }
 
     @Override
     public String getRServeBinPath() {
+        final String rservePath = (String)m_properties.get("Rserve.path") + File.separator + "libs" + File.separator;
         if (Platform.isWindows()) {
             if (Platform.is64Bit()) {
-                return getRHome() + File.separator + "library" + File.separator + "Rserve" + File.separator + "libs" + File.separator + "x64" + File.separator + "Rserve.exe";
+                return rservePath + "x64" + File.separator + "Rserve.exe";
             } else {
-                return getRHome() + File.separator + "library" + File.separator + "Rserve" + File.separator + "libs" + File.separator + "i386" + File.separator + "Rserve.exe";
+                return rservePath +  "i386" + File.separator + "Rserve.exe";
             }
         } else {
-            return getRHome() + File.separator + "library" + File.separator + "Rserve" + File.separator + "libs" + File.separator + "Rserve";
+            return rservePath + "Rserve.dbg";
         }
     }
 }
