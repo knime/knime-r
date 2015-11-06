@@ -104,9 +104,7 @@ public class RControllerTest {
 			progress.setExecuteCanceled();
 			// give some time to cancel the evaluation. Cancellation is checked
 			// every 200ms.
-			t.join(1000); // Warning: Test may fail, if the server starts
-							// slower than this, or the monitor doesn't
-							// immediately realizes the cancellation.
+			t.join(5000); // will return before the 5 seconds are over, if the test succeeds
 			assertFalse(t.isAlive());
 
 			// test that evaluation still works (Rserver has been restarted)
