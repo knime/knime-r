@@ -39,7 +39,6 @@ public class RConsoleControllerTest {
 		m_controller.close();
 	}
 
-	@Ignore
 	@Test
 	public void testCreation() {
 		RConsoleController consoleController = m_controller.getConsoleController();
@@ -64,7 +63,6 @@ public class RConsoleControllerTest {
 	 *             Should never happen.
 	 * @throws InterruptedException
 	 */
-	@Ignore
 	@Test
 	public void testConsole() throws BadLocationException, InterruptedException {
 		final RConsole console = new RConsole();
