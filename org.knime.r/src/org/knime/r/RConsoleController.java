@@ -48,6 +48,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Queue;
+import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -151,7 +152,7 @@ public class RConsoleController implements RCommandExecutionListener {
 
 	/**
 	 * Cancel the currently executingCommand.
-	 * 
+	 *
 	 * @see RConsoleController#getCancelAction()
 	 */
 	public void cancel() {
@@ -169,7 +170,7 @@ public class RConsoleController implements RCommandExecutionListener {
 
 	/**
 	 * Clear the console pane
-	 * 
+	 *
 	 * @see RConsoleController#getClearAction()
 	 */
 	public void clear() {
@@ -334,8 +335,21 @@ public class RConsoleController implements RCommandExecutionListener {
 	public void onCommandExecutionStart(final RCommand command) {
 		updateBusyState(true);
 
-		if (command.isShowInConsole()) {
-			append("> " + command.getCommand() + "\n", 0);
+		if (!command.isShowInConsole()) {
+			return;
+		}
+
+		final StringTokenizer tokenizer = new StringTokenizer(command.getCommand(), "\n");
+
+		boolean first = true;
+		while (tokenizer.hasMoreTokens()) {
+			final String line = tokenizer.nextToken();
+			if (first) {
+				append("> " + line + "\n", 0);
+				first = false;
+			} else {
+				append("+ " + line + "\n", 0);
+			}
 		}
 	}
 

@@ -89,12 +89,12 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 		return "png(\"" + imageFile.getAbsolutePath().replace('\\', '/') + "\"" + ", width="
 				+ m_settings.getImageWidth() + ", height=" + m_settings.getImageHeight() + ", pointsize="
 				+ m_settings.getTextPointSize() + ", bg=\"" + m_settings.getImageBackgroundColor() + "\"" + ", res="
-				+ m_settings.getImageResolution() + ");\n";
+				+ m_settings.getImageResolution() + ")";
 	}
 
 	@Override
 	protected String getScriptSuffix() {
-		return "\ndev.off();";
+		return "dev.off()";
 	}
 
 	/**

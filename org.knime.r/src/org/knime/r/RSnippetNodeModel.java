@@ -355,7 +355,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		}
 
 		// add node specific prefix
-		rScript.append(m_config.getScriptPrefix());
+		rScript.append(m_config.getScriptPrefix()).append("\n");
 
 		// user defined script
 		final String userScript = m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength());

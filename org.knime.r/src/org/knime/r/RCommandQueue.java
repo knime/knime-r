@@ -45,10 +45,8 @@
 package org.knime.r;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -61,11 +59,11 @@ import org.rosuda.REngine.REXP;
 /**
  * A {@link LinkedBlockingQueue} which contains {@link RCommand} and as means of
  * starting a thread which will sequentially execute the RCommands in the queue.
- * 
+ *
  * @author Jonathan Hale
  * @author Heiko Hofer
  */
-public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
+public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 
 	/** Generated serialVersionUID */
 	private static final long serialVersionUID = 1850919045704831064L;
@@ -78,7 +76,7 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param controller
 	 *            {@link RController} for evaluating R code in the execution
 	 *            thread.
@@ -93,49 +91,39 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 	 *
 	 * @param showInConsole
 	 *            If the command should be copied into the R console.
-	 * @return {@link RCommand} describing the last command of
-	 *         <code>rScript</code>. Since the commands are executed stricly
-	 *         sequentially, all commands will have completed once this returned
-	 *         command has. Use {@link RCommand#get()} to wait for execution and
-	 *         fetch the result of evaluation if any.
+	 * @return {@link RCommand} which wraps the added <code>rScript</code>. Use
+	 *         {@link RCommand#get()} to wait for execution and fetch the result
+	 *         of evaluation if any.
 	 * @throws InterruptedException
 	 *             {@inheritDoc}
 	 * @throws NullPointerException
 	 *             {@inheritDoc}
 	 */
 	public RCommand putRScript(final String rScript, final boolean showInConsole) throws InterruptedException {
-		final ArrayList<RCommand> cmds = new ArrayList<>();
-		final StringTokenizer tokenizer = new StringTokenizer(rScript, "\n");
-
-		while (tokenizer.hasMoreTokens()) {
-			final String cmd = tokenizer.nextToken();
-			cmds.add(new RCommand(cmd.trim(), showInConsole));
-		}
-		put(cmds);
-
-		// return last element
-		return cmds.get(cmds.size() - 1);
+		RCommand rCommand = new RCommand(rScript.trim(), showInConsole);
+		put(rCommand);
+		return rCommand;
 	}
 
 	/**
 	 * Interface for classes listening to the exection of commands in a
 	 * {@link RCommandQueue}.
-	 * 
+	 *
 	 * @author Jonathan Hale
 	 */
 	public interface RCommandExecutionListener {
 
 		/**
 		 * Called before execution of a command is started.
-		 * 
-		 * @param command
+		 *
+		 * @param rCmds
 		 *            the command to be executed
 		 */
-		public void onCommandExecutionStart(RCommand command);
+		public void onCommandExecutionStart(RCommand rCmds);
 
 		/**
 		 * Called after a command has been completed.
-		 * 
+		 *
 		 * @param command
 		 *            command which has been completed
 		 */
@@ -152,7 +140,7 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 
 	/**
 	 * Add a {@link RCommandExecutionListener} to listen to this RCommandQueue.
-	 * 
+	 *
 	 * @param l
 	 *            the Listener
 	 */
@@ -162,7 +150,7 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 
 	/**
 	 * Remove a {@link RCommandExecutionListener} from this RCommandQueue.
-	 * 
+	 *
 	 * @param l
 	 *            the Listener
 	 */
@@ -172,7 +160,7 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 
 	/**
 	 * Thread which executes RCommands from the command queue.
-	 * 
+	 *
 	 * @author Jonathan Hale
 	 */
 	protected class RCommandConsumer extends Thread {
@@ -190,19 +178,23 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 				while (!isInterrupted()) {
 					// interrupted flag is checked every 100 milliseconds while
 					// command queue is empty.
-					Collection<RCommand> nextCommands = poll(100, TimeUnit.MILLISECONDS);
+					RCommand nextCommand = poll(100, TimeUnit.MILLISECONDS);
 
-					if (nextCommands == null) {
+					if (nextCommand == null) {
 						/* queue was empty */
 						continue;
 					}
 
 					// we fetch the entire contents of the queue to be able to
-					// show progress for all commands currently in queue
-					final ArrayList<RCommand> commands = new ArrayList<>(nextCommands);
-					while ((nextCommands = poll()) != null) {
-						commands.addAll(nextCommands);
-					}
+					// show progress for all commands currently in queue. This
+					// is neccessary to prevent flashing of the progressbar in
+					// RSnippetNodePanel, which would happen because "invisible"
+					// commands are executed before and after user commands are
+					// executed.
+					final ArrayList<RCommand> commands = new ArrayList<>();
+					do {
+						commands.add(nextCommand);
+					} while ((nextCommand = poll()) != null);
 
 					progress = m_execMonitorFactory.create(1.0);
 					int curCommandIndex = 0;
@@ -212,8 +204,7 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 						m_listeners.stream().forEach((l) -> l.onCommandExecutionStart(rCmd));
 						// catch textual output from command with
 						// paste/capture
-						final String cmd = rCmd.isShowInConsole()
-								? "paste(capture.output(" + rCmd.getCommand() + "),collapse='\\n')\n"
+						final String cmd = rCmd.isShowInConsole() ? captureOuput(rCmd.getCommand())
 								// textual output not needed:
 								: rCmd.getCommand();
 
@@ -224,7 +215,7 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 						rCmd.complete(ret);
 
 						m_listeners.stream().forEach((l) -> l.onCommandExecutionEnd(rCmd));
-						progress.setProgress((float)++curCommandIndex / numCommands);
+						progress.setProgress((float) ++curCommandIndex / numCommands);
 					}
 					progress.setProgress(1.0, "Done!");
 					progress = null;
@@ -248,12 +239,28 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 				m_listeners.stream().forEach((l) -> l.onCommandExecutionCanceled());
 			}
 		}
+
+		/**
+		 * @param command
+		 * @return
+		 */
+		private String captureOuput(final String command) {
+			// Escape '\n' and '"'
+			final StringBuffer escaped = new StringBuffer();
+			for (final byte c : command.getBytes()) {
+				if (c == '\n' || c == '"') {
+					escaped.append('\\');
+				}
+				escaped.append((char) c);
+			}
+			return "paste(capture.output(eval(parse(text = c(\"" + escaped.toString() + "\"))), type = c('output', 'message')),collapse='\\n')";
+		}
 	}
 
 	/**
 	 * Start this queues execution thread (Thread which executes the queues
 	 * {@link RCommand}s).
-	 * 
+	 *
 	 * @param controller
 	 *            Controller to use for execution of R code
 	 * @param factory
@@ -281,7 +288,7 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 	/**
 	 * Start this queues execution thread (Thread which executes the queues
 	 * {@link RCommand}s).
-	 * 
+	 *
 	 * @param controller
 	 *            Controller to use for execution of R code
 	 * @param factory
@@ -302,7 +309,7 @@ public class RCommandQueue extends LinkedBlockingQueue<Collection<RCommand>> {
 	/**
 	 * Stop the queues execution thread. Does nothing if the queue is already
 	 * stopped.
-	 * 
+	 *
 	 * @see #startExecutionThread(RController)
 	 * @see #startExecutionThread(RController, ExecutionMonitorFactory)
 	 * @see #isExecutionThreadRunning()
