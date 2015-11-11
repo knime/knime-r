@@ -90,7 +90,7 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
             if (Platform.is64Bit()) {
                 return binPath + "x64" + File.separator + command + ".exe";
             } else {
-                return binPath + "i386" + File.separator + command + "R.exe";
+                return binPath + "i386" + File.separator + command + ".exe";
             }
         } else {
             return binPath + command;
