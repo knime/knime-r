@@ -116,17 +116,11 @@ public class RViewNodeModel extends RSnippetNodeModel {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void saveSettingsTo(final NodeSettingsWO settings) {
 		m_settings.saveSettings(settings);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 		final RViewNodeSettings s = new RViewNodeSettings();
@@ -139,9 +133,6 @@ public class RViewNodeModel extends RSnippetNodeModel {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
 		m_settings.loadSettings(settings);

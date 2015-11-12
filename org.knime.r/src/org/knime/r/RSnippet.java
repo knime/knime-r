@@ -47,9 +47,6 @@
  */
 package org.knime.r;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
@@ -159,10 +156,8 @@ public final class RSnippet {
 	 *             when settings are inconsistent with the spec or the flow
 	 *             variables at the inport
 	 */
-	public ValueReport<DataTableSpec> configure(final DataTableSpec spec,
+	public DataTableSpec configure(final DataTableSpec spec,
 			final FlowVariableRepository flowVariableRepository) throws InvalidSettingsException {
-		final List<String> errors = new ArrayList<String>();
-		final List<String> warnings = new ArrayList<String>();
 		final DataTableSpec outSpec = spec;
 
 		// createRearranger(spec, flowVariableRepository, -1).createSpec();
@@ -181,7 +176,7 @@ public final class RSnippet {
 		// }
 		// flowVariableRepository.put(flowVar);
 		// }
-		return new ValueReport<DataTableSpec>(outSpec, errors, warnings);
+		return outSpec;
 	}
 
 	/**

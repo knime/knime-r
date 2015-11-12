@@ -60,7 +60,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -98,7 +97,11 @@ import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.SwingWorkerWithContext;
 import org.knime.ext.r.node.local.port.RPortObject;
-import org.knime.r.REvent.RListener;
+import org.knime.r.controller.IRController.RException;
+import org.knime.r.controller.RCommand;
+import org.knime.r.controller.RCommandQueue;
+import org.knime.r.controller.RConsoleController;
+import org.knime.r.controller.RController;
 import org.knime.r.template.AddTemplateDialog;
 import org.knime.r.template.TemplateProvider;
 import org.knime.r.ui.RColumnList;
@@ -115,7 +118,7 @@ import org.rosuda.REngine.REXP;
  * @author Heiko Hofer
  * @author Jonathan Hale
  */
-public class RSnippetNodePanel extends JPanel implements RListener {
+public class RSnippetNodePanel extends JPanel {
 
 	/** Generated serialVersionUID */
 	private static final long serialVersionUID = 2286323699400964363L;
@@ -131,6 +134,9 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	private final RSnippet m_snippet;
 
 	private RConsole m_console;
+	private final RCommandQueue m_commandQueue;
+	private final RConsoleController m_consoleController;
+	private final RController m_controller;
 
 	private RObjectBrowser m_objectBrowser;
 
@@ -167,8 +173,6 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 	protected boolean m_closing;
 
-	private final RController m_controller;
-
 	/**
 	 * @param templateMetaCategory
 	 *            the meta category used in the templates tab or to create
@@ -176,6 +180,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	 * @param config
 	 * @param isPreview
 	 *            if this is a preview used for showing templates.
+	 * @throws RException
 	 */
 	public RSnippetNodePanel(final Class<?> templateMetaCategory, final RSnippetNodeConfig config,
 			final boolean isPreview, final boolean isInteractive) {
@@ -195,7 +200,15 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 		m_isInteractive = isPreview ? false : isInteractive;
 
-		m_controller = (m_isInteractive) ? new RController() : null;
+		if (m_isInteractive) {
+			m_controller = new RController(false);
+			m_commandQueue = new RCommandQueue(m_controller);
+			m_consoleController = new RConsoleController(m_controller, m_commandQueue);
+		} else {
+			m_controller = null;
+			m_consoleController = null;
+			m_commandQueue = null;
+		}
 
 		m_snippet = new RSnippet();
 
@@ -248,7 +261,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 							final String name = (String) m_objectBrowser.getValueAt(row, 0);
 							final String cmd = "print(" + name + ")";
 							try {
-								m_controller.getCommandQueue().putRScript(cmd, true);
+								m_commandQueue.putRScript(cmd, true);
 							} catch (final InterruptedException e1) {
 								/* nothing to do */
 							}
@@ -323,14 +336,14 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		c.weightx = 1;
 		c.weighty = 0;
 
-		final JButton consoleCancelButton = new JButton(m_controller.getConsoleController().getCancelAction());
+		final JButton consoleCancelButton = new JButton(m_consoleController.getCancelAction());
 		consoleCancelButton.setText("");
 		consoleCancelButton.setPreferredSize(new Dimension(consoleCancelButton.getPreferredSize().height,
 				consoleCancelButton.getPreferredSize().height));
 
 		p.add(consoleCancelButton, c);
 
-		final JButton consoleClearButton = new JButton(m_controller.getConsoleController().getClearAction());
+		final JButton consoleClearButton = new JButton(m_consoleController.getClearAction());
 		consoleClearButton.setText("");
 		consoleClearButton.setPreferredSize(new Dimension(consoleClearButton.getPreferredSize().height,
 				consoleClearButton.getPreferredSize().height));
@@ -383,23 +396,23 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 						if (inputRPortObject != null) {
 							// clear and load the workspace of the R port object
-							m_controller.clearAndReadWorkspace(inputRPortObject.getFile(), m_exec);
+							m_controller.clearAndReadWorkspace(inputRPortObject.getFile(), m_exec.createSubProgress(0.5));
 							m_controller.loadLibraries(inputRPortObject.getLibraries());
 						} else {
 							// no need to load any R workspace
-							m_controller.clearWorkspace(m_exec);
+							m_controller.clearWorkspace(m_exec.createSubProgress(0.5));
 						}
 
 						if (m_input != null && m_tableInPort >= 0) {
 							m_exec.setMessage("Send input table to R");
-							m_controller.exportDataTable((BufferedDataTable) m_input[m_tableInPort], "knime.in",
-									m_exec);
+							m_controller.monitoredAssign("knime.in", (BufferedDataTable) m_input[m_tableInPort],
+									m_exec.createSubProgress(0.4));
 						}
 
 						m_exec.setMessage("Send flow variables to R");
 						m_controller.exportFlowVariables(m_inputFlowVars, "knime.flow.in", m_exec);
 
-						workspaceChanged(null);
+						workspaceChanged();
 
 					} finally {
 						if (m_exec != null) {
@@ -593,7 +606,7 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 	/**
 	 * Get names of objects currently defined in the workspace.
-	 * 
+	 *
 	 * @return array of names, never <code>null</code>
 	 */
 	protected String[] rGetObjectNames() {
@@ -601,18 +614,17 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		try {
 			// we use the command queue to make sure commands are executed
 			// strictly sequentially.
-			rexp = m_controller.getCommandQueue().putRScript("ls()", false).get();
+			rexp = m_commandQueue.putRScript("ls()", false).get();
 			return (rexp != null) ? rexp.asStrings() : new String[] {};
 		} catch (final Exception e) {
-			m_controller.getConsoleController().append("Warning: Could not get names of objects defined in workspace.",
-					1);
+			m_consoleController.append("Warning: Could not get names of objects defined in workspace.", 1);
 			return new String[] {};
 		}
 	}
 
 	/**
 	 * Get classes of objects currently defined in the workspace.
-	 * 
+	 *
 	 * @return array of names, never <code>null</code>
 	 */
 	protected String[] rGetObjectClasses() {
@@ -620,12 +632,10 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 		try {
 			// we use the command queue to make sure commands are executed
 			// strictly sequentially.
-			rexp = m_controller.getCommandQueue()
-					.putRScript("sapply(ls(),function(a)class(get(a,envir=globalenv()))[1])", false).get();
+			rexp = m_commandQueue.putRScript("sapply(ls(),function(a)class(get(a,envir=globalenv()))[1])", false).get();
 			return (rexp != null) ? rexp.asStrings() : new String[] {};
 		} catch (final Exception e) {
-			m_controller.getConsoleController()
-					.append("Warning: Could not get classes of objects defined in workspace.", 1);
+			m_consoleController.append("Warning: Could not get classes of objects defined in workspace.", 1);
 			return new String[] {};
 		}
 	}
@@ -678,62 +688,58 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ValueReport<Boolean> onOpen() {
+	public boolean onOpen() {
 		m_closing = false;
 		if (m_isInteractive) {
-
-			m_console.setText("");
-			m_objectBrowser.updateData(new String[0], new String[0]);
-
-			m_snippetTextArea.requestFocus();
-			m_snippetTextArea.requestFocusInWindow();
-
-			final ValueReport<Boolean> isRAvailable = m_controller.isRAvailable();
-
 			try {
-				m_imageFile = FileUtil.createTempFile("rsnippet-default-", ".png");
-			} catch (final IOException e) {
-				LOGGER.error("No PNG image file handle could be created - plot's won't work", e);
-			}
-			// TODO: Lock this according to whether Rserve is connected.
-			// m_evalScriptButton.setEnabled(m_hasLock);
-			// m_evalSelButton.setEnabled(m_hasLock);
-			// m_resetWorkspace.setEnabled(m_hasLock);
-			// m_showPlot.setEnabled(m_hasLock);
+				m_console.setText("");
+				m_objectBrowser.updateData(new String[0], new String[0]);
 
-			connectToR();
-			if (isRAvailable.hasErrors()) {
+				m_snippetTextArea.requestFocus();
+				m_snippetTextArea.requestFocusInWindow();
+
+				// Create temporary image for the R plot output
+				try {
+					m_imageFile = FileUtil.createTempFile("rsnippet-default-", ".png");
+				} catch (final IOException e) {
+					throw new RException("No PNG image file handle could be created - plot's won't work", e);
+				}
+
+				connectToR();
+
+				// enable/disable buttons depending on R according to whether
+				// initialization of RController succeeded
+				final boolean enabled = m_controller.isInitialized();
+				m_evalScriptButton.setEnabled(enabled);
+				m_evalSelButton.setEnabled(enabled);
+				m_resetWorkspace.setEnabled(enabled);
+				m_showPlot.setEnabled(enabled);
+
+			} catch (final RException e) {
 				final StyledDocument doc = m_console.getStyledDocument();
 				try {
 					doc.insertString(doc.getLength(), "R cannot be initialized.\n", m_console.getErrorStyle());
-					doc.insertString(doc.getLength(), ValueReport.joinString(isRAvailable.getErrors(), "\n"),
-							m_console.getErrorStyle());
-				} catch (final BadLocationException e) {
+
+					doc.insertString(doc.getLength(), e.getMessage(), m_console.getErrorStyle());
+				} catch (final BadLocationException ex) {
 					// never happens
-					throw new RuntimeException(e);
+					throw new RuntimeException(ex);
 				}
 			}
-
-			return isRAvailable;
-		} else {
-			return new ValueReport<Boolean>(true, Collections.<String> emptyList(), Collections.<String> emptyList());
 		}
 
+		return true;
 	}
 
-	private void connectToR() {
-		m_controller.getConsoleController().attachOutput(m_console);
-		m_controller.getCommandQueue().startExecutionThread(maxProgress -> {
-			try {
-				m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
-				m_progressPanel.startMonitoring(m_exec);
-				return m_exec;
-			} catch (final Throwable t) {
-				throw new RuntimeException(t);
-			}
+	private void connectToR() throws RException {
+		m_controller.initialize();
+
+		m_consoleController.attachOutput(m_console);
+		m_commandQueue.startExecutionThread(maxProgress -> {
+			m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
+			m_progressPanel.startMonitoring(m_exec);
+			return m_exec;
 		});
-		// start listing to the RController for updating the object browser
-		m_controller.addRListener(this);
 
 		// send data to R
 		resetWorkspace();
@@ -750,23 +756,20 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 			m_imageFile = null;
 		}
 		m_progressPanel.stopMonitoring();
-		if (m_isInteractive) {
-			if (m_controller.isRAvailable().getValue()) {
-				if (m_controller.getConsoleController().isAttached(m_console)) {
-					m_controller.getConsoleController().detach(m_console);
-					// clear pending commands in the console queue
-					m_controller.getCommandQueue().clear();
-					m_controller.getCommandQueue().stopExecutionThread();
-				}
-				// stop listing to the RController for updating the object
-				// browser
-				m_controller.removeRListener(this);
-				// Stop running tasks
-				if (m_exec != null) {
-					m_exec.getProgressMonitor().setExecuteCanceled();
-				}
+		if (m_isInteractive && m_controller != null) {
+			if (m_consoleController.isAttached(m_console)) {
+				m_consoleController.detach(m_console);
+				// clear pending commands in the console queue
+				m_commandQueue.clear();
+				m_commandQueue.stopExecutionThread();
+			}
+			// Stop running tasks
+			if (m_exec != null) {
+				m_exec.getProgressMonitor().setExecuteCanceled();
 			}
 		}
+
+		m_controller.close();
 	}
 
 	protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
@@ -824,25 +827,29 @@ public class RSnippetNodePanel extends JPanel implements RListener {
 
 	private void evalScriptFragment(final String script) {
 		try {
-			final RCommandQueue consoleQueue = m_controller.getCommandQueue();
-
 			final String setupPlotInitCommand = setupPlotInitCommand();
-			consoleQueue.putRScript(setupPlotInitCommand, false);
-			consoleQueue.putRScript(script, true);
+			m_commandQueue.putRScript(setupPlotInitCommand, false);
+			m_commandQueue.putRScript(script, true);
+			final RCommand future = m_commandQueue.putRScript("dev.off()", false);
 
-			final String tempDevOffOutputVar = ("random_" + UUID.randomUUID()).replace("-", "_");
-			consoleQueue.putRScript(tempDevOffOutputVar + "<- dev.off()\nrm(" + tempDevOffOutputVar + ")", false);
+			// update the Panel when execution has finished.
+			SwingUtilities.invokeLater(() -> {
+				try {
+					future.get();
+					workspaceChanged();
+				} catch (Exception e) {
+				}
+			});
+
 		} catch (final InterruptedException e1) {
 			throw new RuntimeException(e1);
 		}
-
-		m_exec.setProgress(1.0);
 	}
 
-	// --- RListener methods ---
-
-	@Override
-	public void workspaceChanged(final REvent e) {
+	/**
+	 * Update the Panel according to changes in the R workspace.
+	 */
+	public void workspaceChanged() {
 		final String[] objectNames = rGetObjectNames();
 		if (objectNames != null && objectNames.length > 0) {
 			final String[] objectClasses = rGetObjectClasses();

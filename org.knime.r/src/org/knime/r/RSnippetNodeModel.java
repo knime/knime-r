@@ -50,6 +50,7 @@ package org.knime.r;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,9 +72,12 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.FlowVariable.Type;
 import org.knime.core.util.FileUtil;
-import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
+import org.knime.r.controller.IRController.RException;
+import org.knime.r.controller.RCommandQueue;
+import org.knime.r.controller.RController;
+import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
 
@@ -118,14 +122,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 		final FlowVariableRepository flowVarRepository = new FlowVariableRepository(getAvailableInputFlowVariables());
 
-		final ValueReport<DataTableSpec> report = m_snippet.configure(tableSpec, flowVarRepository);
-
-		if (report.hasWarnings()) {
-			setWarningMessage(ValueReport.joinString(report.getWarnings(), "\n"));
-		}
-		if (report.hasErrors()) {
-			throw new InvalidSettingsException(ValueReport.joinString(report.getErrors(), "\n"));
-		}
+		final DataTableSpec report = m_snippet.configure(tableSpec, flowVarRepository); // TODO
+																						// Deadcode?
 
 		for (final FlowVariable flowVar : flowVarRepository.getModified()) {
 			if (flowVar.getType().equals(Type.INTEGER)) {
@@ -156,33 +154,20 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	}
 
 	private PortObject[] executeInternal(final RSnippetSettings settings, final PortObject[] inData,
-			final ExecutionContext exec) throws CanceledExecutionException {
+			final ExecutionContext exec) throws CanceledExecutionException, RException {
 		m_snippet.getSettings().loadSettings(settings);
 
 		final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
 
 		final RController controller = new RController();
-
-		final ValueReport<Boolean> isRAvailable = controller.isRAvailable();
-		if (!isRAvailable.getValue()) {
-			controller.close();
-			throw new RuntimeException(ValueReport.joinString(isRAvailable.getErrors(), "\n"));
-		}
 		try {
 			exec.setMessage("R is busy waiting...");
 			exec.checkCanceled();
-			final ValueReport<PortObject[]> out = executeSnippet(controller, inData, flowVarRepo, exec);
-
-			if (out.hasWarnings()) {
-				setWarningMessage(ValueReport.joinString(out.getWarnings(), "\n"));
-			}
-			if (out.hasErrors()) {
-				throw new RuntimeException(ValueReport.joinString(out.getErrors(), "\n"));
-			}
+			final PortObject[] out = executeSnippet(controller, inData, flowVarRepo, exec);
 
 			pushFlowVariables(flowVarRepo);
 
-			return out.getValue();
+			return out;
 		} finally {
 			controller.close();
 		}
@@ -203,11 +188,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	 * @param exec
 	 *            ExecutionContext which enables cancelling of the execution.
 	 */
-	private ValueReport<PortObject[]> executeSnippet(final RController controller, final PortObject[] inData,
+	private PortObject[] executeSnippet(final RController controller, final PortObject[] inData,
 			final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws CanceledExecutionException {
-		final List<String> errors = new ArrayList<String>();
-		final List<String> warnings = new ArrayList<String>();
-
 		// blow away the output of any previous (failed) runs
 		setFailedExternalErrorOutput(new LinkedList<String>());
 		setFailedExternalOutput(new LinkedList<String>());
@@ -246,15 +228,13 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			exec.setMessage("Importing flow variables from R");
 			importFlowVariablesFromR(controller, flowVarRepo, exec);
 
-			return new ValueReport<PortObject[]>(outPorts.toArray(new PortObject[outPorts.size()]), errors, warnings);
+			return outPorts.toArray(new PortObject[outPorts.size()]);
 
 		} catch (final Exception e) {
 			if (e instanceof CanceledExecutionException) {
 				throw (CanceledExecutionException) e;
 			}
-			errors.add(e.getMessage());
-			LOGGER.error(e.getMessage(), e);
-			return new ValueReport<PortObject[]>(null, errors, warnings);
+			throw new RuntimeException("Execution failed.", e);
 		}
 	}
 
@@ -263,13 +243,32 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 		final String rScript = buildRScript(inData, tempWorkspaceFile);
 
-		try {
-			exec.setMessage("Executing R script");
+		exec.setMessage("Setting up output capturing");
+		controller.monitoredEval(RCommandQueue.CAPTURE_OUTPUT_PREFIX, exec);
 
-			controller.monitoredEval(rScript, exec);
-		} catch (final Exception e) {
-			throw e;
+		exec.setMessage("Executing R script");
+		controller.monitoredEval(rScript, exec);
+
+		exec.setMessage("Collecting captured output");
+		REXP output = controller.monitoredEval(RCommandQueue.CAPTURE_OUTPUT_POSTFIX, exec);
+
+		if (output != null && output.isString()) {
+			String out = output.asStrings()[0];
+			if (!out.isEmpty()) {
+				setExternalOutput(getLinkedListFromOutput(out));
+			}
+
+			String err = output.asStrings()[1];
+			if (!err.isEmpty()) {
+				setExternalErrorOutput(getLinkedListFromOutput(err));
+			}
 		}
+	}
+
+	private static final LinkedList<String> getLinkedListFromOutput(final String output) {
+		final LinkedList<String> list = new LinkedList<>();
+		Arrays.stream(output.split("\\r?\\n")).forEach((s) -> list.add(s));
+		return list;
 	}
 
 	/**
@@ -304,33 +303,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		return del;
 	}
 
-	/**
-	 * Path to R binary together with the R arguments <code>CMD BATCH</code> and
-	 * additional options.
-	 *
-	 * @return R binary path and arguments
-	 */
-	protected final String getRBinaryPathAndArguments() {
-		String argR = retRArguments();
-		if (!argR.isEmpty()) {
-			argR = " " + argR;
-		}
-		return getRBinaryPath() + " CMD BATCH" + argR;
-	}
-
-	private String retRArguments() {
-		return "--vanilla";
-	}
-
-	/**
-	 * Path to R binary.
-	 *
-	 * @return R binary path
-	 */
-	protected final String getRBinaryPath() {
-		return RPreferenceInitializer.getRProvider().getRBinPath("R");
-	}
-
 	/*
 	 * Create an R script which loads the input ports workspaces and sets the
 	 * working directory
@@ -358,8 +330,9 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		rScript.append(m_config.getScriptPrefix()).append("\n");
 
 		// user defined script
-		final String userScript = m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength());
-		rScript.append(userScript.trim()).append("\n");
+		final String userScript = m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim();
+		rScript.append("tryCatch(knime.tmp.ret<-withVisible({" + userScript + "}),error=function(e) message(conditionMessage(e)))\n");
+		rScript.append("if(!is.null(knime.tmp.ret)){if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}\n");
 
 		// append node specific suffix
 		rScript.append(m_config.getScriptSuffix()).append("\n");
@@ -377,20 +350,20 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	}
 
 	private BufferedDataTable importDataFromR(final RController controller, final boolean nonNumbersAsMissing,
-			final ExecutionContext exec) throws REngineException, REXPMismatchException, CanceledExecutionException {
-		final BufferedDataTable out = controller.importBufferedDataTable("knime.out", nonNumbersAsMissing, exec);
+			final ExecutionContext exec) throws RException, CanceledExecutionException {
+		BufferedDataTable out = controller.importBufferedDataTable("knime.out", nonNumbersAsMissing, exec);
 		return out;
 	}
 
 	private void importFlowVariablesFromR(final RController controller, final FlowVariableRepository flowVarRepo,
-			final ExecutionContext exec) throws CanceledExecutionException {
+			final ExecutionContext exec) throws RException, CanceledExecutionException {
 		final Collection<FlowVariable> flowVars = controller.importFlowVariables("knime.flow.out");
 		for (final FlowVariable flowVar : flowVars) {
 			flowVarRepo.put(flowVar);
 		}
 	}
 
-	private List<String> importListOfLibrariesFromR(final RController controller) {
+	private List<String> importListOfLibrariesFromR(final RController controller) throws RException {
 		return controller.importListOfLibrariesAndDelete();
 	}
 
@@ -408,7 +381,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	 */
 	private void exportData(final RController controller, final PortObject[] inData,
 			final FlowVariableRepository flowVarRepo, final ExecutionContext exec)
-					throws REngineException, REXPMismatchException, IOException, CanceledExecutionException {
+					throws RException, CanceledExecutionException {
 		controller.clearWorkspace(exec);
 		BufferedDataTable inTable = null;
 		for (final PortObject in : inData) {
@@ -417,7 +390,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			}
 		}
 		if (inTable != null) {
-			controller.exportDataTable(inTable, "knime.in", exec);
+			controller.monitoredAssign("knime.in", inTable, exec);
 		}
 		controller.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
 	}
@@ -465,10 +438,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 	protected RSnippet getRSnippet() {
 		return m_snippet;
-	}
-
-	public void loadSettings(final RSnippetSettings settings) {
-		m_snippet.getSettings().loadSettings(settings);
 	}
 
 }

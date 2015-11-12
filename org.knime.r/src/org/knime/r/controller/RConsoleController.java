@@ -42,7 +42,7 @@
  *  when such Node is propagated with or for interoperation with KNIME.
  * ------------------------------------------------------------------------
  */
-package org.knime.r;
+package org.knime.r.controller;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayDeque;
@@ -50,8 +50,6 @@ import java.util.Deque;
 import java.util.Queue;
 import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.AbstractAction;
@@ -66,11 +64,10 @@ import javax.swing.text.StyledDocument;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.util.Pair;
-import org.knime.r.RCommandQueue.RCommandExecutionListener;
+import org.knime.r.controller.IRController.RException;
+import org.knime.r.controller.RCommandQueue.RCommandExecutionListener;
 import org.knime.r.ui.RConsole;
 import org.knime.r.ui.RProgressPanel;
-import org.rosuda.REngine.REXP;
-import org.rosuda.REngine.REXPMismatchException;
 
 /**
  * Class managing a console and execution of commands pushed to the command
@@ -83,11 +80,10 @@ public class RConsoleController implements RCommandExecutionListener {
 
 	private RConsole m_pane;
 
-	private final Lock m_workspaceChangedLock = new ReentrantLock();
-	private final Condition m_workspaceChanged;
 	private final Action m_cancelAction;
 	private final Action m_clearAction;
 	private final RController m_controller;
+	private final RCommandQueue m_commandQueue;
 
 	private final DocumentListener m_docListener;
 
@@ -97,9 +93,10 @@ public class RConsoleController implements RCommandExecutionListener {
 	 * @param controller
 	 *            RController to use for executing commands etc.
 	 */
-	public RConsoleController(final RController controller) {
+	public RConsoleController(final RController controller, final RCommandQueue queue) {
 		m_controller = controller;
-		m_workspaceChanged = m_workspaceChangedLock.newCondition();
+		queue.addRCommandExecutionListener(this);
+		m_commandQueue = queue;
 		m_cancelAction = new AbstractAction("Terminate") {
 			private static final long serialVersionUID = -8509229734952079641L;
 
@@ -156,10 +153,10 @@ public class RConsoleController implements RCommandExecutionListener {
 	 * @see RConsoleController#getCancelAction()
 	 */
 	public void cancel() {
-		m_controller.getCommandQueue().stopExecutionThread();
+		m_commandQueue.stopExecutionThread();
 
 		// clear commands in queue
-		m_controller.getCommandQueue().clear();
+		m_commandQueue.clear();
 
 		try {
 			m_controller.terminateAndRelaunch();
@@ -230,7 +227,7 @@ public class RConsoleController implements RCommandExecutionListener {
 	 *            Whether currently executing.
 	 */
 	public void updateBusyState(final boolean busy) {
-		m_cancelAction.setEnabled(busy && m_controller.getCommandQueue().size() != 0);
+		m_cancelAction.setEnabled(busy && m_commandQueue.size() != 0);
 	}
 
 	/**
@@ -309,12 +306,6 @@ public class RConsoleController implements RCommandExecutionListener {
 		}
 	}
 
-	public void waitForWorkspaceChange() throws InterruptedException {
-		m_workspaceChangedLock.lock();
-		m_workspaceChanged.await();
-		m_workspaceChangedLock.unlock();
-	}
-
 	/**
 	 * @return Action for canceling current R execution
 	 */
@@ -354,7 +345,7 @@ public class RConsoleController implements RCommandExecutionListener {
 	}
 
 	@Override
-	public void onCommandExecutionEnd(final RCommand command) {
+	public void onCommandExecutionEnd(final RCommand command, final String stdout, final String stderr) {
 		updateBusyState(false);
 
 		if (!command.isShowInConsole()) {
@@ -362,29 +353,28 @@ public class RConsoleController implements RCommandExecutionListener {
 			return;
 		}
 
-		// it is assured that we can get the value now, if there is one.
-		final REXP ret = command.getNow(null);
-
-		try {
-			if (ret != null && ret.isString() && ret.asStrings().length != 0) {
-				/*
-				 * If ret is a string, it is stored in an array of strings in
-				 * the REXP subclass. When `asString()` is called, the first
-				 * element of this array is returned. For some reason, this
-				 * first element may not exist, though, which would cause
-				 * ArrayIndexOutOfBoundsException, if we wouldn't check the
-				 * length of the underlying array)
-				 */
-				append(ret.asString() + "\n", 0);
-			}
-		} catch (REXPMismatchException e) { // ret.asString()
-			append("ERROR: result of command execution could not be parsed as String.", 1);
-		}
+		append(stdout, 0);
+		append(stderr, 1);
 	}
 
 	@Override
 	public void onCommandExecutionCanceled() {
 		updateBusyState(false);
+	}
+
+	@Override
+	public void onCommandExecutionError(final RException e) {
+		Throwable exception = e;
+
+		do {
+			append("ERROR: " + exception.getMessage(), 1);
+			if (exception == exception.getCause()) {
+				// avoid infinite loops for exceptions which set themselves as
+				// their cause.
+				break;
+			}
+			exception = exception.getCause();
+		} while (exception != null);
 	}
 
 }

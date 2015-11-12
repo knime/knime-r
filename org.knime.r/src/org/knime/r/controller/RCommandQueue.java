@@ -42,7 +42,7 @@
  *  when such Node is propagated with or for interoperation with KNIME.
  * ------------------------------------------------------------------------
  */
-package org.knime.r;
+package org.knime.r.controller;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,8 +53,10 @@ import java.util.concurrent.TimeUnit;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
-import org.knime.r.RConsoleController.ExecutionMonitorFactory;
+import org.knime.r.controller.IRController.RException;
+import org.knime.r.controller.RConsoleController.ExecutionMonitorFactory;
 import org.rosuda.REngine.REXP;
+import org.rosuda.REngine.REXPMismatchException;
 
 /**
  * A {@link LinkedBlockingQueue} which contains {@link RCommand} and as means of
@@ -73,6 +75,20 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	private RCommandConsumer m_thread = null;
 
 	private final RController m_controller;
+
+	public final static String CAPTURE_OUTPUT_PREFIX;
+	public final static String CAPTURE_OUTPUT_POSTFIX;
+	public final static String CAPTURE_OUTPUT_CLEANUP;
+
+	static {
+		CAPTURE_OUTPUT_PREFIX = "knime.stdout.con<-textConnection('knime.stdout','w');knime.stderr.con<-textConnection('knime.stderr','w');sink(knime.stdout.con);sink(knime.stderr.con,type='message')\n";
+		CAPTURE_OUTPUT_POSTFIX = "sink();sink(type='message')\n" + //
+				"close(knime.stdout.con);close(knime.stderr.con)\n" + //
+				"knime.output.ret<-c(paste(knime.stdout,collapse='\\n'), paste(knime.stderr,collapse='\\n'))\n" + //
+				"rm(knime.stdout.con,knime.stderr.con,knime.stdout,knime.stderr)\n" + //
+				"knime.output.ret";
+		CAPTURE_OUTPUT_CLEANUP = "rm(knime.output.ret)";
+	}
 
 	/**
 	 * Constructor
@@ -116,18 +132,27 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 		/**
 		 * Called before execution of a command is started.
 		 *
-		 * @param rCmds
+		 * @param command
 		 *            the command to be executed
 		 */
-		public void onCommandExecutionStart(RCommand rCmds);
+		public void onCommandExecutionStart(RCommand command);
 
 		/**
-		 * Called after a command has been completed.
+		 * Called after a command has been completed, even if an error occurred
+		 * and {@link #onCommandExecutionError(RException)} was called before.
 		 *
 		 * @param command
 		 *            command which has been completed
 		 */
-		public void onCommandExecutionEnd(RCommand command);
+		public void onCommandExecutionEnd(RCommand command, String stdout, String stderr);
+
+		/**
+		 * Called when an error occurs during execution of a command.
+		 *
+		 * @param e
+		 *            The exception that occurred.
+		 */
+		public void onCommandExecutionError(RException e);
 
 		/**
 		 * Called when a command is cancelled.
@@ -202,19 +227,54 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 					progress.setProgress(0.0, "Executing commands...");
 					for (RCommand rCmd : commands) {
 						m_listeners.stream().forEach((l) -> l.onCommandExecutionStart(rCmd));
-						// catch textual output from command with
-						// paste/capture
-						final String cmd = rCmd.isShowInConsole() ? captureOuput(rCmd.getCommand())
-								// textual output not needed:
-								: rCmd.getCommand();
+						// setup for capturing output
+						if (rCmd.isShowInConsole()) {
+							try {
+								m_controller.monitoredEval(CAPTURE_OUTPUT_PREFIX, progress);
+							} catch (final RException e) {
+								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
+										new RException("Could not capture output of command.", e)));
+							}
+						}
 
 						// execute command
-						final REXP ret = m_controller.monitoredEval(cmd, progress, false);
+						REXP ret = null;
+						try {
+							ret = m_controller.monitoredEval("tryCatch(knime.tmp.ret<-withVisible({" + rCmd.getCommand() + "}),error=function(e) message(conditionMessage(e)));if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)};knime.tmp.ret$value", progress);
+						} catch (final RException e) {
+							m_listeners.stream().forEach((l) -> l.onCommandExecutionError(e));
+						}
+
+						// retrieve output
+						String out = "";
+						String err = "";
+						if (rCmd.isShowInConsole()) {
+							REXP output = null;
+							try {
+								output = m_controller.monitoredEval(CAPTURE_OUTPUT_POSTFIX, progress);
+								if (output != null && output.isString() && output.asStrings().length == 2) {
+									out = output.asStrings()[0];
+									if (!out.isEmpty()) {
+										out += "\n";
+									}
+									err = output.asStrings()[1];
+									if (!err.isEmpty()) {
+										err += "\n";
+									}
+								}
+								m_controller.monitoredEval(CAPTURE_OUTPUT_CLEANUP, progress);
+							} catch (final RException | REXPMismatchException e) {
+								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
+										new RException("Could not capture output of command.", e)));
+							}
+						}
 
 						// complete Future to notify all threads waiting on it
 						rCmd.complete(ret);
 
-						m_listeners.stream().forEach((l) -> l.onCommandExecutionEnd(rCmd));
+						final String stdout = out;
+						final String stderr = err;
+						m_listeners.stream().forEach((l) -> l.onCommandExecutionEnd(rCmd, stdout, stderr));
 						progress.setProgress((float) ++curCommandIndex / numCommands);
 					}
 					progress.setProgress(1.0, "Done!");
@@ -238,22 +298,6 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 
 				m_listeners.stream().forEach((l) -> l.onCommandExecutionCanceled());
 			}
-		}
-
-		/**
-		 * @param command
-		 * @return
-		 */
-		private String captureOuput(final String command) {
-			// Escape '\n' and '"'
-			final StringBuffer escaped = new StringBuffer();
-			for (final byte c : command.getBytes()) {
-				if (c == '\n' || c == '"') {
-					escaped.append('\\');
-				}
-				escaped.append((char) c);
-			}
-			return "paste(capture.output(eval(parse(text = c(\"" + escaped.toString() + "\"))), type = c('output', 'message')),collapse='\\n')";
 		}
 	}
 

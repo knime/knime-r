@@ -42,7 +42,7 @@
  *  when such Node is propagated with or for interoperation with KNIME.
  * ------------------------------------------------------------------------
  */
-package org.knime.r;
+package org.knime.r.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,8 +58,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-
-import javax.swing.event.EventListenerList;
 
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
@@ -81,6 +79,7 @@ import org.knime.core.data.def.IntCell;
 import org.knime.core.data.def.StringCell;
 import org.knime.core.node.BufferedDataContainer;
 import org.knime.core.node.BufferedDataTable;
+import org.knime.core.node.BufferedDataTable.KnowsRowCountTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
@@ -89,9 +88,8 @@ import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.ThreadUtils;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
-import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
-import org.knime.r.REvent.RListener;
 import org.knime.r.rserve.RConnectionFactory;
+import org.knime.r.rserve.RConnectionFactory.RConnectionResource;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
 import org.rosuda.REngine.REXPFactor;
@@ -100,7 +98,6 @@ import org.rosuda.REngine.REXPInteger;
 import org.rosuda.REngine.REXPList;
 import org.rosuda.REngine.REXPLogical;
 import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.REXPNull;
 import org.rosuda.REngine.REXPString;
 import org.rosuda.REngine.REXPVector;
 import org.rosuda.REngine.REngineException;
@@ -121,51 +118,118 @@ import com.sun.jna.Platform;
  * @author Heiko Hofer
  * @author Jonathan Hale
  */
-public class RController implements AutoCloseable {
+public class RController implements IRController {
 
-	private final NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
+	private final NodeLogger LOGGER = NodeLogger.getLogger(getClass());
 
 	private static final String TEMP_VARIABLE_NAME = "knimertemp836481";
+	public static final String R_LOADED_LIBRARIES_VARIABLE = "knime.loaded.libraries";
 
-	private final RCommandQueue m_commandQueue;
-	private final RConsoleController m_consoleController;
-	private RConnection m_engine;
-
-	private final EventListenerList listenerList = new EventListenerList();
-
-	private boolean m_isRAvailable;
-
-	private List<String> m_warnings;
-
-	private List<String> m_errors;
+	private RConnectionResource m_connection;
 
 	private Properties m_rProps;
 
-	private String m_rMemoryLimit;
+	private boolean m_initialized = false;
+	private boolean m_useNodeContext = false;
 
-	private String m_rHome;
-
-	private boolean m_wasRAvailable;
-
-	static final String R_LOADED_LIBRARIES_VARIABLE = "knime.loaded.libraries";
-
-	private boolean rHomeChanged() {
-		final String rHome = RPreferenceInitializer.getRProvider().getRHome();
-		return !m_rHome.equals(rHome);
+	/**
+	 * Constructor. Calls {@link #initialize()}. To avoid initialization, use
+	 * {@link #RController(boolean)}.
+	 *
+	 * @throws RException
+	 */
+	public RController() throws RException {
+		this(false);
+		initialize();
 	}
 
 	/**
 	 * Constructor
+	 *
+	 * @param useNodeContext
+	 *            Whether to use the NodeContext for threads
+	 * @throws RException
 	 */
-	public RController() {
-		m_consoleController = new RConsoleController(this);
-		m_wasRAvailable = false;
-		m_isRAvailable = false;
+	public RController(final boolean useNodeContext) {
+		setUseNodeContext(useNodeContext);
+	}
 
-		m_commandQueue = new RCommandQueue(this);
-		m_commandQueue.addRCommandExecutionListener(m_consoleController);
+	// --- NodeContext handling ---
 
+	@Override
+	public void setUseNodeContext(final boolean useNodeContext) {
+		m_useNodeContext = useNodeContext;
+	}
+
+	@Override
+	public boolean isUsingNodeContext() {
+		return m_useNodeContext;
+	}
+
+	// --- Initialization & RConnection lifecycle ---
+
+	@Override
+	public void initialize() throws RException {
 		initR();
+	}
+
+	/**
+	 * Check if the RController is initialized and throws
+	 * {@link RControllerNotInitializedException} if not.
+	 */
+	private final void checkInitialized() {
+		if (!m_initialized) {
+			throw new RControllerNotInitializedException();
+		}
+	}
+
+	@Override
+	public void close() {
+		if (m_connection != null) {
+			m_connection.release();
+		}
+
+		m_initialized = false;
+	}
+
+	/**
+	 * Terminate and relaunch the R process this controller is connected to.
+	 * This is currently the only way to interrupt command execution.
+	 *
+	 * @throws Exception
+	 */
+	public void terminateAndRelaunch() throws Exception {
+		LOGGER.debug("Terminating R process");
+
+		if (m_connection != null) {
+			m_connection.destroy();
+		}
+
+		try {
+			m_connection = initRConnection();
+		} catch (Exception e) {
+			throw new Exception("Initializing R with Rserve failed.", e);
+		}
+	}
+
+	/**
+	 * Terminate the R process started for this RController
+	 */
+	public void terminateRProcess() {
+		m_connection.destroy();
+	}
+
+	/**
+	 * Check if the connection is still valid and recover if not.
+	 *
+	 * @throws IOException
+	 */
+	public void checkConnectionAndRecover() throws Exception {
+		if (m_connection != null && m_connection.get().isConnected() && m_connection.isRInstanceAlive()) {
+			// connection is fine.
+			return;
+		}
+		terminateAndRelaunch();
 	}
 
 	/**
@@ -174,83 +238,45 @@ public class RController implements AutoCloseable {
 	 * @return the new RConnection
 	 * @throws Exception
 	 */
-	private RConnection initRConnection() throws Exception {
-		final RConnection connection = RConnectionFactory.createConnection();
-		if (!connection.isConnected()) {
+	private RConnectionResource initRConnection() throws Exception {
+		final RConnectionResource resource = RConnectionFactory.createConnection();
+		if (!resource.get().isConnected()) {
 			throw new Exception("Could not connect to RServe.");
 		}
-		return connection;
+		return resource;
 	}
 
 	/**
 	 * Initialize the underlying REngine with a backend.
+	 *
+	 * @throws RException
 	 */
-	private void initR() {
+	private void initR() throws RException {
 		try {
-			m_errors = new ArrayList<String>();
-			m_warnings = new ArrayList<String>();
-			if (m_wasRAvailable) {
-				// FIXME: Causes KNIME To crash, workaround is now to require a
-				// restart.
-				// m_engine.close();
-				// m_consoleController.stop();
-				m_isRAvailable = false;
-				m_errors.add("You must restart KNIME in order for the changes in R to take effect.");
-				return;
-			}
-
 			final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
 			RBinUtil.checkRHome(rHome);
 
-			m_rHome = rHome;
 			m_rProps = RBinUtil.retrieveRProperties();
 
 			if (!m_rProps.containsKey("major")) {
-				m_errors.add(
+				throw new RException(
 						"Cannot determine major version of R. Please check the R installation defined in the KNIME preferences.");
-				m_isRAvailable = false;
-				return;
 			}
 
-			m_rMemoryLimit = m_rProps.get("memory.limit").toString().trim();
-
-			m_engine = initRConnection();
-
-			// attach a thread to the console controller to get notify when
-			// commands are executed via the console
-			new Thread() {
-				@Override
-				public void run() {
-					while (true) {
-						// wait for r workspace change or at most given time
-						try {
-							m_consoleController.waitForWorkspaceChange();
-						} catch (final InterruptedException e) {
-							/* nothing to do */
-						}
-						// notify listeners
-						fireWorkspaceChange();
-					}
-				}
-			}.start();
+			m_connection = initRConnection();
 		} catch (final InvalidRHomeException ex) {
-			m_errors.add(ex.getMessage());
-			m_isRAvailable = false;
-			return;
+			throw new RException("R Home is invalid.", ex);
 		} catch (final Exception e) {
-			m_errors.add(e.getMessage());
-			m_isRAvailable = false;
-			return;
+			throw new RException("Exception occured during R initialization.", e);
 		}
 
-		// everything is ok.
-		m_isRAvailable = true;
-		m_wasRAvailable = true;
+		m_initialized = (m_connection != null && m_connection.get().isConnected());
 
 		if (Platform.isWindows()) {
 			try {
+				final String rMemoryLimit = m_rProps.get("memory.limit").toString().trim();
 				// set memory to the one of the used R
-				eval("memory.limit(" + m_rMemoryLimit + ");");
+				eval("memory.limit(" + rMemoryLimit + ");");
 			} catch (Exception e) {
 				LOGGER.error("R initialisation failed. " + e.getMessage());
 				throw new RuntimeException(e);
@@ -258,191 +284,67 @@ public class RController implements AutoCloseable {
 		}
 	}
 
-	/**
-	 * @return {@link ValueReport} containing <code>true</code> when R is
-	 *         available and correctly initialized.
-	 */
-	public ValueReport<Boolean> isRAvailable() {
-		return new ValueReport<Boolean>(m_isRAvailable, m_errors, m_warnings);
-	}
+	// --- Simple Getters ---
 
-	/**
-	 * @return The underlying REngine (usually an {@link RConnection})
-	 */
+	@Override
 	public RConnection getREngine() {
-		return m_engine;
+		checkInitialized();
+
+		return m_connection.get();
 	}
 
-	/**
-	 * This is the controller scope command queue. If the evaluation thread is
-	 * running, the commands in the queue will be continuously executed.
-	 *
-	 * @return
-	 */
-	public RCommandQueue getCommandQueue() {
-		return m_commandQueue;
+	@Override
+	public boolean isInitialized() {
+		return m_initialized;
 	}
 
-	/**
-	 * @return a console controller for this RController
-	 */
-	public RConsoleController getConsoleController() {
-		return m_consoleController;
-	}
+	// --- R evaluation ---
 
-	/**
-	 * Add a listener which is notified of workspace changes.
-	 *
-	 * @param l
-	 *            the listener
-	 */
-	public void addRListener(final RListener l) {
-		listenerList.add(RListener.class, l);
-	}
-
-	/**
-	 * Remove a listener.
-	 *
-	 * @param l
-	 *            the listener
-	 * @see #addRListener(RListener)
-	 */
-	public void removeRListener(final RListener l) {
-		listenerList.remove(RListener.class, l);
-	}
-
-	/**
-	 * Inform {@link RListener}s of a workspace change.
-	 */
-	protected void fireWorkspaceChange() {
-		final REvent e = new REvent();
-		for (final RListener l : listenerList.getListeners(RListener.class)) {
-			l.workspaceChanged(e);
-		}
-	}
-
-	/**
-	 * Evaluate R code.
-	 *
-	 * @param cmd
-	 *            the R code
-	 * @return
-	 * @throws REngineException
-	 * @throws REXPMismatchException
-	 */
-	public REXP eval(final String cmd) throws REngineException {
-		if (getREngine() == null || !getREngine().isConnected()) {
-			throw new REngineException(null, "Not connected to Rserve.");
-		}
-		final REXP x = getREngine().parseAndEval(cmd, null, true);
-		return x;
-	}
-
-	/**
-	 * Evaluate R code which is expected to take a while.
-	 *
-	 * @param cmd
-	 * @param exec
-	 * @return
-	 * @throws CanceledExecutionException
-	 */
-	public REXP monitoredEval(final String cmd, final ExecutionMonitor exec) throws CanceledExecutionException {
-		return monitoredEval(cmd, exec, true);
-	}
-
-	/**
-	 * Evaluate R code in a separate thread to be able to cancel it.
-	 *
-	 * @param cmd
-	 * @param exec
-	 *            only used for checking if execution is cancelled.
-	 * @param withContext
-	 *            Whether the NodeContext is required.
-	 * @return
-	 * @throws CanceledExecutionException
-	 */
-	public REXP monitoredEval(final String cmd, final ExecutionMonitor exec, final boolean withContext)
-			throws CanceledExecutionException {
+	@Override
+	public REXP eval(final String expr) throws RException {
 		try {
-			return new MonitoredEval(exec, withContext).run(cmd);
-		} catch (Exception e) {
-			LOGGER.error("Error during R code evaluation: " + e.getMessage());
-			return new REXPNull();
+			REXP x = getREngine().parseAndEval(expr, null, true);
+			return x;
+		} catch (REngineException e) {
+			throw new RException(RException.MSG_EVAL_FAILED, e);
 		}
 	}
 
-	/**
-	 * Assign an R variable in a separate thread to be able to cancel it.
-	 *
-	 * @param symbol
-	 * @param value
-	 * @param exec
-	 * @throws CanceledExecutionException
-	 */
+	@Override
+	public REXP monitoredEval(final String expr, final ExecutionMonitor exec)
+			throws RException, CanceledExecutionException {
+		checkInitialized();
+		try {
+			return new MonitoredEval(exec).run(expr);
+		} catch (Exception e) {
+			throw new RException(RException.MSG_EVAL_FAILED, e);
+		}
+	}
+
+	@Override
+	public void assign(final String expr) throws RException {
+		checkInitialized();
+		try {
+			getREngine().parseAndEval(expr, null, true);
+		} catch (REngineException e) {
+			throw new RException(RException.MSG_EVAL_FAILED, e);
+		}
+	}
+
+	@Override
 	public void monitoredAssign(final String symbol, final REXP value, final ExecutionMonitor exec)
-			throws CanceledExecutionException {
+			throws RException, CanceledExecutionException {
+		checkInitialized();
 		try {
-			new MonitoredEval(exec, false).assign(symbol, value);
+			new MonitoredEval(exec).assign(symbol, value);
 		} catch (Exception e) {
-			LOGGER.error("Error during assignment of R variable: " + e.getMessage());
+			throw new RException(RException.MSG_EVAL_FAILED, e);
 		}
 	}
 
-	/**
-	 * Clear the R workspace (remove all variables and imported packages).
-	 *
-	 * @param exec
-	 * @throws CanceledExecutionException
-	 */
-	public void clearWorkspace(final ExecutionMonitor exec) throws CanceledExecutionException {
-		exec.setProgress(0.0, "Clearing previous workspace");
-		final StringBuilder b = new StringBuilder();
-		b.append("unloader <- function() {\n");
-		b.append("  defaults = getOption(\"defaultPackages\")\n");
-		b.append("  installed = (.packages())\n");
-		b.append("  for (pkg in installed){\n");
-		b.append("      if (!(as.character(pkg) %in% defaults)) {\n");
-		b.append("          if(!(pkg == \"base\")){\n");
-		b.append("              package_name = paste(\"package:\", as.character(pkg), sep=\"\")\n");
-		b.append("              detach(package_name, character.only = TRUE)\n");
-		b.append("          }\n");
-		b.append("      }\n");
-		b.append("  }\n");
-		b.append("}\n");
-		b.append("unloader();\n");
-		b.append("rm(list = ls());"); // also includes the unloader function
-		monitoredEval(b.toString(), exec);
-		exec.setProgress(1.0, "Clearing previous workspace");
-	}
-
-	/**
-	 * @param tempWorkspaceFile
-	 *            the workspace file
-	 * @param exec
-	 *            execution monitor to report progress on
-	 * @return
-	 * @throws CanceledExecutionException
-	 */
-	List<String> clearAndReadWorkspace(final File workspaceFile, final ExecutionMonitor exec)
-			throws CanceledExecutionException {
-		exec.setProgress(0.0, "Clearing previous workspace");
-		clearWorkspace(exec.createSubProgress(0.3));
-		exec.setMessage("Loading workspace");
-		monitoredEval("load(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");",
-				exec.createSubProgress(0.7));
-		return importListOfLibrariesAndDelete();
-	}
-
-	/**
-	 * Write R variables into a R variable in the current workspace
-	 *
-	 * @param inFlowVariables
-	 * @param name
-	 * @param exec
-	 * @throws CanceledExecutionException
-	 */
+	@Override
 	public void exportFlowVariables(final Collection<FlowVariable> inFlowVariables, final String name,
-			final ExecutionMonitor exec) throws CanceledExecutionException {
+			final ExecutionMonitor exec) throws RException, CanceledExecutionException {
 		final REXP[] content = new REXP[inFlowVariables.size()];
 		final String[] names = new String[inFlowVariables.size()];
 		int i = 0;
@@ -463,18 +365,12 @@ public class RController implements AutoCloseable {
 		setVariableName(name, exec);
 	}
 
-	/**
-	 * Get flow variables from a variable in the underlying REngine
-	 *
-	 * @param variableName
-	 *            Name of the variable to get as flow varaibles, or an R
-	 *            expression.
-	 * @return
-	 */
-	public Collection<FlowVariable> importFlowVariables(final String variableName) {
+	@Override
+	public Collection<FlowVariable> importFlowVariables(final String variableName) throws RException {
+		checkInitialized();
 		final List<FlowVariable> flowVars = new ArrayList<FlowVariable>();
 		try {
-			final REXP value = m_engine.get(variableName, null, true);
+			final REXP value = getREngine().get(variableName, null, true);
 
 			if (value == null) {
 				// A variable with this name does not exist
@@ -493,76 +389,11 @@ public class RController implements AutoCloseable {
 				}
 			}
 		} catch (REXPMismatchException e) {
-			LOGGER.error("REXPMismatchException: " + e.getMessage() + " while parsing \"" + variableName + "\"");
+			throw new RException("Error parsing \"" + variableName + "\"", e);
 		} catch (REngineException e) {
 			// the variable name was not found.s
 		}
 		return flowVars;
-	}
-
-	/**
-	 * Get List of libraries imported in the current session and then delete
-	 * those imports.
-	 *
-	 * @return The list of deleted imports
-	 */
-	public List<String> importListOfLibrariesAndDelete() {
-		try {
-			final REXP listAsREXP = eval(R_LOADED_LIBRARIES_VARIABLE);
-			eval("rm(" + R_LOADED_LIBRARIES_VARIABLE + ")");
-			if (!listAsREXP.isVector()) {
-				return Collections.emptyList();
-			} else {
-				return Arrays.asList(listAsREXP.asStrings());
-			}
-		} catch (REXPMismatchException | REngineException e) {
-			LOGGER.error("Rengine error" + e.getMessage());
-		}
-		return Collections.emptyList();
-	}
-
-	/**
-	 * Export a {@link BufferedDataTable} into a R workspace file.
-	 *
-	 * @param table
-	 *            Table to export
-	 * @param name
-	 *            Name of the variable to store the data table into.
-	 * @param exec
-	 *            Execution monitor to track progress
-	 * @throws CanceledExecutionException
-	 */
-	public void exportDataTable(final BufferedDataTable table, final String name, final ExecutionMonitor exec)
-			throws CanceledExecutionException {
-
-		final long size = table.size();
-		final int rowCount = (int) Math.min(size, Integer.MAX_VALUE);
-		if (size != rowCount) {
-			LOGGER.warn("There are more than " + Integer.MAX_VALUE + " rows in the table. The table will be cut off.");
-		}
-
-		final String[] rowNames = new String[rowCount];
-
-		final Collection<Object> columns = initializeAndFillColumns(table, rowNames, exec.createSubProgress(0.7));
-		final RList content = createRListFromBufferedDataTable(table, columns, exec.createSubProgress(0.9));
-
-		if (content.size() > 0) {
-			final REXPString rexpRowNames = new REXPString(rowNames);
-			try {
-				monitoredAssign(TEMP_VARIABLE_NAME, createDataFrame(content, rexpRowNames, exec), exec);
-				setVariableName(name, exec);
-			} catch (final REXPMismatchException e) {
-				LOGGER.error("Cannot create data frame with data from KNIME.", e);
-			}
-		} else {
-			try {
-				// create a new empty data.frame
-				eval("knime.in <- data.frame()");
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-		exec.setProgress(1.0);
 	}
 
 	/**
@@ -582,7 +413,7 @@ public class RController implements AutoCloseable {
 		final DataTableSpec spec = table.getDataTableSpec();
 
 		final int numColumns = spec.getNumColumns();
-		final int rowCount = table.getRowCount();
+		final int rowCount = KnowsRowCountTable.checkRowCount(table.size());
 
 		final ArrayList<Object> columns = new ArrayList<>(numColumns);
 		for (final DataColumnSpec columnSpec : spec) {
@@ -842,15 +673,16 @@ public class RController implements AutoCloseable {
 	 * @param rownames
 	 * @param exec
 	 * @return
-	 * @throws REXPMismatchException
+	 * @throws RException
 	 */
-	public static REXP createDataFrame(final RList l, final REXP rownames, final ExecutionMonitor exec)
-			throws REXPMismatchException {
+	private static REXP createDataFrame(final RList l, final REXP rownames, final ExecutionMonitor exec)
+			throws RException {
 		if (l == null || l.size() <= 0) {
-			throw new REXPMismatchException(new REXPList(l), "data frame (must have dim>0)");
+			throw new RException("", new REXPMismatchException(new REXPList(l), "data frame (must have dim>0)"));
 		}
 		if (!(l.at(0) instanceof REXPVector)) {
-			throw new REXPMismatchException(new REXPList(l), "data frame (contents must be vectors)");
+			throw new RException("",
+					new REXPMismatchException(new REXPList(l), "data frame (contents must be vectors)"));
 		}
 		return new REXPGenericVector(l,
 				new REXPList(new RList(new REXP[] { new REXPString("data.frame"), new REXPString(l.keys()), rownames },
@@ -867,28 +699,14 @@ public class RController implements AutoCloseable {
 	 *            Execution monitor
 	 * @throws CanceledExecutionException
 	 */
-	private void setVariableName(final String name, final ExecutionMonitor exec) throws CanceledExecutionException {
+	private void setVariableName(final String name, final ExecutionMonitor exec)
+			throws RException, CanceledExecutionException {
 		monitoredEval(name + " <- " + TEMP_VARIABLE_NAME + "; rm(" + TEMP_VARIABLE_NAME + ")", exec);
 	}
 
-	/**
-	 * Import a BufferedDataTable from the R expression <code>string</code>.
-	 *
-	 * @param string
-	 *            R expression (variable for e.g.) to retrieve a data.frame
-	 *            which is then converted into a BufferedDataTable.
-	 * @param nonNumbersAsMissing
-	 *            Convert NaN and Infinity to {@link MissingCell}.
-	 * @param exec
-	 *            Execution context for creating the table and monitoring
-	 *            execution.
-	 * @return The created BufferedDataTable.
-	 * @throws REngineException
-	 * @throws REXPMismatchException
-	 * @throws CanceledExecutionException
-	 */
+	@Override
 	public BufferedDataTable importBufferedDataTable(final String string, final boolean nonNumbersAsMissing,
-			final ExecutionContext exec) throws REngineException, REXPMismatchException, CanceledExecutionException {
+			final ExecutionContext exec) throws RException, CanceledExecutionException {
 		final REXP typeRexp = eval("class(" + string + ")");
 		if (typeRexp.isNull()) {
 			// a variable with this name does not exist
@@ -897,85 +715,98 @@ public class RController implements AutoCloseable {
 			return cont.getTable();
 		}
 
-		final String type = typeRexp.asString();
-		if (!type.equals("data.frame")) {
-			throw new RuntimeException("Supporting 'data.frame' as return type, only.");
+		try {
+			final String type = typeRexp.asString();
+			if (!type.equals("data.frame")) {
+				throw new RException(
+						"CODING PROBLEM\timportBufferedDataTable(): Supporting 'data.frame' as return type, only.");
+			}
+		} catch (REXPMismatchException e) {
+			throw new RException("Type of " + string + " could not be parsed as string.", e);
 		}
 
-		final String[] rowIds = eval("attr(" + string + " , \"row.names\")").asStrings();
-		// TODO: Support int[] as row names or int which defines the column of
-		// row names:
-		// http://stat.ethz.ch/R-manual/R-patched/library/base/html/row.names.html
-		final int numRows = rowIds.length;
-		final int ommitColumn = -1;
+		try {
+			final String[] rowIds = eval("attr(" + string + " , \"row.names\")").asStrings();
 
-		final REXP value = m_engine.get(string, null, true);
-		final RList rList = value.asList();
+			// TODO: Support int[] as row names or int which defines the column
+			// of
+			// row names:
+			// http://stat.ethz.ch/R-manual/R-patched/library/base/html/row.names.html
+			final int numRows = rowIds.length;
+			final int ommitColumn = -1;
 
-		final DataTableSpec outSpec = createSpecFromDataFrame(rList);
-		final BufferedDataContainer cont = exec.createDataContainer(outSpec);
+			final REXP value = getREngine().get(string, null, true);
+			final RList rList = value.asList();
 
-		final int numCells = ommitColumn < 0 ? rList.size() : rList.size() - 1;
-		/* now, instead try a row by row approach */
-		final ArrayList<DataCell>[] columns = new ArrayList[numCells];
+			final DataTableSpec outSpec = createSpecFromDataFrame(rList);
+			final BufferedDataContainer cont = exec.createDataContainer(outSpec);
 
-		int cellIndex = 0; // column index without the omitted column
-		for (int columnIndex = 0; columnIndex < numCells; ++columnIndex) {
-			exec.checkCanceled();
-			exec.setProgress(cellIndex / (double) numCells);
+			final int numCells = ommitColumn < 0 ? rList.size() : rList.size() - 1;
 
-			if (columnIndex == ommitColumn) {
-				continue;
-			}
+			final ArrayList<DataCell>[] columns = new ArrayList[numCells];
 
-			final REXP column = rList.at(columnIndex);
-			columns[cellIndex] = new ArrayList<DataCell>(numRows);
+			int cellIndex = 0; // column index without the omitted column
+			for (int columnIndex = 0; columnIndex < numCells; ++columnIndex) {
+				exec.checkCanceled();
+				exec.setProgress(cellIndex / (double) numCells);
 
-			if (column.isNull()) {
-				Collections.fill(columns[columnIndex], DataType.getMissingCell());
-			} else {
-				if (column.isList()) {
-					final ArrayList<DataCell> list = columns[columnIndex];
-					for (final Object o : column.asList()) {
-						final REXP rexp = (REXP) o;
-						if (rexp.isNull()) {
-							list.add(DataType.getMissingCell());
-						} else {
-							if (rexp.isVector()) {
-								final REXPVector colValue = (REXPVector) rexp;
-								final ArrayList<DataCell> listCells = new ArrayList<>(colValue.length());
-								importCells(colValue, listCells, nonNumbersAsMissing);
-								list.add(CollectionCellFactory.createListCell(listCells));
-							} else {
-								LOGGER.warn("Expected Vector type for list cell. Inserting missing cell instead.");
+				if (columnIndex == ommitColumn) {
+					continue;
+				}
+
+				final REXP column = rList.at(columnIndex);
+				columns[cellIndex] = new ArrayList<DataCell>(numRows);
+
+				if (column.isNull()) {
+					Collections.fill(columns[columnIndex], DataType.getMissingCell());
+				} else {
+					if (column.isList()) {
+						final ArrayList<DataCell> list = columns[columnIndex];
+						for (final Object o : column.asList()) {
+							final REXP rexp = (REXP) o;
+							if (rexp.isNull()) {
 								list.add(DataType.getMissingCell());
+							} else {
+								if (rexp.isVector()) {
+									final REXPVector colValue = (REXPVector) rexp;
+									final ArrayList<DataCell> listCells = new ArrayList<>(colValue.length());
+									importCells(colValue, listCells, nonNumbersAsMissing);
+									list.add(CollectionCellFactory.createListCell(listCells));
+								} else {
+									LOGGER.warn("Expected Vector type for list cell. Inserting missing cell instead.");
+									list.add(DataType.getMissingCell());
+								}
 							}
 						}
+					} else {
+						importCells(column, columns[columnIndex], nonNumbersAsMissing);
 					}
-				} else {
-					importCells(column, columns[columnIndex], nonNumbersAsMissing);
 				}
+				++cellIndex;
 			}
-			++cellIndex;
-		}
 
-		final Iterator<DataCell>[] itors = new Iterator[numCells];
-		for (int i = 0; i < numCells; ++i) {
-			itors[i] = columns[i].iterator();
-		}
-
-		final DataCell[] curRow = new DataCell[numCells];
-		for (final String rowId : rowIds) {
-			int i = 0;
-			for (final Iterator<DataCell> itor : itors) {
-				curRow[i++] = itor.next();
+			final Iterator<DataCell>[] itors = new Iterator[numCells];
+			for (int i = 0; i < numCells; ++i) {
+				itors[i] = columns[i].iterator();
 			}
-			cont.addRowToTable(new DefaultRow(rowId, curRow));
+
+			final DataCell[] curRow = new DataCell[numCells];
+			for (final String rowId : rowIds) {
+				int i = 0;
+				for (final Iterator<DataCell> itor : itors) {
+					curRow[i++] = itor.next();
+				}
+				cont.addRowToTable(new DefaultRow(rowId, curRow));
+			}
+
+			cont.close();
+
+			return cont.getTable();
+		} catch (final REXPMismatchException e) {
+			throw new RException("Could not parse REXP.", e);
+		} catch (final REngineException e) {
+			throw new RException("Could not get value of " + string + " from workspace.", e);
 		}
-
-		cont.close();
-
-		return cont.getTable();
 
 	}
 
@@ -1072,26 +903,91 @@ public class RController implements AutoCloseable {
 		}
 	}
 
-	/**
-	 * Save the current R session to a workspace file
-	 *
-	 * @param workspaceFile
-	 * @param exec
-	 * @throws CanceledExecutionException
-	 */
-	public void saveWorkspace(final File workspaceFile, final ExecutionMonitor exec) throws CanceledExecutionException {
+	// --- Workspace management ---
+
+	@Override
+	public void clearWorkspace(final ExecutionMonitor exec) throws RException, CanceledExecutionException {
+		exec.setProgress(0.0, "Clearing previous workspace");
+		final StringBuilder b = new StringBuilder();
+		b.append("unloader <- function() {\n");
+		b.append("  defaults = getOption(\"defaultPackages\")\n");
+		b.append("  installed = (.packages())\n");
+		b.append("  for (pkg in installed){\n");
+		b.append("      if (!(as.character(pkg) %in% defaults)) {\n");
+		b.append("          if(!(pkg == \"base\")){\n");
+		b.append("              package_name = paste(\"package:\", as.character(pkg), sep=\"\")\n");
+		b.append("              detach(package_name, character.only = TRUE)\n");
+		b.append("          }\n");
+		b.append("      }\n");
+		b.append("  }\n");
+		b.append("}\n");
+		b.append("unloader();\n");
+		b.append("rm(list = ls());"); // also includes the unloader function
+		monitoredEval(b.toString(), exec);
+		exec.setProgress(1.0, "Clearing previous workspace");
+	}
+
+	@Override
+	public List<String> clearAndReadWorkspace(final File workspaceFile, final ExecutionMonitor exec)
+			throws RException, CanceledExecutionException {
+		exec.setProgress(0.0, "Clearing previous workspace");
+		clearWorkspace(exec.createSubProgress(0.3));
+		exec.setMessage("Loading workspace");
+		monitoredEval("load(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");",
+				exec.createSubProgress(0.7));
+		return importListOfLibrariesAndDelete();
+	}
+
+	@Override
+	public List<String> importListOfLibrariesAndDelete() throws RException {
+		try {
+			final REXP listAsREXP = eval(R_LOADED_LIBRARIES_VARIABLE);
+			eval("rm(" + R_LOADED_LIBRARIES_VARIABLE + ")");
+			if (!listAsREXP.isVector()) {
+				return Collections.emptyList();
+			} else {
+				return Arrays.asList(listAsREXP.asStrings());
+			}
+		} catch (REXPMismatchException e) {
+			LOGGER.error("Rengine error: " + e.getMessage());
+		}
+		return Collections.emptyList();
+	}
+
+	@Override
+	public void monitoredAssign(final String name, final BufferedDataTable table, final ExecutionMonitor exec)
+			throws RException, CanceledExecutionException {
+
+		final int rowCount = KnowsRowCountTable.checkRowCount(table.size());
+		final String[] rowNames = new String[rowCount];
+
+		final Collection<Object> columns = initializeAndFillColumns(table, rowNames, exec.createSubProgress(0.7));
+		final RList content = createRListFromBufferedDataTable(table, columns, exec.createSubProgress(0.9));
+
+		if (content.size() > 0) {
+			final REXPString rexpRowNames = new REXPString(rowNames);
+			monitoredAssign(TEMP_VARIABLE_NAME, createDataFrame(content, rexpRowNames, exec), exec);
+			setVariableName(name, exec);
+		} else {
+			try {
+				// create a new empty data.frame
+				eval("knime.in <- data.frame()");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		exec.setProgress(1.0);
+	}
+
+	@Override
+	public void saveWorkspace(final File workspaceFile, final ExecutionMonitor exec)
+			throws RException, CanceledExecutionException {
 		// save workspace to file
 		monitoredEval("save.image(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec);
 	}
 
-	/**
-	 * Load a list of R libraries: <code>library(libname)</code>.
-	 *
-	 * @param listOfLibraries
-	 * @throws REngineException
-	 * @throws REXPMismatchException
-	 */
-	public void loadLibraries(final List<String> listOfLibraries) throws REngineException, REXPMismatchException {
+	@Override
+	public void loadLibraries(final List<String> listOfLibraries) throws RException {
 		final String cmd = createLoadLibraryFunctionCall(listOfLibraries, true);
 		eval(cmd);
 	}
@@ -1130,6 +1026,8 @@ public class RController implements AutoCloseable {
 		return "sapply(" + packageVector + ", " + functionBuilder.toString() + ")\n";
 	}
 
+	// --- Monitored Evaluation helpers ---
+
 	/**
 	 * Evaluation of R code with a monitor in a separate thread to cancel the
 	 * code execution in case the execution of the node is cancelled.
@@ -1138,11 +1036,9 @@ public class RController implements AutoCloseable {
 
 		private final int m_interval = 200;
 		private final ExecutionMonitor m_exec;
-		private final boolean m_withContext;
 
-		public MonitoredEval(final ExecutionMonitor exec, final boolean withContext) {
+		public MonitoredEval(final ExecutionMonitor exec) {
 			m_exec = exec;
-			m_withContext = withContext;
 		}
 
 		/*
@@ -1151,7 +1047,7 @@ public class RController implements AutoCloseable {
 		 */
 		private REXP monitor(final Callable<REXP> task) {
 			final FutureTask<REXP> runningTask = new FutureTask<>(task);
-			final Thread t = (m_withContext) ? ThreadUtils.threadWithContext(runningTask, "R-Evaluation")
+			final Thread t = (m_useNodeContext) ? ThreadUtils.threadWithContext(runningTask, "R-Evaluation")
 					: new Thread(runningTask, "R-Evaluation");
 			t.start();
 
@@ -1229,7 +1125,7 @@ public class RController implements AutoCloseable {
 		public void assign(final String symbol, final REXP value)
 				throws REngineException, REXPMismatchException, CanceledExecutionException, Exception {
 			final Future<REXP> future = startMonitoredThread(() -> {
-				m_engine.assign(symbol, value);
+				getREngine().assign(symbol, value);
 				return null;
 			});
 
@@ -1252,7 +1148,7 @@ public class RController implements AutoCloseable {
 				return monitor(task);
 			});
 
-			if (m_withContext) {
+			if (m_useNodeContext) {
 				ThreadUtils.threadWithContext(ret, "R-Monitor").start();
 			} else {
 				new Thread(ret, "R-Monitor").start();
@@ -1261,53 +1157,4 @@ public class RController implements AutoCloseable {
 		}
 
 	}
-
-	@Override
-	public void close() {
-		if (m_engine != null) {
-			m_engine.close();
-		}
-	}
-
-	/**
-	 * Terminate and relaunch the R process this controller is connected to.
-	 * This is currently the only way to interrupt command execution.
-	 *
-	 * @throws Exception
-	 */
-	public void terminateAndRelaunch() throws Exception {
-		LOGGER.debug("Terminating R process");
-
-		RConnectionFactory.terminateProcessOf(m_engine);
-		m_engine.close();
-		try {
-			m_engine = initRConnection();
-		} catch (Exception e) {
-			throw new Exception("Initializing R with Rserve failed.", e);
-		}
-	}
-
-	/**
-	 * Terminate the R process started for this RController
-	 */
-	public void terminateRProcess() {
-		RConnectionFactory.terminateProcessOf(m_engine);
-	}
-
-	/**
-	 * Check if the connection is still valid and recover if not.
-	 *
-	 * @throws IOException
-	 */
-	public void checkConnectionAndRecover() throws Exception {
-		if (m_engine != null) {
-			if (m_engine.isConnected() && RConnectionFactory.isProcessesOfConnectionAlive(m_engine)) {
-				// connection is fine.
-				return;
-			}
-			m_engine.close();
-		}
-		terminateAndRelaunch();
-	}
-
 }
