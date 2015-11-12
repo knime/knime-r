@@ -10,10 +10,11 @@ import javax.swing.text.StyledDocument;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.knime.r.RConsoleController;
-import org.knime.r.RController;
+import org.knime.r.controller.IRController.RException;
+import org.knime.r.controller.RCommandQueue;
+import org.knime.r.controller.RConsoleController;
+import org.knime.r.controller.RController;
 import org.knime.r.ui.RConsole;
 
 /**
@@ -26,7 +27,7 @@ public class RConsoleControllerTest {
 	private RController m_controller;
 
 	@Before
-	public void beforeClass() {
+	public void beforeClass() throws RException {
 		m_controller = new RController();
 		assertNotNull(m_controller);
 	}
@@ -37,13 +38,6 @@ public class RConsoleControllerTest {
 		// leaked.
 		m_controller.terminateRProcess();
 		m_controller.close();
-	}
-
-	@Test
-	public void testCreation() {
-		RConsoleController consoleController = m_controller.getConsoleController();
-		assertNotNull(consoleController);
-		assertNotNull(m_controller.getCommandQueue());
 	}
 
 	/**
@@ -65,9 +59,10 @@ public class RConsoleControllerTest {
 	 */
 	@Test
 	public void testConsole() throws BadLocationException, InterruptedException {
+		final RCommandQueue queue = new RCommandQueue(m_controller);
 		final RConsole console = new RConsole();
 
-		final RConsoleController consoleController = m_controller.getConsoleController();
+		final RConsoleController consoleController = new RConsoleController(m_controller, queue);
 		consoleController.attachOutput(console);
 
 		/* test isAttached(...) */

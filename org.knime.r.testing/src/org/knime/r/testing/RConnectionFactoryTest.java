@@ -10,6 +10,7 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.knime.r.rserve.RConnectionFactory;
+import org.knime.r.rserve.RConnectionFactory.RConnectionResource;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.Rserve.RConnection;
@@ -30,8 +31,12 @@ public class RConnectionFactoryTest {
 	 */
 	@Test
 	public void testConnection() throws InterruptedException {
+		RConnectionResource resource = null;
 		try {
-			m_connection = RConnectionFactory.createConnection();
+			resource = RConnectionFactory.createConnection();
+			assertNotNull(resource);
+
+			m_connection = resource.get();
 			// connection was created in before()
 			assertNotNull(m_connection);
 			assertTrue(m_connection.isConnected());
@@ -67,12 +72,9 @@ public class RConnectionFactoryTest {
 		} finally {
 			// Rserve process may not have been terminated in the test, make
 			// sure it is.
-			RConnectionFactory.terminateProcessOf(m_connection);
-
-			if (m_connection != null) {
-				m_connection.close();
+			if (resource != null) {
+				resource.destroy();
 			}
-			m_connection = null;
 		}
 	}
 
@@ -93,8 +95,9 @@ public class RConnectionFactoryTest {
 	 */
 	@Test
 	public void testRserveTermination() throws InterruptedException, RserveException, IOException {
-		m_connection = RConnectionFactory.createConnection();
-		RConnectionFactory.terminateProcessOf(m_connection);
+		final RConnectionResource resource = RConnectionFactory.createConnection();
+		m_connection = resource.get();
+		resource.destroy();
 		Thread.sleep(50); // give the OS some time to react
 
 		final Collection<Process> runningRProcesses = RConnectionFactory.getRunningRProcesses();

@@ -12,10 +12,10 @@ import org.junit.Test;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.DefaultNodeProgressMonitor;
 import org.knime.core.node.ExecutionMonitor;
-import org.knime.r.RController;
+import org.knime.r.controller.IRController.RException;
+import org.knime.r.controller.RController;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.Rserve.RConnection;
 
 /**
@@ -28,7 +28,7 @@ public class RControllerTest {
 	private static RController m_controller;
 
 	@BeforeClass
-	public static void beforeClass() {
+	public static void beforeClass() throws RException {
 		m_controller = new RController();
 		assertNotNull(m_controller);
 	}
@@ -70,7 +70,7 @@ public class RControllerTest {
 			assertEquals("Returned integer had incorrect value.", 10, exp.asInteger());
 		} catch (REXPMismatchException e) {
 			fail("Simple evaluation did not return Integer.");
-		} catch (REngineException e) {
+		} catch (RException e) {
 			fail("Simple expression evaluation failed.");
 		}
 	}
@@ -91,7 +91,7 @@ public class RControllerTest {
 			final ExecutionMonitor exec = new ExecutionMonitor(progress);
 			t = new Thread(() -> {
 				try {
-					m_controller.monitoredEval("Sys.sleep(20)", exec, false);
+					m_controller.monitoredEval("Sys.sleep(20)", exec);
 				} catch (final CanceledExecutionException e) {
 					// this is expeced.
 				} catch (final Throwable thr) {
@@ -126,7 +126,7 @@ public class RControllerTest {
 			t = new Thread(() -> {
 				try {
 					REXP exp;
-					exp = m_controller.monitoredEval("y <- 12; y", exec, false);
+					exp = m_controller.monitoredEval("y <- 12; y", exec);
 
 					assertNotNull(exp);
 					assertEquals("Returned integer had incorrect value.", 12, exp.asInteger());

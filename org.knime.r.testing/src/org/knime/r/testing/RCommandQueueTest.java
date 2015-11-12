@@ -12,10 +12,14 @@ import java.util.concurrent.TimeoutException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.knime.r.RCommandQueue;
-import org.knime.r.RConsoleController;
-import org.knime.r.RController;
+import org.knime.r.controller.IRController.RException;
+import org.knime.r.controller.RCommandQueue;
+import org.knime.r.controller.RConsoleController;
+import org.knime.r.controller.RController;
 import org.knime.r.ui.RConsole;
+import org.rosuda.REngine.REXPMismatchException;
+import org.rosuda.REngine.Rserve.RConnection;
+import org.rosuda.REngine.Rserve.RserveException;
 import org.rosuda.REngine.Rserve.protocol.RTalk;
 
 /**
@@ -26,10 +30,15 @@ import org.rosuda.REngine.Rserve.protocol.RTalk;
 public class RCommandQueueTest {
 
 	private RController m_controller;
+	private RCommandQueue m_commandQueue;
+	private RConsoleController m_consoleController;
 
 	@Before
-	public void before() {
+	public void before() throws RException {
 		m_controller = new RController();
+		m_commandQueue = new RCommandQueue(m_controller);
+		m_consoleController = new RConsoleController(m_controller, m_commandQueue);
+
 		assertNotNull(m_controller);
 	}
 
@@ -47,11 +56,8 @@ public class RCommandQueueTest {
 	 * connects to a Rserve server.
 	 */
 	@Test
-	public void testCreation() {
-		final RConsoleController consoleController = m_controller.getConsoleController();
-		assertNotNull(consoleController);
-		assertNotNull(m_controller.getCommandQueue());
-
+	public void testConnection() {
+		assertNotNull(m_controller.getREngine());
 		assertTrue(m_controller.getREngine().isConnected());
 	}
 
@@ -70,10 +76,10 @@ public class RCommandQueueTest {
 	 */
 	@Test
 	public void consoleExecution() throws InterruptedException, ExecutionException, TimeoutException {
-		final RCommandQueue queue = m_controller.getCommandQueue();
+		final RCommandQueue queue = new RCommandQueue(m_controller);
 
 		final RConsole console = new RConsole();
-		final RConsoleController consoleController = m_controller.getConsoleController();
+		final RConsoleController consoleController = new RConsoleController(m_controller, queue);
 		consoleController.attachOutput(console);
 
 		/* check startReadConsoleThread() */
@@ -85,8 +91,11 @@ public class RCommandQueueTest {
 		}
 
 		/* check that the console read thread survives bad commands */
-		queue.putRScript("<?hello.y!.üa", true).get(1, TimeUnit.SECONDS);
-
+		queue.putRScript("s<?hello.y!.üa", true).get(1, TimeUnit.SECONDS);
+		
+		// wait for console to update
+		Thread.sleep(10);
+		
 		assertTrue("Execution thread did not survive evaluation of garbage.", queue.isExecutionThreadRunning());
 
 		// clear console for next check.
@@ -94,10 +103,10 @@ public class RCommandQueueTest {
 		assertTrue("Clearing the console failed.", console.getText().isEmpty());
 
 		/* check execution of a simple command, and it's output */
-		m_controller.getCommandQueue().putRScript("print(\"Hello World!\")", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript("print(\"Hello World!\")", true).get(1, TimeUnit.SECONDS);
 
 		// wait for console to update
-		Thread.sleep(10);
+		Thread.sleep(40);
 
 		assertEquals("Incorrect output for print(\"Hello World!\")",
 				// use String.format for platform dependent newlines
@@ -106,7 +115,41 @@ public class RCommandQueueTest {
 				console.getText());
 
 		assertTrue("Execution thread did not survive evaluation of valid R code.", queue.isExecutionThreadRunning());
+		
+		// clear console for next check.
+		consoleController.clear();
+		
+		/* make sure values are printed */
+		
+		// clear console for next check.
+		consoleController.clear();
+		
+		queue.putRScript("42", true).get(1, TimeUnit.SECONDS);
+		// wait for console to update
+		Thread.sleep(10);
 
+		assertEquals("Values are not printed correctly.",
+				// use String.format for platform dependent newlines
+				String.format("> 42%n" //
+						+ "[1] 42%n"),
+				console.getText());
+		
+		// clear console for next check.
+		consoleController.clear();
+		
+		/* multi line execution */
+		queue.putRScript("print(\"Hello World!\")\nprint(\"Hello World, again!\")", true).get(1, TimeUnit.SECONDS);
+		// wait for console to update
+		Thread.sleep(10);
+
+		assertEquals("Incorrect output for print(\"Hello World!\")",
+				// use String.format for platform dependent newlines
+				String.format("> print(\"Hello World!\")%n" //
+						+ "+ print(\"Hello World, again!\")%n" //
+						+ "[1] \"Hello World!\"%n" //
+						+ "[1] \"Hello World, again!\"%n"),
+				console.getText());
+				
 		queue.stopExecutionThread();
 	}
 
@@ -120,10 +163,10 @@ public class RCommandQueueTest {
 	 */
 	@Test
 	public void testConcurrency() throws InterruptedException, ExecutionException, TimeoutException {
-		final RCommandQueue queue = m_controller.getCommandQueue();
+		final RCommandQueue queue = m_commandQueue;
 		final RConsole console = new RConsole();
 
-		final RConsoleController consoleController = m_controller.getConsoleController();
+		final RConsoleController consoleController = m_consoleController;
 		consoleController.attachOutput(console);
 		queue.startExecutionThread();
 
