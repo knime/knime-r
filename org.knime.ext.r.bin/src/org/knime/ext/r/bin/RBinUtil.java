@@ -174,6 +174,7 @@ public class RBinUtil {
                     }
                     LOGGER.debug("External Rscript process output: " + b.toString());
                 } catch (Exception e) {
+                    LOGGER.error("Error reading output of external R process.", e);
                 }
             } , "R Output Reader").start();
             new Thread(() -> {
@@ -185,6 +186,7 @@ public class RBinUtil {
                     }
                     LOGGER.debug("External Rscript process error output: " + b.toString());
                 } catch (Exception e) {
+                    LOGGER.error("Error reading error output of external R process.", e);
                 }
             } , "R Error Reader").start();
 
@@ -199,7 +201,7 @@ public class RBinUtil {
         try {
             props.load(new FileInputStream(propsFile));
         } catch (IOException e) {
-            LOGGER.warn("Could not retrieve properties from R.");
+            LOGGER.warn("Could not retrieve properties from R.", e);
         }
 
         return props;
