@@ -244,14 +244,18 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		final String rScript = buildRScript(inData, tempWorkspaceFile);
 
 		exec.setMessage("Setting up output capturing");
+		// see javadoc of CAPTURE_OUTPUT_PREFIX for more information
 		controller.monitoredEval(RCommandQueue.CAPTURE_OUTPUT_PREFIX, exec);
 
 		exec.setMessage("Executing R script");
 		controller.monitoredEval(rScript, exec);
 
 		exec.setMessage("Collecting captured output");
+		// see javadoc of CAPTURE_OUTPUT_PREFIX for more information
 		REXP output = controller.monitoredEval(RCommandQueue.CAPTURE_OUTPUT_POSTFIX, exec);
 
+		// process the return value of error capturing and update Error and
+		// Output views accordingly
 		if (output != null && output.isString()) {
 			String out = output.asStrings()[0];
 			if (!out.isEmpty()) {
@@ -331,8 +335,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 		// user defined script
 		final String userScript = m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim();
-		rScript.append("tryCatch(knime.tmp.ret<-withVisible({" + userScript + "}),error=function(e) message(conditionMessage(e)))\n");
-		rScript.append("if(!is.null(knime.tmp.ret)){if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}\n");
+		rScript.append(RCommandQueue.makeConsoleLikeCommand(userScript) + "\n");
 
 		// append node specific suffix
 		rScript.append(m_config.getScriptSuffix()).append("\n");

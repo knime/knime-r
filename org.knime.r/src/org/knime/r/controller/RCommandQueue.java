@@ -76,8 +76,53 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 
 	private final RController m_controller;
 
+	/**
+	 * R Code to capture output and error messages of R code.
+	 *
+	 * <pre>
+	 * {@code
+	 * # setup textConnections (which can be compared with Java StringWriters), which
+	 * # we will direct output to. The resulting text will be written into knime.stdout
+	 * # and knime.stderr varaibles.
+	 * knime.stdout.con <- textConnection('knime.stdout', 'w')
+	 * knime.stderr.con <- textConnection('knime.stderr', 'w')
+	 *
+	 * sink(knime.stdout.con) # redirect output
+	 * sink(knime.stderr.con, type='message') # redirect errors
+	 * }
+	 * </pre>
+	 */
 	public final static String CAPTURE_OUTPUT_PREFIX;
+	/**
+	 * R Code to finish up capturing output and error messages of R code after
+	 * execution of the code to capture output from has finished.
+	 *
+	 * <pre>
+	 * {@code
+	 * # return output to normal/stop redirecting output and errors
+	 * sink()
+	 * sink(type='message')
+	 * # close the writers for accessing the result variables
+	 * close(knime.stdout.con)
+	 * close(knime.stderr.con)
+	 * # concatenate the lines with paste(), appending '\n' to every line
+	 * # and combine output and error to a vector, to return the combined
+	 * # value back to java.
+	 * knime.output.ret <- c(
+	 *  paste(knime.stdout, collapse='\\n'),
+	 *  paste(knime.stderr, collapse='\\n')
+	 * )
+	 * # delete variables we don't need anymore.
+	 * rm(knime.stdout.con, knime.stderr.con, knime.stdout, knime.stderr)
+	 * knime.output.ret # the last value in an r script will be returned by Rserve.
+	 * }
+	 * </pre>
+	 */
 	public final static String CAPTURE_OUTPUT_POSTFIX;
+	/**
+	 * Delete the `knime.output.ret` variable, which couldn't be cleaned up in
+	 * {@link #CAPTURE_OUTPUT_POSTFIX}, because we need it as the last value.
+	 */
 	public final static String CAPTURE_OUTPUT_CLEANUP;
 
 	static {
@@ -240,7 +285,8 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 						// execute command
 						REXP ret = null;
 						try {
-							ret = m_controller.monitoredEval("tryCatch(knime.tmp.ret<-withVisible({" + rCmd.getCommand() + "}),error=function(e) message(conditionMessage(e)));if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)};knime.tmp.ret$value", progress);
+							// manage correct printing of command execution and return the produced value.
+							ret = m_controller.monitoredEval(makeConsoleLikeCommand(rCmd.getCommand()) + "\nknime.tmp.ret$value", progress);
 						} catch (final RException e) {
 							m_listeners.stream().forEach((l) -> l.onCommandExecutionError(e));
 						}
@@ -262,7 +308,9 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 										err += "\n";
 									}
 								}
-								m_controller.monitoredEval(CAPTURE_OUTPUT_CLEANUP, progress);
+
+								// cleanup variables which are not needed anymore
+								m_controller.monitoredEval("rm(knime.tmp.ret);" + CAPTURE_OUTPUT_CLEANUP, progress);
 							} catch (final RException | REXPMismatchException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
 										new RException("Could not capture output of command.", e)));
@@ -299,6 +347,44 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 				m_listeners.stream().forEach((l) -> l.onCommandExecutionCanceled());
 			}
 		}
+
+	}
+
+	/**
+	 * Wrap the command in R code which handles correctly printing its return
+	 * value.
+	 *
+	 * <pre>
+	 * {@code
+	 * tryCatch(
+	 * # Some return values are wrapped in an `invisible()` call, which
+	 * # signals that their return value may not be printed by the console.
+	 * # To access the invisible flag which is appended by that function,
+	 * # we need to use `withVisible`.
+	 * 	knime.tmp.ret<-withVisible({ ... }),
+	 *
+	 * # when an error occurs, its condition message will be printed.
+	 * # This avoids an "Error in withVisible({" prefix in our error
+	 * # messages. We prepend our own 'Error:' prefix. A whitespace is
+	 * # inserted in between by paste.
+	 * 	error=function(e) message(paste('Error:',conditionMessage(e)))
+	 * )
+	 * if(!is.null(knime.tmp.ret)) {
+	 * # Here is where we check the visibility flag to make sure we only
+	 * # print to the console if we need to.
+	 * 	if(knime.tmp.ret$visible)
+	 * 		print(knime.tmp.ret$value)
+	 * }
+	 * }
+	 * </pre>
+	 *
+	 * @param command Command to wrap.
+	 * @return
+	 */
+	public static String makeConsoleLikeCommand(final String command) {
+		return "tryCatch(knime.tmp.ret<-withVisible({" + command
+				+ "}),error=function(e) message(paste('Error:',conditionMessage(e))))\n"
+				+ "if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}";
 	}
 
 	/**
