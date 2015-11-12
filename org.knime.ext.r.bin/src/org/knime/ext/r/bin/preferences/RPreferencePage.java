@@ -95,11 +95,11 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
             return;
         }
 
-        RPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
         try {
             RBinUtil.checkRHome(rHome);
 
-            final Properties props = RBinUtil.retrieveRProperties(prefProvider);
+            DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
+            final Properties props = prefProvider.getProperties();
             final String version = (props.getProperty("major") + "." + props.getProperty("minor")).replace(" ", ""); // the version numbers may contain spaces
 
             if ("3.1.0".equals(version)) {

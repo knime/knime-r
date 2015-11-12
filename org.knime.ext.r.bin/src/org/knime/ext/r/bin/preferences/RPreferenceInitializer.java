@@ -145,12 +145,18 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PREF_R_HOME, rHome);
     }
 
+    private static RPreferenceProvider m_cachedPreferenceProvider = null;
+
     /**
      * Returns a provider for the R executable.
      *
      * @return provider to the path to the R executable
      */
     public static final RPreferenceProvider getRProvider() {
-        return new DefaultRPreferenceProvider(Activator.getRHOME().getAbsolutePath());
+        final String rHome = Activator.getRHOME().getAbsolutePath();
+        if (m_cachedPreferenceProvider == null || !m_cachedPreferenceProvider.getRHome().equals(rHome)) {
+            m_cachedPreferenceProvider = new DefaultRPreferenceProvider(rHome);
+        }
+        return m_cachedPreferenceProvider;
     }
 }

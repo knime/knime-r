@@ -64,18 +64,19 @@ import com.sun.jna.Platform;
  */
 public class DefaultRPreferenceProvider implements RPreferenceProvider {
     private final String m_rHome;
-    private final Properties m_properties;
+
+    private Properties m_properties = null;
 
     /**
      * Creates a new preference provider based on the given R home directory.
      *
      * @param rHome R's home directory
+     * @param retrieveProperties Whether to retrieve properties from R
      * @throws InterruptedException
      * @throws IOException
      */
     public DefaultRPreferenceProvider(final String rHome) {
         m_rHome = rHome;
-        m_properties = RBinUtil.retrieveRProperties(this);
     }
 
     @Override
@@ -99,15 +100,33 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 
     @Override
     public String getRServeBinPath() {
+        if (m_properties == null) {
+            m_properties = RBinUtil.retrieveRProperties(this);
+        }
+
         final String rservePath = (String)m_properties.get("Rserve.path") + File.separator + "libs" + File.separator;
         if (Platform.isWindows()) {
             if (Platform.is64Bit()) {
                 return rservePath + "x64" + File.separator + "Rserve.exe";
             } else {
-                return rservePath +  "i386" + File.separator + "Rserve.exe";
+                return rservePath + "i386" + File.separator + "Rserve.exe";
             }
         } else {
             return rservePath + "Rserve.dbg";
         }
+    }
+
+    /**
+     * Get the properties for this provider. Use this method to avoid calling {@link RBinUtil#retrieveRProperties()},
+     * which launches an external R process to retrieve R properties.
+     *
+     * @return The properties for this provider.
+     */
+    public Properties getProperties() {
+        if (m_properties == null) {
+            m_properties = RBinUtil.retrieveRProperties(this);
+        }
+
+        return m_properties;
     }
 }
