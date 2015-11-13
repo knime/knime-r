@@ -383,7 +383,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	 */
 	public static String makeConsoleLikeCommand(final String command) {
 		return "tryCatch(knime.tmp.ret<-withVisible({" + command
-				+ "}),error=function(e) message(paste('Error:',conditionMessage(e))))\n"
+				+ "\n}),error=function(e) message(paste('Error:',conditionMessage(e))))\n"
 				+ "if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}";
 	}
 
