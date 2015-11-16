@@ -78,7 +78,7 @@ public class RControllerTest {
 	/**
 	 * Test {@link RController#monitoredEval(String, ExecutionMonitor)}/
 	 * {@link RController#monitoredEval(String, ExecutionMonitor, boolean)} and
-	 * wether they can be correctly cancelled.
+	 * whether they can be correctly cancelled.
 	 * 
 	 * @throws InterruptedException
 	 */

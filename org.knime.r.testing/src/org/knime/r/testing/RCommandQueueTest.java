@@ -1,6 +1,7 @@
 package org.knime.r.testing;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -17,9 +18,8 @@ import org.knime.r.controller.RCommandQueue;
 import org.knime.r.controller.RConsoleController;
 import org.knime.r.controller.RController;
 import org.knime.r.ui.RConsole;
+import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.Rserve.RConnection;
-import org.rosuda.REngine.Rserve.RserveException;
 import org.rosuda.REngine.Rserve.protocol.RTalk;
 
 /**
@@ -97,24 +97,39 @@ public class RCommandQueueTest {
 		Thread.sleep(10);
 		
 		assertTrue("Execution thread did not survive evaluation of garbage.", queue.isExecutionThreadRunning());
-
+		
 		// clear console for next check.
 		consoleController.clear();
 		assertTrue("Clearing the console failed.", console.getText().isEmpty());
 
-		/* check execution of a simple command, and it's output */
-		queue.putRScript("print(\"Hello World!\")", true).get(1, TimeUnit.SECONDS);
-
+		/* check multiline/valid R code execution, and it's output */
+		queue.putRScript("print(\"Hello World!\")\nprint(\"Hello World, again!\")", true).get(1, TimeUnit.SECONDS);
 		// wait for console to update
-		Thread.sleep(40);
+		Thread.sleep(10);
 
 		assertEquals("Incorrect output for print(\"Hello World!\")",
 				// use String.format for platform dependent newlines
 				String.format("> print(\"Hello World!\")%n" //
-						+ "[1] \"Hello World!\"%n"),
+						+ "+ print(\"Hello World, again!\")%n" //
+						+ "[1] \"Hello World!\"%n" //
+						+ "[1] \"Hello World, again!\"%n"),
 				console.getText());
 
 		assertTrue("Execution thread did not survive evaluation of valid R code.", queue.isExecutionThreadRunning());
+		
+		/* check if any temporary output capturing variables have leaked */
+		try {
+			REXP objects = m_controller.eval("objects()");
+			
+			if (objects != null && objects.isString()) {
+				assertArrayEquals("Temporary objects leaked.", objects.asStrings(), new String[]{});
+			} else {
+				fail("Expected different return value for evaluation of \"objects()\"");
+			}
+		} catch (RException | REXPMismatchException e) {
+			e.printStackTrace();
+			fail("Evaluation of \"objects()\" failed.");
+		}
 		
 		// clear console for next check.
 		consoleController.clear();
@@ -137,19 +152,6 @@ public class RCommandQueueTest {
 		// clear console for next check.
 		consoleController.clear();
 		
-		/* multi line execution */
-		queue.putRScript("print(\"Hello World!\")\nprint(\"Hello World, again!\")", true).get(1, TimeUnit.SECONDS);
-		// wait for console to update
-		Thread.sleep(10);
-
-		assertEquals("Incorrect output for print(\"Hello World!\")",
-				// use String.format for platform dependent newlines
-				String.format("> print(\"Hello World!\")%n" //
-						+ "+ print(\"Hello World, again!\")%n" //
-						+ "[1] \"Hello World!\"%n" //
-						+ "[1] \"Hello World, again!\"%n"),
-				console.getText());
-				
 		queue.stopExecutionThread();
 	}
 
