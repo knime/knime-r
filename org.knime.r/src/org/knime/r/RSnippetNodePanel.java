@@ -204,6 +204,7 @@ public class RSnippetNodePanel extends JPanel {
 			m_controller = new RController(false);
 			m_commandQueue = new RCommandQueue(m_controller);
 			m_consoleController = new RConsoleController(m_controller, m_commandQueue);
+			m_controller.setUseNodeContext(true);
 		} else {
 			m_controller = null;
 			m_consoleController = null;
@@ -739,7 +740,7 @@ public class RSnippetNodePanel extends JPanel {
 			m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
 			m_progressPanel.startMonitoring(m_exec);
 			return m_exec;
-		});
+		}, true);
 
 		// send data to R
 		resetWorkspace();

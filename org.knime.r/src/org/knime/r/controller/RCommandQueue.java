@@ -53,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.workflow.NodeContext;
 import org.knime.r.controller.IRController.RException;
 import org.knime.r.controller.RConsoleController.ExecutionMonitorFactory;
 import org.rosuda.REngine.REXP;
@@ -236,16 +237,23 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	protected class RCommandConsumer extends Thread {
 
 		private ExecutionMonitorFactory m_execMonitorFactory;
+		private final NodeContext m_context;
 
-		public RCommandConsumer(final ExecutionMonitorFactory execMonitorFactory) {
+		public RCommandConsumer(final ExecutionMonitorFactory execMonitorFactory, final boolean withContext) {
 			super("RCommandQueue Executor");
 			m_execMonitorFactory = execMonitorFactory;
+
+			m_context = (withContext) ? NodeContext.getContext() : null;
 		}
 
 		@Override
 		public void run() {
 			ExecutionMonitor progress = null;
 			try {
+				if (m_context != null) {
+					NodeContext.pushContext(m_context);
+				}
+
 				while (!isInterrupted()) {
 					// interrupted flag is checked every 100 milliseconds while
 					// command queue is empty.
@@ -286,8 +294,10 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 						// execute command
 						REXP ret = null;
 						try {
-							// manage correct printing of command execution and return the produced value.
-							ret = m_controller.monitoredEval(makeConsoleLikeCommand(rCmd.getCommand()) + "\nknime.tmp.ret$value", progress);
+							// manage correct printing of command execution and
+							// return the produced value.
+							ret = m_controller.monitoredEval(
+									makeConsoleLikeCommand(rCmd.getCommand()) + "\nknime.tmp.ret$value", progress);
 						} catch (final RException e) {
 							m_listeners.stream().forEach((l) -> l.onCommandExecutionError(e));
 						}
@@ -310,7 +320,8 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 									}
 								}
 
-								// cleanup variables which are not needed anymore
+								// cleanup variables which are not needed
+								// anymore
 								m_controller.monitoredEval("rm(knime.tmp.ret);" + CAPTURE_OUTPUT_CLEANUP, progress);
 							} catch (final RException | REXPMismatchException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
@@ -346,6 +357,10 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 				}
 
 				m_listeners.stream().forEach((l) -> l.onCommandExecutionCanceled());
+			} finally {
+				if (m_context != null) {
+					NodeContext.removeLastContext();
+				}
 			}
 		}
 
@@ -379,7 +394,8 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	 * }
 	 * </pre>
 	 *
-	 * @param command Command to wrap.
+	 * @param command
+	 *            Command to wrap.
 	 * @return
 	 */
 	public static String makeConsoleLikeCommand(final String command) {
@@ -403,7 +419,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	public void startExecutionThread() {
 		startExecutionThread((maxProgress) -> {
 			return new ExecutionMonitor();
-		});
+		} , false);
 	}
 
 	/**
@@ -424,16 +440,17 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	 *            Controller to use for execution of R code
 	 * @param factory
 	 *            Factory creating {@link ExecutionMonitor}s
+	 * @param withNodeContext
 	 * @see #startExecutionThread(RController)
 	 * @see #stopExecutionThread()
 	 * @see #isExecutionThreadRunning()
 	 */
-	public void startExecutionThread(final ExecutionMonitorFactory factory) {
+	public void startExecutionThread(final ExecutionMonitorFactory factory, final boolean withNodeContext) {
 		if (m_thread != null && m_thread.isAlive()) {
 			throw new IllegalStateException("Can only launch one R execution thread on a RCommandQueue.");
 		}
 
-		m_thread = new RCommandConsumer(factory);
+		m_thread = new RCommandConsumer(factory, withNodeContext);
 		m_thread.start();
 	}
 

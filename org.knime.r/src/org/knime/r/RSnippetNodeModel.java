@@ -160,6 +160,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
 
 		final RController controller = new RController();
+		controller.setUseNodeContext(true);
 		try {
 			exec.setMessage("R is busy waiting...");
 			exec.checkCanceled();
@@ -204,6 +205,19 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 				}
 			}
 			exec.setProgress(0.0);
+			exec.setMessage("Loading R input ports");
+
+			// load workspaces from the input ports into the current R session
+			for (final PortObject port : inData) {
+				if (port instanceof RPortObject) {
+					final RPortObject rPortObject = (RPortObject) port;
+					final File portFile = rPortObject.getFile();
+					controller.monitoredEval("load(\"" + portFile.getAbsolutePath().replace('\\', '/') + "\")\n"
+								+ RController.createLoadLibraryFunctionCall(rPortObject.getLibraries(), false),
+							exec);
+				}
+			}
+
 			exec.setMessage("Exporting data to R");
 			// write all input data to the R session
 			exportData(controller, inData, flowVarRepo, exec.createSubExecutionContext(0.6 - importTime));
@@ -244,8 +258,13 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		final String rScript = buildRScript(inData, tempWorkspaceFile);
 
 		exec.setMessage("Setting up output capturing");
+		final StringBuilder prefixScript = new StringBuilder();
 		// see javadoc of CAPTURE_OUTPUT_PREFIX for more information
-		controller.monitoredEval(RCommandQueue.CAPTURE_OUTPUT_PREFIX, exec);
+		prefixScript.append(RCommandQueue.CAPTURE_OUTPUT_PREFIX);
+		// set working directory
+		prefixScript.append("setwd(\"" + tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/') + "\");\n");
+
+		controller.monitoredEval(prefixScript.toString(), exec);
 
 		exec.setMessage("Executing R script");
 		controller.monitoredEval(rScript, exec);
@@ -257,15 +276,23 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		// process the return value of error capturing and update Error and
 		// Output views accordingly
 		if (output != null && output.isString()) {
-			String out = output.asStrings()[0];
+			final String out = output.asStrings()[0];
 			if (!out.isEmpty()) {
 				setExternalOutput(getLinkedListFromOutput(out));
 			}
 
-			String err = output.asStrings()[1];
+			final String err = output.asStrings()[1];
 			if (!err.isEmpty()) {
 				setExternalErrorOutput(getLinkedListFromOutput(err));
 			}
+		}
+
+		// cleanup temporary variables of output capturing and consoleLikeCommand stuff
+		controller.monitoredEval("rm(knime.tmp.ret);" + RCommandQueue.CAPTURE_OUTPUT_CLEANUP, exec);
+
+		if (m_hasROutPorts) {
+			// save workspace to temporary file
+			controller.saveWorkspace(tempWorkspaceFile, exec);
 		}
 	}
 
@@ -313,22 +340,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	 */
 	private String buildRScript(final PortObject[] inPorts, final File tempWorkspaceFile) throws BadLocationException {
 		final StringBuilder rScript = new StringBuilder();
-		// set working directory
-		rScript.append("setwd(\"");
-		rScript.append(tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/'));
-		rScript.append("\");\n");
-
-		// load workspaces from the input ports
-		for (final PortObject port : inPorts) {
-			if (port instanceof RPortObject) {
-				final RPortObject rPortObject = (RPortObject) port;
-				final File portFile = rPortObject.getFile();
-				rScript.append("load(\"");
-				rScript.append(portFile.getAbsolutePath().replace('\\', '/'));
-				rScript.append("\")\n");
-				rScript.append(RController.createLoadLibraryFunctionCall(rPortObject.getLibraries(), false));
-			}
-		}
 
 		// add node specific prefix
 		rScript.append(m_config.getScriptPrefix()).append("\n");
@@ -342,12 +353,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 		// assign list of loaded libraries so that we can read it out later
 		rScript.append(RController.R_LOADED_LIBRARIES_VARIABLE + " <- (.packages());\n");
-
-		if (m_hasROutPorts) {
-			// save workspace to temporary file
-			rScript.append("save.image(\"").append(tempWorkspaceFile.getAbsolutePath().replace('\\', '/'))
-					.append("\");\n");
-		}
 
 		return rScript.toString();
 	}
