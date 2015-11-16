@@ -111,11 +111,10 @@ public class RControllerTest {
 			testEvaluation();
 		} finally {
 			if (t != null && t.isAlive()) {
-				// forcefully stop process to not leak it. Probably not enough,
-				// since other threads may have been opened by this thread.
-				// Only happens on unexpected exceptions, though.
-				t.stop();
+				t.interrupt();
 			}
+			
+			assertFalse(t.isAlive());
 		}
 
 		/* try running a monitored evaluation which terminates */
@@ -144,11 +143,10 @@ public class RControllerTest {
 			assertFalse(t.isAlive());
 		} finally {
 			if (t != null && t.isAlive()) {
-				// forcefully stop process to not leak it. Probably not enough,
-				// since other threads may have been opened by this thread.
-				// Only happens on unexpected exceptions, though.
-				t.stop();
+				t.interrupt();
 			}
+			
+			assertFalse(t.isAlive());
 		}
 	}
 }

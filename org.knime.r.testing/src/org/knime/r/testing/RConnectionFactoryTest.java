@@ -73,7 +73,7 @@ public class RConnectionFactoryTest {
 			// Rserve process may not have been terminated in the test, make
 			// sure it is.
 			if (resource != null) {
-				resource.destroy();
+				resource.destroy(true);
 			}
 		}
 	}
@@ -97,7 +97,7 @@ public class RConnectionFactoryTest {
 	public void testRserveTermination() throws InterruptedException, RserveException, IOException {
 		final RConnectionResource resource = RConnectionFactory.createConnection();
 		m_connection = resource.get();
-		resource.destroy();
+		resource.destroy(true);
 		Thread.sleep(50); // give the OS some time to react
 
 		final Collection<Process> runningRProcesses = RConnectionFactory.getRunningRProcesses();
