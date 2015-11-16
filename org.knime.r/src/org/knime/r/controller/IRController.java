@@ -57,6 +57,7 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.core.node.port.PortObject;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.util.ThreadUtils;
@@ -301,5 +302,17 @@ public interface IRController extends AutoCloseable {
 	 * @throws RException
 	 */
 	void loadLibraries(List<String> listOfLibraries) throws RException;
+
+	/**
+	 * Import RInputPorts and BufferedDataTables into the current R workspace.
+	 *
+	 * @param inData
+	 *            ports to import
+	 * @param exec
+	 *            For monitoring the progess.
+	 * @throws RException
+	 * @throws CanceledExecutionException
+	 */
+	void importDataFromPorts(PortObject[] inData, ExecutionMonitor exec) throws RException, CanceledExecutionException;
 
 }

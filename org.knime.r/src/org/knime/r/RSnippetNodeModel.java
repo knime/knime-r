@@ -48,7 +48,6 @@
 package org.knime.r;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -78,8 +77,6 @@ import org.knime.r.controller.IRController.RException;
 import org.knime.r.controller.RCommandQueue;
 import org.knime.r.controller.RController;
 import org.rosuda.REngine.REXP;
-import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.REngineException;
 
 /**
  * The <code>RSnippetNodeModel</code> provides functionality to create a R
@@ -205,26 +202,12 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 				}
 			}
 			exec.setProgress(0.0);
-			exec.setMessage("Loading R input ports");
 
-			// load workspaces from the input ports into the current R session
-			for (final PortObject port : inData) {
-				if (port instanceof RPortObject) {
-					final RPortObject rPortObject = (RPortObject) port;
-					final File portFile = rPortObject.getFile();
-					controller.monitoredEval("load(\"" + portFile.getAbsolutePath().replace('\\', '/') + "\")\n"
-								+ RController.createLoadLibraryFunctionCall(rPortObject.getLibraries(), false),
-							exec);
-				}
-			}
-
-			exec.setMessage("Exporting data to R");
-			// write all input data to the R session
-			exportData(controller, inData, flowVarRepo, exec.createSubExecutionContext(0.6 - importTime));
+			controller.importDataFromPorts(inData, exec.createSubExecutionContext(importTime));
+			controller.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
 
 			exec.setMessage("Running R");
 			tempWorkspaceFile = FileUtil.createTempFile("R-workspace", ".RData");
-			controller.saveWorkspace(tempWorkspaceFile, exec);
 			runRScript(controller, tempWorkspaceFile, inData, exec.createSubExecutionContext(1.0 - importTime));
 			exec.setProgress(1.0 - importTime);
 
@@ -373,34 +356,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 	private List<String> importListOfLibrariesFromR(final RController controller) throws RException {
 		return controller.importListOfLibrariesAndDelete();
-	}
-
-	/**
-	 * Export the input data into a R workspace
-	 *
-	 * @param inData
-	 * @param flowVarRepo
-	 * @param exec
-	 * @return
-	 * @throws REngineException
-	 * @throws REXPMismatchException
-	 * @throws IOException
-	 * @throws CanceledExecutionException
-	 */
-	private void exportData(final RController controller, final PortObject[] inData,
-			final FlowVariableRepository flowVarRepo, final ExecutionContext exec)
-					throws RException, CanceledExecutionException {
-		controller.clearWorkspace(exec);
-		BufferedDataTable inTable = null;
-		for (final PortObject in : inData) {
-			if (in instanceof BufferedDataTable) {
-				inTable = (BufferedDataTable) in;
-			}
-		}
-		if (inTable != null) {
-			controller.monitoredAssign("knime.in", inTable, exec);
-		}
-		controller.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
 	}
 
 	/**

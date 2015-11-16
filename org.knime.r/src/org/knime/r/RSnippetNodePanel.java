@@ -96,7 +96,6 @@ import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.SwingWorkerWithContext;
-import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.r.controller.IRController.RException;
 import org.knime.r.controller.RCommand;
 import org.knime.r.controller.RCommandQueue;
@@ -381,37 +380,16 @@ public class RSnippetNodePanel extends JPanel {
 						m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
 						m_progressPanel.startMonitoring(m_exec);
 
-						// is there any RPortObject input?
-						RPortObject inputRPortObject = null;
-						if (m_input != null) {
-							for (final PortObject element : m_input) {
-								if (element instanceof RPortObject) {
-									m_exec.setMessage("Load R data from input.");
-									if (inputRPortObject != null) {
-										throw new IllegalStateException("Cannot have more than one R input port");
-									}
-									inputRPortObject = (RPortObject) element;
-								}
-							}
-						}
-
-						if (inputRPortObject != null) {
-							// clear and load the workspace of the R port object
-							m_controller.clearAndReadWorkspace(inputRPortObject.getFile(), m_exec.createSubProgress(0.5));
-							m_controller.loadLibraries(inputRPortObject.getLibraries());
-						} else {
-							// no need to load any R workspace
-							m_controller.clearWorkspace(m_exec.createSubProgress(0.5));
-						}
+						// no need to load any R workspace
+						m_controller.clearWorkspace(m_exec.createSubProgress(0.3));
 
 						if (m_input != null && m_tableInPort >= 0) {
 							m_exec.setMessage("Send input table to R");
-							m_controller.monitoredAssign("knime.in", (BufferedDataTable) m_input[m_tableInPort],
-									m_exec.createSubProgress(0.4));
+							m_controller.importDataFromPorts(m_input, m_exec.createSubProgress(0.6));
 						}
 
 						m_exec.setMessage("Send flow variables to R");
-						m_controller.exportFlowVariables(m_inputFlowVars, "knime.flow.in", m_exec);
+						m_controller.exportFlowVariables(m_inputFlowVars, "knime.flow.in", m_exec.createSubProgress(0.1));
 
 						workspaceChanged();
 

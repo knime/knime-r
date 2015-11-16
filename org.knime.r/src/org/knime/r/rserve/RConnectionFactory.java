@@ -434,7 +434,9 @@ public class RConnectionFactory {
 							}
 						} catch (Throwable t) {
 							// FIXME: There is a known bug where TimerTasks in
-							// KnimeTimer can crash KNIME. We are
+							// KnimeTimer can crash KNIME. We are simply making
+							// 100% sure this will not happen here by catching
+							// everything.
 						}
 					}
 

@@ -84,10 +84,12 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.port.PortObject;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.ThreadUtils;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
+import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.r.rserve.RConnectionFactory;
 import org.knime.r.rserve.RConnectionFactory.RConnectionResource;
 import org.rosuda.REngine.REXP;
@@ -365,6 +367,28 @@ public class RController implements IRController {
 
 		monitoredAssign(TEMP_VARIABLE_NAME, new REXPList(new RList(content, names)), exec);
 		setVariableName(name, exec);
+	}
+
+	@Override
+	public void importDataFromPorts(final PortObject[] inData, final ExecutionMonitor exec) throws RException, CanceledExecutionException {
+		// load workspaces from the input ports into the current R session
+		for (final PortObject port : inData) {
+			if (port instanceof RPortObject) {
+				exec.setMessage("Loading workspace from R input port");
+				final RPortObject rPortObject = (RPortObject) port;
+				final File portFile = rPortObject.getFile();
+				monitoredEval(
+						"load(\"" + portFile.getAbsolutePath().replace('\\', '/') + "\")\n"
+								+ RController.createLoadLibraryFunctionCall(rPortObject.getLibraries(), false),
+						exec.createSubProgress(0.5));
+			} else if (port instanceof BufferedDataTable) {
+				exec.setMessage("Exporting data to R");
+				// write all input data to the R session
+				monitoredAssign("knime.in", (BufferedDataTable)port, exec.createSubProgress(0.5));
+			}
+		}
+
+		exec.setProgress(1.0);
 	}
 
 	@Override
@@ -1161,4 +1185,5 @@ public class RController implements IRController {
 		}
 
 	}
+
 }
