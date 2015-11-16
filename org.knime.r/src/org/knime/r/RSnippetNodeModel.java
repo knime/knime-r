@@ -325,7 +325,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 				final File portFile = rPortObject.getFile();
 				rScript.append("load(\"");
 				rScript.append(portFile.getAbsolutePath().replace('\\', '/'));
-				rScript.append("\");\n");
+				rScript.append("\")\n");
 				rScript.append(RController.createLoadLibraryFunctionCall(rPortObject.getLibraries(), false));
 			}
 		}

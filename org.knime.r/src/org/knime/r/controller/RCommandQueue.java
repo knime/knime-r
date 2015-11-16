@@ -238,6 +238,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 		private ExecutionMonitorFactory m_execMonitorFactory;
 
 		public RCommandConsumer(final ExecutionMonitorFactory execMonitorFactory) {
+			super("RCommandQueue Executor");
 			m_execMonitorFactory = execMonitorFactory;
 		}
 

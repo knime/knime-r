@@ -202,7 +202,7 @@ public class RController implements IRController {
 		LOGGER.debug("Terminating R process");
 
 		if (m_connection != null) {
-			m_connection.destroy();
+			m_connection.destroy(true);
 		}
 
 		try {
@@ -216,7 +216,7 @@ public class RController implements IRController {
 	 * Terminate the R process started for this RController
 	 */
 	public void terminateRProcess() {
-		m_connection.destroy();
+		m_connection.destroy(true);
 	}
 
 	/**
@@ -303,8 +303,10 @@ public class RController implements IRController {
 	@Override
 	public REXP eval(final String expr) throws RException {
 		try {
-			REXP x = getREngine().parseAndEval(expr, null, true);
-			return x;
+			synchronized (getREngine()) {
+				REXP x = getREngine().parseAndEval(expr, null, true);
+				return x;
+			}
 		} catch (REngineException e) {
 			throw new RException(RException.MSG_EVAL_FAILED, e);
 		}
@@ -1125,7 +1127,9 @@ public class RController implements IRController {
 		public void assign(final String symbol, final REXP value)
 				throws REngineException, REXPMismatchException, CanceledExecutionException, Exception {
 			final Future<REXP> future = startMonitoredThread(() -> {
-				getREngine().assign(symbol, value);
+				synchronized (getREngine()) {
+					getREngine().assign(symbol, value);
+				}
 				return null;
 			});
 

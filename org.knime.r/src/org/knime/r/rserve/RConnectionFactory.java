@@ -8,10 +8,13 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Timer;
 import java.util.TimerTask;
 
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchListener;
+import org.eclipse.ui.PlatformUI;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.util.KNIMETimer;
 import org.knime.r.controller.RController;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
@@ -32,11 +35,24 @@ public class RConnectionFactory {
 	private static ArrayList<RConnectionResource> m_resources = new ArrayList<>();
 
 	static {
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			for (final RConnectionResource resource : m_resources) {
-				resource.release();
+		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
+
+			@Override
+			public boolean preShutdown(final IWorkbench workbench, final boolean forced) {
+				synchronized (m_resources) {
+					for (final RConnectionResource resource : m_resources) {
+						resource.destroy(false);
+					}
+				}
+				return true;
 			}
-		}));
+
+			@Override
+			public void postShutdown(final IWorkbench workbench) {
+				/* nothing to do */
+			}
+
+		});
 	}
 
 	/**
@@ -73,7 +89,7 @@ public class RConnectionFactory {
 		try {
 			Process p;
 
-			final String rargs = "--vanilla";
+			final String rargs = "";// "--vanilla";
 			if (Platform.isWindows()) {
 				final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), rargs);
 				builder.environment()
@@ -288,6 +304,7 @@ public class RConnectionFactory {
 
 		private boolean m_available = true;
 		private RInstance m_instance;
+		private TimerTask m_pendingDestructionTask = null;
 
 		private static final int RPROCESS_TIMEOUT = 60000;
 
@@ -315,7 +332,7 @@ public class RConnectionFactory {
 			}
 
 			if (m_available) {
-				m_available = false;
+				doAcquire();
 			} else {
 				throw new IllegalStateException("Resource can not be aquired, it is owned already.");
 			}
@@ -333,10 +350,22 @@ public class RConnectionFactory {
 			}
 
 			if (m_available) {
-				m_available = false;
+				doAcquire();
 				return true;
 			} else {
 				return false;
+			}
+		}
+
+		/*
+		 * Do everything necessary for acquiring this resource.
+		 */
+		private void doAcquire() {
+			m_available = false;
+
+			if (m_pendingDestructionTask != null) {
+				m_pendingDestructionTask.cancel();
+				m_pendingDestructionTask = null;
 			}
 		}
 
@@ -374,37 +403,66 @@ public class RConnectionFactory {
 		}
 
 		/**
-		 * Release ownership of this resource for it to be reaquired.
+		 * Release ownership of this resource for it to be reacquired.
 		 */
 		public synchronized void release() {
 			if (!m_available) {
+				// this should never happen, since either
+				// m_pendingDestructionTask is null, which means this resource
+				// is being held, or the resource is available and has
+				// destruction pending.
+				assert m_pendingDestructionTask == null;
+
 				m_available = true;
 
-				final TimerTask task = new TimerTask() {
+				m_pendingDestructionTask = new TimerTask() {
 					@Override
-					public void run() {
-						if (m_available) {
-							// if not acquired in the meantime, destroy the
-							// resource
-							destroy();
+					public synchronized void run() {
+						try {
+							synchronized (RConnectionResource.this) {
+								if (m_available) {
+									// if not acquired in the meantime, destroy
+									// the resource
+									destroy(true);
+								}
+							}
+						} catch (Throwable t) {
+							// FIXME: There is a known bug where TimerTasks in
+							// KnimeTimer can crash KNIME. We are
 						}
 					}
 
 				};
-				new Timer().schedule(task, RPROCESS_TIMEOUT);
+				KNIMETimer.getInstance().schedule(m_pendingDestructionTask, RPROCESS_TIMEOUT);
 			} // else: release had been called already, but we allow this.
 		}
 
-		public synchronized void destroy() {
-			synchronized (m_resources) {
-				if (m_instance == null) {
-					throw new NullPointerException("The resource has been destroyed already.");
-				}
+		/**
+		 * Destroy the underlying resource.
+		 *
+		 * @param remove
+		 *            Whether to automatically remove this resource from
+		 *            m_resources.
+		 */
+		public synchronized void destroy(final boolean remove) {
+			if (m_instance == null) {
+				throw new NullPointerException("The resource has been destroyed already.");
+			}
 
-				m_available = false;
-				m_instance.close();
-				m_resources.remove(this);
-				m_instance = null;
+			m_available = false;
+			m_instance.close();
+
+			if (remove) {
+				synchronized (m_resources) {
+					m_resources.remove(this);
+				}
+			}
+			m_instance = null;
+
+			// cleanup TimerTask
+			if (m_pendingDestructionTask != null) {
+				m_pendingDestructionTask.cancel();
+				m_pendingDestructionTask = null;
 			}
 		}
 
