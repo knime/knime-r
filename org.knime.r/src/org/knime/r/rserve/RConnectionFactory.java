@@ -118,9 +118,10 @@ public class RConnectionFactory {
 				public void processLine(final String line) {
 					// discard
 				}
+
 			}.start();
 
-			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port: " + port + ")") {
+			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")") {
 
 				@Override
 				public void processLine(final String line) {
@@ -136,7 +137,7 @@ public class RConnectionFactory {
 				try {
 					RConnection connection = rInstance.createConnection();
 					if (connection != null) {
-						LOGGER.debug("Connected to Rserve in " + i + " attempts.");
+						LOGGER.debug("Connected to Rserve in " + i + "attempts.");
 						break;
 					}
 				} catch (RserveException e) {
@@ -154,6 +155,7 @@ public class RConnectionFactory {
 					"Could not start Rserve process. This may be caused by Rserve package not installed or an invalid or broken R Home.",
 					x);
 		}
+
 	}
 
 	/**
@@ -172,30 +174,34 @@ public class RConnectionFactory {
 	 *             either not found or does not have Rserve package installed.
 	 *             Or if there was no open port found.
 	 */
-	public static synchronized RConnectionResource createConnection() throws RserveException, IOException {
-		// try to reuse an existing instance. Ensures there is max one R
-		// instance per parallel executed node.
-		for (RConnectionResource resource : m_resources) {
-			if (resource.acquireIfAvailable()) {
-				return resource;
+	public static RConnectionResource createConnection() throws RserveException, IOException {
+		// synchronizing on the entire class would completely lag out KNIME.
+		synchronized (m_resources) {
+			// try to reuse an existing instance. Ensures there is max one R
+			// instance per parallel executed node.
+			for (RConnectionResource resource : m_resources) {
+				if (resource.acquireIfAvailable()) {
+					return resource;
+				}
 			}
-		}
-		// no existing resource is available. Create a new one.
+			// no existing resource is available. Create a new one.
 
-		// find any available port to run RServe on
-		int port = 6311;
-		try (ServerSocket socket = new ServerSocket(0)) {
-			port = socket.getLocalPort();
-		} catch (IOException e) {
-			throw new IOException("Could not find a free port for Rserve. Is KNIME not permitted to open ports?", e);
+			// find any available port to run RServe on
+			int port = 6311;
+			try (ServerSocket socket = new ServerSocket(0)) {
+				port = socket.getLocalPort();
+			} catch (IOException e) {
+				throw new IOException("Could not find a free port for Rserve. Is KNIME not permitted to open ports?",
+						e);
+			}
+			final RInstance instance = launchRserve(
+					org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRServeBinPath(),
+					"127.0.0.1", port);
+			RConnectionResource resource = new RConnectionResource(instance);
+			resource.acquire();
+			m_resources.add(resource);
+			return resource;
 		}
-		final RInstance instance = launchRserve(
-				org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRServeBinPath(), "127.0.0.1",
-				port);
-		RConnectionResource resource = new RConnectionResource(instance);
-		resource.acquire();
-		m_resources.add(resource);
-		return resource;
 	}
 
 	/**
