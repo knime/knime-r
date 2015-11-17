@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TimerTask;
 
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchListener;
-import org.eclipse.ui.PlatformUI;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.KNIMETimer;
 import org.knime.r.controller.RController;
@@ -35,23 +32,19 @@ public class RConnectionFactory {
 	private static ArrayList<RConnectionResource> m_resources = new ArrayList<>();
 
 	static {
-		PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
+		/*
+		 * Cleanup remaining Rserve processes on VM exit.
+		 */
+		Runtime.getRuntime().addShutdownHook(new Thread("R Processes Cleanup") {
 
 			@Override
-			public boolean preShutdown(final IWorkbench workbench, final boolean forced) {
+			public void run() {
 				synchronized (m_resources) {
 					for (final RConnectionResource resource : m_resources) {
 						resource.destroy(false);
 					}
 				}
-				return true;
 			}
-
-			@Override
-			public void postShutdown(final IWorkbench workbench) {
-				/* nothing to do */
-			}
-
 		});
 	}
 
