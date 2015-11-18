@@ -68,44 +68,50 @@ public class RConnectionFactory {
 	 *             either not found or does not have Rserve package installed.
 	 */
 	private static RInstance launchRserve(final String cmd, final String host, final Integer port) throws IOException {
-		try {
-			Process p;
 
-			final String rargs = "--vanilla";
-			final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), rargs);
-			if (Platform.isWindows()) {
-				builder.environment()
-						.put("path",
-								org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome()
-										+ File.pathSeparator
-										+ org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider()
-												.getRHome()
-										+ ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator
-										+ System.getenv("path"));
+		final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
+
+		try {
+			File commandFile = new File(cmd);
+			if (!commandFile.exists()) {
+				throw new IOException("Command not found: " + cmd);
+			}
+			if (!commandFile.canExecute()) {
+				throw new IOException("Command is not an executable: " + cmd);
 			}
 
-			builder.environment().put("R_HOME",
-					org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome());
+			final String rargs = "--vanilla"; // mandatory under unix, optional
+												// on windows
+			final ProcessBuilder builder = new ProcessBuilder().command(cmd, rargs, "--RS-port", port.toString());
+			if (Platform.isWindows()) {
+				// on windows, the Rserve executable is not reside in the R bin
+				// folder, but still requires the R.dll, so we need to put the R
+				// bin folder on path
+				builder.environment().put("path",
+						rHome + File.pathSeparator + rHome + ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\")
+								+ File.pathSeparator + System.getenv("path"));
+			}
+
+			// R HOME is required for Rserve/R to know where default libraries
+			// are located.
+			builder.environment().put("R_HOME", rHome);
 			builder.directory(new File(cmd).getParentFile());
-			p = builder.start();
 
-			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")") {
+			final Process p = builder.start();
 
-				@Override
-				public void processLine(final String line) {
-					// discard
-				}
+			/*
+			 * Consume output of process, to ensure buffer does not fill up,
+			 * which blocks processes on some OSs. Also, we can log errors in
+			 * the external process this way.
+			 */
+			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
+				/* discard */ LOGGER.debug(line);
+			}).start();
+			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")",
+					(line) -> LOGGER.debug(line)).start();
 
-			}.start();
-
-			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")") {
-
-				@Override
-				public void processLine(final String line) {
-					LOGGER.debug(line);
-				}
-			}.start();
-
+			// wrap the process, requires host and port to create RConnections
+			// later.
 			final RInstance rInstance = new RInstance(p, host, port);
 
 			// try connecting up to 5 times over the course of 500ms. Attempts
@@ -114,23 +120,22 @@ public class RConnectionFactory {
 				try {
 					RConnection connection = rInstance.createConnection();
 					if (connection != null) {
-						LOGGER.debug("Connected to Rserve in " + i + "attempts.");
+						LOGGER.debug("Connected to Rserve in " + i + " attempts.");
 						break;
 					}
 				} catch (RserveException e) {
+					LOGGER.debug("An attempt (" + i + "/5) to connect to Rserve failed.", e);
 					Thread.sleep(100);
 				}
 			}
 
 			if (rInstance.getLastConnection() == null) {
-				throw new IOException("Could not connect to RServe.");
+				throw new IOException("Could not connect to RServe (host: " + host + ", port: " + port + ").");
 			}
 
 			return rInstance;
 		} catch (Exception x) {
-			throw new IOException(
-					"Could not start Rserve process. This may be caused by Rserve package not installed or an invalid or broken R Home.",
-					x);
+			throw new IOException("Could not start Rserve process.", x);
 		}
 
 	}
@@ -152,7 +157,7 @@ public class RConnectionFactory {
 	 *             Or if there was no open port found.
 	 */
 	public static RConnectionResource createConnection() throws RserveException, IOException {
-		initializeResourcesAndShutdownHook(); // checks for re-initialization
+		initializeShutdownHook(); // checks for re-initialization
 
 		// synchronizing on the entire class would completely lag out KNIME for
 		// some reason
@@ -184,7 +189,10 @@ public class RConnectionFactory {
 		}
 	}
 
-	private static void initializeResourcesAndShutdownHook() {
+	/*
+	 * Add the Shutdown hook. Does nothing if already called once.
+	 */
+	private static void initializeShutdownHook() {
 		// if (m_initialized != false) return;
 		// else m_initialized = true;
 		if (m_initialized.compareAndSet(false, true)) {
@@ -192,8 +200,7 @@ public class RConnectionFactory {
 			return;
 		}
 
-		// m_initialized just changed from false to true, we need to
-		// initialized.
+		// m_initialized was false, we need to initialize.
 
 		/*
 		 * Cleanup remaining Rserve processes on VM exit.
@@ -209,6 +216,8 @@ public class RConnectionFactory {
 				}
 			}
 		});
+
+		// m_initialize already set to true in compareAndSet
 	}
 
 	/**
@@ -277,16 +286,41 @@ public class RConnectionFactory {
 
 	}
 
-	private static abstract class StreamReaderThread extends Thread {
-
-		private final InputStream m_stream;
+	/**
+	 * Thread which processes an InputStream line by line via a processing
+	 * function specified by the user.
+	 *
+	 * @author Jonathan Hale
+	 */
+	private static final class StreamReaderThread extends Thread {
 
 		/**
+		 * Interface for functions processing input line by line.
 		 *
+		 * @author Jonathan Hale
 		 */
-		public StreamReaderThread(final InputStream stream, final String name) {
+		@FunctionalInterface
+		interface LineProcessor {
+			void processLine(String s);
+		}
+
+		private final InputStream m_stream;
+		private final LineProcessor m_processor;
+
+		/**
+		 * Constructor
+		 *
+		 * @param stream
+		 *            to read from
+		 * @param name
+		 *            for the Thread
+		 * @param processor
+		 *            to process lines
+		 */
+		public StreamReaderThread(final InputStream stream, final String name, final LineProcessor processor) {
 			super(name);
 			m_stream = stream;
+			m_processor = processor;
 		}
 
 		@Override
@@ -295,14 +329,12 @@ public class RConnectionFactory {
 			try {
 				String line;
 				while ((line = reader.readLine()) != null && !isInterrupted()) {
-					processLine(line);
+					m_processor.processLine(line);
 				}
 			} catch (IOException e) {
 				// nothing to do
 			}
 		}
-
-		public abstract void processLine(final String line);
 	}
 
 	/**
