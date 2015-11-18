@@ -71,9 +71,9 @@ public class RConnectionFactory {
 		try {
 			Process p;
 
-			final String rargs = "";// "--vanilla";
+			final String rargs = "--vanilla";
+			final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), rargs);
 			if (Platform.isWindows()) {
-				final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), rargs);
 				builder.environment()
 						.put("path",
 								org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome()
@@ -82,17 +82,12 @@ public class RConnectionFactory {
 												.getRHome()
 										+ ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator
 										+ System.getenv("path"));
-				builder.environment().put("R_HOME",
-						org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome());
-				builder.directory(new File(cmd).getParentFile());
-				p = builder.start();
-			} else /* unix startup */ {
-				final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), rargs);
-				builder.environment().put("R_HOME",
-						org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome());
-				builder.directory(new File(cmd).getParentFile());
-				p = builder.start();
 			}
+
+			builder.environment().put("R_HOME",
+					org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome());
+			builder.directory(new File(cmd).getParentFile());
+			p = builder.start();
 
 			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")") {
 
