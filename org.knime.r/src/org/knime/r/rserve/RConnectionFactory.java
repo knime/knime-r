@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.KNIMETimer;
@@ -29,24 +30,12 @@ public class RConnectionFactory {
 
 	private final static NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
 
-	private static ArrayList<RConnectionResource> m_resources = new ArrayList<>();
-
-	static {
-		/*
-		 * Cleanup remaining Rserve processes on VM exit.
-		 */
-		Runtime.getRuntime().addShutdownHook(new Thread("R Processes Cleanup") {
-
-			@Override
-			public void run() {
-				synchronized (m_resources) {
-					for (final RConnectionResource resource : m_resources) {
-						resource.destroy(false);
-					}
-				}
-			}
-		});
-	}
+	private static final ArrayList<RConnectionResource> m_resources = new ArrayList<>();
+	/*
+	 * Whether the shutdown hooks have been added. Using atomic boolean enables
+	 * us to make sure we only add the shutdown hooks once.
+	 */
+	private static final AtomicBoolean m_initialized = new AtomicBoolean(false);
 
 	/**
 	 * For testing purposes.
@@ -168,7 +157,10 @@ public class RConnectionFactory {
 	 *             Or if there was no open port found.
 	 */
 	public static RConnectionResource createConnection() throws RserveException, IOException {
-		// synchronizing on the entire class would completely lag out KNIME.
+		initializeResourcesAndShutdownHook(); // checks for re-initialization
+
+		// synchronizing on the entire class would completely lag out KNIME for
+		// some reason
 		synchronized (m_resources) {
 			// try to reuse an existing instance. Ensures there is max one R
 			// instance per parallel executed node.
@@ -195,6 +187,33 @@ public class RConnectionFactory {
 			m_resources.add(resource);
 			return resource;
 		}
+	}
+
+	private static void initializeResourcesAndShutdownHook() {
+		// if (m_initialized != false) return;
+		// else m_initialized = true;
+		if (m_initialized.compareAndSet(false, true)) {
+			/* already initialized */
+			return;
+		}
+
+		// m_initialized just changed from false to true, we need to
+		// initialized.
+
+		/*
+		 * Cleanup remaining Rserve processes on VM exit.
+		 */
+		Runtime.getRuntime().addShutdownHook(new Thread("R Processes Cleanup") {
+
+			@Override
+			public void run() {
+				synchronized (m_resources) {
+					for (final RConnectionResource resource : m_resources) {
+						resource.destroy(false);
+					}
+				}
+			}
+		});
 	}
 
 	/**
