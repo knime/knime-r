@@ -71,6 +71,7 @@ public class RConnectionFactory {
 
 		final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
 
+		RInstance rInstance = null;
 		try {
 			File commandFile = new File(cmd);
 			if (!commandFile.exists()) {
@@ -80,9 +81,7 @@ public class RConnectionFactory {
 				throw new IOException("Command is not an executable: " + cmd);
 			}
 
-			final String rargs = "--vanilla"; // mandatory under unix, optional
-												// on windows
-			final ProcessBuilder builder = new ProcessBuilder().command(cmd, rargs, "--RS-port", port.toString());
+			final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), "--vanilla");
 			if (Platform.isWindows()) {
 				// on windows, the Rserve executable is not reside in the R bin
 				// folder, but still requires the R.dll, so we need to put the R
@@ -105,14 +104,13 @@ public class RConnectionFactory {
 			 * the external process this way.
 			 */
 			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
-				/* discard */ LOGGER.debug(line);
-			}).start();
+				/* discard */ }).start();
 			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")",
 					(line) -> LOGGER.debug(line)).start();
 
 			// wrap the process, requires host and port to create RConnections
 			// later.
-			final RInstance rInstance = new RInstance(p, host, port);
+			rInstance = new RInstance(p, host, port);
 
 			// try connecting up to 5 times over the course of 500ms. Attempts
 			// may fail if Rserve is currently starting up.
@@ -135,7 +133,13 @@ public class RConnectionFactory {
 
 			return rInstance;
 		} catch (Exception x) {
+			if (rInstance != null) {
+				// terminate the R process incase still running
+				rInstance.close();
+			}
 			throw new IOException("Could not start Rserve process.", x);
+		} finally {
+
 		}
 
 	}
@@ -171,21 +175,24 @@ public class RConnectionFactory {
 			}
 			// no existing resource is available. Create a new one.
 
-			// find any available port to run RServe on
-			int port = 6311;
-			try (ServerSocket socket = new ServerSocket(0)) {
-				port = socket.getLocalPort();
-			} catch (IOException e) {
-				throw new IOException("Could not find a free port for Rserve. Is KNIME not permitted to open ports?",
-						e);
-			}
 			final RInstance instance = launchRserve(
 					org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRServeBinPath(),
-					"127.0.0.1", port);
+					"127.0.0.1", findFreePort());
 			RConnectionResource resource = new RConnectionResource(instance);
 			resource.acquire();
 			m_resources.add(resource);
 			return resource;
+		}
+	}
+
+	/*
+	 * Find a free port to launch Rserve on
+	 */
+	private static int findFreePort() throws IOException {
+		try (ServerSocket socket = new ServerSocket(0)) {
+			return socket.getLocalPort();
+		} catch (IOException e) {
+			throw new IOException("Could not find a free port for Rserve. Is KNIME not permitted to open ports?", e);
 		}
 	}
 
