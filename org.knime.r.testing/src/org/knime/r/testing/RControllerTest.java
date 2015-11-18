@@ -35,6 +35,9 @@ public class RControllerTest {
 
 	@AfterClass
 	public static void afterClass() {
+		if (m_controller == null) {
+			return;
+		}
 		m_controller.close();
 		// terminate the R process used by the controller, otherwise it will be
 		// leaked.

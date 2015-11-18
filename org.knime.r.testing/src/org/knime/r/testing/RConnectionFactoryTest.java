@@ -30,7 +30,7 @@ public class RConnectionFactoryTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testConnection() throws InterruptedException {
+	public void testConnection() throws InterruptedException, RserveException, IOException {
 		RConnectionResource resource = null;
 		try {
 			resource = RConnectionFactory.createConnection();
@@ -67,8 +67,6 @@ public class RConnectionFactoryTest {
 			} catch (RserveException e) {
 				fail("\"memory.limit\" failed. This suggests R_HOME is not set for the Rserve process.");
 			}
-		} catch (RserveException | IOException e) {
-			fail(e.getMessage());
 		} finally {
 			// Rserve process may not have been terminated in the test, make
 			// sure it is.
@@ -106,5 +104,5 @@ public class RConnectionFactoryTest {
 
 		m_connection.close();
 	}
-
+	
 }
