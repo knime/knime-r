@@ -326,10 +326,10 @@ public class RController implements IRController {
 	}
 
 	@Override
-	public void assign(final String expr) throws RException {
+	public void assign(final String expr, final String value) throws RException {
 		checkInitialized();
 		try {
-			getREngine().parseAndEval(expr, null, true);
+			getREngine().assign(expr, value);
 		} catch (REngineException e) {
 			throw new RException(RException.MSG_EVAL_FAILED, e);
 		}
@@ -727,7 +727,7 @@ public class RController implements IRController {
 	 */
 	private void setVariableName(final String name, final ExecutionMonitor exec)
 			throws RException, CanceledExecutionException {
-		monitoredEval(name + " <- " + TEMP_VARIABLE_NAME + "; rm(" + TEMP_VARIABLE_NAME + ")", exec);
+		monitoredEval(name + "<-" + TEMP_VARIABLE_NAME + ";rm(" + TEMP_VARIABLE_NAME + ")", exec);
 	}
 
 	@Override

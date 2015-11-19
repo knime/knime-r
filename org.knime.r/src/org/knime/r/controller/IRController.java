@@ -177,7 +177,16 @@ public interface IRController extends AutoCloseable {
 	REXP monitoredEval(String cmd, ExecutionMonitor exec)
 			throws RException, CanceledExecutionException, InterruptedException;
 
-	void assign(String expr) throws RException;
+	/**
+	 * Assign a String to an R expression.
+	 *
+	 * @param expr
+	 *            Expression to assign the value to. Usually a variable name
+	 * @param value
+	 *            Value to assign
+	 * @throws RException
+	 */
+	void assign(String expr, String value) throws RException;
 
 	/**
 	 * Assign an R variable in a separate thread to be able to cancel it.

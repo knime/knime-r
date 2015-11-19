@@ -383,7 +383,7 @@ public class RSnippetNodePanel extends JPanel {
 						// no need to load any R workspace
 						m_controller.clearWorkspace(m_exec.createSubProgress(0.3));
 
-						if (m_input != null && m_tableInPort >= 0) {
+						if (m_input != null) {
 							m_exec.setMessage("Send input table to R");
 							m_controller.importDataFromPorts(m_input, m_exec.createSubProgress(0.6));
 						}

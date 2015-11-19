@@ -218,7 +218,9 @@ public class RConnectionFactory {
 			public void run() {
 				synchronized (m_resources) {
 					for (final RConnectionResource resource : m_resources) {
-						resource.destroy(false);
+						if (resource != null && resource.getUnderlyingRInstance() != null) {
+							resource.destroy(false);
+						}
 					}
 				}
 			}

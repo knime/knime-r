@@ -57,7 +57,6 @@ import org.knime.core.node.workflow.NodeContext;
 import org.knime.r.controller.IRController.RException;
 import org.knime.r.controller.RConsoleController.ExecutionMonitorFactory;
 import org.rosuda.REngine.REXP;
-import org.rosuda.REngine.REXPMismatchException;
 
 /**
  * A {@link LinkedBlockingQueue} which contains {@link RCommand} and as means of
@@ -76,65 +75,6 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	private RCommandConsumer m_thread = null;
 
 	private final RController m_controller;
-
-	/**
-	 * R Code to capture output and error messages of R code.
-	 *
-	 * <pre>
-	 * {@code
-	 * # setup textConnections (which can be compared with Java StringWriters), which
-	 * # we will direct output to. The resulting text will be written into knime.stdout
-	 * # and knime.stderr varaibles.
-	 * knime.stdout.con <- textConnection('knime.stdout', 'w')
-	 * knime.stderr.con <- textConnection('knime.stderr', 'w')
-	 *
-	 * sink(knime.stdout.con) # redirect output
-	 * sink(knime.stderr.con, type='message') # redirect errors
-	 * }
-	 * </pre>
-	 */
-	public final static String CAPTURE_OUTPUT_PREFIX;
-	/**
-	 * R Code to finish up capturing output and error messages of R code after
-	 * execution of the code to capture output from has finished.
-	 *
-	 * <pre>
-	 * {@code
-	 * # return output to normal/stop redirecting output and errors
-	 * sink()
-	 * sink(type='message')
-	 * # close the writers for accessing the result variables
-	 * close(knime.stdout.con)
-	 * close(knime.stderr.con)
-	 * # concatenate the lines with paste(), appending '\n' to every line
-	 * # and combine output and error to a vector, to return the combined
-	 * # value back to java.
-	 * knime.output.ret <- c(
-	 *  paste(knime.stdout, collapse='\\n'),
-	 *  paste(knime.stderr, collapse='\\n')
-	 * )
-	 * # delete variables we don't need anymore.
-	 * rm(knime.stdout.con, knime.stderr.con, knime.stdout, knime.stderr)
-	 * knime.output.ret # the last value in an r script will be returned by Rserve.
-	 * }
-	 * </pre>
-	 */
-	public final static String CAPTURE_OUTPUT_POSTFIX;
-	/**
-	 * Delete the `knime.output.ret` variable, which couldn't be cleaned up in
-	 * {@link #CAPTURE_OUTPUT_POSTFIX}, because we need it as the last value.
-	 */
-	public final static String CAPTURE_OUTPUT_CLEANUP;
-
-	static {
-		CAPTURE_OUTPUT_PREFIX = "knime.stdout.con<-textConnection('knime.stdout','w');knime.stderr.con<-textConnection('knime.stderr','w');sink(knime.stdout.con);sink(knime.stderr.con,type='message')\n";
-		CAPTURE_OUTPUT_POSTFIX = "sink();sink(type='message')\n" + //
-				"close(knime.stdout.con);close(knime.stderr.con)\n" + //
-				"knime.output.ret<-c(paste(knime.stdout,collapse='\\n'), paste(knime.stderr,collapse='\\n'))\n" + //
-				"rm(knime.stdout.con,knime.stderr.con,knime.stdout,knime.stderr)\n" + //
-				"knime.output.ret";
-		CAPTURE_OUTPUT_CLEANUP = "rm(knime.output.ret)";
-	}
 
 	/**
 	 * Constructor
@@ -266,7 +206,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 
 					// we fetch the entire contents of the queue to be able to
 					// show progress for all commands currently in queue. This
-					// is neccessary to prevent flashing of the progressbar in
+					// is necessary to prevent flashing of the progress bar in
 					// RSnippetNodePanel, which would happen because "invisible"
 					// commands are executed before and after user commands are
 					// executed.
@@ -279,62 +219,64 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 					int curCommandIndex = 0;
 					final int numCommands = commands.size();
 					progress.setProgress(0.0, "Executing commands...");
+
+					REXP ret = null;
 					for (RCommand rCmd : commands) {
 						m_listeners.stream().forEach((l) -> l.onCommandExecutionStart(rCmd));
-						// setup for capturing output
+
 						if (rCmd.isShowInConsole()) {
+							final ConsoleLikeRExecutor exec = new ConsoleLikeRExecutor(m_controller);
 							try {
-								m_controller.monitoredEval(CAPTURE_OUTPUT_PREFIX, progress);
-							} catch (final RException e) {
+								exec.setupOutputCapturing(progress);
+							} catch (RException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
 										new RException("Could not capture output of command.", e)));
 							}
-						}
 
-						// execute command
-						REXP ret = null;
-						try {
-							// manage correct printing of command execution and
-							// return the produced value.
-							ret = m_controller.monitoredEval(
-									makeConsoleLikeCommand(rCmd.getCommand()) + "\nknime.tmp.ret$value", progress);
-						} catch (final RException e) {
-							m_listeners.stream().forEach((l) -> l.onCommandExecutionError(e));
-						}
-
-						// retrieve output
-						String out = "";
-						String err = "";
-						if (rCmd.isShowInConsole()) {
-							REXP output = null;
 							try {
-								output = m_controller.monitoredEval(CAPTURE_OUTPUT_POSTFIX, progress);
-								if (output != null && output.isString() && output.asStrings().length == 2) {
-									out = output.asStrings()[0];
-									if (!out.isEmpty()) {
-										out += "\n";
-									}
-									err = output.asStrings()[1];
-									if (!err.isEmpty()) {
-										err += "\n";
-									}
-								}
+								ret = exec.execute(rCmd.getCommand(), progress);
+							} catch (RException e) {
+								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(e));
+							}
 
-								// cleanup variables which are not needed
-								// anymore
-								m_controller.monitoredEval("rm(knime.tmp.ret);" + CAPTURE_OUTPUT_CLEANUP, progress);
-							} catch (final RException | REXPMismatchException e) {
+							try {
+								exec.finishOutputCapturing(progress);
+							} catch (RException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
 										new RException("Could not capture output of command.", e)));
 							}
+
+							try {
+								exec.cleanup(progress);
+							} catch (RException e) {
+								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
+										new RException("Could not cleanup after command execution.", e)));
+							}
+
+							// complete Future to notify all threads waiting on
+							// it
+							rCmd.complete(ret);
+
+							m_listeners.stream()
+									.forEach((l) -> l.onCommandExecutionEnd(rCmd, exec.getStdOut(), exec.getStdErr()));
+						} else {
+							// simple execution without error checks or output
+							// capturing for user-invisible commands issued for
+							// dialog functionality
+							try {
+								ret = m_controller.monitoredEval(rCmd.getCommand(), progress);
+							} catch (RException e) {
+								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
+										new RException("Could not execute internal command.", e)));
+							}
+
+							// complete Future to notify all threads waiting on
+							// it
+							rCmd.complete(ret);
+
+							m_listeners.stream().forEach((l) -> l.onCommandExecutionEnd(rCmd, "", ""));
 						}
 
-						// complete Future to notify all threads waiting on it
-						rCmd.complete(ret);
-
-						final String stdout = out;
-						final String stderr = err;
-						m_listeners.stream().forEach((l) -> l.onCommandExecutionEnd(rCmd, stdout, stderr));
 						progress.setProgress((float) ++curCommandIndex / numCommands);
 					}
 					progress.setProgress(1.0, "Done!");
@@ -357,6 +299,8 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 				}
 
 				m_listeners.stream().forEach((l) -> l.onCommandExecutionCanceled());
+			} catch (IllegalAccessError err) {
+				err.printStackTrace();
 			} finally {
 				if (m_context != null) {
 					NodeContext.removeLastContext();
@@ -391,18 +335,12 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	 * 	if(knime.tmp.ret$visible)
 	 * 		print(knime.tmp.ret$value)
 	 * }
-	 * }
 	 * </pre>
 	 *
 	 * @param command
 	 *            Command to wrap.
 	 * @return
 	 */
-	public static String makeConsoleLikeCommand(final String command) {
-		return "tryCatch(knime.tmp.ret<-withVisible({" + command
-				+ "\n}),error=function(e) message(paste('Error:',conditionMessage(e))))\n"
-				+ "if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}";
-	}
 
 	/**
 	 * Start this queues execution thread (Thread which executes the queues

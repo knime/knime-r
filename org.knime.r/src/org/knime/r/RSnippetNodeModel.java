@@ -54,8 +54,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.text.BadLocationException;
-
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
@@ -73,10 +71,9 @@ import org.knime.core.node.workflow.FlowVariable.Type;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
+import org.knime.r.controller.ConsoleLikeRExecutor;
 import org.knime.r.controller.IRController.RException;
-import org.knime.r.controller.RCommandQueue;
 import org.knime.r.controller.RController;
-import org.rosuda.REngine.REXP;
 
 /**
  * The <code>RSnippetNodeModel</code> provides functionality to create a R
@@ -91,6 +88,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	private static final NodeLogger LOGGER = NodeLogger.getLogger("R Snippet");
 
 	private boolean m_hasROutPorts = true;
+
+	private List<String> m_librariesInR = null;
 
 	/**
 	 * Creates new instance of <code>RSnippetNodeModel</code> with one data in
@@ -151,7 +150,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	}
 
 	private PortObject[] executeInternal(final RSnippetSettings settings, final PortObject[] inData,
-			final ExecutionContext exec) throws CanceledExecutionException, RException {
+			final ExecutionContext exec) throws Exception {
 		m_snippet.getSettings().loadSettings(settings);
 
 		final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
@@ -185,9 +184,10 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	 *
 	 * @param exec
 	 *            ExecutionContext which enables cancelling of the execution.
+	 * @throws Exception
 	 */
 	private PortObject[] executeSnippet(final RController controller, final PortObject[] inData,
-			final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws CanceledExecutionException {
+			final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws Exception {
 		// blow away the output of any previous (failed) runs
 		setFailedExternalErrorOutput(new LinkedList<String>());
 		setFailedExternalOutput(new LinkedList<String>());
@@ -218,8 +218,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 					outPorts.add(importDataFromR(controller, m_snippet.getSettings().getOutNonNumbersAsMissing(),
 							exec.createSubExecutionContext(1.0)));
 				} else if (portType.equals(RPortObject.TYPE)) {
-					final List<String> librariesInR = importListOfLibrariesFromR(controller);
-					outPorts.add(new RPortObject(tempWorkspaceFile, librariesInR));
+					outPorts.add(new RPortObject(tempWorkspaceFile, m_librariesInR));
 				}
 			}
 			exec.setMessage("Importing flow variables from R");
@@ -231,58 +230,72 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			if (e instanceof CanceledExecutionException) {
 				throw (CanceledExecutionException) e;
 			}
-			throw new RuntimeException("Execution failed.", e);
+			throw e;
 		}
 	}
 
 	private void runRScript(final RController controller, final File tempWorkspaceFile, final PortObject[] inData,
 			final ExecutionContext exec) throws Exception {
 
-		final String rScript = buildRScript(inData, tempWorkspaceFile);
+		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
 
 		exec.setMessage("Setting up output capturing");
-		final StringBuilder prefixScript = new StringBuilder();
-		// see javadoc of CAPTURE_OUTPUT_PREFIX for more information
-		prefixScript.append(RCommandQueue.CAPTURE_OUTPUT_PREFIX);
-		// set working directory
-		prefixScript.append("setwd(\"" + tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/') + "\");\n");
-
-		controller.monitoredEval(prefixScript.toString(), exec);
+		executor.setupOutputCapturing(exec);
 
 		exec.setMessage("Executing R script");
-		controller.monitoredEval(rScript, exec);
+
+		// run prefix and script itself
+		executor.execute("setwd(\"" + tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/')
+				+ "\");" + m_config.getScriptPrefix() + ";" + m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim(), exec);
+		// run postfix in a separate evaluation to make sure we are not preventing the return value of the script being printed, which is
+		// important for ggplot2 graphs, which would otherwise not be drawn onto the graphics (png) device.
+		controller.monitoredEval(
+				m_config.getScriptSuffix() + ";" + RController.R_LOADED_LIBRARIES_VARIABLE + "<-(.packages())", exec);
 
 		exec.setMessage("Collecting captured output");
-		// see javadoc of CAPTURE_OUTPUT_PREFIX for more information
-		REXP output = controller.monitoredEval(RCommandQueue.CAPTURE_OUTPUT_POSTFIX, exec);
+		executor.finishOutputCapturing(exec);
 
 		// process the return value of error capturing and update Error and
 		// Output views accordingly
-		if (output != null && output.isString()) {
-			final String out = output.asStrings()[0];
-			if (!out.isEmpty()) {
-				setExternalOutput(getLinkedListFromOutput(out));
-			}
+		if (!executor.getStdOut().isEmpty()) {
+			setExternalOutput(getLinkedListFromOutput(executor.getStdOut()));
+		}
 
-			final String err = output.asStrings()[1];
-			if (!err.isEmpty()) {
-				setExternalErrorOutput(getLinkedListFromOutput(err));
+		if (!executor.getStdErr().isEmpty()) {
+			final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
+			setExternalErrorOutput(output);
+
+			for (final String line : output) {
+				if (line.startsWith("Error:")) {
+					throw new RException("Error in R code: \"" + line + "\"");
+				}
 			}
 		}
 
-		// cleanup temporary variables of output capturing and consoleLikeCommand stuff
-		controller.monitoredEval("rm(knime.tmp.ret);" + RCommandQueue.CAPTURE_OUTPUT_CLEANUP, exec);
+		// cleanup temporary variables of output capturing and
+		// consoleLikeCommand stuff
+		exec.setMessage("Cleaning up");
+		executor.cleanup(exec);
 
 		if (m_hasROutPorts) {
 			// save workspace to temporary file
+			m_librariesInR = importListOfLibrariesFromR(controller);
 			controller.saveWorkspace(tempWorkspaceFile, exec);
 		}
+
 	}
 
 	private static final LinkedList<String> getLinkedListFromOutput(final String output) {
 		final LinkedList<String> list = new LinkedList<>();
 		Arrays.stream(output.split("\\r?\\n")).forEach((s) -> list.add(s));
 		return list;
+	}
+
+	@Override
+	protected void reset() {
+		super.reset();
+
+		m_librariesInR = null;
 	}
 
 	/**
@@ -310,34 +323,11 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 				del = FileUtil.deleteRecursively(file);
 				if (!del) {
 					// ok that's it no trials anymore ...
-					LOGGER.debug(file.getAbsoluteFile() + " could not be deleted !");
+					LOGGER.debug(file.getAbsoluteFile() + " could not be deleted!");
 				}
 			}
 		}
 		return del;
-	}
-
-	/*
-	 * Create an R script which loads the input ports workspaces and sets the
-	 * working directory
-	 */
-	private String buildRScript(final PortObject[] inPorts, final File tempWorkspaceFile) throws BadLocationException {
-		final StringBuilder rScript = new StringBuilder();
-
-		// add node specific prefix
-		rScript.append(m_config.getScriptPrefix()).append("\n");
-
-		// user defined script
-		final String userScript = m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim();
-		rScript.append(RCommandQueue.makeConsoleLikeCommand(userScript) + "\n");
-
-		// append node specific suffix
-		rScript.append(m_config.getScriptSuffix()).append("\n");
-
-		// assign list of loaded libraries so that we can read it out later
-		rScript.append(RController.R_LOADED_LIBRARIES_VARIABLE + " <- (.packages());\n");
-
-		return rScript.toString();
 	}
 
 	private BufferedDataTable importDataFromR(final RController controller, final boolean nonNumbersAsMissing,
