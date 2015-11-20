@@ -246,11 +246,11 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 		// run prefix and script itself
 		executor.execute("setwd(\"" + tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/')
-				+ "\");" + m_config.getScriptPrefix() + ";" + m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim(), exec);
+				+ "\")\n" + m_config.getScriptPrefix() + "\n" + m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim(), exec);
 		// run postfix in a separate evaluation to make sure we are not preventing the return value of the script being printed, which is
 		// important for ggplot2 graphs, which would otherwise not be drawn onto the graphics (png) device.
 		controller.monitoredEval(
-				m_config.getScriptSuffix() + ";" + RController.R_LOADED_LIBRARIES_VARIABLE + "<-(.packages())", exec);
+				m_config.getScriptSuffix() + "\n" + RController.R_LOADED_LIBRARIES_VARIABLE + "<-(.packages())", exec);
 
 		exec.setMessage("Collecting captured output");
 		executor.finishOutputCapturing(exec);
