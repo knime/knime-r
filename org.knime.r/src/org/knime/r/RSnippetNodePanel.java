@@ -384,11 +384,11 @@ public class RSnippetNodePanel extends JPanel {
 						m_controller.clearWorkspace(m_exec.createSubProgress(0.3));
 
 						if (m_input != null) {
-							m_exec.setMessage("Send input table to R");
+							m_exec.setMessage("Sending input data to R");
 							m_controller.importDataFromPorts(m_input, m_exec.createSubProgress(0.6));
 						}
 
-						m_exec.setMessage("Send flow variables to R");
+						m_exec.setMessage("Sending flow variables to R");
 						m_controller.exportFlowVariables(m_inputFlowVars, "knime.flow.in", m_exec.createSubProgress(0.1));
 
 						workspaceChanged();
@@ -714,8 +714,13 @@ public class RSnippetNodePanel extends JPanel {
 		m_controller.initialize();
 
 		m_consoleController.attachOutput(m_console);
-		m_commandQueue.startExecutionThread(maxProgress -> {
+		m_commandQueue.startExecutionThread(() -> {
+			if (m_exec != null) {
+				m_exec.getProgressMonitor().removeAllProgressListener();
+			}
+
 			m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
+			m_exec.setProgress(0.0f); // for correct initial progress display
 			m_progressPanel.startMonitoring(m_exec);
 			return m_exec;
 		}, true);

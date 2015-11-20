@@ -197,7 +197,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 				while (!isInterrupted()) {
 					// interrupted flag is checked every 100 milliseconds while
 					// command queue is empty.
-					RCommand nextCommand = poll(100, TimeUnit.MILLISECONDS);
+					RCommand nextCommand = poll(50, TimeUnit.MILLISECONDS);
 
 					if (nextCommand == null) {
 						/* queue was empty */
@@ -213,41 +213,42 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 					final ArrayList<RCommand> commands = new ArrayList<>();
 					do {
 						commands.add(nextCommand);
-					} while ((nextCommand = poll()) != null);
+					} while ((nextCommand = poll(10, TimeUnit.MILLISECONDS)) != null);
 
-					progress = m_execMonitorFactory.create(1.0);
-					int curCommandIndex = 0;
+					progress = m_execMonitorFactory.create();
+					progress.setMessage("Executing commands...");
 					final int numCommands = commands.size();
-					progress.setProgress(0.0, "Executing commands...");
+					final double progressIncrement = 1 / numCommands;
 
 					REXP ret = null;
 					for (RCommand rCmd : commands) {
 						m_listeners.stream().forEach((l) -> l.onCommandExecutionStart(rCmd));
 
+						ExecutionMonitor sub = progress.createSubProgress(progressIncrement);
+						sub.setProgress(0.0);
 						if (rCmd.isShowInConsole()) {
 							final ConsoleLikeRExecutor exec = new ConsoleLikeRExecutor(m_controller);
 							try {
-								exec.setupOutputCapturing(progress);
+								exec.setupOutputCapturing(sub.createSubProgress(0.2));
 							} catch (RException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
 										new RException("Could not capture output of command.", e)));
 							}
 
 							try {
-								ret = exec.execute(rCmd.getCommand(), progress);
+								ret = exec.execute(rCmd.getCommand(), sub.createSubProgress(0.5));
 							} catch (RException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(e));
 							}
-
 							try {
-								exec.finishOutputCapturing(progress);
+								exec.finishOutputCapturing(sub.createSubProgress(0.2));
 							} catch (RException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
 										new RException("Could not capture output of command.", e)));
 							}
 
 							try {
-								exec.cleanup(progress);
+								exec.cleanup(sub.createSubProgress(0.1));
 							} catch (RException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
 										new RException("Could not cleanup after command execution.", e)));
@@ -264,7 +265,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 							// capturing for user-invisible commands issued for
 							// dialog functionality
 							try {
-								ret = m_controller.monitoredEval(rCmd.getCommand(), progress);
+								ret = m_controller.monitoredEval(rCmd.getCommand(), sub.createSubProgress(0.9));
 							} catch (RException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
 										new RException("Could not execute internal command.", e)));
@@ -277,7 +278,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 							m_listeners.stream().forEach((l) -> l.onCommandExecutionEnd(rCmd, "", ""));
 						}
 
-						progress.setProgress((float) ++curCommandIndex / numCommands);
+						sub.setProgress(1.0);
 					}
 					progress.setProgress(1.0, "Done!");
 					progress = null;
@@ -355,7 +356,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	 * @see #isExecutionThreadRunning()
 	 */
 	public void startExecutionThread() {
-		startExecutionThread((maxProgress) -> {
+		startExecutionThread(() -> {
 			return new ExecutionMonitor();
 		} , false);
 	}

@@ -370,7 +370,8 @@ public class RController implements IRController {
 	}
 
 	@Override
-	public void importDataFromPorts(final PortObject[] inData, final ExecutionMonitor exec) throws RException, CanceledExecutionException {
+	public void importDataFromPorts(final PortObject[] inData, final ExecutionMonitor exec)
+			throws RException, CanceledExecutionException {
 		// load workspaces from the input ports into the current R session
 		for (final PortObject port : inData) {
 			if (port instanceof RPortObject) {
@@ -384,7 +385,7 @@ public class RController implements IRController {
 			} else if (port instanceof BufferedDataTable) {
 				exec.setMessage("Exporting data to R");
 				// write all input data to the R session
-				monitoredAssign("knime.in", (BufferedDataTable)port, exec.createSubProgress(0.5));
+				monitoredAssign("knime.in", (BufferedDataTable) port, exec.createSubProgress(0.5));
 			}
 		}
 
@@ -987,12 +988,12 @@ public class RController implements IRController {
 		final int rowCount = KnowsRowCountTable.checkRowCount(table.size());
 		final String[] rowNames = new String[rowCount];
 
-		final Collection<Object> columns = initializeAndFillColumns(table, rowNames, exec.createSubProgress(0.7));
-		final RList content = createRListFromBufferedDataTable(table, columns, exec.createSubProgress(0.9));
+		final Collection<Object> columns = initializeAndFillColumns(table, rowNames, exec.createSubProgress(0.3));
+		final RList content = createRListFromBufferedDataTable(table, columns, exec.createSubProgress(0.5));
 
 		if (content.size() > 0) {
 			final REXPString rexpRowNames = new REXPString(rowNames);
-			monitoredAssign(TEMP_VARIABLE_NAME, createDataFrame(content, rexpRowNames, exec), exec);
+			monitoredAssign(TEMP_VARIABLE_NAME, createDataFrame(content, rexpRowNames, exec.createSubProgress(0.2)), exec);
 			setVariableName(name, exec);
 		} else {
 			try {
@@ -1063,6 +1064,10 @@ public class RController implements IRController {
 		private final int m_interval = 200;
 		private final ExecutionMonitor m_exec;
 
+		/**
+		 * Constructor
+		 * @param exec for tracking progress and checking cancelled state.
+		 */
 		public MonitoredEval(final ExecutionMonitor exec) {
 			m_exec = exec;
 		}
@@ -1103,7 +1108,6 @@ public class RController implements IRController {
 					LOGGER.warn("Could not terminate R correctly.");
 				}
 			}
-
 			return null;
 		}
 

@@ -241,12 +241,9 @@ public class RConsoleController implements RCommandExecutionListener {
 		/**
 		 * Create a new ExecutionMonitor.
 		 *
-		 * @param maxProgress
-		 *            The fraction of the progress this sub progress contributes
-		 *            to the whole progress
 		 * @return The created {@link ExecutionMonitor}, never <code>null</code>
 		 */
-		ExecutionMonitor create(double maxProgress);
+		ExecutionMonitor create();
 	}
 
 	private final AtomicBoolean m_updateScheduled = new AtomicBoolean(false);
