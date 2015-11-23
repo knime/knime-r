@@ -183,6 +183,14 @@ public class RController implements IRController {
 		if (!m_initialized) {
 			throw new RControllerNotInitializedException();
 		}
+		if (!m_connection.isRInstanceAlive()) {
+			throw new RuntimeException("Rserve process terminated unexpectedly.");
+		}
+		if (m_connection.isAvailable()) {
+			// resource should never be available, if held by this RController.
+			// Available means available to aqcuire for other RControllers.
+			throw new RuntimeException("Invalid resource state: lost ownership of connection resource.");
+		}
 	}
 
 	@Override
