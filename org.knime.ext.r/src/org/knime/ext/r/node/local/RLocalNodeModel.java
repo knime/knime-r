@@ -77,7 +77,7 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
  * which is returned by this node. This means, the user has to take care that
  * the processed data have to be referenced by the variable "R".
  * <br>
- * Note that the number of input data tables is one and can not be modified when
+ * Note that the number of input data tables is one and cannot be modified when
  * extending this node model. The number of output data tables can be specified
  * but only one or zero will make any sense since only the data referenced by
  * the "R" variable will be exported as output data table if the number of

@@ -388,7 +388,7 @@ public class RConnectionFactory {
 			if (m_available) {
 				doAcquire();
 			} else {
-				throw new IllegalStateException("Resource can not be aquired, it is owned already.");
+				throw new IllegalStateException("Resource cannot be aquired, it is owned already.");
 			}
 		}
 
