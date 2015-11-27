@@ -2,6 +2,7 @@ package org.knime.r.rserve;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,6 +13,7 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.knime.core.node.NodeLogger;
+import org.knime.core.util.FileUtil;
 import org.knime.core.util.KNIMETimer;
 import org.knime.r.controller.RController;
 import org.rosuda.REngine.Rserve.RConnection;
@@ -81,7 +83,14 @@ public class RConnectionFactory {
 				throw new IOException("Command is not an executable: " + cmd);
 			}
 
-			final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), "--vanilla");
+			final File file = FileUtil.createTempFile("Rserve", ".conf");
+			try(FileWriter writer = new FileWriter(file)) {
+				writer.write("maxinbuff 2048000"); // unlimited
+			} catch(IOException e) {
+				LOGGER.warn("Could not write configuration file for Rserve:", e);
+			}
+
+			final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), "--RS-conf", file.getAbsolutePath(), "--vanilla");
 			if (Platform.isWindows()) {
 				// on windows, the Rserve executable is not reside in the R bin
 				// folder, but still requires the R.dll, so we need to put the R
@@ -468,6 +477,11 @@ public class RConnectionFactory {
 				assert m_pendingDestructionTask == null;
 
 				m_available = true;
+
+				if (m_instance.getLastConnection() != null && m_instance.getLastConnection().isConnected()) {
+					// connection was not closed before release. Clean that up.
+					m_instance.getLastConnection().close();
+				}
 
 				m_pendingDestructionTask = new TimerTask() {
 					@Override

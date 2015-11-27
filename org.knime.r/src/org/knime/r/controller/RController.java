@@ -239,6 +239,8 @@ public class RController implements IRController {
 			// connection is fine.
 			return;
 		}
+
+		// all of the session data has been lost. We cannot recover from that.
 		terminateAndRelaunch();
 	}
 
@@ -999,18 +1001,20 @@ public class RController implements IRController {
 		final Collection<Object> columns = initializeAndFillColumns(table, rowNames, exec.createSubProgress(0.3));
 		final RList content = createRListFromBufferedDataTable(table, columns, exec.createSubProgress(0.5));
 
+		try {
+			// create a new empty data.frame
+			// this is required! Without, Rserve will crash with "large" amounts
+			// of data.
+			eval(name + "<-data.frame()");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
 		if (content.size() > 0) {
 			final REXPString rexpRowNames = new REXPString(rowNames);
-			monitoredAssign(TEMP_VARIABLE_NAME, createDataFrame(content, rexpRowNames, exec.createSubProgress(0.2)), exec);
-			setVariableName(name, exec);
-		} else {
-			try {
-				// create a new empty data.frame
-				eval("knime.in <- data.frame()");
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
+			monitoredAssign(name, createDataFrame(content, rexpRowNames, exec.createSubProgress(0.2)), exec);
 		}
+
 		exec.setProgress(1.0);
 	}
 
@@ -1074,7 +1078,9 @@ public class RController implements IRController {
 
 		/**
 		 * Constructor
-		 * @param exec for tracking progress and checking cancelled state.
+		 *
+		 * @param exec
+		 *            for tracking progress and checking cancelled state.
 		 */
 		public MonitoredEval(final ExecutionMonitor exec) {
 			m_exec = exec;
