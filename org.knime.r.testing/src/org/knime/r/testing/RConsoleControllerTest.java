@@ -39,8 +39,8 @@ public class RConsoleControllerTest {
 		}
 		// terminate the R process used by the controller, otherwise it will be
 		// leaked.
-		m_controller.terminateRProcess();
 		m_controller.close();
+		m_controller.terminateRProcess();
 	}
 
 	/**
