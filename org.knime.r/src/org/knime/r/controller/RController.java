@@ -180,7 +180,7 @@ public class RController implements IRController {
 	 * {@link RControllerNotInitializedException} if not.
 	 */
 	private final void checkInitialized() {
-		if (!m_initialized) {
+		if (!m_initialized || m_connection == null) {
 			throw new RControllerNotInitializedException();
 		}
 		if (!m_connection.isRInstanceAlive()) {
@@ -197,6 +197,7 @@ public class RController implements IRController {
 	public void close() {
 		if (m_connection != null) {
 			m_connection.release();
+			m_connection = null;
 		}
 
 		m_initialized = false;
@@ -211,9 +212,7 @@ public class RController implements IRController {
 	public void terminateAndRelaunch() throws Exception {
 		LOGGER.debug("Terminating R process");
 
-		if (m_connection != null) {
-			m_connection.destroy(true);
-		}
+		terminateRProcess();
 
 		try {
 			m_connection = initRConnection();
@@ -226,7 +225,9 @@ public class RController implements IRController {
 	 * Terminate the R process started for this RController
 	 */
 	public void terminateRProcess() {
-		m_connection.destroy(true);
+		if (m_connection != null) {
+			m_connection.destroy(true);
+		}
 	}
 
 	/**
@@ -429,7 +430,7 @@ public class RController implements IRController {
 		} catch (REXPMismatchException e) {
 			throw new RException("Error parsing \"" + variableName + "\"", e);
 		} catch (REngineException e) {
-			// the variable name was not found.s
+			// the variable name was not found.
 		}
 		return flowVars;
 	}

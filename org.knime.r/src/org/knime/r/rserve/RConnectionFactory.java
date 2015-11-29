@@ -133,7 +133,7 @@ public class RConnectionFactory {
 					}
 				} catch (RserveException e) {
 					LOGGER.debug("An attempt (" + i + "/5) to connect to Rserve failed.", e);
-					Thread.sleep(100);
+					Thread.sleep(2^i * 100);
 				}
 			}
 
@@ -475,10 +475,9 @@ public class RConnectionFactory {
 		 */
 		public synchronized void release() {
 			if (!m_available) {
-				// this should never happen, since either
-				// m_pendingDestructionTask is null, which means this resource
-				// is being held, or the resource is available and has
-				// destruction pending.
+				// Either m_pendingDestructionTask is null, which means
+				// this resource is being held, or the resource is available
+				// and has destruction pending.
 				assert m_pendingDestructionTask == null;
 
 				m_available = true;
@@ -490,7 +489,7 @@ public class RConnectionFactory {
 
 				m_pendingDestructionTask = new TimerTask() {
 					@Override
-					public synchronized void run() {
+					public void run() {
 						try {
 							synchronized (RConnectionResource.this) {
 								if (m_available) {

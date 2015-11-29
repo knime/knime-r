@@ -200,10 +200,9 @@ public class RSnippetNodePanel extends JPanel {
 		m_isInteractive = isPreview ? false : isInteractive;
 
 		if (m_isInteractive) {
-			m_controller = new RController(false);
+			m_controller = new RController(true);
 			m_commandQueue = new RCommandQueue(m_controller);
 			m_consoleController = new RConsoleController(m_controller, m_commandQueue);
-			m_controller.setUseNodeContext(true);
 		} else {
 			m_controller = null;
 			m_consoleController = null;
