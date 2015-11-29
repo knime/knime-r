@@ -252,8 +252,9 @@ public class RController implements IRController {
 	 */
 	private RConnectionResource initRConnection() throws Exception {
 		final RConnectionResource resource = RConnectionFactory.createConnection();
+
 		if (!resource.get().isConnected()) {
-			throw new Exception("Could not connect to RServe.");
+			throw new Exception("Could not initialize RController: Resource was not connected.");
 		}
 		return resource;
 	}

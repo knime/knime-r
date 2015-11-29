@@ -84,13 +84,14 @@ public class RConnectionFactory {
 			}
 
 			final File file = FileUtil.createTempFile("Rserve", ".conf");
-			try(FileWriter writer = new FileWriter(file)) {
+			try (FileWriter writer = new FileWriter(file)) {
 				writer.write("maxinbuff 2048000"); // unlimited
-			} catch(IOException e) {
+			} catch (IOException e) {
 				LOGGER.warn("Could not write configuration file for Rserve:", e);
 			}
 
-			final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), "--RS-conf", file.getAbsolutePath(), "--vanilla");
+			final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), "--RS-conf",
+					file.getAbsolutePath(), "--vanilla");
 			if (Platform.isWindows()) {
 				// on windows, the Rserve executable is not reside in the R bin
 				// folder, but still requires the R.dll, so we need to put the R
@@ -179,6 +180,10 @@ public class RConnectionFactory {
 			// instance per parallel executed node.
 			for (RConnectionResource resource : m_resources) {
 				if (resource.acquireIfAvailable()) {
+					// connections are closed when released => we need to
+					// reconnect
+					resource.getUnderlyingRInstance().createConnection();
+
 					return resource;
 				}
 			}
