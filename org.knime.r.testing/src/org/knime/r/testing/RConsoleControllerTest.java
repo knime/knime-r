@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
@@ -27,20 +28,25 @@ public class RConsoleControllerTest {
 	private RController m_controller;
 
 	@Before
-	public void beforeClass() throws RException {
+	public void before() throws RException {
 		m_controller = new RController();
 		assertNotNull(m_controller);
 	}
 
 	@After
-	public void afterClass() {
+	public void after() {
 		if (m_controller == null) {
 			return;
 		}
 		// terminate the R process used by the controller, otherwise it will be
 		// leaked.
-		m_controller.close();
-		m_controller.terminateRProcess();
+		try {
+			m_controller.close();
+		} catch (RException e) {
+			fail(e.getMessage());
+		} finally {
+			m_controller.terminateRProcess();
+		}
 	}
 
 	/**

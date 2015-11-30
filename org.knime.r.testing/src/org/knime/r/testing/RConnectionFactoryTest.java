@@ -1,14 +1,19 @@
 package org.knime.r.testing;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Test;
+import org.junit.internal.ArrayComparisonFailure;
+import org.knime.r.controller.IRController.RException;
 import org.knime.r.rserve.RConnectionFactory;
 import org.knime.r.rserve.RConnectionFactory.RConnectionResource;
 import org.rosuda.REngine.REXP;
@@ -44,7 +49,7 @@ public class RConnectionFactoryTest {
 			// simple test to make sure the server is actually responding
 			// correctly
 			try {
-				REXP exp = m_connection.eval("x <- 10; x");
+				REXP exp = m_connection.eval("x<-10;x");
 
 				assertNotNull(exp);
 				assertEquals("Returned integer had incorrect value.", 10, exp.asInteger());
@@ -57,15 +62,14 @@ public class RConnectionFactoryTest {
 			// test to make sure the server is running with the correct
 			// environment
 			try {
-				// memory.limit() is part of the utils package in R, which
-				// should
-				// have been loaded by default
-				REXP exp = m_connection.eval("memory.limit()");
+				// R.Version() is part of the base package in R, which
+				// should have been loaded by default
+				REXP exp = m_connection.eval("R.Version()");
 
 				// We expect some return value.
 				assertNotNull(exp);
 			} catch (RserveException e) {
-				fail("\"memory.limit\" failed. This suggests R_HOME is not set for the Rserve process.");
+				fail("\"R.Version\" failed. This suggests R_HOME is not set for the Rserve process.");
 			}
 		} finally {
 			// Rserve process may not have been terminated in the test, make
@@ -101,8 +105,36 @@ public class RConnectionFactoryTest {
 		final Collection<Process> runningRProcesses = RConnectionFactory.getRunningRProcesses();
 
 		assertTrue("FATAL, please check the code for more information.", runningRProcesses.isEmpty());
-
-		m_connection.close();
+		assertFalse("Connection has not been closed on resource destruction", m_connection.isConnected());
 	}
-	
+
+	/**
+	 * Test whether the Rserve process created for a connection creates a new
+	 * workspace, therefore no variables are leaked.
+	 * 
+	 * @throws RserveException
+	 * @throws InterruptedException
+	 * @throws IOException
+	 * @throws REXPMismatchException
+	 * @throws RException 
+	 */
+	@Test
+	public void ensureNoWorkspaceLeaking()
+			throws InterruptedException, RserveException, IOException, REXPMismatchException, RException {
+		RConnectionResource resource = RConnectionFactory.createConnection();
+		m_connection = resource.get();
+		m_connection.eval("x<-42");
+		resource.release();
+
+		// reacquire resource
+		resource = RConnectionFactory.createConnection();
+		m_connection = resource.get();
+
+		REXP result = m_connection.eval("objects()");
+		assertArrayEquals("Workspace objects leaked! " + Arrays.toString(result.asStrings()), result.asStrings(),
+				new String[] {});
+
+		resource.destroy(true);
+	}
+
 }

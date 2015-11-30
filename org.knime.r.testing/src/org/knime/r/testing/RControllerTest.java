@@ -6,8 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.DefaultNodeProgressMonitor;
@@ -25,23 +25,25 @@ import org.rosuda.REngine.Rserve.RConnection;
  */
 public class RControllerTest {
 
-	private static RController m_controller;
+	private RController m_controller;
 
-	@BeforeClass
-	public static void beforeClass() throws RException {
+	@Before
+	public void before() throws RException {
 		m_controller = new RController();
 		assertNotNull(m_controller);
 	}
 
-	@AfterClass
-	public static void afterClass() {
-		if (m_controller == null) {
-			return;
-		}
-		m_controller.close();
+	@After
+	public void after() {
 		// terminate the R process used by the controller, otherwise it will be
 		// leaked.
-		m_controller.terminateRProcess();
+		try {
+			m_controller.close();
+		} catch (RException e) {
+			fail(e.getMessage());
+		} finally {
+			m_controller.terminateRProcess();
+		}
 	}
 
 	/**
@@ -107,7 +109,8 @@ public class RControllerTest {
 			progress.setExecuteCanceled();
 			// give some time to cancel the evaluation. Cancellation is checked
 			// every 200ms.
-			t.join(5000); // will return before the 5 seconds are over, if the test succeeds
+			t.join(5000); // will return before the 5 seconds are over, if the
+							// test succeeds
 			assertFalse(t.isAlive());
 
 			// test that evaluation still works (Rserver has been restarted)
@@ -116,7 +119,7 @@ public class RControllerTest {
 			if (t != null && t.isAlive()) {
 				t.interrupt();
 			}
-			
+
 			assertFalse(t.isAlive());
 		}
 
@@ -148,7 +151,7 @@ public class RControllerTest {
 			if (t != null && t.isAlive()) {
 				t.interrupt();
 			}
-			
+
 			assertFalse(t.isAlive());
 		}
 	}
