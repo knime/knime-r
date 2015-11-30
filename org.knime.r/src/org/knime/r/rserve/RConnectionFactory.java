@@ -284,6 +284,12 @@ public class RConnectionFactory {
 
 		@Override
 		public void close() {
+
+			// close connection to process, if existent
+			if (m_lastConnection != null && m_lastConnection.isConnected()) {
+				m_lastConnection.close();
+			}
+
 			// terminate processes the nicer way
 			m_process.destroy();
 
