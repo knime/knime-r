@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.KNIMETimer;
+import org.knime.r.controller.IRController.RException;
 import org.knime.r.controller.RController;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
@@ -133,7 +134,7 @@ public class RConnectionFactory {
 					}
 				} catch (RserveException e) {
 					LOGGER.debug("An attempt (" + i + "/5) to connect to Rserve failed.", e);
-					Thread.sleep(2^i * 100);
+					Thread.sleep(2 ^ i * 100);
 				}
 			}
 
@@ -478,8 +479,11 @@ public class RConnectionFactory {
 
 		/**
 		 * Release ownership of this resource for it to be reacquired.
+		 *
+		 * @throws RException
+		 *             If the RConnection could not be closed/detached
 		 */
-		public synchronized void release() {
+		public synchronized void release() throws RException {
 			if (!m_available) {
 				// Either m_pendingDestructionTask is null, which means
 				// this resource is being held, or the resource is available
@@ -490,7 +494,42 @@ public class RConnectionFactory {
 
 				if (m_instance.getLastConnection() != null && m_instance.getLastConnection().isConnected()) {
 					// connection was not closed before release. Clean that up.
-					m_instance.getLastConnection().close();
+					final RConnection connection = m_instance.getLastConnection();
+					try {
+
+						// m_instance.getLastConnection().detach(); would be the
+						// way to go, but...
+						// FIXME: https://github.com/s-u/REngine/issues/7
+
+						// clear workspace in the same method used in
+						// RController. This is copied (!) code,
+						// since considered a (hopefully) temporary option until
+						// the above issue is resolved.
+						if (Platform.isWindows()) {
+							final StringBuilder b = new StringBuilder();
+							b.append("unloader <- function() {\n");
+							b.append("  defaults = getOption(\"defaultPackages\")\n");
+							b.append("  installed = (.packages())\n");
+							b.append("  for (pkg in installed){\n");
+							b.append("      if (!(as.character(pkg) %in% defaults)) {\n");
+							b.append("          if(!(pkg == \"base\")){\n");
+							b.append("              package_name = paste(\"package:\", as.character(pkg), sep=\"\")\n");
+							b.append("              detach(package_name, character.only = TRUE)\n");
+							b.append("          }\n");
+							b.append("      }\n");
+							b.append("  }\n");
+							b.append("}\n");
+							b.append("unloader();\n");
+							b.append("rm(list = ls());"); // also includes the
+															// unloader function
+							connection.eval(b.toString());
+						} // unix automatically gets independent workspaces for every connection
+					} catch (RserveException e) {
+						throw new RException(
+								"Could not detach connection to R, could leak objects to other workspaces.", e);
+					} finally {
+						connection.close();
+					}
 				}
 
 				m_pendingDestructionTask = new TimerTask() {

@@ -388,7 +388,8 @@ public class RSnippetNodePanel extends JPanel {
 						}
 
 						m_exec.setMessage("Sending flow variables to R");
-						m_controller.exportFlowVariables(m_inputFlowVars, "knime.flow.in", m_exec.createSubProgress(0.1));
+						m_controller.exportFlowVariables(m_inputFlowVars, "knime.flow.in",
+								m_exec.createSubProgress(0.1));
 
 						workspaceChanged();
 
@@ -722,7 +723,7 @@ public class RSnippetNodePanel extends JPanel {
 			m_exec.setProgress(0.0f); // for correct initial progress display
 			m_progressPanel.startMonitoring(m_exec);
 			return m_exec;
-		}, true);
+		} , true);
 
 		// send data to R
 		resetWorkspace();
@@ -752,7 +753,11 @@ public class RSnippetNodePanel extends JPanel {
 			}
 		}
 
-		m_controller.close();
+		try {
+			m_controller.close();
+		} catch (RException e) {
+			LOGGER.error("Failed to close Rserve connection", e);
+		}
 	}
 
 	protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {

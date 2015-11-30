@@ -194,7 +194,7 @@ public class RController implements IRController {
 	}
 
 	@Override
-	public void close() {
+	public void close() throws RException {
 		if (m_connection != null) {
 			m_connection.release();
 			m_connection = null;
@@ -216,6 +216,7 @@ public class RController implements IRController {
 
 		try {
 			m_connection = initRConnection();
+			m_initialized = (m_connection != null && m_connection.get().isConnected());
 		} catch (Exception e) {
 			throw new Exception("Initializing R with Rserve failed.", e);
 		}
@@ -228,6 +229,8 @@ public class RController implements IRController {
 		if (m_connection != null) {
 			m_connection.destroy(true);
 		}
+
+		m_initialized = false;
 	}
 
 	/**
