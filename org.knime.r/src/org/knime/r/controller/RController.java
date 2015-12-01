@@ -616,11 +616,11 @@ public class RController implements IRController {
 	 * @return The created RList
 	 * @throws CanceledExecutionException
 	 */
-	private RList createRListFromBufferedDataTable(final BufferedDataTable table, final Collection<Object> columns,
-			final ExecutionMonitor exec) throws CanceledExecutionException {
+	private ArrayList<RList> createRListsFromBufferedDataTableColumns(final BufferedDataTable table,
+			final Collection<Object> columns, final ExecutionMonitor exec) throws CanceledExecutionException {
 		final DataTableSpec tableSpec = table.getDataTableSpec();
 		final int numColumns = tableSpec.getNumColumns();
-		final RList content = new RList();
+		final ArrayList<RList> content = new ArrayList<>();
 
 		int c = 0;
 		for (final Object columnsColumn : columns) {
@@ -655,7 +655,9 @@ public class RController implements IRController {
 						rList.add((col == null) ? null : createFactor(col));
 					}
 				}
-				content.put(colSpec.getName(), new REXPGenericVector(new RList(rList)));
+				RList list = new RList();
+				list.put(colSpec.getName(), new REXPGenericVector(new RList(rList)));
+				content.add(list);
 			} else {
 				REXP ri;
 				if (type.isCompatible(BooleanValue.class)) {
@@ -671,7 +673,10 @@ public class RController implements IRController {
 					final String[] column = (String[]) columnsColumn;
 					ri = createFactor(column);
 				}
-				content.put(colSpec.getName(), ri);
+
+				RList list = new RList();
+				list.put(colSpec.getName(), ri);
+				content.add(list);
 			}
 		}
 		exec.setProgress(1.0);
@@ -1004,20 +1009,55 @@ public class RController implements IRController {
 		final String[] rowNames = new String[rowCount];
 
 		final Collection<Object> columns = initializeAndFillColumns(table, rowNames, exec.createSubProgress(0.3));
-		final RList content = createRListFromBufferedDataTable(table, columns, exec.createSubProgress(0.5));
+		final ArrayList<RList> content = createRListsFromBufferedDataTableColumns(table, columns,
+				exec.createSubProgress(0.5));
 
 		try {
-			// create a new empty data.frame
-			// this is required! Without, Rserve will crash with "large" amounts
+			// create a new empty data.frame this is required! Without, Rserve
+			// will crash with "large" amounts
 			// of data.
 			eval(name + "<-data.frame()");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
+		// transfer row names to Rserve
+		monitoredAssign("knime.row.names", new REXPString(rowNames), exec);
+
+		// script for combinding the invididual columns into a data.frame
+		final StringBuilder buildScript = new StringBuilder(name + "<-data.frame(row.names=knime.row.names");
+		// script for removing temporary variables
+		final StringBuilder cleanupScript = new StringBuilder("rm(knime.row.names");
+
 		if (content.size() > 0) {
-			final REXPString rexpRowNames = new REXPString(rowNames);
-			monitoredAssign(name, createDataFrame(content, rexpRowNames, exec.createSubProgress(0.2)), exec);
+			try {
+				new MonitoredEval(exec).startMonitoredThread(() -> {
+					synchronized (getREngine()) {
+						final RConnection conn = getREngine();
+
+						int i = 0;
+						for (final RList column : content) {
+							exec.checkCanceled();
+							conn.assign("c"+i, new REXPGenericVector(column));
+
+							buildScript.append(",c" + i);
+							cleanupScript.append(",c" + i);
+							i++;
+						}
+					}
+					return null;
+				}).get();
+			} catch (InterruptedException e) {
+				// no cleanup to do, node will be reset anyway.
+			} catch (ExecutionException e) {
+				LOGGER.error("Error while sending data to R.", e);
+			}
+
+			// build the data.frame
+			monitoredEval(buildScript.append(",check.names=F)").toString(), exec);
+
+			// cleanup temporary variables
+			monitoredEval(cleanupScript.append(")").toString(), exec);
 		}
 
 		exec.setProgress(1.0);
@@ -1194,7 +1234,7 @@ public class RController implements IRController {
 		/*
 		 * Execute a Callable in a monitored thread
 		 */
-		private Future<REXP> startMonitoredThread(final Callable<REXP> task) {
+		public Future<REXP> startMonitoredThread(final Callable<REXP> task) {
 			final FutureTask<REXP> ret = new FutureTask<REXP>(() -> {
 				return monitor(task);
 			});
