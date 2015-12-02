@@ -63,6 +63,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -821,13 +823,23 @@ public class RSnippetNodePanel extends JPanel {
 			final RCommand future = m_commandQueue.putRScript("dev.off()", false);
 
 			// update the Panel when execution has finished.
-			SwingUtilities.invokeLater(() -> {
+			final Runnable checkIfDone = new Runnable() {
+				@Override
+				public void run() {
 				try {
-					future.get();
+					try {
+						future.get(50, TimeUnit.MILLISECONDS);
+					} catch(TimeoutException e) {
+						SwingUtilities.invokeLater(this);
+						return;
+					}
 					workspaceChanged();
 				} catch (Exception e) {
 				}
-			});
+				}
+			};
+
+			SwingUtilities.invokeLater(checkIfDone);
 
 		} catch (final InterruptedException e1) {
 			throw new RuntimeException(e1);

@@ -50,6 +50,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.BorderFactory;
@@ -62,35 +63,34 @@ import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.NodeProgressEvent;
 import org.knime.core.node.workflow.NodeProgressListener;
+import org.knime.core.util.KNIMETimer;
 
 /**
  * Display progress in the bottom of the R-Snippet nodes.
- * 
+ *
  * @author Heiko Hofer
  */
 public class RProgressPanel extends JPanel implements NodeProgressListener {
 	/** Generated serialVersionUID */
 	private static final long serialVersionUID = -1900970914267712698L;
-	
+
 	private ExecutionMonitor m_exec;
 	private JButton m_cancelButton;
 	private JProgressBar m_progressBar;
 	private JLabel m_message;
 	private CardLayout m_cardLayout;
 
-	
 	public RProgressPanel() {
 		super(new CardLayout());
-		m_cardLayout = (CardLayout)super.getLayout();
+		m_cardLayout = (CardLayout) super.getLayout();
 		m_exec = new ExecutionMonitor();
 		JPanel defaultPanel = new JPanel();
-		defaultPanel.setPreferredSize(new Dimension(0,0));
+		defaultPanel.setPreferredSize(new Dimension(0, 0));
 		add(defaultPanel, "default");
-		
-		
+
 		m_cancelButton = new JButton("Cancel");
 		m_cancelButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 				m_exec.getProgressMonitor().setExecuteCanceled();
@@ -101,7 +101,7 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 		m_progressBar.setValue(0);
 		m_progressBar.setStringPainted(true);
 		m_message = new JLabel();
-		
+
 		JPanel progressPanel = new JPanel(new BorderLayout(5, 5));
 		JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
@@ -115,26 +115,26 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 		add(progressPanel, "progress");
 		m_cardLayout.show(this, "default");
 	}
-	
+
 	private final AtomicBoolean m_updateInProgress = new AtomicBoolean(false);
-	
+
 	public void stopMonitoring() {
 		ViewUtils.runOrInvokeLaterInEDT(new Runnable() {
 			@Override
 			public void run() {
-				stopMonitoringInternal();					
+				stopMonitoringInternal();
 			}
 		});
 	}
 
 	protected void stopMonitoringInternal() {
-		m_cancelButton.setEnabled(false);	
-		m_exec.getProgressMonitor().removeProgressListener(this);	
+		m_cancelButton.setEnabled(false);
+		m_exec.getProgressMonitor().removeProgressListener(this);
 		m_cardLayout.show(this, "default");
 	}
 
 	public void startMonitoring(final ExecutionMonitor exec) {
-		m_exec.getProgressMonitor().removeProgressListener(this);		
+		m_exec.getProgressMonitor().removeProgressListener(this);
 		m_exec = exec;
 		m_exec.getProgressMonitor().addProgressListener(this);
 		m_message.setText("");
@@ -148,21 +148,20 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 		m_updateInProgress.set(false);
 	}
 
-
 	@Override
 	public void progressChanged(final NodeProgressEvent pe) {
 		// if another state is waiting to be processed, simply return
-        // and leave the work to the previously started thread. This
-        // works because we are retrieving the current state information!
+		// and leave the work to the previously started thread. This
+		// works because we are retrieving the current state information!
 		if (m_updateInProgress.compareAndSet(false, true)) {
 			ViewUtils.runOrInvokeLaterInEDT(new Runnable() {
 				@Override
 				public void run() {
 					// let others know we are in the middle of processing
-	                // this update - they will now need to start their own job.                
-	                m_updateInProgress.set(false);
-	                progressChangedInternal();
-					
+					// this update - they will now need to start their own job.
+					m_updateInProgress.set(false);
+					progressChangedInternal();
+
 				}
 			});
 		}
@@ -171,17 +170,27 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 
 	private void progressChangedInternal() {
 		Double progress = m_exec.getProgressMonitor().getProgress();
-		String message = m_exec.getProgressMonitor().getMessage();		
+		String message = m_exec.getProgressMonitor().getMessage();
 		m_message.setText(message);
 		if (progress != null) {
 			if (m_progressBar.isIndeterminate()) {
 				m_progressBar.setIndeterminate(false);
-			}			
+			}
 			int p = (int) Math.round(progress * 100);
 			m_progressBar.setValue(p);
-			
+
 			if (p >= 100) {
-				m_cardLayout.show(this, "default");
+
+				// delay showing nothing by 200ms for the user to see that progress
+				// reached 100%
+				KNIMETimer.getInstance().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						if (p >= 100) {
+							m_cardLayout.show(RProgressPanel.this, "default");
+						}
+					}
+				}, 200);
 			}
 		}
 	}

@@ -227,7 +227,7 @@ public class RConsoleController implements RCommandExecutionListener {
 	 *            Whether currently executing.
 	 */
 	public void updateBusyState(final boolean busy) {
-		m_cancelAction.setEnabled(busy && m_commandQueue.size() != 0);
+		m_cancelAction.setEnabled(busy);
 	}
 
 	/**
