@@ -158,7 +158,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		final RController controller = new RController();
 		controller.setUseNodeContext(true);
 		try {
-			exec.setMessage("R is busy waiting...");
 			exec.checkCanceled();
 			final PortObject[] out = executeSnippet(controller, inData, flowVarRepo, exec);
 
@@ -206,7 +205,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			controller.importDataFromPorts(inData, exec.createSubExecutionContext(importTime));
 			controller.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
 
-			exec.setMessage("Running R");
 			tempWorkspaceFile = FileUtil.createTempFile("R-workspace", ".RData");
 			runRScript(controller, tempWorkspaceFile, inData, exec.createSubExecutionContext(1.0 - importTime));
 			exec.setProgress(1.0 - importTime);

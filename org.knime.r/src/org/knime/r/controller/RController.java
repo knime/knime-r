@@ -58,6 +58,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
@@ -616,11 +618,12 @@ public class RController implements IRController {
 	 * @return The created RList
 	 * @throws CanceledExecutionException
 	 */
-	private ArrayList<RList> createRListsFromBufferedDataTableColumns(final BufferedDataTable table,
-			final Collection<Object> columns, final ExecutionMonitor exec) throws CanceledExecutionException {
+	private void createRListsFromBufferedDataTableColumns(final BufferedDataTable table,
+			final Collection<Object> columns, final LinkedBlockingQueue<RList> dest, final ExecutionMonitor exec) throws CanceledExecutionException {
+		// NOTE: This method may not use RConnection (see monitoredAssign(String, BufferedDataTable, ExecutionMonitor))
+
 		final DataTableSpec tableSpec = table.getDataTableSpec();
 		final int numColumns = tableSpec.getNumColumns();
-		final ArrayList<RList> content = new ArrayList<>();
 
 		int c = 0;
 		for (final Object columnsColumn : columns) {
@@ -655,9 +658,9 @@ public class RController implements IRController {
 						rList.add((col == null) ? null : createFactor(col));
 					}
 				}
-				RList list = new RList();
+				final RList list = new RList();
 				list.put(colSpec.getName(), new REXPGenericVector(new RList(rList)));
-				content.add(list);
+				dest.add(list);
 			} else {
 				REXP ri;
 				if (type.isCompatible(BooleanValue.class)) {
@@ -674,13 +677,12 @@ public class RController implements IRController {
 					ri = createFactor(column);
 				}
 
-				RList list = new RList();
+				final RList list = new RList();
 				list.put(colSpec.getName(), ri);
-				content.add(list);
+				dest.add(list);
 			}
 		}
 		exec.setProgress(1.0);
-		return content;
 	}
 
 	/**
@@ -1009,8 +1011,7 @@ public class RController implements IRController {
 		final String[] rowNames = new String[rowCount];
 
 		final Collection<Object> columns = initializeAndFillColumns(table, rowNames, exec.createSubProgress(0.3));
-		final ArrayList<RList> content = createRListsFromBufferedDataTableColumns(table, columns,
-				exec.createSubProgress(0.5));
+		final LinkedBlockingQueue<RList> contentQueue = new LinkedBlockingQueue<>();
 
 		try {
 			// create a new empty data.frame this is required! Without, Rserve
@@ -1029,15 +1030,23 @@ public class RController implements IRController {
 		// script for removing temporary variables
 		final StringBuilder cleanupScript = new StringBuilder("rm(knime.row.names");
 
-		if (content.size() > 0) {
+		final int numColumns = columns.size();
+		if (numColumns > 0) {
 			try {
-				new MonitoredEval(exec).startMonitoredThread(() -> {
+				// Task for sending columns to Rserve
+				Future<REXP> future = new MonitoredEval(exec).startMonitoredThread(() -> {
 					synchronized (getREngine()) {
 						final RConnection conn = getREngine();
 
 						int i = 0;
-						for (final RList column : content) {
-							exec.checkCanceled();
+						// we expect exactly numColumns columns
+						// checkCancel() is handled by the monitoring thread.
+						while (i < numColumns) {
+							final RList column = contentQueue.poll(100, TimeUnit.MILLISECONDS);
+							if (column == null) {
+								continue;
+							}
+
 							conn.assign("c"+i, new REXPGenericVector(column));
 
 							buildScript.append(",c" + i);
@@ -1046,7 +1055,14 @@ public class RController implements IRController {
 						}
 					}
 					return null;
-				}).get();
+				});
+
+				// since the following does not need the RConnection, we can safely let
+				// this run in parallel with the transmission of the columns
+				createRListsFromBufferedDataTableColumns(table, columns, contentQueue,
+						exec.createSubProgress(0.5));
+
+				future.get();
 			} catch (InterruptedException e) {
 				// no cleanup to do, node will be reset anyway.
 			} catch (ExecutionException e) {
