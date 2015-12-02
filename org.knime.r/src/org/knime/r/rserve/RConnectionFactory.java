@@ -64,6 +64,11 @@ public class RConnectionFactory {
 	 *
 	 * @param cmd
 	 *            command necessary to start Rserve ("Rserve.exe" on Windows)
+	 * @param host
+	 *            For creating the RConnection in RInstance. Launching a remote
+	 *            processes is not supported, this should always be "127.0.0.1"
+	 * @param port
+	 *            Port to launch the Rserve process on.
 	 * @return <code>true</code> if Rserve is running or was successfully
 	 *         started, <code>false</code> otherwise.
 	 * @throws IOException
@@ -71,7 +76,6 @@ public class RConnectionFactory {
 	 *             either not found or does not have Rserve package installed.
 	 */
 	private static RInstance launchRserve(final String cmd, final String host, final Integer port) throws IOException {
-
 		final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
 
 		RInstance rInstance = null;
@@ -86,28 +90,41 @@ public class RConnectionFactory {
 
 			final File file = FileUtil.createTempFile("Rserve", ".conf");
 			try (FileWriter writer = new FileWriter(file)) {
-				writer.write("maxinbuff 2048000"); // unlimited
+				writer.write("maxinbuff 0"); // unlimited
 			} catch (IOException e) {
-				LOGGER.warn("Could not write configuration file for Rserve:", e);
+				LOGGER.warn("Could not write configuration file for Rserve.", e);
 			}
 
-			final ProcessBuilder builder = new ProcessBuilder().command(cmd, "--RS-port", port.toString(), "--RS-conf",
-					file.getAbsolutePath(), "--vanilla");
+			final String[] environment;
 			if (Platform.isWindows()) {
+				environment = new String[2];
 				// on windows, the Rserve executable is not reside in the R bin
 				// folder, but still requires the R.dll, so we need to put the R
 				// bin folder on path
-				builder.environment().put("path",
-						rHome + File.pathSeparator + rHome + ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\")
-								+ File.pathSeparator + System.getenv("path"));
+				environment[1] = "path=" + rHome + File.pathSeparator + rHome
+						+ ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator
+						+ System.getenv("path");
+			} else {
+				environment = new String[1];
 			}
 
 			// R HOME is required for Rserve/R to know where default libraries
 			// are located.
-			builder.environment().put("R_HOME", rHome);
-			builder.directory(new File(cmd).getParentFile());
+			environment[0] = "R_HOME=" + rHome;
 
-			final Process p = builder.start();
+			final File workingDir = new File(cmd).getParentFile();
+			if (!workingDir.exists()) {
+				LOGGER.error("Could not find working directory for Rserve, starting Rserve will most likely fail.");
+			}
+
+			/*
+			 * We use Runtime().getRuntime().exec() instead of ProcessBuilder
+			 * here, since ProcessBuilder seems to have some kind of bug: under
+			 * win32 when running in debug mode, Rserve is never started.
+			 */
+			final Process p = Runtime.getRuntime().exec(
+					cmd + " --RS-port " + port.toString() + " --RS-conf \"" + file.getAbsolutePath() + "\" --vanilla",
+					environment, workingDir);
 
 			/*
 			 * Consume output of process, to ensure buffer does not fill up,
@@ -125,7 +142,7 @@ public class RConnectionFactory {
 
 			// try connecting up to 5 times over the course of 500ms. Attempts
 			// may fail if Rserve is currently starting up.
-			for (int i = 1; i <= 5; i++) {
+			for (int i = 1; i <= 4; i++) {
 				try {
 					RConnection connection = rInstance.createConnection();
 					if (connection != null) {
@@ -137,8 +154,13 @@ public class RConnectionFactory {
 					Thread.sleep(2 ^ i * 100);
 				}
 			}
-
-			if (rInstance.getLastConnection() == null) {
+			try {
+				if (rInstance.getLastConnection() == null) {
+					// try one last (5th) time.
+					rInstance.createConnection();
+				}
+			} catch (RserveException e) {
+				LOGGER.debug("Last attempt (5/5) to connect to Rserve failed.", e);
 				throw new IOException("Could not connect to RServe (host: " + host + ", port: " + port + ").");
 			}
 
@@ -203,7 +225,7 @@ public class RConnectionFactory {
 	/*
 	 * Find a free port to launch Rserve on
 	 */
-	private static int findFreePort() throws IOException {
+	public static int findFreePort() throws IOException {
 		try (ServerSocket socket = new ServerSocket(0)) {
 			return socket.getLocalPort();
 		} catch (IOException e) {
@@ -523,7 +545,8 @@ public class RConnectionFactory {
 							b.append("rm(list = ls());"); // also includes the
 															// unloader function
 							connection.eval(b.toString());
-						} // unix automatically gets independent workspaces for every connection
+						} // unix automatically gets independent workspaces for
+							// every connection
 					} catch (RserveException e) {
 						throw new RException(
 								"Could not detach connection to R, could leak objects to other workspaces.", e);
