@@ -69,6 +69,7 @@ import org.knime.core.util.KNIMETimer;
  * Display progress in the bottom of the R-Snippet nodes.
  *
  * @author Heiko Hofer
+ * @author Jonathan Hale
  */
 public class RProgressPanel extends JPanel implements NodeProgressListener {
 	/** Generated serialVersionUID */
