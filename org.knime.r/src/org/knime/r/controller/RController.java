@@ -59,7 +59,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
@@ -88,6 +87,7 @@ import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.util.Pair;
 import org.knime.core.util.ThreadUtils;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
@@ -619,8 +619,8 @@ public class RController implements IRController {
 	 * @throws CanceledExecutionException
 	 */
 	private void createRListsFromBufferedDataTableColumns(final BufferedDataTable table,
-			final Collection<Object> columns, final LinkedBlockingQueue<REXPColumn> dest, final ExecutionMonitor exec)
-					throws CanceledExecutionException {
+			final Collection<Object> columns, final LinkedBlockingQueue<Pair<REXP, Boolean>> dest,
+			final ExecutionMonitor exec) throws CanceledExecutionException {
 		// NOTE: This method may not use RConnection (see
 		// monitoredAssign(String, BufferedDataTable, ExecutionMonitor))
 
@@ -660,7 +660,8 @@ public class RController implements IRController {
 						cells.add((rowCell == null) ? null : createFactor(rowCell));
 					}
 				}
-				dest.add(new REXPColumn(colSpec.getName(), new RList(cells), true));
+				// pair of the data and "isCollection" flag
+				dest.add(new Pair<REXP, Boolean>(new REXPGenericVector(new RList(cells)), true));
 			} else {
 				REXP ri;
 				if (type.isCompatible(BooleanValue.class)) {
@@ -677,7 +678,8 @@ public class RController implements IRController {
 					ri = createFactor(column);
 				}
 
-				dest.add(new REXPColumn(colSpec.getName(), ri, false));
+				// pair of the data and "isCollection" flag
+				dest.add(new Pair<REXP, Boolean>(ri, false));
 			}
 		}
 		exec.setProgress(1.0);
@@ -1053,7 +1055,7 @@ public class RController implements IRController {
 		final String[] rowNames = new String[rowCount];
 
 		final Collection<Object> columns = initializeAndFillColumns(table, rowNames, exec.createSubProgress(0.3));
-		final LinkedBlockingQueue<REXPColumn> contentQueue = new LinkedBlockingQueue<>();
+		final LinkedBlockingQueue<Pair<REXP, Boolean>> contentQueue = new LinkedBlockingQueue<>();
 
 		try {
 			// create a new empty data.frame this is required! Without, Rserve
@@ -1066,11 +1068,12 @@ public class RController implements IRController {
 
 		// transfer row names to Rserve
 		monitoredAssign("knime.row.names", new REXPString(rowNames), exec);
+		monitoredAssign("knime.col.names", new REXPString(table.getDataTableSpec().getColumnNames()), exec);
 
 		// script for combinding the invididual columns into a data.frame
 		final StringBuilder buildScript = new StringBuilder(name + "<-data.frame(row.names=knime.row.names");
 		// script for removing temporary variables
-		final StringBuilder cleanupScript = new StringBuilder("rm(knime.row.names");
+		final StringBuilder cleanupScript = new StringBuilder("rm(knime.row.names,knime.col.names");
 
 		final int numColumns = columns.size();
 		if (numColumns > 0) {
@@ -1085,21 +1088,22 @@ public class RController implements IRController {
 						// checkCancel() is handled by the monitoring thread.
 						while (i < numColumns) {
 							// pair of column name and converted column data
-							final REXPColumn column = contentQueue.poll(100, TimeUnit.MILLISECONDS);
+							final Pair<REXP, Boolean> column = contentQueue.take();
 							if (column == null) {
 								continue;
 							}
 
-							conn.assign("c" + i, column.getValues());
-							if (column.isCollectionType()) {
+							conn.assign("c" + i, column.getFirst());
+							if (column.getSecond()) {
 								// We need to make sure the collections are not
 								// split up into multiple columns by the
 								// data.frame call. I() ensures the column is
 								// taken "AsIs".
-								buildScript.append(",\"" + column.getName() + "\"=I(c" + i + ")");
+								buildScript.append(",I(c" + i + ")");
 							} else {
-								buildScript.append(",\"" + column.getName() + "\"=c" + i);
+								buildScript.append(",c" + i);
 							}
+							cleanupScript.append(",c" + i);
 							i++;
 						}
 					}
@@ -1110,7 +1114,7 @@ public class RController implements IRController {
 				// this run in parallel with the transmission of the columns
 				createRListsFromBufferedDataTableColumns(table, columns, contentQueue,
 					exec.createSubProgress(0.5));
-
+					
 				future.get();
 			} catch (InterruptedException e) {
 				// no cleanup to do, node will be reset anyway.
@@ -1119,7 +1123,7 @@ public class RController implements IRController {
 			}
 
 			// build the data.frame
-			monitoredEval(buildScript.append(",check.names=F)").toString(), exec);
+			monitoredEval(buildScript.append(",check.names=F);names(knime.in)<-knime.col.names").toString(), exec);
 
 			// cleanup temporary variables
 			monitoredEval(cleanupScript.append(")").toString(), exec);
