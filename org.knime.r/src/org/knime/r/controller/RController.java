@@ -283,7 +283,8 @@ public class RController implements IRController {
 						"Cannot determine major version of R. Please check the R installation defined in the KNIME preferences.");
 			}
 
-			if (m_rProps.getProperty("Rserve") == null || m_rProps.getProperty("Rserve").isEmpty()) {
+			String rserveProp = m_rProps.getProperty("Rserve.path");
+			if (rserveProp == null || rserveProp.isEmpty()) {
 				org.knime.ext.r.bin.preferences.RPreferenceInitializer.invalidatePreferenceProviderCache();
 				throw new RException("Could not find Rserve package. Please install it in your R installation by running \"install.packages('Rserve')\".");
 			}
@@ -1120,7 +1121,7 @@ public class RController implements IRController {
 				// this run in parallel with the transmission of the columns
 				createRListsFromBufferedDataTableColumns(table, columns, contentQueue,
 					exec.createSubProgress(0.5));
-					
+
 				future.get();
 			} catch (InterruptedException e) {
 				// no cleanup to do, node will be reset anyway.
