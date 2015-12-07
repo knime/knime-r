@@ -108,6 +108,7 @@ import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.RFactor;
 import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
+import org.rosuda.REngine.Rserve.RserveException;
 
 import com.sun.jna.Platform;
 
@@ -256,11 +257,11 @@ public class RController implements IRController {
 	 * @return the new RConnection
 	 * @throws Exception
 	 */
-	private RConnectionResource initRConnection() throws Exception {
+	private RConnectionResource initRConnection() throws RserveException, IOException {
 		final RConnectionResource resource = RConnectionFactory.createConnection();
 
 		if (!resource.get().isConnected()) {
-			throw new Exception("Could not initialize RController: Resource was not connected.");
+			throw new IOException("Could not initialize RController: Resource was not connected.");
 		}
 		return resource;
 	}
@@ -282,10 +283,15 @@ public class RController implements IRController {
 						"Cannot determine major version of R. Please check the R installation defined in the KNIME preferences.");
 			}
 
+			if (m_rProps.getProperty("Rserve") == null || m_rProps.getProperty("Rserve").isEmpty()) {
+				org.knime.ext.r.bin.preferences.RPreferenceInitializer.invalidatePreferenceProviderCache();
+				throw new RException("Could not find Rserve package. Please install it in your R installation by running \"install.packages('Rserve')\".");
+			}
+
 			m_connection = initRConnection();
 		} catch (final InvalidRHomeException ex) {
 			throw new RException("R Home is invalid.", ex);
-		} catch (final Exception e) {
+		} catch (final RserveException | IOException e) {
 			throw new RException("Exception occured during R initialization.", e);
 		}
 

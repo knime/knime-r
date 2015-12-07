@@ -49,7 +49,6 @@
 package org.knime.ext.r.bin.preferences;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 
 import org.knime.ext.r.bin.RBinUtil;
@@ -71,9 +70,6 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
      * Creates a new preference provider based on the given R home directory.
      *
      * @param rHome R's home directory
-     * @param retrieveProperties Whether to retrieve properties from R
-     * @throws InterruptedException
-     * @throws IOException
      */
     public DefaultRPreferenceProvider(final String rHome) {
         m_rHome = rHome;

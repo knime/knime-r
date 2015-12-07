@@ -53,9 +53,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.knime.ext.r.bin.Activator;
@@ -76,27 +77,48 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
         super(GRID);
     }
 
+    /**
+     * Modified DirectoryFieldEditor with an appropirate doCheckState() override and verification on key stroke.
+     *
+     * @author Jonathan Hale
+     */
+    private class RHomeDirectoryFieldEditor extends DirectoryFieldEditor {
+        /**
+         * @param name
+         * @param labelText
+         * @param parent
+         */
+        public RHomeDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
+            // we do most of the parent code, but set a different validate strategy.
+            init(name, labelText);
+            setChangeButtonText(JFaceResources.getString("openBrowse"));//$NON-NLS-1$
+            setValidateStrategy(VALIDATE_ON_KEY_STROKE);
+            createControl(parent);
+        }
+
+        @Override
+        protected boolean doCheckState() {
+            return checkRVersion(getStringValue());
+        }
+    }
+
     @Override
     protected void createFieldEditors() {
-        final DirectoryFieldEditor rHomePath =
-            new DirectoryFieldEditor(RPreferenceInitializer.PREF_R_HOME, "Path to R Home", getFieldEditorParent());
-
-        rHomePath.setPropertyChangeListener((e) -> {
-            checkRVersion((String)e.getNewValue());
-        });
-        addField(rHomePath);
+        addField(new RHomeDirectoryFieldEditor(RPreferenceInitializer.PREF_R_HOME, "Path to R Home",
+            getFieldEditorParent()));
 
         checkRVersion(Activator.getRHOME().getAbsolutePath());
     }
 
-    void checkRVersion(final String rHome) {
+    private boolean checkRVersion(final String rHome) {
         final Path rHomePath = Paths.get(rHome);
         if (!Files.isDirectory(rHomePath)) {
-            return;
+            setMessage("The selected path is not a directory.", ERROR);
+            return false;
         }
 
         try {
-            RBinUtil.checkRHome(rHome);
+            RBinUtil.checkRHome(rHome, true);
 
             DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
             final Properties props = prefProvider.getProperties();
@@ -104,14 +126,20 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
 
             if ("3.1.0".equals(version)) {
                 setMessage("You have selected an R 3.1.0 installation. "
-                    + "Please see http://tech.knime.org/faq#q26 for details.", IMessageProvider.WARNING);
+                    + "Please see http://tech.knime.org/faq#q26 for details.", WARNING);
+                return true;
             }
 
-            if (props.getProperty("Rserve.path") == null) {
-                setMessage("The package Rserve needs to be installed in your R installation.", IMessageProvider.ERROR);
+            if (props.getProperty("Rserve.path") == null || props.getProperty("Rserve.path").isEmpty()) {
+                setMessage("The package 'Rserve' needs to be installed in your R installation. Please install it in R using \"install.packages('Rserve')\".", WARNING);
+                return true; // to allow the user to install Rserve later without having to select the path via the annoying path dialog again.
             }
+
+            setMessage(null, NONE);
+            return true;
         } catch (InvalidRHomeException e) {
-            setMessage(e.getMessage(), IMessageProvider.ERROR);
+            setMessage(e.getMessage(), ERROR);
+            return false;
         }
     }
 

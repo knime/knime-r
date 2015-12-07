@@ -159,4 +159,12 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
         }
         return m_cachedPreferenceProvider;
     }
+
+    /**
+     * Invalidate the cached preference provider returned by {@link #getRProvider()}, to refetch R properties (which
+     * launches an external R command).
+     */
+    public static final void invalidatePreferenceProviderCache() {
+        m_cachedPreferenceProvider = null;
+    }
 }
