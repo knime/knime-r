@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.KNIMETimer;
@@ -32,6 +33,9 @@ import com.sun.jna.Platform;
 public class RConnectionFactory {
 
 	private final static NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
+
+	// connect to a localhost default port Rserve
+	private static final boolean DEBUG_RSERVE = false;
 
 	private static final ArrayList<RConnectionResource> m_resources = new ArrayList<>();
 	/*
@@ -75,9 +79,10 @@ public class RConnectionFactory {
 	 *             if Rserve could not be launched. This may be the case if R is
 	 *             either not found or does not have Rserve package installed.
 	 */
-	private static RInstance launchRserve(final String cmd, final String host, final Integer port) throws IOException {
+	private static RInstance launchRserve(final String command, final String host, final Integer port) throws IOException {
 		final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
-
+		// if debbuging, launch debug version of Rserve.
+		final String cmd = (DEBUG_RSERVE && Platform.isWindows()) ? command.replace(".exe", "_d.exe") : command;
 		RInstance rInstance = null;
 		try {
 			File commandFile = new File(cmd);
@@ -88,34 +93,34 @@ public class RConnectionFactory {
 				throw new IOException("Command is not an executable: " + cmd);
 			}
 
-			final File file = FileUtil.createTempFile("Rserve", ".conf");
+			final File tempDir = FileUtil.createTempDir("knime-r-tmp", KNIMEConstants.getKNIMETempPath().toFile());
+			final File file = new File(tempDir, "Rserve.conf");
 			try (FileWriter writer = new FileWriter(file)) {
-				writer.write("maxinbuff 0"); // unlimited
+				writer.write("maxinbuff 0\n"); // unlimited
+				writer.write("encoding utf8\n"); // encoding for java clients
 			} catch (IOException e) {
 				LOGGER.warn("Could not write configuration file for Rserve.", e);
 			}
 
 			final String[] environment;
 			if (Platform.isWindows()) {
-				environment = new String[2];
+				environment = new String[3];
 				// on windows, the Rserve executable is not reside in the R bin
 				// folder, but still requires the R.dll, so we need to put the R
 				// bin folder on path
-				environment[1] = "path=" + rHome + File.pathSeparator + rHome
+				environment[2] = "path=" + rHome + File.pathSeparator + rHome
 						+ ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator
 						+ System.getenv("path");
 			} else {
-				environment = new String[1];
+				environment = new String[2];
 			}
 
 			// R HOME is required for Rserve/R to know where default libraries
 			// are located.
 			environment[0] = "R_HOME=" + rHome;
 
-			final File workingDir = new File(cmd).getParentFile();
-			if (!workingDir.exists()) {
-				LOGGER.error("Could not find working directory for Rserve, starting Rserve will most likely fail.");
-			}
+			// so that we can clean up everything Rserve spits out
+			environment[1] = "TMPDIR=" + tempDir.getAbsolutePath();
 
 			/*
 			 * We use Runtime().getRuntime().exec() instead of ProcessBuilder
@@ -124,7 +129,7 @@ public class RConnectionFactory {
 			 */
 			final Process p = Runtime.getRuntime().exec(
 					cmd + " --RS-port " + port.toString() + " --RS-conf \"" + file.getAbsolutePath() + "\" --vanilla",
-					environment, workingDir);
+					environment, tempDir);
 
 			/*
 			 * Consume output of process, to ensure buffer does not fill up,
@@ -132,7 +137,12 @@ public class RConnectionFactory {
 			 * the external process this way.
 			 */
 			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
-				/* discard */ }).start();
+				if (DEBUG_RSERVE) {
+					// intentionally print to stdout. This is only for debugging and would otherwise
+					// completely flood the log, which could then not be read simultaneously.
+					System.out.println(line);
+				}  /* else discard */
+			}).start();
 			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")",
 					(line) -> LOGGER.debug(line)).start();
 

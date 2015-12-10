@@ -113,9 +113,8 @@ public class RBinUtil {
      *
      * @return properties about use R
      * @throws IOException in case that running R fails
-     * @throws InterruptedException when external process of calling R is interrupted
      */
-    public static Properties retrieveRProperties() throws IOException, InterruptedException {
+    public static Properties retrieveRProperties() throws IOException {
         return retrieveRProperties(RPreferenceInitializer.getRProvider());
     }
 
@@ -124,8 +123,6 @@ public class RBinUtil {
      *
      * @param rpref provider for path to R executable
      * @return properties about use R
-     * @throws IOException in case that running R fails
-     * @throws InterruptedException when external process of calling R is interrupted
      */
     public static Properties retrieveRProperties(final RPreferenceProvider rpref) {
         final File tmpPath = new File(TEMP_PATH);
@@ -223,40 +220,50 @@ public class RBinUtil {
     }
 
     /**
+     * @param rHomePath
+     * @throws InvalidRHomeException
+     */
+    public static void checkRHome(final String rHomePath) throws InvalidRHomeException {
+        checkRHome(rHomePath, false);
+    }
+
+    /**
      * Checks whether the given path is a valid R_HOME directory. It checks the presence of the bin and library folder.
      *
      * @param rHomePath path to R_HOME
+     * @param fromPreferences Set to true if this function is called from the R preference page.
      * @throws InvalidRHomeException If the specified R_HOME path is invalid
      */
-    public static void checkRHome(final String rHomePath) throws InvalidRHomeException {
+    public static void checkRHome(final String rHomePath, final boolean fromPreferences) throws InvalidRHomeException {
         final File rHome = new File(rHomePath);
-        final String msgSuffix =
-            "R_HOME ('" + rHomePath + "') is meant to be the path to the folder which is the root of Rs "
-                + "installation tree. \nIt contains a 'bin' folder which itself contains the R executable and a "
-                + "'library' folder containing the R-Java bridge library.\n"
-                + "Please change the R settings in the preferences.";
+        final String msgSuffix = ((fromPreferences) ? "" : " R_HOME ('" + rHomePath + "')"
+            + " is meant to be the path to the folder which is the root of R's "
+            + "installation tree. \nIt contains a 'bin' folder which itself contains the R executable and a "
+            + "'library' folder. Please change the R settings in the preferences.");
+        final String R_HOME_NAME = (fromPreferences) ? "Path to R Home" : "R_HOME";
+
         /* check if the directory exists */
         if (!rHome.exists()) {
-            throw new InvalidRHomeException("R_HOME does not exist." + msgSuffix);
+            throw new InvalidRHomeException(R_HOME_NAME + " does not exist." + msgSuffix);
         }
         /* Make sure R home is not a file. */
         if (!rHome.isDirectory()) {
-            throw new InvalidRHomeException("R_HOME is not a directory." + msgSuffix);
+            throw new InvalidRHomeException(R_HOME_NAME + " is not a directory." + msgSuffix);
         }
         /* Check if there is a bin directory */
         File binDir = new File(rHome, "bin");
         if (!binDir.isDirectory()) {
-            throw new InvalidRHomeException("R_HOME does not contain a folder with name 'bin'." + msgSuffix);
+            throw new InvalidRHomeException(R_HOME_NAME + " does not contain a folder with name 'bin'." + msgSuffix);
         }
         /* Check if there is an R Excecutable */
         File rExecutable = new File(new DefaultRPreferenceProvider(rHomePath).getRBinPath("R"));
         if (!rExecutable.exists()) {
-            throw new InvalidRHomeException("R_HOME does not contain an R executable." + msgSuffix);
+            throw new InvalidRHomeException(R_HOME_NAME + " does not contain an R executable." + msgSuffix);
         }
         /* Make sure there is a library directory */
         File libraryDir = new File(rHome, "library");
         if (!libraryDir.isDirectory()) {
-            throw new InvalidRHomeException("R_HOME does not contain a folder with name 'library'." + msgSuffix);
+            throw new InvalidRHomeException(R_HOME_NAME + " does not contain a folder with name 'library'." + msgSuffix);
         }
         /* On windows, we expect the appropriate platform-specific folders corresponding to our Platform */
         if (Platform.isWindows()) {
@@ -264,14 +271,14 @@ public class RBinUtil {
                 File expectedFolder = new File(binDir, "x64");
                 if (!expectedFolder.isDirectory()) {
                     throw new InvalidRHomeException(
-                        "R_HOME does not contain a folder with name 'bin\\x64'. Please install R 64-bit files."
+                        R_HOME_NAME + " does not contain a folder with name 'bin\\x64'. Please install R 64-bit files."
                             + msgSuffix);
                 }
             } else {
                 File expectedFolder = new File(binDir, "i386");
                 if (!expectedFolder.isDirectory()) {
                     throw new InvalidRHomeException(
-                        "R_HOME does not contain a folder with name 'bin\\i386'. Please install R 32-bit files."
+                        R_HOME_NAME + " does not contain a folder with name 'bin\\i386'. Please install R 32-bit files."
                             + msgSuffix);
                 }
             }

@@ -59,7 +59,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
@@ -88,6 +87,7 @@ import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.util.Pair;
 import org.knime.core.util.ThreadUtils;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
@@ -108,6 +108,7 @@ import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.RFactor;
 import org.rosuda.REngine.RList;
 import org.rosuda.REngine.Rserve.RConnection;
+import org.rosuda.REngine.Rserve.RserveException;
 
 import com.sun.jna.Platform;
 
@@ -256,11 +257,11 @@ public class RController implements IRController {
 	 * @return the new RConnection
 	 * @throws Exception
 	 */
-	private RConnectionResource initRConnection() throws Exception {
+	private RConnectionResource initRConnection() throws RserveException, IOException {
 		final RConnectionResource resource = RConnectionFactory.createConnection();
 
 		if (!resource.get().isConnected()) {
-			throw new Exception("Could not initialize RController: Resource was not connected.");
+			throw new IOException("Could not initialize RController: Resource was not connected.");
 		}
 		return resource;
 	}
@@ -282,10 +283,17 @@ public class RController implements IRController {
 						"Cannot determine major version of R. Please check the R installation defined in the KNIME preferences.");
 			}
 
+			String rserveProp = m_rProps.getProperty("Rserve.path");
+			if (rserveProp == null || rserveProp.isEmpty()) {
+				org.knime.ext.r.bin.preferences.RPreferenceInitializer.invalidatePreferenceProviderCache();
+				throw new RException(
+						"Could not find Rserve package. Please install it in your R installation by running \"install.packages('Rserve')\".");
+			}
+
 			m_connection = initRConnection();
 		} catch (final InvalidRHomeException ex) {
 			throw new RException("R Home is invalid.", ex);
-		} catch (final Exception e) {
+		} catch (final RserveException | IOException e) {
 			throw new RException("Exception occured during R initialization.", e);
 		}
 
@@ -346,7 +354,21 @@ public class RController implements IRController {
 	public void assign(final String expr, final String value) throws RException {
 		checkInitialized();
 		try {
-			getREngine().assign(expr, value);
+			synchronized (getREngine()) {
+				getREngine().assign(expr, value);
+			}
+		} catch (REngineException e) {
+			throw new RException(RException.MSG_EVAL_FAILED, e);
+		}
+	}
+
+	@Override
+	public void assign(final String expr, final REXP value) throws RException {
+		checkInitialized();
+		try {
+			synchronized (getREngine()) {
+				getREngine().assign(expr, value);
+			}
 		} catch (REngineException e) {
 			throw new RException(RException.MSG_EVAL_FAILED, e);
 		}
@@ -619,8 +641,10 @@ public class RController implements IRController {
 	 * @throws CanceledExecutionException
 	 */
 	private void createRListsFromBufferedDataTableColumns(final BufferedDataTable table,
-			final Collection<Object> columns, final LinkedBlockingQueue<RList> dest, final ExecutionMonitor exec) throws CanceledExecutionException {
-		// NOTE: This method may not use RConnection (see monitoredAssign(String, BufferedDataTable, ExecutionMonitor))
+			final Collection<Object> columns, final LinkedBlockingQueue<Pair<REXP, Boolean>> dest,
+			final ExecutionMonitor exec) throws CanceledExecutionException {
+		// NOTE: This method may not use RConnection (see
+		// monitoredAssign(String, BufferedDataTable, ExecutionMonitor))
 
 		final DataTableSpec tableSpec = table.getDataTableSpec();
 		final int numColumns = tableSpec.getNumColumns();
@@ -636,31 +660,30 @@ public class RController implements IRController {
 
 			if (type.isCollectionType()) {
 				final DataType elementType = type.getCollectionElementType();
-				final ArrayList<REXP> rList = new ArrayList<>(numColumns);
+				final ArrayList<REXP> cells = new ArrayList<>();
 				if (elementType.isCompatible(BooleanValue.class)) {
 					final byte[][] column = (byte[][]) columnsColumn;
-					for (final byte[] col : column) {
-						rList.add((col == null) ? null : new REXPLogical(col));
+					for (final byte[] rowCell : column) {
+						cells.add((rowCell == null) ? null : new REXPLogical(rowCell));
 					}
 				} else if (elementType.isCompatible(IntValue.class)) {
 					final int[][] column = (int[][]) columnsColumn;
-					for (final int[] col : column) {
-						rList.add((col == null) ? null : new REXPInteger(col));
+					for (final int[] rowCell : column) {
+						cells.add((rowCell == null) ? null : new REXPInteger(rowCell));
 					}
 				} else if (elementType.isCompatible(DoubleValue.class)) {
 					final double[][] column = (double[][]) columnsColumn;
-					for (final double[] col : column) {
-						rList.add((col == null) ? null : new REXPDouble(col));
+					for (final double[] rowCell : column) {
+						cells.add((rowCell == null) ? null : new REXPDouble(rowCell));
 					}
 				} else {
 					final String[][] column = (String[][]) columnsColumn;
-					for (final String[] col : column) {
-						rList.add((col == null) ? null : createFactor(col));
+					for (final String[] rowCell : column) {
+						cells.add((rowCell == null) ? null : createFactor(rowCell));
 					}
 				}
-				final RList list = new RList();
-				list.put(colSpec.getName(), new REXPGenericVector(new RList(rList)));
-				dest.add(list);
+				// pair of the data and "isCollection" flag
+				dest.add(new Pair<REXP, Boolean>(new REXPGenericVector(new RList(cells)), true));
 			} else {
 				REXP ri;
 				if (type.isCompatible(BooleanValue.class)) {
@@ -677,9 +700,8 @@ public class RController implements IRController {
 					ri = createFactor(column);
 				}
 
-				final RList list = new RList();
-				list.put(colSpec.getName(), ri);
-				dest.add(list);
+				// pair of the data and "isCollection" flag
+				dest.add(new Pair<REXP, Boolean>(ri, false));
 			}
 		}
 		exec.setProgress(1.0);
@@ -713,29 +735,6 @@ public class RController implements IRController {
 		}
 		final String[] levels = hash.keySet().toArray(new String[hash.size()]);
 		return new REXPFactor(valueIndices, levels);
-	}
-
-	/**
-	 * Create a new R <code>data.frame</code> from the given list and rownames.
-	 *
-	 * @param l
-	 * @param rownames
-	 * @param exec
-	 * @return
-	 * @throws RException
-	 */
-	private static REXP createDataFrame(final RList l, final REXP rownames, final ExecutionMonitor exec)
-			throws RException {
-		if (l == null || l.size() <= 0) {
-			throw new RException("", new REXPMismatchException(new REXPList(l), "data frame (must have dim>0)"));
-		}
-		if (!(l.at(0) instanceof REXPVector)) {
-			throw new RException("",
-					new REXPMismatchException(new REXPList(l), "data frame (contents must be vectors)"));
-		}
-		return new REXPGenericVector(l,
-				new REXPList(new RList(new REXP[] { new REXPString("data.frame"), new REXPString(l.keys()), rownames },
-						new String[] { "class", "names", "row.names" })));
 	}
 
 	/**
@@ -778,8 +777,7 @@ public class RController implements IRController {
 			final String[] rowIds = eval("attr(" + string + " , \"row.names\")").asStrings();
 
 			// TODO: Support int[] as row names or int which defines the column
-			// of
-			// row names:
+			// of row names:
 			// http://stat.ethz.ch/R-manual/R-patched/library/base/html/row.names.html
 			final int numRows = rowIds.length;
 			final int ommitColumn = -1;
@@ -803,7 +801,7 @@ public class RController implements IRController {
 					continue;
 				}
 
-				final REXP column = rList.at(columnIndex);
+				REXP column = rList.at(columnIndex);
 				columns[cellIndex] = new ArrayList<DataCell>(numRows);
 
 				if (column.isNull()) {
@@ -1003,6 +1001,74 @@ public class RController implements IRController {
 		return Collections.emptyList();
 	}
 
+	/**
+	 * Class which contains the column of a table for exchange between
+	 * preparation and transfer thread.
+	 *
+	 * @author Jonathan Hale
+	 */
+	private static class REXPColumn {
+
+		private final REXP m_values;
+		private final String m_name;
+		private final boolean m_isCollectionType;
+
+		/**
+		 * Constructor
+		 *
+		 * @param name
+		 *            Name of the column
+		 * @param cells
+		 *            List containing the cell values for R
+		 * @param isCollectionType
+		 *            Whether the cells are collections
+		 */
+		public REXPColumn(final String name, final RList cells, final boolean isCollectionType) {
+			m_values = new REXPGenericVector(cells);
+			m_name = name;
+			m_isCollectionType = isCollectionType;
+		}
+
+		/**
+		 * Constructor
+		 *
+		 * @param name
+		 *            Name of the column
+		 * @param cells
+		 *            REXP containing the cell values for R
+		 * @param isCollectionType
+		 *            Whether the cells are collections
+		 * @param list
+		 */
+		public REXPColumn(final String name, final REXP cells, final boolean isCollectionType) {
+			m_values = cells;
+			m_name = name;
+			m_isCollectionType = isCollectionType;
+		}
+
+		/**
+		 * @return Column name
+		 */
+		public String getName() {
+			return m_name;
+		}
+
+		/**
+		 * @return Whether the cells are collections
+		 */
+		public boolean isCollectionType() {
+			return m_isCollectionType;
+		}
+
+		/**
+		 * @return REXP containing the cell values for R
+		 */
+		public REXP getValues() {
+			return m_values;
+		}
+
+	}
+
 	@Override
 	public void monitoredAssign(final String name, final BufferedDataTable table, final ExecutionMonitor exec)
 			throws RException, CanceledExecutionException {
@@ -1011,7 +1077,7 @@ public class RController implements IRController {
 		final String[] rowNames = new String[rowCount];
 
 		final Collection<Object> columns = initializeAndFillColumns(table, rowNames, exec.createSubProgress(0.3));
-		final LinkedBlockingQueue<RList> contentQueue = new LinkedBlockingQueue<>();
+		final LinkedBlockingQueue<Pair<REXP, Boolean>> contentQueue = new LinkedBlockingQueue<>();
 
 		try {
 			// create a new empty data.frame this is required! Without, Rserve
@@ -1024,11 +1090,12 @@ public class RController implements IRController {
 
 		// transfer row names to Rserve
 		monitoredAssign("knime.row.names", new REXPString(rowNames), exec);
+		monitoredAssign("knime.col.names", new REXPString(table.getDataTableSpec().getColumnNames()), exec);
 
 		// script for combinding the invididual columns into a data.frame
 		final StringBuilder buildScript = new StringBuilder(name + "<-data.frame(row.names=knime.row.names");
 		// script for removing temporary variables
-		final StringBuilder cleanupScript = new StringBuilder("rm(knime.row.names");
+		final StringBuilder cleanupScript = new StringBuilder("rm(knime.row.names,knime.col.names");
 
 		final int numColumns = columns.size();
 		if (numColumns > 0) {
@@ -1042,14 +1109,22 @@ public class RController implements IRController {
 						// we expect exactly numColumns columns
 						// checkCancel() is handled by the monitoring thread.
 						while (i < numColumns) {
-							final RList column = contentQueue.poll(100, TimeUnit.MILLISECONDS);
+							// pair of column name and converted column data
+							final Pair<REXP, Boolean> column = contentQueue.take();
 							if (column == null) {
 								continue;
 							}
 
-							conn.assign("c"+i, new REXPGenericVector(column));
-
-							buildScript.append(",c" + i);
+							conn.assign("c" + i, column.getFirst());
+							if (column.getSecond()) {
+								// We need to make sure the collections are not
+								// split up into multiple columns by the
+								// data.frame call. I() ensures the column is
+								// taken "AsIs".
+								buildScript.append(",I(c" + i + ")");
+							} else {
+								buildScript.append(",c" + i);
+							}
 							cleanupScript.append(",c" + i);
 							i++;
 						}
@@ -1060,7 +1135,7 @@ public class RController implements IRController {
 				// since the following does not need the RConnection, we can safely let
 				// this run in parallel with the transmission of the columns
 				createRListsFromBufferedDataTableColumns(table, columns, contentQueue,
-						exec.createSubProgress(0.5));
+					exec.createSubProgress(0.5));
 
 				future.get();
 			} catch (InterruptedException e) {
@@ -1070,7 +1145,7 @@ public class RController implements IRController {
 			}
 
 			// build the data.frame
-			monitoredEval(buildScript.append(",check.names=F)").toString(), exec);
+			monitoredEval(buildScript.append(",check.names=F);names(knime.in)<-knime.col.names").toString(), exec);
 
 			// cleanup temporary variables
 			monitoredEval(cleanupScript.append(")").toString(), exec);

@@ -243,8 +243,9 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		exec.setMessage("Executing R script");
 
 		// run prefix and script itself
-		executor.execute("setwd(\"" + tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/')
-				+ "\")\n" + m_config.getScriptPrefix() + "\n" + m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim(), exec);
+		executor.execute("setwd(\"" + tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/') + "\")\n"
+				+ m_config.getScriptPrefix() + "\n"
+				+ m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim(), exec);
 		// run postfix in a separate evaluation to make sure we are not preventing the return value of the script being printed, which is
 		// important for ggplot2 graphs, which would otherwise not be drawn onto the graphics (png) device.
 		controller.monitoredEval(
@@ -264,7 +265,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			setExternalErrorOutput(output);
 
 			for (final String line : output) {
-				if (line.startsWith("Error:")) {
+				if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
 					throw new RException("Error in R code: \"" + line + "\"");
 				}
 			}

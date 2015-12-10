@@ -168,6 +168,7 @@ public class RSnippetNodePanel extends JPanel {
 
 	private RPlotPreviewFrame m_previewFrame;
 
+	private File m_tempDir;
 	private File m_imageFile;
 
 	private ExecutionMonitor m_exec;
@@ -261,11 +262,7 @@ public class RSnippetNodePanel extends JPanel {
 						if (row > -1) {
 							final String name = (String) m_objectBrowser.getValueAt(row, 0);
 							final String cmd = "print(" + name + ")";
-							try {
-								m_commandQueue.putRScript(cmd, true);
-							} catch (final InterruptedException e1) {
-								/* nothing to do */
-							}
+							m_commandQueue.putRScript(cmd, true);
 						}
 					}
 				}
@@ -667,7 +664,8 @@ public class RSnippetNodePanel extends JPanel {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 *
+	 * @return
 	 */
 	public boolean onOpen() {
 		m_closing = false;
@@ -681,7 +679,12 @@ public class RSnippetNodePanel extends JPanel {
 
 				// Create temporary image for the R plot output
 				try {
-					m_imageFile = FileUtil.createTempFile("rsnippet-default-", ".png");
+					m_tempDir = FileUtil.createTempDir("rtmp-dialog-");
+					m_imageFile = new File(m_tempDir, "rsnippet-plot.png");
+
+					// switch working directory to m_tempDir:
+					m_commandQueue.putRScript("setwd(\"" + m_tempDir.getAbsolutePath().replace('\\', '/') + "\")\n",
+							false);
 				} catch (final IOException e) {
 					throw new RException("No PNG image file handle could be created - plot's won't work", e);
 				}
@@ -737,9 +740,11 @@ public class RSnippetNodePanel extends JPanel {
 			m_previewFrame.dispose();
 			m_previewFrame = null;
 		}
-		if (m_imageFile != null) {
-			m_imageFile.delete();
+		if (m_tempDir != null) {
+			// delete the temporary directory including its contents
+			FileUtil.deleteRecursively(m_tempDir);
 			m_imageFile = null;
+			m_tempDir = null;
 		}
 		m_progressPanel.stopMonitoring();
 		if (m_isInteractive && m_controller != null) {
@@ -816,34 +821,29 @@ public class RSnippetNodePanel extends JPanel {
 	}
 
 	private void evalScriptFragment(final String script) {
-		try {
-			final String setupPlotInitCommand = setupPlotInitCommand();
-			m_commandQueue.putRScript(setupPlotInitCommand, false);
-			m_commandQueue.putRScript(script, true);
-			final RCommand future = m_commandQueue.putRScript("dev.off()", false);
+		final String setupPlotInitCommand = setupPlotInitCommand();
+		m_commandQueue.putRScript(setupPlotInitCommand, false);
+		m_commandQueue.putRScript(script, true);
+		final RCommand future = m_commandQueue.putRScript("dev.off()", false);
 
-			// update the Panel when execution has finished.
-			final Runnable checkIfDone = new Runnable() {
-				@Override
-				public void run() {
+		// update the Panel when execution has finished.
+		final Runnable checkIfDone = new Runnable() {
+			@Override
+			public void run() {
 				try {
 					try {
 						future.get(50, TimeUnit.MILLISECONDS);
-					} catch(TimeoutException e) {
+					} catch (TimeoutException e) {
 						SwingUtilities.invokeLater(this);
 						return;
 					}
 					workspaceChanged();
 				} catch (Exception e) {
 				}
-				}
-			};
+			}
+		};
 
-			SwingUtilities.invokeLater(checkIfDone);
-
-		} catch (final InterruptedException e1) {
-			throw new RuntimeException(e1);
-		}
+		SwingUtilities.invokeLater(checkIfDone);
 	}
 
 	/**
