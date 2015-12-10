@@ -96,19 +96,15 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	 * @return {@link RCommand} which wraps the added <code>rScript</code>. Use
 	 *         {@link RCommand#get()} to wait for execution and fetch the result
 	 *         of evaluation if any.
-	 * @throws InterruptedException
-	 *             {@inheritDoc}
-	 * @throws NullPointerException
-	 *             {@inheritDoc}
 	 */
-	public RCommand putRScript(final String rScript, final boolean showInConsole) throws InterruptedException {
+	public RCommand putRScript(final String rScript, final boolean showInConsole) {
 		RCommand rCommand = new RCommand(rScript.trim(), showInConsole);
-		put(rCommand);
+		add(rCommand); // we did not limit capacity, this should always work.
 		return rCommand;
 	}
 
 	/**
-	 * Interface for classes listening to the exection of commands in a
+	 * Interface for classes listening to the execution of commands in a
 	 * {@link RCommandQueue}.
 	 *
 	 * @author Jonathan Hale
@@ -310,38 +306,6 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 		}
 
 	}
-
-	/**
-	 * Wrap the command in R code which handles correctly printing its return
-	 * value.
-	 *
-	 * <pre>
-	 * {@code
-	 * tryCatch(
-	 * # Some return values are wrapped in an `invisible()` call, which
-	 * # signals that their return value may not be printed by the console.
-	 * # To access the invisible flag which is appended by that function,
-	 * # we need to use `withVisible`.
-	 * 	knime.tmp.ret<-withVisible({ ... }),
-	 *
-	 * # when an error occurs, its condition message will be printed.
-	 * # This avoids an "Error in withVisible({" prefix in our error
-	 * # messages. We prepend our own 'Error:' prefix. A whitespace is
-	 * # inserted in between by paste.
-	 * 	error=function(e) message(paste('Error:',conditionMessage(e)))
-	 * )
-	 * if(!is.null(knime.tmp.ret)) {
-	 * # Here is where we check the visibility flag to make sure we only
-	 * # print to the console if we need to.
-	 * 	if(knime.tmp.ret$visible)
-	 * 		print(knime.tmp.ret$value)
-	 * }
-	 * </pre>
-	 *
-	 * @param command
-	 *            Command to wrap.
-	 * @return
-	 */
 
 	/**
 	 * Start this queues execution thread (Thread which executes the queues

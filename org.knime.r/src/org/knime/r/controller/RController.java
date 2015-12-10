@@ -286,7 +286,8 @@ public class RController implements IRController {
 			String rserveProp = m_rProps.getProperty("Rserve.path");
 			if (rserveProp == null || rserveProp.isEmpty()) {
 				org.knime.ext.r.bin.preferences.RPreferenceInitializer.invalidatePreferenceProviderCache();
-				throw new RException("Could not find Rserve package. Please install it in your R installation by running \"install.packages('Rserve')\".");
+				throw new RException(
+						"Could not find Rserve package. Please install it in your R installation by running \"install.packages('Rserve')\".");
 			}
 
 			m_connection = initRConnection();
@@ -353,7 +354,21 @@ public class RController implements IRController {
 	public void assign(final String expr, final String value) throws RException {
 		checkInitialized();
 		try {
-			getREngine().assign(expr, value);
+			synchronized (getREngine()) {
+				getREngine().assign(expr, value);
+			}
+		} catch (REngineException e) {
+			throw new RException(RException.MSG_EVAL_FAILED, e);
+		}
+	}
+
+	@Override
+	public void assign(final String expr, final REXP value) throws RException {
+		checkInitialized();
+		try {
+			synchronized (getREngine()) {
+				getREngine().assign(expr, value);
+			}
 		} catch (REngineException e) {
 			throw new RException(RException.MSG_EVAL_FAILED, e);
 		}
