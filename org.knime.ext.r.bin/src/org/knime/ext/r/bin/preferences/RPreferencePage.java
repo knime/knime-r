@@ -63,6 +63,8 @@ import org.knime.ext.r.bin.Activator;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
 
+import com.sun.jna.Platform;
+
 /**
  * Preference page for settings the R installation directory.
  *
@@ -130,9 +132,17 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
                 return true;
             }
 
-            if (props.getProperty("Rserve.path") == null || props.getProperty("Rserve.path").isEmpty()) {
+            final String rservePath = props.getProperty("Rserve.path");
+            if (rservePath == null || props.getProperty("Rserve.path").isEmpty()) {
                 setMessage("The package 'Rserve' needs to be installed in your R installation. Please install it in R using \"install.packages('Rserve')\".", WARNING);
                 return true; // to allow the user to install Rserve later without having to select the path via the annoying path dialog again.
+            }
+
+            final String cairoPath = props.getProperty("Cairo.path");
+            if (Platform.isMac() && (cairoPath == null || cairoPath.isEmpty())) {
+                // under Mac we need Cairo package to use png()/bmp() etc devices.
+                setMessage("The package 'Cairo' needs to be installed in your R installation for bitmap graphics devices to work properly. Please install it in R using \"install.packages('Cairo')\".", WARNING);
+                return true;
             }
 
             setMessage(null, NONE);

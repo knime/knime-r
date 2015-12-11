@@ -283,13 +283,12 @@ public class RController implements IRController {
 						"Cannot determine major version of R. Please check the R installation defined in the KNIME preferences.");
 			}
 
-			String rserveProp = m_rProps.getProperty("Rserve.path");
+			final String rserveProp = m_rProps.getProperty("Rserve.path");
 			if (rserveProp == null || rserveProp.isEmpty()) {
 				org.knime.ext.r.bin.preferences.RPreferenceInitializer.invalidatePreferenceProviderCache();
 				throw new RException(
 						"Could not find Rserve package. Please install it in your R installation by running \"install.packages('Rserve')\".");
 			}
-
 			m_connection = initRConnection();
 		} catch (final InvalidRHomeException ex) {
 			throw new RException("R Home is invalid.", ex);
@@ -308,7 +307,21 @@ public class RController implements IRController {
 				LOGGER.error("R initialisation failed. " + e.getMessage());
 				throw new RuntimeException(e);
 			}
-		}
+		} else if (Platform.isMac()) {
+			// produce a warning message if 'Cairo' package is not installed.
+			try {
+				final REXP ret = eval("find.package('Cairo')");
+				final String cairoPath = ret.asString();
+
+				if (cairoPath == null || cairoPath.isEmpty()) {
+					// under Mac we need Cairo package to use png()/bmp() etc devices.
+		            throw new RException("");
+				}
+
+			} catch (RException | REXPMismatchException e) {
+				LOGGER.warn("The package 'Cairo' needs to be installed in your R installation for bitmap graphics devices to work properly. Please install it in R using \"install.packages('Cairo')\".");
+			}
+        }
 	}
 
 	// --- Simple Getters ---

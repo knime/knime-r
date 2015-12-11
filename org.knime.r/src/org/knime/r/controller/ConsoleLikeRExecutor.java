@@ -120,7 +120,8 @@ public class ConsoleLikeRExecutor {
 	 * </pre>
 	 */
 	public static final String CODE_EXECUTION = //
-	"knime.tmp.ret<-NULL;for(exp in parse(text=knime.tmp.script)){tryCatch(knime.tmp.ret<-withVisible(eval(exp)),error=function(e) message(paste('" + ERROR_PREFIX + "',conditionMessage(e))))\n"
+	"knime.tmp.ret<-NULL;for(exp in parse(text=knime.tmp.script)){tryCatch(knime.tmp.ret<-withVisible(eval(exp)),error=function(e) message(paste('"
+			+ ERROR_PREFIX + "',conditionMessage(e))))\n"
 			+ "if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}};rm(knime.tmp.script,exp);knime.tmp.ret$value";
 
 	/**
@@ -162,7 +163,7 @@ public class ConsoleLikeRExecutor {
 	 * </pre>
 	 */
 	public static final String CAPTURE_OUTPUT_CLEANUP = //
-	"rm(knime.tmp.ret,knime.tmp.script,knime.output.ret,knime.stdout.con,knime.stderr.con,knime.stdout,knime.stderr)";
+	"rm(knime.tmp.ret,knime.output.ret,knime.stdout.con,knime.stderr.con,knime.stdout,knime.stderr)";
 
 	private final RController m_controller;
 	private String stdout = "";

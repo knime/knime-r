@@ -56,6 +56,8 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.util.FileUtil;
 
+import com.sun.jna.Platform;
+
 /**
  * Configurations for R nodes with image output.
  *
@@ -86,10 +88,20 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 	@Override
 	protected String getScriptPrefix() {
 		final File imageFile = getImageFile();
-		return "png(\"" + imageFile.getAbsolutePath().replace('\\', '/') + "\"" + ", width="
+		final StringBuilder prefix = new StringBuilder();
+
+		String bitmapType = "";
+		if (Platform.isMac()) {
+			bitmapType = ",bitmapType='cairo'";
+			prefix.append("library('Cairo');");
+		}
+
+		prefix.append("options(device = 'png'" + bitmapType + ")").append("\n");
+		prefix.append("png(\"" + imageFile.getAbsolutePath().replace('\\', '/') + "\"" + ", width="
 				+ m_settings.getImageWidth() + ", height=" + m_settings.getImageHeight() + ", pointsize="
 				+ m_settings.getTextPointSize() + ", bg=\"" + m_settings.getImageBackgroundColor() + "\"" + ", res="
-				+ m_settings.getImageResolution() + ")";
+				+ m_settings.getImageResolution() + ")");
+		return prefix.toString();
 	}
 
 	@Override

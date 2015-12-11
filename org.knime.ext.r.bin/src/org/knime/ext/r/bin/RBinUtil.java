@@ -141,6 +141,7 @@ public class RBinUtil {
             + "foo <- paste(names(R.Version()), R.Version(), sep='=')\n"
             + "foo <- append(foo, paste('memory.limit', memory.limit(), sep='='))\n"
             + "foo <- append(foo, paste('Rserve.path', find.package('Rserve', quiet=TRUE), sep='='))\n"
+            + "foo <- append(foo, paste('Cairo.path', find.package('Cairo', quiet=TRUE), sep='='))\n"
             + "foo <- append(foo, paste('rhome', R.home(), sep='='))\n" //
             + "write(foo, file='" + propertiesPath + "', ncolumns=1, append=FALSE, sep='\\n')\nq()";
 
