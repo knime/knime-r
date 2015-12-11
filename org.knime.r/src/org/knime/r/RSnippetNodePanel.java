@@ -113,6 +113,8 @@ import org.knime.r.ui.RProgressPanel;
 import org.knime.r.ui.RSnippetTextArea;
 import org.rosuda.REngine.REXP;
 
+import com.sun.jna.Platform;
+
 /**
  * The dialog component for RSnippet-Nodes.
  *
@@ -412,7 +414,14 @@ public class RSnippetNodePanel extends JPanel {
 	private String setupPlotInitCommand() {
 		final StringBuilder b = new StringBuilder();
 		if (m_imageFile != null) {
-			b.append("options(device = \"png\")").append("\n");
+			String bitmapType = "";
+
+			if (Platform.isMac()) {
+				bitmapType = ",bitmapType='cairo'";
+				b.append("library('Cairo');");
+			}
+
+			b.append("options(device = 'png'" + bitmapType + ")").append("\n");
 			b.append("png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")").append("\n");
 		}
 		return b.toString();
