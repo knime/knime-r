@@ -150,7 +150,7 @@ public final class RPathUtil {
             new String[]{"/usr/lib64/R", "/usr/lib/R", "/usr/local/lib64/R", "/usr/local/lib/R",
                 "/Library/Frameworks/R.framework/Resources"};
         for (String s : searchPaths) {
-            File f = new File(s);
+            File f = new File(s, "bin");
             if (f.isDirectory()) {
                 systemRHome = f;
                 break;
