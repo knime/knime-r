@@ -152,7 +152,7 @@ public final class RPathUtil {
         for (String s : searchPaths) {
             File f = new File(s, "bin");
             if (f.isDirectory()) {
-                systemRHome = f;
+                systemRHome = f.getParentFile();
                 break;
             }
         }
