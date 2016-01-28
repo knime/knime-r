@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -38,6 +39,26 @@ public class RConnectionFactory {
 	private static final boolean DEBUG_RSERVE = false;
 
 	private static final ArrayList<RConnectionResource> m_resources = new ArrayList<>();
+
+	private static final File tempDir;
+
+	static {
+		// create temporary directory for R
+		File dir;
+		try {
+			// try creating a subdirectory in the KNIME temp folder to have all
+			// R stuff in one place.
+			dir = FileUtil.createTempDir("knime-r-tmp", KNIMEConstants.getKNIMETempPath().toFile());
+		} catch (final IOException e) {
+			// this should never happen, but if it does, using the existing
+			// KNIME temp folder directly should work well enough.
+			LOGGER.warn("Could not create temporary directory for R integration.", e);
+			dir = KNIMEConstants.getKNIMETempPath().toFile();
+		}
+
+		tempDir = dir;
+	}
+
 	/*
 	 * Whether the shutdown hooks have been added. Using atomic boolean enables
 	 * us to make sure we only add the shutdown hooks once.
@@ -64,6 +85,67 @@ public class RConnectionFactory {
 	}
 
 	/**
+	 * @return Configuration file for Rserve
+	 */
+	private static File createRserveConfig() {
+		final File file = new File(tempDir, "Rserve.conf");
+		try (FileWriter writer = new FileWriter(file)) {
+			writer.write("maxinbuff 0\n"); // unlimited
+			writer.write("encoding utf8\n"); // encoding for java clients
+		} catch (IOException e) {
+			LOGGER.warn("Could not write configuration file for Rserve.", e);
+		}
+
+		return file;
+	}
+
+	/**
+	 * Start an Rserve process with a given Rserve executable command.
+	 *
+	 * @param command
+	 *            Rserve executable command
+	 * @param host
+	 *            Host of the Rserve server
+	 * @param port
+	 *            Port to start the Rserve server on
+	 * @return the started Rserve process
+	 * @throws IOException
+	 */
+	private static Process launchRserveProcess(final String command, final String host, final Integer port)
+			throws IOException {
+		final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
+
+		final File configFile = createRserveConfig();
+		final ProcessBuilder builder = new ProcessBuilder();
+		builder.command(command, "--RS-port", port.toString(), "--RS-conf \"" + configFile.getAbsolutePath() + "\"",
+				"--vanilla");
+
+		final Map<String, String> env = builder.environment();
+		if (Platform.isWindows()) {
+			// on windows, the Rserve executable is not reside in the R bin
+			// folder, but still requires the R.dll, so we need to put the R
+			// bin folder on path
+			env.put("PATH", rHome + File.pathSeparator + rHome
+					+ ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator + env.get("PATH"));
+		} else {
+			// on Unix we need priorize the "R_HOME/lib" folder in the
+			// LD_LIBRARY_PATH to ensure that the shared libraries of the
+			// selected R installation are used.
+			env.put("LD_LIBRARY_PATH",
+					rHome + File.separator + "lib" + File.pathSeparator + env.get("LD_LIBRARY_PATH"));
+
+		}
+		// R HOME is required for Rserve/R to know where default libraries
+		// are located.
+		env.put("R_HOME", rHome);
+
+		// so that we can clean up everything Rserve spits out
+		env.put("TMPDIR", tempDir.getAbsolutePath());
+
+		return builder.start();
+	}
+
+	/**
 	 * Attempt to start Rserve and create a connection to it.
 	 *
 	 * @param cmd
@@ -79,57 +161,26 @@ public class RConnectionFactory {
 	 *             if Rserve could not be launched. This may be the case if R is
 	 *             either not found or does not have Rserve package installed.
 	 */
-	private static RInstance launchRserve(final String command, final String host, final Integer port) throws IOException {
-		final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
-		// if debbuging, launch debug version of Rserve.
+	private static RInstance launchRserve(final String command, final String host, final Integer port)
+			throws IOException {
+		// if debugging, launch debug version of Rserve.
 		final String cmd = (DEBUG_RSERVE && Platform.isWindows()) ? command.replace(".exe", "_d.exe") : command;
+
+		File commandFile = new File(cmd);
+		if (!commandFile.exists()) {
+			throw new IOException("Command not found: " + cmd);
+		}
+		if (!commandFile.canExecute()) {
+			throw new IOException("Command is not an executable: " + cmd);
+		}
+
 		RInstance rInstance = null;
 		try {
-			File commandFile = new File(cmd);
-			if (!commandFile.exists()) {
-				throw new IOException("Command not found: " + cmd);
-			}
-			if (!commandFile.canExecute()) {
-				throw new IOException("Command is not an executable: " + cmd);
-			}
+			final Process p = launchRserveProcess(command, host, port);
 
-			final File tempDir = FileUtil.createTempDir("knime-r-tmp", KNIMEConstants.getKNIMETempPath().toFile());
-			final File file = new File(tempDir, "Rserve.conf");
-			try (FileWriter writer = new FileWriter(file)) {
-				writer.write("maxinbuff 0\n"); // unlimited
-				writer.write("encoding utf8\n"); // encoding for java clients
-			} catch (IOException e) {
-				LOGGER.warn("Could not write configuration file for Rserve.", e);
-			}
-
-			final String[] environment;
-			if (Platform.isWindows()) {
-				environment = new String[3];
-				// on windows, the Rserve executable is not reside in the R bin
-				// folder, but still requires the R.dll, so we need to put the R
-				// bin folder on path
-				environment[2] = "path=" + rHome + File.pathSeparator + rHome
-						+ ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator
-						+ System.getenv("path");
-			} else {
-				environment = new String[2];
-			}
-
-			// R HOME is required for Rserve/R to know where default libraries
-			// are located.
-			environment[0] = "R_HOME=" + rHome;
-
-			// so that we can clean up everything Rserve spits out
-			environment[1] = "TMPDIR=" + tempDir.getAbsolutePath();
-
-			/*
-			 * We use Runtime().getRuntime().exec() instead of ProcessBuilder
-			 * here, since ProcessBuilder seems to have some kind of bug: under
-			 * win32 when running in debug mode, Rserve is never started.
-			 */
-			final Process p = Runtime.getRuntime().exec(
-					cmd + " --RS-port " + port.toString() + " --RS-conf \"" + file.getAbsolutePath() + "\" --vanilla",
-					environment, tempDir);
+			// wrap the process, requires host and port to create RConnections
+			// later.
+			rInstance = new RInstance(p, host, port);
 
 			/*
 			 * Consume output of process, to ensure buffer does not fill up,
@@ -138,17 +189,15 @@ public class RConnectionFactory {
 			 */
 			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
 				if (DEBUG_RSERVE) {
-					// intentionally print to stdout. This is only for debugging and would otherwise
-					// completely flood the log, which could then not be read simultaneously.
+					// intentionally print to stdout. This is only for debugging
+					// and would otherwise
+					// completely flood the log, which could then not be read
+					// simultaneously.
 					System.out.println(line);
-				}  /* else discard */
+				} /* else discard */
 			}).start();
 			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")",
 					(line) -> LOGGER.debug(line)).start();
-
-			// wrap the process, requires host and port to create RConnections
-			// later.
-			rInstance = new RInstance(p, host, port);
 
 			// try connecting up to 5 times over the course of 500ms. Attempts
 			// may fail if Rserve is currently starting up.
@@ -177,21 +226,17 @@ public class RConnectionFactory {
 			return rInstance;
 		} catch (Exception x) {
 			if (rInstance != null) {
-				// terminate the R process incase still running
+				// terminate the R process in case still running
 				rInstance.close();
 			}
 			throw new IOException("Could not start Rserve process.", x);
-		} finally {
-
 		}
-
 	}
 
 	/**
 	 * Create a new {@link RConnection}, creating a new R instance beforehand,
-	 * if on windows, for every single connection, unless a connection of an
-	 * existing instance has been closed in which case an R instance
-	 * weleratorConfiguration, org.eclipse.ui.contexts.will be reused.
+	 * unless a connection of an existing instance has been closed in which case
+	 * an R instance will be reused.
 	 *
 	 * The method does not check {@link RConnection#isConnected()}.
 	 *
@@ -273,7 +318,7 @@ public class RConnectionFactory {
 			}
 		});
 
-		// m_initialize already set to true in compareAndSet
+		// m_initialized already set to true in compareAndSet
 	}
 
 	/**
