@@ -84,7 +84,7 @@ public class RConsoleControllerTest {
 
 		/* test append(...) */
 		consoleController.append("Hello World!", 0);
-		Thread.sleep(10); // append is executed in separate EDT thread
+		Thread.sleep(100); // append is executed in separate EDT thread
 
 		final StyledDocument doc = console.getStyledDocument();
 		assertEquals("Appending to the console failed.", "Hello World!", console.getText());
