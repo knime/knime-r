@@ -449,7 +449,16 @@ public class RController implements IRController {
 		checkInitialized();
 		final List<FlowVariable> flowVars = new ArrayList<FlowVariable>();
 		try {
-			final REXP value = getREngine().get(variableName, null, true);
+			// this used to be:
+			//    getREngine().get(variableName, null, true);
+			// but that caused crashes on Mac (see AP-5646) - Jonathan hasn't gotten to the bottom of it but apparently
+			// it's the above commented line that kills RServe. Be more paranoid here and check existence first
+			final REXP exists = getREngine().eval("exists(\"" + variableName + "\")");
+
+			if (exists.asBytes()[0] == REXPLogical.FALSE) {
+				return Collections.emptyList();
+			}
+			final REXP value = getREngine().eval("try(" + variableName + "\")");
 
 			if (value == null) {
 				// A variable with this name does not exist
@@ -468,7 +477,7 @@ public class RController implements IRController {
 				}
 			}
 		} catch (REXPMismatchException e) {
-			throw new RException("Error parsing \"" + variableName + "\"", e);
+			throw new RException("Error importing flow variables from \"" + variableName + "\"", e);
 		} catch (REngineException e) {
 			// the variable name was not found.
 		}
