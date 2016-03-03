@@ -44,8 +44,10 @@
  */
 package org.knime.r.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -315,13 +317,51 @@ public class RController implements IRController {
 
 				if (cairoPath == null || cairoPath.isEmpty()) {
 					// under Mac we need Cairo package to use png()/bmp() etc devices.
-		            throw new RException("");
+					throw new RException("");
 				}
 
 			} catch (RException | REXPMismatchException e) {
-				LOGGER.warn("The package 'Cairo' needs to be installed in your R installation for bitmap graphics devices to work properly. Please install it in R using \"install.packages('Cairo')\".");
+				LOGGER.warn("The package 'Cairo' needs to be installed in your R installation for bitmap graphics "
+						+ "devices to work properly. Please install it in R using \"install.packages('Cairo')\".");
+				return;
 			}
-        }
+
+			// Cairo requires XQuartz to be installed. We make sure it is, since
+			// loading the Cairo library will crash Rserve otherwise.
+			final ProcessBuilder builder = new ProcessBuilder("mdls", "-name", "kMDItemVersion",
+					"/Applications/Utilities/XQuartz.app");
+
+			boolean found = false;
+			try {
+				final Process process = builder.start();
+
+				// check if output of process was a valid version
+				final BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				String line;
+				while ((line = stdout.readLine()) != null) {
+					if (line.matches("kMDItemVersion = \"2(.[0-9]+)*\"")) {
+						found = true;
+					}
+				}
+
+				try {
+					process.waitFor();
+				} catch (InterruptedException e) {
+					// happens when user cancels node at this point for example
+					LOGGER.debug("Interrupted while waiting for mdls process to terminate.", e);
+				}
+
+			} catch (IOException e) {
+				// should never happen, just in case, here is something for
+				// users to report if they accidentally deleted their mdls
+				LOGGER.error("Could not run mdls to check for XQuartz version.");
+			}
+
+			if (!found) {
+				throw new RuntimeException("XQuartz is required for the Cairo library on MacOS. Please download "
+						+ "and install XQuartz from www.xquartz.org.");
+			}
+		}
 	}
 
 	// --- Simple Getters ---
