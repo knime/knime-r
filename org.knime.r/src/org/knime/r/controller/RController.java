@@ -339,7 +339,7 @@ public class RController implements IRController {
 				final BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
 				String line;
 				while ((line = stdout.readLine()) != null) {
-					if (line.matches("kMDItemVersion = \"2(.[0-9]+)*\"")) {
+					if (line.matches("kMDItemVersion = \"2(?:\\.[0-9]+)*\"")) {
 						found = true;
 					}
 				}
