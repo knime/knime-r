@@ -92,6 +92,13 @@ public class RConnectionFactory {
 		try (FileWriter writer = new FileWriter(file)) {
 			writer.write("maxinbuff 0\n"); // unlimited
 			writer.write("encoding utf8\n"); // encoding for java clients
+
+			/* YES, EA! See https://github.com/s-u/Rserve/blob/
+			 * 4800e9dc1c67cf4fbc14c502dc7615b644610152/src/Rserv.c#L1134
+			 */
+			writer.write("deamon disable\n");
+			// keeping this incase the typo one is removed in a future version:
+			writer.write("daemon disable\n");
 		} catch (IOException e) {
 			LOGGER.warn("Could not write configuration file for Rserve.", e);
 		}
@@ -117,8 +124,7 @@ public class RConnectionFactory {
 
 		final File configFile = createRserveConfig();
 		final ProcessBuilder builder = new ProcessBuilder();
-		builder.command(command, "--RS-port", port.toString(), "--RS-conf \"" + configFile.getAbsolutePath() + "\"",
-				"--vanilla");
+		builder.command(command, "--RS-port", port.toString(), "--RS-conf", configFile.getAbsolutePath(), "--vanilla");
 
 		final Map<String, String> env = builder.environment();
 		if (Platform.isWindows()) {
@@ -164,7 +170,8 @@ public class RConnectionFactory {
 	private static RInstance launchRserve(final String command, final String host, final Integer port)
 			throws IOException {
 		// if debugging, launch debug version of Rserve.
-		final String cmd = (DEBUG_RSERVE && Platform.isWindows()) ? command.replace(".exe", "_d.exe") : command;
+		final String cmd = (DEBUG_RSERVE)
+				? ((Platform.isWindows()) ? command.replace(".exe", "_d.exe") : command + ".dbg") : command;
 
 		File commandFile = new File(cmd);
 		if (!commandFile.exists()) {
@@ -176,7 +183,7 @@ public class RConnectionFactory {
 
 		RInstance rInstance = null;
 		try {
-			final Process p = launchRserveProcess(command, host, port);
+			final Process p = launchRserveProcess(cmd, host, port);
 
 			// wrap the process, requires host and port to create RConnections
 			// later.
@@ -545,7 +552,7 @@ public class RConnectionFactory {
 		 */
 		public RConnection get() {
 			if (m_available) {
-				throw new IllegalAccessError("Please RConnectionResource#aquire() first before calling get.");
+				throw new IllegalAccessError("Please RConnectionResource#acquire() first before calling get.");
 			}
 			if (m_instance == null) {
 				throw new NullPointerException("The resource has been closed already.");

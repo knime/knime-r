@@ -108,7 +108,7 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
                 return rservePath + "i386" + File.separator + "Rserve.exe";
             }
         } else {
-            return rservePath + "Rserve.dbg";
+            return rservePath + "Rserve";
         }
     }
 
