@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KNIME R-Project nodes
 Bundle-SymbolicName: org.knime.r;singleton:=true
-Bundle-Version: 3.1.1.qualifier
+Bundle-Version: 3.1.2.qualifier
 Bundle-ClassPath: org-knime-r.jar,
  lib/rengine-1.8.4.jar,
  lib/rserve-engine-1.8.4.jar
@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",
  com.fifesoft.languagesupport;bundle-version="[2.5.7,3.0.0)",
  com.fifesoft.rstaui;bundle-version="[2.5.7,3.0.0)",
  com.fifesoft.rsyntaxtextarea;bundle-version="[2.5.7,3.0.0)",
- com.fifesoft.spellchecker;bundle-version="[2.5.7,3.0.0)"
+ com.fifesoft.spellchecker;bundle-version="[2.5.7,3.0.0)",
+ org.apache.commons.lang3;bundle-version="[3.2.1,4.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.knime.base

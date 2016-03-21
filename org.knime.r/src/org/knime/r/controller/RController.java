@@ -44,8 +44,10 @@
  */
 package org.knime.r.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,6 +62,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.commons.lang3.StringUtils;
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
@@ -136,6 +139,10 @@ public class RController implements IRController {
 
 	private boolean m_initialized = false;
 	private boolean m_useNodeContext = false;
+
+	private static boolean quartzFound;
+
+	private static boolean cairoFound;
 
 	/**
 	 * Constructor. Calls {@link #initialize()}. To avoid initialization, use
@@ -308,20 +315,67 @@ public class RController implements IRController {
 				throw new RuntimeException(e);
 			}
 		} else if (Platform.isMac()) {
-			// produce a warning message if 'Cairo' package is not installed.
-			try {
-				final REXP ret = eval("find.package('Cairo')");
-				final String cairoPath = ret.asString();
+			checkCairoOnMac();
+		}
+	}
 
-				if (cairoPath == null || cairoPath.isEmpty()) {
-					// under Mac we need Cairo package to use png()/bmp() etc devices.
-		            throw new RException("");
-				}
+	private void checkCairoOnMac() throws RException {
+		if (cairoFound && quartzFound) {
+			return;
+		}
 
-			} catch (RException | REXPMismatchException e) {
-				LOGGER.warn("The package 'Cairo' needs to be installed in your R installation for bitmap graphics devices to work properly. Please install it in R using \"install.packages('Cairo')\".");
+		// produce a warning message if 'Cairo' package is not installed.
+		try {
+			final REXP ret = eval("find.package('Cairo')");
+			final String cairoPath = ret.asString();
+
+			if (!StringUtils.isEmpty(cairoPath)) {
+				// under Mac we need Cairo package to use png()/bmp() etc devices.
+				cairoFound = true;
 			}
-        }
+		} catch (RException | REXPMismatchException e) {
+			LOGGER.debug("Error while querying Cairo package version: "+ e.getMessage(), e);
+		}
+
+		if (!cairoFound) {
+			LOGGER.warn("The package 'Cairo' needs to be installed in your R installation for bitmap graphics "
+					+ "devices to work properly. Please install it in R using \"install.packages('Cairo')\".");
+			return;
+		}
+
+		// Cairo requires XQuartz to be installed. We make sure it is, since
+		// loading the Cairo library will crash Rserve otherwise.
+		final ProcessBuilder builder = new ProcessBuilder("mdls", "-name", "kMDItemVersion",
+				"/Applications/Utilities/XQuartz.app");
+
+		try {
+			final Process process = builder.start();
+
+			// check if output of process was a valid version
+			final BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line;
+			while ((line = stdout.readLine()) != null) {
+				if (line.matches("kMDItemVersion = \"2(?:\\.[0-9]+)+\"")) {
+					quartzFound = true;
+				}
+			}
+
+			try {
+				process.waitFor();
+			} catch (InterruptedException e) {
+				// happens when user cancels node at this point for example
+				LOGGER.debug("Interrupted while waiting for mdls process to terminate.", e);
+			}
+		} catch (IOException e) {
+			// should never happen, just in case, here is something for
+			// users to report if they accidentally deleted their mdls
+			LOGGER.error("Could not run mdls to check for XQuartz version: " + e.getMessage(), e);
+		}
+
+		if (!quartzFound) {
+			throw new RException("XQuartz is required for the Cairo library on MacOS. Please download "
+					+ "and install XQuartz from http://www.xquartz.org/.");
+		}
 	}
 
 	// --- Simple Getters ---
