@@ -122,8 +122,7 @@ public class RConnectionFactory {
 
 		final File configFile = createRserveConfig();
 		final ProcessBuilder builder = new ProcessBuilder();
-		builder.command(command, "--RS-port", port.toString(), "--RS-conf \"" + configFile.getAbsolutePath() + "\"",
-				"--vanilla");
+		builder.command(command, "--RS-port", port.toString(), "--RS-conf", configFile.getAbsolutePath(), "--vanilla");
 
 		final Map<String, String> env = builder.environment();
 		if (Platform.isWindows()) {
