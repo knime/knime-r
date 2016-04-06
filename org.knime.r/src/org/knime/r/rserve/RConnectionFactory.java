@@ -99,6 +99,11 @@ public class RConnectionFactory {
 			writer.write("deamon disable\n");
 			// keeping this incase the typo one is removed in a future version:
 			writer.write("daemon disable\n");
+			if (Boolean.getBoolean("java.awt.headless")) {
+				// make sure to run R in non-interactive mode when running
+				// headless KNIME (see AP-5748)
+				writer.write("interactive no\n");
+			}
 		} catch (IOException e) {
 			LOGGER.warn("Could not write configuration file for Rserve.", e);
 		}
