@@ -512,7 +512,7 @@ public class RController implements IRController {
 			if (exists.asBytes()[0] == REXPLogical.FALSE) {
 				return Collections.emptyList();
 			}
-			final REXP value = getREngine().eval("try(" + variableName + "\")");
+			final REXP value = getREngine().eval("try(" + variableName + ")");
 
 			if (value == null) {
 				// A variable with this name does not exist
