@@ -200,11 +200,7 @@ public class RConnectionFactory {
 			 */
 			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
 				if (DEBUG_RSERVE) {
-					// intentionally print to stdout. This is only for debugging
-					// and would otherwise
-					// completely flood the log, which could then not be read
-					// simultaneously.
-					System.out.println(line);
+				    LOGGER.debug(line);
 				} /* else discard */
 			}).start();
 			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")",
