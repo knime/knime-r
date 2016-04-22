@@ -35,8 +35,7 @@ public class RConnectionFactory {
 
 	private final static NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
 
-	// connect to a localhost default port Rserve
-	private static final boolean DEBUG_RSERVE = false;
+	private static final boolean DEBUG_RSERVE = Boolean.getBoolean(KNIMEConstants.PROPERTY_R_RSERVE_DEBUG);
 
 	private static final ArrayList<RConnectionResource> m_resources = new ArrayList<>();
 
