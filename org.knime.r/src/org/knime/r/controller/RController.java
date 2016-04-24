@@ -829,9 +829,10 @@ public class RController implements IRController {
 	}
 
 	@Override
-	public BufferedDataTable importBufferedDataTable(final String string, final boolean nonNumbersAsMissing,
+	public BufferedDataTable importBufferedDataTable(final String varName, final boolean nonNumbersAsMissing,
 			final ExecutionContext exec) throws RException, CanceledExecutionException {
-		final REXP typeRexp = eval("class(" + string + ")");
+
+		final REXP typeRexp = eval("class(" + varName + ")");
 		if (typeRexp.isNull()) {
 			// a variable with this name does not exist
 			final BufferedDataContainer cont = exec.createDataContainer(new DataTableSpec());
@@ -841,16 +842,18 @@ public class RController implements IRController {
 
 		try {
 			final String type = typeRexp.asString();
-			if (!type.equals("data.frame")) {
+			if (type.equals("matrix") || type.equals("list")) {
+				eval(varName + "<-data.frame(" + varName + ")");
+			} else if (!type.equals("data.frame")) {
 				throw new RException(
-						"CODING PROBLEM\timportBufferedDataTable(): Supporting 'data.frame' as return type, only.");
+						"CODING PROBLEM\timportBufferedDataTable(): Supporting only 'data.frame', 'matrix' and 'list' for type of \"" + varName  +"\" (was '" + type + "').");
 			}
 		} catch (REXPMismatchException e) {
-			throw new RException("Type of " + string + " could not be parsed as string.", e);
+			throw new RException("Type of " + varName + " could not be parsed as string.", e);
 		}
 
 		try {
-			final String[] rowIds = eval("attr(" + string + " , \"row.names\")").asStrings();
+			final String[] rowIds = eval("attr(" + varName + " , \"row.names\")").asStrings();
 
 			// TODO: Support int[] as row names or int which defines the column
 			// of row names:
@@ -858,7 +861,7 @@ public class RController implements IRController {
 			final int numRows = rowIds.length;
 			final int ommitColumn = -1;
 
-			final REXP value = getREngine().get(string, null, true);
+			final REXP value = getREngine().get(varName, null, true);
 			final RList rList = value.asList();
 
 			final DataTableSpec outSpec = createSpecFromDataFrame(rList);
@@ -928,7 +931,7 @@ public class RController implements IRController {
 		} catch (final REXPMismatchException e) {
 			throw new RException("Could not parse REXP.", e);
 		} catch (final REngineException e) {
-			throw new RException("Could not get value of " + string + " from workspace.", e);
+			throw new RException("Could not get value of " + varName + " from workspace.", e);
 		}
 
 	}
