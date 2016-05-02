@@ -183,8 +183,8 @@ public class RViewNodeSettings {
 	 * @param m_imgWidth
 	 *            the m_imgWidth to set
 	 */
-	public void setImageWidth(final int m_imgWidth) {
-		this.m_imgWidth = m_imgWidth;
+	public void setImageWidth(final int imgWidth) {
+		this.m_imgWidth = imgWidth;
 	}
 
 	/**
@@ -198,8 +198,8 @@ public class RViewNodeSettings {
 	 * @param m_imgHeight
 	 *            the m_imgHeight to set
 	 */
-	public void setImageHeight(final int m_imgHeight) {
-		this.m_imgHeight = m_imgHeight;
+	public void setImageHeight(final int imgHeight) {
+		this.m_imgHeight = imgHeight;
 	}
 
 	/**
@@ -213,8 +213,8 @@ public class RViewNodeSettings {
 	 * @param m_imgResolution
 	 *            the m_imgResolution to set
 	 */
-	public void setImageResolution(final String m_imgResolution) {
-		this.m_imgResolution = m_imgResolution;
+	public void setImageResolution(final String imgResolution) {
+		this.m_imgResolution = imgResolution;
 	}
 
 	/**
@@ -228,8 +228,8 @@ public class RViewNodeSettings {
 	 * @param m_imgBackgroundColor
 	 *            the m_imgBackgroundColor to set
 	 */
-	public void setImageBackgroundColor(final String m_imgBackgroundColor) {
-		this.m_imgBackgroundColor = m_imgBackgroundColor;
+	public void setImageBackgroundColor(final String imgBackgroundColor) {
+		this.m_imgBackgroundColor = imgBackgroundColor;
 	}
 
 	/**
@@ -243,8 +243,8 @@ public class RViewNodeSettings {
 	 * @param m_textPointSize
 	 *            the m_textPointSize to set
 	 */
-	public void setTextPointSize(final int m_textPointSize) {
-		this.m_textPointSize = m_textPointSize;
+	public void setTextPointSize(final int textPointSize) {
+		this.m_textPointSize = textPointSize;
 	}
 
 	/**
@@ -258,8 +258,8 @@ public class RViewNodeSettings {
 	 * @param m_rSettings
 	 *            the m_rSettings to set
 	 */
-	public void setRSettings(final RSnippetSettings m_rSettings) {
-		this.m_rSettings = m_rSettings;
+	public void setRSettings(final RSnippetSettings rSettings) {
+		this.m_rSettings = rSettings;
 	}
 
 }

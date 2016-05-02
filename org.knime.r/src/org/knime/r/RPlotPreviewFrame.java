@@ -47,6 +47,7 @@ package org.knime.r;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ComponentAdapter;
@@ -71,7 +72,7 @@ import org.knime.core.util.SimpleFileFilter;
  * Frame showing PNG preview plot. Watches the RController image file.
  *
  * @author Bernd Wiswedel, KNIME.com, Zurich, Switzerland
- *
+ * @author Jonathan Hale
  */
 final class RPlotPreviewFrame extends JDialog {
 
@@ -96,6 +97,7 @@ final class RPlotPreviewFrame extends JDialog {
 		m_plotPreviewPanel = new ImageViewPanel();
 		m_cardLayoutPanel.add(new JScrollPane(m_plotPreviewPanel), PLOT);
 		fullPanel.add(m_cardLayoutPanel, BorderLayout.CENTER);
+		m_plotPreviewPanel.setScaleType(ScaleType.None);
 
 		final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		final JButton closeButton = new JButton("Close");
@@ -122,6 +124,13 @@ final class RPlotPreviewFrame extends JDialog {
 			}
 			m_plotPreviewPanel.setImage(image);
 			cardLayout.show(m_cardLayoutPanel, PLOT);
+
+			/* set size of dialog to image size, but never bigger than screen size */
+			final Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+			final int windowWidth = (int) Math.min(image.getWidth() + 20, screenSize.getWidth() - 50);
+			final int windowHeight = (int) Math.min(image.getHeight() + 75, screenSize.getHeight() - 50);
+
+			setSize(windowWidth, windowHeight);
 		} else {
 			m_plotPreviewPanel.setImage(null);
 			cardLayout.show(m_cardLayoutPanel, NO_PLOT);
@@ -143,8 +152,8 @@ final class RPlotPreviewFrame extends JDialog {
 			}
 		});
 		rPlotPreviewFrame.setSource(jFileChooser.getSelectedFile());
-		rPlotPreviewFrame.m_plotPreviewPanel.setScaleType(ScaleType.None);
 		rPlotPreviewFrame.pack();
 		rPlotPreviewFrame.setVisible(true);
 	}
+
 }

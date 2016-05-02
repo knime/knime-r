@@ -421,8 +421,10 @@ public class RSnippetNodePanel extends JPanel {
 				b.append("library('Cairo');");
 			}
 
-			b.append("options(device = 'png'" + bitmapType + ")").append("\n");
-			b.append("png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\")").append("\n");
+			final Dimension size = getPreviewImageDimensions();
+			b.append("options(device='png'" + bitmapType + ")").append("\n");
+			b.append("png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\",width=" + size.getWidth()
+					+ ",height=" + size.getHeight() + ")").append("\n");
 		}
 		return b.toString();
 	}
@@ -441,10 +443,19 @@ public class RSnippetNodePanel extends JPanel {
 		if (isToPack) {
 			m_previewFrame.pack();
 			if (m_imageFile == null || m_imageFile.length() == 0L) {
-				m_previewFrame.setSize(400, 300);
+				m_previewFrame.setSize(getPreviewImageDimensions());
 			}
 		}
 		m_previewFrame.setVisible(true);
+	}
+
+	/**
+	 * Override to change preview image dimensions. Default is `(400, 300)`.
+	 *
+	 * @return dimensions of the preview image.
+	 */
+	protected Dimension getPreviewImageDimensions() {
+		return new Dimension(400, 300);
 	}
 
 	/**

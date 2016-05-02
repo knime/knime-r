@@ -94,8 +94,6 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 	private final RSnippetNodeConfig m_config;
 	private int m_tableInPort;
 
-	private PortObject[] m_input;
-
 	private JTextField m_imgWidth;
 
 	private JTextField m_imgHeight;
@@ -138,6 +136,11 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 					final Map<String, FlowVariable> flowVariables) {
 				super.applyTemplate(template, spec, flowVariables);
 				setSelected(SNIPPET_TAB);
+			}
+
+			@Override
+			protected Dimension getPreviewImageDimensions() {
+				return new Dimension(m_settings.getImageWidth(), m_settings.getImageHeight());
 			}
 
 		};
@@ -295,9 +298,6 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 		return templatesPanel;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean closeOnESC() {
 		// do not close on ESC, since ESC is used to close autocomplete popups
@@ -309,7 +309,6 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 	protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
 			throws NotConfigurableException {
 		final DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec) specs[m_tableInPort] : null;
-		m_input = null;
 		m_panel.updateData(RViewNodeSettings.extractRSettings(settings), specs, getAvailableFlowVariables().values());
 
 		m_templatesController.setDataTableSpec(spec);
@@ -321,7 +320,6 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 	protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObject[] input)
 			throws NotConfigurableException {
 		final DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable) input[m_tableInPort]).getSpec() : null;
-		m_input = input;
 		m_panel.updateData(RViewNodeSettings.extractRSettings(settings), input, getAvailableFlowVariables().values());
 
 		m_templatesController.setDataTableSpec(spec);
@@ -338,9 +336,6 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 		m_imgBackgroundColor.setText(m_settings.getImageBackgroundColor());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onOpen() {
 		ViewUtils.invokeAndWaitInEDT(() -> m_panel.onOpen());
@@ -351,9 +346,6 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 		ViewUtils.invokeAndWaitInEDT(() -> m_panel.onClose());
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
 		m_settings.setRSettings(m_panel.getRSnippet().getSettings());
