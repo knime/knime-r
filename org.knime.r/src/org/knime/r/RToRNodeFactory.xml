@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
-<knimeNode type="Manipulator" icon="rsnippet.png">
+<knimeNode type="Manipulator" icon="rtor.png">
 	<name>R To R</name>
 	<shortDescription>
 	    Takes a R workspace and modifies it based on the entered R script.

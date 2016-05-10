@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
-<knimeNode type="Predictor" icon="rsnippet.png">
+<knimeNode type="Predictor" icon="rpredictor.png">
 	<name>R Predictor</name>
 	<shortDescription>
 	    Allows execution of R code in a local R installation for predicting 

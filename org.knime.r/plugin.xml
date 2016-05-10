@@ -109,7 +109,7 @@
          point="org.knime.workbench.repository.categories">
       <category
             description="R Statistics Integration"
-            icon="icons/rsnippet.png"
+            icon="icons/r.png"
             level-id="r"
             locked="true"
             name="R"
@@ -117,7 +117,7 @@
       </category>
       <category
             after="r-metanodes"
-            icon="icons/rsnippet_io.png"
+            icon="icons/r-io.png"
             level-id="io"
             name="IO"
             path="/scripting/r">
@@ -133,14 +133,14 @@
          point="org.knime.workbench.repository.metanode">
       <PersistedMetaNode
             category-path="/scripting/r/r-metanodes"
-            icon="icons/rsnippet.png"
+            icon="icons/r.png"
             id="grouped_scatterplot"
             name="Grouped ScatterPlot"
             workflowDir="metanode_templates/Grouped ScatterPlot/">
       </PersistedMetaNode>
       <PersistedMetaNode
             category-path="/scripting/r/r-metanodes"
-            icon="icons/rsnippet.png"
+            icon="icons/r.png"
             id="stacked_barchart"
             name="Stacked BarChart"
             workflowDir="metanode_templates/Stacked BarChart/">
