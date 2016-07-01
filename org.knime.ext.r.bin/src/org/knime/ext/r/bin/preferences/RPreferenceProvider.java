@@ -59,6 +59,11 @@ public interface RPreferenceProvider {
     public String getRHome();
 
     /**
+     * @return Maxinbuf setting for Rserve (in Megabyte)
+     */
+    public int getMaxInfBuf();
+
+    /**
      * @param command R command ("R" or "Rscript" for example)
      * @return path to the command executable
      */

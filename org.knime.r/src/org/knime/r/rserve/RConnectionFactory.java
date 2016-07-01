@@ -89,7 +89,10 @@ public class RConnectionFactory {
 	private static File createRserveConfig() {
 		final File file = new File(tempDir, "Rserve.conf");
 		try (FileWriter writer = new FileWriter(file)) {
-			writer.write("maxinbuff 0\n"); // unlimited
+			writer.write("maxinbuf "
+					// convert preference from MB (more intuitive) to kB (required by Rserve)
+					+ (org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getMaxInfBuf() * 1024)
+					+ "\n");
 			writer.write("encoding utf8\n"); // encoding for java clients
 
 			/* YES, EA! See https://github.com/s-u/Rserve/blob/
@@ -200,7 +203,7 @@ public class RConnectionFactory {
 			 */
 			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
 				if (DEBUG_RSERVE) {
-				    LOGGER.debug(line);
+					LOGGER.debug(line);
 				} /* else discard */
 			}).start();
 			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")",
@@ -281,6 +284,29 @@ public class RConnectionFactory {
 			resource.acquire();
 			m_resources.add(resource);
 			return resource;
+		}
+	}
+
+	/**
+	 * Set all resources to be destroyed as soon as they become available. This
+	 * is useful when settings or preferences changed and old Rserve processes
+	 * (which still use the old settings) should not be used anymore. This is a
+	 * better alternative to aborting running nodes.
+	 */
+	public static void clearExistingResources() {
+		synchronized (m_resources) {
+		    LOGGER.debugWithFormat("Retiring RServe processes (%d instances)", m_resources.size());
+			final ArrayList<RConnectionResource> destroyedResources = new ArrayList<>();
+			for (final RConnectionResource res : m_resources) {
+				res.setDestroyOnAvailable(true);
+				if (res.getUnderlyingRInstance() == null) {
+					// resource has been destroyed already and should be removed
+					// from list.
+					destroyedResources.add(res);
+				}
+			}
+
+			m_resources.removeAll(destroyedResources);
 		}
 	}
 
@@ -462,6 +488,7 @@ public class RConnectionFactory {
 	public static class RConnectionResource {
 
 		private boolean m_available = true;
+		private boolean m_destroyOnAvailable = false;
 		private RInstance m_instance;
 		private TimerTask m_pendingDestructionTask = null;
 
@@ -543,6 +570,23 @@ public class RConnectionFactory {
 		}
 
 		/**
+		 * Set whether to destroy this resource as soon as the resource becomes
+		 * available (may destroy the resource immediately).
+		 *
+		 * @param dispose
+		 *            whether the resource should be destroyed on next release.
+		 */
+		public synchronized void setDestroyOnAvailable(final boolean dispose) {
+			m_destroyOnAvailable = dispose;
+
+			if (m_available) {
+				// if not acquired in the meantime, destroy
+				// the resource
+				destroy(false);
+			}
+		}
+
+		/**
 		 * Note: Always call {@link #acquire()} or {@link #acquireIfAvailable()}
 		 * before using this method.
 		 *
@@ -569,11 +613,6 @@ public class RConnectionFactory {
 		 */
 		public synchronized void release() throws RException {
 			if (!m_available) {
-				// Either m_pendingDestructionTask is null, which means
-				// this resource is being held, or the resource is available
-				// and has destruction pending.
-				assert m_pendingDestructionTask == null;
-
 				m_available = true;
 
 				if (m_instance.getLastConnection() != null && m_instance.getLastConnection().isConnected()) {
@@ -617,27 +656,37 @@ public class RConnectionFactory {
 					}
 				}
 
-				m_pendingDestructionTask = new TimerTask() {
-					@Override
-					public void run() {
-						try {
-							synchronized (RConnectionResource.this) {
-								if (m_available) {
-									// if not acquired in the meantime, destroy
-									// the resource
-									destroy(true);
-								}
-							}
-						} catch (Throwable t) {
-							// FIXME: There is a known bug where TimerTasks in
-							// KnimeTimer can crash KNIME. We are simply making
-							// 100% sure this will not happen here by catching
-							// everything.
-						}
-					}
+				if (m_destroyOnAvailable) {
+					destroy(true);
+				} else {
+					// Either m_pendingDestructionTask is null, which means
+					// this resource is being held, or the resource is available
+					// and has destruction pending.
+					assert m_pendingDestructionTask == null;
 
-				};
-				KNIMETimer.getInstance().schedule(m_pendingDestructionTask, RPROCESS_TIMEOUT);
+					m_pendingDestructionTask = new TimerTask() {
+						@Override
+						public void run() {
+							try {
+								synchronized (RConnectionResource.this) {
+									if (m_available) {
+										// if not acquired in the meantime,
+										// destroy
+										// the resource
+										destroy(true);
+									}
+								}
+							} catch (Throwable t) {
+								// FIXME: There is a known bug where TimerTasks
+								// in KnimeTimer can crash KNIME. We are simply
+								// making 100% sure this will not happen here by
+								// catching everything.
+							}
+						}
+
+					};
+					KNIMETimer.getInstance().schedule(m_pendingDestructionTask, RPROCESS_TIMEOUT);
+				}
 			} // else: release had been called already, but we allow this.
 		}
 

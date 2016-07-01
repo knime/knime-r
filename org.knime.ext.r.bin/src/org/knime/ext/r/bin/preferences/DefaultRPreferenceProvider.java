@@ -81,6 +81,12 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
     }
 
     @Override
+    public int getMaxInfBuf() {
+        return org.eclipse.core.runtime.Platform.getPreferencesService()
+                .getInt("org.knime.ext.r.bin", RPreferenceInitializer.PREF_RSERVE_MAXINBUF, 256, null);
+    }
+
+    @Override
     public String getRBinPath(final String command) {
         final String binPath = getRHome() + File.separator + "bin" + File.separator;
         if (Platform.isWindows()) {

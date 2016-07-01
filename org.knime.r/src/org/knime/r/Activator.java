@@ -45,6 +45,8 @@
 package org.knime.r;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
+import org.knime.r.rserve.RConnectionFactory;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -74,6 +76,17 @@ public class Activator extends AbstractUIPlugin {
 	public void start(final BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+
+		org.knime.ext.r.bin.Activator.getDefault().getPreferenceStore().addPropertyChangeListener(event -> {
+			// if Rserve properties change, we need to invalidate all the existing Rserve processes
+		    switch (event.getProperty()) {
+		        case RPreferenceInitializer.PREF_RSERVE_MAXINBUF:
+		        case RPreferenceInitializer.PREF_R_HOME:
+		            RConnectionFactory.clearExistingResources();
+		            break;
+	            default:
+		    }
+		});
 	}
 
 	/*

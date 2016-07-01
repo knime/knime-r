@@ -62,10 +62,18 @@ import org.knime.ext.r.bin.RPathUtil;
  */
 public class RPreferenceInitializer extends AbstractPreferenceInitializer {
 
+
     private static final NodeLogger LOGGER = NodeLogger.getLogger(RPreferenceInitializer.class);
 
     /** Preference key for the path to the R executable setting. */
     public static final String PREF_R_HOME = "knime.r.home";
+
+    /** From The Rserve docu: maxinbuf specifies the maximal allowable size of the input buffer. */
+    // addresses AP-5976
+    public static final String PREF_RSERVE_MAXINBUF = "knime.r.maxinbuf";
+
+    /** Default for {@link #PREF_RSERVE_MAXINBUF} in MB. */
+    private static final int DEFAULT_MAX_IN_BUF_MB = 256;
 
     /**
      * @return default R_HOME from 2.9 settings, package bundle or system default
@@ -114,6 +122,11 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
             }
 
             @Override
+            public int getMaxInfBuf() {
+                return DEFAULT_MAX_IN_BUF_MB; // default
+            }
+
+            @Override
             public String getRServeBinPath() {
                 throw new UnsupportedOperationException("Please use getRBinPath() with this provider, only.");
             }
@@ -143,6 +156,7 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
         String rHome = rHomeFile == null ? "" : rHomeFile.getAbsolutePath();
         LOGGER.debug("Default R Home: " + rHome);
         store.setDefault(PREF_R_HOME, rHome);
+        store.setDefault(PREF_RSERVE_MAXINBUF, DEFAULT_MAX_IN_BUF_MB);
     }
 
     private static RPreferenceProvider m_cachedPreferenceProvider = null;

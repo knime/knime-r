@@ -55,6 +55,7 @@ import java.util.Properties;
 
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
@@ -108,6 +109,10 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
     protected void createFieldEditors() {
         addField(new RHomeDirectoryFieldEditor(RPreferenceInitializer.PREF_R_HOME, "Path to R Home",
             getFieldEditorParent()));
+        IntegerFieldEditor field = new IntegerFieldEditor(RPreferenceInitializer.PREF_RSERVE_MAXINBUF, 
+            "Rserve receiving buffer size limit (in MB)", getFieldEditorParent());
+        field.setValidRange(1, 1000000); // at least 1 MB should be assigned
+        addField(field);
 
         checkRVersion(Activator.getRHOME().getAbsolutePath());
     }
