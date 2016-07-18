@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KNIME R-Porttype
 Bundle-SymbolicName: org.knime.ext.r.type;singleton:=true
-Bundle-Version: 3.2.0.qualifier
+Bundle-Version: 3.3.0.qualifier
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
 Export-Package: org.knime.ext.r.node.local.port
 Require-Bundle: org.knime.core;bundle-version="[3.0.0,4.0.0)"

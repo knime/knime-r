@@ -2,7 +2,7 @@
 <feature
       id="org.knime.features.rengine.r2"
       label="KNIME Interactive R Nodes - JRI Bridge for R v2.x only"
-      version="3.2.0.qualifier"
+      version="3.3.0.qualifier"
       provider-name="KNIME GmbH, Konstanz, Germany">
 
    <description url="http://www.knime.org/downloads/extensions">
