@@ -768,15 +768,14 @@ public class RSnippetNodePanel extends JPanel {
 		}
 		m_progressPanel.stopMonitoring();
 		if (m_isInteractive && m_controller != null) {
-			if (m_consoleController.isAttached(m_console)) {
-				m_consoleController.detach(m_console);
-				// clear pending commands in the console queue
-				m_commandQueue.clear();
-				m_commandQueue.stopExecutionThread();
-			}
 			// Stop running tasks
 			if (m_exec != null) {
 				m_exec.getProgressMonitor().setExecuteCanceled();
+			}
+
+			if (m_consoleController.isAttached(m_console)) {
+				m_consoleController.cancel();
+				m_consoleController.detach(m_console);
 			}
 		}
 

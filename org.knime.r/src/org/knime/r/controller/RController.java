@@ -219,7 +219,7 @@ public class RController implements IRController {
 	 *
 	 * @throws Exception
 	 */
-	public void terminateAndRelaunch() throws Exception {
+	public synchronized void terminateAndRelaunch() {
 		LOGGER.debug("Terminating R process");
 
 		terminateRProcess();
@@ -227,17 +227,20 @@ public class RController implements IRController {
 		try {
 			m_connection = initRConnection();
 			m_initialized = (m_connection != null && m_connection.get().isConnected());
+			LOGGER.debug("Recovered with a new R process");
 		} catch (Exception e) {
-			throw new Exception("Initializing R with Rserve failed.", e);
+			throw new RuntimeException("Initializing R with Rserve failed.", e);
 		}
 	}
 
 	/**
 	 * Terminate the R process started for this RController
 	 */
-	public void terminateRProcess() {
+	// public because called from test, otherwise this is 'private'
+	public synchronized void terminateRProcess() {
 		if (m_connection != null) {
 			m_connection.destroy(true);
+			m_connection = null;
 		}
 
 		m_initialized = false;
@@ -248,7 +251,7 @@ public class RController implements IRController {
 	 *
 	 * @throws IOException
 	 */
-	public void checkConnectionAndRecover() throws Exception {
+	public synchronized void checkConnectionAndRecover() {
 		if (m_connection != null && m_connection.get().isConnected() && m_connection.isRInstanceAlive()) {
 			// connection is fine.
 			return;
@@ -412,7 +415,7 @@ public class RController implements IRController {
 		checkInitialized();
 		try {
 			return new MonitoredEval(exec).run(expr);
-		} catch (Exception e) {
+		} catch (RException | REngineException | REXPMismatchException e) {
 			throw new RException(RException.MSG_EVAL_FAILED, e);
 		}
 	}
@@ -1080,74 +1083,6 @@ public class RController implements IRController {
 		return Collections.emptyList();
 	}
 
-	/**
-	 * Class which contains the column of a table for exchange between
-	 * preparation and transfer thread.
-	 *
-	 * @author Jonathan Hale
-	 */
-	private static class REXPColumn {
-
-		private final REXP m_values;
-		private final String m_name;
-		private final boolean m_isCollectionType;
-
-		/**
-		 * Constructor
-		 *
-		 * @param name
-		 *            Name of the column
-		 * @param cells
-		 *            List containing the cell values for R
-		 * @param isCollectionType
-		 *            Whether the cells are collections
-		 */
-		public REXPColumn(final String name, final RList cells, final boolean isCollectionType) {
-			m_values = new REXPGenericVector(cells);
-			m_name = name;
-			m_isCollectionType = isCollectionType;
-		}
-
-		/**
-		 * Constructor
-		 *
-		 * @param name
-		 *            Name of the column
-		 * @param cells
-		 *            REXP containing the cell values for R
-		 * @param isCollectionType
-		 *            Whether the cells are collections
-		 * @param list
-		 */
-		public REXPColumn(final String name, final REXP cells, final boolean isCollectionType) {
-			m_values = cells;
-			m_name = name;
-			m_isCollectionType = isCollectionType;
-		}
-
-		/**
-		 * @return Column name
-		 */
-		public String getName() {
-			return m_name;
-		}
-
-		/**
-		 * @return Whether the cells are collections
-		 */
-		public boolean isCollectionType() {
-			return m_isCollectionType;
-		}
-
-		/**
-		 * @return REXP containing the cell values for R
-		 */
-		public REXP getValues() {
-			return m_values;
-		}
-
-	}
-
 	@Override
 	public void monitoredAssign(final String name, final BufferedDataTable table, final ExecutionMonitor exec)
 			throws RException, CanceledExecutionException {
@@ -1305,7 +1240,7 @@ public class RController implements IRController {
 		 * Run the Callable in a thread and make sure to cancel it, in case
 		 * execution is cancelled.
 		 */
-		private REXP monitor(final Callable<REXP> task) {
+		private REXP monitor(final Callable<REXP> task) throws InterruptedException, RException {
 			final FutureTask<REXP> runningTask = new FutureTask<>(task);
 			final Thread t = (m_useNodeContext) ? ThreadUtils.threadWithContext(runningTask, "R-Evaluation")
 					: new Thread(runningTask, "R-Evaluation");
@@ -1320,7 +1255,7 @@ public class RController implements IRController {
 				return runningTask.get();
 			} catch (InterruptedException | CanceledExecutionException | ExecutionException e) {
 				try {
-					if (!runningTask.isDone()) {
+					if (t.isAlive()) {
 						t.interrupt();
 
 						// The eval() call blocks somewhere in RTalk class,
@@ -1336,8 +1271,11 @@ public class RController implements IRController {
 				} catch (final Exception e1) {
 					LOGGER.warn("Could not terminate R correctly.");
 				}
+				if (e instanceof ExecutionException && e.getCause() instanceof RException) {
+					throw (RException) e.getCause();
+				}
+				throw new InterruptedException(e.getMessage());
 			}
-			return null;
 		}
 
 		/**
@@ -1346,24 +1284,19 @@ public class RController implements IRController {
 		 * @param cmd
 		 * @return Result of the code
 		 * @throws REngineException
+		 * @throws RException
 		 * @throws REXPMismatchException
-		 * @throws CanceledExecutionException
-		 *             when execution was cancelled
-		 * @throws IOException
-		 *             when initialization of R or Rserve failed when attempting
-		 *             to recover
+		 * @throws CanceledExecutionException when execution was cancelled
 		 */
 		public REXP run(final String cmd)
-				throws REngineException, REXPMismatchException, CanceledExecutionException, Exception {
-			final Future<REXP> future = startMonitoredThread(() -> {
-				return eval(cmd);
-			});
-
+				throws REngineException, REXPMismatchException, RException, CanceledExecutionException {
 			try {
 				// wait for evaluation to complete
-				return future.get();
-			} catch (InterruptedException | ExecutionException e) {
-				return null;
+				return monitor(() -> {
+					return eval(cmd);
+				});
+			} catch (InterruptedException e) {
+				throw new CanceledExecutionException();
 			} finally {
 				// Make sure to recover in case user terminated or crashed our
 				// server
@@ -1383,17 +1316,17 @@ public class RController implements IRController {
 		 */
 		public void assign(final String symbol, final REXP value)
 				throws REngineException, REXPMismatchException, CanceledExecutionException, Exception {
-			final Future<REXP> future = startMonitoredThread(() -> {
-				synchronized (getREngine()) {
-					getREngine().assign(symbol, value);
-				}
-				return null;
-			});
-
 			try {
 				// wait for evaluation to complete
-				future.get();
-			} catch (InterruptedException | ExecutionException e) {
+				monitor(() -> {
+					synchronized (getREngine()) {
+						getREngine().assign(symbol, value);
+					}
+					return null;
+				});
+
+			} catch (InterruptedException e) {
+				throw new CanceledExecutionException();
 			} finally {
 				// Make sure to recover in case user terminated or crashed our
 				// server
