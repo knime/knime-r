@@ -200,7 +200,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 						continue;
 					}
 
-					// we fetch the entire contents of the queue to be able to
+					// We fetch the entire contents of the queue to be able to
 					// show progress for all commands currently in queue. This
 					// is necessary to prevent flashing of the progress bar in
 					// RSnippetNodePanel, which would happen because "invisible"
@@ -236,6 +236,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 							} catch (RException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(e));
 							}
+
 							try {
 								exec.finishOutputCapturing(sub.createSubProgress(0.2));
 							} catch (RException e) {
@@ -267,8 +268,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 										new RException("Could not execute internal command.", e)));
 							}
 
-							// complete Future to notify all threads waiting on
-							// it
+							// complete Future to notify all threads waiting on it
 							rCmd.complete(ret);
 
 							m_listeners.stream().forEach((l) -> l.onCommandExecutionEnd(rCmd, "", ""));
@@ -282,7 +282,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 			} catch (InterruptedException | CanceledExecutionException e) {
 				try {
 					if (progress != null && progress.getProgressMonitor().getProgress() != 1.0) {
-						m_controller.terminateAndRelaunch();
+						m_controller.checkConnectionAndRecover();
 					}
 				} catch (final Exception e1) {
 					// Could not terminate Rserve properly. Politely ask user to
@@ -304,7 +304,6 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -368,6 +367,16 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	public void stopExecutionThread() {
 		if (m_thread != null && m_thread.isAlive()) {
 			m_thread.interrupt();
+			try {
+				// A new R process will be started to recover. That justifies potentially long waits here.
+				m_thread.join(5000);
+			} catch (InterruptedException e) {
+				LOGGER.debug("Was interrupted while waiting for R Command Queue Excecution Thread to terminate.");
+			}
+			// final desperate measures
+			if (m_thread.isAlive()) {
+				throw new IllegalStateException("R Command Queue Execution Thread did not terminate.");
+			}
 		}
 	}
 

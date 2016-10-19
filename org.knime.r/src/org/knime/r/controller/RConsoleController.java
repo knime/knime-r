@@ -153,10 +153,10 @@ public class RConsoleController implements RCommandExecutionListener {
 	 * @see RConsoleController#getCancelAction()
 	 */
 	public void cancel() {
-		m_commandQueue.stopExecutionThread();
-
 		// clear commands in queue
 		m_commandQueue.clear();
+
+		m_commandQueue.stopExecutionThread();
 
 		try {
 			m_controller.terminateAndRelaunch();

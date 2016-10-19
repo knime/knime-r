@@ -12,6 +12,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
@@ -33,11 +35,40 @@ import com.sun.jna.Platform;
  */
 public class RConnectionFactory {
 
-	private final static NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
+	private static final NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
 
 	private static final boolean DEBUG_RSERVE = Boolean.getBoolean(KNIMEConstants.PROPERTY_R_RSERVE_DEBUG);
 
-	private static final ArrayList<RConnectionResource> m_resources = new ArrayList<>();
+	private static final ReentrantLock RESOURCES_LOCK = new ReentrantLock();
+	private static final ArrayList<RConnectionResource> RESOURCES = new ArrayList<>();
+
+	/**
+	 * Class which allows locking a lock in a try-with-resource statement to be implicitly unlocked in finally.
+	 * <pre><code>
+	 *    try(LockHolder lh = new LockHolder(myLock)) {
+	 *    	// lock() has been called on myLock
+	 *    }
+	 *    // unlock() has been called on myLock
+	 * <code></pre>
+	 */
+	private static class LockHolder implements AutoCloseable {
+
+		private final Lock m_lock;
+
+		/**
+		 * Constructor
+		 * @param lock Lock to lock and unlock
+		 */
+		public LockHolder(final Lock lock) {
+			m_lock = lock;
+			lock.lock();
+		}
+
+		@Override
+		public void close() {
+			m_lock.unlock();
+		}
+	}
 
 	private static final File tempDir;
 
@@ -72,11 +103,13 @@ public class RConnectionFactory {
 	public static Collection<Process> getRunningRProcesses() {
 		final ArrayList<Process> list = new ArrayList<>();
 
-		for (final RConnectionResource res : m_resources) {
-			final Process p = res.getUnderlyingRInstance().getProcess();
+		try(LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+			for (final RConnectionResource res : RESOURCES) {
+				final Process p = res.getUnderlyingRInstance().getProcess();
 
-			if (p.isAlive()) {
-				list.add(p);
+				if (p.isAlive()) {
+					list.add(p);
+				}
 			}
 		}
 
@@ -263,10 +296,10 @@ public class RConnectionFactory {
 
 		// synchronizing on the entire class would completely lag out KNIME for
 		// some reason
-		synchronized (m_resources) {
+		try(LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
 			// try to reuse an existing instance. Ensures there is max one R
 			// instance per parallel executed node.
-			for (RConnectionResource resource : m_resources) {
+			for (RConnectionResource resource : RESOURCES) {
 				if (resource.acquireIfAvailable()) {
 					// connections are closed when released => we need to
 					// reconnect
@@ -281,8 +314,11 @@ public class RConnectionFactory {
 					org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRServeBinPath(),
 					"127.0.0.1", findFreePort());
 			RConnectionResource resource = new RConnectionResource(instance);
-			resource.acquire();
-			m_resources.add(resource);
+			if (!resource.acquireIfAvailable()) {
+				// this could also be an assertion
+				throw new IllegalStateException("Newly created RConnectionResource was not available.");
+			}
+			RESOURCES.add(resource);
 			return resource;
 		}
 	}
@@ -294,11 +330,11 @@ public class RConnectionFactory {
 	 * better alternative to aborting running nodes.
 	 */
 	public static void clearExistingResources() {
-		synchronized (m_resources) {
-		    LOGGER.debugWithFormat("Retiring RServe processes (%d instances)", m_resources.size());
+		try(LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+		    LOGGER.debugWithFormat("Retiring RServe processes (%d instances)", RESOURCES.size());
 			final ArrayList<RConnectionResource> destroyedResources = new ArrayList<>();
-			for (final RConnectionResource res : m_resources) {
-				res.setDestroyOnAvailable(true);
+			for (final RConnectionResource res : RESOURCES) {
+				res.setDestroyOnAvailable();
 				if (res.getUnderlyingRInstance() == null) {
 					// resource has been destroyed already and should be removed
 					// from list.
@@ -306,7 +342,7 @@ public class RConnectionFactory {
 				}
 			}
 
-			m_resources.removeAll(destroyedResources);
+			RESOURCES.removeAll(destroyedResources);
 		}
 	}
 
@@ -327,12 +363,12 @@ public class RConnectionFactory {
 	private static void initializeShutdownHook() {
 		// if (m_initialized != false) return;
 		// else m_initialized = true;
-		if (m_initialized.compareAndSet(false, true)) {
+		if (!m_initialized.compareAndSet(false, true)) {
 			/* already initialized */
 			return;
 		}
 
-		// m_initialized was false, we need to initialize.
+		// m_initialized was false (aka. compareAndSet returned true), we need to initialize.
 
 		/*
 		 * Cleanup remaining Rserve processes on VM exit.
@@ -341,8 +377,8 @@ public class RConnectionFactory {
 
 			@Override
 			public void run() {
-				synchronized (m_resources) {
-					for (final RConnectionResource resource : m_resources) {
+				try(LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+					for (final RConnectionResource resource : RESOURCES) {
 						if (resource != null && resource.getUnderlyingRInstance() != null) {
 							resource.destroy(false);
 						}
@@ -487,7 +523,7 @@ public class RConnectionFactory {
 	 */
 	public static class RConnectionResource {
 
-		private boolean m_available = true;
+		private final AtomicBoolean m_available = new AtomicBoolean(true);
 		private boolean m_destroyOnAvailable = false;
 		private RInstance m_instance;
 		private TimerTask m_pendingDestructionTask = null;
@@ -509,80 +545,54 @@ public class RConnectionFactory {
 		}
 
 		/**
-		 * Acquire ownership of this resource. Only the factory should be able
-		 * to do this.
-		 */
-		/* package-protected */ synchronized void acquire() {
-			if (m_instance == null) {
-				throw new NullPointerException("The resource has been destroyed already.");
-			}
-
-			if (m_available) {
-				doAcquire();
-			} else {
-				throw new IllegalStateException("Resource cannot be aquired, it is owned already.");
-			}
-		}
-
-		/**
 		 * Acquire ownership of this resource, if it is available. Only the
 		 * factory should be able to do this.
 		 *
 		 * @return Whether the resource has been acquired.
 		 */
-		/* package-protected */ synchronized boolean acquireIfAvailable() {
+		synchronized boolean acquireIfAvailable() {
 			if (m_instance == null) {
 				throw new NullPointerException("The resource has been destroyed already.");
 			}
 
-			if (m_available) {
-				doAcquire();
+			if (m_available.compareAndSet(true, false)) {
+				if (m_pendingDestructionTask != null) {
+					m_pendingDestructionTask.cancel();
+					m_pendingDestructionTask = null;
+				}
 				return true;
 			} else {
 				return false;
 			}
 		}
 
-		/*
-		 * Do everything necessary for acquiring this resource.
-		 */
-		private void doAcquire() {
-			m_available = false;
-
-			if (m_pendingDestructionTask != null) {
-				m_pendingDestructionTask.cancel();
-				m_pendingDestructionTask = null;
-			}
-		}
-
 		/**
 		 * @return The RInstance which holds this resources RConnection.
 		 */
-		/* package-protected */ RInstance getUnderlyingRInstance() {
+		RInstance getUnderlyingRInstance() {
 			return m_instance;
 		}
 
 		/**
-		 * @return <code>true</code> if the resource has not been aquired yet.
+		 * Check whether the resource has been acquired. A return value of
+		 * <code>true</code> does <em>not</em> guarantee
+		 * {@link #acquireIfAvailable()} is going to succeed.
+		 *
+		 * @return <code>true</code> if the resource has not been acquired yet.
 		 */
-		public synchronized boolean isAvailable() {
-			return m_available;
+		public boolean isAvailable() {
+			return m_available.get();
 		}
 
 		/**
 		 * Set whether to destroy this resource as soon as the resource becomes
 		 * available (may destroy the resource immediately).
-		 *
-		 * @param dispose
-		 *            whether the resource should be destroyed on next release.
 		 */
-		public synchronized void setDestroyOnAvailable(final boolean dispose) {
-			m_destroyOnAvailable = dispose;
-
-			if (m_available) {
-				// if not acquired in the meantime, destroy
-				// the resource
+		public void setDestroyOnAvailable() {
+			if (m_available.compareAndSet(true, false)) {
 				destroy(false);
+			} else {
+				m_destroyOnAvailable = true;
 			}
 		}
 
@@ -595,7 +605,7 @@ public class RConnectionFactory {
 		 *             If the resource has not been acquired yet.
 		 */
 		public RConnection get() {
-			if (m_available) {
+			if (isAvailable()) {
 				throw new IllegalAccessError("Please RConnectionResource#acquire() first before calling get.");
 			}
 			if (m_instance == null) {
@@ -612,9 +622,9 @@ public class RConnectionFactory {
 		 *             If the RConnection could not be closed/detached
 		 */
 		public synchronized void release() throws RException {
-			if (!m_available) {
-				m_available = true;
-
+		    // we allow release() to be called multiple times (though synchronized) but ignore invocations
+		    // when already released
+			if (!m_available.get()) {
 				if (m_instance.getLastConnection() != null && m_instance.getLastConnection().isConnected()) {
 					// connection was not closed before release. Clean that up.
 					final RConnection connection = m_instance.getLastConnection();
@@ -668,13 +678,10 @@ public class RConnectionFactory {
 						@Override
 						public void run() {
 							try {
-								synchronized (RConnectionResource.this) {
-									if (m_available) {
-										// if not acquired in the meantime,
-										// destroy
-										// the resource
-										destroy(true);
-									}
+								if (m_available.compareAndSet(true, false)) {
+									// if not acquired in the meantime,
+									// destroy the resource
+									destroy(true);
 								}
 							} catch (Throwable t) {
 								// FIXME: There is a known bug where TimerTasks
@@ -686,6 +693,7 @@ public class RConnectionFactory {
 
 					};
 					KNIMETimer.getInstance().schedule(m_pendingDestructionTask, RPROCESS_TIMEOUT);
+					m_available.set(true);
 				}
 			} // else: release had been called already, but we allow this.
 		}
@@ -702,12 +710,12 @@ public class RConnectionFactory {
 				throw new NullPointerException("The resource has been destroyed already.");
 			}
 
-			m_available = false;
+			m_available.set(false);
 			m_instance.close();
 
 			if (remove) {
-				synchronized (m_resources) {
-					m_resources.remove(this);
+				try(LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+					RESOURCES.remove(this);
 				}
 			}
 			m_instance = null;

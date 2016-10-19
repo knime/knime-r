@@ -101,7 +101,7 @@ public class RCommandQueueTest {
 		}
 
 		/* check that the console read thread survives bad commands */
-		queue.putRScript("s<?hello.y!.üa", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript("s<?hello.y!.ï¿½a", true).get(1, TimeUnit.SECONDS);
 
 		// wait for console to update
 		Thread.sleep(10);
@@ -212,5 +212,25 @@ public class RCommandQueueTest {
 
 		consoleController.detach(console);
 
+	}
+	
+	/**
+	 * Test for a bug which caused the R Console Execution thread to block until
+	 * the current R script has finished executing.
+	 * 
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws TimeoutException
+	 */
+	@Test
+	public void testShutdown() throws InterruptedException, ExecutionException, TimeoutException {
+		final RCommandQueue queue = m_commandQueue;
+
+		queue.startExecutionThread();
+		queue.putRScript("Sys.sleep(1000)", true);
+		Thread.sleep(150);
+		queue.stopExecutionThread();
+		
+		assertTrue("R Execution thread did not terminate.", !queue.isExecutionThreadRunning());
 	}
 }
