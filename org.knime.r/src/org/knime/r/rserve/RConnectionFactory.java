@@ -122,10 +122,10 @@ public class RConnectionFactory {
 	private static File createRserveConfig() {
 		final File file = new File(tempDir, "Rserve.conf");
 		try (FileWriter writer = new FileWriter(file)) {
-			writer.write("maxinbuf "
-					// convert preference from MB (more intuitive) to kB (required by Rserve)
-					+ (org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getMaxInfBuf() * 1024)
-					+ "\n");
+		    // convert preference from MB (more intuitive) to kB (required by Rserve)
+		    int bufferSizeInKB = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getMaxInfBuf() * 1024;
+			writer.write("maxinbuf " + bufferSizeInKB + "\n");
+			writer.write("maxsendbuf " + bufferSizeInKB + "\n");
 			writer.write("encoding utf8\n"); // encoding for java clients
 
 			/* YES, EA! See https://github.com/s-u/Rserve/blob/
