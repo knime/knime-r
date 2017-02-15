@@ -135,19 +135,26 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 	}
 
 	public void startMonitoring(final ExecutionMonitor exec) {
-		m_exec.getProgressMonitor().removeProgressListener(this);
-		m_exec = exec;
-		m_exec.getProgressMonitor().addProgressListener(this);
-		m_message.setText("");
-		if (m_exec.getProgressMonitor().getProgress() == null) {
-			m_progressBar.setIndeterminate(true);
-		} else {
-			progressChangedInternal();
-		}
-		m_cancelButton.setEnabled(true);
-		m_cardLayout.show(this, "progress");
-		m_updateInProgress.set(false);
-	}
+        // AP-9610: Has to be run on the EDT
+        // If not, this can potentially remove a HierarchyListener through
+        // > progressChangedInternal()
+        //    > m_progressBar.setIndeterminate(false)
+        // While the main thread is iterating over it to dispatch hierarchy events.
+        ViewUtils.runOrInvokeLaterInEDT(() -> {
+            m_exec.getProgressMonitor().removeProgressListener(this);
+            m_exec = exec;
+            m_message.setText("");
+            m_exec.getProgressMonitor().addProgressListener(this);
+            if (m_exec.getProgressMonitor().getProgress() == null) {
+                m_progressBar.setIndeterminate(true);
+            } else {
+                progressChangedInternal();
+            }
+            m_cancelButton.setEnabled(true);
+            m_cardLayout.show(this, "progress");
+            m_updateInProgress.set(false);
+        });
+    }
 
 	@Override
 	public void progressChanged(final NodeProgressEvent pe) {
