@@ -62,8 +62,6 @@ import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.util.ThreadUtils;
 import org.rosuda.REngine.REXP;
-import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.Rserve.RConnection;
 
 /**
@@ -76,7 +74,7 @@ public interface IRController extends AutoCloseable {
 	/**
 	 * Marker class for exceptions during R configuration or execution.
 	 *
-	 * @author Jonathan Hale
+	 * @author Jonathan Hale, KNIME, Konstanz, Germany
 	 */
 	public static class RException extends Exception {
 		/** Generated serialVersionUID */
@@ -87,6 +85,7 @@ public interface IRController extends AutoCloseable {
 
 		/**
 		 * Constructor
+		 * @param msg Message
 		 */
 		public RException(final String msg) {
 			super(msg);
@@ -94,6 +93,8 @@ public interface IRController extends AutoCloseable {
 
 		/**
 		 * Constructor
+		 * @param msg Message
+		 * @param cause Cause (parent exception)
 		 */
 		public RException(final String msg, final Throwable cause) {
 			super(msg, cause);
@@ -135,6 +136,7 @@ public interface IRController extends AutoCloseable {
 	/**
 	 * Set whether to use {@link NodeContext}s for Threads.
 	 *
+	 * @param useNodeContext Whether to use node contexts
 	 * @see ThreadUtils#threadWithContext(Runnable)
 	 * @see ThreadUtils#threadWithContext(Runnable, String)
 	 * @see IRController#isUsingNodeContext()
@@ -231,12 +233,14 @@ public interface IRController extends AutoCloseable {
 	/**
 	 * Assign an R variable in a separate thread to be able to cancel it.
 	 *
-	 * @param symbol
-	 * @param value
-	 * @param exec
+	 * @param symbol R variable name
+	 * @param value REXP value to assign to the variable
+	 * @param exec Execution Monitor
+	 * @throws RException
 	 * @throws CanceledExecutionException
+	 * @throws InterruptedException
 	 * @see #monitoredEval(String, ExecutionMonitor)
-	 * @see #assign(String)
+	 * @see #assign(String, REXP)
 	 */
 	void monitoredAssign(String symbol, REXP value, ExecutionMonitor exec)
 			throws RException, CanceledExecutionException, InterruptedException;
@@ -244,18 +248,21 @@ public interface IRController extends AutoCloseable {
 	/**
 	 * Clear the R workspace (remove all variables and imported packages).
 	 *
-	 * @param exec
+	 * @param exec Execution Monitor
+	 * @throws RException
 	 * @throws CanceledExecutionException
 	 */
 	void clearWorkspace(ExecutionMonitor exec) throws RException, CanceledExecutionException;
 
 	/**
+	 * @param workspaceFile R workspace file to read
 	 * @param tempWorkspaceFile
 	 *            the workspace file
 	 * @param exec
 	 *            execution monitor to report progress on
 	 * @return List of libraries which were previously imported in the
 	 *         workspace. See {@link #importListOfLibrariesAndDelete()}.
+	 * @throws RException
 	 * @throws CanceledExecutionException
 	 */
 	List<String> clearAndReadWorkspace(final File workspaceFile, final ExecutionMonitor exec)
@@ -264,9 +271,10 @@ public interface IRController extends AutoCloseable {
 	/**
 	 * Write R variables into a R variable in the current workspace
 	 *
-	 * @param inFlowVariables
-	 * @param name
-	 * @param exec
+	 * @param inFlowVariables Flow variables to export into the R workspace
+	 * @param name Name for the R variable to contain the flow variables
+	 * @param exec Execution monitor
+	 * @throws RException
 	 * @throws CanceledExecutionException
 	 */
 	void exportFlowVariables(Collection<FlowVariable> inFlowVariables, String name, ExecutionMonitor exec)
@@ -315,8 +323,7 @@ public interface IRController extends AutoCloseable {
 	 *            Execution context for creating the table and monitoring
 	 *            execution.
 	 * @return The created BufferedDataTable.
-	 * @throws REngineException
-	 * @throws REXPMismatchException
+	 * @throws RException
 	 * @throws CanceledExecutionException
 	 */
 	BufferedDataTable importBufferedDataTable(String string, boolean nonNumbersAsMissing, ExecutionContext exec)
@@ -327,6 +334,7 @@ public interface IRController extends AutoCloseable {
 	 * those imports.
 	 *
 	 * @return The list of deleted imports
+	 * @throws RException
 	 */
 	List<String> importListOfLibrariesAndDelete() throws RException;
 

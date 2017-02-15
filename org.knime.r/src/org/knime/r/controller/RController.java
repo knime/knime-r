@@ -131,6 +131,8 @@ public class RController implements IRController {
 	private final NodeLogger LOGGER = NodeLogger.getLogger(getClass());
 
 	private static final String TEMP_VARIABLE_NAME = "knimertemp836481";
+
+	/** Name of the R variable which stores the names of loaded R libraries */
 	public static final String R_LOADED_LIBRARIES_VARIABLE = "knime.loaded.libraries";
 
 	private RConnectionResource m_connection;
@@ -160,7 +162,6 @@ public class RController implements IRController {
 	 *
 	 * @param useNodeContext
 	 *            Whether to use the NodeContext for threads
-	 * @throws RException
 	 */
 	public RController(final boolean useNodeContext) {
 		setUseNodeContext(useNodeContext);
@@ -216,8 +217,6 @@ public class RController implements IRController {
 	/**
 	 * Terminate and relaunch the R process this controller is connected to.
 	 * This is currently the only way to interrupt command execution.
-	 *
-	 * @throws Exception
 	 */
 	public synchronized void terminateAndRelaunch() {
 		LOGGER.debug("Terminating R process");
@@ -248,8 +247,6 @@ public class RController implements IRController {
 
 	/**
 	 * Check if the connection is still valid and recover if not.
-	 *
-	 * @throws IOException
 	 */
 	public synchronized void checkConnectionAndRecover() {
 		if (m_connection != null && m_connection.get().isConnected() && m_connection.isRInstanceAlive()) {
@@ -735,7 +732,6 @@ public class RController implements IRController {
 	 *            Table to get the data from
 	 * @param columns
 	 * @param exec
-	 * @return The created RList
 	 * @throws CanceledExecutionException
 	 */
 	private void createRListsFromBufferedDataTableColumns(final BufferedDataTable table,
@@ -1012,26 +1008,6 @@ public class RController implements IRController {
 		}
 	}
 
-	private DataTableSpec createSpecFromDataFrame(final RList rList) throws REXPMismatchException {
-		final List<DataColumnSpec> colSpecs = new ArrayList<DataColumnSpec>();
-		for (int c = 0; c < rList.size(); c++) {
-			final String colName = rList.isNamed() ? rList.keyAt(c) : "R_out_" + c;
-			DataType colType = null;
-			final REXP column = rList.at(c);
-			if (column.isNull()) {
-				colType = StringCell.TYPE;
-			}
-			if (column.isList()) {
-				colType = DataType.getType(ListCell.class, DataType.getType(DataCell.class));
-			} else {
-				colType = importDataType(column);
-			}
-
-			colSpecs.add(new DataColumnSpecCreator(colName, colType).createSpec());
-		}
-		return new DataTableSpec(colSpecs.toArray(new DataColumnSpec[colSpecs.size()]));
-	}
-
 	/*
 	 * Get cell type as which a REXP would be imported.
 	 */
@@ -1134,7 +1110,7 @@ public class RController implements IRController {
 		if (numColumns > 0) {
 			try {
 				// Task for sending columns to Rserve
-				Future<REXP> future = new MonitoredEval(exec).startMonitoredThread(() -> {
+				final Future<REXP> future = new MonitoredEval(exec).startMonitoredThread(() -> {
 					synchronized (getREngine()) {
 						final RConnection conn = getREngine();
 
@@ -1259,7 +1235,7 @@ public class RController implements IRController {
 		 * Run the Callable in a thread and make sure to cancel it, in case
 		 * execution is cancelled.
 		 */
-		private REXP monitor(final Callable<REXP> task) throws InterruptedException, RException {
+		private REXP monitor(final Callable<REXP> task) throws InterruptedException, RException, CanceledExecutionException {
 			final FutureTask<REXP> runningTask = new FutureTask<>(task);
 			final Thread t = (m_useNodeContext) ? ThreadUtils.threadWithContext(runningTask, "R-Evaluation")
 					: new Thread(runningTask, "R-Evaluation");
@@ -1272,7 +1248,12 @@ public class RController implements IRController {
 				}
 
 				return runningTask.get();
-			} catch (InterruptedException | CanceledExecutionException | ExecutionException e) {
+			} catch (ExecutionException e) {
+				if (e.getCause() instanceof RException) {
+					throw (RException) e.getCause();
+				}
+				throw new RException("Exception during R evaluation", e);
+			} finally {
 				try {
 					if (t.isAlive()) {
 						t.interrupt();
@@ -1290,10 +1271,6 @@ public class RController implements IRController {
 				} catch (final Exception e1) {
 					LOGGER.warn("Could not terminate R correctly.");
 				}
-				if (e instanceof ExecutionException && e.getCause() instanceof RException) {
-					throw (RException) e.getCause();
-				}
-				throw new InterruptedException(e.getMessage());
 			}
 		}
 

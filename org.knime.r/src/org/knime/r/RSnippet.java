@@ -50,8 +50,6 @@ package org.knime.r;
 import javax.swing.text.BadLocationException;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
-import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 
 /**
@@ -141,42 +139,6 @@ public final class RSnippet {
 	private RSyntaxDocument createDocument() {
 		final RSyntaxDocument doc = new RSnippetDocument();
 		return doc;
-	}
-
-	/**
-	 * Create the outspec of the java snippet node. This method is typically
-	 * used in the configure of a node.
-	 *
-	 * @param spec
-	 *            the spec of the data table at the inport
-	 * @param flowVariableRepository
-	 *            the flow variables at the inport
-	 * @return the spec at the output
-	 * @throws InvalidSettingsException
-	 *             when settings are inconsistent with the spec or the flow
-	 *             variables at the inport
-	 */
-	public DataTableSpec configure(final DataTableSpec spec,
-			final FlowVariableRepository flowVariableRepository) throws InvalidSettingsException {
-		final DataTableSpec outSpec = spec;
-
-		// createRearranger(spec, flowVariableRepository, -1).createSpec();
-		// // populate flowVariableRepository with new flow variables having
-		// // default values
-		// for (OutVar outVar : m_fields.getOutVarFields()) {
-		// FlowVariable flowVar = null;
-		// if (outVar.getKnimeType().equals(
-		// org.knime.core.node.workflow.FlowVariable.Type.INTEGER)) {
-		// flowVar = new FlowVariable(outVar.getKnimeName(), -1);
-		// } else if (outVar.getKnimeType().equals(
-		// org.knime.core.node.workflow.FlowVariable.Type.DOUBLE)) {
-		// flowVar = new FlowVariable(outVar.getKnimeName(), -1.0);
-		// } else {
-		// flowVar = new FlowVariable(outVar.getKnimeName(), "");
-		// }
-		// flowVariableRepository.put(flowVar);
-		// }
-		return outSpec;
 	}
 
 	/**

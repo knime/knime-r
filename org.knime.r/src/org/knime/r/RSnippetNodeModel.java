@@ -55,7 +55,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
-import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -95,8 +94,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	 * Creates new instance of <code>RSnippetNodeModel</code> with one data in
 	 * and data one out port.
 	 *
-	 * @param pref
-	 *            R preference provider
+	 * @param config
+	 *            R Snippet Node Config
 	 */
 	public RSnippetNodeModel(final RSnippetNodeConfig config) {
 		super(config.getInPortTypes().toArray(new PortType[config.getInPortTypes().size()]),
@@ -109,17 +108,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 	@Override
 	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		DataTableSpec tableSpec = null;
-		for (final PortObjectSpec inSpec : inSpecs) {
-			if (inSpec instanceof DataTableSpec) {
-				tableSpec = (DataTableSpec) inSpec;
-			}
-		}
-
 		final FlowVariableRepository flowVarRepository = new FlowVariableRepository(getAvailableInputFlowVariables());
-
-		final DataTableSpec report = m_snippet.configure(tableSpec, flowVarRepository); // TODO
-																						// Deadcode?
 
 		for (final FlowVariable flowVar : flowVarRepository.getModified()) {
 			if (flowVar.getType().equals(Type.INTEGER)) {
@@ -214,7 +203,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			for (final PortType portType : m_config.getOutPortTypes()) {
 				if (portType.equals(BufferedDataTable.TYPE)) {
 					outPorts.add(importDataFromR(controller, m_snippet.getSettings().getOutNonNumbersAsMissing(),
-							exec.createSubExecutionContext(1.0)));
+							exec.createSubExecutionContext(0.3)));
 				} else if (portType.equals(RPortObject.TYPE)) {
 					outPorts.add(new RPortObject(tempWorkspaceFile, m_librariesInR));
 				}
@@ -331,7 +320,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 	private BufferedDataTable importDataFromR(final RController controller, final boolean nonNumbersAsMissing,
 			final ExecutionContext exec) throws RException, CanceledExecutionException {
-		BufferedDataTable out = controller.importBufferedDataTable("knime.out", nonNumbersAsMissing, exec);
+		final BufferedDataTable out = controller.importBufferedDataTable("knime.out", nonNumbersAsMissing, exec);
 		return out;
 	}
 
@@ -380,16 +369,32 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		m_snippet.getSettings().loadSettings(settings);
 	}
 
-	public RSnippetSettings getSettings() {
-		return m_snippet.getSettings();
-	}
+    /**
+     * Get the settings for the R snippet
+     *
+     * @return the settings
+     *
+     * @see RSnippet#getSettings()
+     */
+    public RSnippetSettings getSettings() {
+        return m_snippet.getSettings();
+    }
 
-	protected RSnippetNodeConfig getRSnippetNodeConfig() {
-		return m_config;
-	}
+    /**
+     * Get the R snippet node config
+     *
+     * @return the config
+     */
+    protected RSnippetNodeConfig getRSnippetNodeConfig() {
+        return m_config;
+    }
 
-	protected RSnippet getRSnippet() {
-		return m_snippet;
-	}
-
+    /**
+     * Get the underlying {@link RSnippet}.
+     *
+     * @return the RSnippet
+     */
+    protected RSnippet getRSnippet() {
+        return m_snippet;
+    }
 }
