@@ -162,15 +162,11 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
 		// and leave the work to the previously started thread. This
 		// works because we are retrieving the current state information!
 		if (m_updateInProgress.compareAndSet(false, true)) {
-			ViewUtils.runOrInvokeLaterInEDT(new Runnable() {
-				@Override
-				public void run() {
-					// let others know we are in the middle of processing
-					// this update - they will now need to start their own job.
-					m_updateInProgress.set(false);
-					progressChangedInternal();
-
-				}
+			ViewUtils.runOrInvokeLaterInEDT(() -> {
+                // let others know we are in the middle of processing
+                // this update - they will now need to start their own job.
+                m_updateInProgress.set(false);
+                progressChangedInternal();
 			});
 		}
 
