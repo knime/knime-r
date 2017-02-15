@@ -187,21 +187,21 @@ public class ConsoleLikeRExecutor {
 	 * @throws CanceledExecutionException
 	 */
 	public void setupOutputCapturing(final ExecutionMonitor progress) throws RException, CanceledExecutionException {
-		m_controller.monitoredEval(CAPTURE_OUTPUT_PREFIX, progress);
+		m_controller.monitoredEval(CAPTURE_OUTPUT_PREFIX, progress, false);
 	}
 
 	/**
-	 * Execute and R script and handle printing of the result aswell as
-	 * correctly printing errors.
-	 *
-	 * @param script
-	 *            The script to execute
-	 * @param progress
-	 *            For monitoring progress.
-	 * @return The result of the evaluation
-	 * @throws RException
-	 * @throws CanceledExecutionException
-	 */
+     * Execute and R script and handle printing of the result aswell as correctly printing errors.
+     *
+     * <b>Performance notes:</b> If the result is not needed, use {@link #executeIgnoreResult(String, ExecutionMonitor)}
+     * instead.
+     *
+     * @param script The script to execute
+     * @param progress For monitoring progress.
+     * @return The result of the evaluation
+     * @throws RException
+     * @throws CanceledExecutionException
+     */
 	public REXP execute(final String script, final ExecutionMonitor progress)
 			throws RException, CanceledExecutionException {
 
@@ -214,9 +214,28 @@ public class ConsoleLikeRExecutor {
 		} catch (RException e) {
 			throw new RException("Transferring the R script to R failed.", e);
 		}
-		ret = m_controller.monitoredEval(CODE_EXECUTION, progress);
+		ret = m_controller.monitoredEval(CODE_EXECUTION, progress, true);
 
 		return ret;
+	}
+
+    /**
+     * Execute and R script and handle correctly printing errors, but prevent result from being transferred.
+     *
+     * @param script The script to execute
+     * @param progress For monitoring progress.
+     * @throws RException
+     * @throws CanceledExecutionException
+     */
+	public void executeIgnoreResult(final String script, final ExecutionMonitor progress)
+			throws RException, CanceledExecutionException {
+		// manage correct printing of command execution
+		try {
+			m_controller.assign("knime.tmp.script", new REXPString(script));
+		} catch (RException e) {
+			throw new RException("Transferring the R script to R failed.", e);
+		}
+		m_controller.monitoredEval(CODE_EXECUTION, progress, false);
 	}
 
 	/**
@@ -229,7 +248,7 @@ public class ConsoleLikeRExecutor {
 		String err = "", out = "";
 		REXP output = null;
 		try {
-			output = m_controller.monitoredEval(CAPTURE_OUTPUT_POSTFIX, progress);
+			output = m_controller.monitoredEval(CAPTURE_OUTPUT_POSTFIX, progress, true);
 			if (output != null && output.isString() && output.asStrings().length == 2) {
 				out = output.asStrings()[0];
 				if (!out.isEmpty()) {

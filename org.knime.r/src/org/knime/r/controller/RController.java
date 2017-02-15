@@ -329,7 +329,7 @@ public class RController implements IRController {
 
 		// produce a warning message if 'Cairo' package is not installed.
 		try {
-			final REXP ret = eval("find.package('Cairo')");
+			final REXP ret = eval("find.package('Cairo')", false);
 			final String cairoPath = ret.asString();
 
 			if (!StringUtils.isEmpty(cairoPath)) {
@@ -397,24 +397,43 @@ public class RController implements IRController {
 
 	// --- R evaluation ---
 
-	@Override
+    @Deprecated
+    @Override
 	public REXP eval(final String expr) throws RException {
+	    return eval(expr, true);
+	}
+
+	@Override
+	public REXP eval(final String expr, final boolean resolve) throws RException {
 		try {
-			synchronized (getREngine()) {
-				REXP x = getREngine().parseAndEval(expr, null, true);
-				return x;
-			}
+            synchronized (getREngine()) {
+                // sadly, eval(String, RExpr, boolean) has a bug and just completely ignores the "resolve" parameter. Immitating its behaviour here.
+                if (resolve) {
+                    REXP x = getREngine().eval(expr);
+                    return x;
+                } else {
+                    getREngine().voidEval(expr);
+                    return null;
+                }
+            }
 		} catch (REngineException e) {
 			throw new RException(RException.MSG_EVAL_FAILED, e);
 		}
 	}
 
-	@Override
+	@Deprecated
+    @Override
 	public REXP monitoredEval(final String expr, final ExecutionMonitor exec)
+			throws RException, CanceledExecutionException {
+	    return monitoredEval(expr, exec, true);
+	}
+
+	@Override
+	public REXP monitoredEval(final String expr, final ExecutionMonitor exec, final boolean resolve)
 			throws RException, CanceledExecutionException {
 		checkInitialized();
 		try {
-			return new MonitoredEval(exec).run(expr);
+			return new MonitoredEval(exec).run(expr, resolve);
 		} catch (RException | REngineException | REXPMismatchException e) {
 			throw new RException(RException.MSG_EVAL_FAILED, e);
 		}
@@ -490,7 +509,7 @@ public class RController implements IRController {
 				monitoredEval(
 						"load(\"" + portFile.getAbsolutePath().replace('\\', '/') + "\")\n"
 								+ RController.createLoadLibraryFunctionCall(rPortObject.getLibraries(), false),
-						exec.createSubProgress(0.5));
+						exec.createSubProgress(0.5), false);
 			} else if (port instanceof BufferedDataTable) {
 				exec.setMessage("Exporting data to R");
 				// write all input data to the R session
@@ -828,14 +847,14 @@ public class RController implements IRController {
 	 */
 	private void setVariableName(final String name, final ExecutionMonitor exec)
 			throws RException, CanceledExecutionException {
-		monitoredEval(name + "<-" + TEMP_VARIABLE_NAME + ";rm(" + TEMP_VARIABLE_NAME + ")", exec);
+		monitoredEval(name + "<-" + TEMP_VARIABLE_NAME + ";rm(" + TEMP_VARIABLE_NAME + ")", exec, false);
 	}
 
 	@Override
 	public BufferedDataTable importBufferedDataTable(final String varName, final boolean nonNumbersAsMissing,
 			final ExecutionContext exec) throws RException, CanceledExecutionException {
 
-		final REXP typeRexp = eval("class(" + varName + ")");
+		final REXP typeRexp = eval("class(" + varName + ")", true);
 		if (typeRexp.isNull()) {
 			// a variable with this name does not exist
 			final BufferedDataContainer cont = exec.createDataContainer(new DataTableSpec());
@@ -1052,7 +1071,7 @@ public class RController implements IRController {
 		b.append("}\n");
 		b.append("unloader();\n");
 		b.append("rm(list = ls());"); // also includes the unloader function
-		monitoredEval(b.toString(), exec);
+		monitoredEval(b.toString(), exec, false);
 		exec.setProgress(1.0, "Clearing previous workspace");
 	}
 
@@ -1063,15 +1082,15 @@ public class RController implements IRController {
 		clearWorkspace(exec.createSubProgress(0.3));
 		exec.setMessage("Loading workspace");
 		monitoredEval("load(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");",
-				exec.createSubProgress(0.7));
+				exec.createSubProgress(0.7), false);
 		return importListOfLibrariesAndDelete();
 	}
 
 	@Override
 	public List<String> importListOfLibrariesAndDelete() throws RException {
 		try {
-			final REXP listAsREXP = eval(R_LOADED_LIBRARIES_VARIABLE);
-			eval("rm(" + R_LOADED_LIBRARIES_VARIABLE + ")");
+			final REXP listAsREXP = eval(R_LOADED_LIBRARIES_VARIABLE, true);
+			eval("rm(" + R_LOADED_LIBRARIES_VARIABLE + ")", false);
 			if (!listAsREXP.isVector()) {
 				return Collections.emptyList();
 			} else {
@@ -1159,10 +1178,10 @@ public class RController implements IRController {
 			}
 
 			// build the data.frame
-			monitoredEval(buildScript.append(",check.names=F);names(knime.in)<-knime.col.names").toString(), exec);
+			monitoredEval(buildScript.append(",check.names=F);names(knime.in)<-knime.col.names").toString(), exec, false);
 
 			// cleanup temporary variables
-			monitoredEval(cleanupScript.append(")").toString(), exec);
+			monitoredEval(cleanupScript.append(")").toString(), exec, false);
 		}
 
 		exec.setProgress(1.0);
@@ -1172,13 +1191,13 @@ public class RController implements IRController {
 	public void saveWorkspace(final File workspaceFile, final ExecutionMonitor exec)
 			throws RException, CanceledExecutionException {
 		// save workspace to file
-		monitoredEval("save.image(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec);
+		monitoredEval("save.image(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec, false);
 	}
 
 	@Override
 	public void loadLibraries(final List<String> listOfLibraries) throws RException {
 		final String cmd = createLoadLibraryFunctionCall(listOfLibraries, true);
-		eval(cmd);
+		eval(cmd, false);
 	}
 
 	/**
@@ -1281,22 +1300,23 @@ public class RController implements IRController {
 		/**
 		 * Run R code
 		 *
-		 * @param cmd
-		 * @return Result of the code
+		 * @param cmd The R command to run
+		 * @param resolve Whether to resolve the resulting reference
+		 * @return Result of the code (if resolve is true) or a reference to the result (if resolve is false)
 		 * @throws REngineException
 		 * @throws RException
 		 * @throws REXPMismatchException
 		 * @throws CanceledExecutionException when execution was cancelled
 		 */
-		public REXP run(final String cmd)
+		public REXP run(final String cmd, final boolean resolve)
 				throws REngineException, REXPMismatchException, RException, CanceledExecutionException {
 			try {
 				// wait for evaluation to complete
 				return monitor(() -> {
-					return eval(cmd);
+					return eval(cmd, resolve);
 				});
 			} catch (InterruptedException e) {
-				throw new CanceledExecutionException();
+				throw new RException("R evaluation was interrupted.", e);
 			} finally {
 				// Make sure to recover in case user terminated or crashed our
 				// server
