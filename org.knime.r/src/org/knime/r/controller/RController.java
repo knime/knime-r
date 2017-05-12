@@ -414,7 +414,7 @@ public class RController implements IRController {
                 }
             }
 		} catch (REngineException e) {
-			throw new RException(RException.MSG_EVAL_FAILED, e);
+			throw new RException(RException.MSG_EVAL_FAILED + ": \"" + expr + "\"", e);
 		}
 	}
 
@@ -432,7 +432,7 @@ public class RController implements IRController {
 		try {
 			return new MonitoredEval(exec).run(expr, resolve);
 		} catch (RException | REngineException | REXPMismatchException e) {
-			throw new RException(RException.MSG_EVAL_FAILED, e);
+			throw new RException(RException.MSG_EVAL_FAILED + ": \"" + expr + "\"", e);
 		}
 	}
 
@@ -444,7 +444,7 @@ public class RController implements IRController {
 				getREngine().assign(expr, value);
 			}
 		} catch (REngineException e) {
-			throw new RException(RException.MSG_EVAL_FAILED, e);
+			throw new RException(RException.MSG_EVAL_FAILED + ": \"" + expr + "\"", e);
 		}
 	}
 
@@ -456,7 +456,7 @@ public class RController implements IRController {
 				getREngine().assign(expr, value);
 			}
 		} catch (REngineException e) {
-			throw new RException(RException.MSG_EVAL_FAILED, e);
+			throw new RException(RException.MSG_EVAL_FAILED + ": \"" + expr + "\"", e);
 		}
 	}
 
@@ -467,7 +467,7 @@ public class RController implements IRController {
 		try {
 			new MonitoredEval(exec).assign(symbol, value);
 		} catch (Exception e) {
-			throw new RException(RException.MSG_EVAL_FAILED, e);
+			throw new RException(String.format("Assigning value to %s failed.", symbol), e);
 		}
 	}
 
