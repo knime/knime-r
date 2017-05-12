@@ -420,11 +420,18 @@ public class RConnectionFactory {
 			m_port = port;
 		}
 
+		/**
+		 * @return Connect to Rserve using the host and port given in the constructor.
+		 * @throws RserveException
+		 */
 		public RConnection createConnection() throws RserveException {
 			m_lastConnection = new RConnection(m_host, m_port);
 			return m_lastConnection;
 		}
 
+		/**
+		 * @return The RConnection which was connected to last (may be closed).
+		 */
 		public RConnection getLastConnection() {
 			return m_lastConnection;
 		}
