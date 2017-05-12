@@ -52,15 +52,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.knime.core.data.BooleanValue;
@@ -70,9 +75,11 @@ import org.knime.core.data.DataColumnSpecCreator;
 import org.knime.core.data.DataRow;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.data.DataType;
+import org.knime.core.data.DataValue;
 import org.knime.core.data.DoubleValue;
 import org.knime.core.data.IntValue;
 import org.knime.core.data.MissingCell;
+import org.knime.core.data.StringValue;
 import org.knime.core.data.collection.CollectionCellFactory;
 import org.knime.core.data.collection.CollectionDataValue;
 import org.knime.core.data.collection.ListCell;
@@ -858,91 +865,182 @@ public class RController implements IRController {
 			return cont.getTable();
 		}
 
+		boolean isDataTable = false;
 		try {
 			final String type = typeRexp.asString();
-			if (type.equals("matrix") || type.equals("list")) {
+			if (type.equals("data.table")) {
+				isDataTable = true;
+				LOGGER.warn("Using experimental support for receiving data as \"data.table\".");
+			} else if (type.equals("matrix") || type.equals("list")) {
 				eval(varName + "<-data.frame(" + varName + ")", false);
 			} else if (!type.equals("data.frame")) {
 				throw new RException(
-						"CODING PROBLEM\timportBufferedDataTable(): Supporting only 'data.frame', 'matrix' and 'list' for type of \"" + varName  +"\" (was '" + type + "').");
+						"CODING PROBLEM\timportBufferedDataTable(): Supporting only 'data.frame', 'data.table', 'matrix' and 'list' for type of \"" + varName  +"\" (was '" + type + "').");
 			}
 		} catch (REXPMismatchException e) {
 			throw new RException("Type of " + varName + " could not be parsed as string.", e);
 		}
 
+		final ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		try {
-			final String[] rowIds = eval("attr(" + varName + " , \"row.names\")").asStrings();
+			// Get column names
+			final String[] columnNames = eval("colnames(" + varName + ")", true).asStrings();
+			final int numColumns = columnNames.length;
 
-			// TODO: Support int[] as row names or int which defines the column
-			// of row names:
-			// http://stat.ethz.ch/R-manual/R-patched/library/base/html/row.names.html
-			final int numRows = rowIds.length;
-			final int ommitColumn = -1;
+			// Get row count (and row names if not automatic compact 1:n storage)
+			final REXP numRowsRexp = getREngine().eval(".row_names_info(" + varName + ")");
+			final boolean compactRowNames = numRowsRexp.asInteger() < 0;
+			if(!compactRowNames) {
+				eval("knime.out.row.names<-attr(" + varName + ",\"row.names\")", false);
+			}
+			final int numRows = Math.abs(numRowsRexp.asInteger());
+			int transferredRows = 0;
 
-			final REXP value = getREngine().get(varName, null, true);
-			final RList rList = value.asList();
+			final List<DataColumnSpec> colSpecs = new ArrayList<DataColumnSpec>();
+			DataTableSpec outSpec = null;
+			BufferedDataContainer cont = null;
 
-			final DataTableSpec outSpec = createSpecFromDataFrame(rList);
-			final BufferedDataContainer cont = exec.createDataContainer(outSpec);
+			final DataCell[][] columns = new DataCell[numColumns][];
+			final Future<Void>[] futures = new Future[numColumns];
+			Future<Void> addRowsFuture = null;
 
-			final int numCells = ommitColumn < 0 ? rList.size() : rList.size() - 1;
+			while (transferredRows < numRows) {
+				int rowsThisBatch = Math.min(50000, numRows-transferredRows);
 
-			final ArrayList<DataCell>[] columns = new ArrayList[numCells];
-
-			int cellIndex = 0; // column index without the omitted column
-			for (int columnIndex = 0; columnIndex < numCells; ++columnIndex) {
-				exec.checkCanceled();
-				exec.setProgress(cellIndex / (double) numCells);
-
-				if (columnIndex == ommitColumn) {
-					continue;
+				if (numRows - transferredRows - rowsThisBatch < 10000) {
+					// avoid final chunk being smaller that 100k rows
+					rowsThisBatch = numRows - transferredRows;
 				}
 
-				REXP column = rList.at(columnIndex);
-				columns[cellIndex] = new ArrayList<DataCell>(numRows);
+				// Expression for range of rows to transfer e.g.: 1:10000
+				final String rowRangeExpr = (transferredRows+1) + ":" + (transferredRows+rowsThisBatch);
 
-				if (column.isNull()) {
-					Collections.fill(columns[columnIndex], DataType.getMissingCell());
-				} else {
-					if (column.isList()) {
-						final ArrayList<DataCell> list = columns[columnIndex];
-						for (final Object o : column.asList()) {
-							final REXP rexp = (REXP) o;
-							if (rexp.isNull()) {
-								list.add(DataType.getMissingCell());
-							} else {
-								if (rexp.isVector()) {
-									final REXPVector colValue = (REXPVector) rexp;
-									final ArrayList<DataCell> listCells = new ArrayList<>(colValue.length());
-									importCells(colValue, listCells, nonNumbersAsMissing);
-									list.add(CollectionCellFactory.createListCell(listCells));
-								} else {
-									LOGGER.warn("Expected Vector type for list cell. Inserting missing cell instead.");
-									list.add(DataType.getMissingCell());
-								}
-							}
+				for (int i = 0; i < numColumns; ++i) {
+					exec.checkCanceled();
+					exec.setProgress((transferredRows/(double)numRows)+(rowsThisBatch/(double)numRows)*(i/(double)numColumns));
+
+					final int rIndex = i+1; // R starts indices at 1
+					final String expr = varName + "[" + rowRangeExpr + "," + rIndex + "]" + ((isDataTable) ? "[[1]]" : "");
+					final REXP column = getREngine().eval(expr);
+
+					if(outSpec == null) {
+						// Create column spec for this column
+						DataType colType = null;
+						if (column.isNull()) {
+							colType = StringCell.TYPE;
+						} else if (column.isList()) {
+							colType = DataType.getType(ListCell.class, DataType.getType(DataCell.class));
+						} else {
+							colType = importDataType(column);
 						}
+						colSpecs.add(new DataColumnSpecCreator(columnNames[i], colType).createSpec());
+					}
+
+					// Convert values
+					if (columns[i] == null || columns[i].length < rowsThisBatch) {
+						// Only reallocate the DataCell buffer if insufficient size.
+						columns[i] = new DataCell[rowsThisBatch];
+					}
+
+					if (addRowsFuture != null) {
+						try {
+							addRowsFuture.get();
+						} catch (Throwable e) {
+							new RuntimeException("Error while adding rows to table.", e);
+						}
+					}
+
+					if (column.isNull()) {
+						Arrays.fill(columns[i], DataType.getMissingCell());
 					} else {
-						importCells(column, columns[columnIndex], nonNumbersAsMissing);
+						if (column.isList()) {
+							final DataCell[] list = columns[i];
+							int row = 0;
+							for (final Object o : column.asList()) {
+								final REXP rexp = (REXP) o;
+								if (rexp.isNull()) {
+									list[row] = DataType.getMissingCell();
+								} else {
+									if (rexp.isVector()) {
+										final REXPVector colValue = (REXPVector) rexp;
+										final DataCell[] listCells = new DataCell[colValue.length()];
+										importCells(colValue, listCells, nonNumbersAsMissing);
+										list[row] = CollectionCellFactory.createListCell(Arrays.asList(listCells));
+									} else {
+										LOGGER.warn("Expected Vector type for list cell. Inserting missing cell instead.");
+										list[row] = DataType.getMissingCell();
+									}
+								}
+								++row;
+							}
+						} else {
+							final DataCell[] columnCells = columns[i];
+							futures[i] = threadPool.submit(() -> {
+								importCells(column, columnCells, nonNumbersAsMissing);
+								return null;
+							});
+						}
 					}
 				}
-				++cellIndex;
-			}
 
-			final Iterator<DataCell>[] itors = new Iterator[numCells];
-			for (int i = 0; i < numCells; ++i) {
-				itors[i] = columns[i].iterator();
-			}
-
-			final DataCell[] curRow = new DataCell[numCells];
-			for (final String rowId : rowIds) {
-				int i = 0;
-				for (final Iterator<DataCell> itor : itors) {
-					curRow[i++] = itor.next();
+				if (outSpec == null || cont == null) {
+					// create container and outspec for the first batch of rows
+					outSpec = new DataTableSpec(colSpecs.toArray(new DataColumnSpec[colSpecs.size()]));
+					cont = exec.createDataContainer(outSpec);
 				}
-				cont.addRowToTable(new DefaultRow(rowId, curRow));
+
+				Stream.of(futures).filter(o -> o != null).forEach(f -> {
+					try {
+						f.get();
+					} catch (final Throwable e) {
+						throw new RuntimeException("Error during conversion of R values to KNIME types.", e);
+					}
+				});
+
+				final REXP rRowIds = (compactRowNames) ? null : getREngine().eval("knime.out.row.names[" + rowRangeExpr + "]");
+
+				final DataCell[] curRow = new DataCell[numColumns];
+
+				final BufferedDataContainer finalCont = cont;
+				final int finalTransferredRows = transferredRows;
+				final int finalRowsThisBatch = rowsThisBatch;
+				addRowsFuture = threadPool.submit(() -> {
+					if (compactRowNames) {
+						for(int i = 0; i < finalRowsThisBatch; ++i) {
+							for (int col = 0; col < columns.length; ++col) {
+								curRow[col] = columns[col][i];
+							}
+							finalCont.addRowToTable(new DefaultRow(Integer.toString(1 + i + finalTransferredRows), curRow));
+						}
+					} else {
+						final String[] rowIds = rRowIds.asStrings();
+
+						for(int i = 0; i < finalRowsThisBatch; ++i) {
+							for (int col = 0; col < columns.length; ++col) {
+								curRow[col] = columns[col][i];
+							}
+							finalCont.addRowToTable(new DefaultRow(rowIds[i + finalTransferredRows], curRow));
+						}
+					}
+					return null;
+				});
+
+				transferredRows += rowsThisBatch;
 			}
 
+			if (addRowsFuture != null) {
+				try {
+					addRowsFuture.get();
+				} catch (Throwable e) {
+					new RuntimeException("Error while adding rows to table.", e);
+				}
+			}
+
+			if (outSpec == null || cont == null) {
+				// create container and outspec for the first batch of rows
+				outSpec = new DataTableSpec(colSpecs.toArray(new DataColumnSpec[colSpecs.size()]));
+				cont = exec.createDataContainer(outSpec);
+			}
 			cont.close();
 
 			return cont.getTable();
@@ -950,8 +1048,9 @@ public class RController implements IRController {
 			throw new RException("Could not parse REXP.", e);
 		} catch (final REngineException e) {
 			throw new RException("Could not get value of " + varName + " from workspace.", e);
+		} finally {
+			threadPool.shutdownNow();
 		}
-
 	}
 
 	/**
@@ -966,29 +1065,36 @@ public class RController implements IRController {
 	 *            Convert NaN and Infinity to {@link MissingCell}.
 	 * @throws REXPMismatchException
 	 */
-	private final void importCells(final REXP rexp, final ArrayList<DataCell> column, final boolean nonNumbersAsMissing)
+	private final void importCells(final REXP rexp, final DataCell[] column, final boolean nonNumbersAsMissing)
 			throws REXPMismatchException {
 		if (rexp.isLogical()) {
-			for (final byte val : rexp.asBytes()) {
+			final byte[] bytes = rexp.asBytes();
+			for (int i = 0; i < bytes.length; ++i) {
+				final byte val = bytes[i];
 				if (val == REXPLogical.TRUE) {
-					column.add(BooleanCell.TRUE);
+					column[i] = BooleanCell.TRUE;
 				} else if (val == REXPLogical.FALSE) {
-					column.add(BooleanCell.FALSE);
+					column[i] = BooleanCell.FALSE;
 				} else {
-					column.add(DataType.getMissingCell());
+					column[i] = DataType.getMissingCell();
 				}
 			}
 		} else if (rexp.isFactor()) {
-			for (int r = 0; r < rexp.length(); ++r) {
-				final String colValue = rexp.asFactor().at(r);
-				column.add((colValue == null) ? DataType.getMissingCell() : new StringCell(colValue));
+			final RFactor strings = rexp.asFactor();
+			for (int r = 0; r < strings.size(); ++r) {
+				final String colValue = strings.at(r);
+				column[r] = (colValue == null) ? DataType.getMissingCell() : new StringCell(colValue);
 			}
 		} else if (rexp.isInteger()) {
-			for (final int val : rexp.asIntegers()) {
-				column.add((val == REXPInteger.NA) ? DataType.getMissingCell() : new IntCell(val));
+			final int[] ints = rexp.asIntegers();
+			for (int i = 0; i < ints.length; ++i) {
+				final int val = ints[i];
+				column[i] = (val == REXPInteger.NA) ? DataType.getMissingCell() : new IntCell(val);
 			}
 		} else if (rexp.isNumeric()) {
-			for (final double val : rexp.asDoubles()) {
+			double[] doubles = rexp.asDoubles();
+			for (int i = 0; i < doubles.length; ++i) {
+				final double val = doubles[i];
 				if (!REXPDouble.isNA(val) && !(nonNumbersAsMissing && (Double.isNaN(val) || Double.isInfinite(val)))) {
 					/*
 					 * If R value is not NA (not available), missing cell will
@@ -996,14 +1102,16 @@ public class RController implements IRController {
 					 * exported as missing cells, NaN and Infinite will be
 					 * exported as missing cells instead, aswell.
 					 */
-					column.add(new DoubleCell(val));
+					column[i] = new DoubleCell(val);
 				} else {
-					column.add(DataType.getMissingCell());
+					column[i] = DataType.getMissingCell();
 				}
 			}
 		} else {
-			for (final String val : rexp.asStrings()) {
-				column.add((val == null) ? DataType.getMissingCell() : new StringCell(val));
+			final String[] strings = rexp.asStrings();
+			for (int i = 0; i < strings.length; ++i) {
+				final String val = strings[i];
+				column[i] = (val == null) ? DataType.getMissingCell() : new StringCell(val);
 			}
 		}
 	}
