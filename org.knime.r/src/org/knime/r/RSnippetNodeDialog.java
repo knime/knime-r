@@ -51,7 +51,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Label;
 import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.Map;
@@ -59,6 +58,7 @@ import java.util.Map;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.text.NumberFormatter;
 
@@ -214,10 +214,10 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 
 		p.add(m_sendRowNames, gbc_sendRowNames);
 
-		p.add(new Label("Type of \"knime.in\" variable."), gbc_knimeInTypeLbl);
+		p.add(new JLabel("Type of \"knime.in\" variable."), gbc_knimeInTypeLbl);
 		p.add(m_knimeInType, gbc_knimeInType);
 
-		p.add(new Label("Number of rows to send to R per batch"), gbc_sendBatchSizeLbl);
+		p.add(new JLabel("Number of rows to send to R per batch"), gbc_sendBatchSizeLbl);
 		p.add(m_sendBatchSize, gbc_sendBatchSize);
 
 		p.add(new JPanel(), gbc_filler); // Panel to fill up remaining space
