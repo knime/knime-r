@@ -309,7 +309,7 @@ public class RController implements IRController {
 			try {
 				final String rMemoryLimit = m_rProps.get("memory.limit").toString().trim();
 				// set memory to the one of the used R
-				eval("memory.limit(" + rMemoryLimit + ");");
+				eval("memory.limit(" + rMemoryLimit + ");", false);
 			} catch (Exception e) {
 				LOGGER.error("R initialisation failed. " + e.getMessage());
 				throw new RuntimeException(e);
@@ -326,7 +326,7 @@ public class RController implements IRController {
 
 		// produce a warning message if 'Cairo' package is not installed.
 		try {
-			final REXP ret = eval("find.package('Cairo')", false);
+			final REXP ret = eval("find.package('Cairo')", true);
 			final String cairoPath = ret.asString();
 
 			if (!StringUtils.isEmpty(cairoPath)) {
@@ -394,35 +394,35 @@ public class RController implements IRController {
 
 	// --- R evaluation ---
 
-    @Deprecated
-    @Override
+	@Deprecated
+	@Override
 	public REXP eval(final String expr) throws RException {
-	    return eval(expr, true);
+		return eval(expr, true);
 	}
 
 	@Override
 	public REXP eval(final String expr, final boolean resolve) throws RException {
 		try {
-            synchronized (getREngine()) {
-                // sadly, eval(String, RExpr, boolean) has a bug and just completely ignores the "resolve" parameter. Immitating its behaviour here.
-                if (resolve) {
-                    REXP x = getREngine().eval(expr);
-                    return x;
-                } else {
-                    getREngine().voidEval(expr);
-                    return null;
-                }
-            }
+			synchronized (getREngine()) {
+				// sadly, eval(String, RExpr, boolean) has a bug and just completely ignores the "resolve" parameter. Immitating its behaviour here.
+				if (resolve) {
+					REXP x = getREngine().eval(expr);
+					return x;
+				} else {
+					getREngine().voidEval(expr);
+					return null;
+				}
+			}
 		} catch (REngineException e) {
 			throw new RException(RException.MSG_EVAL_FAILED + ": \"" + expr + "\"", e);
 		}
 	}
 
 	@Deprecated
-    @Override
+	@Override
 	public REXP monitoredEval(final String expr, final ExecutionMonitor exec)
 			throws RException, CanceledExecutionException {
-	    return monitoredEval(expr, exec, true);
+		return monitoredEval(expr, exec, true);
 	}
 
 	@Override
@@ -861,7 +861,7 @@ public class RController implements IRController {
 		try {
 			final String type = typeRexp.asString();
 			if (type.equals("matrix") || type.equals("list")) {
-				eval(varName + "<-data.frame(" + varName + ")");
+				eval(varName + "<-data.frame(" + varName + ")", false);
 			} else if (!type.equals("data.frame")) {
 				throw new RException(
 						"CODING PROBLEM\timportBufferedDataTable(): Supporting only 'data.frame', 'matrix' and 'list' for type of \"" + varName  +"\" (was '" + type + "').");
