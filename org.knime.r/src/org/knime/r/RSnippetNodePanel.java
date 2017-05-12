@@ -221,7 +221,7 @@ public class RSnippetNodePanel extends JPanel {
 		m_flowVarsList.install(m_snippetTextArea);
 
 		setEnabled(!isPreview);
-		panel.setPreferredSize(new Dimension(850, 600));
+		panel.setPreferredSize(new Dimension(1280, 720));
 	}
 
 	private JPanel createPanel(final boolean isPreview, final boolean isInteractive) {
@@ -250,7 +250,7 @@ public class RSnippetNodePanel extends JPanel {
 		final JSplitPane leftSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		leftSplitPane.setLeftComponent(colsAndVars);
 		leftSplitPane.setRightComponent(snippetPanel);
-		leftSplitPane.setDividerLocation(170);
+		leftSplitPane.setDividerLocation(200);
 
 		m_objectBrowser = new RObjectBrowser();
 		m_console = new RConsole();
@@ -290,7 +290,7 @@ public class RSnippetNodePanel extends JPanel {
 			rightSplitPane.setLeftComponent(leftSplitPane);
 			rightSplitPane.setRightComponent(objectBrowserContainer);
 			rightSplitPane.setResizeWeight(1.0);
-			rightSplitPane.setDividerLocation(550);
+			rightSplitPane.setDividerLocation(1000);
 			rightSplitPane.setOneTouchExpandable(true);
 
 			final JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);

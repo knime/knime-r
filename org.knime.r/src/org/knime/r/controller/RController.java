@@ -1070,7 +1070,11 @@ public class RController implements IRController {
 			}
 			dataValueClasses[columnIndex] = dataValueClass;
 			final String constructor = DATA_TYPE_TO_R_CONSTRUCTOR.get(dataValueClass);
-			eval(columnVar + "<-I(" + constructor + ")", false); // Allocate vector for column, e.g.: c10 <- double(12345)
+			if (dataValueClass == CollectionDataValue.class) {
+				eval(columnVar + "<-I(" + constructor + ")", false); // Allocate vector for column, e.g.: c10 <- double(12345)
+			} else {
+				eval(columnVar + "<-" + constructor, false); // Allocate vector for column, e.g.: c10 <- double(12345)
+			}
 
 			// Prepare KNIME side batch for this column
 			if (dataValueClass == CollectionDataValue.class) {

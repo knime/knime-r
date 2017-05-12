@@ -153,7 +153,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 		if (m_tableInPort >= 0 || m_tableOutPort >= 0) {
 			addTab("Advanced", createAdvancedPanel());
 		}
-		m_panel.setPreferredSize(new Dimension(800, 600));
+		m_panel.setPreferredSize(new Dimension(1280, 720));
 	}
 
 	/** Create the templates tab. */
