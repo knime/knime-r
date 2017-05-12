@@ -95,6 +95,7 @@ import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.util.ThreadPool;
 import org.knime.core.util.ThreadUtils;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
@@ -675,7 +676,8 @@ public class RController implements IRController {
 			throw new RException("Type of " + varName + " could not be parsed as string.", e);
 		}
 
-		final ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		ThreadPool threadPool = ThreadPool.currentPool();
+
 		try {
 			// Get column names
 			final String[] columnNames = eval("colnames(" + varName + ")", true).asStrings();
@@ -769,10 +771,12 @@ public class RController implements IRController {
 							}
 						} else {
 							final DataCell[] columnCells = columns[i];
-							futures[i] = threadPool.submit(() -> {
+							Callable<Void> callable = () -> {
 								importCells(column, columnCells, nonNumbersAsMissing);
 								return null;
-							});
+							};
+                            futures[i] = threadPool != null ? threadPool.enqueue(callable)
+                                : R_THREAD_POOL.submit(callable);
 						}
 					}
 				}
@@ -798,7 +802,7 @@ public class RController implements IRController {
 				final BufferedDataContainer finalCont = cont;
 				final int finalTransferredRows = transferredRows;
 				final int finalRowsThisBatch = rowsThisBatch;
-				addRowsFuture = threadPool.submit(() -> {
+				addRowsFuture = R_THREAD_POOL.submit(() -> {
 					if (compactRowNames) {
 						for(int i = 0; i < finalRowsThisBatch; ++i) {
 							for (int col = 0; col < columns.length; ++col) {
@@ -842,8 +846,6 @@ public class RController implements IRController {
 			throw new RException("Could not parse REXP.", e);
 		} catch (final REngineException e) {
 			throw new RException("Could not get value of " + varName + " from workspace.", e);
-		} finally {
-			threadPool.shutdownNow();
 		}
 	}
 
@@ -982,6 +984,10 @@ public class RController implements IRController {
 
 	/** Map of type to a R expression which creates a column vector for that type */
 	private static final Map<Class<? extends DataValue>, String> DATA_TYPE_TO_R_CONSTRUCTOR;
+
+    private static final ExecutorService R_THREAD_POOL =
+            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
 	static {
 		Map<Class<? extends DataValue>, String> tmp = new HashMap<>();
 
