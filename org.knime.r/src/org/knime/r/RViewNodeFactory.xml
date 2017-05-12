@@ -65,6 +65,26 @@
 			The code to be applied to your expression editor.
 		  </option>
 	    </tab>
+	    <tab name="Advanced">
+	      <option name="Send Row Names to R">
+	        Whether to send the row names from KNIME to R. Disabling this can improve performance with very large tables.
+	        Row names of knime.in will instead be default R row names: 1:n.
+	      </option>
+	      <option name="R type for knime.in">
+	        By default knime.in is data.frame. For large input tables, using data.table is likely more memory efficient
+	        especially while sending the input data to R and may therefore be faster.
+
+	        Please be aware that the <b>support for data.table is experimental (!)</b> and requires the "data.table" R package
+	        to be installed. It may not work for some R scripts, may slightly change or even be removed entirely in a future version.
+	      </option>
+	      <option name="Send batch size">
+	        The input of the R node is sent in row batches (default, 10 000 rows at a time). This is the amount of rows KNIME will
+	        retain in memory at any given time. For large tables, a higher batch size may be faster, but will require additional
+	        memory.
+	        Be aware, that R will likely keep all of the input table in memory and this only helps with memory during transmission
+	        of data to R.
+	      </option>
+	    </tab>
 	</fullDescription>
 	
 	<ports>

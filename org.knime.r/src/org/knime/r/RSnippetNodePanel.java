@@ -385,7 +385,9 @@ public class RSnippetNodePanel extends JPanel {
 
 						if (m_input != null) {
 							m_exec.setMessage("Sending input data to R");
-							m_controller.importDataFromPorts(m_input, m_exec.createSubProgress(0.6));
+							final RSnippetSettings s = m_snippet.getSettings();
+							m_controller.importDataFromPorts(m_input, m_exec.createSubProgress(0.6),
+								s.getSendBatchSize(), s.getKnimeInType(), s.getSendRowNames());
 						}
 
 						m_exec.setMessage("Sending flow variables to R");

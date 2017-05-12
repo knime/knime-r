@@ -52,8 +52,13 @@
 			  The code to be applied to your expression editor.
 		  </option>
 	    </tab>
+	    <tab name="Advanced">
+	      <option name="NaNs">
+	        Convert NaN and +/-Infinity output to missing cells. Enable this for backwards compatibility with the behavior before
+	        version 2.10.
+	      </option>
+	    </tab>
     </fullDescription>
-    
     <ports>
         <outPort index="0" name="Data from R">A table containing new data from the R data frame named <i>knime.out</i>.</outPort>
     </ports>    

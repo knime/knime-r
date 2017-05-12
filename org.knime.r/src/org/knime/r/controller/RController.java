@@ -495,7 +495,7 @@ public class RController implements IRController {
 	}
 
 	@Override
-	public void importDataFromPorts(final PortObject[] inData, final ExecutionMonitor exec)
+	public void importDataFromPorts(final PortObject[] inData, final ExecutionMonitor exec, final int batchSize, final String rType, final boolean sendRowNames)
 			throws RException, CanceledExecutionException {
 		// load workspaces from the input ports into the current R session
 		for (final PortObject port : inData) {
@@ -510,7 +510,7 @@ public class RController implements IRController {
 			} else if (port instanceof BufferedDataTable) {
 				exec.setMessage("Exporting data to R");
 				// write all input data to the R session
-				monitoredAssign("knime.in", (BufferedDataTable) port, exec.createSubProgress(0.5));
+				monitoredAssign("knime.in", (BufferedDataTable) port, exec.createSubProgress(0.5), batchSize, rType, sendRowNames);
 			}
 		}
 
@@ -1079,7 +1079,7 @@ public class RController implements IRController {
 	}
 
 	@Override
-	public void monitoredAssign(final String name, final BufferedDataTable table, final ExecutionMonitor exec)
+	public void monitoredAssign(final String name, final BufferedDataTable table, final ExecutionMonitor exec, final int batchSize, final String rType, final boolean sendRowNames)
 			throws RException, CanceledExecutionException {
 
 		final int rowCount = KnowsRowCountTable.checkRowCount(table.size());

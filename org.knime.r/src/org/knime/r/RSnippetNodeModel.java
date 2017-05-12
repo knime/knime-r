@@ -191,7 +191,9 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			}
 			exec.setProgress(0.0);
 
-			controller.importDataFromPorts(inData, exec.createSubExecutionContext(importTime));
+			final RSnippetSettings s = m_snippet.getSettings();
+			controller.importDataFromPorts(inData, exec.createSubExecutionContext(importTime),
+                                s.getSendBatchSize(), s.getKnimeInType(), s.getSendRowNames());
 			controller.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
 
 			tempWorkspaceFile = FileUtil.createTempFile("R-workspace", ".RData");

@@ -51,11 +51,16 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Label;
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.Map;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
+import javax.swing.text.NumberFormatter;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
@@ -93,6 +98,9 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 	private int m_tableOutPort;
 
 	private JCheckBox m_outNonNumbersAsMissing;
+	private JCheckBox m_sendRowNames;
+	private JComboBox<String> m_knimeInType;
+	private JFormattedTextField m_sendBatchSize;
 
 	/**
 	 * Create a new Dialog.
@@ -142,9 +150,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 		// The preview does not have the templates tab
 		addTab("Templates", createTemplatesPanel());
 
-		// currently there is only one advanced option which applies only for R
-		// nodes with table output.
-		if (m_tableOutPort >= 0) {
+		if (m_tableInPort >= 0 || m_tableOutPort >= 0) {
 			addTab("Advanced", createAdvancedPanel());
 		}
 		m_panel.setPreferredSize(new Dimension(800, 600));
@@ -161,16 +167,59 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 	}
 
 	private JPanel createAdvancedPanel() {
-		final GridBagConstraints gbc_nonNums = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.BASELINE,
-				GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0);
-		final GridBagConstraints gbc_filler = new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.BASELINE,
-				GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0);
+		final Insets insets = new Insets(5, 5, 0, 5);
+		int y = 0;
+		final GridBagConstraints gbc_nonNums = new GridBagConstraints(0, y, 1, 1, 1, 0, GridBagConstraints.BASELINE,
+				GridBagConstraints.HORIZONTAL, insets, 0, 0);
+		++y;
+		final GridBagConstraints gbc_sendRowNames = new GridBagConstraints(0, y, 1, 1, 1, 0, GridBagConstraints.BASELINE,
+				GridBagConstraints.HORIZONTAL, insets, 0, 0);
+		++y;
+		final GridBagConstraints gbc_knimeInTypeLbl = new GridBagConstraints(0, y, 1, 1, 1, 0, GridBagConstraints.BASELINE,
+				GridBagConstraints.HORIZONTAL, insets, 0, 0);
+		final GridBagConstraints gbc_knimeInType = new GridBagConstraints(1, y, 2, 1, 1, 0, GridBagConstraints.BASELINE,
+				GridBagConstraints.HORIZONTAL, insets, 0, 0);
+		++y;
+		final GridBagConstraints gbc_sendBatchSizeLbl = new GridBagConstraints(0, y, 1, 1, 1, 0, GridBagConstraints.BASELINE,
+				GridBagConstraints.HORIZONTAL, insets, 0, 0);
+		final GridBagConstraints gbc_sendBatchSize = new GridBagConstraints(1, y, 1, 1, 1, 0, GridBagConstraints.BASELINE,
+				GridBagConstraints.HORIZONTAL, insets, 0, 0);
+		++y;
+		final GridBagConstraints gbc_filler = new GridBagConstraints(0, y, 1, 1, 1, 1, GridBagConstraints.BASELINE,
+				GridBagConstraints.HORIZONTAL, insets, 0, 0);
 
 		m_outNonNumbersAsMissing = new JCheckBox("Treat NaN, Inf and -Inf as missing values in the output table.");
 		m_outNonNumbersAsMissing.setToolTipText("Check for backwards compatibility with pre 2.10 releases.");
+		m_outNonNumbersAsMissing.setEnabled(m_tableOutPort >= 0);
+
+		m_sendRowNames = new JCheckBox("Send row names of input table.");
+		m_sendRowNames.setToolTipText("Disabling sending row names can improve performance with very large tables.");
+		m_sendRowNames.setEnabled(m_tableInPort >= 0);
+
+		m_knimeInType = new JComboBox<>(new String[]{"data.frame", "data.table (experimental!)"});
+		m_knimeInType.setToolTipText("R type for knime.in. \"data.table\" requires the \"data.table\" package.");
+		m_knimeInType.setEnabled(m_tableInPort >= 0);
+
+		final NumberFormat fmt = NumberFormat.getNumberInstance();
+		final NumberFormatter formatter = new NumberFormatter(fmt);
+		formatter.setMinimum(1);
+		formatter.setMaximum(1000000);
+		formatter.setValueClass(Integer.class);
+		m_sendBatchSize = new JFormattedTextField(formatter);
+		m_sendBatchSize.setToolTipText("Number of rows to send to R per batch. This amount of rows will be kept in memory on KNIME side.");
+		m_sendBatchSize.setEnabled(m_tableInPort >= 0);
 
 		final JPanel p = new JPanel(new GridBagLayout());
 		p.add(m_outNonNumbersAsMissing, gbc_nonNums);
+
+		p.add(m_sendRowNames, gbc_sendRowNames);
+
+		p.add(new Label("Type of \"knime.in\" variable."), gbc_knimeInTypeLbl);
+		p.add(m_knimeInType, gbc_knimeInType);
+
+		p.add(new Label("Number of rows to send to R per batch"), gbc_sendBatchSizeLbl);
+		p.add(m_sendBatchSize, gbc_sendBatchSize);
+
 		p.add(new JPanel(), gbc_filler); // Panel to fill up remaining space
 		return p;
 	}
@@ -187,10 +236,20 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 			throws NotConfigurableException {
 		final DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec) specs[m_tableInPort] : null;
 		m_panel.updateData(settings, specs, getAvailableFlowVariables().values());
+		final RSnippetSettings s = new RSnippetSettings();
+		s.loadSettingsForDialog(settings);
+
 		if (m_tableOutPort >= 0) {
-			final RSnippetSettings s = new RSnippetSettings();
-			s.loadSettingsForDialog(settings);
 			m_outNonNumbersAsMissing.setSelected(s.getOutNonNumbersAsMissing());
+		}
+
+		if (m_tableInPort >= 0) {
+			m_sendBatchSize.setValue(new Integer(s.getSendBatchSize()));
+
+			final String type = s.getKnimeInType();
+			m_knimeInType.setSelectedIndex(type.equals("data.table") ? 1 : 0);
+
+			m_sendRowNames.setSelected(s.getSendRowNames());
 		}
 
 		m_templatesController.setDataTableSpec(spec);
@@ -202,14 +261,24 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 			throws NotConfigurableException {
 		final DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable) input[m_tableInPort]).getSpec() : null;
 		m_panel.updateData(settings, input, getAvailableFlowVariables().values());
+
+		final RSnippetSettings s = new RSnippetSettings();
+		s.loadSettingsForDialog(settings);
 		if (m_tableOutPort >= 0) {
-			final RSnippetSettings s = new RSnippetSettings();
-			s.loadSettingsForDialog(settings);
 			m_outNonNumbersAsMissing.setSelected(s.getOutNonNumbersAsMissing());
+		}
+		if (m_tableInPort >= 0) {
+			m_sendRowNames.setSelected(s.getSendRowNames());
+
+			m_sendBatchSize.setValue(new Integer(s.getSendBatchSize()));
+
+			final String type = s.getKnimeInType();
+			m_knimeInType.setSelectedIndex(type.equals("data.table") ? 1 : 0);
 		}
 
 		m_templatesController.setDataTableSpec(spec);
 		m_templatesController.setFlowVariables(getAvailableFlowVariables());
+
 	}
 
 	@Override
@@ -228,9 +297,17 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 
 	@Override
 	protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
+		final RSnippetSettings s = m_panel.getRSnippet().getSettings();
+
 		if (m_tableOutPort >= 0) {
-			m_panel.getRSnippet().getSettings().setOutNonNumbersAsMissing(m_outNonNumbersAsMissing.isSelected());
+			s.setOutNonNumbersAsMissing(m_outNonNumbersAsMissing.isSelected());
 		}
+		if (m_tableInPort >= 0) {
+			s.setSendRowNames(m_sendRowNames.isSelected());
+			s.setSendBatchSize((Integer)m_sendBatchSize.getValue());
+			s.setKnimeInType(m_knimeInType.getSelectedIndex() == 0 ? "data.frame" : "data.table");
+		}
+
 		m_panel.saveSettingsTo(settings);
 	}
 

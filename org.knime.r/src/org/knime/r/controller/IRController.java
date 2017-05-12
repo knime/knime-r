@@ -301,6 +301,12 @@ public interface IRController extends AutoCloseable {
 	 *            The table to assign to the variable.
 	 * @param exec
 	 *            For monitoring the progress.
+	 * @param batchSize
+	 *            max number of rows to send to R per batch.
+	 * @param type
+	 *            R type for "symbol" to provide the table data as
+	 * @param sendRowNames
+	 *            Whether to send names of rows to R with the input table
 	 * @throws RException
 	 *             If an R related error occurred during execution.
 	 * @throws CanceledExecutionException
@@ -308,7 +314,7 @@ public interface IRController extends AutoCloseable {
 	 * @throws InterruptedException
 	 *             If a thread was interrupted.
 	 */
-	void monitoredAssign(String symbol, BufferedDataTable value, ExecutionMonitor exec)
+	void monitoredAssign(String symbol, BufferedDataTable value, ExecutionMonitor exec, int batchSize, String type, boolean sendRowNames)
 			throws RException, CanceledExecutionException, InterruptedException;
 
 	/**
@@ -367,9 +373,15 @@ public interface IRController extends AutoCloseable {
 	 *            ports to import
 	 * @param exec
 	 *            For monitoring the progess.
+	 * @param batchSize
+	 *            max number of rows to send to R per batch.
+	 * @param rType
+	 *            R type for "symbol" to provide the table data as
+	 * @param sendRowNames
+	 *            Whether to send row names of input tables to R
 	 * @throws RException
 	 * @throws CanceledExecutionException
 	 */
-	void importDataFromPorts(PortObject[] inData, ExecutionMonitor exec) throws RException, CanceledExecutionException;
+	void importDataFromPorts(PortObject[] inData, ExecutionMonitor exec, final int batchSize, final String rType, final boolean sendRowNames) throws RException, CanceledExecutionException;
 
 }

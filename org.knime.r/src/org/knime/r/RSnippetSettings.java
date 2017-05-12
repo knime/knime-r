@@ -61,6 +61,9 @@ public class RSnippetSettings {
 	private static final String TEMPLATE_UUID = "templateUUID";
 	private static final String VERSION = "version";
 	private static final String OUT_NON_NUMBERS_AS_MISSING = "Output non numbers (NaN, Inf, -Inf) as missing cells";
+	private static final String SEND_ROW_NAMES = "sendRowNames";
+	private static final String KNIME_IN_TYPE = "knimeInType";
+	private static final String SEND_BATCH_SIZE = "sendBatchSize";
 
 	/** Custom script. */
 	private String m_script;
@@ -77,6 +80,15 @@ public class RSnippetSettings {
 	 */
 	private boolean m_outNonNumbersAsMissing;
 
+	/** Whether to send row names to R with the input table. */
+	private boolean m_sendRowNames;
+
+	/** Number of rows to send to R in one batch. */
+	private int m_sendBatchSize;
+
+	/** R type to use for the knime.in variable */
+	private String m_knimeInType;
+
 	/**
 	 * Create a new instance.
 	 */
@@ -85,6 +97,9 @@ public class RSnippetSettings {
 		m_templateUUID = null;
 		m_version = RSnippet.VERSION_1_X;
 		m_outNonNumbersAsMissing = false;
+		m_sendRowNames = true;
+		m_sendBatchSize = 10000;
+		m_knimeInType = "data.frame";
 	}
 
 	/**
@@ -98,6 +113,9 @@ public class RSnippetSettings {
 		settings.addString(TEMPLATE_UUID, getTemplateUUID());
 		settings.addString(VERSION, getVersion());
 		settings.addBoolean(OUT_NON_NUMBERS_AS_MISSING, m_outNonNumbersAsMissing);
+		settings.addBoolean(SEND_ROW_NAMES, m_sendRowNames);
+		settings.addInt(SEND_BATCH_SIZE, getSendBatchSize());
+		settings.addString(KNIME_IN_TYPE, getKnimeInType());
 	}
 
 	/**
@@ -120,6 +138,16 @@ public class RSnippetSettings {
 			setOutNonNumbersAsMissing(true);
 		}
 		setVersion(settings.getString(VERSION));
+
+		setSendRowNames(settings.getBoolean(SEND_ROW_NAMES, true));
+		setSendBatchSize(settings.getInt(SEND_BATCH_SIZE, 10000));
+
+		final String type = settings.getString(KNIME_IN_TYPE, "data.frame");
+		if ("data.frame".equals(type) || "data.table".equals(type)) {
+			setKnimeInType(type);
+		} else {
+			throw new InvalidSettingsException("Invalid type for knime.in: Can only be \"data.frame\" or \"data.table\".");
+		}
 	}
 
 	/**
@@ -138,6 +166,17 @@ public class RSnippetSettings {
 			// keep backward compatibility
 			setOutNonNumbersAsMissing(settings.getBoolean(OUT_NON_NUMBERS_AS_MISSING, true));
 		}
+
+		setSendRowNames(settings.getBoolean(SEND_ROW_NAMES, true));
+
+		setSendBatchSize(settings.getInt(SEND_BATCH_SIZE, 10000));
+
+		final String type = settings.getString(KNIME_IN_TYPE, "data.frame");
+		if ("data.frame".equals(type) || "data.table".equals(type)) {
+			setKnimeInType(type);
+		} else {
+			setKnimeInType("data.frame");
+		}
 	}
 
 	public void loadSettings(final RSnippetSettings s) {
@@ -145,6 +184,9 @@ public class RSnippetSettings {
 		setTemplateUUID(s.getTemplateUUID());
 		setVersion(s.getVersion());
 		setOutNonNumbersAsMissing(s.getOutNonNumbersAsMissing());
+		setSendRowNames(s.getSendRowNames());
+		setSendBatchSize(s.getSendBatchSize());
+		setKnimeInType(s.getKnimeInType());
 	}
 
 	/**
@@ -213,4 +255,53 @@ public class RSnippetSettings {
 		m_outNonNumbersAsMissing = outNonNumbersAsMissing;
 	}
 
+	/**
+	 * @return whether to send row names with the input table.
+	 */
+	boolean getSendRowNames() {
+		return m_sendRowNames;
+	}
+
+	/**
+	 * Set whether to send row names to R with the input table.
+	 *
+	 * @param b whether to send or not to send.
+	 */
+	void setSendRowNames(final boolean b) {
+		m_sendRowNames = b;
+	}
+
+	/**
+	 * Set number of rows to send to R per batch.
+	 * @param numRows number of rows.
+	 */
+	void setSendBatchSize(final int numRows) {
+		m_sendBatchSize = numRows;
+	}
+
+	/**
+	 * @return Number of rows that should be sent to R per batch.
+	 */
+	int getSendBatchSize() {
+		return m_sendBatchSize;
+	}
+
+	/**
+	 * Set the R type in which to provide the data from KNIME.
+	 * @param type either "data.frame" or "data.table".
+	 */
+	void setKnimeInType(final String type) {
+		if ("data.frame".equals(type) || "data.table".equals(type)) {
+			m_knimeInType = type;
+			return;
+		}
+		throw new IllegalArgumentException("Type for \"knime.in\" should be either \"data.frame\" or \"data.table\".");
+	}
+
+	/**
+	 * @return R type to use for the knime.in variable.
+	 */
+	String getKnimeInType() {
+		return m_knimeInType;
+	}
 }
