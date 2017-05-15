@@ -267,7 +267,8 @@ public class ConsoleLikeRExecutor {
 			}
 
 		} catch (REXPMismatchException e) {
-			throw new RException("Tried to parse a non-string as string.", e);
+			// Never going to happen, since we are checking output.isString() before using asString()
+			throw new IllegalStateException("Tried to parse a non-string as string.", e);
 		}
 
 		stdout = out;

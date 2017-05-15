@@ -668,6 +668,7 @@ public class RController implements IRController {
 			BufferedDataContainer cont = null;
 
 			final DataCell[][] columns = new DataCell[numColumns][];
+			@SuppressWarnings("unchecked")
 			final Future<Void>[] futures = new Future[numColumns];
 			Future<Void> addRowsFuture = null;
 
@@ -782,6 +783,10 @@ public class RController implements IRController {
 							finalCont.addRowToTable(new DefaultRow(Integer.toString(1 + i + finalTransferredRows), curRow));
 						}
 					} else {
+						if (rRowIds == null) {
+							// Should never happen, only happens if Rserve returns less bytes than expected. Maybe a version issue?
+							throw new IllegalStateException("Received an invalid packet from Rserve.");
+						}
 						final String[] rowIds = rRowIds.asStrings();
 
 						for(int i = 0; i < finalRowsThisBatch; ++i) {
@@ -1431,22 +1436,5 @@ public class RController implements IRController {
 				checkConnectionAndRecover();
 			}
 		}
-
-		/*
-		 * Execute a Callable in a monitored thread
-		 */
-		public Future<REXP> startMonitoredThread(final Callable<REXP> task) {
-			final FutureTask<REXP> ret = new FutureTask<REXP>(() -> {
-				return monitor(task);
-			});
-
-			if (m_useNodeContext) {
-				ThreadUtils.threadWithContext(ret, "R-Monitor").start();
-			} else {
-				new Thread(ret, "R-Monitor").start();
-			}
-			return ret;
-		}
-
 	}
 }

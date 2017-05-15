@@ -288,38 +288,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		m_librariesInR = null;
 	}
 
-	/**
-	 * Deletes the specified file. If the file is a directory the directory
-	 * itself as well as its files and sub-directories are deleted.
-	 *
-	 * @param file
-	 *            The file to delete.
-	 * @return <code>true</code> if the file could be deleted, otherwise
-	 *         <code>false</code>.
-	 */
-	static boolean deleteFile(final File file) {
-		boolean del = false;
-		if (file != null && file.exists()) {
-			del = FileUtil.deleteRecursively(file);
-
-			// if file could not be deleted call GC and try again
-			if (!del) {
-				// It is possible that there are still open streams around
-				// holding the file. Therefore these streams, actually belonging
-				// to the garbage, has to be collected by the GC.
-				System.gc();
-
-				// try to delete again
-				del = FileUtil.deleteRecursively(file);
-				if (!del) {
-					// ok that's it no trials anymore ...
-					LOGGER.debug(file.getAbsoluteFile() + " could not be deleted!");
-				}
-			}
-		}
-		return del;
-	}
-
 	private BufferedDataTable importDataFromR(final RController controller, final boolean nonNumbersAsMissing,
 			final ExecutionContext exec) throws RException, CanceledExecutionException {
 		final BufferedDataTable out = controller.importBufferedDataTable("knime.out", nonNumbersAsMissing, exec);

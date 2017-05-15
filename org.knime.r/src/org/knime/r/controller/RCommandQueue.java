@@ -91,6 +91,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	 * Inserts the specified script at the tail of this queue, waiting if
 	 * necessary for space to become available.
 	 *
+	 * @param rScript Script to enqueue for execution
 	 * @param showInConsole
 	 *            If the command should be copied into the R console.
 	 * @return {@link RCommand} which wraps the added <code>rScript</code>. Use
@@ -125,6 +126,8 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 		 *
 		 * @param command
 		 *            command which has been completed
+		 * @param stdout messages to stdout captured during execution
+		 * @param stderr messages to stderr captured during execution
 		 */
 		public void onCommandExecutionEnd(RCommand command, String stdout, String stderr);
 
@@ -175,6 +178,12 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 		private ExecutionMonitorFactory m_execMonitorFactory;
 		private final NodeContext m_context;
 
+		/**
+		 * Constructor
+		 *
+		 * @param execMonitorFactory will be used to get/create ExecutionMonitors for every command in the queue
+		 * @param withContext whether to run the thread with NodeContext
+		 */
 		public RCommandConsumer(final ExecutionMonitorFactory execMonitorFactory, final boolean withContext) {
 			super("RCommandQueue Executor");
 			m_execMonitorFactory = execMonitorFactory;
@@ -310,24 +319,20 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	 * Start this queues execution thread (Thread which executes the queues
 	 * {@link RCommand}s).
 	 *
-	 * @param controller
-	 *            Controller to use for execution of R code
-	 * @param factory
-	 *            Factory creating {@link ExecutionMonitor}s
-	 * @see #startExecutionThread(RController, ExecutionMonitorFactory)
+	 * @see #startExecutionThread(ExecutionMonitorFactory, boolean)
 	 * @see #stopExecutionThread()
 	 * @see #isExecutionThreadRunning()
 	 */
 	public void startExecutionThread() {
 		startExecutionThread(() -> {
 			return new ExecutionMonitor();
-		} , false);
+		}, false);
 	}
 
 	/**
 	 * @return <code>true</code> if the execution thread is currently running.
-	 * @see #startExecutionThread(RController)
-	 * @see #startExecutionThread(RController, ExecutionMonitorFactory)
+	 * @see #startExecutionThread()
+	 * @see #startExecutionThread(ExecutionMonitorFactory, boolean)
 	 * @see #stopExecutionThread()
 	 */
 	public boolean isExecutionThreadRunning() {
@@ -338,12 +343,10 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	 * Start this queues execution thread (Thread which executes the queues
 	 * {@link RCommand}s).
 	 *
-	 * @param controller
-	 *            Controller to use for execution of R code
 	 * @param factory
 	 *            Factory creating {@link ExecutionMonitor}s
 	 * @param withNodeContext
-	 * @see #startExecutionThread(RController)
+	 * @see #startExecutionThread()
 	 * @see #stopExecutionThread()
 	 * @see #isExecutionThreadRunning()
 	 */
@@ -360,8 +363,8 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 	 * Stop the queues execution thread. Does nothing if the queue is already
 	 * stopped.
 	 *
-	 * @see #startExecutionThread(RController)
-	 * @see #startExecutionThread(RController, ExecutionMonitorFactory)
+	 * @see #startExecutionThread()
+	 * @see #startExecutionThread(ExecutionMonitorFactory, boolean)
 	 * @see #isExecutionThreadRunning()
 	 */
 	public void stopExecutionThread() {
