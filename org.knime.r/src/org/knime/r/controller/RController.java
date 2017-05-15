@@ -1284,12 +1284,6 @@ public class RController implements IRController {
 		}
 	}
 
-	@Override
-	public void loadLibraries(final List<String> listOfLibraries) throws RException {
-		final String cmd = createLoadLibraryFunctionCall(listOfLibraries, true);
-		eval(cmd, false);
-	}
-
 	/**
 	 * A function call that loads all libraries in the argument but checking if
 	 * they are not loaded yet.

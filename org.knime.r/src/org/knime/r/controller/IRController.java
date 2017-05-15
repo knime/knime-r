@@ -322,14 +322,6 @@ public interface IRController extends AutoCloseable {
 	void saveWorkspace(File workspaceFile, ExecutionMonitor exec) throws RException, CanceledExecutionException;
 
 	/**
-	 * Load a list of R libraries: <code>library(libname)</code>.
-	 *
-	 * @param listOfLibraries
-	 * @throws RException
-	 */
-	void loadLibraries(List<String> listOfLibraries) throws RException;
-
-	/**
 	 * Import RInputPorts and BufferedDataTables into the current R workspace.
 	 *
 	 * @param inData
