@@ -296,7 +296,7 @@ public class ConsoleLikeRExecutor {
 	 */
 	public void cleanup(final ExecutionMonitor progress) throws RException, CanceledExecutionException {
 		// cleanup variables which are not needed anymore
-		m_controller.monitoredEval(CAPTURE_OUTPUT_CLEANUP, progress);
+		m_controller.monitoredEval(CAPTURE_OUTPUT_CLEANUP, progress, false);
 	}
 
 }

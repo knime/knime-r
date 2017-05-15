@@ -149,17 +149,6 @@ public interface IRController extends AutoCloseable {
 	/**
      * Evaluate R code. This may have side effects on the workspace of the RController.
      *
-     * @param expr the R expression to evaluate
-     * @return result of evaluation.
-     * @throws RException
-     * @deprecated Explicitly pass "resolve" flag using {@link #eval(String, boolean)}
-     */
-	@Deprecated
-	REXP eval(String expr) throws RException;
-
-	/**
-     * Evaluate R code. This may have side effects on the workspace of the RController.
-     *
 	 * @param expr R expression
      * @param cmd the R expression to evaluate
      * @param resolve Whether to resolve the resulting reference
@@ -167,23 +156,6 @@ public interface IRController extends AutoCloseable {
 	 * @throws RException
      */
 	REXP eval(String expr, boolean resolve) throws RException;
-
-    /**
-     * Evaluate R code in a separate thread to be able to cancel it.
-     *
-     * @param cmd The R command
-     * @param exec only used for checking if execution is cancelled.
-     * @return Result of the evaluation (always resolved)
-     * @throws RException
-     * @throws CanceledExecutionException
-     * @throws InterruptedException
-     * @see #eval(String)
-     * @deprecated Explicitly define resolve flag using {@link #monitoredEval(String, ExecutionMonitor, boolean)}
-     *             instead.
-     */
-	@Deprecated
-	REXP monitoredEval(String cmd, ExecutionMonitor exec)
-			throws RException, CanceledExecutionException, InterruptedException;
 
 	/**
      * Evaluate R code in a separate thread to be able to cancel it.
@@ -195,7 +167,6 @@ public interface IRController extends AutoCloseable {
 	 * @throws RException
      * @throws CanceledExecutionException
 	 * @throws InterruptedException
-     * @see #eval(String)
      */
 	REXP monitoredEval(String cmd, ExecutionMonitor exec, boolean resolve)
 			throws RException, CanceledExecutionException, InterruptedException;
@@ -231,7 +202,7 @@ public interface IRController extends AutoCloseable {
 	 * @throws RException
 	 * @throws CanceledExecutionException
 	 * @throws InterruptedException
-	 * @see #monitoredEval(String, ExecutionMonitor)
+	 * @see #monitoredEval(String, ExecutionMonitor, boolean)
 	 * @see #assign(String, REXP)
 	 */
 	void monitoredAssign(String symbol, REXP value, ExecutionMonitor exec)

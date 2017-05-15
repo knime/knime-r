@@ -399,12 +399,6 @@ public class RController implements IRController {
 
 	// --- R evaluation ---
 
-	@Deprecated
-	@Override
-	public REXP eval(final String expr) throws RException {
-		return eval(expr, true);
-	}
-
 	@Override
 	public REXP eval(final String expr, final boolean resolve) throws RException {
 		try {
@@ -423,16 +417,9 @@ public class RController implements IRController {
 		}
 	}
 
-	@Deprecated
-	@Override
-	public REXP monitoredEval(final String expr, final ExecutionMonitor exec)
-			throws RException, CanceledExecutionException {
-		return monitoredEval(expr, exec, true);
-	}
-
 	@Override
 	public REXP monitoredEval(final String expr, final ExecutionMonitor exec, final boolean resolve)
-			throws RException, CanceledExecutionException {
+			throws RException, CanceledExecutionException, InterruptedException {
 		checkInitialized();
 		try {
 			return new MonitoredEval(exec).run(expr, resolve);
@@ -496,7 +483,7 @@ public class RController implements IRController {
 		}
 
 		monitoredAssign(TEMP_VARIABLE_NAME, new REXPList(new RList(content, names)), exec);
-		setVariableName(name, exec);
+		eval(name + "<-" + TEMP_VARIABLE_NAME + ";rm(" + TEMP_VARIABLE_NAME + ")", false);
 	}
 
 	@Override
@@ -631,21 +618,6 @@ public class RController implements IRController {
 		}
 		final String[] levels = hash.keySet().toArray(new String[hash.size()]);
 		return new REXPFactor(valueIndices, levels);
-	}
-
-	/**
-	 * Assign the {@link #TEMP_VARIABLE_NAME} variable to a new variable with
-	 * name <code>name</code>.
-	 *
-	 * @param name
-	 *            Name for the variable
-	 * @param exec
-	 *            Execution monitor
-	 * @throws CanceledExecutionException
-	 */
-	private void setVariableName(final String name, final ExecutionMonitor exec)
-			throws RException, CanceledExecutionException {
-		monitoredEval(name + "<-" + TEMP_VARIABLE_NAME + ";rm(" + TEMP_VARIABLE_NAME + ")", exec, false);
 	}
 
 	@Override

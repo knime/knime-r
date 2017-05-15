@@ -82,7 +82,7 @@ public class RControllerTest {
 
 		// similar to evaluation test in RConnectionFactoryTest
 		try {
-			REXP exp = m_controller.eval("w <- 10; w");
+			REXP exp = m_controller.eval("w <- 10; w", true);
 
 			assertNotNull(exp);
 			assertEquals("Returned integer had incorrect value.", 10, exp.asInteger());
@@ -109,7 +109,7 @@ public class RControllerTest {
 			final ExecutionMonitor exec = new ExecutionMonitor(progress);
 			t = new Thread(() -> {
 				try {
-					m_controller.monitoredEval("Sys.sleep(20)", exec);
+					m_controller.monitoredEval("Sys.sleep(20)", exec, false);
 				} catch (final CanceledExecutionException e) {
 					// this is expeced.
 				} catch (final Throwable thr) {
@@ -144,7 +144,7 @@ public class RControllerTest {
 			t = new Thread(() -> {
 				try {
 					REXP exp;
-					exp = m_controller.monitoredEval("y <- 12; y", exec);
+					exp = m_controller.monitoredEval("y <- 12; y", exec, true);
 
 					assertNotNull(exp);
 					assertEquals("Returned integer had incorrect value.", 12, exp.asInteger());
@@ -158,7 +158,7 @@ public class RControllerTest {
 			t.start();
 			// give some time to cancel the evaluation. Cancellation is checked
 			// every 200ms.
-			t.join(1000); // Warning: Test may fail evaluation takes longer
+			t.join(1000); // Warning: Test may fail if evaluation takes longer on other machines
 			assertFalse(t.isAlive());
 		} finally {
 			if (t != null && t.isAlive()) {

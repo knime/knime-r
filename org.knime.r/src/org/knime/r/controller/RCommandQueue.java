@@ -262,7 +262,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
 							// capturing for user-invisible commands issued for
 							// dialog functionality
 							try {
-								ret = m_controller.monitoredEval(rCmd.getCommand(), sub.createSubProgress(0.9));
+								ret = m_controller.monitoredEval(rCmd.getCommand(), sub.createSubProgress(0.9), true);
 							} catch (RException e) {
 								m_listeners.stream().forEach((l) -> l.onCommandExecutionError(
 										new RException("Could not execute internal command.", e)));
