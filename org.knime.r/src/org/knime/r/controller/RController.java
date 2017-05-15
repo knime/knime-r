@@ -59,9 +59,13 @@ import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -76,6 +80,7 @@ import org.knime.core.data.DataValue;
 import org.knime.core.data.DoubleValue;
 import org.knime.core.data.IntValue;
 import org.knime.core.data.MissingCell;
+import org.knime.core.data.RowKey;
 import org.knime.core.data.StringValue;
 import org.knime.core.data.collection.CollectionCellFactory;
 import org.knime.core.data.collection.CollectionDataValue;
@@ -93,6 +98,7 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.ThreadPool;
 import org.knime.core.util.ThreadUtils;
@@ -499,7 +505,8 @@ public class RController implements IRController {
 			} else if (port instanceof BufferedDataTable) {
 				exec.setMessage("Exporting data to R");
 				// write all input data to the R session
-				monitoredAssign("knime.in", (BufferedDataTable) port, exec.createSubProgress(0.5), batchSize, rType, sendRowNames);
+				monitoredAssign("knime.in", (BufferedDataTable) port, exec.createSubProgress(0.5),
+						batchSize, rType, sendRowNames);
 			}
 		}
 
@@ -546,40 +553,40 @@ public class RController implements IRController {
 		return flowVars;
 	}
 
-	/*
-	 * Create an REXPLogical for a BooleanValue
+	/**
+	 * Create an REXPLogical for a BooleanValue or {@link REXPLogical#isNA()}.
 	 */
-	private byte exportBooleanValue(final DataCell cell) {
+	private static byte exportBooleanValue(final DataCell cell) {
 		if (cell.isMissing()) {
 			return REXPLogical.NA;
 		}
 		return ((BooleanValue) cell).getBooleanValue() ? REXPLogical.TRUE : REXPLogical.FALSE;
 	}
 
-	/*
-	 * Create an int for a IntValue
+	/**
+	 * Create an int for a IntValue or create a {@link REXPInteger#NA}.
 	 */
-	private int exportIntValue(final DataCell cell) {
+	private static int exportIntValue(final DataCell cell) {
 		if (cell.isMissing()) {
 			return REXPInteger.NA;
 		}
 		return ((IntValue) cell).getIntValue();
 	}
 
-	/*
-	 * Create a double for a DoubleValue
+	/**
+	 * Create a double for a DoubleValue or {@link REXPDouble#NA}.
 	 */
-	private double exportDoubleValue(final DataCell cell) {
+	private static double exportDoubleValue(final DataCell cell) {
 		if (cell.isMissing()) {
 			return REXPDouble.NA;
 		}
 		return ((DoubleValue) cell).getDoubleValue();
 	}
 
-	/*
-	 * Create a String for a StringValue
+	/**
+	 * Create a String for a StringValue or null.
 	 */
-	private String exportStringValue(final DataCell cell) {
+	private static String exportStringValue(final DataCell cell) {
 		if (!cell.isMissing()) {
 			return cell.toString();
 		} else {
@@ -604,18 +611,18 @@ public class RController implements IRController {
 			final String type = typeRexp.asString();
 			if (type.equals("data.table")) {
 				isDataTable = true;
-				LOGGER.warn("Using experimental support for receiving data as \"data.table\".");
+				LOGGER.debug("Using experimental support for receiving data as \"data.table\".");
 			} else if (type.equals("matrix") || type.equals("list")) {
 				eval(varName + "<-data.frame(" + varName + ")", false);
 			} else if (!type.equals("data.frame")) {
-				throw new RException(
-						"CODING PROBLEM\timportBufferedDataTable(): Supporting only 'data.frame', 'data.table', 'matrix' and 'list' for type of \"" + varName  +"\" (was '" + type + "').", null);
+                throw new RException("CODING PROBLEM\timportBufferedDataTable(): Supporting only 'data.frame', "
+                    + "'data.table', 'matrix' and 'list' for type of \"" + varName + "\" (was '" + type + "').", null);
 			}
 		} catch (REXPMismatchException e) {
 			throw new RException("Type of " + varName + " could not be parsed as string.", e);
 		}
 
-		ThreadPool threadPool = ThreadPool.currentPool();
+		final ThreadPool threadPool = ThreadPool.currentPool();
 
 		try {
 			// Get column names
@@ -641,10 +648,12 @@ public class RController implements IRController {
 			Future<Void> addRowsFuture = null;
 
 			while (transferredRows < numRows) {
-				int rowsThisBatch = Math.min(50000, numRows-transferredRows);
+			    // this is NOT the chunk size value as per config dialog as receiving data happens
+			    // in chunks _and_ on columns
+				int rowsThisBatch = Math.min(50000, numRows - transferredRows);
 
 				if (numRows - transferredRows - rowsThisBatch < 10000) {
-					// avoid final chunk being smaller that 100k rows
+					// avoid final chunk being smaller than 10k rows
 					rowsThisBatch = numRows - transferredRows;
 				}
 
@@ -653,16 +662,18 @@ public class RController implements IRController {
 
 				for (int i = 0; i < numColumns; ++i) {
 					exec.checkCanceled();
-					exec.setProgress((transferredRows/(double)numRows)+(rowsThisBatch/(double)numRows)*(i/(double)numColumns));
+					exec.setProgress((transferredRows / (double)numRows)
+					    + (rowsThisBatch / (double)numRows) * (i / (double)numColumns));
 
-					final int rIndex = i+1; // R starts indices at 1
-					final String expr = varName + "[" + rowRangeExpr + "," + rIndex + "]" + ((isDataTable) ? "[[1]]" : "");
+					final int rIndex = i + 1; // R starts indices at 1
+					final String expr = varName + "[" + rowRangeExpr + "," + rIndex + "]"
+					        + ((isDataTable) ? "[[1]]" : "");
 					final REXP column = getREngine().eval(expr);
 
-					if(outSpec == null) {
+					if (outSpec == null) {
 						// Create column spec for this column
-						DataType colType = null;
-						if (column.isNull()) {
+						DataType colType;
+						if (column.isNull()) { // column is missing (in R), edge case
 							colType = StringCell.TYPE;
 						} else if (column.isList()) {
 							colType = DataType.getType(ListCell.class, DataType.getType(DataCell.class));
@@ -681,7 +692,7 @@ public class RController implements IRController {
 					if (addRowsFuture != null) {
 						try {
 							addRowsFuture.get();
-						} catch (Throwable e) {
+						} catch (InterruptedException | ExecutionException e) {
 							new RuntimeException("Error while adding rows to table.", e);
 						}
 					}
@@ -711,10 +722,10 @@ public class RController implements IRController {
 							}
 						} else {
 							final DataCell[] columnCells = columns[i];
-							Callable<Void> callable = () -> {
+							Callable<Void> callable = ThreadUtils.callableWithContext(() -> {
 								importCells(column, columnCells, nonNumbersAsMissing);
 								return null;
-							};
+							});
                             futures[i] = threadPool != null ? threadPool.enqueue(callable)
                                 : R_THREAD_POOL.submit(callable);
 						}
@@ -742,30 +753,24 @@ public class RController implements IRController {
 				final BufferedDataContainer finalCont = cont;
 				final int finalTransferredRows = transferredRows;
 				final int finalRowsThisBatch = rowsThisBatch;
-				addRowsFuture = R_THREAD_POOL.submit(() -> {
-					if (compactRowNames) {
-						for(int i = 0; i < finalRowsThisBatch; ++i) {
-							for (int col = 0; col < columns.length; ++col) {
-								curRow[col] = columns[col][i];
-							}
-							finalCont.addRowToTable(new DefaultRow(Integer.toString(1 + i + finalTransferredRows), curRow));
-						}
-					} else {
-						if (rRowIds == null) {
-							// Should never happen, only happens if Rserve returns less bytes than expected. Maybe a version issue?
-							throw new IllegalStateException("Received an invalid packet from Rserve.");
-						}
-						final String[] rowIds = rRowIds.asStrings();
-
-						for(int i = 0; i < finalRowsThisBatch; ++i) {
-							for (int col = 0; col < columns.length; ++col) {
-								curRow[col] = columns[col][i];
-							}
-							finalCont.addRowToTable(new DefaultRow(rowIds[i + finalTransferredRows], curRow));
-						}
-					}
+				// Should never happen, only happens if Rserve returns less bytes than expected. Maybe a version issue?
+				CheckUtils.checkState(compactRowNames || rRowIds != null, "Received an invalid packet from Rserve.");
+				Callable<Void> addRowsCallable = ThreadUtils.callableWithContext(() -> {
+				    @SuppressWarnings("null")
+                    final String[] rowIds = compactRowNames ? null : rRowIds.asStrings();
+				    for (int i = 0; i < finalRowsThisBatch; ++i) {
+				        @SuppressWarnings("null")
+				        RowKey rowKey = compactRowNames ? new RowKey(Long.toString(1 + i + finalTransferredRows))
+				            : new RowKey(rowIds[i]);
+				        for (int col = 0; col < columns.length; ++col) {
+				            curRow[col] = columns[col][i];
+				        }
+				        finalCont.addRowToTable(new DefaultRow(rowKey, curRow));
+				    }
 					return null;
 				});
+                addRowsFuture = threadPool != null ? threadPool.enqueue(addRowsCallable) :
+                    R_THREAD_POOL.submit(addRowsCallable);
 
 				transferredRows += rowsThisBatch;
 			}
@@ -773,7 +778,7 @@ public class RController implements IRController {
 			if (addRowsFuture != null) {
 				try {
 					addRowsFuture.get();
-				} catch (Throwable e) {
+				} catch (InterruptedException | ExecutionException e) {
 					new RuntimeException("Error while adding rows to table.", e);
 				}
 			}
@@ -805,7 +810,7 @@ public class RController implements IRController {
 	 *            Convert NaN and Infinity to {@link MissingCell}.
 	 * @throws REXPMismatchException
 	 */
-	private final void importCells(final REXP rexp, final DataCell[] column, final boolean nonNumbersAsMissing)
+	private static final void importCells(final REXP rexp, final DataCell[] column, final boolean nonNumbersAsMissing)
 			throws REXPMismatchException {
 		if (rexp.isLogical()) {
 			final byte[] bytes = rexp.asBytes();
@@ -856,10 +861,10 @@ public class RController implements IRController {
 		}
 	}
 
-	/*
+	/**
 	 * Get cell type as which a REXP would be imported.
 	 */
-	private DataType importDataType(final REXP column) {
+	private static DataType importDataType(final REXP column) {
 		if (column.isNull()) {
 			return StringCell.TYPE;
 		} else if (column.isLogical()) {
@@ -937,8 +942,12 @@ public class RController implements IRController {
 	/** Map of type to a R expression which creates a column vector for that type */
 	private static final Map<Class<? extends DataValue>, String> DATA_TYPE_TO_R_CONSTRUCTOR;
 
+	private static final AtomicInteger R_THREAD_POOL_INDEX = new AtomicInteger();
+
     private static final ExecutorService R_THREAD_POOL =
-            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        new ThreadPoolExecutor(0, Runtime.getRuntime().availableProcessors(), 60L, TimeUnit.SECONDS,
+            new SynchronousQueue<Runnable>(),
+            r -> new Thread(r, "R-DataExchange-" + R_THREAD_POOL_INDEX.getAndIncrement()));
 
 	static {
 		Map<Class<? extends DataValue>, String> tmp = new HashMap<>();
@@ -953,293 +962,283 @@ public class RController implements IRController {
 	}
 
 	/* This class ties together all variables concerning a single batch */
-	private static class Batch {
-		final int size; /** Size of this batch */
-		int index = 0; /** Current row index for writing to */
+	private static final class Batch {
+		final int m_size; /** Size of this batch */
+		int m_index = 0; /** Current row index for writing to */
 
-		final RList rBatch; // List containing rColumns
-		final REXPString rRowNames;
-		final REXPGenericVector rVector;
+		final RList m_rBatch; // List containing rColumns
+		final REXPString m_rRowNames;
+		final REXPGenericVector m_rVector;
 
 		/**
 		 * @param numRows Number of rows for this batch.
 		 * @param columnCount Number of columns.
 		 */
 		public Batch(final int numRows, final int columnCount) {
-			this.size = numRows;
+			m_size = numRows;
 
-			rRowNames = new REXPString(new String[numRows]);
-			rBatch = new RList(columnCount+1, false);
-			rVector = new REXPGenericVector(rBatch);
+			m_rRowNames = new REXPString(new String[numRows]);
+			m_rBatch = new RList(columnCount + 1, false);
+			m_rVector = new REXPGenericVector(m_rBatch);
 		}
 	}
 
-	@Override
-	public void monitoredAssign(final String name, final BufferedDataTable table, final ExecutionMonitor exec, final int batchSize, final String rType, final boolean sendRowNames)
-			throws RException, CanceledExecutionException {
+    @Override
+    public void monitoredAssign(final String name, final BufferedDataTable table, final ExecutionMonitor exec,
+        final int batchSize, final String rType, final boolean sendRowNames)
+        throws RException, CanceledExecutionException {
 
-		final int rowCount = KnowsRowCountTable.checkRowCount(table.size());
-		final int columnCount = table.getDataTableSpec().getNumColumns();
+        final int rowCount = KnowsRowCountTable.checkRowCount(table.size());
+        final int columnCount = table.getDataTableSpec().getNumColumns();
 
-		assign("rowCount", new REXPInteger(rowCount));
-		assign("colCount", new REXPInteger(columnCount));
+        assign("rowCount", new REXPInteger(rowCount));
+        assign("colCount", new REXPInteger(columnCount));
 
-		@SuppressWarnings("unchecked")
-		final Class<? extends DataValue>[] dataValueClasses = new Class[columnCount]; // type of each column
+        @SuppressWarnings("unchecked")
+        final Class<? extends DataValue>[] dataValueClasses = new Class[columnCount]; // type of each column
 
-		/*
-		 * Allocate the memory for the columns on R side.
-		 * They will be concatenated to a data.frame or data.table after filled with input data (without copying the memory)
-		 */
-		exec.setMessage("Allocating memory for R columns.");
+        /*
+         * Allocate the memory for the columns on R side.
+         * They will be concatenated to a data.frame or data.table after filled with input data (without copying the memory)
+         */
+        exec.setMessage("Allocating memory for R columns.");
 
-		// Create cols variable (array of column vectors), will be coerced to data.frame later.
-		eval("cols<-list(length=colCount)", false);
+        // Create cols variable (array of column vectors), will be coerced to data.frame later.
+        eval("cols<-list(length=colCount)", false);
 
-		// Script for removing temporary variables
-		final StringBuilder cleanupScript = new StringBuilder("rm(knime.row.names,knime.col.names,bt,i,rowCount,colCount,cols");
+        // Script for removing temporary variables
+        final StringBuilder cleanupScript =
+            new StringBuilder("rm(knime.row.names,knime.col.names,bt,i,rowCount,colCount,cols");
 
-		// script for combining the individual columns into a data.frame (or data.table)
-		final boolean useDataTable = "data.table".equals(rType);
-		if (useDataTable) {
-			final REXP ret = eval("find.package('data.table')", true);
-			try {
-				if(StringUtils.isEmpty(ret.asString())) {
-					throw new RuntimeException("Selected data.table as type for \"" + name + "\", but package could not be found.");
-				}
-			} catch (REXPMismatchException e) {
-				throw new IllegalStateException("\"find.package\" doesn't return string anymore.", e);
-			}
-			LOGGER.warn("Using experimental support for sending data as \"data.table\".");
-		}
+        // script for combining the individual columns into a data.frame (or data.table)
+        final boolean useDataTable = "data.table".equals(rType);
+        if (useDataTable) {
+            final REXP ret = eval("find.package('data.table')", true);
+            try {
+                if (StringUtils.isEmpty(ret.asString())) {
+                    throw new RuntimeException(
+                        "Selected data.table as type for \"" + name + "\", but package could not be found.");
+                }
+            } catch (REXPMismatchException e) {
+                throw new IllegalStateException("\"find.package\" doesn't return string anymore.", e);
+            }
+            LOGGER.debug("Using experimental support for sending data as \"data.table\".");
+        }
 
-		// Variables concerning a single batch
-		final Batch batch = new Batch(Math.min(batchSize, rowCount), columnCount);
+        // Variables concerning a single batch
+        final Batch batch = new Batch(Math.min(batchSize, rowCount), columnCount);
 
-		// Get type of each column and generate R code which creates an appropriate column
-		int columnIndex = 0;
-		for (final DataColumnSpec columnSpec : table.getDataTableSpec()) {
-			final String columnVar = "cols[[" + (columnIndex+1) + "]]";
+        // Get type of each column and generate R code which creates an appropriate column
+        int columnIndex = 0;
+        for (final DataColumnSpec columnSpec : table.getDataTableSpec()) {
+            final String columnVar = "cols[[" + (columnIndex + 1) + "]]";
 
-			final DataType type = columnSpec.getType();
-			Class<? extends DataValue> dataValueClass;
-			if (type.isCollectionType()) {
-				dataValueClass = CollectionDataValue.class;
-			} else {
-				if (type.isCompatible(BooleanValue.class)) {
-					dataValueClass = BooleanValue.class;
-				} else if (type.isCompatible(IntValue.class)) {
-					dataValueClass = IntValue.class;
-				} else if (type.isCompatible(DoubleValue.class)) {
-					dataValueClass = DoubleValue.class;
-				} else {
-					dataValueClass = StringValue.class;
-				}
-			}
-			dataValueClasses[columnIndex] = dataValueClass;
-			final String constructor = DATA_TYPE_TO_R_CONSTRUCTOR.get(dataValueClass);
-			if (dataValueClass == CollectionDataValue.class) {
-				eval(columnVar + "<-I(" + constructor + ")", false); // Allocate vector for column, e.g.: c10 <- double(12345)
-			} else {
-				eval(columnVar + "<-" + constructor, false); // Allocate vector for column, e.g.: c10 <- double(12345)
-			}
+            final DataType type = columnSpec.getType();
+            Class<? extends DataValue> dataValueClass;
+            if (type.isCollectionType()) {
+                dataValueClass = CollectionDataValue.class;
+            } else {
+                if (type.isCompatible(BooleanValue.class)) {
+                    dataValueClass = BooleanValue.class;
+                } else if (type.isCompatible(IntValue.class)) {
+                    dataValueClass = IntValue.class;
+                } else if (type.isCompatible(DoubleValue.class)) {
+                    dataValueClass = DoubleValue.class;
+                } else {
+                    dataValueClass = StringValue.class;
+                }
+            }
+            dataValueClasses[columnIndex] = dataValueClass;
+            final String constructor = DATA_TYPE_TO_R_CONSTRUCTOR.get(dataValueClass);
+            if (dataValueClass == CollectionDataValue.class) {
+                eval(columnVar + "<-I(" + constructor + ")", false); // Allocate vector for column, e.g.: c10 <- double(12345)
+            } else {
+                eval(columnVar + "<-" + constructor, false); // Allocate vector for column, e.g.: c10 <- double(12345)
+            }
 
-			// Prepare KNIME side batch for this column
-			if (dataValueClass == CollectionDataValue.class) {
-				final RList col = new RList(batch.size, false);
-				for (int r = 0; r < batch.size; ++r) {
-					col.add(null);
-				}
-				batch.rBatch.add(new REXPGenericVector(col));
-			} else if (dataValueClass == BooleanValue.class) {
-				batch.rBatch.add(new REXPLogical(new byte[batch.size]));
-			} else if (dataValueClass == IntValue.class) {
-				batch.rBatch.add(new REXPInteger(new int[batch.size]));
-			} else if (dataValueClass == DoubleValue.class) {
-				batch.rBatch.add(new REXPDouble(new double[batch.size]));
-			} else {
-				batch.rBatch.add(new REXPString(new String[batch.size]));
-			}
+            // Prepare KNIME side batch for this column
+            if (dataValueClass == CollectionDataValue.class) {
+                final RList col = new RList(batch.m_size, false);
+                IntStream.range(0, batch.m_size).forEach(i -> col.add(null));
+                batch.m_rBatch.add(new REXPGenericVector(col));
+            } else if (dataValueClass == BooleanValue.class) {
+                batch.m_rBatch.add(new REXPLogical(new byte[batch.m_size]));
+            } else if (dataValueClass == IntValue.class) {
+                batch.m_rBatch.add(new REXPInteger(new int[batch.m_size]));
+            } else if (dataValueClass == DoubleValue.class) {
+                batch.m_rBatch.add(new REXPDouble(new double[batch.m_size]));
+            } else {
+                batch.m_rBatch.add(new REXPString(new String[batch.m_size]));
+            }
 
-			columnIndex++;
+            columnIndex++;
 
-			exec.checkCanceled(); // Useful for many many rows
-		}
+            exec.checkCanceled(); // Useful for many many rows
+        }
 
-		if (sendRowNames) {
-			// Allocate vector for row names on R side
-			eval("knime.row.names<-character(rowCount)", false);
-			cleanupScript.append(",knime.row.names");
+        if (sendRowNames) {
+            // Allocate vector for row names on R side
+            eval("knime.row.names<-character(rowCount)", false);
+            cleanupScript.append(",knime.row.names");
 
-			// And on KNIME side
-			batch.rBatch.add(batch.rRowNames);
-		}
+            // And on KNIME side
+            batch.m_rBatch.add(batch.m_rRowNames);
+        }
 
-		exec.setMessage("Sending column names.");
-		// transfer column names to Rserve
-		monitoredAssign("knime.col.names", new REXPString(table.getDataTableSpec().getColumnNames()), exec);
+        exec.setMessage("Sending column names.");
+        // transfer column names to Rserve
+        monitoredAssign("knime.col.names", new REXPString(table.getDataTableSpec().getColumnNames()), exec);
 
-		if (useDataTable) {
-			// Create data.table now, we will use set(table, column, row, newData) to set values in the table directly
-			try {
-				monitoredEval("library(data.table);" + name + "<-as.data.table(cols, check.names=F);names(" + name + ")<-knime.col.names", exec, false);
-			} catch (InterruptedException e) {
-				throw new RException("Interrupted while creating data.table and assigning column names.", e);
-			}
-		}
+        if (useDataTable) {
+            // Create data.table now, we will use set(table, column, row, newData) to set values in the table directly
+            try {
+                monitoredEval("library(data.table);" + name + "<-as.data.table(cols, check.names=F);names(" + name
+                    + ")<-knime.col.names", exec, false);
+            } catch (InterruptedException e) {
+                throw new RException("Interrupted while creating data.table and assigning column names.", e);
+            }
+        }
 
-		/*
-		 * Send rows to R in batches
-		 */
-		exec.setMessage("Sending rows to R.");
+        /*
+         * Send rows to R in batches
+         */
+        exec.setMessage("Sending rows to R.");
 
-		final double numRows = table.size(); // for progress reporting only
-		long rowIndex = 0;
+        final double numRows = table.size(); // for progress reporting only
+        long rowIndex = 0;
 
-		// variables for "Rows per second" debug output
-		long timeSinceUpdate = System.currentTimeMillis();
-		int rowsSinceUpdate = 0;
+        // variables for "Rows per second" debug output
+        long timeSinceUpdate = System.currentTimeMillis();
+        int rowsSinceUpdate = 0;
 
-		for (final DataRow row : table) {
+        for (final DataRow row : table) {
 
-			// The following block prints the amount of rows sent every second for a rough estimate while benchmarking
-			if (System.currentTimeMillis() - timeSinceUpdate > 1000) {
-				LOGGER.debugWithFormat("Rows per second: %d", rowsSinceUpdate);
-				rowsSinceUpdate = 0;
-				timeSinceUpdate = System.currentTimeMillis();
-			} else {
-				++rowsSinceUpdate;
-			}
+            // The following block prints the amount of rows sent every second for a rough estimate while benchmarking
+            if (System.currentTimeMillis() - timeSinceUpdate > 1000) {
+                LOGGER.debugWithFormat("Rows per second: %d", rowsSinceUpdate);
+                rowsSinceUpdate = 0;
+                timeSinceUpdate = System.currentTimeMillis();
+            } else {
+                ++rowsSinceUpdate;
+            }
 
-			if (sendRowNames) {
-				batch.rRowNames.asStrings()[batch.index] = row.getKey().getString();
-			}
+            if (sendRowNames) {
+                batch.m_rRowNames.asStrings()[batch.m_index] = row.getKey().getString();
+            }
 
-			// Assign the values of the current row to the batch
-			int c = 0; // columnIndex
-			for (final DataCell cell : row) {
-				final Class<? extends DataValue> type = dataValueClasses[c];
+            // Assign the values of the current row to the batch
+            int c = 0; // columnIndex
+            for (final DataCell cell : row) {
+                final Class<? extends DataValue> type = dataValueClasses[c];
 
-				try {
-					if (type == CollectionDataValue.class) {
-						REXP value;
-						// try get value from collection cell
-						if (cell.isMissing()) {
-							value = null;
-						} else {
-							final CollectionDataValue collValue = (CollectionDataValue) cell;
-							final DataType elementType = cell.getType().getCollectionElementType();
-							if (elementType.isCompatible(BooleanValue.class)) {
-								final byte[] elementValue = new byte[collValue.size()];
-								int i = 0;
-								for (final DataCell e : collValue) {
-									if (e.isMissing()) {
-										elementValue[i] = REXPLogical.NA;
-									} else {
-										elementValue[i] = ((BooleanValue)e).getBooleanValue() ? REXPLogical.TRUE : REXPLogical.FALSE;
-									}
-									++i;
-								}
-								value = new REXPLogical(elementValue);
+                try {
+                    if (type == CollectionDataValue.class) {
+                        REXP value;
+                        // try get value from collection cell
+                        if (cell.isMissing()) {
+                            value = null;
+                        } else {
+                            final CollectionDataValue collValue = (CollectionDataValue)cell;
+                            final DataType elementType = cell.getType().getCollectionElementType();
+                            if (elementType.isCompatible(BooleanValue.class)) {
+                                final byte[] elementValue = new byte[collValue.size()];
+                                int i = 0;
+                                for (final DataCell e : collValue) {
+                                    elementValue[i] = exportBooleanValue(e);
+                                    ++i;
+                                }
+                                value = new REXPLogical(elementValue);
 
-							} else if (elementType.isCompatible(IntValue.class)) {
-								final int[] elementValue = new int[collValue.size()];
-								int i = 0;
-								for (final DataCell e : collValue) {
-									elementValue[i] = ((IntValue)e).getIntValue();
-									++i;
-								}
-								value = new REXPInteger(elementValue);
-							} else if (elementType.isCompatible(DoubleValue.class)) {
-								final double[] elementValue = new double[collValue.size()];
-								int i = 0;
-								for (final DataCell e : collValue) {
-									elementValue[i] = ((DoubleValue)e).getDoubleValue();
-									++i;
-								}
-								value = new REXPDouble(elementValue);
-							} else {
-								final String[] elementValue = new String[collValue.size()];
-								int i = 0;
-								for (final DataCell e : collValue) {
-									elementValue[i] = ((StringCell)e).getStringValue();
-									++i;
-								}
-								value = new REXPString(elementValue);
-							}
-						}
-						((REXP)batch.rBatch.get(c)).asList().set(batch.index, value);
-					} else {
-						final REXP curREXP = (REXP)batch.rBatch.get(c);
-						if (type.equals(BooleanValue.class)) {
-							curREXP.asBytes()[batch.index] = exportBooleanValue(cell);
-						} else if (type.equals(IntValue.class)) {
-							curREXP.asIntegers()[batch.index] = exportIntValue(cell);
-						} else if (type.equals(DoubleValue.class)) {
-							curREXP.asDoubles()[batch.index] = exportDoubleValue(cell);
-						} else {
-							curREXP.asStrings()[batch.index] = exportStringValue(cell);
-						}
-					}
-				} catch (REXPMismatchException e) {
-					// Will never happen, the REXPs types are added according to column types.
-					throw new IllegalStateException(e);
-				}
-				++c;
-			}
+                            } else if (elementType.isCompatible(IntValue.class)) {
+                                final int[] elementValue =
+                                    collValue.stream().mapToInt(RController::exportIntValue).toArray();
+                                value = new REXPInteger(elementValue);
+                            } else if (elementType.isCompatible(DoubleValue.class)) {
+                                final double[] elementValue =
+                                    collValue.stream().mapToDouble(RController::exportDoubleValue).toArray();
+                                value = new REXPDouble(elementValue);
+                            } else {
+                                final String[] elementValue =
+                                    collValue.stream().map(RController::exportStringValue).toArray(String[]::new);
+                                value = new REXPString(elementValue);
+                            }
+                        }
+                        ((REXP)batch.m_rBatch.get(c)).asList().set(batch.m_index, value);
+                    } else {
+                        final REXP curREXP = (REXP)batch.m_rBatch.get(c);
+                        if (type.equals(BooleanValue.class)) {
+                            curREXP.asBytes()[batch.m_index] = exportBooleanValue(cell);
+                        } else if (type.equals(IntValue.class)) {
+                            curREXP.asIntegers()[batch.m_index] = exportIntValue(cell);
+                        } else if (type.equals(DoubleValue.class)) {
+                            curREXP.asDoubles()[batch.m_index] = exportDoubleValue(cell);
+                        } else {
+                            curREXP.asStrings()[batch.m_index] = exportStringValue(cell);
+                        }
+                    }
+                } catch (REXPMismatchException e) {
+                    // Will never happen, the REXPs types are added according to column types.
+                    throw new IllegalStateException(e);
+                }
+                ++c;
+            }
 
-			++batch.index;
-			if (batch.index == batch.size || batch.index+rowIndex == rowCount) {
-				// Batch full or end of table
-				assign("bt", batch.rVector);
+            ++batch.m_index;
+            if (batch.m_index == batch.m_size || batch.m_index + rowIndex == rowCount) {
+                // Batch full or end of table
+                assign("bt", batch.m_rVector);
 
-				final long start = rowIndex + 1;
-				final long end = rowIndex + batch.index;
+                final long start = rowIndex + 1;
+                final long end = rowIndex + batch.m_index;
 
-				if (useDataTable) {
-					eval("for(i in 1:colCount){set(" + name + "," + start + ":" + end + ",i,bt[i])}", false);
-				} else {
-					eval("for(i in 1:colCount){cols[[i]][" + start + ":" + end + "]<-bt[[i]][1:" + batch.index + "]}", false);
-				}
+                if (useDataTable) {
+                    eval("for(i in 1:colCount){set(" + name + "," + start + ":" + end + ",i,bt[i])}", false);
+                } else {
+                    eval("for(i in 1:colCount){cols[[i]][" + start + ":" + end + "]<-bt[[i]][1:" + batch.m_index + "]}",
+                        false);
+                }
 
-				if (sendRowNames) {
-					eval("knime.row.names[" + start + ":" + end + "]<-bt[[colCount+1]][1:" + batch.index + "]", false);
-				}
+                if (sendRowNames) {
+                    eval("knime.row.names[" + start + ":" + end + "]<-bt[[colCount+1]][1:" + batch.m_index + "]",
+                        false);
+                }
 
-				// Not relevant if batch.index+rowIndex == rowCount
-				rowIndex += batch.size;
-				batch.index = 0;
+                // Not relevant if batch.index+rowIndex == rowCount
+                rowIndex += batch.m_size;
+                batch.m_index = 0;
 
-				exec.checkCanceled();
-				exec.setProgress(rowIndex / numRows);
-			}
-		}
+                exec.checkCanceled();
+                exec.setProgress(rowIndex / numRows);
+            }
+        }
 
-		try {
-			if (useDataTable) {
-				// Assign row names if sent
-				if (sendRowNames) {
-					monitoredEval("row.names(" + name + ")<-knime.row.names", exec, false);
-				}
-			} else {
-				// Coerce columns to data.frame (rather than constructing a new one which would copy the entire data)
-				if (sendRowNames) {
-					monitoredEval(name + "<-as.data.frame(cols,row.names=knime.row.names,check.names=F);names(" + name + ")<-knime.col.names", exec, false);
-				} else {
-					monitoredEval(name + "<-as.data.frame(cols,check.names=F);names(" + name + ")<-knime.col.names", exec, false);
-				}
-			}
-		} catch (InterruptedException e) {
-			throw new RException("Interrupted while setting row names or creating data.frame.", e);
-		}
+        try {
+            if (useDataTable) {
+                // Assign row names if sent
+                if (sendRowNames) {
+                    monitoredEval("row.names(" + name + ")<-knime.row.names", exec, false);
+                }
+            } else {
+                // Coerce columns to data.frame (rather than constructing a new one which would copy the entire data)
+                if (sendRowNames) {
+                    monitoredEval(name + "<-as.data.frame(cols,row.names=knime.row.names,check.names=F);names(" + name
+                        + ")<-knime.col.names", exec, false);
+                } else {
+                    monitoredEval(name + "<-as.data.frame(cols,check.names=F);names(" + name + ")<-knime.col.names",
+                        exec, false);
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RException("Interrupted while setting row names or creating data.frame.", e);
+        }
 
-		/* Clean up */
-		exec.setMessage("Cleaning up.");
+        /* Clean up */
+        exec.setMessage("Cleaning up.");
 
-		eval(cleanupScript.append(")").toString(), false);
+        eval(cleanupScript.append(")").toString(), false);
 
-		exec.setProgress(1.0);
-	}
+        exec.setProgress(1.0);
+    }
 
 	@Override
 	public void saveWorkspace(final File workspaceFile, final ExecutionMonitor exec)

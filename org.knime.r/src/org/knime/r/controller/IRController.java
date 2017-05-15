@@ -149,11 +149,12 @@ public interface IRController extends AutoCloseable {
 	/**
      * Evaluate R code. This may have side effects on the workspace of the RController.
      *
-	 * @param expr R expression
+     * @param expr R expression
      * @param cmd the R expression to evaluate
-     * @param resolve Whether to resolve the resulting reference
+     * @param resolve Whether to resolve the resulting reference, if <code>false</code> null returned (unless an
+     *            exception is thrown)
      * @return result of evaluation.
-	 * @throws RException
+     * @throws RException
      */
 	REXP eval(String expr, boolean resolve) throws RException;
 
