@@ -495,10 +495,9 @@ public class RController implements IRController {
 				exec.setMessage("Loading workspace from R input port");
 				final RPortObject rPortObject = (RPortObject) port;
 				final File portFile = rPortObject.getFile();
-				monitoredEval(
-						"load(\"" + portFile.getAbsolutePath().replace('\\', '/') + "\")\n"
-								+ RController.createLoadLibraryFunctionCall(rPortObject.getLibraries(), false),
-						exec.createSubProgress(0.5), false);
+				eval("load(\"" + portFile.getAbsolutePath().replace('\\', '/') + "\")\n"
+						+ RController.createLoadLibraryFunctionCall(rPortObject.getLibraries(), false),
+						false);
 			} else if (port instanceof BufferedDataTable) {
 				exec.setMessage("Exporting data to R");
 				// write all input data to the R session
@@ -923,7 +922,11 @@ public class RController implements IRController {
 		b.append("}\n");
 		b.append("unloader();\n");
 		b.append("rm(list = ls());"); // also includes the unloader function
-		monitoredEval(b.toString(), exec, false);
+		try {
+			monitoredEval(b.toString(), exec, false);
+		} catch (InterruptedException e) {
+			throw new RException("Interrupted while loading R workspace.", e);
+		}
 		exec.setProgress(1.0, "Clearing previous workspace");
 	}
 
@@ -933,8 +936,12 @@ public class RController implements IRController {
 		exec.setProgress(0.0, "Clearing previous workspace");
 		clearWorkspace(exec.createSubProgress(0.3));
 		exec.setMessage("Loading workspace");
-		monitoredEval("load(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");",
-				exec.createSubProgress(0.7), false);
+		try {
+			monitoredEval("load(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");",
+					exec.createSubProgress(0.7), false);
+		} catch (InterruptedException e) {
+			throw new RException("Interrupted while loading R workspace.", e);
+		}
 		return importListOfLibrariesAndDelete();
 	}
 
@@ -1097,7 +1104,11 @@ public class RController implements IRController {
 
 		if (useDataTable) {
 			// Create data.table now, we will use set(table, column, row, newData) to set values in the table directly
-			monitoredEval("library(data.table);" + name + "<-as.data.table(cols, check.names=F);names(" + name + ")<-knime.col.names", exec, false);
+			try {
+				monitoredEval("library(data.table);" + name + "<-as.data.table(cols, check.names=F);names(" + name + ")<-knime.col.names", exec, false);
+			} catch (InterruptedException e) {
+				throw new RException("Interrupted while creating data.table and assigning column names.", e);
+			}
 		}
 
 		/*
@@ -1227,18 +1238,22 @@ public class RController implements IRController {
 			}
 		}
 
-		if (useDataTable) {
-			// Assign row names if sent
-			if (sendRowNames) {
-				monitoredEval("row.names(" + name + ")<-knime.row.names", exec, false);
-			}
-		} else {
-			// Coerce columns to data.frame (rather than constructing a new one which would copy the entire data)
-			if (sendRowNames) {
-				monitoredEval(name + "<-as.data.frame(cols,row.names=knime.row.names,check.names=F);names(" + name + ")<-knime.col.names", exec, false);
+		try {
+			if (useDataTable) {
+				// Assign row names if sent
+				if (sendRowNames) {
+					monitoredEval("row.names(" + name + ")<-knime.row.names", exec, false);
+				}
 			} else {
-				monitoredEval(name + "<-as.data.frame(cols,check.names=F);names(" + name + ")<-knime.col.names", exec, false);
+				// Coerce columns to data.frame (rather than constructing a new one which would copy the entire data)
+				if (sendRowNames) {
+					monitoredEval(name + "<-as.data.frame(cols,row.names=knime.row.names,check.names=F);names(" + name + ")<-knime.col.names", exec, false);
+				} else {
+					monitoredEval(name + "<-as.data.frame(cols,check.names=F);names(" + name + ")<-knime.col.names", exec, false);
+				}
 			}
+		} catch (InterruptedException e) {
+			throw new RException("Interrupted while setting row names or creating data.frame.", e);
 		}
 
 		/* Clean up */
@@ -1253,7 +1268,11 @@ public class RController implements IRController {
 	public void saveWorkspace(final File workspaceFile, final ExecutionMonitor exec)
 			throws RException, CanceledExecutionException {
 		// save workspace to file
-		monitoredEval("save.image(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec, false);
+		try {
+			monitoredEval("save.image(\"" + workspaceFile.getAbsolutePath().replace('\\', '/') + "\");", exec, false);
+		} catch (InterruptedException e) {
+			throw new RException("Interrupted while saving R workspace.", e);
+		}
 	}
 
 	@Override
@@ -1370,16 +1389,15 @@ public class RController implements IRController {
 		 * @throws RException
 		 * @throws REXPMismatchException
 		 * @throws CanceledExecutionException when execution was cancelled
+		 * @throws InterruptedException
 		 */
 		public REXP run(final String cmd, final boolean resolve)
-				throws REngineException, REXPMismatchException, RException, CanceledExecutionException {
+				throws REngineException, REXPMismatchException, RException, CanceledExecutionException, InterruptedException {
 			try {
 				// wait for evaluation to complete
 				return monitor(() -> {
 					return eval(cmd, resolve);
 				});
-			} catch (InterruptedException e) {
-				throw new RException("R evaluation was interrupted.", e);
 			} finally {
 				// Make sure to recover in case user terminated or crashed our
 				// server
@@ -1407,9 +1425,6 @@ public class RController implements IRController {
 					}
 					return null;
 				});
-
-			} catch (InterruptedException e) {
-				throw new CanceledExecutionException();
 			} finally {
 				// Make sure to recover in case user terminated or crashed our
 				// server

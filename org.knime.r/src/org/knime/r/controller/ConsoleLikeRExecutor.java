@@ -186,25 +186,27 @@ public class ConsoleLikeRExecutor {
 	 * @param progress
 	 * @throws RException
 	 * @throws CanceledExecutionException
+	 * @throws InterruptedException If the thread was interrupted while waiting for Rserve to evaluate R code.
 	 */
-	public void setupOutputCapturing(final ExecutionMonitor progress) throws RException, CanceledExecutionException {
-		m_controller.monitoredEval(CAPTURE_OUTPUT_PREFIX, progress, false);
+	public void setupOutputCapturing(final ExecutionMonitor progress) throws RException, CanceledExecutionException, InterruptedException {
+	    m_controller.monitoredEval(CAPTURE_OUTPUT_PREFIX, progress, false);
 	}
 
 	/**
-     * Execute and R script and handle printing of the result aswell as correctly printing errors.
-     *
-     * <b>Performance notes:</b> If the result is not needed, use {@link #executeIgnoreResult(String, ExecutionMonitor)}
-     * instead.
-     *
-     * @param script The script to execute
-     * @param progress For monitoring progress.
-     * @return The result of the evaluation
-     * @throws RException
-     * @throws CanceledExecutionException
-     */
+	 * Execute and R script and handle printing of the result aswell as correctly printing errors.
+	 *
+	 * <b>Performance notes:</b> If the result is not needed, use {@link #executeIgnoreResult(String, ExecutionMonitor)}
+	 * instead.
+	 *
+	 * @param script The script to execute
+	 * @param progress For monitoring progress.
+	 * @return The result of the evaluation
+	 * @throws RException
+	 * @throws CanceledExecutionException
+	 * @throws InterruptedException If the thread was interrupted while waiting for Rserve to evaluate R code.
+	 */
 	public REXP execute(final String script, final ExecutionMonitor progress)
-			throws RException, CanceledExecutionException {
+			throws RException, CanceledExecutionException, InterruptedException {
 
 		// execute command
 		REXP ret = null;
@@ -220,16 +222,17 @@ public class ConsoleLikeRExecutor {
 		return ret;
 	}
 
-    /**
-     * Execute and R script and handle correctly printing errors, but prevent result from being transferred.
-     *
-     * @param script The script to execute
-     * @param progress For monitoring progress.
-     * @throws RException
-     * @throws CanceledExecutionException
-     */
+	/**
+	 * Execute and R script and handle correctly printing errors, but prevent result from being transferred.
+	 *
+	 * @param script The script to execute
+	 * @param progress For monitoring progress.
+	 * @throws RException
+	 * @throws CanceledExecutionException
+	 * @throws InterruptedException If the thread was interrupted while waiting for Rserve to evaluate R code.
+	 */
 	public void executeIgnoreResult(final String script, final ExecutionMonitor progress)
-			throws RException, CanceledExecutionException {
+			throws RException, CanceledExecutionException, InterruptedException {
 		// manage correct printing of command execution
 		try {
 			m_controller.assign("knime.tmp.script", new REXPString(script));
@@ -245,8 +248,9 @@ public class ConsoleLikeRExecutor {
 	 * @param progress Execution monitor
 	 * @throws RException
 	 * @throws CanceledExecutionException
+	 * @throws InterruptedException If the thread was interrupted while waiting for Rserve to evaluate R code.
 	 */
-	public void finishOutputCapturing(final ExecutionMonitor progress) throws RException, CanceledExecutionException {
+	public void finishOutputCapturing(final ExecutionMonitor progress) throws RException, CanceledExecutionException, InterruptedException {
 		String err = "", out = "";
 		REXP output = null;
 		try {
@@ -287,14 +291,15 @@ public class ConsoleLikeRExecutor {
 	}
 
 	/**
-	 * Cleanup temporary variables, which were created during output capturing
-	 * and execute.
+	 * Cleanup temporary variables, which were created during output capturing and execute.
 	 *
 	 * @param progress Execution monitor
 	 * @throws CanceledExecutionException
 	 * @throws RException
+	 * @throws InterruptedException If the thread was interrupted while waiting for Rserve to evaluate R code.
 	 */
-	public void cleanup(final ExecutionMonitor progress) throws RException, CanceledExecutionException {
+	public void cleanup(final ExecutionMonitor progress)
+		throws RException, CanceledExecutionException, InterruptedException {
 		// cleanup variables which are not needed anymore
 		m_controller.monitoredEval(CAPTURE_OUTPUT_CLEANUP, progress, false);
 	}
