@@ -91,14 +91,25 @@ public class RConsoleControllerTest {
 		assertEquals("Appending to the console document failed.", "Hello World!", doc.getText(0, doc.getLength()));
 
 		/*
-		 * check the clear action. It doesn't check the action event, so passing
+		 * check the clear action. It doesn't use the action event, so passing
 		 * null as ActionEvent is okay.
 		 */
 		assertNotNull(consoleController.getClearAction());
 		consoleController.getClearAction().actionPerformed(null);
 		Thread.sleep(10); // clear is executed in separate EDT thread
 		assertEquals("Clearing the console failed.", "", console.getText());
-		// doc is not cleared! TODO: Is this intentional?
+
+		/*
+		 * check the cancel action. It doesn't use the action event, so passing
+		 * null as ActionEvent is okay.
+		 */
+		assertNotNull(consoleController.getCancelAction());
+		consoleController.append("Sys.sleep(1000);print(\"failed\")", 0);
+		consoleController.append("Sys.sleep(1000);print(\"failed again\")", 0);
+		Thread.sleep(60); // wait for command to be taken from queue
+		consoleController.getCancelAction().actionPerformed(null);
+		assertTrue("Cancel action should clear command queue.", queue.isEmpty());
+		assertFalse(queue.isExecutionThreadRunning());
 
 		/* test detach(...) */
 		consoleController.detach(console);
