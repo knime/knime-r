@@ -1,7 +1,7 @@
 package org.knime.r.testing;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -129,7 +129,7 @@ public class RCommandQueueTest {
 
 		/* check if any temporary output capturing variables have leaked */
 		try {
-			REXP objects = m_controller.eval("objects()");
+			REXP objects = m_controller.eval("objects()", true);
 
 			if (objects != null && objects.isString()) {
 				assertArrayEquals("Temporary objects leaked." + Arrays.toString(objects.asStrings()),
@@ -195,11 +195,7 @@ public class RCommandQueueTest {
 		} , "testConcurrency - Command Executor");
 		t.start();
 
-		queue.putRScript("print(\"Hey!\")", true).get(10, TimeUnit.SECONDS); // should
-																				// never
-																				// take
-																				// that
-																				// long
+		queue.putRScript("print(\"Hey!\")", true).get(10, TimeUnit.SECONDS); // should never take that long
 		t.join(10000); // should also never take that long
 
 		consoleController.clear();
@@ -211,9 +207,8 @@ public class RCommandQueueTest {
 		queue.stopExecutionThread();
 
 		consoleController.detach(console);
-
 	}
-	
+
 	/**
 	 * Test for a bug which caused the R Console Execution thread to block until
 	 * the current R script has finished executing.
@@ -228,9 +223,77 @@ public class RCommandQueueTest {
 
 		queue.startExecutionThread();
 		queue.putRScript("Sys.sleep(1000)", true);
-		Thread.sleep(150);
+		Thread.sleep(250);
 		queue.stopExecutionThread();
 		
 		assertTrue("R Execution thread did not terminate.", !queue.isExecutionThreadRunning());
+	}
+
+	/**
+	 * Test whether the RCommandQueue handles invalid R code correctly.
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws TimeoutException
+	 */
+	@Test
+	public void testHandleInvalidR() throws InterruptedException, ExecutionException, TimeoutException {
+		final RCommandQueue queue = m_commandQueue;
+		final RConsole console = new RConsole();
+
+		final RConsoleController consoleController = m_consoleController;
+		consoleController.attachOutput(console);
+
+		queue.startExecutionThread();
+		assertTrue(queue.isExecutionThreadRunning());
+		queue.putRScript("print(\"sanity check\")", true).get(1, TimeUnit.SECONDS);
+		Thread.sleep(10); // wait for console update
+
+		assertEquals("Sanity check for whether execution test is running failed.",
+				String.format("> print(\"sanity check\")%n[1] \"sanity check\"%n"),
+				console.getText());
+		consoleController.clear();
+
+		// Name not found
+		queue.putRScript("IdoNotExistVar", true).get(1, TimeUnit.SECONDS);
+		Thread.sleep(10); // wait for console update
+		assertEquals("Expected and name not found error.", String.format("> IdoNotExistVar%nError: object 'IdoNotExistVar' not found%n"), console.getText());
+		consoleController.clear();
+
+		// Bad syntax may lead to bad behavior
+		queue.putRScript("} print(\"Hello\")", true).get(1, TimeUnit.SECONDS);
+		Thread.sleep(10); // wait for console update
+		assertEquals("Syntactically incorrect R code should print syntax error messages.",
+				String.format( //
+						"> } print(\"Hello\")%n" + //
+						"Error: <text>:1:1: unexpected '}'%n" + //
+						"1: }%n" + //
+						"    ^%n"),
+				console.getText());
+		consoleController.clear();
+
+		queue.putRScript(") print(\"Hello\")", true).get(1, TimeUnit.SECONDS);
+		Thread.sleep(10); // wait for console update
+		assertEquals("Syntactically incorrect R code should print syntax error messages.",
+				String.format( //
+						"> ) print(\"Hello\")%n" + //
+						"Error: <text>:1:1: unexpected ')'%n" + //
+						"1: )%n" + //
+						"    ^%n"),
+				console.getText());
+		consoleController.clear();
+
+		queue.putRScript("\" print(\"Hello\")", true).get(1, TimeUnit.SECONDS);
+		Thread.sleep(10); // wait for console update
+		assertEquals("Syntactically incorrect R code should print syntax error messages.",
+				String.format( //
+						"> \" print(\"Hello\")%n" + //
+						"Error: <text>:1:10: unexpected symbol%n" + //
+						"1: \" print(\"Hello%n" + //
+						"             ^%n"),
+				console.getText());
+
+		queue.stopExecutionThread();
+
+		consoleController.detach(console);
 	}
 }
