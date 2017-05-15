@@ -53,7 +53,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -104,7 +103,6 @@ import org.knime.r.rserve.RConnectionFactory;
 import org.knime.r.rserve.RConnectionFactory.RConnectionResource;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
-import org.rosuda.REngine.REXPFactor;
 import org.rosuda.REngine.REXPGenericVector;
 import org.rosuda.REngine.REXPInteger;
 import org.rosuda.REngine.REXPList;
@@ -587,36 +585,6 @@ public class RController implements IRController {
 		} else {
 			return null;
 		}
-	}
-
-	/**
-	 * Creates factor variable efficiently (based on the implementation of
-	 * {@link RFactor#RFactor(String[], int)}). Fixes bug 5576: New R nodes:
-	 * String columns with many and/or long values take long to load into R.
-	 *
-	 * @param values
-	 *            non null column values
-	 * @return the factor
-	 */
-	private static REXPFactor createFactor(final String[] values) {
-		final LinkedHashMap<String, Integer> hash = new LinkedHashMap<String, Integer>();
-		final int[] valueIndices = new int[values.length];
-		for (int i = 0; i < values.length; i++) {
-			int valueIndex;
-			if (values[i] == null) { // missing
-				valueIndex = REXPInteger.NA;
-			} else {
-				Integer index = hash.get(values[i]);
-				if (index == null) {
-					index = hash.size() + 1;
-					hash.put(values[i], index);
-				}
-				valueIndex = index.intValue();
-			}
-			valueIndices[i] = valueIndex;
-		}
-		final String[] levels = hash.keySet().toArray(new String[hash.size()]);
-		return new REXPFactor(valueIndices, levels);
 	}
 
 	@Override
