@@ -86,14 +86,6 @@ public interface IRController extends AutoCloseable {
 		/**
 		 * Constructor
 		 * @param msg Message
-		 */
-		public RException(final String msg) {
-			super(msg);
-		}
-
-		/**
-		 * Constructor
-		 * @param msg Message
 		 * @param cause Cause (parent exception)
 		 */
 		public RException(final String msg, final Throwable cause) {

@@ -292,14 +292,14 @@ public class RController implements IRController {
 
 			if (!m_rProps.containsKey("major")) {
 				throw new RException(
-						"Cannot determine major version of R. Please check the R installation defined in the KNIME preferences.");
+						"Cannot determine major version of R. Please check the R installation defined in the KNIME preferences.", null);
 			}
 
 			final String rserveProp = m_rProps.getProperty("Rserve.path");
 			if (rserveProp == null || rserveProp.isEmpty()) {
 				org.knime.ext.r.bin.preferences.RPreferenceInitializer.invalidatePreferenceProviderCache();
 				throw new RException(
-						"Could not find Rserve package. Please install it in your R installation by running \"install.packages('Rserve')\".");
+						"Could not find Rserve package. Please install it in your R installation by running \"install.packages('Rserve')\".", null);
 			}
 			m_connection = initRConnection();
 		} catch (final InvalidRHomeException ex) {
@@ -379,7 +379,7 @@ public class RController implements IRController {
 
 		if (!quartzFound) {
 			throw new RException("XQuartz is required for the Cairo library on MacOS. Please download "
-					+ "and install XQuartz from http://www.xquartz.org/.");
+					+ "and install XQuartz from http://www.xquartz.org/.", null);
 		}
 	}
 
@@ -670,7 +670,7 @@ public class RController implements IRController {
 				eval(varName + "<-data.frame(" + varName + ")", false);
 			} else if (!type.equals("data.frame")) {
 				throw new RException(
-						"CODING PROBLEM\timportBufferedDataTable(): Supporting only 'data.frame', 'data.table', 'matrix' and 'list' for type of \"" + varName  +"\" (was '" + type + "').");
+						"CODING PROBLEM\timportBufferedDataTable(): Supporting only 'data.frame', 'data.table', 'matrix' and 'list' for type of \"" + varName  +"\" (was '" + type + "').", null);
 			}
 		} catch (REXPMismatchException e) {
 			throw new RException("Type of " + varName + " could not be parsed as string.", e);

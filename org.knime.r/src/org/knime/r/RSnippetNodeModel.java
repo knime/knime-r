@@ -257,7 +257,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
 			for (final String line : output) {
 				if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
-					throw new RException("Error in R code: \"" + line + "\"");
+					throw new RException("Error in R code: \"" + line + "\"", null);
 				}
 			}
 		}
