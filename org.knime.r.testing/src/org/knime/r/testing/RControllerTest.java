@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.DefaultNodeProgressMonitor;
 import org.knime.core.node.ExecutionMonitor;
+import org.knime.r.controller.IRController.RControllerNotInitializedException;
 import org.knime.r.controller.IRController.RException;
 import org.knime.r.controller.RController;
 import org.rosuda.REngine.REXP;
@@ -51,7 +52,7 @@ public class RControllerTest {
 	 * return value.
 	 */
 	@Test
-	public void testInitialization() {
+	public void testInitialization() throws RException {
 		/* Check underlying RConnection */
 		RConnection rEngine = (RConnection) m_controller.getREngine();
 		assertNotNull("No RConnection exists, most likely cause is that R or Rserve are not installed or found.",
@@ -59,6 +60,18 @@ public class RControllerTest {
 		// this assertion is theoretically covered by the
 		// RConnectionFactoryTest, but you never know what could go wrong.
 		assertTrue("Could not connect to Rserve.", rEngine.isConnected());
+
+		RController uninitialized = new RController(false);
+		assertFalse(uninitialized.isInitialized());
+
+		try {
+			uninitialized.eval("42", false);
+			fail("Expected a RControllerNotInitializedException.");
+		} catch (RControllerNotInitializedException e) {
+			// Should throw.
+		} finally {
+			uninitialized.close();
+		}
 	}
 
 	/**
