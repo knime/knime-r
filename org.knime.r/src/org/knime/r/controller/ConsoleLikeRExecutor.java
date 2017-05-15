@@ -94,19 +94,22 @@ public class ConsoleLikeRExecutor {
 	 * and handling printing the value correctly.
 	 *
 	 * <pre>
-	 * {@code
+	 * <code>
 	 * knime.tmp.ret <- NULL # avoids "knime.tmp.ret not found" in cleanup, if an error occurred in execution.
+	 *
+	 * # e would be something like "Error in withVisible(...", which does not look nice.
+	 * # By only printing the condition message, we can avoid that prefix (and the RException thrown by Rserve otherwise).
+	 * printError <- function(e) message(paste('Error:',conditionMessage(e)))
+	 *
 	 * # we need to be able to print the results of every R command individually.
-	 * for(exp in parse(text=knime.tmp.script)) {
+	 * for(exp in tryCatch(parse(text=knime.tmp.script), error=printError)) {
 	 * 	tryCatch( # for custom error output
 	 * 		# returns the result with an visibility flag which signals the R console whether the value should be printed.
 	 * 		knime.tmp.ret <- withVisible(
 	 * 			# parsing the script ourselves enables us to catch syntax errors
 	 * 			eval(exp)
 	 * 		),
-	 * 		# e would be something like "Error in withVisible(...", which does not look nice.
-	 * 		# By only printing the condition message, we can avoid that prefix.
-	 * 		error=function(e) message(paste('Error:',conditionMessage(e)))
+	 * 		error=printError
 	 * 	)
 	 * 	# $visible is only useful, if there is actually a return value
 	 * 	if(!is.null(knime.tmp.ret)) {
@@ -114,15 +117,13 @@ public class ConsoleLikeRExecutor {
 	 * 		if(knime.tmp.ret$visible) print(knime.tmp.ret$value)
 	 * 	}
 	 * }
-	 * rm(knime.tmp.script,exp) # remove temporary script variable
+	 * rm(knime.tmp.script,exp,printError) # remove temporary script variable
 	 * knime.tmp.ret$value # return the value of the evaluation
-	 * }
-	 * </pre>
+	 * </code><pre>
 	 */
 	public static final String CODE_EXECUTION = //
-	"knime.tmp.ret<-NULL;for(exp in parse(text=knime.tmp.script)){tryCatch(knime.tmp.ret<-withVisible(eval(exp)),error=function(e) message(paste('"
-			+ ERROR_PREFIX + "',conditionMessage(e))))\n"
-			+ "if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}};rm(knime.tmp.script,exp);knime.tmp.ret$value";
+	"knime.tmp.ret<-NULL;printError<-function(e) message(paste('" + ERROR_PREFIX + "',conditionMessage(e)));for(exp in tryCatch(parse(text=knime.tmp.script),error=printError)){tryCatch(knime.tmp.ret<-withVisible(eval(exp)),error=printError)\n"
+			+ "if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}};rm(knime.tmp.script,exp,printError);knime.tmp.ret$value";
 
 	/**
 	 * R Code to finish up capturing output and error messages of R code after
