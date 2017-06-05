@@ -991,6 +991,14 @@ public class RController implements IRController {
         final int rowCount = KnowsRowCountTable.checkRowCount(table.size());
         final int columnCount = table.getDataTableSpec().getNumColumns();
 
+        if (columnCount == 0) {
+            // Special case of empty table input. R doesn't seem to have "only row names" case, so we
+            // just handle this as in 2.12, where this resulted in a empty data.frame without rows or columns.
+            eval(name + "<-data.frame()", false);
+            exec.setProgress(1.0);
+            return;
+        }
+
         assign("rowCount", new REXPInteger(rowCount));
         assign("colCount", new REXPInteger(columnCount));
 
