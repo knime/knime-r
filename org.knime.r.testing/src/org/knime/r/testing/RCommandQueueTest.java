@@ -20,6 +20,7 @@ import org.knime.r.controller.RConsoleController;
 import org.knime.r.controller.RController;
 import org.knime.r.ui.RConsole;
 import org.rosuda.REngine.REXP;
+import org.rosuda.REngine.REXPLogical;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.Rserve.protocol.RTalk;
 
@@ -234,9 +235,10 @@ public class RCommandQueueTest {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 * @throws TimeoutException
+	 * @throws REXPMismatchException
 	 */
 	@Test
-	public void testHandleInvalidR() throws InterruptedException, ExecutionException, TimeoutException {
+	public void testHandleInvalidR() throws InterruptedException, ExecutionException, TimeoutException, REXPMismatchException {
 		final RCommandQueue queue = m_commandQueue;
 		final RConsole console = new RConsole();
 
@@ -252,6 +254,14 @@ public class RCommandQueueTest {
 				String.format("> print(\"sanity check\")%n[1] \"sanity check\"%n"),
 				console.getText());
 		consoleController.clear();
+
+		/*
+		 * Errors are language dependent, so we set the language to English to
+		 * be able to assertEquals on the output. Not saved, so no need to
+		 * reset.
+		 */
+		final REXP ret = queue.putRScript("Sys.setenv(LANG='en')", false).get(500, TimeUnit.MILLISECONDS);
+		assertTrue("Failed to set language of R errors.", ret.isLogical() && ret.asBytes()[0] == REXPLogical.TRUE);
 
 		// Name not found
 		queue.putRScript("IdoNotExistVar", true).get(1, TimeUnit.SECONDS);
