@@ -51,14 +51,14 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.image.ImagePortObject;
 
-class RSnippetNodeConfig {
+public class RSnippetNodeConfig {
 
 	/**
 	 * Get the input port definition
 	 *
 	 * @return the input port definition
 	 */
-	protected Collection<PortType> getInPortTypes() {
+	public Collection<PortType> getInPortTypes() {
 		final Collection<PortType> portTypes = new ArrayList<PortType>(4);
 		portTypes.add(BufferedDataTable.TYPE);
 		return portTypes;
@@ -98,7 +98,7 @@ class RSnippetNodeConfig {
 	 *
 	 * @return the default script
 	 */
-	String getDefaultScript() {
+	protected String getDefaultScript() {
 		boolean inHasTable = false;
 		for (final PortType portType : getInPortTypes()) {
 			if (portType.equals(BufferedDataTable.TYPE)) {

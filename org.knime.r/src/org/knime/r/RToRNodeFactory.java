@@ -65,7 +65,7 @@ public class RToRNodeFactory extends RSnippetNodeFactory {
 	public RToRNodeFactory() {
 		super(new RSnippetNodeConfig() {
 			@Override
-			protected Collection<PortType> getInPortTypes() {
+            public Collection<PortType> getInPortTypes() {
 				final Collection<PortType> ports = new ArrayList<PortType>();
 				ports.add(RPortObject.TYPE);
 				return ports;
@@ -77,7 +77,7 @@ public class RToRNodeFactory extends RSnippetNodeFactory {
 			}
 
 			@Override
-			String getDefaultScript() {
+			protected String getDefaultScript() {
 				return "# call more functions\n";
 			}
 		});
