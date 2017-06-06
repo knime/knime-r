@@ -65,7 +65,7 @@ public class RToTableNodeFactory extends RSnippetNodeFactory {
 	public RToTableNodeFactory() {
 		super(new RSnippetNodeConfig() {
 			@Override
-			protected Collection<PortType> getInPortTypes() {
+            public Collection<PortType> getInPortTypes() {
 				return Collections.singleton(RPortObject.TYPE);
 			}
 
@@ -75,7 +75,7 @@ public class RToTableNodeFactory extends RSnippetNodeFactory {
 			}
 
 			@Override
-			String getDefaultScript() {
+			protected String getDefaultScript() {
 				return "knime.out <- iris # insert your data.frame here\n";
 			}
 		});

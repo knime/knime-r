@@ -66,7 +66,7 @@ public class RPredictorNodeFactory extends RSnippetNodeFactory {
 	public RPredictorNodeFactory() {
 		super(new RSnippetNodeConfig() {
 			@Override
-			protected Collection<PortType> getInPortTypes() {
+            public Collection<PortType> getInPortTypes() {
 				final Collection<PortType> ports = new ArrayList<PortType>();
 				ports.add(RPortObject.TYPE);
 				ports.add(BufferedDataTable.TYPE);
@@ -79,7 +79,7 @@ public class RPredictorNodeFactory extends RSnippetNodeFactory {
 			}
 
 			@Override
-			String getDefaultScript() {
+			protected String getDefaultScript() {
 				return "knime.out <- cbind(knime.in, predict(knime.model, knime.in))\n";
 			}
 		});

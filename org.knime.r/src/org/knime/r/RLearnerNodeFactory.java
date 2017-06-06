@@ -65,7 +65,7 @@ public class RLearnerNodeFactory extends RSnippetNodeFactory {
 	public RLearnerNodeFactory() {
 		super(new RSnippetNodeConfig() {
 			@Override
-			protected Collection<PortType> getInPortTypes() {
+            public Collection<PortType> getInPortTypes() {
 				return Collections.singleton(BufferedDataTable.TYPE);
 			}
 
@@ -75,7 +75,7 @@ public class RLearnerNodeFactory extends RSnippetNodeFactory {
 			}
 
 			@Override
-			String getDefaultScript() {
+            protected String getDefaultScript() {
 				return "library(rpart) # load the learner library\n"
 						+ "data <- iris # use knime.in here and fix class column\n"
 						+ "knime.model <- rpart(data$\"Species\" ~ ., data[1:(ncol(data) - 1)])\n";

@@ -76,7 +76,7 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 	}
 
 	@Override
-	protected Collection<PortType> getInPortTypes() {
+    public Collection<PortType> getInPortTypes() {
 		return Collections.singleton(m_inPortType);
 	}
 
@@ -131,7 +131,7 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 	}
 
 	@Override
-	String getDefaultScript() {
+	public String getDefaultScript() {
 		if (BufferedDataTable.TYPE.equals(m_inPortType)) {
 			return "plot(knime.in)\n";
 		} else {

@@ -65,7 +65,7 @@ public class TableToRNodeFactory extends RSnippetNodeFactory {
 	public TableToRNodeFactory() {
 		super(new RSnippetNodeConfig() {
 			@Override
-			protected Collection<PortType> getInPortTypes() {
+            public Collection<PortType> getInPortTypes() {
 				return Collections.singleton(BufferedDataTable.TYPE);
 
 			}
@@ -76,7 +76,7 @@ public class TableToRNodeFactory extends RSnippetNodeFactory {
 			}
 
 			@Override
-			String getDefaultScript() {
+			protected String getDefaultScript() {
 				return "rframe <- knime.in\n";
 			}
 		});

@@ -64,7 +64,7 @@ public class RReaderTableNodeFactory extends RSnippetNodeFactory {
 	public RReaderTableNodeFactory() {
 		super(new RSnippetNodeConfig() {
 			@Override
-			protected Collection<PortType> getInPortTypes() {
+            public Collection<PortType> getInPortTypes() {
 				return Collections.emptyList();
 			}
 
@@ -74,7 +74,7 @@ public class RReaderTableNodeFactory extends RSnippetNodeFactory {
 			}
 
 			@Override
-			String getDefaultScript() {
+			protected String getDefaultScript() {
 				return "knime.out <- iris # assign your data frame here\n";
 			}
 		});

@@ -8,7 +8,10 @@ Bundle-ClassPath: org-knime-r.jar,
  lib/rserve-engine-1.8.4.jar
 Bundle-Activator: org.knime.r.Activator
 Bundle-Vendor: KNIME GmbH, Konstanz, Germany
-Export-Package: org.knime.r.ionodes
+Export-Package: org.knime.r,
+ org.knime.r.ionodes,
+ org.knime.r.template,
+ org.knime.r.ui
 Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.6.0,4.0.0)",
  org.knime.workbench.repository;bundle-version="[3.0.0,4.0.0)",

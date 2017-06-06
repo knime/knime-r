@@ -71,7 +71,7 @@ final class RToPMMLNodeConfig extends RSnippetNodeConfig {
 	}
 
 	@Override
-	protected Collection<PortType> getInPortTypes() {
+    public Collection<PortType> getInPortTypes() {
 		return Collections.singleton(m_inPortType);
 	}
 
