@@ -174,7 +174,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	 *            ExecutionContext which enables cancelling of the execution.
 	 * @throws Exception
 	 */
-	private PortObject[] executeSnippet(final RController controller, final PortObject[] inData,
+	protected PortObject[] executeSnippet(final RController controller, final PortObject[] inData,
 			final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws Exception {
 		// blow away the output of any previous (failed) runs
 		setFailedExternalErrorOutput(new LinkedList<String>());
@@ -309,7 +309,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	/**
 	 * Push changed flow variables.
 	 */
-	private void pushFlowVariables(final FlowVariableRepository flowVarRepo) {
+	protected void pushFlowVariables(final FlowVariableRepository flowVarRepo) {
 		for (final FlowVariable var : flowVarRepo.getModified()) {
 			final Type type = var.getType();
 			if (type.equals(Type.INTEGER)) {
