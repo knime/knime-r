@@ -668,9 +668,9 @@ public class RController implements IRController {
 					    + (rowsThisBatch / (double)numRows) * (i / (double)numColumns));
 
 					final int rIndex = i + 1; // R starts indices at 1
-					final String expr = varName + "[" + rowRangeExpr + "," + rIndex + "]"
-					        + ((isDataTable) ? "[[1]]" : "");
-					final REXP column = getREngine().eval(expr);
+                    final String expr = varName
+                        + ((isDataTable) ? "[[" + rIndex + "]][" + rowRangeExpr + "]" : "[" + rowRangeExpr + "," + rIndex + "]");
+                    final REXP column = getREngine().eval(expr);
 
 					if (outSpec == null) {
 						// Create column spec for this column
