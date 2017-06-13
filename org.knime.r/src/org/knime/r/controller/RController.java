@@ -957,8 +957,8 @@ public class RController implements IRController {
 		tmp.put(IntValue.class, "integer(rowCount)");
 		tmp.put(BooleanValue.class, "logical(rowCount)");
 		tmp.put(DoubleValue.class, "double(rowCount)");
-		//tmp.put(StringValue.class, "character(rowCount)");
-		tmp.put(StringValue.class, "factor(character(rowCount))");
+		/* For character default value is "", which would create a "" level. */
+		tmp.put(StringValue.class, "factor(as.character(rep(NA, rowCount)))");
 		tmp.put(CollectionDataValue.class, "vector(mode='list', length=rowCount)");
 
 		DATA_TYPE_TO_R_CONSTRUCTOR = Collections.unmodifiableMap(tmp);
