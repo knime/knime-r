@@ -53,6 +53,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -109,6 +110,7 @@ import org.knime.r.rserve.RConnectionFactory;
 import org.knime.r.rserve.RConnectionFactory.RConnectionResource;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPDouble;
+import org.rosuda.REngine.REXPFactor;
 import org.rosuda.REngine.REXPGenericVector;
 import org.rosuda.REngine.REXPInteger;
 import org.rosuda.REngine.REXPList;
@@ -955,7 +957,8 @@ public class RController implements IRController {
 		tmp.put(IntValue.class, "integer(rowCount)");
 		tmp.put(BooleanValue.class, "logical(rowCount)");
 		tmp.put(DoubleValue.class, "double(rowCount)");
-		tmp.put(StringValue.class, "character(rowCount)");
+		//tmp.put(StringValue.class, "character(rowCount)");
+		tmp.put(StringValue.class, "factor(character(rowCount))");
 		tmp.put(CollectionDataValue.class, "vector(mode='list', length=rowCount)");
 
 		DATA_TYPE_TO_R_CONSTRUCTOR = Collections.unmodifiableMap(tmp);
@@ -970,6 +973,9 @@ public class RController implements IRController {
 		final REXPString m_rRowNames;
 		final REXPGenericVector m_rVector;
 
+		final Map<Integer, LinkedHashMap<String, Integer>> m_factorLevels = new HashMap<>();
+		final Map<Integer, int[]> m_factorIndices = new HashMap<>();
+
 		/**
 		 * @param numRows Number of rows for this batch.
 		 * @param columnCount Number of columns.
@@ -980,6 +986,23 @@ public class RController implements IRController {
 			m_rRowNames = new REXPString(new String[numRows]);
 			m_rBatch = new RList(columnCount + 1, false);
 			m_rVector = new REXPGenericVector(m_rBatch);
+		}
+
+        /**
+         * Create REXPFactor instance from levels (String[]) and indices (int[]) for every factor column.
+         */
+        public void postProcessFactorColumns() {
+            for (Map.Entry<Integer, LinkedHashMap<String, Integer>> entry : m_factorLevels.entrySet()) {
+                final int columnIndex = entry.getKey();
+                final LinkedHashMap<String, Integer> factorLevels = entry.getValue();
+
+                final String[] levels = factorLevels.keySet().stream().toArray(n -> new String[n]);
+                final int[] indices = m_factorIndices.get(columnIndex);
+
+                /* Create a REXP factor for this batch without copying the indices and levels */
+                final REXPFactor factor = new REXPFactor(new RFactor(indices, levels, false, 1));
+                m_rBatch.set(columnIndex, factor);
+            }
 		}
 	}
 
@@ -1075,6 +1098,15 @@ public class RController implements IRController {
                 batch.m_rBatch.add(new REXPInteger(new int[batch.m_size]));
             } else if (dataValueClass == DoubleValue.class) {
                 batch.m_rBatch.add(new REXPDouble(new double[batch.m_size]));
+            } else if (dataValueClass == StringValue.class) {
+                /* Create index array and level map for factor columns */
+                final int[] indices = new int[batch.m_size]; /* Will be reused every batch */
+                final String[] levels = new String[0]; /* No levels yet and not reused */
+
+                batch.m_factorIndices.put(columnIndex, indices);
+                batch.m_factorLevels.put(columnIndex, new LinkedHashMap<String, Integer>());
+
+                batch.m_rBatch.add(new REXPFactor(new RFactor(indices, levels, false, 1)));
             } else {
                 batch.m_rBatch.add(new REXPString(new String[batch.m_size]));
             }
@@ -1180,6 +1212,22 @@ public class RController implements IRController {
                             curREXP.asIntegers()[batch.m_index] = exportIntValue(cell);
                         } else if (type.equals(DoubleValue.class)) {
                             curREXP.asDoubles()[batch.m_index] = exportDoubleValue(cell);
+                        } else if (type.equals(StringValue.class)) {
+                            final LinkedHashMap<String, Integer> factors = batch.m_factorLevels.get(c);
+                            int index = REXPInteger.NA;
+                            if (!cell.isMissing()) {
+                                /* Get factor index for the value */
+                                final String value = ((StringValue)cell).getStringValue();
+                                final Integer idx = factors.get(value);
+                                if (idx == null) {
+                                    /* First occurance of this string value, add it to map of factor levels */
+                                    index = factors.size()+1; // R indices are base 1
+                                    factors.put(value, index);
+                                } else {
+                                    index = idx;
+                                }
+                            }
+                            batch.m_factorIndices.get(c)[batch.m_index] = index;
                         } else {
                             curREXP.asStrings()[batch.m_index] = exportStringValue(cell);
                         }
@@ -1194,16 +1242,21 @@ public class RController implements IRController {
             ++batch.m_index;
             if (batch.m_index == batch.m_size || batch.m_index + rowIndex == rowCount) {
                 // Batch full or end of table
+
+                batch.postProcessFactorColumns(); /* Create REXPFactor from int[] and level hash map */
+
                 assign("bt", batch.m_rVector);
 
                 final long start = rowIndex + 1;
                 final long end = rowIndex + batch.m_index;
 
+                /* Assign data from chunk/batch to final table column-wise. If it's a factor column, we need to grow the level set, otherwise values will end up as NA */
                 if (useDataTable) {
-                    eval("for(i in 1:colCount){set(" + name + "," + start + ":" + end + ",i,bt[i])}", false);
+                    eval("for(i in 1:colCount){if(is.factor(bt[[i]])){levels(" + name + "[[i]])<-levels(bt[[i]])};set("
+                        + name + "," + start + ":" + end + ",i,bt[i])}", false);
                 } else {
-                    eval("for(i in 1:colCount){cols[[i]][" + start + ":" + end + "]<-bt[[i]][1:" + batch.m_index + "]}",
-                        false);
+                    eval("for(i in 1:colCount){if(is.factor(bt[[i]])){levels(cols[[i]])<-levels(bt[[i]])};cols[[i]]["
+                        + start + ":" + end + "]<-bt[[i]][1:" + batch.m_index + "]}", false);
                 }
 
                 if (sendRowNames) {
