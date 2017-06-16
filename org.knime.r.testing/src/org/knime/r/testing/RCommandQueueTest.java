@@ -259,8 +259,9 @@ public class RCommandQueueTest {
 		 * Errors are language dependent, so we set the language to English to
 		 * be able to assertEquals on the output. Not saved, so no need to
 		 * reset.
+		 * LANGUAGE environment variable has precedence over the LC_MESSAGES locale
 		 */
-		final REXP ret = queue.putRScript("Sys.setenv(LANG='en')", false).get(500, TimeUnit.MILLISECONDS);
+		final REXP ret = queue.putRScript("Sys.setenv(LANGUAGE='en')", false).get(500, TimeUnit.MILLISECONDS);
 		assertTrue("Failed to set language of R errors.", ret.isLogical() && ret.asBytes()[0] == REXPLogical.TRUE);
 
 		// Name not found
