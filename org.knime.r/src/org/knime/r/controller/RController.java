@@ -1044,9 +1044,9 @@ public class RController implements IRController {
         // script for combining the individual columns into a data.frame (or data.table)
         final boolean useDataTable = "data.table".equals(rType);
         if (useDataTable) {
-            final REXP ret = eval("find.package('data.table')", true);
+            final REXP ret = eval("require('data.table')", true);
             try {
-                if (StringUtils.isEmpty(ret.asString())) {
+                if (!Boolean.parseBoolean(ret.asString())) {
                     throw new RuntimeException(
                         "Selected data.table as type for \"" + name + "\", but package could not be found.");
                 }
