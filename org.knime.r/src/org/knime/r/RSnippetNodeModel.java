@@ -54,6 +54,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.text.BadLocationException;
+
 import org.knime.base.node.util.exttool.ExtToolOutputNodeModel;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
@@ -163,18 +165,35 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 	 *
 	 * @param controller
 	 *            RController to use for execution
-	 *
 	 * @param inData
 	 *            input ports to pass to R
-	 *
 	 * @param flowVarRepo
 	 *            flow variables to pass to R
-	 *
 	 * @param exec
-	 *            ExecutionContext which enables cancelling of the execution.
+	 *            ExecutionContext which enables canceling of the execution.
 	 * @throws Exception
 	 */
 	protected PortObject[] executeSnippet(final RController controller, final PortObject[] inData,
+			final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws Exception {
+	    return executeSnippet(controller, getScript(), inData, flowVarRepo, exec);
+	}
+
+	/**
+	 * Execute the R snippet stored in the node settings
+	 *
+	 * @param controller
+	 *            RController to use for execution
+	 * @param script
+	 *            Script to run
+	 * @param inData
+	 *            input ports to pass to R
+	 * @param flowVarRepo
+	 *            flow variables to pass to R
+	 * @param exec
+	 *            ExecutionContext which enables canceling of the execution.
+	 * @throws Exception
+	 */
+	protected PortObject[] executeSnippet(final RController controller, final String script, final PortObject[] inData,
 			final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws Exception {
 		// blow away the output of any previous (failed) runs
 		setFailedExternalErrorOutput(new LinkedList<String>());
@@ -197,7 +216,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 			controller.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
 
 			tempWorkspaceFile = FileUtil.createTempFile("R-workspace", ".RData");
-			runRScript(controller, tempWorkspaceFile, inData, exec.createSubExecutionContext(1.0 - importTime));
+			runRScript(controller, script, tempWorkspaceFile, inData, exec.createSubExecutionContext(1.0 - importTime));
 			exec.setProgress(1.0 - importTime);
 
 			exec.setMessage("Importing data from R");
@@ -223,7 +242,19 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		}
 	}
 
-	private void runRScript(final RController controller, final File tempWorkspaceFile, final PortObject[] inData,
+	/**
+	 * @return Script to be run in {@link #executeSnippet(RController, PortObject[], FlowVariableRepository, ExecutionContext)}
+	 */
+    protected String getScript() {
+        try {
+            return m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim();
+        } catch (BadLocationException e) {
+            // Will never happen
+            throw new IllegalStateException(e);
+        }
+    }
+
+	private void runRScript(final RController controller, final String script, final File tempWorkspaceFile, final PortObject[] inData,
 			final ExecutionContext exec) throws Exception {
 
 		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
@@ -236,7 +267,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 		// run prefix and script itself
 		executor.executeIgnoreResult("setwd(\"" + tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/') + "\")\n"
 				+ m_config.getScriptPrefix() + "\n"
-				+ m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim(), exec);
+				+ script, exec);
 		// run postfix in a separate evaluation to make sure we are not preventing the return value of the script being printed, which is
 		// important for ggplot2 graphs, which would otherwise not be drawn onto the graphics (png) device.
 		controller.monitoredEval(
