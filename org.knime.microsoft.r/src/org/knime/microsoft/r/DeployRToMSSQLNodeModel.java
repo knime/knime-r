@@ -100,14 +100,14 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
 
         @Override
         protected String getDefaultScript() {
-            return "";
+            return "knime.out<-cbind(knime.in, predict(knime.model, knime.in))";
         }
 
         @Override
         protected String getScriptSuffix() {
-            //return "conn<-textConnection('knime.model.serialized',open='w',encoding='bytes');saveRDS(knime.model,file=conn,ascii=TRUE)";
-            return "conn<-rawConnection(raw(0),open='w');saveRDS(knime.model,file=conn);knime.model.serialized<-rawConnectionValue(conn);close(conn)";
+            return "";
         }
+
     };
 
     /**
@@ -131,7 +131,7 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
         /* Check if we are connected to a MSSQL database, since we require support for sq_execute_external_script */
         final DatabaseConnectionSettings databaseSettings =
             databasePort.getConnectionSettings(getCredentialsProvider());
-        if (false) { // TODO
+        if (false) { // TODO: Make sure we are on MSSQL
             LOGGER.error("Deploy R To MSSQL Node does not support " + databasePort.getDatabaseIdentifier());
             throw new InvalidSettingsException("This node only works with Microsoft SQL Server 2016+");
         }
@@ -149,7 +149,7 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
         final Connection connection = connectionSettings.createConnection(getCredentialsProvider());
 
         /* Serialize R Model */
-        final RSnippetSettings settings = getRSnippet().getSettings(); // FIXME: Oh boy, how bad can it get...
+        final RSnippetSettings settings = getRSnippet().getSettings();
         getRSnippet().getSettings().loadSettings(settings);
 
         final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
@@ -159,13 +159,17 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
         final Blob blob = connection.createBlob();
         try {
             exec.checkCanceled();
-            final PortObject[] out = executeSnippet(controller, inData, flowVarRepo, exec);
+            final String serializeScript = "conn<-rawConnection(raw(0),open='w');saveRDS(knime.model,file=conn);"
+                + "knime.model.serialized<-rawConnectionValue(conn);close(conn);rm(conn)";
+            executeSnippet(controller, serializeScript, inData, flowVarRepo, exec);
 
             final REXP serializedModelREXP = controller.eval("knime.model.serialized", true);
+
             final byte[] serializedModel = serializedModelREXP.asBytes();
 
             /* Put the serialized Model into a new "KNIME_R_WORKSPACE" table */
-            connection.createStatement().execute("IF OBJECT_ID('KNIME_R_WORKSPACE', 'U') IS NOT NULL DROP TABLE KNIME_R_WORKSPACE");
+            connection.createStatement()
+                .execute("IF OBJECT_ID('KNIME_R_WORKSPACE', 'U') IS NOT NULL DROP TABLE KNIME_R_WORKSPACE");
             connection.createStatement().execute("CREATE TABLE KNIME_R_WORKSPACE (workspace varbinary(MAX))");
 
             /* Send the serialized model as BLOB */
@@ -182,11 +186,18 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
 
         /* Execute R code via SQL statement */
         final String rCode = getRSnippet().getDocument().getText(0, getRSnippet().getDocument().getLength()).trim();
-        final String query = getRunRCodeQuery().replace("${userRCode}", rCode.replace("'", "\""));
+        final String query = getRunRCodeQuery().replace("${userRCode}", rCode.replace("'", "\""))
+            .replace("${usr}", connectionSettings.getUserName(getCredentialsProvider()))
+            .replace("${pwd}", connectionSettings.getPassword(getCredentialsProvider()))
+            .replace("${outTableName}", "OutputTable");
         LOGGER.debug("Query: " + query);
 
-        if (!connection.createStatement().execute(query)) {
-            throw new RuntimeException("SQL Query failed.");
+        try {
+            if (!connection.createStatement().execute(query)) {
+                throw new RuntimeException("SQL Query failed.");
+            }
+        } catch(Exception e) {
+            throw new RuntimeException("SQL Query failed.", e);
         }
 
         return new PortObject[]{new DatabaseConnectionPortObject(new DatabasePortObjectSpec(new DataTableSpec(),
@@ -194,12 +205,12 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
     }
 
     /**
-     * @return
+     * @return Code loaded from resource to execute R code in an SQL query.
      */
     private String getRunRCodeQuery() {
-        try (final InputStream stream = getClass().getResource("RunRCode.sql").openStream()){
-           final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-           return String.join("\n", reader.lines().collect(Collectors.toList()));
+        try (final InputStream stream = getClass().getResource("RunRCode.sql").openStream()) {
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            return String.join("\n", reader.lines().collect(Collectors.toList()));
         } catch (IOException e) {
             throw new RuntimeException("CODING ERROR: Could not read RCodeQuery.sql", e);
         }
