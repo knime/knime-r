@@ -56,7 +56,6 @@ import javax.swing.JPanel;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
@@ -75,7 +74,7 @@ import org.knime.r.template.TemplatesPanel;
  * @author Heiko Hofer
  */
 public class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
-    private static final NodeLogger LOGGER = NodeLogger.getLogger(DeployRToMSSQLNodeDialog.class);
+    // private static final NodeLogger LOGGER = NodeLogger.getLogger(DeployRToMSSQLNodeDialog.class);
 
     private static final String SNIPPET_TAB = "R Snippet";
 
@@ -93,6 +92,7 @@ public class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
      * Create a new Dialog.
      *
      * @param templateMetaCategory the meta category used in the templates tab or to create templates
+     * @param config R Snippet node config to customize the dialog and node model
      */
     protected DeployRToMSSQLNodeDialog(final Class<?> templateMetaCategory, final RSnippetNodeConfig config) {
         m_settings = new DeployRToMSSQLNodeSettings();
@@ -119,10 +119,11 @@ public class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
 
     /** Create the templates tab. */
     private JPanel createTemplatesPanel() {
-        final SimpleRSnippetNodePanel preview = new SimpleRSnippetNodePanel(m_templateMetaCategory, m_config, m_settings, true, false);
+        final SimpleRSnippetNodePanel preview =
+            new SimpleRSnippetNodePanel(m_templateMetaCategory, m_config, m_settings, true, false);
 
         m_templatesController = new DefaultTemplateController<>(m_panel, preview);
-        return  new TemplatesPanel(Collections.singleton(m_templateMetaCategory), m_templatesController);
+        return new TemplatesPanel(Collections.singleton(m_templateMetaCategory), m_templatesController);
     }
 
     @Override
@@ -135,7 +136,7 @@ public class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
     @Override
     protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
         throws NotConfigurableException {
-		m_panel.updateData(settings, specs, getAvailableFlowVariables().values());
+        m_panel.updateData(settings, specs, getAvailableFlowVariables().values());
         m_settings.loadSettingsForDialog(settings);
         m_panel.getSnippetSettings().loadSettingsForDialog(settings);
     }
@@ -143,7 +144,7 @@ public class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
     @Override
     protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObject[] input)
         throws NotConfigurableException {
-		m_panel.updateData(settings, input, getAvailableFlowVariables().values());
+        m_panel.updateData(settings, input, getAvailableFlowVariables().values());
         m_settings.loadSettingsForDialog(settings);
         m_panel.getSnippetSettings().loadSettingsForDialog(settings);
     }
@@ -154,7 +155,8 @@ public class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
     }
 
     @Override
-    public void onClose() { }
+    public void onClose() {
+    }
 
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {

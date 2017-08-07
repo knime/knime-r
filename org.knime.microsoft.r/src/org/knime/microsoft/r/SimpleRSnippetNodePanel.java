@@ -115,6 +115,7 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
     protected RFlowVariableList m_flowVarsList;
 
     private final RSnippet m_snippet;
+
     private final DeployRToMSSQLNodeSettings m_settings;
 
     private final boolean m_isInteractive;
@@ -133,7 +134,9 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
     /**
      * @param templateMetaCategory the meta category used in the templates tab or to create templates
      * @param config
+     * @param settings Node settings to write to from the panel (e.g. for SQL output table name)
      * @param isPreview if this is a preview used for showing templates.
+     * @param isInteractive
      */
     public SimpleRSnippetNodePanel(final Class<?> templateMetaCategory, final RSnippetNodeConfig config,
         final DeployRToMSSQLNodeSettings settings, final boolean isPreview, final boolean isInteractive) {
@@ -363,7 +366,13 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
         return true;
     }
 
-    /** Update pane contents to match given data */
+    /**
+     * Update pane contents to match given data
+     *
+     * @param settings R Snippet settings to update the panel with
+     * @param specs Input port specs
+     * @param flowVariables Flow variables
+     */
     public void updateData(final ConfigRO settings, final PortObjectSpec[] specs,
         final Collection<FlowVariable> flowVariables) {
         m_snippet.getSettings().loadSettingsForDialog(settings);
@@ -371,7 +380,13 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
         updateData(m_snippet.getSettings(), null, spec, flowVariables);
     }
 
-    /** Update pane contents to match given data */
+    /**
+     * Update pane contents to match given data
+     *
+     * @param settings R Snippet settings to update the panel with
+     * @param input Input data at input ports
+     * @param flowVariables Flow variables
+     */
     public void updateData(final ConfigRO settings, final PortObject[] input,
         final Collection<FlowVariable> flowVariables) {
         m_snippet.getSettings().loadSettingsForDialog(settings);
@@ -379,13 +394,27 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
         updateData(m_snippet.getSettings(), input, spec, flowVariables);
     }
 
-    /** Update pane contents to match given data */
+    /**
+     * Update pane contents to match given data
+     *
+     * @param settings R Snippet settings to update the panel with
+     * @param input Input data at input ports
+     * @param spec Input Table specification
+     * @param flowVariables Flow variables
+     */
     private void updateData(final RSnippetSettings settings, final PortObject[] input, final DataTableSpec spec,
         final Collection<FlowVariable> flowVariables) {
         ViewUtils.invokeAndWaitInEDT(() -> updateDataInternal(settings, input, spec, flowVariables));
     }
 
-    /** Update pane contents to match given data */
+    /**
+     * Update pane contents to match given data
+     *
+     * @param settings R Snippet settings to update the panel with
+     * @param input Input data at input ports
+     * @param spec Input Table specification
+     * @param flowVariables Flow variables
+     */
     protected void updateDataInternal(final RSnippetSettings settings, final PortObject[] input,
         final DataTableSpec spec, final Collection<FlowVariable> flowVariables) {
         m_snippet.getSettings().loadSettings(settings);
