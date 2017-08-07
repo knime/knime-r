@@ -80,6 +80,21 @@ import org.knime.r.controller.RController;
 import org.rosuda.REngine.REXP;
 
 /**
+ * Node Model which allows executing R code in a Microsoft SQL Server
+ *
+ * <h1>General process:</h1>
+ * <ul>
+ * <li>A R script which serializes knime.model and knime.flow.in using <code>saveRDS</code> is run</li>
+ * <li>The binary data is retrieved and uploaded to an SQL table as a BLOB</li>
+ * <li>The users script is prefixed with code which deserializes the data from the table to provide it as variables to
+ * the user</li>
+ * <li>The user R script retrieves the username and password to log into the database from the serverside R
+ * instance</li>
+ * <li>knime.out is output into a SQL table using <code>RxDataStep</code>, which is a special Microsoft R (RevoScaleR)
+ * function only available with MS R</li>
+ * </ul>
+ *
+ *
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  */
 public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
@@ -97,23 +112,27 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
 
         @Override
         protected String getScriptPrefix() {
+            // This script prefix only has influence on the serialization code
             return "";
         }
 
         @Override
         protected String getDefaultScript() {
+            // This default script only has influence on the sql R code
             return "knime.out<-cbind(knime.in, predict(knime.model, knime.in))";
         }
 
         @Override
         protected String getScriptSuffix() {
+            // This script suffix only has influence on the serialization code
             return "";
         }
 
     };
 
     private static final NodeLogger LOGGER = NodeLogger.getLogger("Deploy R To MSSQL");
-	private DeployRToMSSQLNodeSettings m_settings = new DeployRToMSSQLNodeSettings();
+
+    private DeployRToMSSQLNodeSettings m_settings = new DeployRToMSSQLNodeSettings();
 
     /**
      * Constructor
@@ -134,7 +153,8 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
         /* Check if we are connected to a MSSQL database, since we require support for sq_execute_external_script */
         final DatabaseConnectionSettings databaseSettings =
             databasePort.getConnectionSettings(getCredentialsProvider());
-        if (false) { // TODO: Make sure we are on MSSQL
+
+        if (!databaseSettings.getDriver().startsWith("com.microsoft")) {
             LOGGER.error("Deploy R To MSSQL Node does not support " + databasePort.getDatabaseIdentifier());
             throw new InvalidSettingsException("This node only works with Microsoft SQL Server 2016+");
         }
@@ -145,7 +165,6 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
     @Override
     protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
         final DatabaseConnectionPortObject databasePort = (DatabaseConnectionPortObject)inData[0];
-        final RPortObject rPort = (RPortObject)inData[1];
 
         final DatabaseConnectionSettings connectionSettings =
             databasePort.getConnectionSettings(getCredentialsProvider());
@@ -162,8 +181,9 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
         final Blob blob = connection.createBlob();
         try {
             exec.checkCanceled();
-            final String serializeScript = "conn<-rawConnection(raw(0),open='w');saveRDS(list(knime.model=knime.model,knime.flow.in=knime.flow.in),file=conn);"
-                + "knime.model.serialized<-rawConnectionValue(conn);close(conn);rm(conn)";
+            final String serializeScript =
+                "conn<-rawConnection(raw(0),open='w');saveRDS(list(knime.model=knime.model,knime.flow.in=knime.flow.in),file=conn);"
+                    + "knime.model.serialized<-rawConnectionValue(conn);close(conn);rm(conn)";
             executeSnippet(controller, serializeScript, inData, flowVarRepo, exec);
 
             final REXP serializedModelREXP = controller.eval("knime.model.serialized", true);
@@ -199,7 +219,7 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
             if (!connection.createStatement().execute(query)) {
                 throw new RuntimeException("SQL Query failed.");
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("SQL Query failed.", e);
         }
 

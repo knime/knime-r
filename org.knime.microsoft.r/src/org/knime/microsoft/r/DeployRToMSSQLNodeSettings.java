@@ -55,6 +55,7 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
  */
 public class DeployRToMSSQLNodeSettings {
 
+    /** Settings key used to store the output table name under. */
     public static final String KEY_OUTPUT_TABLE_NAME = "OutputTableName";
 
     private SettingsModelString m_outputTableNameModel = new SettingsModelString(KEY_OUTPUT_TABLE_NAME, "OutputTable");
