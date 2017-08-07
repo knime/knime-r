@@ -1,5 +1,6 @@
 /*
- * ------------------------------------------------------------------
+ * ------------------------------------------------------------------------
+ *
  *  Copyright by KNIME GmbH, Konstanz, Germany
  *  Website: http://www.knime.org; Email: contact@knime.org
  *
@@ -42,31 +43,31 @@
  *  when such Node is propagated with or for interoperation with KNIME.
  * ---------------------------------------------------------------------
  *
+ * History
+ *   17.07.2017 (Jonathan Hale): created
  */
-package org.knime.microsoft.r;
+package org.knime.r.template;
 
-import org.knime.core.node.NodeDialogPane;
-import org.knime.r.RSnippetNodeFactory;
+import java.util.Map;
+
+import org.knime.core.data.DataTableSpec;
+import org.knime.core.node.workflow.FlowVariable;
+import org.knime.r.RSnippetTemplate;
 
 /**
- * @author Jonathan Hale, KNIME, Konstanz, Germany
+ * Interface for components which can receive a template.
+ *
+ * @author Jonathan Hale
  */
-public class DeployRToMSSQLNodeFactory extends RSnippetNodeFactory {
+public interface TemplateReceiver {
 
     /**
-     * Constructor
+     * Reinitialize with the given blueprint.
+     *
+     * @param template the template
+     * @param flowVariables the flow variables at the input
+     * @param spec the input spec
      */
-    public DeployRToMSSQLNodeFactory() {
-        super(DeployRToMSSQLNodeModel.RSNIPPET_NODE_CONFIG);
-    }
-
-    @Override
-    public DeployRToMSSQLNodeModel createNodeModel() {
-        return new DeployRToMSSQLNodeModel();
-    }
-
-    @Override
-    protected NodeDialogPane createNodeDialogPane() {
-        return new DeployRToMSSQLNodeDialog(this.getClass(), DeployRToMSSQLNodeModel.RSNIPPET_NODE_CONFIG);
-    }
+    public void applyTemplate(final RSnippetTemplate template, final DataTableSpec spec,
+        final Map<String, FlowVariable> flowVariables);
 }

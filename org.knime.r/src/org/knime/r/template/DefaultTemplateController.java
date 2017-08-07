@@ -52,62 +52,54 @@ import java.util.Map;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.workflow.FlowVariable;
-import org.knime.r.RSnippetNodePanel;
 import org.knime.r.RSnippetTemplate;
 
 /**
- * The default implementation of TemplateController. It provides methods to get
- * a preview and to replace the setting of a java snippet by the settings of a
- * template.
+ * The default implementation of TemplateController. It provides methods to get a preview and to replace the setting of
+ * a java snippet by the settings of a template.
  *
  * @author Heiko Hofer
+ * @author Jontathan Hale, KNIME, Konstanz, Germany
  */
-public class DefaultTemplateController implements TemplateController {
-    private RSnippetNodePanel m_model;
-    private RSnippetNodePanel m_preview;
-    private DataTableSpec m_spec;
-    private Map<String, FlowVariable> m_flowVariables;
+public class DefaultTemplateController<T extends Component & TemplateReceiver> implements TemplateController {
+    private T m_model;
 
+    private T m_preview;
+
+    private DataTableSpec m_spec;
+
+    private Map<String, FlowVariable> m_flowVariables;
 
     /**
      * Create a new instance.
+     *
      * @param model the dialog that serves as a model in the MVC principle
      * @param preview the dialog used for preview of the template
      */
-    public DefaultTemplateController(final RSnippetNodePanel model,
-            final RSnippetNodePanel preview) {
+    public DefaultTemplateController(final T model, final T preview) {
         super();
         m_model = model;
         m_preview = preview;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Component getPreview() {
         return m_preview;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setPreviewSettings(final RSnippetTemplate template) {
         m_preview.applyTemplate(template, m_spec, m_flowVariables);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setSettings(final RSnippetTemplate template) {
         m_model.applyTemplate(template, m_spec, m_flowVariables);
     }
 
     /**
-     * Set the spec used for for the preview and applying a template to
-     * the model.
+     * Set the spec used for for the preview and applying a template to the model.
+     *
      * @param spec the spec of the input
      */
     public void setDataTableSpec(final DataTableSpec spec) {
@@ -115,13 +107,11 @@ public class DefaultTemplateController implements TemplateController {
     }
 
     /**
-     * Set the flow variables used for for the preview and applying a
-     * template to the model.
+     * Set the flow variables used for for the preview and applying a template to the model.
+     *
      * @param flowVariables the flow variables
      */
-    public void setFlowVariables(
-            final Map<String, FlowVariable> flowVariables) {
+    public void setFlowVariables(final Map<String, FlowVariable> flowVariables) {
         m_flowVariables = flowVariables;
     }
-
 }

@@ -192,7 +192,7 @@ public class RSnippetSettings {
 	/**
 	 * @return the script
 	 */
-	String getScript() {
+	public String getScript() {
 		return m_script;
 	}
 
@@ -200,7 +200,7 @@ public class RSnippetSettings {
 	 * @param script
 	 *            the script to set
 	 */
-	void setScript(final String script) {
+	public void setScript(final String script) {
 		m_script = script;
 	}
 
@@ -215,14 +215,14 @@ public class RSnippetSettings {
 	 * @param templateUUID
 	 *            the templateUUID to set
 	 */
-	void setTemplateUUID(final String templateUUID) {
+	public void setTemplateUUID(final String templateUUID) {
 		m_templateUUID = templateUUID;
 	}
 
 	/**
 	 * @return the version
 	 */
-	String getVersion() {
+	public String getVersion() {
 		return m_version;
 	}
 
@@ -230,7 +230,7 @@ public class RSnippetSettings {
 	 * @param version
 	 *            the version to set
 	 */
-	void setVersion(final String version) {
+	public void setVersion(final String version) {
 		m_version = version;
 	}
 
@@ -240,7 +240,7 @@ public class RSnippetSettings {
 	 *
 	 * @return when NaN, Inf and -Inf should be treated as missing values
 	 */
-	boolean getOutNonNumbersAsMissing() {
+	public boolean getOutNonNumbersAsMissing() {
 		return m_outNonNumbersAsMissing;
 	}
 
@@ -251,14 +251,14 @@ public class RSnippetSettings {
 	 * @param outNonNumbersAsMissing
 	 *            whether NaN, Inf and -Inf should be treated as missing values
 	 */
-	void setOutNonNumbersAsMissing(final boolean outNonNumbersAsMissing) {
+	public void setOutNonNumbersAsMissing(final boolean outNonNumbersAsMissing) {
 		m_outNonNumbersAsMissing = outNonNumbersAsMissing;
 	}
 
 	/**
 	 * @return whether to send row names with the input table.
 	 */
-	boolean getSendRowNames() {
+	public boolean getSendRowNames() {
 		return m_sendRowNames;
 	}
 
@@ -267,7 +267,7 @@ public class RSnippetSettings {
 	 *
 	 * @param b whether to send or not to send.
 	 */
-	void setSendRowNames(final boolean b) {
+	public void setSendRowNames(final boolean b) {
 		m_sendRowNames = b;
 	}
 
@@ -275,14 +275,14 @@ public class RSnippetSettings {
 	 * Set number of rows to send to R per batch.
 	 * @param numRows number of rows.
 	 */
-	void setSendBatchSize(final int numRows) {
+	public void setSendBatchSize(final int numRows) {
 		m_sendBatchSize = numRows;
 	}
 
 	/**
 	 * @return Number of rows that should be sent to R per batch.
 	 */
-	int getSendBatchSize() {
+	public int getSendBatchSize() {
 		return m_sendBatchSize;
 	}
 
@@ -290,7 +290,7 @@ public class RSnippetSettings {
 	 * Set the R type in which to provide the data from KNIME.
 	 * @param type either "data.frame" or "data.table".
 	 */
-	void setKnimeInType(final String type) {
+	public void setKnimeInType(final String type) {
 		if ("data.frame".equals(type) || "data.table".equals(type)) {
 			m_knimeInType = type;
 			return;
@@ -301,7 +301,7 @@ public class RSnippetSettings {
 	/**
 	 * @return R type to use for the knime.in variable.
 	 */
-	String getKnimeInType() {
+	public String getKnimeInType() {
 		return m_knimeInType;
 	}
 }

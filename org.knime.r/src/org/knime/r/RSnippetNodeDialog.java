@@ -131,10 +131,6 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 		}
 
 		m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, true) {
-
-			/**
-			 *
-			 */
 			private static final long serialVersionUID = 6934850660800321248L;
 
 			@Override
