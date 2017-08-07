@@ -45,9 +45,68 @@
  */
 package org.knime.microsoft.r;
 
+import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
+
 /**
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  */
 public class DeployRToMSSQLNodeSettings {
 
+    public static final String KEY_OUTPUT_TABLE_NAME = "OutputTableName";
+
+    private SettingsModelString m_outputTableNameModel = new SettingsModelString(KEY_OUTPUT_TABLE_NAME, "OutputTable");
+
+    /**
+     * Get name of the output sql table
+     * @return name of the table
+     */
+    public String getOutputTableName() {
+       return m_outputTableNameModel.getStringValue();
+    }
+
+    /**
+     * Set name of the output sql table
+     * @param outputTableName name for the table
+     */
+    public void setOutputTableName(final String outputTableName) {
+       m_outputTableNameModel.setStringValue(outputTableName);
+    }
+
+    /**
+     * Settings model for the name of the output sql table.
+     * @return the settings model
+     */
+    public SettingsModelString outputTableNameMode() {
+        return m_outputTableNameModel;
+    }
+
+    /**
+     * Save settings
+     * @param settings Settings to save to
+     */
+    public void saveSettingsTo(final NodeSettingsWO settings) {
+        m_outputTableNameModel.saveSettingsTo(settings);
+    }
+
+    /**
+     * Load settings
+     * @param settings Settings to load from
+     * @throws InvalidSettingsException
+     */
+    public void loadSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
+        m_outputTableNameModel.loadSettingsFrom(settings);
+    }
+
+    /**
+     * @param settings
+     */
+    public void loadSettingsForDialog(final NodeSettingsRO settings) {
+        try {
+            m_outputTableNameModel.loadSettingsFrom(settings);
+        } catch (InvalidSettingsException e) {
+        }
+    }
 }

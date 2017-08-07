@@ -79,7 +79,7 @@ public final class RSnippet {
 		m_settings = new RSnippetSettings() {
 
 			@Override
-			String getScript() {
+            public String getScript() {
 				if (m_document != null) {
 					try {
 						return m_document.getText(0, m_document.getLength());
@@ -93,7 +93,7 @@ public final class RSnippet {
 			}
 
 			@Override
-			void setScript(final String script) {
+            public void setScript(final String script) {
 				if (m_document != null) {
 					try {
 						final String s = m_document.getText(0, m_document.getLength());

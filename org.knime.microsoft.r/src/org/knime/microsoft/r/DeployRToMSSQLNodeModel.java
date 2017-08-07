@@ -60,6 +60,8 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeSettingsRO;
+import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
@@ -110,14 +112,15 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
 
     };
 
+    private static final NodeLogger LOGGER = NodeLogger.getLogger("Deploy R To MSSQL");
+	private DeployRToMSSQLNodeSettings m_settings = new DeployRToMSSQLNodeSettings();
+
     /**
      * Constructor
      */
     public DeployRToMSSQLNodeModel() {
         super(RSNIPPET_NODE_CONFIG);
     }
-
-    private static final NodeLogger LOGGER = NodeLogger.getLogger("Deploy R To MSSQL");
 
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
@@ -159,7 +162,7 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
         final Blob blob = connection.createBlob();
         try {
             exec.checkCanceled();
-            final String serializeScript = "conn<-rawConnection(raw(0),open='w');saveRDS(knime.model,file=conn);"
+            final String serializeScript = "conn<-rawConnection(raw(0),open='w');saveRDS(list(knime.model=knime.model,knime.flow.in=knime.flow.in),file=conn);"
                 + "knime.model.serialized<-rawConnectionValue(conn);close(conn);rm(conn)";
             executeSnippet(controller, serializeScript, inData, flowVarRepo, exec);
 
@@ -189,7 +192,7 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
         final String query = getRunRCodeQuery().replace("${userRCode}", rCode.replace("'", "\""))
             .replace("${usr}", connectionSettings.getUserName(getCredentialsProvider()))
             .replace("${pwd}", connectionSettings.getPassword(getCredentialsProvider()))
-            .replace("${outTableName}", "OutputTable");
+            .replace("${outTableName}", m_settings.getOutputTableName());
         LOGGER.debug("Query: " + query);
 
         try {
@@ -214,6 +217,18 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
         } catch (IOException e) {
             throw new RuntimeException("CODING ERROR: Could not read RCodeQuery.sql", e);
         }
+    }
+
+    @Override
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
+        super.loadValidatedSettingsFrom(settings);
+        m_settings.loadSettingsFrom(settings);
+    }
+
+    @Override
+    protected void saveSettingsTo(final NodeSettingsWO settings) {
+        super.saveSettingsTo(settings);
+        m_settings.saveSettingsTo(settings);
     }
 
 }

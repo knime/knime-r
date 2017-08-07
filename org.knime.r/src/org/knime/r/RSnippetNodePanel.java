@@ -105,6 +105,7 @@ import org.knime.r.controller.RConsoleController;
 import org.knime.r.controller.RController;
 import org.knime.r.template.AddTemplateDialog;
 import org.knime.r.template.TemplateProvider;
+import org.knime.r.template.TemplateReceiver;
 import org.knime.r.ui.RColumnList;
 import org.knime.r.ui.RConsole;
 import org.knime.r.ui.RFlowVariableList;
@@ -121,7 +122,7 @@ import com.sun.jna.Platform;
  * @author Heiko Hofer
  * @author Jonathan Hale
  */
-public class RSnippetNodePanel extends JPanel {
+public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
 
 	/** Generated serialVersionUID */
 	private static final long serialVersionUID = 2286323699400964363L;
@@ -161,11 +162,8 @@ public class RSnippetNodePanel extends JPanel {
 	private RProgressPanel m_progressPanel;
 
 	private JButton m_evalSelButton;
-
 	private JButton m_evalScriptButton;
-
 	private JButton m_resetWorkspace;
-
 	private JButton m_showPlot;
 
 	private RPlotPreviewFrame m_previewFrame;
@@ -175,6 +173,7 @@ public class RSnippetNodePanel extends JPanel {
 
 	private ExecutionMonitor m_exec;
 
+	/** Whether the dialog is currently closing */
 	protected boolean m_closing;
 
 	/**
@@ -184,7 +183,7 @@ public class RSnippetNodePanel extends JPanel {
 	 * @param config
 	 * @param isPreview
 	 *            if this is a preview used for showing templates.
-	 * @throws RException
+     * @param isInteractive Whether the code should be interactively executable
 	 */
 	public RSnippetNodePanel(final Class<?> templateMetaCategory, final RSnippetNodeConfig config,
 			final boolean isPreview, final boolean isInteractive) {
@@ -395,7 +394,6 @@ public class RSnippetNodePanel extends JPanel {
 								m_exec.createSubProgress(0.1));
 
 						workspaceChanged();
-
 					} finally {
 						if (m_exec != null) {
 							m_exec.getProgressMonitor().setExecuteCanceled();
@@ -403,13 +401,11 @@ public class RSnippetNodePanel extends JPanel {
 							m_exec.setProgress(1);
 						}
 					}
-
 				} finally {
 					publish(Boolean.TRUE);
 				}
 				return null;
 			}
-
 		}.execute();
 	}
 
@@ -527,7 +523,7 @@ public class RSnippetNodePanel extends JPanel {
 	}
 
 	/**
-	 * The panel at the to with the "Create Template..." Button.
+	 * The panel at the top with the "Create Template..." Button.
 	 */
 	private JPanel createTemplateInfoPanel(final boolean isPreview) {
 		final JButton addTemplateButton = new JButton("Create Template...");
@@ -650,7 +646,8 @@ public class RSnippetNodePanel extends JPanel {
 	 * @param spec
 	 *            the input spec
 	 */
-	public void applyTemplate(final RSnippetTemplate template, final DataTableSpec spec,
+	@Override
+    public void applyTemplate(final RSnippetTemplate template, final DataTableSpec spec,
 			final Map<String, FlowVariable> flowVariables) {
 		// save and read settings to decouple objects.
 		final NodeSettings settings = new NodeSettings(template.getUUID());
@@ -678,7 +675,7 @@ public class RSnippetNodePanel extends JPanel {
 	 *
 	 * @param template
 	 *            the template
-	 * @return the template's loacation for display
+	 * @return the template's location for display
 	 */
 	private String createTemplateLocationText(final RSnippetTemplate template) {
 		final TemplateProvider provider = TemplateProvider.getDefault();
