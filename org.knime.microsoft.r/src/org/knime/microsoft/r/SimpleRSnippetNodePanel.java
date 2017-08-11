@@ -48,6 +48,7 @@ package org.knime.microsoft.r;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collection;
@@ -129,7 +130,8 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
 
     private int m_tableInPort;
 
-    private JTextField m_sqlTableNameTextField = new JTextField();
+    private JTextField m_sqlOutTableNameTextField = new JTextField();
+    private JTextField m_sqlInTableNameTextField = new JTextField();
 
     /**
      * @param templateMetaCategory the meta category used in the templates tab or to create templates
@@ -163,18 +165,18 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
         setEnabled(!isPreview);
         panel.setPreferredSize(new Dimension(1280, 720));
 
-        m_sqlTableNameTextField.setMinimumSize(new Dimension(200, 23));
-        m_sqlTableNameTextField.setMinimumSize(new Dimension(200, 40));
-        m_sqlTableNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+        m_sqlInTableNameTextField.setMinimumSize(new Dimension(200, 23));
+        m_sqlInTableNameTextField.setMinimumSize(new Dimension(200, 40));
+        m_sqlInTableNameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void removeUpdate(final DocumentEvent e) {
-                settings.setOutputTableName(m_sqlTableNameTextField.getText());
+                setSettings();
             }
 
             @Override
             public void insertUpdate(final DocumentEvent e) {
-                settings.setOutputTableName(m_sqlTableNameTextField.getText());
+                setSettings();
             }
 
             @Override
@@ -183,7 +185,31 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
             }
 
             private void setSettings() {
-                settings.setOutputTableName(m_sqlTableNameTextField.getText());
+                settings.setInputTableName(m_sqlInTableNameTextField.getText());
+            }
+        });
+
+        m_sqlOutTableNameTextField.setMinimumSize(new Dimension(200, 23));
+        m_sqlOutTableNameTextField.setMinimumSize(new Dimension(200, 40));
+        m_sqlOutTableNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void removeUpdate(final DocumentEvent e) {
+                setSettings();
+            }
+
+            @Override
+            public void insertUpdate(final DocumentEvent e) {
+                setSettings();
+            }
+
+            @Override
+            public void changedUpdate(final DocumentEvent e) {
+                setSettings();
+            }
+
+            private void setSettings() {
+                settings.setOutputTableName(m_sqlOutTableNameTextField.getText());
             }
         });
     }
@@ -274,14 +300,16 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
         if (isPreview) {
             templateInfoPanel.add(m_templateLocation, BorderLayout.CENTER);
         } else {
-            final JPanel tableNamePanel = new JPanel();
-
+            final JPanel tableNamePanel = new JPanel(new GridLayout(2, 2));
+            tableNamePanel.add(new JLabel("SQL Input Table Name: "));
+            tableNamePanel.add(m_sqlInTableNameTextField);
             tableNamePanel.add(new JLabel("SQL Output Table Name: "));
-            tableNamePanel.add(m_sqlTableNameTextField);
+            tableNamePanel.add(m_sqlOutTableNameTextField);
 
-            final Dimension d = m_sqlTableNameTextField.getPreferredSize();
+            final Dimension d = m_sqlOutTableNameTextField.getPreferredSize();
             d.width = 150;
-            m_sqlTableNameTextField.setPreferredSize(d);
+            m_sqlInTableNameTextField.setPreferredSize(d);
+            m_sqlOutTableNameTextField.setPreferredSize(d);
 
             templateInfoPanel.add(tableNamePanel, BorderLayout.LINE_START);
             templateInfoPanel.add(addTemplateButton, BorderLayout.LINE_END);
@@ -361,7 +389,8 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
         m_snippetTextArea.requestFocus();
         m_snippetTextArea.requestFocusInWindow();
 
-        m_sqlTableNameTextField.setText(m_settings.getOutputTableName());
+        m_sqlInTableNameTextField.setText(m_settings.getInputTableName());
+        m_sqlOutTableNameTextField.setText(m_settings.getOutputTableName());
 
         return true;
     }
