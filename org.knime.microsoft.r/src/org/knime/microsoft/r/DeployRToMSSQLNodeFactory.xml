@@ -37,7 +37,7 @@
 
 	<ports>
 		<inPort name="Database Connection" index="0">Connection to a Microsoft SQL Database </inPort>
-		<outPort name="R Workspace" index="0">R Workspace containing the trained R model. </outPort>
+		<outPort name="Database Connection" index="0">Output Database Connection. </outPort>
 	</ports>
 
 	<views>
