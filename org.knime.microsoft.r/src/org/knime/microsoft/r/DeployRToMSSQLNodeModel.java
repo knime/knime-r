@@ -96,6 +96,12 @@ import org.rosuda.REngine.REXP;
  *
  *
  * @author Jonathan Hale, KNIME, Konstanz, Germany
+ *
+ * @see DeployRToMSSQLNodeModel
+ * @see DeployRToMSSQLNodeSettings
+ * @see DeployRToMSSQLNodeDialog
+ * @see DeployRToMSSQLNodeFactory
+ * @see DeployRToMSSQLNodeView
  */
 public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
 
