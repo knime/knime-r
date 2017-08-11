@@ -65,7 +65,11 @@ public class DeployRToMSSQLNodeSettings {
     /** Settings key used to store the output table name under. */
     public static final String KEY_OUTPUT_TABLE_NAME = "OutputTableName";
 
+    /** Settings key used to store the input table name under. */
+    public static final String KEY_INPUT_TABLE_NAME = "InputTableName";
+
     private SettingsModelString m_outputTableNameModel = new SettingsModelString(KEY_OUTPUT_TABLE_NAME, "OutputTable");
+    private SettingsModelString m_inputTableNameModel = new SettingsModelString(KEY_INPUT_TABLE_NAME, "InputTable");
 
     /**
      * Get name of the output sql table
@@ -95,12 +99,40 @@ public class DeployRToMSSQLNodeSettings {
     }
 
     /**
+     * Get name of the input sql table
+     *
+     * @return name of the table
+     */
+    public String getInputTableName() {
+        return m_inputTableNameModel.getStringValue();
+    }
+
+    /**
+     * Set name of the input sql table
+     *
+     * @param inputTableName name for the table
+     */
+    public void setInputTableName(final String inputTableName) {
+        m_inputTableNameModel.setStringValue(inputTableName);
+    }
+
+    /**
+     * Settings model for the name of the input sql table.
+     *
+     * @return the settings model
+     */
+    public SettingsModelString inputTableNameMode() {
+        return m_inputTableNameModel;
+    }
+
+    /**
      * Save settings
      *
      * @param settings Settings to save to
      */
     public void saveSettingsTo(final NodeSettingsWO settings) {
         m_outputTableNameModel.saveSettingsTo(settings);
+        m_inputTableNameModel.saveSettingsTo(settings);
     }
 
     /**
@@ -111,6 +143,7 @@ public class DeployRToMSSQLNodeSettings {
      */
     public void loadSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         m_outputTableNameModel.loadSettingsFrom(settings);
+        m_inputTableNameModel.loadSettingsFrom(settings);
     }
 
     /**
@@ -119,6 +152,7 @@ public class DeployRToMSSQLNodeSettings {
     public void loadSettingsForDialog(final NodeSettingsRO settings) {
         try {
             m_outputTableNameModel.loadSettingsFrom(settings);
+            m_inputTableNameModel.loadSettingsFrom(settings);
         } catch (InvalidSettingsException e) {
         }
     }

@@ -218,6 +218,7 @@ public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
         final String query = getRunRCodeQuery().replace("${userRCode}", rCode.replace("'", "\""))
             .replace("${usr}", connectionSettings.getUserName(getCredentialsProvider()))
             .replace("${pwd}", connectionSettings.getPassword(getCredentialsProvider()))
+            .replace("${inTableName}", m_settings.getInputTableName())
             .replace("${outTableName}", m_settings.getOutputTableName());
         LOGGER.debug("Query: " + query);
 
