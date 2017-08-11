@@ -18,9 +18,5 @@
             category-path="/scripting/ms-r"
             factory-class="org.knime.microsoft.r.DeployRToMSSQLNodeFactory">
       </node>
-      <node
-            category-path="/scripting/ms-r"
-            factory-class="org.knime.microsoft.r.MSSQLRNodeFactory">
-      </node>
    </extension>
 </plugin>
