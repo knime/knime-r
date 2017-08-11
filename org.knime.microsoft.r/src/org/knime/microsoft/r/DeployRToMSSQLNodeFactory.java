@@ -50,6 +50,12 @@ import org.knime.r.RSnippetNodeFactory;
 
 /**
  * @author Jonathan Hale, KNIME, Konstanz, Germany
+ *
+ * @see DeployRToMSSQLNodeModel
+ * @see DeployRToMSSQLNodeSettings
+ * @see DeployRToMSSQLNodeDialog
+ * @see DeployRToMSSQLNodeFactory
+ * @see DeployRToMSSQLNodeView
  */
 public class DeployRToMSSQLNodeFactory extends RSnippetNodeFactory {
 

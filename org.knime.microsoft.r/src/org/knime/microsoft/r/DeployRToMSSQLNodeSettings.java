@@ -51,7 +51,14 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
+ * Node Settings for the {@link DeployRToMSSQLNodeModel}.
+ *
  * @author Jonathan Hale, KNIME, Konstanz, Germany
+ *
+ * @see DeployRToMSSQLNodeModel
+ * @see DeployRToMSSQLNodeDialog
+ * @see DeployRToMSSQLNodeFactory
+ * @see DeployRToMSSQLNodeView
  */
 public class DeployRToMSSQLNodeSettings {
 
@@ -62,22 +69,25 @@ public class DeployRToMSSQLNodeSettings {
 
     /**
      * Get name of the output sql table
+     *
      * @return name of the table
      */
     public String getOutputTableName() {
-       return m_outputTableNameModel.getStringValue();
+        return m_outputTableNameModel.getStringValue();
     }
 
     /**
      * Set name of the output sql table
+     *
      * @param outputTableName name for the table
      */
     public void setOutputTableName(final String outputTableName) {
-       m_outputTableNameModel.setStringValue(outputTableName);
+        m_outputTableNameModel.setStringValue(outputTableName);
     }
 
     /**
      * Settings model for the name of the output sql table.
+     *
      * @return the settings model
      */
     public SettingsModelString outputTableNameMode() {
@@ -86,6 +96,7 @@ public class DeployRToMSSQLNodeSettings {
 
     /**
      * Save settings
+     *
      * @param settings Settings to save to
      */
     public void saveSettingsTo(final NodeSettingsWO settings) {
@@ -94,6 +105,7 @@ public class DeployRToMSSQLNodeSettings {
 
     /**
      * Load settings
+     *
      * @param settings Settings to load from
      * @throws InvalidSettingsException
      */

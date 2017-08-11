@@ -71,7 +71,13 @@ import org.knime.r.template.TemplatesPanel;
 /**
  * The dialog of the R nodes.
  *
- * @author Heiko Hofer
+ * @author Jonathan Hale, KNIME, Konstanz, Germany
+ *
+ * @see DeployRToMSSQLNodeModel
+ * @see DeployRToMSSQLNodeSettings
+ * @see DeployRToMSSQLNodeDialog
+ * @see DeployRToMSSQLNodeFactory
+ * @see DeployRToMSSQLNodeView
  */
 public class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
     // private static final NodeLogger LOGGER = NodeLogger.getLogger(DeployRToMSSQLNodeDialog.class);
