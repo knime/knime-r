@@ -685,18 +685,18 @@ public class RController implements IRController {
 						colSpecs.add(new DataColumnSpecCreator(columnNames[i], colType).createSpec());
 					}
 
-					// Convert values
-					if (columns[i] == null || columns[i].length < rowsThisBatch) {
-						// Only reallocate the DataCell buffer if insufficient size.
-						columns[i] = new DataCell[rowsThisBatch];
-					}
-
 					if (addRowsFuture != null) {
 						try {
 							addRowsFuture.get();
 						} catch (InterruptedException | ExecutionException e) {
 							new RuntimeException("Error while adding rows to table.", e);
 						}
+					}
+
+					// Convert values
+					if (columns[i] == null || columns[i].length < rowsThisBatch) {
+						// Only reallocate the DataCell buffer if insufficient size.
+						columns[i] = new DataCell[rowsThisBatch];
 					}
 
 					if (column.isNull()) {
