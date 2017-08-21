@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.knime.features.microsoft.r"
-      label="KNIME Microsoft R Statistics Integration"
-      version="3.3.0.qualifier"
+      label="KNIME Microsoft R Integration (Deploy R Model to Microsoft SQL Server)"
+      version="3.4.0.qualifier"
       provider-name="KNIME GmbH, Konstanz, Germany"
       plugin="org.knime.microsoft.r">
 

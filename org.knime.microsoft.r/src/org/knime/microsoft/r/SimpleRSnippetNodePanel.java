@@ -103,7 +103,7 @@ import org.knime.r.ui.RSnippetTextArea;
  * @author Heiko Hofer
  * @author Jonathan Hale
  */
-public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
+class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
 
     /** Generated serialVersionUID */
     private static final long serialVersionUID = 2286323699400964363L;
@@ -312,7 +312,7 @@ public class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver 
             m_sqlOutTableNameTextField.setPreferredSize(d);
 
             templateInfoPanel.add(tableNamePanel, BorderLayout.LINE_START);
-            templateInfoPanel.add(addTemplateButton, BorderLayout.LINE_END);
+            templateInfoPanel.add(ViewUtils.getInFlowLayout(addTemplateButton), BorderLayout.LINE_END);
         }
         templateInfoPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         return templateInfoPanel;
