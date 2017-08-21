@@ -2,20 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension
-         point="org.knime.workbench.repository.categories">
-      <category
-            description="Microsoft R Statistics Integration"
-            icon="icons/r.png"
-            level-id="ms-r"
-            locked="true"
-            name="Microsoft R"
-            path="/scripting">
-      </category>
-   </extension>
-   <extension
          point="org.knime.workbench.repository.nodes">
       <node
-            category-path="/scripting/ms-r"
+            category-path="/labs/"
             factory-class="org.knime.microsoft.r.DeployRToMSSQLNodeFactory">
       </node>
    </extension>

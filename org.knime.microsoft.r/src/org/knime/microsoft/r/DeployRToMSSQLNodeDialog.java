@@ -73,14 +73,8 @@ import org.knime.r.template.TemplatesPanel;
  *
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
- * @see DeployRToMSSQLNodeModel
- * @see DeployRToMSSQLNodeSettings
- * @see DeployRToMSSQLNodeDialog
- * @see DeployRToMSSQLNodeFactory
- * @see DeployRToMSSQLNodeView
  */
-public class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
-    // private static final NodeLogger LOGGER = NodeLogger.getLogger(DeployRToMSSQLNodeDialog.class);
+final class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
 
     private static final String SNIPPET_TAB = "R Snippet";
 

@@ -97,13 +97,8 @@ import org.rosuda.REngine.REXP;
  *
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
- * @see DeployRToMSSQLNodeModel
- * @see DeployRToMSSQLNodeSettings
- * @see DeployRToMSSQLNodeDialog
- * @see DeployRToMSSQLNodeFactory
- * @see DeployRToMSSQLNodeView
  */
-public class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
+final class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
 
     static final RSnippetNodeConfig RSNIPPET_NODE_CONFIG = new RSnippetNodeConfig() {
         @Override
