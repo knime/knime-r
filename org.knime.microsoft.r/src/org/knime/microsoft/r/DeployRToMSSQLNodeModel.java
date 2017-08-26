@@ -156,7 +156,8 @@ final class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
             databasePort.getConnectionSettings(getCredentialsProvider());
 
         if (!databaseSettings.getDriver().startsWith("com.microsoft")) {
-            LOGGER.error("Deploy R To MSSQL Node does not support " + databasePort.getDatabaseIdentifier());
+            LOGGER.error("Deploy R To MSSQL Node does not support " + databasePort.getDatabaseIdentifier()
+                + ".\nMake sure to use the Microsoft database connector and the Microsoft JDBC driver.");
             throw new InvalidSettingsException("This node only works with Microsoft SQL Server 2016+");
         }
 
