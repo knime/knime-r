@@ -211,12 +211,14 @@ final class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
 
         /* Execute R code via SQL statement */
         final String rCode = getRSnippet().getDocument().getText(0, getRSnippet().getDocument().getLength()).trim();
+        final String inTable = m_settings.getInputTableName();
+        final String outTable = m_settings.getOutputTableName();
         final String query = getRunRCodeQuery().replace("${userRCode}", rCode.replace("'", "\""))
             .replace("${usr}", connectionSettings.getUserName(getCredentialsProvider()))
             .replace("${pwd}", connectionSettings.getPassword(getCredentialsProvider()))
-            .replace("${inTableName}", m_settings.getInputTableName())
-            .replace("${outTableName}", m_settings.getOutputTableName());
-        LOGGER.debug("Query: " + query);
+            .replace("${inTableName}", inTable).replace("${outTableName}", outTable);
+
+        LOGGER.debug("Running SQL R query with input table \"" + inTable + "\" and output table \"" + outTable + "\".");
 
         try {
             if (!connection.createStatement().execute(query)) {
