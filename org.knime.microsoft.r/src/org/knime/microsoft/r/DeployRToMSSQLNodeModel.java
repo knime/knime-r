@@ -103,7 +103,7 @@ final class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
     static final RSnippetNodeConfig RSNIPPET_NODE_CONFIG = new RSnippetNodeConfig() {
         @Override
         public Collection<PortType> getInPortTypes() {
-            return Arrays.asList(DatabaseConnectionPortObject.TYPE, RPortObject.TYPE);
+            return Arrays.asList(RPortObject.TYPE, DatabaseConnectionPortObject.TYPE);
         }
 
         @Override
@@ -128,8 +128,10 @@ final class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
             // This script suffix only has influence on the serialization code
             return "";
         }
-
     };
+
+    public static final int PORT_INDEX_R = 0;
+    public static final int PORT_INDEX_DB = 1;
 
     private static final NodeLogger LOGGER = NodeLogger.getLogger("Deploy R To MSSQL");
 
@@ -146,10 +148,10 @@ final class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         super.configure(inSpecs);
 
-        assert inSpecs[0] instanceof DatabaseConnectionPortObjectSpec;
-        assert inSpecs[1] instanceof RPortObjectSpec;
+        assert inSpecs[PORT_INDEX_R] instanceof RPortObjectSpec;
+        assert inSpecs[PORT_INDEX_DB] instanceof DatabaseConnectionPortObjectSpec;
 
-        final DatabaseConnectionPortObjectSpec databasePort = (DatabaseConnectionPortObjectSpec)inSpecs[0];
+        final DatabaseConnectionPortObjectSpec databasePort = (DatabaseConnectionPortObjectSpec)inSpecs[PORT_INDEX_DB];
 
         /* Check if we are connected to a MSSQL database, since we require support for sq_execute_external_script */
         final DatabaseConnectionSettings databaseSettings =
@@ -166,7 +168,7 @@ final class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
 
     @Override
     protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
-        final DatabaseConnectionPortObject databasePort = (DatabaseConnectionPortObject)inData[0];
+        final DatabaseConnectionPortObject databasePort = (DatabaseConnectionPortObject)inData[PORT_INDEX_DB];
 
         final DatabaseConnectionSettings connectionSettings =
             databasePort.getConnectionSettings(getCredentialsProvider());
