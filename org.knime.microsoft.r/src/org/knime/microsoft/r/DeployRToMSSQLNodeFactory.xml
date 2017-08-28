@@ -10,6 +10,12 @@
 			This node allows running R code on a Microsoft SQL Server (using a SQL query behind the scenes).
 			Input and output data to the R script are SQL tables. In addition the <b>knime.model</b> and
 			<b>knime.flow.in</b> variables from a R port can be used in the R script.
+
+			<h4>JDBC Driver</h4>
+
+			This node requires the <b>Microsoft JDBC driver</b> to be used in the Microsoft SQL Server connector.
+			Please download it from <a href="https://docs.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server">here</a>
+			and add <i>sqljdbc_6.0\enu\jre8\sqljdbc42.jar</i> in the "Preferences -> Databases" panel.
 		</intro>
 		<tab name="R Editor">
 			<option name="SQL Input Table Name">
@@ -40,8 +46,8 @@
 
 	<ports>
 		<inPort name="R Workspace" index="0">R Workspace which contains the model.</inPort>
-		<inPort name="Database Connection" index="1">Connection to a Microsoft SQL Database </inPort>
-		<outPort name="Database Connection" index="0">Output Database Connection. </outPort>
+		<inPort name="Database Connection" index="1">Connection to a Microsoft SQL Database.</inPort>
+		<outPort name="Database Connection" index="0">Output Database Connection.</outPort>
 	</ports>
 
 	<views>
