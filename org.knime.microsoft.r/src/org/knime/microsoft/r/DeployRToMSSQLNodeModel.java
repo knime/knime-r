@@ -52,6 +52,8 @@ import java.io.InputStreamReader;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -215,6 +217,22 @@ final class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
         final String rCode = getRSnippet().getDocument().getText(0, getRSnippet().getDocument().getLength()).trim();
         final String inTable = m_settings.getInputTableName();
         final String outTable = m_settings.getOutputTableName();
+
+        /* Make sure input table exists */
+        final Statement tableCheckStmt = connection.createStatement();
+        if (!tableCheckStmt.execute("SELECT OBJECT_ID('" + inTable + "', 'U')")) {
+            throw new RuntimeException("Check for input table failed.");
+        } else {
+            final ResultSet resultSet = tableCheckStmt.getResultSet();
+            resultSet.next();
+            final Object objId = resultSet.getObject(1);
+            if(objId == null) {
+                // Table does not exist!
+                throw new RuntimeException("Input table does not exist.");
+            }
+        }
+
+        /* Resolve variables in SQL query template. */
         final String query = getRunRCodeQuery().replace("${userRCode}", rCode.replace("'", "\""))
             .replace("${usr}", connectionSettings.getUserName(getCredentialsProvider()))
             .replace("${pwd}", connectionSettings.getPassword(getCredentialsProvider()))
