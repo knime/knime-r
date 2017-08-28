@@ -100,7 +100,7 @@ import org.rosuda.REngine.REXP;
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
  */
-final class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
+final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
 
     static final RSnippetNodeConfig RSNIPPET_NODE_CONFIG = new RSnippetNodeConfig() {
         @Override
@@ -137,12 +137,12 @@ final class DeployRToMSSQLNodeModel extends RSnippetNodeModel {
 
     private static final NodeLogger LOGGER = NodeLogger.getLogger("Deploy R To MSSQL");
 
-    private DeployRToMSSQLNodeSettings m_settings = new DeployRToMSSQLNodeSettings();
+    private RunRInMSSQLNodeSettings m_settings = new RunRInMSSQLNodeSettings();
 
     /**
      * Constructor
      */
-    public DeployRToMSSQLNodeModel() {
+    public RunRInMSSQLNodeModel() {
         super(RSNIPPET_NODE_CONFIG);
     }
 

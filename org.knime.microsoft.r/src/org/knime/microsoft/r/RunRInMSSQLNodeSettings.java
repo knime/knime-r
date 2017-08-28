@@ -51,12 +51,12 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
- * Node Settings for the DeployRToMSSQLNodeModel.
+ * Node Settings for the RunRInMSSQLNodeModel.
  *
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
  */
-final class DeployRToMSSQLNodeSettings {
+final class RunRInMSSQLNodeSettings {
 
     /** Settings key used to store the output table name under. */
     public static final String KEY_OUTPUT_TABLE_NAME = "OutputTableName";

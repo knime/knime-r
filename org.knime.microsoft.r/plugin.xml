@@ -5,7 +5,7 @@
          point="org.knime.workbench.repository.nodes">
       <node
             category-path="/labs/"
-            factory-class="org.knime.microsoft.r.DeployRToMSSQLNodeFactory">
+            factory-class="org.knime.microsoft.r.RunRInMSSQLNodeFactory">
       </node>
    </extension>
 </plugin>
