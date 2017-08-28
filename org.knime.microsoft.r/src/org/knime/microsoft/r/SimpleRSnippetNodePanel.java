@@ -300,11 +300,14 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
         if (isPreview) {
             templateInfoPanel.add(m_templateLocation, BorderLayout.CENTER);
         } else {
-            final JPanel tableNamePanel = new JPanel(new GridLayout(2, 2));
+            final JPanel tableNamePanel = new JPanel(new GridLayout(2, 3));
             tableNamePanel.add(new JLabel("SQL Input Table Name: "));
             tableNamePanel.add(m_sqlInTableNameTextField);
+            tableNamePanel.add(new JLabel("(knime.in)"));
+
             tableNamePanel.add(new JLabel("SQL Output Table Name: "));
             tableNamePanel.add(m_sqlOutTableNameTextField);
+            tableNamePanel.add(new JLabel("(knime.out)"));
 
             final Dimension d = m_sqlOutTableNameTextField.getPreferredSize();
             d.width = 150;
