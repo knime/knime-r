@@ -52,22 +52,22 @@ import org.knime.r.RSnippetNodeFactory;
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
  */
-public final class DeployRToMSSQLNodeFactory extends RSnippetNodeFactory {
+public final class RunRInMSSQLNodeFactory extends RSnippetNodeFactory {
 
     /**
      * Constructor
      */
-    public DeployRToMSSQLNodeFactory() {
-        super(DeployRToMSSQLNodeModel.RSNIPPET_NODE_CONFIG);
+    public RunRInMSSQLNodeFactory() {
+        super(RunRInMSSQLNodeModel.RSNIPPET_NODE_CONFIG);
     }
 
     @Override
-    public DeployRToMSSQLNodeModel createNodeModel() {
-        return new DeployRToMSSQLNodeModel();
+    public RunRInMSSQLNodeModel createNodeModel() {
+        return new RunRInMSSQLNodeModel();
     }
 
     @Override
     protected NodeDialogPane createNodeDialogPane() {
-        return new DeployRToMSSQLNodeDialog(this.getClass(), DeployRToMSSQLNodeModel.RSNIPPET_NODE_CONFIG);
+        return new RunRInMSSQLNodeDialog(this.getClass(), RunRInMSSQLNodeModel.RSNIPPET_NODE_CONFIG);
     }
 }

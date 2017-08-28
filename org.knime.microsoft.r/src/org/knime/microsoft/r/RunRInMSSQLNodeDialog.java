@@ -74,11 +74,11 @@ import org.knime.r.template.TemplatesPanel;
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
  */
-final class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
+final class RunRInMSSQLNodeDialog extends DataAwareNodeDialogPane {
 
     private static final String SNIPPET_TAB = "R Snippet";
 
-    private final DeployRToMSSQLNodeSettings m_settings;
+    private final RunRInMSSQLNodeSettings m_settings;
 
     private final SimpleRSnippetNodePanel m_panel;
 
@@ -94,8 +94,8 @@ final class DeployRToMSSQLNodeDialog extends DataAwareNodeDialogPane {
      * @param templateMetaCategory the meta category used in the templates tab or to create templates
      * @param config R Snippet node config to customize the dialog and node model
      */
-    protected DeployRToMSSQLNodeDialog(final Class<?> templateMetaCategory, final RSnippetNodeConfig config) {
-        m_settings = new DeployRToMSSQLNodeSettings();
+    protected RunRInMSSQLNodeDialog(final Class<?> templateMetaCategory, final RSnippetNodeConfig config) {
+        m_settings = new RunRInMSSQLNodeSettings();
         m_templateMetaCategory = templateMetaCategory;
         m_config = config;
 

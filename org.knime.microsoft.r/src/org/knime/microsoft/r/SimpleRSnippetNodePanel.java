@@ -108,7 +108,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
     /** Generated serialVersionUID */
     private static final long serialVersionUID = 2286323699400964363L;
 
-    private static final NodeLogger LOGGER = NodeLogger.getLogger(DeployRToMSSQLNodeDialog.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RunRInMSSQLNodeDialog.class);
 
     private RSnippetTextArea m_snippetTextArea;
 
@@ -117,7 +117,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
 
     private final RSnippet m_snippet;
 
-    private final DeployRToMSSQLNodeSettings m_settings;
+    private final RunRInMSSQLNodeSettings m_settings;
 
     private final boolean m_isInteractive;
 
@@ -141,7 +141,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
      * @param isInteractive
      */
     public SimpleRSnippetNodePanel(final Class<?> templateMetaCategory, final RSnippetNodeConfig config,
-        final DeployRToMSSQLNodeSettings settings, final boolean isPreview, final boolean isInteractive) {
+        final RunRInMSSQLNodeSettings settings, final boolean isPreview, final boolean isInteractive) {
         super(new BorderLayout());
         m_config = config;
         m_tableInPort = -1;
