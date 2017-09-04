@@ -74,6 +74,7 @@ public class RCorePlugin extends AbstractUIPlugin {
 
     /**
      * This method is called upon plug-in activation.
+     * 
      * @param context The bundle context.
      * @throws Exception If cause by super class.
      */
@@ -85,6 +86,7 @@ public class RCorePlugin extends AbstractUIPlugin {
 
     /**
      * This method is called when the plug-in is stopped.
+     * 
      * @param context The bundle context.
      * @throws Exception If cause by super class.
      */
@@ -104,8 +106,7 @@ public class RCorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * Returns an image descriptor for the image file at the given plug-in
-     * relative path.
+     * Returns an image descriptor for the image file at the given plug-in relative path.
      *
      * @param path the path
      * @return the image descriptor

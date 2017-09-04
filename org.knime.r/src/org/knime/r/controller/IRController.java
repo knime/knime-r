@@ -71,82 +71,81 @@ import org.rosuda.REngine.Rserve.RConnection;
  */
 public interface IRController extends AutoCloseable {
 
-	/**
-	 * Marker class for exceptions during R configuration or execution.
-	 *
-	 * @author Jonathan Hale, KNIME, Konstanz, Germany
-	 */
-	public static class RException extends Exception {
-		/** Generated serialVersionUID */
-		private static final long serialVersionUID = -167928539964071316L;
+    /**
+     * Marker class for exceptions during R configuration or execution.
+     *
+     * @author Jonathan Hale, KNIME, Konstanz, Germany
+     */
+    public static class RException extends Exception {
+        /** Generated serialVersionUID */
+        private static final long serialVersionUID = -167928539964071316L;
 
-		/** Message constants */
-		public static String MSG_EVAL_FAILED = "R evaluation failed.";
+        /** Message constants */
+        public static String MSG_EVAL_FAILED = "R evaluation failed.";
 
-		/**
-		 * Constructor
-		 * @param msg Message
-		 * @param cause Cause (parent exception)
-		 */
-		public RException(final String msg, final Throwable cause) {
-			super(msg, cause);
-		}
-	}
+        /**
+         * Constructor
+         * 
+         * @param msg Message
+         * @param cause Cause (parent exception)
+         */
+        public RException(final String msg, final Throwable cause) {
+            super(msg, cause);
+        }
+    }
 
-	/**
-	 * Marker class for exception occurring when trying to use RController when
-	 * not initialized.
-	 *
-	 * @author Jonathan Hale
-	 */
-	public static class RControllerNotInitializedException extends RuntimeException {
-		/** Generated serialVersionUID */
-		private static final long serialVersionUID = 3788368549686421509L;
+    /**
+     * Marker class for exception occurring when trying to use RController when not initialized.
+     *
+     * @author Jonathan Hale
+     */
+    public static class RControllerNotInitializedException extends RuntimeException {
+        /** Generated serialVersionUID */
+        private static final long serialVersionUID = 3788368549686421509L;
 
-		/**
-		 * Constructor
-		 */
-		public RControllerNotInitializedException() {
-			super("CODING PROBLEM\tRController was not initalized at this point.");
-		}
-	}
+        /**
+         * Constructor
+         */
+        public RControllerNotInitializedException() {
+            super("CODING PROBLEM\tRController was not initalized at this point.");
+        }
+    }
 
-	/**
-	 * Initialize everything which may fail. This includes starting up
-	 * servers/checking for libraries etc.
-	 *
-	 * @throws RException
-	 */
-	void initialize() throws RException;
+    /**
+     * Initialize everything which may fail. This includes starting up servers/checking for libraries etc.
+     *
+     * @throws RException
+     */
+    void initialize() throws RException;
 
-	/**
-	 * @return <code>true</code> if {@link #initialize()} was called on this
-	 *         instance and {@link #close()} has not been called since.
-	 */
-	boolean isInitialized();
+    /**
+     * @return <code>true</code> if {@link #initialize()} was called on this instance and {@link #close()} has not been
+     *         called since.
+     */
+    boolean isInitialized();
 
-	/**
-	 * Set whether to use {@link NodeContext}s for Threads.
-	 *
-	 * @param useNodeContext Whether to use node contexts
-	 * @see ThreadUtils#threadWithContext(Runnable)
-	 * @see ThreadUtils#threadWithContext(Runnable, String)
-	 * @see IRController#isUsingNodeContext()
-	 */
-	void setUseNodeContext(boolean useNodeContext);
+    /**
+     * Set whether to use {@link NodeContext}s for Threads.
+     *
+     * @param useNodeContext Whether to use node contexts
+     * @see ThreadUtils#threadWithContext(Runnable)
+     * @see ThreadUtils#threadWithContext(Runnable, String)
+     * @see IRController#isUsingNodeContext()
+     */
+    void setUseNodeContext(boolean useNodeContext);
 
-	/**
-	 * @return <code>true</code> if currently using NodeContexts in threads.
-	 * @see IRController#setUseNodeContext(boolean)
-	 */
-	boolean isUsingNodeContext();
+    /**
+     * @return <code>true</code> if currently using NodeContexts in threads.
+     * @see IRController#setUseNodeContext(boolean)
+     */
+    boolean isUsingNodeContext();
 
-	/**
-	 * @return The underlying REngine (usually an {@link RConnection})
-	 */
-	RConnection getREngine();
+    /**
+     * @return The underlying REngine (usually an {@link RConnection})
+     */
+    RConnection getREngine();
 
-	/**
+    /**
      * Evaluate R code. This may have side effects on the workspace of the RController.
      *
      * @param expr R expression
@@ -156,188 +155,157 @@ public interface IRController extends AutoCloseable {
      * @return result of evaluation.
      * @throws RException
      */
-	REXP eval(String expr, boolean resolve) throws RException;
+    REXP eval(String expr, boolean resolve) throws RException;
 
-	/**
+    /**
      * Evaluate R code in a separate thread to be able to cancel it.
      *
      * @param cmd The R command
      * @param exec only used for checking if execution is cancelled.
      * @param resolve Whether to resolve the resulting reference
      * @return Result of the evaluation, either a reference (if resolve is false) or the resolved value.
-	 * @throws RException
+     * @throws RException
      * @throws CanceledExecutionException
-	 * @throws InterruptedException
+     * @throws InterruptedException
      */
-	REXP monitoredEval(String cmd, ExecutionMonitor exec, boolean resolve)
-			throws RException, CanceledExecutionException, InterruptedException;
+    REXP monitoredEval(String cmd, ExecutionMonitor exec, boolean resolve)
+        throws RException, CanceledExecutionException, InterruptedException;
 
-	/**
-	 * Assign a String to an R variable.
-	 *
-	 * @param expr
-	 *            Expression to assign the value to. Usually a variable name
-	 * @param value
-	 *            Value to assign
-	 * @throws RException
-	 */
-	void assign(String expr, String value) throws RException;
+    /**
+     * Assign a String to an R variable.
+     *
+     * @param expr Expression to assign the value to. Usually a variable name
+     * @param value Value to assign
+     * @throws RException
+     */
+    void assign(String expr, String value) throws RException;
 
-	/**
-	 * Assign an REXP an R variable.
-	 *
-	 * @param expr
-	 *            Expression to assign the value to. Usually a variable name
-	 * @param value
-	 *            Value to assign
-	 * @throws RException
-	 */
-	void assign(String expr, REXP value) throws RException;
+    /**
+     * Assign an REXP an R variable.
+     *
+     * @param expr Expression to assign the value to. Usually a variable name
+     * @param value Value to assign
+     * @throws RException
+     */
+    void assign(String expr, REXP value) throws RException;
 
-	/**
-	 * Assign an R variable in a separate thread to be able to cancel it.
-	 *
-	 * @param symbol R variable name
-	 * @param value REXP value to assign to the variable
-	 * @param exec Execution Monitor
-	 * @throws RException
-	 * @throws CanceledExecutionException
-	 * @throws InterruptedException
-	 * @see #monitoredEval(String, ExecutionMonitor, boolean)
-	 * @see #assign(String, REXP)
-	 */
-	void monitoredAssign(String symbol, REXP value, ExecutionMonitor exec)
-			throws RException, CanceledExecutionException, InterruptedException;
+    /**
+     * Assign an R variable in a separate thread to be able to cancel it.
+     *
+     * @param symbol R variable name
+     * @param value REXP value to assign to the variable
+     * @param exec Execution Monitor
+     * @throws RException
+     * @throws CanceledExecutionException
+     * @throws InterruptedException
+     * @see #monitoredEval(String, ExecutionMonitor, boolean)
+     * @see #assign(String, REXP)
+     */
+    void monitoredAssign(String symbol, REXP value, ExecutionMonitor exec)
+        throws RException, CanceledExecutionException, InterruptedException;
 
-	/**
-	 * Clear the R workspace (remove all variables and imported packages).
-	 *
-	 * @param exec Execution Monitor
-	 * @throws RException
-	 * @throws CanceledExecutionException
-	 */
-	void clearWorkspace(ExecutionMonitor exec) throws RException, CanceledExecutionException;
+    /**
+     * Clear the R workspace (remove all variables and imported packages).
+     *
+     * @param exec Execution Monitor
+     * @throws RException
+     * @throws CanceledExecutionException
+     */
+    void clearWorkspace(ExecutionMonitor exec) throws RException, CanceledExecutionException;
 
-	/**
-	 * @param workspaceFile R workspace file to read
-	 * @param tempWorkspaceFile
-	 *            the workspace file
-	 * @param exec
-	 *            execution monitor to report progress on
-	 * @return List of libraries which were previously imported in the
-	 *         workspace. See {@link #importListOfLibrariesAndDelete()}.
-	 * @throws RException
-	 * @throws CanceledExecutionException
-	 */
-	List<String> clearAndReadWorkspace(final File workspaceFile, final ExecutionMonitor exec)
-			throws RException, CanceledExecutionException;
+    /**
+     * @param workspaceFile R workspace file to read
+     * @param tempWorkspaceFile the workspace file
+     * @param exec execution monitor to report progress on
+     * @return List of libraries which were previously imported in the workspace. See
+     *         {@link #importListOfLibrariesAndDelete()}.
+     * @throws RException
+     * @throws CanceledExecutionException
+     */
+    List<String> clearAndReadWorkspace(final File workspaceFile, final ExecutionMonitor exec)
+        throws RException, CanceledExecutionException;
 
-	/**
-	 * Write R variables into a R variable in the current workspace
-	 *
-	 * @param inFlowVariables Flow variables to export into the R workspace
-	 * @param name Name for the R variable to contain the flow variables
-	 * @param exec Execution monitor
-	 * @throws RException
-	 * @throws CanceledExecutionException
-	 */
-	void exportFlowVariables(Collection<FlowVariable> inFlowVariables, String name, ExecutionMonitor exec)
-			throws RException, CanceledExecutionException;
+    /**
+     * Write R variables into a R variable in the current workspace
+     *
+     * @param inFlowVariables Flow variables to export into the R workspace
+     * @param name Name for the R variable to contain the flow variables
+     * @param exec Execution monitor
+     * @throws RException
+     * @throws CanceledExecutionException
+     */
+    void exportFlowVariables(Collection<FlowVariable> inFlowVariables, String name, ExecutionMonitor exec)
+        throws RException, CanceledExecutionException;
 
-	/**
-	 * Get flow variables from a R variable.
-	 *
-	 * @param variableName
-	 *            Name of the variable to get the {@link FlowVariable}s from.
-	 * @return The extracted flow variables.
-	 * @throws RException
-	 *             If an R related error occurred during execution.
-	 */
-	Collection<FlowVariable> importFlowVariables(String variableName) throws RException;
+    /**
+     * Get flow variables from a R variable.
+     *
+     * @param variableName Name of the variable to get the {@link FlowVariable}s from.
+     * @return The extracted flow variables.
+     * @throws RException If an R related error occurred during execution.
+     */
+    Collection<FlowVariable> importFlowVariables(String variableName) throws RException;
 
-	/**
-	 * Assign a {@link BufferedDataTable} to a R variable in the current
-	 * workspace.
-	 *
-	 * @param symbol
-	 *            R variable to assign to.
-	 * @param value
-	 *            The table to assign to the variable.
-	 * @param exec
-	 *            For monitoring the progress.
-	 * @param batchSize
-	 *            max number of rows to send to R per batch.
-	 * @param type
-	 *            R type for "symbol" to provide the table data as
-	 * @param sendRowNames
-	 *            Whether to send names of rows to R with the input table
-	 * @throws RException
-	 *             If an R related error occurred during execution.
-	 * @throws CanceledExecutionException
-	 *             If execution was cancelled.
-	 * @throws InterruptedException
-	 *             If a thread was interrupted.
-	 */
-	void monitoredAssign(String symbol, BufferedDataTable value, ExecutionMonitor exec, int batchSize, String type, boolean sendRowNames)
-			throws RException, CanceledExecutionException, InterruptedException;
+    /**
+     * Assign a {@link BufferedDataTable} to a R variable in the current workspace.
+     *
+     * @param symbol R variable to assign to.
+     * @param value The table to assign to the variable.
+     * @param exec For monitoring the progress.
+     * @param batchSize max number of rows to send to R per batch.
+     * @param type R type for "symbol" to provide the table data as
+     * @param sendRowNames Whether to send names of rows to R with the input table
+     * @throws RException If an R related error occurred during execution.
+     * @throws CanceledExecutionException If execution was cancelled.
+     * @throws InterruptedException If a thread was interrupted.
+     */
+    void monitoredAssign(String symbol, BufferedDataTable value, ExecutionMonitor exec, int batchSize, String type,
+        boolean sendRowNames) throws RException, CanceledExecutionException, InterruptedException;
 
-	/**
-	 * Import a BufferedDataTable from the R expression <code>string</code>.
-	 *
-	 * @param string
-	 *            R expression (variable for e.g.) to retrieve a data.frame
-	 *            which is then converted into a BufferedDataTable.
-	 * @param nonNumbersAsMissing
-	 *            Convert NaN and Infinity to {@link MissingCell}.
-	 * @param exec
-	 *            Execution context for creating the table and monitoring
-	 *            execution.
-	 * @return The created BufferedDataTable.
-	 * @throws RException
-	 * @throws CanceledExecutionException
-	 */
-	BufferedDataTable importBufferedDataTable(String string, boolean nonNumbersAsMissing, ExecutionContext exec)
-			throws RException, CanceledExecutionException;
+    /**
+     * Import a BufferedDataTable from the R expression <code>string</code>.
+     *
+     * @param string R expression (variable for e.g.) to retrieve a data.frame which is then converted into a
+     *            BufferedDataTable.
+     * @param nonNumbersAsMissing Convert NaN and Infinity to {@link MissingCell}.
+     * @param exec Execution context for creating the table and monitoring execution.
+     * @return The created BufferedDataTable.
+     * @throws RException
+     * @throws CanceledExecutionException
+     */
+    BufferedDataTable importBufferedDataTable(String string, boolean nonNumbersAsMissing, ExecutionContext exec)
+        throws RException, CanceledExecutionException;
 
-	/**
-	 * Get list of libraries imported in the current session and then delete
-	 * those imports.
-	 *
-	 * @return The list of deleted imports
-	 * @throws RException
-	 */
-	List<String> importListOfLibrariesAndDelete() throws RException;
+    /**
+     * Get list of libraries imported in the current session and then delete those imports.
+     *
+     * @return The list of deleted imports
+     * @throws RException
+     */
+    List<String> importListOfLibrariesAndDelete() throws RException;
 
-	/**
-	 * Save the workspace in the current R session to the specified file.
-	 *
-	 * @param workspaceFile
-	 *            File to save the workspace to.
-	 * @param exec
-	 *            For monitoring the progress.
-	 * @throws RException
-	 *             If an R related error occurred during execution.
-	 * @throws CanceledExecutionException
-	 *             If execution was cancelled.
-	 */
-	void saveWorkspace(File workspaceFile, ExecutionMonitor exec) throws RException, CanceledExecutionException;
+    /**
+     * Save the workspace in the current R session to the specified file.
+     *
+     * @param workspaceFile File to save the workspace to.
+     * @param exec For monitoring the progress.
+     * @throws RException If an R related error occurred during execution.
+     * @throws CanceledExecutionException If execution was cancelled.
+     */
+    void saveWorkspace(File workspaceFile, ExecutionMonitor exec) throws RException, CanceledExecutionException;
 
-	/**
-	 * Import RInputPorts and BufferedDataTables into the current R workspace.
-	 *
-	 * @param inData
-	 *            ports to import
-	 * @param exec
-	 *            For monitoring the progess.
-	 * @param batchSize
-	 *            max number of rows to send to R per batch.
-	 * @param rType
-	 *            R type for "symbol" to provide the table data as
-	 * @param sendRowNames
-	 *            Whether to send row names of input tables to R
-	 * @throws RException
-	 * @throws CanceledExecutionException
-	 */
-	void importDataFromPorts(PortObject[] inData, ExecutionMonitor exec, final int batchSize, final String rType, final boolean sendRowNames) throws RException, CanceledExecutionException;
+    /**
+     * Import RInputPorts and BufferedDataTables into the current R workspace.
+     *
+     * @param inData ports to import
+     * @param exec For monitoring the progess.
+     * @param batchSize max number of rows to send to R per batch.
+     * @param rType R type for "symbol" to provide the table data as
+     * @param sendRowNames Whether to send row names of input tables to R
+     * @throws RException
+     * @throws CanceledExecutionException
+     */
+    void importDataFromPorts(PortObject[] inData, ExecutionMonitor exec, final int batchSize, final String rType,
+        final boolean sendRowNames) throws RException, CanceledExecutionException;
 
 }

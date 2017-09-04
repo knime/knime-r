@@ -55,6 +55,7 @@ package org.knime.r.template;
 public interface TemplateRepositoryProvider {
     /**
      * Get the repository.
+     * 
      * @return the repository
      */
     public TemplateRepository getRepository();

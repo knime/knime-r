@@ -41,21 +41,21 @@
  *  may freely choose the license terms applicable to such Node, including
  *  when such Node is propagated with or for interoperation with KNIME.
  * ------------------------------------------------------------------------
- * 
+ *
  */
 package org.knime.ext.r.node;
 
+import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.knime.core.node.NodeDialogPane;
 
 /**
  * <code>NodeFactory</code> for R Console.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 public class RConsoleFactory extends NodeFactory<RConsoleModel> {
-    
+
     /**
      * {@inheritDoc}
      */
@@ -76,8 +76,7 @@ public class RConsoleFactory extends NodeFactory<RConsoleModel> {
      * {@inheritDoc}
      */
     @Override
-    public NodeView<RConsoleModel> createNodeView(final int viewIndex,
-            final RConsoleModel nodeModel) {
+    public NodeView<RConsoleModel> createNodeView(final int viewIndex, final RConsoleModel nodeModel) {
         return null;
     }
 

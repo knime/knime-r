@@ -50,25 +50,25 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
  * Generic node factory for all R nodes.
- * 
+ *
  * @author Thomas Gabriel, KNIME.com, Zurich
  *
  * @param <T> typed node model derived from <code>RAbstractLocalNodeModel</code>
  */
-public abstract class RNodeFactory<T extends RAbstractLocalNodeModel> 
-        extends NodeFactory<T> {
-    
-    private final RPreferenceProvider m_pref; 
-    
+public abstract class RNodeFactory<T extends RAbstractLocalNodeModel> extends NodeFactory<T> {
+
+    private final RPreferenceProvider m_pref;
+
     /**
      * Node factory used for all local R nodes.
+     * 
      * @param pref a preference provider
      */
     public RNodeFactory(final RPreferenceProvider pref) {
         super();
         m_pref = pref;
     }
-    
+
     /**
      * @return R preference provider
      */

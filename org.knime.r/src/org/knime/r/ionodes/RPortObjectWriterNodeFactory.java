@@ -49,10 +49,11 @@ import org.knime.ext.r.node.local.port.RPortObject;
 
 /**
  * Factory for R port object writer
+ * 
  * @author Bernd Wiswedel, University of Konstanz
  */
 public class RPortObjectWriterNodeFactory extends PortObjectWriterNodeFactory {
-    
+
     /** defines input type. */
     public RPortObjectWriterNodeFactory() {
         super(RPortObject.TYPE);

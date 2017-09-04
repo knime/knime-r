@@ -64,11 +64,11 @@ import org.knime.r.RSnippetDocument;
  */
 @SuppressWarnings("serial")
 public class RSnippetTextArea extends RSyntaxTextArea {
-    private static final NodeLogger LOGGER =
-        NodeLogger.getLogger(RSnippetTextArea.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RSnippetTextArea.class);
 
     /**
      * Create a new component.
+     * 
      * @param snippet the snippet
      */
     public RSnippetTextArea(final RSnippet snippet) {
@@ -80,7 +80,7 @@ public class RSnippetTextArea extends RSyntaxTextArea {
 
         try {
             applySyntaxColors();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOGGER.debug(e.getMessage(), e);
         }
 
@@ -90,14 +90,12 @@ public class RSnippetTextArea extends RSyntaxTextArea {
 //        LanguageSupportFactory.get().register(this);
     }
 
-
     private void applySyntaxColors() throws IOException {
-        Package pack = RSnippetTextArea.class.getPackage();
-        String base = pack.getName().replace(".", "/") + "/";
-        URL url = this.getClass().getClassLoader()
-                .getResource(base + "r_syntax_style.xml");
-        InputStream in = url.openStream();
-        Theme theme = Theme.load(in);
+        final Package pack = RSnippetTextArea.class.getPackage();
+        final String base = pack.getName().replace(".", "/") + "/";
+        final URL url = this.getClass().getClassLoader().getResource(base + "r_syntax_style.xml");
+        final InputStream in = url.openStream();
+        final Theme theme = Theme.load(in);
         theme.apply(this);
     }
 }

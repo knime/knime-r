@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Test;
-import org.junit.internal.ArrayComparisonFailure;
 import org.knime.r.controller.IRController.RException;
 import org.knime.r.rserve.RConnectionFactory;
 import org.knime.r.rserve.RConnectionFactory.RConnectionResource;
@@ -116,7 +115,7 @@ public class RConnectionFactoryTest {
 	 * @throws InterruptedException
 	 * @throws IOException
 	 * @throws REXPMismatchException
-	 * @throws RException 
+	 * @throws RException
 	 */
 	@Test
 	public void ensureNoWorkspaceLeaking()

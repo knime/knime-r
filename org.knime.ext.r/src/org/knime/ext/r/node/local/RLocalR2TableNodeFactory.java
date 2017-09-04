@@ -84,14 +84,12 @@ public class RLocalR2TableNodeFactory extends RNodeFactory<RLocalR2TableNodeMode
      * {@inheritDoc}
      */
     @Override
-    public ExtToolOutputNodeView<RLocalR2TableNodeModel> createNodeView(
-            final int viewIndex, final RLocalR2TableNodeModel nodeModel) {
+    public ExtToolOutputNodeView<RLocalR2TableNodeModel> createNodeView(final int viewIndex,
+        final RLocalR2TableNodeModel nodeModel) {
         if (viewIndex == 0) {
-            return
-                new ExtToolStdoutNodeView<RLocalR2TableNodeModel>(nodeModel);
+            return new ExtToolStdoutNodeView<RLocalR2TableNodeModel>(nodeModel);
         } else if (viewIndex == 1) {
-            return
-                new ExtToolStderrNodeView<RLocalR2TableNodeModel>(nodeModel);
+            return new ExtToolStderrNodeView<RLocalR2TableNodeModel>(nodeModel);
         }
         return null;
     }

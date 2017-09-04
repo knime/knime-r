@@ -65,7 +65,8 @@ import org.osgi.framework.FrameworkUtil;
  * @author Thorsten Meinl, KNIME.com, Zurich, Switzerland
  */
 public final class RPathUtil {
-    private RPathUtil() {}
+    private RPathUtil() {
+    }
 
     private static File packagedRExecutable;
 
@@ -74,7 +75,6 @@ public final class RPathUtil {
     private static File systemRExecutable;
 
     private static File systemRHome;
-
 
     static {
         findPackagedR();
@@ -85,9 +85,8 @@ public final class RPathUtil {
         }
     }
 
-
     private static void findPackagedR() {
-        Bundle bundle = FrameworkUtil.getBundle(RPathUtil.class);
+        final Bundle bundle = FrameworkUtil.getBundle(RPathUtil.class);
         Enumeration<URL> e = bundle.findEntries("/R-Inst/bin", "R.exe", false);
         URL url = null;
         if ((e != null) && e.hasMoreElements()) {
@@ -103,29 +102,28 @@ public final class RPathUtil {
                 packagedRExecutable = new File(FileLocator.toFileURL(url).getFile());
                 File RInstDir = packagedRExecutable.getParentFile(); // parent is either /bin or /i386
                 do {
-                   RInstDir = RInstDir.getParentFile();
-                } while(!"R-Inst".equals(RInstDir.getName()));
+                    RInstDir = RInstDir.getParentFile();
+                } while (!"R-Inst".equals(RInstDir.getName()));
                 packagedRHome = RInstDir;
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 NodeLogger.getLogger(RPathUtil.class).info("Could not locate packaged R executable", ex);
             }
         }
     }
 
-
     private static void findSystemRWindows() {
-        FileFilter ff = new FileFilter() {
+        final FileFilter ff = new FileFilter() {
             @Override
             public boolean accept(final File pathname) {
                 return pathname.isDirectory() && pathname.getName().startsWith("R-");
             }
         };
 
-        File programFiles = new File(System.getenv("ProgramFiles"));
-        for (File dir : programFiles.listFiles(ff)) {
-            File binDir = new File(dir, "bin");
+        final File programFiles = new File(System.getenv("ProgramFiles"));
+        for (final File dir : programFiles.listFiles(ff)) {
+            final File binDir = new File(dir, "bin");
             if (binDir.isDirectory()) {
-                File executable = new File(binDir, "R.exe");
+                final File executable = new File(binDir, "R.exe");
                 if (executable.isFile()) {
                     systemRHome = dir;
                     systemRExecutable = executable;
@@ -135,29 +133,26 @@ public final class RPathUtil {
         }
     }
 
-
     private static void findSystemRUnix() {
         String[] searchPaths = {"/usr/bin/R", "/usr/local/bin/R"};
-        for (String s : searchPaths) {
-            File f = new File(s);
+        for (final String s : searchPaths) {
+            final File f = new File(s);
             if (f.canExecute()) {
                 systemRExecutable = f;
                 break;
             }
         }
 
-        searchPaths =
-            new String[]{"/usr/lib64/R", "/usr/lib/R", "/usr/local/lib64/R", "/usr/local/lib/R",
-                "/Library/Frameworks/R.framework/Resources"};
-        for (String s : searchPaths) {
-            File f = new File(s, "bin");
+        searchPaths = new String[]{"/usr/lib64/R", "/usr/lib/R", "/usr/local/lib64/R", "/usr/local/lib/R",
+            "/Library/Frameworks/R.framework/Resources"};
+        for (final String s : searchPaths) {
+            final File f = new File(s, "bin");
             if (f.isDirectory()) {
                 systemRHome = f.getParentFile();
                 break;
             }
         }
     }
-
 
     /**
      * Returns the path to the executable of a packaged R installation if one exists.
@@ -168,7 +163,6 @@ public final class RPathUtil {
         return packagedRExecutable;
     }
 
-
     /**
      * Returns the path to a packaged R installation.
      *
@@ -177,7 +171,6 @@ public final class RPathUtil {
     public static File getPackagedRHome() {
         return packagedRHome;
     }
-
 
     /**
      * Returns the path to the executable of an R installation in the operating system if one exists. The search is
@@ -190,11 +183,9 @@ public final class RPathUtil {
         return systemRExecutable;
     }
 
-
     /**
-     * Returns the path to an R installation in the operating system if one exists. The search is
-     * performed by looking at common places such as <tt>/usr/lib</tt> under Linux or <tt>C:/Program Files/</tt> under
-     * Windows.
+     * Returns the path to an R installation in the operating system if one exists. The search is performed by looking
+     * at common places such as <tt>/usr/lib</tt> under Linux or <tt>C:/Program Files/</tt> under Windows.
      *
      * @return the R installation directory or <code>null</code> if no system installation was found
      */

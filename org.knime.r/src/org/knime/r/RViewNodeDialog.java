@@ -81,282 +81,285 @@ import org.knime.r.template.TemplatesPanel;
  * @author Heiko Hofer
  */
 public class RViewNodeDialog extends DataAwareNodeDialogPane {
-	private static final NodeLogger LOGGER = NodeLogger.getLogger(RViewNodeDialog.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RViewNodeDialog.class);
 
-	private static final String SNIPPET_TAB = "R Snippet";
-	private static final String PNG_SETTINGS_TAB = "PNG Settings";
+    private static final String SNIPPET_TAB = "R Snippet";
 
-	private final RViewNodeSettings m_settings;
-	private final RSnippetNodePanel m_panel;
-	private DefaultTemplateController m_templatesController;
+    private static final String PNG_SETTINGS_TAB = "PNG Settings";
 
-	private final Class<?> m_templateMetaCategory;
-	private final RSnippetNodeConfig m_config;
-	private int m_tableInPort;
+    private final RViewNodeSettings m_settings;
 
-	private JTextField m_imgWidth;
+    private final RSnippetNodePanel m_panel;
 
-	private JTextField m_imgHeight;
+    private DefaultTemplateController m_templatesController;
 
-	private JTextField m_imgResolution;
+    private final Class<?> m_templateMetaCategory;
 
-	private JTextField m_textPointSize;
+    private final RSnippetNodeConfig m_config;
 
-	private JTextField m_imgBackgroundColor;
+    private int m_tableInPort;
 
-	/**
-	 * Create a new Dialog.
-	 *
-	 * @param templateMetaCategory
-	 *            the meta category used in the templates tab or to create
-	 *            templates
-	 */
-	protected RViewNodeDialog(final Class<?> templateMetaCategory, final RSnippetNodeConfig config) {
-		m_settings = new RViewNodeSettings();
-		m_templateMetaCategory = templateMetaCategory;
-		m_config = config;
-		m_tableInPort = -1;
-		int i = 0;
-		for (final PortType portType : m_config.getInPortTypes()) {
-			if (portType.equals(BufferedDataTable.TYPE)) {
-				m_tableInPort = i;
-			}
-			i++;
-		}
+    private JTextField m_imgWidth;
 
-		m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, true) {
+    private JTextField m_imgHeight;
 
-			/**
-			 *
-			 */
-			private static final long serialVersionUID = -1154071447343773118L;
+    private JTextField m_imgResolution;
 
-			@Override
-			public void applyTemplate(final RSnippetTemplate template, final DataTableSpec spec,
-					final Map<String, FlowVariable> flowVariables) {
-				super.applyTemplate(template, spec, flowVariables);
-				setSelected(SNIPPET_TAB);
-			}
+    private JTextField m_textPointSize;
 
-			@Override
-			protected Dimension getPreviewImageDimensions() {
-				return new Dimension(m_settings.getImageWidth(), m_settings.getImageHeight());
-			}
+    private JTextField m_imgBackgroundColor;
 
-		};
+    /**
+     * Create a new Dialog.
+     *
+     * @param templateMetaCategory the meta category used in the templates tab or to create templates
+     */
+    protected RViewNodeDialog(final Class<?> templateMetaCategory, final RSnippetNodeConfig config) {
+        m_settings = new RViewNodeSettings();
+        m_templateMetaCategory = templateMetaCategory;
+        m_config = config;
+        m_tableInPort = -1;
+        int i = 0;
+        for (final PortType portType : m_config.getInPortTypes()) {
+            if (portType.equals(BufferedDataTable.TYPE)) {
+                m_tableInPort = i;
+            }
+            i++;
+        }
 
-		addTab(SNIPPET_TAB, m_panel);
-		addTab(PNG_SETTINGS_TAB, createPNGSettingsPanel());
-		// The preview does not have the templates tab
-		addTab("Templates", createTemplatesPanel());
+        m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, true) {
 
-		m_panel.setPreferredSize(new Dimension(800, 600));
-	}
+            /**
+             *
+             */
+            private static final long serialVersionUID = -1154071447343773118L;
 
-	private JPanel createPNGSettingsPanel() {
-		final JPanel p = new JPanel(new GridBagLayout());
-		final GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.BASELINE;
-		c.insets = new Insets(2, 2, 2, 2);
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 0;
-		c.weighty = 0;
+            @Override
+            public void applyTemplate(final RSnippetTemplate template, final DataTableSpec spec,
+                final Map<String, FlowVariable> flowVariables) {
+                super.applyTemplate(template, spec, flowVariables);
+                setSelected(SNIPPET_TAB);
+            }
 
-		new Insets(3, 8, 3, 8);
-		new Insets(3, 0, 3, 8);
-		final Insets leftCategoryInsets = new Insets(11, 8, 3, 8);
-		new Insets(11, 0, 3, 8);
+            @Override
+            protected Dimension getPreviewImageDimensions() {
+                return new Dimension(m_settings.getImageWidth(), m_settings.getImageHeight());
+            }
 
-		c.gridx = 0;
-		c.insets = leftCategoryInsets;
-		c.gridwidth = 1;
-		c.weightx = 1;
-		final JPanel imagePanel = createImagePanel();
-		imagePanel.setBorder(BorderFactory.createTitledBorder("Image"));
-		p.add(imagePanel, c);
+        };
 
-		c.gridy++;
-		final JPanel appearancePanel = createAppearancePanel();
-		appearancePanel.setBorder(BorderFactory.createTitledBorder("Appearance"));
-		p.add(appearancePanel, c);
+        addTab(SNIPPET_TAB, m_panel);
+        addTab(PNG_SETTINGS_TAB, createPNGSettingsPanel());
+        // The preview does not have the templates tab
+        addTab("Templates", createTemplatesPanel());
 
-		c.gridy++;
-		c.weighty = 1;
-		p.add(new JPanel(), c);
-		return p;
-	}
+        m_panel.setPreferredSize(new Dimension(800, 600));
+    }
 
-	private JPanel createImagePanel() {
-		final JPanel p = new JPanel(new GridBagLayout());
-		final GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.BASELINE;
-		c.insets = new Insets(2, 2, 2, 2);
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 0;
-		c.weighty = 0;
+    private JPanel createPNGSettingsPanel() {
+        final JPanel p = new JPanel(new GridBagLayout());
+        final GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.BASELINE;
+        c.insets = new Insets(2, 2, 2, 2);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.weighty = 0;
 
-		final Insets leftInsets = new Insets(3, 0, 3, 8);
-		final Insets rightInsets = new Insets(3, 0, 3, 0);
-		final Insets leftCategoryInsets = new Insets(0, 0, 3, 8);
-		final Insets rightCategoryInsets = new Insets(0, 0, 3, 0);
+        new Insets(3, 8, 3, 8);
+        new Insets(3, 0, 3, 8);
+        final Insets leftCategoryInsets = new Insets(11, 8, 3, 8);
+        new Insets(11, 0, 3, 8);
 
-		c.gridx = 0;
-		c.insets = leftCategoryInsets;
-		c.gridwidth = 1;
-		c.weightx = 0;
-		p.add(new JLabel("Width (in Pixel):"), c);
-		c.gridx = 1;
-		c.insets = rightCategoryInsets;
-		c.weightx = 1;
-		m_imgWidth = new JTextField();
-		p.add(m_imgWidth, c);
+        c.gridx = 0;
+        c.insets = leftCategoryInsets;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        final JPanel imagePanel = createImagePanel();
+        imagePanel.setBorder(BorderFactory.createTitledBorder("Image"));
+        p.add(imagePanel, c);
 
-		c.gridy++;
-		c.gridx = 0;
-		c.insets = leftInsets;
-		c.gridwidth = 1;
-		c.weightx = 0;
-		p.add(new JLabel("Height (in Pixel):"), c);
-		c.gridx = 1;
-		c.insets = rightInsets;
-		c.weightx = 1;
-		m_imgHeight = new JTextField();
-		p.add(m_imgHeight, c);
+        c.gridy++;
+        final JPanel appearancePanel = createAppearancePanel();
+        appearancePanel.setBorder(BorderFactory.createTitledBorder("Appearance"));
+        p.add(appearancePanel, c);
 
-		c.gridy++;
-		c.gridx = 0;
-		c.insets = leftInsets;
-		c.gridwidth = 1;
-		c.weightx = 0;
-		p.add(new JLabel("Resolution (dpi):"), c);
-		c.gridx = 1;
-		c.insets = rightInsets;
-		c.weightx = 1;
-		m_imgResolution = new JTextField();
-		p.add(m_imgResolution, c);
+        c.gridy++;
+        c.weighty = 1;
+        p.add(new JPanel(), c);
+        return p;
+    }
 
-		return p;
-	}
+    private JPanel createImagePanel() {
+        final JPanel p = new JPanel(new GridBagLayout());
+        final GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.BASELINE;
+        c.insets = new Insets(2, 2, 2, 2);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.weighty = 0;
 
-	private JPanel createAppearancePanel() {
-		final JPanel p = new JPanel(new GridBagLayout());
-		final GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.BASELINE;
-		c.insets = new Insets(2, 2, 2, 2);
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 0;
-		c.weighty = 0;
+        final Insets leftInsets = new Insets(3, 0, 3, 8);
+        final Insets rightInsets = new Insets(3, 0, 3, 0);
+        final Insets leftCategoryInsets = new Insets(0, 0, 3, 8);
+        final Insets rightCategoryInsets = new Insets(0, 0, 3, 0);
 
-		final Insets leftInsets = new Insets(3, 0, 3, 8);
-		final Insets rightInsets = new Insets(3, 0, 3, 0);
-		new Insets(0, 0, 3, 8);
-		new Insets(0, 0, 3, 0);
+        c.gridx = 0;
+        c.insets = leftCategoryInsets;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        p.add(new JLabel("Width (in Pixel):"), c);
+        c.gridx = 1;
+        c.insets = rightCategoryInsets;
+        c.weightx = 1;
+        m_imgWidth = new JTextField();
+        p.add(m_imgWidth, c);
 
-		c.gridy++;
-		c.gridx = 0;
-		c.insets = leftInsets;
-		c.gridwidth = 1;
-		c.weightx = 0;
-		p.add(new JLabel("Text point size:"), c);
-		c.gridx = 1;
-		c.insets = rightInsets;
-		c.weightx = 1;
-		m_textPointSize = new JTextField();
-		p.add(m_textPointSize, c);
+        c.gridy++;
+        c.gridx = 0;
+        c.insets = leftInsets;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        p.add(new JLabel("Height (in Pixel):"), c);
+        c.gridx = 1;
+        c.insets = rightInsets;
+        c.weightx = 1;
+        m_imgHeight = new JTextField();
+        p.add(m_imgHeight, c);
 
-		c.gridy++;
-		c.gridx = 0;
-		c.insets = leftInsets;
-		c.gridwidth = 1;
-		c.weightx = 0;
-		p.add(new JLabel("Background color:"), c);
-		c.gridx = 1;
-		c.insets = rightInsets;
-		c.weightx = 1;
-		m_imgBackgroundColor = new JTextField();
-		p.add(m_imgBackgroundColor, c);
+        c.gridy++;
+        c.gridx = 0;
+        c.insets = leftInsets;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        p.add(new JLabel("Resolution (dpi):"), c);
+        c.gridx = 1;
+        c.insets = rightInsets;
+        c.weightx = 1;
+        m_imgResolution = new JTextField();
+        p.add(m_imgResolution, c);
 
-		return p;
-	}
+        return p;
+    }
 
-	/** Create the templates tab. */
-	private JPanel createTemplatesPanel() {
-		final RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, m_config, true, false);
+    private JPanel createAppearancePanel() {
+        final JPanel p = new JPanel(new GridBagLayout());
+        final GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.BASELINE;
+        c.insets = new Insets(2, 2, 2, 2);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.weighty = 0;
 
-		m_templatesController = new DefaultTemplateController(m_panel, preview);
-		final TemplatesPanel templatesPanel = new TemplatesPanel(
-				Collections.<Class<?>> singleton(m_templateMetaCategory), m_templatesController);
-		return templatesPanel;
-	}
+        final Insets leftInsets = new Insets(3, 0, 3, 8);
+        final Insets rightInsets = new Insets(3, 0, 3, 0);
+        new Insets(0, 0, 3, 8);
+        new Insets(0, 0, 3, 0);
 
-	@Override
-	public boolean closeOnESC() {
-		// do not close on ESC, since ESC is used to close autocomplete popups
-		// in the snippets textarea.
-		return false;
-	}
+        c.gridy++;
+        c.gridx = 0;
+        c.insets = leftInsets;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        p.add(new JLabel("Text point size:"), c);
+        c.gridx = 1;
+        c.insets = rightInsets;
+        c.weightx = 1;
+        m_textPointSize = new JTextField();
+        p.add(m_textPointSize, c);
 
-	@Override
-	protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
-			throws NotConfigurableException {
-		final DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec) specs[m_tableInPort] : null;
-		m_panel.updateData(RViewNodeSettings.extractRSettings(settings), specs, getAvailableFlowVariables().values());
+        c.gridy++;
+        c.gridx = 0;
+        c.insets = leftInsets;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        p.add(new JLabel("Background color:"), c);
+        c.gridx = 1;
+        c.insets = rightInsets;
+        c.weightx = 1;
+        m_imgBackgroundColor = new JTextField();
+        p.add(m_imgBackgroundColor, c);
 
-		m_templatesController.setDataTableSpec(spec);
-		m_templatesController.setFlowVariables(getAvailableFlowVariables());
-		loadImageSettingsFrom(settings);
-	}
+        return p;
+    }
 
-	@Override
-	protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObject[] input)
-			throws NotConfigurableException {
-		final DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable) input[m_tableInPort]).getSpec() : null;
-		m_panel.updateData(RViewNodeSettings.extractRSettings(settings), input, getAvailableFlowVariables().values());
+    /** Create the templates tab. */
+    private JPanel createTemplatesPanel() {
+        final RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, m_config, true, false);
 
-		m_templatesController.setDataTableSpec(spec);
-		m_templatesController.setFlowVariables(getAvailableFlowVariables());
-		loadImageSettingsFrom(settings);
-	}
+        m_templatesController = new DefaultTemplateController(m_panel, preview);
+        final TemplatesPanel templatesPanel =
+            new TemplatesPanel(Collections.<Class<?>> singleton(m_templateMetaCategory), m_templatesController);
+        return templatesPanel;
+    }
 
-	private void loadImageSettingsFrom(final NodeSettingsRO settings) {
-		m_settings.loadSettingsForDialog(settings);
-		m_imgWidth.setText(Integer.toString(m_settings.getImageWidth()));
-		m_imgHeight.setText(Integer.toString(m_settings.getImageHeight()));
-		m_imgResolution.setText(m_settings.getImageResolution());
-		m_textPointSize.setText(Integer.toString(m_settings.getTextPointSize()));
-		m_imgBackgroundColor.setText(m_settings.getImageBackgroundColor());
-	}
+    @Override
+    public boolean closeOnESC() {
+        // do not close on ESC, since ESC is used to close autocomplete popups
+        // in the snippets textarea.
+        return false;
+    }
 
-	@Override
-	public void onOpen() {
-		ViewUtils.invokeAndWaitInEDT(() -> m_panel.onOpen());
-	}
+    @Override
+    protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
+        throws NotConfigurableException {
+        final DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec)specs[m_tableInPort] : null;
+        m_panel.updateData(RViewNodeSettings.extractRSettings(settings), specs, getAvailableFlowVariables().values());
 
-	@Override
-	public void onClose() {
-		ViewUtils.invokeAndWaitInEDT(() -> m_panel.onClose());
-	}
+        m_templatesController.setDataTableSpec(spec);
+        m_templatesController.setFlowVariables(getAvailableFlowVariables());
+        loadImageSettingsFrom(settings);
+    }
 
-	@Override
-	protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
-		m_settings.setRSettings(m_panel.getRSnippet().getSettings());
+    @Override
+    protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObject[] input)
+        throws NotConfigurableException {
+        final DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable)input[m_tableInPort]).getSpec() : null;
+        m_panel.updateData(RViewNodeSettings.extractRSettings(settings), input, getAvailableFlowVariables().values());
 
-		m_settings.setImageWidth(Integer.valueOf(m_imgWidth.getText()));
-		m_settings.setImageHeight(Integer.valueOf(m_imgHeight.getText()));
-		m_settings.setImageResolution(m_imgResolution.getText());
-		m_settings.setTextPointSize(Integer.valueOf(m_textPointSize.getText()));
-		m_settings.setImageBackgroundColor(m_imgBackgroundColor.getText());
+        m_templatesController.setDataTableSpec(spec);
+        m_templatesController.setFlowVariables(getAvailableFlowVariables());
+        loadImageSettingsFrom(settings);
+    }
 
-		m_settings.saveSettings(settings);
-	}
+    private void loadImageSettingsFrom(final NodeSettingsRO settings) {
+        m_settings.loadSettingsForDialog(settings);
+        m_imgWidth.setText(Integer.toString(m_settings.getImageWidth()));
+        m_imgHeight.setText(Integer.toString(m_settings.getImageHeight()));
+        m_imgResolution.setText(m_settings.getImageResolution());
+        m_textPointSize.setText(Integer.toString(m_settings.getTextPointSize()));
+        m_imgBackgroundColor.setText(m_settings.getImageBackgroundColor());
+    }
+
+    @Override
+    public void onOpen() {
+        ViewUtils.invokeAndWaitInEDT(() -> m_panel.onOpen());
+    }
+
+    @Override
+    public void onClose() {
+        ViewUtils.invokeAndWaitInEDT(() -> m_panel.onClose());
+    }
+
+    @Override
+    protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
+        m_settings.setRSettings(m_panel.getRSnippet().getSettings());
+
+        m_settings.setImageWidth(Integer.valueOf(m_imgWidth.getText()));
+        m_settings.setImageHeight(Integer.valueOf(m_imgHeight.getText()));
+        m_settings.setImageResolution(m_imgResolution.getText());
+        m_settings.setTextPointSize(Integer.valueOf(m_textPointSize.getText()));
+        m_settings.setImageBackgroundColor(m_imgBackgroundColor.getText());
+
+        m_settings.saveSettings(settings);
+    }
 
 }

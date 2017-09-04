@@ -62,7 +62,6 @@ import org.knime.ext.r.bin.RPathUtil;
  */
 public class RPreferenceInitializer extends AbstractPreferenceInitializer {
 
-
     private static final NodeLogger LOGGER = NodeLogger.getLogger(RPreferenceInitializer.class);
 
     /** Preference key for the path to the R executable setting. */
@@ -80,20 +79,20 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
      */
     private File getDefaultRHOME() {
         // R_HOME value from KNIME 2.9
-        String rHomeV29 = org.eclipse.core.runtime.Platform.getPreferencesService().getString("org.knime.r",
+        final String rHomeV29 = org.eclipse.core.runtime.Platform.getPreferencesService().getString("org.knime.r",
             "knime.r.home", "", null);
-        if (rHomeV29 != null && !rHomeV29.isEmpty()) {
-            File rHomeFile = new File(rHomeV29);
+        if ((rHomeV29 != null) && !rHomeV29.isEmpty()) {
+            final File rHomeFile = new File(rHomeV29);
             if (rHomeFile.exists() && rHomeFile.isDirectory()) {
                 return rHomeFile;
             }
         }
         // Try R binary settings from KNIME 2.9
-        String rHomeV29FromRBin = determineRHomeFromRBinSetting();
-        if (rHomeV29FromRBin != null && !rHomeV29FromRBin.isEmpty()) {
+        final String rHomeV29FromRBin = determineRHomeFromRBinSetting();
+        if ((rHomeV29FromRBin != null) && !rHomeV29FromRBin.isEmpty()) {
             return new File(rHomeV29FromRBin);
         } else {
-            File packagedExecutable = RPathUtil.getPackagedRHome();
+            final File packagedExecutable = RPathUtil.getPackagedRHome();
             if (packagedExecutable != null) {
                 return packagedExecutable;
             }
@@ -105,11 +104,11 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
     private String determineRHomeFromRBinSetting() {
         final String rBinPathV29 = org.eclipse.core.runtime.Platform.getPreferencesService()
             .getString("org.knime.ext.r", "knime.r.path", "", null);
-        if (rBinPathV29 == null || rBinPathV29.isEmpty()) {
+        if ((rBinPathV29 == null) || rBinPathV29.isEmpty()) {
             return null;
         }
 
-        Properties rProps = RBinUtil.retrieveRProperties(new RPreferenceProvider() {
+        final Properties rProps = RBinUtil.retrieveRProperties(new RPreferenceProvider() {
 
             @Override
             public String getRHome() {
@@ -132,13 +131,13 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
             }
         });
 
-        if (rProps != null && rProps.containsKey("rhome")) {
-            File rhomeFile = new File(rProps.getProperty("rhome"));
+        if ((rProps != null) && rProps.containsKey("rhome")) {
+            final File rhomeFile = new File(rProps.getProperty("rhome"));
             if (rhomeFile.exists()) {
                 try {
                     // determine canonical path since R does not provide it.
                     return rhomeFile.getCanonicalPath();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     // do nothing
                 }
             }
@@ -151,9 +150,9 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
      */
     @Override
     public void initializeDefaultPreferences() {
-        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-        File rHomeFile = getDefaultRHOME();
-        String rHome = rHomeFile == null ? "" : rHomeFile.getAbsolutePath();
+        final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+        final File rHomeFile = getDefaultRHOME();
+        final String rHome = rHomeFile == null ? "" : rHomeFile.getAbsolutePath();
         LOGGER.debug("Default R Home: " + rHome);
         store.setDefault(PREF_R_HOME, rHome);
         store.setDefault(PREF_RSERVE_MAXINBUF, DEFAULT_MAX_IN_BUF_MB);
@@ -168,7 +167,7 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
      */
     public static final RPreferenceProvider getRProvider() {
         final String rHome = Activator.getRHOME().getAbsolutePath();
-        if (m_cachedPreferenceProvider == null || !m_cachedPreferenceProvider.getRHome().equals(rHome)) {
+        if ((m_cachedPreferenceProvider == null) || !m_cachedPreferenceProvider.getRHome().equals(rHome)) {
             m_cachedPreferenceProvider = new DefaultRPreferenceProvider(rHome);
         }
         return m_cachedPreferenceProvider;

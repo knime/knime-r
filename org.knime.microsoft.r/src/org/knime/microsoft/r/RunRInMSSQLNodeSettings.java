@@ -64,8 +64,11 @@ final class RunRInMSSQLNodeSettings {
     /** Settings key used to store the input table name under. */
     public static final String KEY_INPUT_TABLE_NAME = "InputTableName";
 
-    private SettingsModelString m_outputTableNameModel = new SettingsModelString(KEY_OUTPUT_TABLE_NAME, "OutputTable");
-    private SettingsModelString m_inputTableNameModel = new SettingsModelString(KEY_INPUT_TABLE_NAME, "InputTable");
+    private final SettingsModelString m_outputTableNameModel =
+        new SettingsModelString(KEY_OUTPUT_TABLE_NAME, "OutputTable");
+
+    private final SettingsModelString m_inputTableNameModel =
+        new SettingsModelString(KEY_INPUT_TABLE_NAME, "InputTable");
 
     /**
      * Get name of the output sql table
@@ -149,7 +152,7 @@ final class RunRInMSSQLNodeSettings {
         try {
             m_outputTableNameModel.loadSettingsFrom(settings);
             m_inputTableNameModel.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException e) {
+        } catch (final InvalidSettingsException e) {
         }
     }
 }

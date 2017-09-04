@@ -55,13 +55,14 @@ import org.knime.core.node.NodeLogger;
 
 /**
  * A provider to the default template repository.
+ * 
  * @author Heiko Hofer
  */
-public class DefaultFileTemplateRepositoryProvider
-        implements TemplateRepositoryProvider {
-    private static NodeLogger logger
-        = NodeLogger.getLogger(DefaultFileTemplateRepositoryProvider.class);
+public class DefaultFileTemplateRepositoryProvider implements TemplateRepositoryProvider {
+    private static NodeLogger logger = NodeLogger.getLogger(DefaultFileTemplateRepositoryProvider.class);
+
     private static FileTemplateRepository defaultRepo;
+
     private final Object m_lock = new Object[0];
 
     /**
@@ -71,12 +72,11 @@ public class DefaultFileTemplateRepositoryProvider
     public TemplateRepository getRepository() {
         synchronized (m_lock) {
             if (null == defaultRepo) {
-                File file = getDefaultLocation();
+                final File file = getDefaultLocation();
                 try {
                     defaultRepo = FileTemplateRepository.create(file);
-                } catch (IOException e) {
-                    logger.error("Cannot create the default template "
-                            + "provider for the java snippet nodes", e);
+                } catch (final IOException e) {
+                    logger.error("Cannot create the default template " + "provider for the java snippet nodes", e);
                 }
             }
         }
@@ -85,11 +85,11 @@ public class DefaultFileTemplateRepositoryProvider
 
     /**
      * Get the default location for snippet templates.
+     * 
      * @return the default directory for snippet templates.
      */
     private File getDefaultLocation() {
-        File dir = new File(new File(KNIMEConstants.getKNIMEHomeDir()),
-                "rsnippets");
+        final File dir = new File(new File(KNIMEConstants.getKNIMEHomeDir()), "rsnippets");
 
         if (!dir.exists()) {
             dir.mkdirs();

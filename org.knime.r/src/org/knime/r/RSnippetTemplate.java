@@ -60,215 +60,216 @@ import org.knime.core.node.NodeSettingsWO;
  */
 @SuppressWarnings("rawtypes")
 public class RSnippetTemplate {
-	private static final String SNIPPET = "Snippet";
-	private static final String META_CATEGORY = "Meta category";
-	private static final String CATEGORY = "Category";
-	private static final String NAME = "Name";
-	private static final String DESCRIPTION = "Description";
-	private static final String VERSION = "Version";
+    private static final String SNIPPET = "Snippet";
 
-	/** The first version of templates. */
-	public static final String VERSION_1_X = "version 1.x";
+    private static final String META_CATEGORY = "Meta category";
 
-	private RSnippetSettings m_snippetSettings;
-	/**
-	 * The meta category which typically is the dialog class this template comes
-	 * from.
-	 */
-	private Class m_metaCategory;
-	/** The category this template falls into. */
-	private String m_category;
-	/**
-	 * A short (one sentence) descriptive name. It must not necessarily be
-	 * unique.
-	 */
-	private String m_name;
-	/** The description of the template. */
-	private String m_description;
-	/** The version of the template. */
-	private String m_version;
-	/** The uuid of the template. */
-	private String m_uuid;
+    private static final String CATEGORY = "Category";
 
-	/**
-	 * Create a template and read parameters from the settings object.
-	 *
-	 * @param settings
-	 *            the settings
-	 * @return a new instance
-	 */
-	public static RSnippetTemplate create(final NodeSettingsRO settings) {
-		final RSnippetTemplate template = new RSnippetTemplate();
-		template.loadSettings(settings);
-		return template;
-	}
+    private static final String NAME = "Name";
 
-	/**
-	 * Create instance with default values.
-	 *
-	 * @param metaCategory
-	 *            the meta category of the template
-	 * @param snippetSettings
-	 *            the settings
-	 */
-	public RSnippetTemplate(final Class metaCategory, final RSnippetSettings snippetSettings) {
-		m_metaCategory = metaCategory;
-		m_category = "default";
-		m_description = "";
-		m_version = RSnippetTemplate.VERSION_1_X;
-		m_snippetSettings = snippetSettings;
-		m_uuid = UUID.randomUUID().toString();
-		m_snippetSettings.setTemplateUUID(m_uuid);
-	}
+    private static final String DESCRIPTION = "Description";
 
-	/**
-	 * Create an empty instance used for persistence.
-	 */
-	private RSnippetTemplate() {
-		// fields will be set with loadSettingsFor...
-	}
+    private static final String VERSION = "Version";
 
-	/**
-	 * @return the snippetSettings
-	 */
-	public RSnippetSettings getSnippetSettings() {
-		return m_snippetSettings;
-	}
+    /** The first version of templates. */
+    public static final String VERSION_1_X = "version 1.x";
 
-	/**
-	 * @return the category
-	 */
-	public String getCategory() {
-		return m_category;
-	}
+    private RSnippetSettings m_snippetSettings;
 
-	/**
-	 * @param category
-	 *            the category to set
-	 */
-	public void setCategory(final String category) {
-		m_category = category;
-	}
+    /**
+     * The meta category which typically is the dialog class this template comes from.
+     */
+    private Class m_metaCategory;
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return m_name;
-	}
+    /** The category this template falls into. */
+    private String m_category;
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(final String name) {
-		m_name = name;
-	}
+    /**
+     * A short (one sentence) descriptive name. It must not necessarily be unique.
+     */
+    private String m_name;
 
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return m_description;
-	}
+    /** The description of the template. */
+    private String m_description;
 
-	/**
-	 * @param description
-	 *            the description to set
-	 */
-	public void setDescription(final String description) {
-		m_description = description;
-	}
+    /** The version of the template. */
+    private String m_version;
 
-	/**
-	 * @return the metaCategory
-	 */
-	public Class getMetaCategory() {
-		return m_metaCategory;
-	}
+    /** The uuid of the template. */
+    private String m_uuid;
 
-	/**
-	 * @return the uuid
-	 */
-	public String getUUID() {
-		return m_uuid;
-	}
+    /**
+     * Create a template and read parameters from the settings object.
+     *
+     * @param settings the settings
+     * @return a new instance
+     */
+    public static RSnippetTemplate create(final NodeSettingsRO settings) {
+        final RSnippetTemplate template = new RSnippetTemplate();
+        template.loadSettings(settings);
+        return template;
+    }
 
-	/**
-	 * Saves current parameters to settings object.
-	 *
-	 * @param settings
-	 *            To save to.
-	 */
-	public void saveSettings(final NodeSettingsWO settings) {
-		settings.addString(META_CATEGORY, m_metaCategory.getName());
-		settings.addString(CATEGORY, m_category);
-		settings.addString(NAME, m_name);
-		settings.addString(DESCRIPTION, m_description);
-		settings.addString(VERSION, m_version);
-		final NodeSettingsWO snippet = settings.addNodeSettings(SNIPPET);
-		m_snippetSettings.saveSettings(snippet);
-	}
+    /**
+     * Create instance with default values.
+     *
+     * @param metaCategory the meta category of the template
+     * @param snippetSettings the settings
+     */
+    public RSnippetTemplate(final Class metaCategory, final RSnippetSettings snippetSettings) {
+        m_metaCategory = metaCategory;
+        m_category = "default";
+        m_description = "";
+        m_version = RSnippetTemplate.VERSION_1_X;
+        m_snippetSettings = snippetSettings;
+        m_uuid = UUID.randomUUID().toString();
+        m_snippetSettings.setTemplateUUID(m_uuid);
+    }
 
-	/**
-	 * Loads parameters.
-	 *
-	 * @param settings
-	 *            to load from
-	 */
-	public void loadSettings(final NodeSettingsRO settings) {
-		try {
-			final String metaCategory = settings.getString(META_CATEGORY, null);
-			m_metaCategory = metaCategory != null ? Class.forName(metaCategory) : RSnippetTemplate.class;
-			m_category = settings.getString(CATEGORY, "default");
-			m_name = settings.getString(NAME, "?");
-			m_description = settings.getString(DESCRIPTION, "");
-			m_version = settings.getString(m_version, RSnippetTemplate.VERSION_1_X);
-			final NodeSettingsRO snippet = settings.getNodeSettings(SNIPPET);
-			m_snippetSettings = new RSnippetSettings();
-			m_snippetSettings.loadSettingsForDialog(snippet);
-			m_uuid = m_snippetSettings.getTemplateUUID();
-		} catch (final ClassNotFoundException e) {
-			throw new IllegalStateException(e);
-		} catch (final InvalidSettingsException e) {
-			throw new IllegalStateException(e);
-		}
-	}
+    /**
+     * Create an empty instance used for persistence.
+     */
+    private RSnippetTemplate() {
+        // fields will be set with loadSettingsFor...
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((m_uuid == null) ? 0 : m_uuid.hashCode());
-		return result;
-	}
+    /**
+     * @return the snippetSettings
+     */
+    public RSnippetSettings getSnippetSettings() {
+        return m_snippetSettings;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final RSnippetTemplate other = (RSnippetTemplate) obj;
-		if (m_uuid == null) {
-			if (other.m_uuid != null) {
-				return false;
-			}
-		} else if (!m_uuid.equals(other.m_uuid)) {
-			return false;
-		}
-		return true;
-	}
+    /**
+     * @return the category
+     */
+    public String getCategory() {
+        return m_category;
+    }
+
+    /**
+     * @param category the category to set
+     */
+    public void setCategory(final String category) {
+        m_category = category;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return m_name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(final String name) {
+        m_name = name;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return m_description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(final String description) {
+        m_description = description;
+    }
+
+    /**
+     * @return the metaCategory
+     */
+    public Class getMetaCategory() {
+        return m_metaCategory;
+    }
+
+    /**
+     * @return the uuid
+     */
+    public String getUUID() {
+        return m_uuid;
+    }
+
+    /**
+     * Saves current parameters to settings object.
+     *
+     * @param settings To save to.
+     */
+    public void saveSettings(final NodeSettingsWO settings) {
+        settings.addString(META_CATEGORY, m_metaCategory.getName());
+        settings.addString(CATEGORY, m_category);
+        settings.addString(NAME, m_name);
+        settings.addString(DESCRIPTION, m_description);
+        settings.addString(VERSION, m_version);
+        final NodeSettingsWO snippet = settings.addNodeSettings(SNIPPET);
+        m_snippetSettings.saveSettings(snippet);
+    }
+
+    /**
+     * Loads parameters.
+     *
+     * @param settings to load from
+     */
+    public void loadSettings(final NodeSettingsRO settings) {
+        try {
+            final String metaCategory = settings.getString(META_CATEGORY, null);
+            m_metaCategory = metaCategory != null ? Class.forName(metaCategory) : RSnippetTemplate.class;
+            m_category = settings.getString(CATEGORY, "default");
+            m_name = settings.getString(NAME, "?");
+            m_description = settings.getString(DESCRIPTION, "");
+            m_version = settings.getString(m_version, RSnippetTemplate.VERSION_1_X);
+            final NodeSettingsRO snippet = settings.getNodeSettings(SNIPPET);
+            m_snippetSettings = new RSnippetSettings();
+            m_snippetSettings.loadSettingsForDialog(snippet);
+            m_uuid = m_snippetSettings.getTemplateUUID();
+        } catch (final ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        } catch (final InvalidSettingsException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = (prime * result) + ((m_uuid == null) ? 0 : m_uuid.hashCode());
+        return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RSnippetTemplate other = (RSnippetTemplate)obj;
+        if (m_uuid == null) {
+            if (other.m_uuid != null) {
+                return false;
+            }
+        } else if (!m_uuid.equals(other.m_uuid)) {
+            return false;
+        }
+        return true;
+    }
 
 }

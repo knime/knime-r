@@ -57,12 +57,10 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.workflow.FlowVariable;
 
 /**
- * The dialog of the <code>RLocalViewsNodeDialog</code> which provides a
- * drop down menu containing a set of names of R plots and a multi line text
- * field to specify R code for the usage of plots. When a certain R plot
- * is specified using the drop down menu, a dummy R code template is
- * shown up in the multi line text field. Additionally a column selection panel
- * is provided to specify columns to use and import into R.
+ * The dialog of the <code>RLocalViewsNodeDialog</code> which provides a drop down menu containing a set of names of R
+ * plots and a multi line text field to specify R code for the usage of plots. When a certain R plot is specified using
+ * the drop down menu, a dummy R code template is shown up in the multi line text field. Additionally a column selection
+ * panel is provided to specify columns to use and import into R.
  *
  * @author Kilian Thiel, University of Konstanz
  */
@@ -71,6 +69,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
     private static final String TAB_TITLE = "R View Command";
 
     private final RViewsDialogPanel m_viewScriptPanel;
+
     private final RViewsPngDialogPanel m_viewPngPanel;
 
     /**
@@ -90,10 +89,10 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
      * {@inheritDoc}
      */
     @Override
-    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs) throws NotConfigurableException {
+    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
+        throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
-        Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
+        final Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
         m_viewScriptPanel.loadSettings(settings, specs, flowMap);
         m_viewPngPanel.loadSettings(settings, specs);
     }
@@ -102,8 +101,7 @@ public class RLocalViewsNodeDialog extends RLocalNodeDialogPane {
      * {@inheritDoc}
      */
     @Override
-    public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
-        throws InvalidSettingsException {
+    public void saveAdditionalSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
         super.saveAdditionalSettingsTo(settings);
         m_viewScriptPanel.saveSettings(settings);
         m_viewPngPanel.saveSettings(settings);

@@ -58,9 +58,8 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  * @author Kilian Thiel, University of Konstanz
  */
 @Deprecated
-public class RLocalViewsNodeFactory extends
-        RNodeFactory<RLocalViewsNodeModel> {
-    
+public class RLocalViewsNodeFactory extends RNodeFactory<RLocalViewsNodeModel> {
+
     /**
      * Empty default constructor.
      */
@@ -88,8 +87,7 @@ public class RLocalViewsNodeFactory extends
      * {@inheritDoc}
      */
     @Override
-    public NodeView<RLocalViewsNodeModel> createNodeView(
-            final int viewIndex, final RLocalViewsNodeModel nodeModel) {
+    public NodeView<RLocalViewsNodeModel> createNodeView(final int viewIndex, final RLocalViewsNodeModel nodeModel) {
         if (viewIndex == 0) {
             return new RLocalViewsNodeView(nodeModel);
         } else if (viewIndex == 1) {

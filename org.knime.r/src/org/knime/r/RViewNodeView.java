@@ -61,45 +61,44 @@ import org.knime.r.ui.RPlotterViewPanel;
  */
 public class RViewNodeView extends NodeView<RViewNodeModel> {
 
-	private final RPlotterViewPanel m_panel;
+    private final RPlotterViewPanel m_panel;
 
-	/**
-	 * Creates a new instance.
-	 *
-	 * @param nodeModel
-	 *            the model associated with this view.
-	 */
-	public RViewNodeView(final RViewNodeModel nodeModel) {
-		super(nodeModel);
-		m_panel = new RPlotterViewPanel();
-		super.setComponent(new JScrollPane(m_panel));
-	}
+    /**
+     * Creates a new instance.
+     *
+     * @param nodeModel the model associated with this view.
+     */
+    public RViewNodeView(final RViewNodeModel nodeModel) {
+        super(nodeModel);
+        m_panel = new RPlotterViewPanel();
+        super.setComponent(new JScrollPane(m_panel));
+    }
 
-	/**
-	 * Updates the image to display.
-	 *
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void modelChanged() {
-		final RViewNodeModel model = super.getNodeModel();
-		final Image image = model.getResultImage();
-		m_panel.update(image);
-	}
+    /**
+     * Updates the image to display.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    protected void modelChanged() {
+        final RViewNodeModel model = super.getNodeModel();
+        final Image image = model.getResultImage();
+        m_panel.update(image);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void onClose() {
-		// empty
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onClose() {
+        // empty
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void onOpen() {
-		// empty
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onOpen() {
+        // empty
+    }
 }

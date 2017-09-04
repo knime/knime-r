@@ -64,78 +64,78 @@ import com.sun.jna.Platform;
  * @author Heiko Hofer
  */
 public class RViewNodeConfig extends RSnippetNodeConfig {
-	private static final NodeLogger LOGGER = NodeLogger.getLogger("R Snippet");
+    private static final NodeLogger LOGGER = NodeLogger.getLogger("R Snippet");
 
-	private final PortType m_inPortType;
-	private File m_imageFile;
+    private final PortType m_inPortType;
 
-	private RViewNodeSettings m_settings;
+    private File m_imageFile;
 
-	public RViewNodeConfig(final PortType inPortType) {
-		m_inPortType = inPortType;
-	}
+    private RViewNodeSettings m_settings;
 
-	@Override
+    public RViewNodeConfig(final PortType inPortType) {
+        m_inPortType = inPortType;
+    }
+
+    @Override
     public Collection<PortType> getInPortTypes() {
-		return Collections.singleton(m_inPortType);
-	}
+        return Collections.singleton(m_inPortType);
+    }
 
-	@Override
-	protected Collection<PortType> getOutPortTypes() {
-		return Collections.singleton(ImagePortObject.TYPE);
-	}
+    @Override
+    protected Collection<PortType> getOutPortTypes() {
+        return Collections.singleton(ImagePortObject.TYPE);
+    }
 
-	@Override
-	protected String getScriptPrefix() {
-		final File imageFile = getImageFile();
-		final StringBuilder prefix = new StringBuilder();
+    @Override
+    protected String getScriptPrefix() {
+        final File imageFile = getImageFile();
+        final StringBuilder prefix = new StringBuilder();
 
-		String bitmapType = "";
-		if (Platform.isMac()) {
-			bitmapType = ",bitmapType='cairo'";
-			prefix.append("library('Cairo');");
-		}
+        String bitmapType = "";
+        if (Platform.isMac()) {
+            bitmapType = ",bitmapType='cairo'";
+            prefix.append("library('Cairo');");
+        }
 
-		prefix.append("options(device = 'png'" + bitmapType + ")").append("\n");
-		prefix.append("png(\"" + imageFile.getAbsolutePath().replace('\\', '/') + "\"" + ", width="
-				+ m_settings.getImageWidth() + ", height=" + m_settings.getImageHeight() + ", pointsize="
-				+ m_settings.getTextPointSize() + ", bg=\"" + m_settings.getImageBackgroundColor() + "\"" + ", res="
-				+ m_settings.getImageResolution() + ")");
-		return prefix.toString();
-	}
+        prefix.append("options(device = 'png'" + bitmapType + ")").append("\n");
+        prefix.append(
+            "png(\"" + imageFile.getAbsolutePath().replace('\\', '/') + "\"" + ", width=" + m_settings.getImageWidth()
+                + ", height=" + m_settings.getImageHeight() + ", pointsize=" + m_settings.getTextPointSize() + ", bg=\""
+                + m_settings.getImageBackgroundColor() + "\"" + ", res=" + m_settings.getImageResolution() + ")");
+        return prefix.toString();
+    }
 
-	@Override
-	protected String getScriptSuffix() {
-		return "dev.off()";
-	}
+    @Override
+    protected String getScriptSuffix() {
+        return "dev.off()";
+    }
 
-	/**
-	 * Non-null image file to use for this current node. Lazy-initialized to
-	 * temp location.
-	 */
-	public File getImageFile() {
-		if (m_imageFile == null) {
-			try {
-				m_imageFile = FileUtil.createTempFile("R-view-", ".png");
-			} catch (final IOException e) {
-				LOGGER.error("Cannot create temporary file.", e);
-				throw new RuntimeException(e);
-			}
-			m_imageFile.deleteOnExit();
-		}
-		return m_imageFile;
-	}
+    /**
+     * Non-null image file to use for this current node. Lazy-initialized to temp location.
+     */
+    public File getImageFile() {
+        if (m_imageFile == null) {
+            try {
+                m_imageFile = FileUtil.createTempFile("R-view-", ".png");
+            } catch (final IOException e) {
+                LOGGER.error("Cannot create temporary file.", e);
+                throw new RuntimeException(e);
+            }
+            m_imageFile.deleteOnExit();
+        }
+        return m_imageFile;
+    }
 
-	public void setSettings(final RViewNodeSettings settings) {
-		m_settings = settings;
-	}
+    public void setSettings(final RViewNodeSettings settings) {
+        m_settings = settings;
+    }
 
-	@Override
-	public String getDefaultScript() {
-		if (BufferedDataTable.TYPE.equals(m_inPortType)) {
-			return "plot(knime.in)\n";
-		} else {
-			return "plot(iris)\n";
-		}
-	}
+    @Override
+    public String getDefaultScript() {
+        if (BufferedDataTable.TYPE.equals(m_inPortType)) {
+            return "plot(knime.in)\n";
+        } else {
+            return "plot(iris)\n";
+        }
+    }
 }

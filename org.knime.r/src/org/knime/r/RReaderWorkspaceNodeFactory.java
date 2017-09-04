@@ -58,26 +58,26 @@ import org.knime.ext.r.node.local.port.RPortObject;
  */
 public class RReaderWorkspaceNodeFactory extends RSnippetNodeFactory {
 
-	/**
-	 * Empty default constructor.
-	 */
-	public RReaderWorkspaceNodeFactory() {
-		super(new RSnippetNodeConfig() {
-			@Override
+    /**
+     * Empty default constructor.
+     */
+    public RReaderWorkspaceNodeFactory() {
+        super(new RSnippetNodeConfig() {
+            @Override
             public Collection<PortType> getInPortTypes() {
-				return Collections.<PortType> emptyList();
-			}
+                return Collections.<PortType> emptyList();
+            }
 
-			@Override
-			protected Collection<PortType> getOutPortTypes() {
-				return Collections.singleton(RPortObject.TYPE);
-			}
+            @Override
+            protected Collection<PortType> getOutPortTypes() {
+                return Collections.singleton(RPortObject.TYPE);
+            }
 
-			@Override
-			protected String getDefaultScript() {
-				return "rframe <- iris";
-			}
-		});
-	}
+            @Override
+            protected String getDefaultScript() {
+                return "rframe <- iris";
+            }
+        });
+    }
 
 }

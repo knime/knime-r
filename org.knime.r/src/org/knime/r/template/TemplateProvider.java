@@ -73,21 +73,23 @@ import org.knime.r.RSnippetTemplate;
  * @author Heiko Hofer
  */
 @SuppressWarnings("rawtypes")
-public final class TemplateProvider extends TemplateRepository
-        implements ChangeListener {
-    private static final String EXTENSION_POINT_ID =
-        "org.knime.r.templaterepository";
+public final class TemplateProvider extends TemplateRepository implements ChangeListener {
+    private static final String EXTENSION_POINT_ID = "org.knime.r.templaterepository";
+
     private static final Object LOCK = new Object[0];
-    private static final NodeLogger LOGGER = NodeLogger.getLogger(
-            TemplateProvider.class);
+
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(TemplateProvider.class);
+
     /**
      * The display name of the category with all templates.
      */
     static final String ALL_CATEGORY = "All";
 
-    private Map<Class, Map<String, Collection<RSnippetTemplate>>> m_templates;
-    private List<TemplateRepository> m_repos;
-    private FileTemplateRepository m_defaultRepo;
+    private final Map<Class, Map<String, Collection<RSnippetTemplate>>> m_templates;
+
+    private final List<TemplateRepository> m_repos;
+
+    private final FileTemplateRepository m_defaultRepo;
 
     private static TemplateProvider provider;
 
@@ -95,34 +97,31 @@ public final class TemplateProvider extends TemplateRepository
      * prevent instantiation from outside.
      */
     private TemplateProvider() {
-        m_defaultRepo = (FileTemplateRepository)
-            new DefaultFileTemplateRepositoryProvider().getRepository();
+        m_defaultRepo = (FileTemplateRepository)new DefaultFileTemplateRepositoryProvider().getRepository();
         m_repos = new ArrayList<TemplateRepository>();
-        IConfigurationElement[] config = Platform.getExtensionRegistry()
-            .getConfigurationElementsFor(EXTENSION_POINT_ID);
+        final IConfigurationElement[] config =
+            Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_POINT_ID);
 
-        for (IConfigurationElement e : config) {
+        for (final IConfigurationElement e : config) {
             try {
                 final Object o = e.createExecutableExtension("provider-class");
                 if (o instanceof TemplateRepositoryProvider) {
-                    TemplateRepository repo =
-                        ((TemplateRepositoryProvider)o).getRepository();
+                    final TemplateRepository repo = ((TemplateRepositoryProvider)o).getRepository();
                     if (null != repo) {
                         repo.addChangeListener(this);
                         m_repos.add(repo);
                     }
                 }
-            } catch (CoreException ex) {
-                LOGGER.error("Error while reading rsnippet template "
-                        + "repositories.", ex);
+            } catch (final CoreException ex) {
+                LOGGER.error("Error while reading rsnippet template " + "repositories.", ex);
             }
         }
-        m_templates = new HashMap<Class,
-            Map<String, Collection<RSnippetTemplate>>>();
+        m_templates = new HashMap<Class, Map<String, Collection<RSnippetTemplate>>>();
     }
 
     /**
      * Get default shared instance.
+     * 
      * @return default TemplateProvider
      */
     public static TemplateProvider getDefault() {
@@ -136,14 +135,14 @@ public final class TemplateProvider extends TemplateRepository
 
     /**
      * Get all categories.
-     * @param m_metaCategories only categories that hold templates in this
-     * meta categories will be displayed.
+     * 
+     * @param m_metaCategories only categories that hold templates in this meta categories will be displayed.
      * @return the categories
      */
     public Set<String> getCategories(final Collection<Class<?>> m_metaCategories) {
         initTemplates(m_metaCategories);
-        Set<String> categories = new LinkedHashSet<String>();
-        for (Class c : m_metaCategories) {
+        final Set<String> categories = new LinkedHashSet<String>();
+        for (final Class c : m_metaCategories) {
             if (m_templates.containsKey(c)) {
                 categories.addAll(m_templates.get(c).keySet());
             }
@@ -155,11 +154,10 @@ public final class TemplateProvider extends TemplateRepository
      * {@inheritDoc}
      */
     @Override
-    public Collection<RSnippetTemplate> getTemplates(
-            final Collection<Class<?>> metaCategories) {
+    public Collection<RSnippetTemplate> getTemplates(final Collection<Class<?>> metaCategories) {
         initTemplates(metaCategories);
-        Set<RSnippetTemplate> templates = new LinkedHashSet<RSnippetTemplate>();
-        for (Class c : metaCategories) {
+        final Set<RSnippetTemplate> templates = new LinkedHashSet<RSnippetTemplate>();
+        for (final Class c : metaCategories) {
             if (m_templates.containsKey(c)) {
                 templates.addAll(m_templates.get(c).get(ALL_CATEGORY));
             }
@@ -169,17 +167,15 @@ public final class TemplateProvider extends TemplateRepository
 
     /**
      * Get the {@link RSnippetTemplate}s in the given category.
-     * @param metaCategories only templates from these
-     * meta categories will be returned.
+     * 
+     * @param metaCategories only templates from these meta categories will be returned.
      * @param category a category as given by getCategories()
      * @return the {@link RSnippetTemplate}s in the given category
      */
-    public Collection<RSnippetTemplate> getTemplates(
-            final Collection<Class<?>> metaCategories,
-            final String category) {
+    public Collection<RSnippetTemplate> getTemplates(final Collection<Class<?>> metaCategories, final String category) {
         initTemplates(metaCategories);
-        Set<RSnippetTemplate> templates = new LinkedHashSet<RSnippetTemplate>();
-        for (Class c : metaCategories) {
+        final Set<RSnippetTemplate> templates = new LinkedHashSet<RSnippetTemplate>();
+        for (final Class c : metaCategories) {
             if (m_templates.containsKey(c)) {
                 templates.addAll(m_templates.get(c).get(category));
             }
@@ -187,27 +183,30 @@ public final class TemplateProvider extends TemplateRepository
         return templates;
     }
 
-    /** Load templates for the given meta categories.
+    /**
+     * Load templates for the given meta categories.
+     * 
      * @param m_metaCategories the meta categories
      */
     private void initTemplates(final Collection<Class<?>> m_metaCategories) {
         // reset data
-        for (Class key : m_metaCategories) {
+        for (final Class key : m_metaCategories) {
             if (m_templates.containsKey(key)) {
                 m_templates.remove(key);
             }
-            Map<String, Collection<RSnippetTemplate>> templates =
+            final Map<String, Collection<RSnippetTemplate>> templates =
                 new LinkedHashMap<String, Collection<RSnippetTemplate>>();
             templates.put(ALL_CATEGORY, new ArrayList<RSnippetTemplate>());
             m_templates.put(key, templates);
         }
-        for (TemplateRepository repo : m_repos) {
+        for (final TemplateRepository repo : m_repos) {
             appendTemplates(repo.getTemplates(m_metaCategories));
         }
     }
 
     /**
      * Add a template to the default location.
+     * 
      * @param template the template
      */
     public void addTemplate(final RSnippetTemplate template) {
@@ -219,31 +218,31 @@ public final class TemplateProvider extends TemplateRepository
         fireStateChanged();
     }
 
-
     /**
      * Append to given list of templates.
+     * 
      * @param templates the templates
      */
     private void appendTemplates(final Collection<RSnippetTemplate> templates) {
         if (null == templates) {
             return;
         }
-        for (RSnippetTemplate template : templates) {
-            Class key = template.getMetaCategory();
+        for (final RSnippetTemplate template : templates) {
+            final Class key = template.getMetaCategory();
             appendTemplateTo(m_templates.get(key), template);
         }
     }
 
     /**
      * Append the template to the given map.
+     * 
      * @param map the map
      * @param template the template
      */
-    private void appendTemplateTo(
-            final Map<String, Collection<RSnippetTemplate>> map,
-            final RSnippetTemplate template) {
+    private void appendTemplateTo(final Map<String, Collection<RSnippetTemplate>> map,
+        final RSnippetTemplate template) {
         map.get(ALL_CATEGORY).add(template);
-        String key = template.getCategory();
+        final String key = template.getCategory();
         if (!map.containsKey(key)) {
             map.put(key, new ArrayList<RSnippetTemplate>());
         }
@@ -252,12 +251,13 @@ public final class TemplateProvider extends TemplateRepository
 
     /**
      * Test if a template can be removed.
+     * 
      * @param template the template
      * @return true when removeTemplate(template) could be successful
      */
     @Override
     public boolean isRemoveable(final RSnippetTemplate template) {
-        for (TemplateRepository repo : m_repos) {
+        for (final TemplateRepository repo : m_repos) {
             if (repo.isRemoveable(template)) {
                 return true;
             }
@@ -267,6 +267,7 @@ public final class TemplateProvider extends TemplateRepository
 
     /**
      * Remove the given template.
+     * 
      * @param template the template to be removed
      * @return when the template is successfully removed
      */
@@ -274,7 +275,7 @@ public final class TemplateProvider extends TemplateRepository
     public boolean removeTemplate(final RSnippetTemplate template) {
         if (isRemoveable(template)) {
             boolean success;
-            for (TemplateRepository repo : m_repos) {
+            for (final TemplateRepository repo : m_repos) {
                 repo.removeChangeListener(this);
                 success = repo.removeTemplate(template);
                 if (success) {
@@ -303,6 +304,7 @@ public final class TemplateProvider extends TemplateRepository
 
     /**
      * Get the template with the given id.
+     * 
      * @param id the id
      * @return the template or null if a template with the id does not exist.
      * @throws NullPointerException if id is null.
@@ -312,8 +314,8 @@ public final class TemplateProvider extends TemplateRepository
         if (null == id) {
             throw new NullPointerException("UUID is null.");
         }
-        for (TemplateRepository repo : m_repos) {
-            RSnippetTemplate template = repo.getTemplate(id);
+        for (final TemplateRepository repo : m_repos) {
+            final RSnippetTemplate template = repo.getTemplate(id);
             if (null != template) {
                 return template;
             }
@@ -322,14 +324,12 @@ public final class TemplateProvider extends TemplateRepository
     }
 
     /**
-     * Get a short descriptive string about the location of the template.
-     * This should give the user an idea where the template comes from. It can
-     * be a path to a file, or the name of a company with a template name like
-     * "Fibonacci (KNIME)" for a template from KNIME that generates the
-     * Fibonacci numbers.
+     * Get a short descriptive string about the location of the template. This should give the user an idea where the
+     * template comes from. It can be a path to a file, or the name of a company with a template name like "Fibonacci
+     * (KNIME)" for a template from KNIME that generates the Fibonacci numbers.
+     * 
      * @param template the template
-     * @return the string describing the location of the template or null if
-     * no string could be generated.
+     * @return the string describing the location of the template or null if no string could be generated.
      * @throws NullPointerException if template is null.
      */
     @Override
@@ -337,8 +337,8 @@ public final class TemplateProvider extends TemplateRepository
         if (null == template) {
             throw new NullPointerException("template is null.");
         }
-        for (TemplateRepository repo : m_repos) {
-            String loc = repo.getDisplayLocation(template);
+        for (final TemplateRepository repo : m_repos) {
+            final String loc = repo.getDisplayLocation(template);
             if (null != loc) {
                 return loc;
             }

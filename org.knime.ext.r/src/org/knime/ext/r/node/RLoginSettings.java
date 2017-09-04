@@ -114,6 +114,7 @@ public final class RLoginSettings {
     static SettingsModelString createUserModel() {
         return new SettingsModelString(KEY_USER, DEFAULT_USER);
     }
+
     /**
      * Create new empty R login settings object.
      */
@@ -173,19 +174,20 @@ public final class RLoginSettings {
      * @return the currently set password - DECRYPTED.
      */
     static String getPassword() {
-        String pw = PASS.getStringValue();
-        if (pw == null || pw.length() == 0) {
+        final String pw = PASS.getStringValue();
+        if ((pw == null) || (pw.length() == 0)) {
             return DEFAULT_PASS;
         }
         try {
             return KnimeEncryption.decrypt(pw);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return DEFAULT_PASS;
         }
     }
 
     /**
      * Validate settings.
+     * 
      * @param settings to validate
      * @throws InvalidSettingsException if settings could not be validated
      */
@@ -198,6 +200,7 @@ public final class RLoginSettings {
 
     /**
      * Load validated settings.
+     * 
      * @param settings to load
      * @throws InvalidSettingsException if settings could not loaded
      */

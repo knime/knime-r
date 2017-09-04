@@ -49,7 +49,6 @@ import java.awt.Image;
 
 import org.knime.core.node.NodeView;
 
-
 /**
  * <code>NodeView</code> for the R plotter.
  *
@@ -74,8 +73,8 @@ public class RPlotterNodeView2 extends NodeView<RPlotterNodeModel2> {
      */
     @Override
     protected void modelChanged() {
-        RPlotterNodeModel2 model = super.getNodeModel();
-        Image image = model.getResultImage();
+        final RPlotterNodeModel2 model = super.getNodeModel();
+        final Image image = model.getResultImage();
         m_panel.update(image);
     }
 

@@ -49,44 +49,41 @@ import java.util.concurrent.CompletableFuture;
 import org.rosuda.REngine.REXP;
 
 /**
- * Class holding an R Command. This is a subclass of future, which means it can
- * be executed and will hold some kind of return value when done. RCommands are
- * usually created and executed by adding them to
- * {@link RController#getCommandQueue()} using
- * {@link RCommandQueue#putRScript(String, boolean)}.
+ * Class holding an R Command. This is a subclass of future, which means it can be executed and will hold some kind of
+ * return value when done. RCommands are usually created and executed by adding them to
+ * {@link RController#getCommandQueue()} using {@link RCommandQueue#putRScript(String, boolean)}.
  *
  * @author Heiko Hofer
  * @author Jonathan Hale
  */
 public final class RCommand extends CompletableFuture<REXP> {
-	private final String m_command;
-	private final boolean m_showInConsole;
+    private final String m_command;
 
-	/**
-	 * Constructor
-	 *
-	 * @param command
-	 *            RCode for this command
-	 * @param showInConsole
-	 *            Whether to print <code>command</code> to the console
-	 */
-	public RCommand(final String command, final boolean showInConsole) {
-		m_command = command;
-		m_showInConsole = showInConsole;
-	}
+    private final boolean m_showInConsole;
 
-	/**
-	 * @return Whether to print this commands code to console
-	 */
-	public boolean isShowInConsole() {
-		return m_showInConsole;
-	}
+    /**
+     * Constructor
+     *
+     * @param command RCode for this command
+     * @param showInConsole Whether to print <code>command</code> to the console
+     */
+    public RCommand(final String command, final boolean showInConsole) {
+        m_command = command;
+        m_showInConsole = showInConsole;
+    }
 
-	/**
-	 * @return The commands code.
-	 */
-	public String getCommand() {
-		return m_command;
-	}
+    /**
+     * @return Whether to print this commands code to console
+     */
+    public boolean isShowInConsole() {
+        return m_showInConsole;
+    }
+
+    /**
+     * @return The commands code.
+     */
+    public String getCommand() {
+        return m_command;
+    }
 
 }

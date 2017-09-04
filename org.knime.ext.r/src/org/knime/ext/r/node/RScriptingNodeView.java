@@ -81,7 +81,6 @@ import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.Rserve.RFileInputStream;
 import org.rosuda.REngine.Rserve.RserveException;
 
-
 /**
  * <code>NodeView</code> and "RScripting" Node view.
  *
@@ -91,9 +90,11 @@ import org.rosuda.REngine.Rserve.RserveException;
 public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
 
     private final JEditorPane m_shell;
+
     private final JTextArea m_output;
 
     private final JList m_list;
+
     private final DefaultListModel m_listModel;
 
     private static final String FILE_NAME = "bild.png";
@@ -101,8 +102,7 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
     /** If smaller the picture is not displayed. */
     private static final int MIN_FILE_SIZE = 500;
 
-    private static final NodeLogger LOGGER = NodeLogger
-            .getLogger(RScriptingNodeView.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RScriptingNodeView.class);
 
     /** Underlying R model. */
     private final RRemoteNodeModel m_rModel;
@@ -129,7 +129,7 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
             @Override
             public void keyTyped(final KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                    String[] text = m_shell.getText().split("\n");
+                    final String[] text = m_shell.getText().split("\n");
                     //if (text.length > 0) {
                     for (int i = text.length; --i >= 0;) {
                         String cmd = text[i];
@@ -142,14 +142,11 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
                         LOGGER.debug("eval: " + text[text.length - 1]);
                         try {
                             createPNG(); // has to be there before command is
-                                            // send
-                            REXP rexp = m_rModel.getRconnection().eval(
-                                    "try(" + cmd + ")");
+                            // send
+                            final REXP rexp = m_rModel.getRconnection().eval("try(" + cmd + ")");
                             print(rexp, cmd);
-                        } catch (Exception exc) {
-                            m_output.append(
-                                    m_rModel.getRconnection().getLastError()
-                                    + "\n");
+                        } catch (final Exception exc) {
+                            m_output.append(m_rModel.getRconnection().getLastError() + "\n");
                         } finally {
                             m_shell.requestFocus();
                         }
@@ -166,26 +163,25 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
         m_list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(final MouseEvent e) {
-                Object o = m_list.getSelectedValue();
+                final Object o = m_list.getSelectedValue();
                 if (o != null) {
-                    DataColumnSpec cspec = (DataColumnSpec) o;
+                    final DataColumnSpec cspec = (DataColumnSpec)o;
                     m_shell.replaceSelection(cspec.getName());
                     m_list.clearSelection();
                     m_shell.requestFocus();
                 }
             }
         });
-        JPanel panel = new JPanel(new BorderLayout());
-        JScrollPane listScroll = new JScrollPane(m_list);
+        final JPanel panel = new JPanel(new BorderLayout());
+        final JScrollPane listScroll = new JScrollPane(m_list);
         listScroll.setPreferredSize(new Dimension(150, 250));
         panel.add(listScroll, BorderLayout.WEST);
-        JScrollPane shellScroll = new JScrollPane(m_shell);
+        final JScrollPane shellScroll = new JScrollPane(m_shell);
         shellScroll.setPreferredSize(new Dimension(250, 250));
         panel.add(shellScroll, BorderLayout.CENTER);
-        JScrollPane outputScroll = new JScrollPane(m_output);
+        final JScrollPane outputScroll = new JScrollPane(m_output);
         outputScroll.setPreferredSize(new Dimension(400, 150));
-        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panel,
-                outputScroll);
+        final JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panel, outputScroll);
         super.setComponent(split);
     }
 
@@ -193,7 +189,7 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
         Image image = null;
         try {
             image = getImage();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOGGER.error("Could not create image: ", e);
         }
         if (image != null) {
@@ -201,13 +197,13 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
             Component comp = super.getComponent();
             while (comp != null) {
                 if (comp instanceof Frame) {
-                    frame = (Frame) comp;
+                    frame = (Frame)comp;
                     break;
                 }
                 comp = comp.getParent();
             }
-            JDialog f = new JDialog(frame, super.getViewTitle() + " - "  + cmd);
-            Container cont = f.getContentPane();
+            final JDialog f = new JDialog(frame, super.getViewTitle() + " - " + cmd);
+            final Container cont = f.getContentPane();
             cont.add(new RPlotterViewPanel(image));
             f.pack();
             f.setVisible(true);
@@ -222,13 +218,12 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
     protected void modelChanged() {
         m_shell.setText("");
         m_listModel.removeAllElements();
-        RScriptingNodeModel model = super.getNodeModel();
-        DataTableSpec inSpec = model.getDataTableSpec();
+        final RScriptingNodeModel model = super.getNodeModel();
+        final DataTableSpec inSpec = model.getDataTableSpec();
         if (inSpec != null) {
-            DataTableSpec spec = RConnectionRemote.createRenamedDataTableSpec(
-                    inSpec);
+            final DataTableSpec spec = RConnectionRemote.createRenamedDataTableSpec(inSpec);
             for (int i = 0; i < spec.getNumColumns(); i++) {
-                DataColumnSpec cspec = spec.getColumnSpec(i);
+                final DataColumnSpec cspec = spec.getColumnSpec(i);
                 m_listModel.addElement(cspec);
             }
         }
@@ -253,18 +248,14 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
     private void createPNG() throws RserveException, REXPMismatchException {
         // we are careful here - not all R binaries support png
         // so we rather capture any failures
-        REXP xp = m_rModel.getRconnection().eval(
-                "try(png(\"" + FILE_NAME + "\"))");
+        final REXP xp = m_rModel.getRconnection().eval("try(png(\"" + FILE_NAME + "\"))");
         if (xp.asString() != null) { // if there's a string then we have a
             // problem, R sent an error
-            LOGGER.warn("Can't open png graphics device:\n"
-                    + xp.asString());
+            LOGGER.warn("Can't open png graphics device:\n" + xp.asString());
             // this is analogous to 'warnings', but for us it's sufficient to
             // get just the 1st warning
-            REXP w = m_rModel.getRconnection().eval(
-                    "if (exists(\"last.warning\") && "
-                            + "length(last.warning)>0) names(last.warning)[1] "
-                            + "else 0");
+            final REXP w = m_rModel.getRconnection().eval(
+                "if (exists(\"last.warning\") && " + "length(last.warning)>0) names(last.warning)[1] " + "else 0");
             if (w.asString() != null) {
                 LOGGER.warn(w.asString());
             }
@@ -280,9 +271,9 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
         // ... just in case the file gets really big ...
         // we don't know the size in advance, because it's just a stream.
         // also we can't rewind it, so we have to store it piece-by-piece
-        RFileInputStream is = m_rModel.getRconnection().openFile(FILE_NAME);
-        Vector<byte[]> buffers = new Vector<byte[]>();
-        int bufSize = 65536;
+        final RFileInputStream is = m_rModel.getRconnection().openFile(FILE_NAME);
+        final Vector<byte[]> buffers = new Vector<byte[]>();
+        final int bufSize = 65536;
         byte[] buf = new byte[bufSize];
         int imgLength = 0;
         int n = 0;
@@ -306,10 +297,10 @@ public class RScriptingNodeView extends NodeView<RScriptingNodeModel> {
         LOGGER.info("The image " + FILE_NAME + " has " + imgLength + " bytes.");
 
         // now let's join all the chunks into one, big array ...
-        byte[] imgCode = new byte[imgLength];
+        final byte[] imgCode = new byte[imgLength];
         int imgPos = 0;
-        for (Enumeration<byte[]> e = buffers.elements(); e.hasMoreElements();) {
-            byte[] b = e.nextElement();
+        for (final Enumeration<byte[]> e = buffers.elements(); e.hasMoreElements();) {
+            final byte[] b = e.nextElement();
             System.arraycopy(b, 0, imgCode, imgPos, bufSize);
             imgPos += bufSize;
         }

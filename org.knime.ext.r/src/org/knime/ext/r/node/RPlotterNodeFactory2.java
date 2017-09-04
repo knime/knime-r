@@ -75,8 +75,7 @@ public class RPlotterNodeFactory2 extends NodeFactory<RPlotterNodeModel2> {
      * {@inheritDoc}
      */
     @Override
-    public NodeView<RPlotterNodeModel2> createNodeView(
-            final int viewIndex, final RPlotterNodeModel2 nodeModel) {
+    public NodeView<RPlotterNodeModel2> createNodeView(final int viewIndex, final RPlotterNodeModel2 nodeModel) {
         return new RPlotterNodeView2(nodeModel);
     }
 

@@ -88,8 +88,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
-            throws InvalidSettingsException {
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         if (inSpecs[0] == null) {
             if (RDialogPanel.DEFAULT_R_COMMAND.equals(m_rCommand)) {
                 throw new InvalidSettingsException("Configure node or connect input.");
@@ -103,11 +102,11 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec) throws CanceledExecutionException, Exception {
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
+        throws CanceledExecutionException, Exception {
 
         // tmp files
-        File tempOutData = null;
+        final File tempOutData = null;
         File inDataCsvFile = null;
         File rCommandFile = null;
         File rOutFile = null;
@@ -115,38 +114,38 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
 
         try {
             // execute R cmd
-            StringBuilder completeCmd = new StringBuilder();
+            final StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(getSetWorkingDirCmd());
 
             // data in-port is optional
             if (inData[0] != null) {
                 // preprocess data in in DataTable.
-                PortObject[] inDataTables = preprocessDataTable(inData, exec);
+                final PortObject[] inDataTables = preprocessDataTable(inData, exec);
                 // write data to csv
                 inDataCsvFile = writeInDataCsvFile((BufferedDataTable)inDataTables[0], exec);
 
                 // write data into R
                 completeCmd.append(READ_DATA_CMD_PREFIX);
                 completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
-                completeCmd.append(getReadCSVCommandSuffix(((BufferedDataTable) inDataTables[0]).getDataTableSpec()));
+                completeCmd.append(getReadCSVCommandSuffix(((BufferedDataTable)inDataTables[0]).getDataTableSpec()));
             }
             completeCmd.append(m_rCommand.trim());
             completeCmd.append("\n");
 
-            File fileR = File.createTempFile("~knime", ".R", new File(KNIMEConstants.getKNIMETempDir()));
+            final File fileR = File.createTempFile("~knime", ".R", new File(KNIMEConstants.getKNIMETempDir()));
             fileR.deleteOnExit();
             completeCmd.append("save(list = ls(all=TRUE), file=\"");
             completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
             completeCmd.append("\")\n");
 
             // write R command
-            String rCmd = resolveVariablesInScript(completeCmd.toString());
+            final String rCmd = resolveVariablesInScript(completeCmd.toString());
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
 
             // create shell command
-            StringBuilder shellCmd = new StringBuilder();
+            final StringBuilder shellCmd = new StringBuilder();
 
             final String rBinaryFile = getRBinaryPathAndArguments();
             shellCmd.append(rBinaryFile);
@@ -154,13 +153,13 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
             shellCmd.append(" " + rOutFile.getName());
 
             // execute shell command
-            String shcmd = shellCmd.toString();
+            final String shcmd = shellCmd.toString();
             LOGGER.debug("Shell command: \n" + shcmd);
 
-            CommandExecution cmdExec = new CommandExecution(shcmd);
+            final CommandExecution cmdExec = new CommandExecution(shcmd);
             cmdExec.addObserver(this);
             cmdExec.setExecutionDir(rCommandFile.getParentFile());
-            int exitVal = cmdExec.execute(exec);
+            final int exitVal = cmdExec.execute(exec);
 
             setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));
             setExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
@@ -176,7 +175,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
             synchronized (cmdExec) {
 
                 // save error description of the Rout file to the ErrorOut
-                LinkedList<String> list = new LinkedList<String>(cmdExec.getStdErr());
+                final LinkedList<String> list = new LinkedList<String>(cmdExec.getStdErr());
 
                 list.add("#############################################");
                 list.add("#");
@@ -184,7 +183,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
                 list.add("#");
                 list.add("#############################################");
                 list.add(" ");
-                BufferedReader bfr = new BufferedReader(new FileReader(rOutFile));
+                final BufferedReader bfr = new BufferedReader(new FileReader(rOutFile));
                 String line;
                 while ((line = bfr.readLine()) != null) {
                     list.add(line);
@@ -192,7 +191,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
                 bfr.close();
 
                 // use row before last as R error.
-                int index = list.size() - 2;
+                final int index = list.size() - 2;
                 if (index >= 0) {
                     rErr = list.get(index);
                 }
@@ -222,13 +221,12 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
         m_rCommand = RDialogPanel.getExpressionFrom(settings);
         try {
             m_argumentsR.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException ise) {
+        } catch (final InvalidSettingsException ise) {
             // load old workflow no option is used, overwrite new dialog dft
             m_argumentsR.setStringValue("");
         }
@@ -250,7 +248,7 @@ public class RLocalTable2RNodeModel extends RAbstractLocalNodeModel {
     protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.validateSettings(settings);
         final String exp = RDialogPanel.getExpressionFrom(settings);
-        if (exp == null || exp.trim().isEmpty()) {
+        if ((exp == null) || exp.trim().isEmpty()) {
             throw new InvalidSettingsException("Configure node and enter a non-empty R script.");
         }
     }

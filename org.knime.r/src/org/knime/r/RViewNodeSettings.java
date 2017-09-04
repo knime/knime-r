@@ -57,209 +57,202 @@ import org.knime.core.node.config.ConfigRO;
  */
 public class RViewNodeSettings {
 
-	private static final String IMAGE_WIDTH = "Image width";
-	private static final String IMAGE_HEIGHT = "Image height";
-	private static final String IMAGE_RESOLUTION = "Image resolution";
-	private static final String IMAGE_BACKGROUND_COLOR = "Image background color";
+    private static final String IMAGE_WIDTH = "Image width";
 
-	private static final String TEXT_POINT_SIZE = "Text point size";
+    private static final String IMAGE_HEIGHT = "Image height";
 
-	private static final String R_SETTINGS = "R settings";
+    private static final String IMAGE_RESOLUTION = "Image resolution";
 
-	/** Image width. */
-	private int m_imgWidth;
+    private static final String IMAGE_BACKGROUND_COLOR = "Image background color";
 
-	/** Image height. */
-	private int m_imgHeight;
+    private static final String TEXT_POINT_SIZE = "Text point size";
 
-	/** Image resolution. */
-	private String m_imgResolution;
+    private static final String R_SETTINGS = "R settings";
 
-	/** Image background color. */
-	private String m_imgBackgroundColor;
+    /** Image width. */
+    private int m_imgWidth;
 
-	/** Text point size. */
-	private int m_textPointSize;
+    /** Image height. */
+    private int m_imgHeight;
 
-	/** R settings */
-	private RSnippetSettings m_rSettings;
+    /** Image resolution. */
+    private String m_imgResolution;
 
-	public RViewNodeSettings() {
-		this(new RSnippetSettings());
-	}
+    /** Image background color. */
+    private String m_imgBackgroundColor;
 
-	public RViewNodeSettings(final RSnippetSettings rSnippetSettings) {
-		m_imgWidth = 640;
-		m_imgHeight = 640;
-		m_imgResolution = "NA";
-		m_imgBackgroundColor = "#ffffff";
-		m_textPointSize = 12;
-		m_rSettings = rSnippetSettings;
-	}
+    /** Text point size. */
+    private int m_textPointSize;
 
-	public static ConfigRO extractRSettings(final ConfigRO config) {
-		if (config.containsKey(R_SETTINGS)) {
-			try {
-				return config.getConfig(R_SETTINGS);
-			} catch (final InvalidSettingsException e) {
-				// should never happen
-				throw new RuntimeException(e);
-			}
-		} else {
-			return null;
-		}
-	}
+    /** R settings */
+    private RSnippetSettings m_rSettings;
 
-	/**
-	 * Saves current parameters to settings object.
-	 *
-	 * @param settings
-	 *            To save to.
-	 */
-	public void saveSettings(final NodeSettingsWO settings) {
-		settings.addInt(IMAGE_WIDTH, m_imgWidth);
-		settings.addInt(IMAGE_HEIGHT, m_imgHeight);
-		settings.addString(IMAGE_RESOLUTION, m_imgResolution);
-		settings.addString(IMAGE_BACKGROUND_COLOR, m_imgBackgroundColor);
-		settings.addInt(TEXT_POINT_SIZE, m_textPointSize);
-		m_rSettings.saveSettings(settings.addConfig(R_SETTINGS));
-	}
+    public RViewNodeSettings() {
+        this(new RSnippetSettings());
+    }
 
-	/**
-	 * Loads parameters in NodeModel.
-	 *
-	 * @param settings
-	 *            To load from.
-	 * @throws InvalidSettingsException
-	 *             If incomplete or wrong.
-	 */
-	public void loadSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
+    public RViewNodeSettings(final RSnippetSettings rSnippetSettings) {
+        m_imgWidth = 640;
+        m_imgHeight = 640;
+        m_imgResolution = "NA";
+        m_imgBackgroundColor = "#ffffff";
+        m_textPointSize = 12;
+        m_rSettings = rSnippetSettings;
+    }
 
-		if (settings.containsKey(IMAGE_WIDTH)) {
-			m_imgWidth = settings.getInt(IMAGE_WIDTH);
-			m_imgHeight = settings.getInt(IMAGE_HEIGHT);
-			m_imgResolution = settings.getString(IMAGE_RESOLUTION);
-			m_imgBackgroundColor = settings.getString(IMAGE_BACKGROUND_COLOR);
-			m_textPointSize = settings.getInt(TEXT_POINT_SIZE);
-			m_rSettings.loadSettings(settings.getConfig(R_SETTINGS));
-		} else {
-			// Support just R Settings
-			m_rSettings.loadSettings(settings);
-		}
-	}
+    public static ConfigRO extractRSettings(final ConfigRO config) {
+        if (config.containsKey(R_SETTINGS)) {
+            try {
+                return config.getConfig(R_SETTINGS);
+            } catch (final InvalidSettingsException e) {
+                // should never happen
+                throw new RuntimeException(e);
+            }
+        } else {
+            return null;
+        }
+    }
 
-	/**
-	 * Loads parameters in Dialog.
-	 *
-	 * @param settings
-	 *            To load from.
-	 */
-	public void loadSettingsForDialog(final NodeSettingsRO settings) {
-		m_imgWidth = settings.getInt(IMAGE_WIDTH, 640);
-		m_imgHeight = settings.getInt(IMAGE_HEIGHT, 640);
-		m_imgResolution = settings.getString(IMAGE_RESOLUTION, "NA");
-		m_imgBackgroundColor = settings.getString(IMAGE_BACKGROUND_COLOR, "#ffffff");
-		m_textPointSize = settings.getInt(TEXT_POINT_SIZE, 12);
-		if (settings.containsKey(R_SETTINGS)) {
-			try {
-				m_rSettings.loadSettingsForDialog(settings.getConfig(R_SETTINGS));
-			} catch (final InvalidSettingsException e) {
-				// should never happen
-				throw new RuntimeException(e);
-			}
-		} else {
-			m_rSettings = new RSnippetSettings();
-		}
-	}
+    /**
+     * Saves current parameters to settings object.
+     *
+     * @param settings To save to.
+     */
+    public void saveSettings(final NodeSettingsWO settings) {
+        settings.addInt(IMAGE_WIDTH, m_imgWidth);
+        settings.addInt(IMAGE_HEIGHT, m_imgHeight);
+        settings.addString(IMAGE_RESOLUTION, m_imgResolution);
+        settings.addString(IMAGE_BACKGROUND_COLOR, m_imgBackgroundColor);
+        settings.addInt(TEXT_POINT_SIZE, m_textPointSize);
+        m_rSettings.saveSettings(settings.addConfig(R_SETTINGS));
+    }
 
-	/**
-	 * @return the m_imgWidth
-	 */
-	public int getImageWidth() {
-		return m_imgWidth;
-	}
+    /**
+     * Loads parameters in NodeModel.
+     *
+     * @param settings To load from.
+     * @throws InvalidSettingsException If incomplete or wrong.
+     */
+    public void loadSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
 
-	/**
-	 * @param m_imgWidth
-	 *            the m_imgWidth to set
-	 */
-	public void setImageWidth(final int imgWidth) {
-		this.m_imgWidth = imgWidth;
-	}
+        if (settings.containsKey(IMAGE_WIDTH)) {
+            m_imgWidth = settings.getInt(IMAGE_WIDTH);
+            m_imgHeight = settings.getInt(IMAGE_HEIGHT);
+            m_imgResolution = settings.getString(IMAGE_RESOLUTION);
+            m_imgBackgroundColor = settings.getString(IMAGE_BACKGROUND_COLOR);
+            m_textPointSize = settings.getInt(TEXT_POINT_SIZE);
+            m_rSettings.loadSettings(settings.getConfig(R_SETTINGS));
+        } else {
+            // Support just R Settings
+            m_rSettings.loadSettings(settings);
+        }
+    }
 
-	/**
-	 * @return the m_imgHeight
-	 */
-	public int getImageHeight() {
-		return m_imgHeight;
-	}
+    /**
+     * Loads parameters in Dialog.
+     *
+     * @param settings To load from.
+     */
+    public void loadSettingsForDialog(final NodeSettingsRO settings) {
+        m_imgWidth = settings.getInt(IMAGE_WIDTH, 640);
+        m_imgHeight = settings.getInt(IMAGE_HEIGHT, 640);
+        m_imgResolution = settings.getString(IMAGE_RESOLUTION, "NA");
+        m_imgBackgroundColor = settings.getString(IMAGE_BACKGROUND_COLOR, "#ffffff");
+        m_textPointSize = settings.getInt(TEXT_POINT_SIZE, 12);
+        if (settings.containsKey(R_SETTINGS)) {
+            try {
+                m_rSettings.loadSettingsForDialog(settings.getConfig(R_SETTINGS));
+            } catch (final InvalidSettingsException e) {
+                // should never happen
+                throw new RuntimeException(e);
+            }
+        } else {
+            m_rSettings = new RSnippetSettings();
+        }
+    }
 
-	/**
-	 * @param m_imgHeight
-	 *            the m_imgHeight to set
-	 */
-	public void setImageHeight(final int imgHeight) {
-		this.m_imgHeight = imgHeight;
-	}
+    /**
+     * @return the m_imgWidth
+     */
+    public int getImageWidth() {
+        return m_imgWidth;
+    }
 
-	/**
-	 * @return the m_imgResolution
-	 */
-	public String getImageResolution() {
-		return m_imgResolution;
-	}
+    /**
+     * @param m_imgWidth the m_imgWidth to set
+     */
+    public void setImageWidth(final int imgWidth) {
+        this.m_imgWidth = imgWidth;
+    }
 
-	/**
-	 * @param m_imgResolution
-	 *            the m_imgResolution to set
-	 */
-	public void setImageResolution(final String imgResolution) {
-		this.m_imgResolution = imgResolution;
-	}
+    /**
+     * @return the m_imgHeight
+     */
+    public int getImageHeight() {
+        return m_imgHeight;
+    }
 
-	/**
-	 * @return the m_imgBackgroundColor
-	 */
-	public String getImageBackgroundColor() {
-		return m_imgBackgroundColor;
-	}
+    /**
+     * @param m_imgHeight the m_imgHeight to set
+     */
+    public void setImageHeight(final int imgHeight) {
+        this.m_imgHeight = imgHeight;
+    }
 
-	/**
-	 * @param m_imgBackgroundColor
-	 *            the m_imgBackgroundColor to set
-	 */
-	public void setImageBackgroundColor(final String imgBackgroundColor) {
-		this.m_imgBackgroundColor = imgBackgroundColor;
-	}
+    /**
+     * @return the m_imgResolution
+     */
+    public String getImageResolution() {
+        return m_imgResolution;
+    }
 
-	/**
-	 * @return the m_textPointSize
-	 */
-	public int getTextPointSize() {
-		return m_textPointSize;
-	}
+    /**
+     * @param m_imgResolution the m_imgResolution to set
+     */
+    public void setImageResolution(final String imgResolution) {
+        this.m_imgResolution = imgResolution;
+    }
 
-	/**
-	 * @param m_textPointSize
-	 *            the m_textPointSize to set
-	 */
-	public void setTextPointSize(final int textPointSize) {
-		this.m_textPointSize = textPointSize;
-	}
+    /**
+     * @return the m_imgBackgroundColor
+     */
+    public String getImageBackgroundColor() {
+        return m_imgBackgroundColor;
+    }
 
-	/**
-	 * @return the m_rSettings
-	 */
-	public RSnippetSettings getRSettings() {
-		return m_rSettings;
-	}
+    /**
+     * @param m_imgBackgroundColor the m_imgBackgroundColor to set
+     */
+    public void setImageBackgroundColor(final String imgBackgroundColor) {
+        this.m_imgBackgroundColor = imgBackgroundColor;
+    }
 
-	/**
-	 * @param m_rSettings
-	 *            the m_rSettings to set
-	 */
-	public void setRSettings(final RSnippetSettings rSettings) {
-		this.m_rSettings = rSettings;
-	}
+    /**
+     * @return the m_textPointSize
+     */
+    public int getTextPointSize() {
+        return m_textPointSize;
+    }
+
+    /**
+     * @param m_textPointSize the m_textPointSize to set
+     */
+    public void setTextPointSize(final int textPointSize) {
+        this.m_textPointSize = textPointSize;
+    }
+
+    /**
+     * @return the m_rSettings
+     */
+    public RSnippetSettings getRSettings() {
+        return m_rSettings;
+    }
+
+    /**
+     * @param m_rSettings the m_rSettings to set
+     */
+    public void setRSettings(final RSnippetSettings rSettings) {
+        this.m_rSettings = rSettings;
+    }
 
 }

@@ -130,8 +130,9 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
 
     private int m_tableInPort;
 
-    private JTextField m_sqlOutTableNameTextField = new JTextField();
-    private JTextField m_sqlInTableNameTextField = new JTextField();
+    private final JTextField m_sqlOutTableNameTextField = new JTextField();
+
+    private final JTextField m_sqlInTableNameTextField = new JTextField();
 
     /**
      * @param templateMetaCategory the meta category used in the templates tab or to create templates

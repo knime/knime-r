@@ -77,298 +77,289 @@ import org.knime.r.controller.IRController.RException;
 import org.knime.r.controller.RController;
 
 /**
- * The <code>RSnippetNodeModel</code> provides functionality to create a R
- * script with user defined R code and run it.
+ * The <code>RSnippetNodeModel</code> provides functionality to create a R script with user defined R code and run it.
  *
  * @author Heiko Hofer
  * @author Jonathan Hale
  */
 public class RSnippetNodeModel extends ExtToolOutputNodeModel {
-	private final RSnippet m_snippet;
-	private final RSnippetNodeConfig m_config;
-	private static final NodeLogger LOGGER = NodeLogger.getLogger("R Snippet");
+    private final RSnippet m_snippet;
 
-	private boolean m_hasROutPorts = true;
+    private final RSnippetNodeConfig m_config;
 
-	private List<String> m_librariesInR = null;
+    private static final NodeLogger LOGGER = NodeLogger.getLogger("R Snippet");
 
-	/**
-	 * Creates new instance of <code>RSnippetNodeModel</code> with one data in
-	 * and data one out port.
-	 *
-	 * @param config
-	 *            R Snippet Node Config
-	 */
-	public RSnippetNodeModel(final RSnippetNodeConfig config) {
-		super(config.getInPortTypes().toArray(new PortType[config.getInPortTypes().size()]),
-				config.getOutPortTypes().toArray(new PortType[config.getOutPortTypes().size()]));
-		m_snippet = new RSnippet();
-		m_snippet.attachLogger(LOGGER);
-		m_snippet.getSettings().setScript(config.getDefaultScript());
-		m_config = config;
-	}
+    private boolean m_hasROutPorts = true;
 
-	@Override
-	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		final FlowVariableRepository flowVarRepository = new FlowVariableRepository(getAvailableInputFlowVariables());
+    private List<String> m_librariesInR = null;
 
-		for (final FlowVariable flowVar : flowVarRepository.getModified()) {
-			if (flowVar.getType().equals(Type.INTEGER)) {
-				pushFlowVariableInt(flowVar.getName(), flowVar.getIntValue());
-			} else if (flowVar.getType().equals(Type.DOUBLE)) {
-				pushFlowVariableDouble(flowVar.getName(), flowVar.getDoubleValue());
-			} else {
-				pushFlowVariableString(flowVar.getName(), flowVar.getStringValue());
-			}
-		}
+    /**
+     * Creates new instance of <code>RSnippetNodeModel</code> with one data in and data one out port.
+     *
+     * @param config R Snippet Node Config
+     */
+    public RSnippetNodeModel(final RSnippetNodeConfig config) {
+        super(config.getInPortTypes().toArray(new PortType[config.getInPortTypes().size()]),
+            config.getOutPortTypes().toArray(new PortType[config.getOutPortTypes().size()]));
+        m_snippet = new RSnippet();
+        m_snippet.attachLogger(LOGGER);
+        m_snippet.getSettings().setScript(config.getDefaultScript());
+        m_config = config;
+    }
 
-		m_hasROutPorts = false;
-		final Collection<PortObjectSpec> outSpec = new ArrayList<PortObjectSpec>(4);
-		for (final PortType portType : m_config.getOutPortTypes()) {
-			if (portType.equals(BufferedDataTable.TYPE)) {
-				outSpec.add(null);
-			} else if (portType.equals(RPortObject.TYPE)) {
-				outSpec.add(RPortObjectSpec.INSTANCE);
-				m_hasROutPorts = true;
-			}
-		}
-		return outSpec.toArray(new PortObjectSpec[outSpec.size()]);
-	}
+    @Override
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+        final FlowVariableRepository flowVarRepository = new FlowVariableRepository(getAvailableInputFlowVariables());
 
-	@Override
-	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
-		return executeInternal(m_snippet.getSettings(), inData, exec);
-	}
+        for (final FlowVariable flowVar : flowVarRepository.getModified()) {
+            if (flowVar.getType().equals(Type.INTEGER)) {
+                pushFlowVariableInt(flowVar.getName(), flowVar.getIntValue());
+            } else if (flowVar.getType().equals(Type.DOUBLE)) {
+                pushFlowVariableDouble(flowVar.getName(), flowVar.getDoubleValue());
+            } else {
+                pushFlowVariableString(flowVar.getName(), flowVar.getStringValue());
+            }
+        }
 
-	private PortObject[] executeInternal(final RSnippetSettings settings, final PortObject[] inData,
-			final ExecutionContext exec) throws Exception {
-		m_snippet.getSettings().loadSettings(settings);
+        m_hasROutPorts = false;
+        final Collection<PortObjectSpec> outSpec = new ArrayList<PortObjectSpec>(4);
+        for (final PortType portType : m_config.getOutPortTypes()) {
+            if (portType.equals(BufferedDataTable.TYPE)) {
+                outSpec.add(null);
+            } else if (portType.equals(RPortObject.TYPE)) {
+                outSpec.add(RPortObjectSpec.INSTANCE);
+                m_hasROutPorts = true;
+            }
+        }
+        return outSpec.toArray(new PortObjectSpec[outSpec.size()]);
+    }
 
-		final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
+    @Override
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
+        return executeInternal(m_snippet.getSettings(), inData, exec);
+    }
 
-		final RController controller = new RController();
-		controller.setUseNodeContext(true);
-		try {
-			exec.checkCanceled();
-			final PortObject[] out = executeSnippet(controller, inData, flowVarRepo, exec);
+    private PortObject[] executeInternal(final RSnippetSettings settings, final PortObject[] inData,
+        final ExecutionContext exec) throws Exception {
+        m_snippet.getSettings().loadSettings(settings);
 
-			pushFlowVariables(flowVarRepo);
+        final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
 
-			return out;
-		} finally {
-			controller.close();
-		}
-	}
+        final RController controller = new RController();
+        controller.setUseNodeContext(true);
+        try {
+            exec.checkCanceled();
+            final PortObject[] out = executeSnippet(controller, inData, flowVarRepo, exec);
 
-	/**
-	 * Execute the R snippet stored in the node settings
-	 *
-	 * @param controller
-	 *            RController to use for execution
-	 * @param inData
-	 *            input ports to pass to R
-	 * @param flowVarRepo
-	 *            flow variables to pass to R
-	 * @param exec
-	 *            ExecutionContext which enables canceling of the execution.
-	 * @throws Exception
-	 */
-	protected PortObject[] executeSnippet(final RController controller, final PortObject[] inData,
-			final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws Exception {
-	    return executeSnippet(controller, getScript(), inData, flowVarRepo, exec);
-	}
+            pushFlowVariables(flowVarRepo);
 
-	/**
-	 * Execute the R snippet stored in the node settings
-	 *
-	 * @param controller
-	 *            RController to use for execution
-	 * @param script
-	 *            Script to run
-	 * @param inData
-	 *            input ports to pass to R
-	 * @param flowVarRepo
-	 *            flow variables to pass to R
-	 * @param exec
-	 *            ExecutionContext which enables canceling of the execution.
-	 * @throws Exception
-	 */
-	protected PortObject[] executeSnippet(final RController controller, final String script, final PortObject[] inData,
-			final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws Exception {
-		// blow away the output of any previous (failed) runs
-		setFailedExternalErrorOutput(new LinkedList<String>());
-		setFailedExternalOutput(new LinkedList<String>());
+            return out;
+        } finally {
+            controller.close();
+        }
+    }
 
-		File tempWorkspaceFile = null;
-		try {
-			// just to have a better progress report
-			double importTime = 0.0;
-			for (final PortType portType : m_config.getOutPortTypes()) {
-				if (portType.equals(BufferedDataTable.TYPE)) {
-					importTime = 0.3;
-				}
-			}
-			exec.setProgress(0.0);
+    /**
+     * Execute the R snippet stored in the node settings
+     *
+     * @param controller RController to use for execution
+     * @param inData input ports to pass to R
+     * @param flowVarRepo flow variables to pass to R
+     * @param exec ExecutionContext which enables canceling of the execution.
+     * @throws Exception
+     */
+    protected PortObject[] executeSnippet(final RController controller, final PortObject[] inData,
+        final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws Exception {
+        return executeSnippet(controller, getScript(), inData, flowVarRepo, exec);
+    }
 
-			final RSnippetSettings s = m_snippet.getSettings();
-			controller.importDataFromPorts(inData, exec.createSubExecutionContext(importTime),
-                                s.getSendBatchSize(), s.getKnimeInType(), s.getSendRowNames());
-			controller.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
+    /**
+     * Execute the R snippet stored in the node settings
+     *
+     * @param controller RController to use for execution
+     * @param script Script to run
+     * @param inData input ports to pass to R
+     * @param flowVarRepo flow variables to pass to R
+     * @param exec ExecutionContext which enables canceling of the execution.
+     * @throws Exception
+     */
+    protected PortObject[] executeSnippet(final RController controller, final String script, final PortObject[] inData,
+        final FlowVariableRepository flowVarRepo, final ExecutionContext exec) throws Exception {
+        // blow away the output of any previous (failed) runs
+        setFailedExternalErrorOutput(new LinkedList<String>());
+        setFailedExternalOutput(new LinkedList<String>());
 
-			tempWorkspaceFile = FileUtil.createTempFile("R-workspace", ".RData");
-			runRScript(controller, script, tempWorkspaceFile, inData, exec.createSubExecutionContext(1.0 - importTime));
-			exec.setProgress(1.0 - importTime);
+        File tempWorkspaceFile = null;
+        try {
+            // just to have a better progress report
+            double importTime = 0.0;
+            for (final PortType portType : m_config.getOutPortTypes()) {
+                if (portType.equals(BufferedDataTable.TYPE)) {
+                    importTime = 0.3;
+                }
+            }
+            exec.setProgress(0.0);
 
-			exec.setMessage("Importing data from R");
-			final Collection<PortObject> outPorts = new ArrayList<PortObject>(4);
-			for (final PortType portType : m_config.getOutPortTypes()) {
-				if (portType.equals(BufferedDataTable.TYPE)) {
-					outPorts.add(importDataFromR(controller, m_snippet.getSettings().getOutNonNumbersAsMissing(),
-							exec.createSubExecutionContext(0.3)));
-				} else if (portType.equals(RPortObject.TYPE)) {
-					outPorts.add(new RPortObject(tempWorkspaceFile, m_librariesInR));
-				}
-			}
-			exec.setMessage("Importing flow variables from R");
-			importFlowVariablesFromR(controller, flowVarRepo, exec);
+            final RSnippetSettings s = m_snippet.getSettings();
+            controller.importDataFromPorts(inData, exec.createSubExecutionContext(importTime), s.getSendBatchSize(),
+                s.getKnimeInType(), s.getSendRowNames());
+            controller.exportFlowVariables(flowVarRepo.getInFlowVariables(), "knime.flow.in", exec);
 
-			return outPorts.toArray(new PortObject[outPorts.size()]);
+            tempWorkspaceFile = FileUtil.createTempFile("R-workspace", ".RData");
+            runRScript(controller, script, tempWorkspaceFile, inData, exec.createSubExecutionContext(1.0 - importTime));
+            exec.setProgress(1.0 - importTime);
 
-		} catch (final Exception e) {
-			if (e instanceof CanceledExecutionException) {
-				throw (CanceledExecutionException) e;
-			}
-			throw e;
-		}
-	}
+            exec.setMessage("Importing data from R");
+            final Collection<PortObject> outPorts = new ArrayList<PortObject>(4);
+            for (final PortType portType : m_config.getOutPortTypes()) {
+                if (portType.equals(BufferedDataTable.TYPE)) {
+                    outPorts.add(importDataFromR(controller, m_snippet.getSettings().getOutNonNumbersAsMissing(),
+                        exec.createSubExecutionContext(0.3)));
+                } else if (portType.equals(RPortObject.TYPE)) {
+                    outPorts.add(new RPortObject(tempWorkspaceFile, m_librariesInR));
+                }
+            }
+            exec.setMessage("Importing flow variables from R");
+            importFlowVariablesFromR(controller, flowVarRepo, exec);
 
-	/**
-	 * @return Script to be run in {@link #executeSnippet(RController, PortObject[], FlowVariableRepository, ExecutionContext)}
-	 */
+            return outPorts.toArray(new PortObject[outPorts.size()]);
+
+        } catch (final Exception e) {
+            if (e instanceof CanceledExecutionException) {
+                throw (CanceledExecutionException)e;
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * @return Script to be run in
+     *         {@link #executeSnippet(RController, PortObject[], FlowVariableRepository, ExecutionContext)}
+     */
     protected String getScript() {
         try {
             return m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim();
-        } catch (BadLocationException e) {
+        } catch (final BadLocationException e) {
             // Will never happen
             throw new IllegalStateException(e);
         }
     }
 
-	private void runRScript(final RController controller, final String script, final File tempWorkspaceFile, final PortObject[] inData,
-			final ExecutionContext exec) throws Exception {
+    private void runRScript(final RController controller, final String script, final File tempWorkspaceFile,
+        final PortObject[] inData, final ExecutionContext exec) throws Exception {
 
-		final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
+        final ConsoleLikeRExecutor executor = new ConsoleLikeRExecutor(controller);
 
-		exec.setMessage("Setting up output capturing");
-		executor.setupOutputCapturing(exec);
+        exec.setMessage("Setting up output capturing");
+        executor.setupOutputCapturing(exec);
 
-		exec.setMessage("Executing R script");
+        exec.setMessage("Executing R script");
 
-		// run prefix and script itself
-		executor.executeIgnoreResult("setwd(\"" + tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/') + "\")\n"
-				+ m_config.getScriptPrefix() + "\n"
-				+ script, exec);
-		// run postfix in a separate evaluation to make sure we are not preventing the return value of the script being printed, which is
-		// important for ggplot2 graphs, which would otherwise not be drawn onto the graphics (png) device.
-		controller.monitoredEval(
-				m_config.getScriptSuffix() + "\n" + RController.R_LOADED_LIBRARIES_VARIABLE + "<-(.packages())", exec, false);
+        // run prefix and script itself
+        executor.executeIgnoreResult("setwd(\"" + tempWorkspaceFile.getParentFile().getAbsolutePath().replace('\\', '/')
+            + "\")\n" + m_config.getScriptPrefix() + "\n" + script, exec);
+        // run postfix in a separate evaluation to make sure we are not preventing the return value of the script being printed, which is
+        // important for ggplot2 graphs, which would otherwise not be drawn onto the graphics (png) device.
+        controller.monitoredEval(
+            m_config.getScriptSuffix() + "\n" + RController.R_LOADED_LIBRARIES_VARIABLE + "<-(.packages())", exec,
+            false);
 
-		exec.setMessage("Collecting captured output");
-		executor.finishOutputCapturing(exec);
+        exec.setMessage("Collecting captured output");
+        executor.finishOutputCapturing(exec);
 
-		// process the return value of error capturing and update Error and
-		// Output views accordingly
-		if (!executor.getStdOut().isEmpty()) {
-			setExternalOutput(getLinkedListFromOutput(executor.getStdOut()));
-		}
+        // process the return value of error capturing and update Error and
+        // Output views accordingly
+        if (!executor.getStdOut().isEmpty()) {
+            setExternalOutput(getLinkedListFromOutput(executor.getStdOut()));
+        }
 
-		if (!executor.getStdErr().isEmpty()) {
-			final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
-			setExternalErrorOutput(output);
+        if (!executor.getStdErr().isEmpty()) {
+            final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
+            setExternalErrorOutput(output);
 
-			for (final String line : output) {
-				if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
-					throw new RException("Error in R code: \"" + line + "\"", null);
-				}
-			}
-		}
+            for (final String line : output) {
+                if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
+                    throw new RException("Error in R code: \"" + line + "\"", null);
+                }
+            }
+        }
 
-		// cleanup temporary variables of output capturing and
-		// consoleLikeCommand stuff
-		exec.setMessage("Cleaning up");
-		executor.cleanup(exec);
+        // cleanup temporary variables of output capturing and
+        // consoleLikeCommand stuff
+        exec.setMessage("Cleaning up");
+        executor.cleanup(exec);
 
-		if (m_hasROutPorts) {
-			// save workspace to temporary file
-			m_librariesInR = importListOfLibrariesFromR(controller);
-			controller.saveWorkspace(tempWorkspaceFile, exec);
-		}
+        if (m_hasROutPorts) {
+            // save workspace to temporary file
+            m_librariesInR = importListOfLibrariesFromR(controller);
+            controller.saveWorkspace(tempWorkspaceFile, exec);
+        }
 
-	}
+    }
 
-	private static final LinkedList<String> getLinkedListFromOutput(final String output) {
-		final LinkedList<String> list = new LinkedList<>();
-		Arrays.stream(output.split("\\r?\\n")).forEach((s) -> list.add(s));
-		return list;
-	}
+    private static final LinkedList<String> getLinkedListFromOutput(final String output) {
+        final LinkedList<String> list = new LinkedList<>();
+        Arrays.stream(output.split("\\r?\\n")).forEach((s) -> list.add(s));
+        return list;
+    }
 
-	@Override
-	protected void reset() {
-		super.reset();
+    @Override
+    protected void reset() {
+        super.reset();
 
-		m_librariesInR = null;
-	}
+        m_librariesInR = null;
+    }
 
-	private BufferedDataTable importDataFromR(final RController controller, final boolean nonNumbersAsMissing,
-			final ExecutionContext exec) throws RException, CanceledExecutionException {
-		final BufferedDataTable out = controller.importBufferedDataTable("knime.out", nonNumbersAsMissing, exec);
-		return out;
-	}
+    private BufferedDataTable importDataFromR(final RController controller, final boolean nonNumbersAsMissing,
+        final ExecutionContext exec) throws RException, CanceledExecutionException {
+        final BufferedDataTable out = controller.importBufferedDataTable("knime.out", nonNumbersAsMissing, exec);
+        return out;
+    }
 
-	private void importFlowVariablesFromR(final RController controller, final FlowVariableRepository flowVarRepo,
-			final ExecutionContext exec) throws RException, CanceledExecutionException {
-		final Collection<FlowVariable> flowVars = controller.importFlowVariables("knime.flow.out");
-		for (final FlowVariable flowVar : flowVars) {
-			flowVarRepo.put(flowVar);
-		}
-	}
+    private void importFlowVariablesFromR(final RController controller, final FlowVariableRepository flowVarRepo,
+        final ExecutionContext exec) throws RException, CanceledExecutionException {
+        final Collection<FlowVariable> flowVars = controller.importFlowVariables("knime.flow.out");
+        for (final FlowVariable flowVar : flowVars) {
+            flowVarRepo.put(flowVar);
+        }
+    }
 
-	private List<String> importListOfLibrariesFromR(final RController controller) throws RException {
-		return controller.importListOfLibrariesAndDelete();
-	}
+    private List<String> importListOfLibrariesFromR(final RController controller) throws RException {
+        return controller.importListOfLibrariesAndDelete();
+    }
 
-	/**
-	 * Push changed flow variables.
-	 */
-	protected void pushFlowVariables(final FlowVariableRepository flowVarRepo) {
-		for (final FlowVariable var : flowVarRepo.getModified()) {
-			final Type type = var.getType();
-			if (type.equals(Type.INTEGER)) {
-				pushFlowVariableInt(var.getName(), var.getIntValue());
-			} else if (type.equals(Type.DOUBLE)) {
-				pushFlowVariableDouble(var.getName(), var.getDoubleValue());
-			} else { // case: type.equals(Type.STRING)
-				pushFlowVariableString(var.getName(), var.getStringValue());
-			}
-		}
-	}
+    /**
+     * Push changed flow variables.
+     */
+    protected void pushFlowVariables(final FlowVariableRepository flowVarRepo) {
+        for (final FlowVariable var : flowVarRepo.getModified()) {
+            final Type type = var.getType();
+            if (type.equals(Type.INTEGER)) {
+                pushFlowVariableInt(var.getName(), var.getIntValue());
+            } else if (type.equals(Type.DOUBLE)) {
+                pushFlowVariableDouble(var.getName(), var.getDoubleValue());
+            } else { // case: type.equals(Type.STRING)
+                pushFlowVariableString(var.getName(), var.getStringValue());
+            }
+        }
+    }
 
-	@Override
-	protected void saveSettingsTo(final NodeSettingsWO settings) {
-		m_snippet.getSettings().saveSettings(settings);
-	}
+    @Override
+    protected void saveSettingsTo(final NodeSettingsWO settings) {
+        m_snippet.getSettings().saveSettings(settings);
+    }
 
-	@Override
-	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-		final RSnippetSettings s = new RSnippetSettings();
-		s.loadSettings(settings);
-		// TODO: Check settings
-	}
+    @Override
+    protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
+        final RSnippetSettings s = new RSnippetSettings();
+        s.loadSettings(settings);
+        // TODO: Check settings
+    }
 
-	@Override
-	protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
-		m_snippet.getSettings().loadSettings(settings);
-	}
+    @Override
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
+        m_snippet.getSettings().loadSettings(settings);
+    }
 
     /**
      * Get the settings for the R snippet

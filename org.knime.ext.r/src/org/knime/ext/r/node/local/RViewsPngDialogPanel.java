@@ -73,111 +73,101 @@ public class RViewsPngDialogPanel extends JLabel {
     public static final String TAB_PNG_TITLE = "PNG Settings";
 
     /**
-     * @return a <code>SettingsModelIntegerBounded</code> instance
-     * containing the height of the png image to create by R.
+     * @return a <code>SettingsModelIntegerBounded</code> instance containing the height of the png image to create by
+     *         R.
      */
     public static final SettingsModelIntegerBounded createHeightModel() {
-        return new SettingsModelIntegerBounded("R-png-height",
-                RLocalViewsNodeModel2.IMG_DEF_SIZE,
-                RLocalViewsNodeModel2.IMG_MIN_HEIGHT,
-                RLocalViewsNodeModel2.IMG_MAX_HEIGHT);
+        return new SettingsModelIntegerBounded("R-png-height", RLocalViewsNodeModel2.IMG_DEF_SIZE,
+            RLocalViewsNodeModel2.IMG_MIN_HEIGHT, RLocalViewsNodeModel2.IMG_MAX_HEIGHT);
     }
 
     /**
-     * @return a <code>SettingsModelIntegerBounded</code> instance
-     * containing the width of the png image to create by R.
+     * @return a <code>SettingsModelIntegerBounded</code> instance containing the width of the png image to create by R.
      */
     public static final SettingsModelIntegerBounded createWidthModel() {
-        return new SettingsModelIntegerBounded("R-png-width",
-                RLocalViewsNodeModel2.IMG_DEF_SIZE,
-                RLocalViewsNodeModel2.IMG_MIN_WIDTH,
-                RLocalViewsNodeModel2.IMG_MAX_WIDTH);
+        return new SettingsModelIntegerBounded("R-png-width", RLocalViewsNodeModel2.IMG_DEF_SIZE,
+            RLocalViewsNodeModel2.IMG_MIN_WIDTH, RLocalViewsNodeModel2.IMG_MAX_WIDTH);
     }
 
     /**
-     * @return a <code>SettingsModelIntegerBounded</code> instance
-     * containing the point size of the png image to create by R.
+     * @return a <code>SettingsModelIntegerBounded</code> instance containing the point size of the png image to create
+     *         by R.
      */
     public static final SettingsModelIntegerBounded createPointSizeModel() {
-        return new SettingsModelIntegerBounded("R-png-pointSize", 12, 1,
-                Integer.MAX_VALUE);
+        return new SettingsModelIntegerBounded("R-png-pointSize", 12, 1, Integer.MAX_VALUE);
     }
 
     /**
-     * @return a <code>SettingsModelString</code> instance
-     * containing the resolution of the png image to create by R.
+     * @return a <code>SettingsModelString</code> instance containing the resolution of the png image to create by R.
      */
     public static final SettingsModelString createResolutionModel() {
         return new SettingsModelString("R-png-resolution", "NA");
     }
 
     /**
-     * @return a <code>SettingsModelString</code> instance
-     * containing the background color of the png image to create by R.
+     * @return a <code>SettingsModelString</code> instance containing the background color of the png image to create by
+     *         R.
      */
     public static final SettingsModelString createBgModel() {
         return new SettingsModelString("R-bg-col", "#FFFFFF");
     }
 
     private final DialogComponentNumberEdit m_heightComp;
+
     private final SettingsModelIntegerBounded m_heightModel;
 
     private final DialogComponentNumberEdit m_widthComp;
+
     private final SettingsModelIntegerBounded m_widthModel;
 
     private final DialogComponentNumber m_pointSizeComp;
+
     private final SettingsModelIntegerBounded m_pointSizeModel;
 
     private final DialogComponentString m_bgComp;
+
     private final SettingsModelString m_bgModel;
 
     private final DialogComponentString m_resolutionComp;
+
     private final SettingsModelString m_resolutionModel;
 
     /**
-     * Creates new instance of <code>RViewsPngDialogPanel</code> which provides
-     * default dialog components to specify png options used by R to create
-     * the png image.
+     * Creates new instance of <code>RViewsPngDialogPanel</code> which provides default dialog components to specify png
+     * options used by R to create the png image.
      */
     public RViewsPngDialogPanel() {
         super();
         super.setLayout(new BorderLayout());
 
         m_heightModel = createHeightModel();
-        m_heightComp = new DialogComponentNumberEdit(m_heightModel,
-                "Height: ");
+        m_heightComp = new DialogComponentNumberEdit(m_heightModel, "Height: ");
 
         m_widthModel = createWidthModel();
-        m_widthComp = new DialogComponentNumberEdit(m_widthModel,
-                "Width: ");
+        m_widthComp = new DialogComponentNumberEdit(m_widthModel, "Width: ");
 
         // Resolution (dpi)
         m_resolutionModel = createResolutionModel();
-        m_resolutionComp = new DialogComponentString(m_resolutionModel,
-                "Resolution (dpi): ");
-        m_resolutionComp.setToolTipText("Resolution in dots per inch; "
-                + "default value is NA (72 dpi)");
+        m_resolutionComp = new DialogComponentString(m_resolutionModel, "Resolution (dpi): ");
+        m_resolutionComp.setToolTipText("Resolution in dots per inch; " + "default value is NA (72 dpi)");
 
         // Image size
-        JPanel size = new JPanel(new BorderLayout());
-        size.setBorder(BorderFactory.createTitledBorder(BorderFactory
-                .createEtchedBorder(), " Image size "));
+        final JPanel size = new JPanel(new BorderLayout());
+        size.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), " Image size "));
         size.add(m_widthComp.getComponentPanel(), BorderLayout.WEST);
         size.add(m_heightComp.getComponentPanel(), BorderLayout.CENTER);
         size.add(m_resolutionComp.getComponentPanel(), BorderLayout.EAST);
 
         // Point size
         m_pointSizeModel = createPointSizeModel();
-        m_pointSizeComp = new DialogComponentNumber(m_pointSizeModel,
-                "Point size: ", 1);
+        m_pointSizeComp = new DialogComponentNumber(m_pointSizeModel, "Point size: ", 1);
 
         // Background color
         m_bgModel = createBgModel();
-        m_bgComp = new DialogComponentString(m_bgModel , "Background color: ");
+        m_bgComp = new DialogComponentString(m_bgModel, "Background color: ");
 
-        JPanel upperPanel = new JPanel(new BorderLayout());
-        upperPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-                .createEtchedBorder(), " Appearance "));
+        final JPanel upperPanel = new JPanel(new BorderLayout());
+        upperPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), " Appearance "));
         upperPanel.add(m_pointSizeComp.getComponentPanel(), BorderLayout.NORTH);
         upperPanel.add(m_bgComp.getComponentPanel(), BorderLayout.CENTER);
 
@@ -188,13 +178,13 @@ public class RViewsPngDialogPanel extends JLabel {
 
     /**
      * Loads settings into dialog components.
+     * 
      * @param settings The settings to load.
      * @param specs The specs of the input data table.
-     * @throws NotConfigurableException If components could not be configured
-     * and settings not be set.
+     * @throws NotConfigurableException If components could not be configured and settings not be set.
      */
-    public void loadSettings(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs) throws NotConfigurableException {
+    public void loadSettings(final NodeSettingsRO settings, final PortObjectSpec[] specs)
+        throws NotConfigurableException {
         m_heightComp.loadSettingsFrom(settings, specs);
         m_widthComp.loadSettingsFrom(settings, specs);
         m_pointSizeComp.loadSettingsFrom(settings, specs);
@@ -204,11 +194,11 @@ public class RViewsPngDialogPanel extends JLabel {
 
     /**
      * Saves settings set in the dialog components into the settings instance.
+     * 
      * @param settings The settings instance to save settings to.
      * @throws InvalidSettingsException If invalid settings have been set.
      */
-    public void saveSettings(final NodeSettingsWO settings)
-        throws InvalidSettingsException {
+    public void saveSettings(final NodeSettingsWO settings) throws InvalidSettingsException {
         m_heightComp.saveSettingsTo(settings);
         m_widthComp.saveSettingsTo(settings);
         m_pointSizeComp.saveSettingsTo(settings);

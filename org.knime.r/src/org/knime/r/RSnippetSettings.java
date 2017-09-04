@@ -57,251 +57,251 @@ import org.knime.core.node.config.ConfigWO;
  * @author Heiko Hofer
  */
 public class RSnippetSettings {
-	private static final String SCRIPT = "script";
-	private static final String TEMPLATE_UUID = "templateUUID";
-	private static final String VERSION = "version";
-	private static final String OUT_NON_NUMBERS_AS_MISSING = "Output non numbers (NaN, Inf, -Inf) as missing cells";
-	private static final String SEND_ROW_NAMES = "sendRowNames";
-	private static final String KNIME_IN_TYPE = "knimeInType";
-	private static final String SEND_BATCH_SIZE = "sendBatchSize";
+    private static final String SCRIPT = "script";
 
-	/** Custom script. */
-	private String m_script;
+    private static final String TEMPLATE_UUID = "templateUUID";
 
-	/** The UUID of the blueprint for this setting. */
-	private String m_templateUUID;
+    private static final String VERSION = "version";
 
-	/** The version of the java snippet. */
-	private String m_version;
+    private static final String OUT_NON_NUMBERS_AS_MISSING = "Output non numbers (NaN, Inf, -Inf) as missing cells";
 
-	/**
-	 * whether NaN, Inf and -Inf should be treated as missing values. Added in
-	 * v2.10 for backward compatibility.
-	 */
-	private boolean m_outNonNumbersAsMissing;
+    private static final String SEND_ROW_NAMES = "sendRowNames";
 
-	/** Whether to send row names to R with the input table. */
-	private boolean m_sendRowNames;
+    private static final String KNIME_IN_TYPE = "knimeInType";
 
-	/** Number of rows to send to R in one batch. */
-	private int m_sendBatchSize;
+    private static final String SEND_BATCH_SIZE = "sendBatchSize";
 
-	/** R type to use for the knime.in variable */
-	private String m_knimeInType;
+    /** Custom script. */
+    private String m_script;
 
-	/**
-	 * Create a new instance.
-	 */
-	public RSnippetSettings() {
-		m_script = "";
-		m_templateUUID = null;
-		m_version = RSnippet.VERSION_1_X;
-		m_outNonNumbersAsMissing = false;
-		m_sendRowNames = true;
-		m_sendBatchSize = 10000;
-		m_knimeInType = "data.frame";
-	}
+    /** The UUID of the blueprint for this setting. */
+    private String m_templateUUID;
 
-	/**
-	 * Saves current parameters to settings object.
-	 *
-	 * @param settings
-	 *            To save to.
-	 */
-	public void saveSettings(final ConfigWO settings) {
-		settings.addString(SCRIPT, getScript());
-		settings.addString(TEMPLATE_UUID, getTemplateUUID());
-		settings.addString(VERSION, getVersion());
-		settings.addBoolean(OUT_NON_NUMBERS_AS_MISSING, m_outNonNumbersAsMissing);
-		settings.addBoolean(SEND_ROW_NAMES, m_sendRowNames);
-		settings.addInt(SEND_BATCH_SIZE, getSendBatchSize());
-		settings.addString(KNIME_IN_TYPE, getKnimeInType());
-	}
+    /** The version of the java snippet. */
+    private String m_version;
 
-	/**
-	 * Loads parameters in NodeModel.
-	 *
-	 * @param settings
-	 *            To load from.
-	 * @throws InvalidSettingsException
-	 *             If incomplete or wrong.
-	 */
-	public void loadSettings(final ConfigRO settings) throws InvalidSettingsException {
-		setScript(settings.getString(SCRIPT));
-		if (settings.containsKey(TEMPLATE_UUID)) {
-			setTemplateUUID(settings.getString(TEMPLATE_UUID));
-		}
-		if (settings.containsKey(OUT_NON_NUMBERS_AS_MISSING)) { // added in 2.10
-			setOutNonNumbersAsMissing(settings.getBoolean(OUT_NON_NUMBERS_AS_MISSING));
-		} else {
-			// keep backward compatibility
-			setOutNonNumbersAsMissing(true);
-		}
-		setVersion(settings.getString(VERSION));
+    /**
+     * whether NaN, Inf and -Inf should be treated as missing values. Added in v2.10 for backward compatibility.
+     */
+    private boolean m_outNonNumbersAsMissing;
 
-		setSendRowNames(settings.getBoolean(SEND_ROW_NAMES, true));
-		setSendBatchSize(settings.getInt(SEND_BATCH_SIZE, 10000));
+    /** Whether to send row names to R with the input table. */
+    private boolean m_sendRowNames;
 
-		final String type = settings.getString(KNIME_IN_TYPE, "data.frame");
-		if ("data.frame".equals(type) || "data.table".equals(type)) {
-			setKnimeInType(type);
-		} else {
-			throw new InvalidSettingsException("Invalid type for knime.in: Can only be \"data.frame\" or \"data.table\".");
-		}
-	}
+    /** Number of rows to send to R in one batch. */
+    private int m_sendBatchSize;
 
-	/**
-	 * Loads parameters in Dialog.
-	 *
-	 * @param settings
-	 *            To load from.
-	 */
-	public void loadSettingsForDialog(final ConfigRO settings) {
-		setScript(settings.getString(SCRIPT, ""));
-		setTemplateUUID(settings.getString(TEMPLATE_UUID, null));
-		setVersion(settings.getString(VERSION, RSnippet.VERSION_1_X));
-		if (settings.containsKey(OUT_NON_NUMBERS_AS_MISSING)) {
-			setOutNonNumbersAsMissing(settings.getBoolean(OUT_NON_NUMBERS_AS_MISSING, false));
-		} else {
-			// keep backward compatibility
-			setOutNonNumbersAsMissing(settings.getBoolean(OUT_NON_NUMBERS_AS_MISSING, true));
-		}
+    /** R type to use for the knime.in variable */
+    private String m_knimeInType;
 
-		setSendRowNames(settings.getBoolean(SEND_ROW_NAMES, true));
+    /**
+     * Create a new instance.
+     */
+    public RSnippetSettings() {
+        m_script = "";
+        m_templateUUID = null;
+        m_version = RSnippet.VERSION_1_X;
+        m_outNonNumbersAsMissing = false;
+        m_sendRowNames = true;
+        m_sendBatchSize = 10000;
+        m_knimeInType = "data.frame";
+    }
 
-		setSendBatchSize(settings.getInt(SEND_BATCH_SIZE, 10000));
+    /**
+     * Saves current parameters to settings object.
+     *
+     * @param settings To save to.
+     */
+    public void saveSettings(final ConfigWO settings) {
+        settings.addString(SCRIPT, getScript());
+        settings.addString(TEMPLATE_UUID, getTemplateUUID());
+        settings.addString(VERSION, getVersion());
+        settings.addBoolean(OUT_NON_NUMBERS_AS_MISSING, m_outNonNumbersAsMissing);
+        settings.addBoolean(SEND_ROW_NAMES, m_sendRowNames);
+        settings.addInt(SEND_BATCH_SIZE, getSendBatchSize());
+        settings.addString(KNIME_IN_TYPE, getKnimeInType());
+    }
 
-		final String type = settings.getString(KNIME_IN_TYPE, "data.frame");
-		if ("data.frame".equals(type) || "data.table".equals(type)) {
-			setKnimeInType(type);
-		} else {
-			setKnimeInType("data.frame");
-		}
-	}
+    /**
+     * Loads parameters in NodeModel.
+     *
+     * @param settings To load from.
+     * @throws InvalidSettingsException If incomplete or wrong.
+     */
+    public void loadSettings(final ConfigRO settings) throws InvalidSettingsException {
+        setScript(settings.getString(SCRIPT));
+        if (settings.containsKey(TEMPLATE_UUID)) {
+            setTemplateUUID(settings.getString(TEMPLATE_UUID));
+        }
+        if (settings.containsKey(OUT_NON_NUMBERS_AS_MISSING)) { // added in 2.10
+            setOutNonNumbersAsMissing(settings.getBoolean(OUT_NON_NUMBERS_AS_MISSING));
+        } else {
+            // keep backward compatibility
+            setOutNonNumbersAsMissing(true);
+        }
+        setVersion(settings.getString(VERSION));
 
-	public void loadSettings(final RSnippetSettings s) {
-		setScript(s.getScript());
-		setTemplateUUID(s.getTemplateUUID());
-		setVersion(s.getVersion());
-		setOutNonNumbersAsMissing(s.getOutNonNumbersAsMissing());
-		setSendRowNames(s.getSendRowNames());
-		setSendBatchSize(s.getSendBatchSize());
-		setKnimeInType(s.getKnimeInType());
-	}
+        setSendRowNames(settings.getBoolean(SEND_ROW_NAMES, true));
+        setSendBatchSize(settings.getInt(SEND_BATCH_SIZE, 10000));
 
-	/**
-	 * @return the script
-	 */
-	public String getScript() {
-		return m_script;
-	}
+        final String type = settings.getString(KNIME_IN_TYPE, "data.frame");
+        if ("data.frame".equals(type) || "data.table".equals(type)) {
+            setKnimeInType(type);
+        } else {
+            throw new InvalidSettingsException(
+                "Invalid type for knime.in: Can only be \"data.frame\" or \"data.table\".");
+        }
+    }
 
-	/**
-	 * @param script
-	 *            the script to set
-	 */
-	public void setScript(final String script) {
-		m_script = script;
-	}
+    /**
+     * Loads parameters in Dialog.
+     *
+     * @param settings To load from.
+     */
+    public void loadSettingsForDialog(final ConfigRO settings) {
+        setScript(settings.getString(SCRIPT, ""));
+        setTemplateUUID(settings.getString(TEMPLATE_UUID, null));
+        setVersion(settings.getString(VERSION, RSnippet.VERSION_1_X));
+        if (settings.containsKey(OUT_NON_NUMBERS_AS_MISSING)) {
+            setOutNonNumbersAsMissing(settings.getBoolean(OUT_NON_NUMBERS_AS_MISSING, false));
+        } else {
+            // keep backward compatibility
+            setOutNonNumbersAsMissing(settings.getBoolean(OUT_NON_NUMBERS_AS_MISSING, true));
+        }
 
-	/**
-	 * @return the templateUUID
-	 */
-	public String getTemplateUUID() {
-		return m_templateUUID;
-	}
+        setSendRowNames(settings.getBoolean(SEND_ROW_NAMES, true));
 
-	/**
-	 * @param templateUUID
-	 *            the templateUUID to set
-	 */
-	public void setTemplateUUID(final String templateUUID) {
-		m_templateUUID = templateUUID;
-	}
+        setSendBatchSize(settings.getInt(SEND_BATCH_SIZE, 10000));
 
-	/**
-	 * @return the version
-	 */
-	public String getVersion() {
-		return m_version;
-	}
+        final String type = settings.getString(KNIME_IN_TYPE, "data.frame");
+        if ("data.frame".equals(type) || "data.table".equals(type)) {
+            setKnimeInType(type);
+        } else {
+            setKnimeInType("data.frame");
+        }
+    }
 
-	/**
-	 * @param version
-	 *            the version to set
-	 */
-	public void setVersion(final String version) {
-		m_version = version;
-	}
+    public void loadSettings(final RSnippetSettings s) {
+        setScript(s.getScript());
+        setTemplateUUID(s.getTemplateUUID());
+        setVersion(s.getVersion());
+        setOutNonNumbersAsMissing(s.getOutNonNumbersAsMissing());
+        setSendRowNames(s.getSendRowNames());
+        setSendBatchSize(s.getSendBatchSize());
+        setKnimeInType(s.getKnimeInType());
+    }
 
-	/**
-	 * True when the R values NaN, Inf and -Inf should be treated as missing
-	 * values. Applies only to R nodes with table output.
-	 *
-	 * @return when NaN, Inf and -Inf should be treated as missing values
-	 */
-	public boolean getOutNonNumbersAsMissing() {
-		return m_outNonNumbersAsMissing;
-	}
+    /**
+     * @return the script
+     */
+    public String getScript() {
+        return m_script;
+    }
 
-	/**
-	 * Set if the R values NaN, Inf and -Inf should be treated as missing
-	 * values. Applies only to R nodes with table output.
-	 *
-	 * @param outNonNumbersAsMissing
-	 *            whether NaN, Inf and -Inf should be treated as missing values
-	 */
-	public void setOutNonNumbersAsMissing(final boolean outNonNumbersAsMissing) {
-		m_outNonNumbersAsMissing = outNonNumbersAsMissing;
-	}
+    /**
+     * @param script the script to set
+     */
+    public void setScript(final String script) {
+        m_script = script;
+    }
 
-	/**
-	 * @return whether to send row names with the input table.
-	 */
-	public boolean getSendRowNames() {
-		return m_sendRowNames;
-	}
+    /**
+     * @return the templateUUID
+     */
+    public String getTemplateUUID() {
+        return m_templateUUID;
+    }
 
-	/**
-	 * Set whether to send row names to R with the input table.
-	 *
-	 * @param b whether to send or not to send.
-	 */
-	public void setSendRowNames(final boolean b) {
-		m_sendRowNames = b;
-	}
+    /**
+     * @param templateUUID the templateUUID to set
+     */
+    public void setTemplateUUID(final String templateUUID) {
+        m_templateUUID = templateUUID;
+    }
 
-	/**
-	 * Set number of rows to send to R per batch.
-	 * @param numRows number of rows.
-	 */
-	public void setSendBatchSize(final int numRows) {
-		m_sendBatchSize = numRows;
-	}
+    /**
+     * @return the version
+     */
+    public String getVersion() {
+        return m_version;
+    }
 
-	/**
-	 * @return Number of rows that should be sent to R per batch.
-	 */
-	public int getSendBatchSize() {
-		return m_sendBatchSize;
-	}
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(final String version) {
+        m_version = version;
+    }
 
-	/**
-	 * Set the R type in which to provide the data from KNIME.
-	 * @param type either "data.frame" or "data.table".
-	 */
-	public void setKnimeInType(final String type) {
-		if ("data.frame".equals(type) || "data.table".equals(type)) {
-			m_knimeInType = type;
-			return;
-		}
-		throw new IllegalArgumentException("Type for \"knime.in\" should be either \"data.frame\" or \"data.table\".");
-	}
+    /**
+     * True when the R values NaN, Inf and -Inf should be treated as missing values. Applies only to R nodes with table
+     * output.
+     *
+     * @return when NaN, Inf and -Inf should be treated as missing values
+     */
+    public boolean getOutNonNumbersAsMissing() {
+        return m_outNonNumbersAsMissing;
+    }
 
-	/**
-	 * @return R type to use for the knime.in variable.
-	 */
-	public String getKnimeInType() {
-		return m_knimeInType;
-	}
+    /**
+     * Set if the R values NaN, Inf and -Inf should be treated as missing values. Applies only to R nodes with table
+     * output.
+     *
+     * @param outNonNumbersAsMissing whether NaN, Inf and -Inf should be treated as missing values
+     */
+    public void setOutNonNumbersAsMissing(final boolean outNonNumbersAsMissing) {
+        m_outNonNumbersAsMissing = outNonNumbersAsMissing;
+    }
+
+    /**
+     * @return whether to send row names with the input table.
+     */
+    public boolean getSendRowNames() {
+        return m_sendRowNames;
+    }
+
+    /**
+     * Set whether to send row names to R with the input table.
+     *
+     * @param b whether to send or not to send.
+     */
+    public void setSendRowNames(final boolean b) {
+        m_sendRowNames = b;
+    }
+
+    /**
+     * Set number of rows to send to R per batch.
+     * 
+     * @param numRows number of rows.
+     */
+    public void setSendBatchSize(final int numRows) {
+        m_sendBatchSize = numRows;
+    }
+
+    /**
+     * @return Number of rows that should be sent to R per batch.
+     */
+    public int getSendBatchSize() {
+        return m_sendBatchSize;
+    }
+
+    /**
+     * Set the R type in which to provide the data from KNIME.
+     * 
+     * @param type either "data.frame" or "data.table".
+     */
+    public void setKnimeInType(final String type) {
+        if ("data.frame".equals(type) || "data.table".equals(type)) {
+            m_knimeInType = type;
+            return;
+        }
+        throw new IllegalArgumentException("Type for \"knime.in\" should be either \"data.frame\" or \"data.table\".");
+    }
+
+    /**
+     * @return R type to use for the knime.in variable.
+     */
+    public String getKnimeInType() {
+        return m_knimeInType;
+    }
 }

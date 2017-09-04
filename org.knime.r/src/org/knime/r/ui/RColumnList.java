@@ -83,7 +83,7 @@ public class RColumnList extends JList<DataColumnSpec> {
             @Override
             public void keyTyped(final KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                    Object selected = getSelectedValue();
+                    final Object selected = getSelectedValue();
                     if (selected != null) {
                         onSelectionInColumnList(selected);
                     }
@@ -95,7 +95,7 @@ public class RColumnList extends JList<DataColumnSpec> {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    Object selected = getSelectedValue();
+                    final Object selected = getSelectedValue();
                     if (selected != null) {
                         onSelectionInColumnList(selected);
                     }
@@ -111,7 +111,7 @@ public class RColumnList extends JList<DataColumnSpec> {
             if (selected instanceof String) {
                 enter = (String)selected;
             } else {
-                DataColumnSpec colSpec = (DataColumnSpec)selected;
+                final DataColumnSpec colSpec = (DataColumnSpec)selected;
                 enter = getFieldReadStatement(colSpec);
             }
             clearSelection();
@@ -123,10 +123,10 @@ public class RColumnList extends JList<DataColumnSpec> {
     }
 
     private String getFieldReadStatement(final DataColumnSpec colSpec) {
-		return "knime.in$\"" + colSpec.getName() + "\"";
-	}
+        return "knime.in$\"" + colSpec.getName() + "\"";
+    }
 
-	/**
+    /**
      * A double click on an element will perform an insertion to this text area.
      *
      * @param snippet the text area
@@ -136,19 +136,16 @@ public class RColumnList extends JList<DataColumnSpec> {
     }
 
     /**
-     * Renderer that will display the rowindex and rowkey with different
-     * background.
+     * Renderer that will display the rowindex and rowkey with different background.
      */
     private static class ListRenderer extends DataColumnSpecListCellRenderer {
         /**
          * {@inheritDoc}
          */
         @Override
-        public Component getListCellRendererComponent(final JList list,
-                final Object value, final int index, final boolean isSelected,
-                final boolean cellHasFocus) {
-            Component c = super.getListCellRendererComponent(list, value,
-                    index, isSelected, cellHasFocus);
+        public Component getListCellRendererComponent(final JList list, final Object value, final int index,
+            final boolean isSelected, final boolean cellHasFocus) {
+            final Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (value instanceof String) {
                 c.setFont(list.getFont().deriveFont(Font.ITALIC));
             }
@@ -158,19 +155,20 @@ public class RColumnList extends JList<DataColumnSpec> {
 
     /**
      * Set the input spec.
+     * 
      * @param spec the data table spec of the input
      */
     public void setSpec(final DataTableSpec spec) {
-        DefaultListModel<DataColumnSpec> listModel = (DefaultListModel<DataColumnSpec>)getModel();
+        final DefaultListModel<DataColumnSpec> listModel = (DefaultListModel<DataColumnSpec>)getModel();
         listModel.removeAllElements();
-//        listModel.addElement(RSnippet.ROWID);
-//        listModel.addElement(RSnippet.ROWINDEX);
-//        listModel.addElement(RSnippet.ROWCOUNT);
-	    if (spec != null) {	
-	        for (DataColumnSpec colSpec : spec) {
-	            listModel.addElement(colSpec);
-	        }
-	    }
+        //        listModel.addElement(RSnippet.ROWID);
+        //        listModel.addElement(RSnippet.ROWINDEX);
+        //        listModel.addElement(RSnippet.ROWCOUNT);
+        if (spec != null) {
+            for (final DataColumnSpec colSpec : spec) {
+                listModel.addElement(colSpec);
+            }
+        }
     }
 
 }

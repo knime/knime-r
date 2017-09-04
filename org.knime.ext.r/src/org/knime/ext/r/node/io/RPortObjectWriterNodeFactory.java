@@ -51,8 +51,7 @@ import org.knime.ext.r.node.local.port.RPortObject;
  *
  * @author Bernd Wiswedel, University of Konstanz
  */
-public class RPortObjectWriterNodeFactory extends
-        PortObjectWriterNodeFactory {
+public class RPortObjectWriterNodeFactory extends PortObjectWriterNodeFactory {
 
     /**
      *

@@ -78,10 +78,10 @@ public class RLocalR2TableNodeDialogPane extends RLocalNodeDialogPane {
      * {@inheritDoc}
      */
     @Override
-    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs) throws NotConfigurableException {
+    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
+        throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
-        Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
+        final Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
         m_dialogPanel.loadSettingsFrom(settings, new DataTableSpec[]{}, flowMap);
     }
 
@@ -89,8 +89,7 @@ public class RLocalR2TableNodeDialogPane extends RLocalNodeDialogPane {
      * {@inheritDoc}
      */
     @Override
-    public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
-        throws InvalidSettingsException {
+    public void saveAdditionalSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
         super.saveAdditionalSettingsTo(settings);
         m_dialogPanel.saveSettingsTo(settings);
     }

@@ -82,8 +82,8 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 
     @Override
     public int getMaxInfBuf() {
-        return org.eclipse.core.runtime.Platform.getPreferencesService()
-                .getInt("org.knime.ext.r.bin", RPreferenceInitializer.PREF_RSERVE_MAXINBUF, 256, null);
+        return org.eclipse.core.runtime.Platform.getPreferencesService().getInt("org.knime.ext.r.bin",
+            RPreferenceInitializer.PREF_RSERVE_MAXINBUF, 256, null);
     }
 
     @Override

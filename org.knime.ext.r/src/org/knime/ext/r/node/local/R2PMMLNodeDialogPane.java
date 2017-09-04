@@ -41,7 +41,7 @@
  *  may freely choose the license terms applicable to such Node, including
  *  when such Node is propagated with or for interoperation with KNIME.
  * ---------------------------------------------------------------------
- * 
+ *
  * History
  *   17.09.2007 (thiel): created
  */
@@ -49,11 +49,11 @@ package org.knime.ext.r.node.local;
 
 /**
  * Dialog used to specify the R executable for the R to PMML converter node.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 public class R2PMMLNodeDialogPane extends RLocalNodeDialogPane {
-    
+
     /**
      * Constructor.
      */

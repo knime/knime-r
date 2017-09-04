@@ -62,56 +62,41 @@ import org.knime.core.util.FileUtil;
 import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
- * <code>RLocalNodeModel</code> is an abstract
- * <code>StdOutBufferedNodeModel</code> which can be extended to implement a R
- * node using a local R installation. This abstract node model provides
- * functionality to write incoming data of a <code>DataTable</code> into a csv
- * file and read this data into R. The R variable containing the data is named
- * "R". Additional R commands to modify and process this data can be specified
- * by a class extending <code>RLocalNodeModel</code>. To access i.e. the
- * first three columns of a table and reference them by another variable "a" the
- * R command "a <- R[1:3]" can be used.<br>
- * Further, this class writes the data
- * referenced by the R variable "R" after execution of the additional commands
- * into a csv file and generates an outgoing <code>DataTable</code> out of it,
- * which is returned by this node. This means, the user has to take care that
- * the processed data have to be referenced by the variable "R".
- * <br>
- * Note that the number of input data tables is one and cannot be modified when
- * extending this node model. The number of output data tables can be specified
- * but only one or zero will make any sense since only the data referenced by
- * the "R" variable will be exported as output data table if the number of
- * output tables is greater than zero.
- * <br>
+ * <code>RLocalNodeModel</code> is an abstract <code>StdOutBufferedNodeModel</code> which can be extended to implement a
+ * R node using a local R installation. This abstract node model provides functionality to write incoming data of a
+ * <code>DataTable</code> into a csv file and read this data into R. The R variable containing the data is named "R".
+ * Additional R commands to modify and process this data can be specified by a class extending
+ * <code>RLocalNodeModel</code>. To access i.e. the first three columns of a table and reference them by another
+ * variable "a" the R command "a <- R[1:3]" can be used.<br>
+ * Further, this class writes the data referenced by the R variable "R" after execution of the additional commands into
+ * a csv file and generates an outgoing <code>DataTable</code> out of it, which is returned by this node. This means,
+ * the user has to take care that the processed data have to be referenced by the variable "R". <br>
+ * Note that the number of input data tables is one and cannot be modified when extending this node model. The number of
+ * output data tables can be specified but only one or zero will make any sense since only the data referenced by the
+ * "R" variable will be exported as output data table if the number of output tables is greater than zero. <br>
  * Additionally this class provides a preprocessing method
- * {@link RLocalNodeModel#preprocessDataTable(PortObject[], ExecutionContext)}
- * which can be overwritten to preprocess that input data, as well as a
- * postprocess method
- * {@link RLocalNodeModel#postprocessDataTable(
- * BufferedDataTable[], ExecutionContext)}
- * which can be overwritten to process that data after the R script execution.
- * If these methods are not overwritten the data will not be modified.
+ * {@link RLocalNodeModel#preprocessDataTable(PortObject[], ExecutionContext)} which can be overwritten to preprocess
+ * that input data, as well as a postprocess method
+ * {@link RLocalNodeModel#postprocessDataTable( BufferedDataTable[], ExecutionContext)} which can be overwritten to
+ * process that data after the R script execution. If these methods are not overwritten the data will not be modified.
  *
  * @author Kilian Thiel, University of Konstanz
  * @author Thomas Gabriel, University of Konstanz
  */
 public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
-    private static final NodeLogger LOGGER =
-        NodeLogger.getLogger(RLocalNodeModel.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RLocalNodeModel.class);
 
     private boolean m_hasDataTableOutPort = false;
 
     /**
-     * Constructor of <code>RLocalNodeModel</code> creating a model with one
-     * data in port and one data out port if and only if <code>hasOutput</code>
-     * is set <code>true</code>. Otherwise the node will not have any
-     * data out port.
+     * Constructor of <code>RLocalNodeModel</code> creating a model with one data in port and one data out port if and
+     * only if <code>hasOutput</code> is set <code>true</code>. Otherwise the node will not have any data out port.
+     * 
      * @param outPorts array of out-port types
      * @param pref R preference provider
      */
-    public RLocalNodeModel(final PortType[] outPorts,
-            final RPreferenceProvider pref) {
+    public RLocalNodeModel(final PortType[] outPorts, final RPreferenceProvider pref) {
         super(new PortType[]{BufferedDataTable.TYPE}, outPorts, pref);
         // check for data table out ports
         if (outPorts != null) {
@@ -124,42 +109,34 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
     }
 
     /**
-     * Implement this method to specify certain R code to run. Be aware that
-     * this R code has to be valid, otherwise the node will not execute
-     * properly. To access the input data of the node via R use the variable
-     * "R". To access i.e. the first three columns of a table and reference
-     * them by another variable "a" the R command "a <- R[1:3];" can be used.
-     * End all R command lines with a semicolon and a line break. The data
-     * which has to be returned be the node as out data has to be stored in
-     * the "R" variable again, so take care to reference your data by "R".
+     * Implement this method to specify certain R code to run. Be aware that this R code has to be valid, otherwise the
+     * node will not execute properly. To access the input data of the node via R use the variable "R". To access i.e.
+     * the first three columns of a table and reference them by another variable "a" the R command "a <- R[1:3];" can be
+     * used. End all R command lines with a semicolon and a line break. The data which has to be returned be the node as
+     * out data has to be stored in the "R" variable again, so take care to reference your data by "R".
      *
      * @return The R command to execute.
      */
     protected abstract String getCommand();
 
     /**
-     * First the
-     * {@link RLocalNodeModel#preprocessDataTable(PortObject[],
-     * ExecutionContext)}
-     * method is called to preprocess that input data. Further a csv file is
-     * written containing the input data. Next a R script is created consisting
-     * of R commands to import the data of the csv file, the R code specified in
-     * the command string and the export of the modified data into a output
-     * table. This table is returned at the end.
+     * First the {@link RLocalNodeModel#preprocessDataTable(PortObject[], ExecutionContext)} method is called to
+     * preprocess that input data. Further a csv file is written containing the input data. Next a R script is created
+     * consisting of R commands to import the data of the csv file, the R code specified in the command string and the
+     * export of the modified data into a output table. This table is returned at the end.
      *
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec) throws CanceledExecutionException,
-            Exception {
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
+        throws CanceledExecutionException, Exception {
 
         // blow away the output of any previous (failed) runs
         setFailedExternalErrorOutput(new LinkedList<String>());
         setFailedExternalOutput(new LinkedList<String>());
 
         // preprocess data in in DataTable.
-        PortObject[] inDataTables = preprocessDataTable(inData, exec);
+        final PortObject[] inDataTables = preprocessDataTable(inData, exec);
 
         File tempOutData = null;
         File inDataCsvFile = null;
@@ -169,15 +146,14 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
 
         try {
             // write data to csv
-            inDataCsvFile = writeInDataCsvFile(
-                    (BufferedDataTable)inDataTables[0], exec);
+            inDataCsvFile = writeInDataCsvFile((BufferedDataTable)inDataTables[0], exec);
 
             // execute R cmd
-            StringBuilder completeCmd = new StringBuilder();
+            final StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(getSetWorkingDirCmd());
             completeCmd.append(READ_DATA_CMD_PREFIX);
             completeCmd.append(inDataCsvFile.getAbsolutePath().replace('\\', '/'));
-            completeCmd.append(getReadCSVCommandSuffix(((BufferedDataTable) inDataTables[0]).getDataTableSpec()));
+            completeCmd.append(getReadCSVCommandSuffix(((BufferedDataTable)inDataTables[0]).getDataTableSpec()));
 
             completeCmd.append(getCommand().trim());
             completeCmd.append("\n");
@@ -186,20 +162,19 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             if (m_hasDataTableOutPort) {
                 tempOutData = FileUtil.createTempFile("R-outDataTempFile-", ".csv", new File(m_tempPath), true);
                 completeCmd.append(WRITE_DATA_CMD_PREFIX);
-                completeCmd.append(
-                        tempOutData.getAbsolutePath().replace('\\', '/'));
+                completeCmd.append(tempOutData.getAbsolutePath().replace('\\', '/'));
                 completeCmd.append(WRITE_DATA_CMD_SUFFIX);
             }
 
             // write R command
-            String rCmd = resolveVariablesInScript(completeCmd.toString());
+            final String rCmd = resolveVariablesInScript(completeCmd.toString());
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = File.createTempFile("R-outDataTempFile-", ".Rout", rCommandFile.getParentFile());
             rOutFile.deleteOnExit();
 
             // create shell command
-            StringBuilder shellCmd = new StringBuilder();
+            final StringBuilder shellCmd = new StringBuilder();
 
             final String rBinaryFile = getRBinaryPathAndArguments();
             shellCmd.append(rBinaryFile);
@@ -207,13 +182,13 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             shellCmd.append(" " + rOutFile.getName());
 
             // execute shell command
-            String shcmd = shellCmd.toString();
+            final String shcmd = shellCmd.toString();
             LOGGER.debug("Shell command: \n" + shcmd);
 
-            CommandExecution cmdExec = new CommandExecution(shcmd);
+            final CommandExecution cmdExec = new CommandExecution(shcmd);
             cmdExec.addObserver(this);
             cmdExec.setExecutionDir(rCommandFile.getParentFile());
-            int exitVal = cmdExec.execute(exec);
+            final int exitVal = cmdExec.execute(exec);
 
             setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));
             setExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
@@ -223,15 +198,13 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             if (exitVal != 0) {
                 // before we return, we save the output in the failing list
                 synchronized (cmdExec) {
-                    setFailedExternalOutput(new LinkedList<String>(
-                            cmdExec.getStdOutput()));
+                    setFailedExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
                 }
             }
             synchronized (cmdExec) {
 
                 // save error description of the Rout file to the ErrorOut
-                LinkedList<String> list =
-                        new LinkedList<String>(cmdExec.getStdErr());
+                final LinkedList<String> list = new LinkedList<String>(cmdExec.getStdErr());
 
                 list.add("#############################################");
                 list.add("#");
@@ -239,8 +212,7 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
                 list.add("#");
                 list.add("#############################################");
                 list.add(" ");
-                BufferedReader bfr =
-                        new BufferedReader(new FileReader(rOutFile));
+                final BufferedReader bfr = new BufferedReader(new FileReader(rOutFile));
                 String line;
                 while ((line = bfr.readLine()) != null) {
                     list.add(line);
@@ -248,17 +220,15 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
                 bfr.close();
 
                 // use row before last as R error.
-                int index = list.size() - 2;
+                final int index = list.size() - 2;
                 if (index >= 0) {
                     rErr = list.get(index);
                 }
 
                 if (exitVal != 0) {
                     setFailedExternalErrorOutput(list);
-                    LOGGER.debug("Execution of R Script failed with exit code: "
-                            + exitVal);
-                    throw new IllegalStateException(
-                            "Execution of R script failed: " + rErr);
+                    LOGGER.debug("Execution of R Script failed with exit code: " + exitVal);
+                    throw new IllegalStateException("Execution of R script failed: " + rErr);
                 } else {
                     setExternalOutput(list);
                 }
@@ -267,9 +237,8 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
             // read out data only if data table out port exists
             if (m_hasDataTableOutPort) {
                 // read data from R output csv into a buffered data table.
-                ExecutionContext subExecCon =
-                    exec.createSubExecutionContext(1.0);
-                BufferedDataTable dt = readOutData(tempOutData, subExecCon);
+                final ExecutionContext subExecCon = exec.createSubExecutionContext(1.0);
+                final BufferedDataTable dt = readOutData(tempOutData, subExecCon);
 
                 // postprocess data in out DataTable.
                 dts = postprocessDataTable(new BufferedDataTable[]{dt}, exec);
@@ -291,12 +260,11 @@ public abstract class RLocalNodeModel extends RAbstractLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
         try {
             m_argumentsR.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException ise) {
+        } catch (final InvalidSettingsException ise) {
             m_argumentsR.setStringValue("--vanilla");
         }
     }

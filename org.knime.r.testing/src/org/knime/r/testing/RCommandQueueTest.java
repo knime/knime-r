@@ -193,7 +193,7 @@ public class RCommandQueueTest {
 				queue.putRScript(tempDevOffOutputVar + "<- dev.off()\nrm(" + tempDevOffOutputVar + ")", false).get();
 			} catch (Exception e) {
 			}
-		} , "testConcurrency - Command Executor");
+		}, "testConcurrency - Command Executor");
 		t.start();
 
 		queue.putRScript("print(\"Hey!\")", true).get(10, TimeUnit.SECONDS); // should never take that long
@@ -226,19 +226,21 @@ public class RCommandQueueTest {
 		queue.putRScript("Sys.sleep(1000)", true);
 		Thread.sleep(250);
 		queue.stopExecutionThread();
-		
+
 		assertTrue("R Execution thread did not terminate.", !queue.isExecutionThreadRunning());
 	}
 
 	/**
 	 * Test whether the RCommandQueue handles invalid R code correctly.
+	 * 
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 * @throws TimeoutException
 	 * @throws REXPMismatchException
 	 */
 	@Test
-	public void testHandleInvalidR() throws InterruptedException, ExecutionException, TimeoutException, REXPMismatchException {
+	public void testHandleInvalidR()
+			throws InterruptedException, ExecutionException, TimeoutException, REXPMismatchException {
 		final RCommandQueue queue = m_commandQueue;
 		final RConsole console = new RConsole();
 
@@ -251,8 +253,7 @@ public class RCommandQueueTest {
 		Thread.sleep(10); // wait for console update
 
 		assertEquals("Sanity check for whether execution test is running failed.",
-				String.format("> print(\"sanity check\")%n[1] \"sanity check\"%n"),
-				console.getText());
+				String.format("> print(\"sanity check\")%n[1] \"sanity check\"%n"), console.getText());
 		consoleController.clear();
 
 		/*
@@ -267,7 +268,8 @@ public class RCommandQueueTest {
 		// Name not found
 		queue.putRScript("IdoNotExistVar", true).get(1, TimeUnit.SECONDS);
 		Thread.sleep(10); // wait for console update
-		assertEquals("Expected and name not found error.", String.format("> IdoNotExistVar%nError: object 'IdoNotExistVar' not found%n"), console.getText());
+		assertEquals("Expected and name not found error.",
+				String.format("> IdoNotExistVar%nError: object 'IdoNotExistVar' not found%n"), console.getText());
 		consoleController.clear();
 
 		// Bad syntax may lead to bad behavior

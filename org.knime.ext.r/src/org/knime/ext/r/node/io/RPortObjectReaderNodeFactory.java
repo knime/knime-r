@@ -51,8 +51,7 @@ import org.knime.ext.r.node.local.port.RPortObject;
  *
  * @author Bernd Wiswedel, University of Konstanz
  */
-public class RPortObjectReaderNodeFactory extends
-        PortObjectReaderNodeFactory {
+public class RPortObjectReaderNodeFactory extends PortObjectReaderNodeFactory {
 
     /** */
     public RPortObjectReaderNodeFactory() {

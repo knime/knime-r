@@ -65,8 +65,7 @@ import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
- * This is the model implementation of RLocalSource node.
- * A general data reader node for R.
+ * This is the model implementation of RLocalSource node. A general data reader node for R.
  *
  * @author Thomas Gabriel, KNIME.com AG, Zurich, Switzerland
  * @since 2.8
@@ -79,6 +78,7 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
 
     /**
      * Creates a new instance of <code>RLocalSourceNodeModel</code> with given in- and out-port specification.
+     * 
      * @param pref provider for R executable
      */
     public RLocalSourceNodeModel(final RPreferenceProvider pref) {
@@ -87,8 +87,7 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
 
     /** {@inheritDoc} */
     @Override
-    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
-            throws InvalidSettingsException {
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         checkRExecutable();
         return new DataTableSpec[]{null};
     }
@@ -104,7 +103,7 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
 
         try {
             // execute R cmd
-            StringBuilder completeCmd = new StringBuilder();
+            final StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(getSetWorkingDirCmd());
 
             // result data
@@ -118,13 +117,13 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
             completeCmd.append(WRITE_DATA_CMD_SUFFIX);
 
             // write R command
-            String rCmd = completeCmd.toString();
+            final String rCmd = completeCmd.toString();
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
 
             // create shell command
-            StringBuilder shellCmd = new StringBuilder();
+            final StringBuilder shellCmd = new StringBuilder();
 
             final String rBinaryFile = getRBinaryPathAndArguments();
             shellCmd.append(rBinaryFile);
@@ -132,13 +131,13 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
             shellCmd.append(" " + rOutFile.getName());
 
             // execute shell command
-            String shcmd = shellCmd.toString();
+            final String shcmd = shellCmd.toString();
             LOGGER.debug("Shell command: \n" + shcmd);
 
-            CommandExecution cmdExec = new CommandExecution(shcmd);
+            final CommandExecution cmdExec = new CommandExecution(shcmd);
             cmdExec.addObserver(this);
             cmdExec.setExecutionDir(rCommandFile.getParentFile());
-            int exitVal = cmdExec.execute(exec);
+            final int exitVal = cmdExec.execute(exec);
 
             setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));
             setExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
@@ -148,15 +147,13 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
             if (exitVal != 0) {
                 // before we return, we save the output in the failing list
                 synchronized (cmdExec) {
-                    setFailedExternalOutput(new LinkedList<String>(
-                            cmdExec.getStdOutput()));
+                    setFailedExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
                 }
             }
             synchronized (cmdExec) {
 
                 // save error description of the Rout file to the ErrorOut
-                LinkedList<String> list =
-                        new LinkedList<String>(cmdExec.getStdErr());
+                final LinkedList<String> list = new LinkedList<String>(cmdExec.getStdErr());
 
                 list.add("#############################################");
                 list.add("#");
@@ -164,7 +161,7 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
                 list.add("#");
                 list.add("#############################################");
                 list.add(" ");
-                BufferedReader bfr = new BufferedReader(new FileReader(rOutFile));
+                final BufferedReader bfr = new BufferedReader(new FileReader(rOutFile));
                 String line;
                 while ((line = bfr.readLine()) != null) {
                     list.add(line);
@@ -172,7 +169,7 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
                 bfr.close();
 
                 // use row before last as R error.
-                int index = list.size() - 2;
+                final int index = list.size() - 2;
                 if (index >= 0) {
                     rErr = list.get(index);
                 }
@@ -187,8 +184,8 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
             }
 
             // read data from R output csv into a buffered data table.
-            ExecutionContext subExecCon = exec.createSubExecutionContext(1.0);
-            BufferedDataTable dt = readOutData(tempOutData, subExecCon);
+            final ExecutionContext subExecCon = exec.createSubExecutionContext(1.0);
+            final BufferedDataTable dt = readOutData(tempOutData, subExecCon);
 
             // postprocess data in out DataTable.
             dts = postprocessDataTable(new BufferedDataTable[]{dt}, exec);
@@ -203,17 +200,17 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
         // return this table
         return dts;
     }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
         m_rCommand = RDialogPanel.getExpressionFrom(settings, RDialogPanel.DEFAULT_R_COMMAND);
         try {
             m_argumentsR.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException ise) {
+        } catch (final InvalidSettingsException ise) {
             // load old workflow no option is used, overwrite new dialog dft
             m_argumentsR.setStringValue("");
         }
@@ -232,11 +229,10 @@ public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.validateSettings(settings);
         final String exp = RDialogPanel.getExpressionFrom(settings);
-        if (exp == null || exp.trim().isEmpty()) {
+        if ((exp == null) || exp.trim().isEmpty()) {
             throw new InvalidSettingsException("Configure node and enter a non-empty R script.");
         }
     }

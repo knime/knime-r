@@ -74,8 +74,8 @@ public class RPlotterNodeView extends NodeView<RPlotterNodeModel> {
      */
     @Override
     protected void modelChanged() {
-        RPlotterNodeModel model = super.getNodeModel();
-        Image image = model.getResultImage();
+        final RPlotterNodeModel model = super.getNodeModel();
+        final Image image = model.getResultImage();
         m_panel.update(image);
     }
 

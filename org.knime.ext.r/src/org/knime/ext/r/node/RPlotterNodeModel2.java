@@ -86,45 +86,36 @@ import org.rosuda.REngine.Rserve.RserveException;
 public class RPlotterNodeModel2 extends RRemoteNodeModel {
 
     private Image m_resultImage;
+
     private File m_imageFile;
 
     /** PNG image output spec. */
-    private static final ImagePortObjectSpec OUT_SPEC =
-        new ImagePortObjectSpec(PNGImageContent.TYPE);
+    private static final ImagePortObjectSpec OUT_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
 
     private static final String FILE_NAME = "Rplot";
 
     // our LOGGER instance
-    private static final NodeLogger LOGGER = NodeLogger
-            .getLogger(RPlotterNodeModel2.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RPlotterNodeModel2.class);
 
-    private final SettingsModelIntegerBounded m_heightModel =
-        RViewsPngDialogPanel.createHeightModel();
+    private final SettingsModelIntegerBounded m_heightModel = RViewsPngDialogPanel.createHeightModel();
 
-    private final SettingsModelIntegerBounded m_widthModel =
-        RViewsPngDialogPanel.createWidthModel();
+    private final SettingsModelIntegerBounded m_widthModel = RViewsPngDialogPanel.createWidthModel();
 
-    private final SettingsModelString m_resolutionModel =
-        RViewsPngDialogPanel.createResolutionModel();
+    private final SettingsModelString m_resolutionModel = RViewsPngDialogPanel.createResolutionModel();
 
-    private final SettingsModelIntegerBounded m_pointSizeModel =
-        RViewsPngDialogPanel.createPointSizeModel();
+    private final SettingsModelIntegerBounded m_pointSizeModel = RViewsPngDialogPanel.createPointSizeModel();
 
-    private final SettingsModelString m_bgModel =
-        RViewsPngDialogPanel.createBgModel();
+    private final SettingsModelString m_bgModel = RViewsPngDialogPanel.createBgModel();
 
-    private final SettingsModelString m_viewType =
-        RViewsDialogPanel.createViewSettingsModel();
+    private final SettingsModelString m_viewType = RViewsDialogPanel.createViewSettingsModel();
 
-    private String[] m_viewCmds =
-            RViewScriptingConstants.getDefaultExpressionCommands();
+    private String[] m_viewCmds = RViewScriptingConstants.getDefaultExpressionCommands();
 
     /**
      * Creates a new plotter with one data input.
      */
     protected RPlotterNodeModel2() {
-        super(new PortType[]{BufferedDataTable.TYPE},
-                new PortType[] {ImagePortObject.TYPE});
+        super(new PortType[]{BufferedDataTable.TYPE}, new PortType[]{ImagePortObject.TYPE});
         m_resultImage = null;
     }
 
@@ -132,29 +123,24 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec) throws Exception {
-        RConnection c = getRconnection();
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
+        final RConnection c = getRconnection();
         // create unique png file name
-        String fileName = FILE_NAME + "_" + System.identityHashCode(inData[0])
-            + ".png";
+        final String fileName = FILE_NAME + "_" + System.identityHashCode(inData[0]) + ".png";
         LOGGER.info("The image name: " + fileName);
-        String pngCommand = "png(\"" + fileName + "\""
-            + ", width=" + m_widthModel.getIntValue()
-            + ", height=" + m_heightModel.getIntValue()
-            + ", pointsize=" + m_pointSizeModel.getIntValue()
-            + ", bg=\"" + m_bgModel.getStringValue() + "\""
-            + ", res=" + m_resolutionModel.getStringValue() + ")";
+        final String pngCommand = "png(\"" + fileName + "\"" + ", width=" + m_widthModel.getIntValue() + ", height="
+            + m_heightModel.getIntValue() + ", pointsize=" + m_pointSizeModel.getIntValue() + ", bg=\""
+            + m_bgModel.getStringValue() + "\"" + ", res=" + m_resolutionModel.getStringValue() + ")";
         c.eval("try(" + pngCommand + ")");
 
         // send data to R server
-        RConnectionRemote.sendData(c, (BufferedDataTable) inData[0], exec);
+        RConnectionRemote.sendData(c, (BufferedDataTable)inData[0], exec);
 
         // execute view command on server
         LOGGER.debug(Arrays.toString(m_viewCmds));
         exec.setMessage("Executing view R commands...");
-        String[] parsedExp = parseExpression(m_viewCmds);
-        for (String e : parsedExp) {
+        final String[] parsedExp = parseExpression(m_viewCmds);
+        for (final String e : parsedExp) {
             LOGGER.debug("voidEval: try(" + e + ")");
             c.voidEval("try(" + e + ")");
         }
@@ -163,24 +149,24 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
         PNGImageContent content;
         try {
             // read png back from server
-            RFileInputStream ris = c.openFile(fileName);
+            final RFileInputStream ris = c.openFile(fileName);
             m_imageFile = File.createTempFile(FILE_NAME, ".png", new File(KNIMEConstants.getKNIMETempDir()));
-            FileOutputStream out = new FileOutputStream(m_imageFile);
+            final FileOutputStream out = new FileOutputStream(m_imageFile);
             FileUtil.copy(ris, out);
-            FileInputStream in = new FileInputStream(m_imageFile);
+            final FileInputStream in = new FileInputStream(m_imageFile);
             content = new PNGImageContent(in);
             in.close();
             m_resultImage = content.getImage();
         } finally {
             try {
                 c.removeFile(fileName);
-            } catch (RserveException e) {
+            } catch (final RserveException e) {
                 // ignore: file may not exist or is not removable
             }
             c.close();
         }
         // nothing, has no out-port
-        return new PortObject[] {new ImagePortObject(content, OUT_SPEC)};
+        return new PortObject[]{new ImagePortObject(content, OUT_SPEC)};
     }
 
     /**
@@ -203,9 +189,8 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
-            throws InvalidSettingsException {
-        return new PortObjectSpec[] {OUT_SPEC};
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+        return new PortObjectSpec[]{OUT_SPEC};
     }
 
     /**
@@ -227,14 +212,13 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
         m_heightModel.loadSettingsFrom(settings);
         m_widthModel.loadSettingsFrom(settings);
         try {
             m_resolutionModel.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException ise) {
+        } catch (final InvalidSettingsException ise) {
             // ignore backward comp. < v2.3.1
         }
         m_pointSizeModel.loadSettingsFrom(settings);
@@ -242,7 +226,7 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
         m_viewCmds = RDialogPanel.getExpressionsFrom(settings);
         try {
             m_viewType.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException ise) {
+        } catch (final InvalidSettingsException ise) {
             // ignore backward comp. < v2.3
         }
     }
@@ -251,14 +235,13 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.validateSettings(settings);
 
-        String[] viewCmd = RDialogPanel.getExpressionsFrom(settings);
+        final String[] viewCmd = RDialogPanel.getExpressionsFrom(settings);
 
         // if command not valid throw exception
-        if (viewCmd == null || viewCmd.length == 0) {
+        if ((viewCmd == null) || (viewCmd.length == 0)) {
             throw new InvalidSettingsException("R View command is empty!");
         }
 
@@ -271,8 +254,7 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
     }
 
     /**
-     * @return result image for the view, only available after successful
-     *         evaluation
+     * @return result image for the view, only available after successful evaluation
      */
     Image getResultImage() {
         return m_resultImage;
@@ -282,13 +264,12 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadInternals(final File nodeInternDir,
-            final ExecutionMonitor exec)
-            throws IOException, CanceledExecutionException {
-        File file = new File(nodeInternDir, FILE_NAME + ".png");
+    protected void loadInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
+        final File file = new File(nodeInternDir, FILE_NAME + ".png");
         m_imageFile = File.createTempFile(FILE_NAME, ".png", new File(KNIMEConstants.getKNIMETempDir()));
         FileUtil.copy(file, m_imageFile);
-        InputStream is = new FileInputStream(m_imageFile);
+        final InputStream is = new FileInputStream(m_imageFile);
         m_resultImage = new PNGImageContent(is).getImage();
         is.close();
     }
@@ -297,10 +278,9 @@ public class RPlotterNodeModel2 extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void saveInternals(final File nodeInternDir,
-            final ExecutionMonitor exec)
-            throws IOException, CanceledExecutionException {
-        File file = new File(nodeInternDir, FILE_NAME + ".png");
+    protected void saveInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
+        final File file = new File(nodeInternDir, FILE_NAME + ".png");
         FileUtil.copy(m_imageFile, file);
     }
 

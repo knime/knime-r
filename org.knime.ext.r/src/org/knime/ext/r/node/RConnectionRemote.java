@@ -64,7 +64,6 @@ import org.knime.core.node.NodeLogger;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 
-
 /**
  * Utility class for sending data to a R server.
  *
@@ -72,52 +71,46 @@ import org.rosuda.REngine.Rserve.RserveException;
  */
 public final class RConnectionRemote {
 
-    private static final NodeLogger LOGGER =
-        NodeLogger.getLogger(RConnectionRemote.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RConnectionRemote.class);
 
     private RConnectionRemote() {
         // empty
     }
 
     /**
-     * Replaces illegal characters in the specified string. Legal characters are
-     * a-z, A-Z and 0-9. All others will be replaced by a dot.
+     * Replaces illegal characters in the specified string. Legal characters are a-z, A-Z and 0-9. All others will be
+     * replaced by a dot.
      *
      * @param name the string to check and to replace illegal characters in.
-     * @return a string containing only a-z, A-Z and 0-9. All other
-     *         characters got replaced by a dot.
+     * @return a string containing only a-z, A-Z and 0-9. All other characters got replaced by a dot.
      */
     private static final String formatColumn(final String name) {
         return name.replaceAll("[^a-zA-Z0-9]", ".");
     }
 
     /**
-     * Renames all column names by replacing all characters which are not
-     * numeric or letters.
+     * Renames all column names by replacing all characters which are not numeric or letters.
+     * 
      * @param spec spec to replace column names
      * @return new spec with replaced column names
      */
-    public static final DataTableSpec createRenamedDataTableSpec(
-            final DataTableSpec spec) {
-        DataColumnSpec[] cspecs = new DataColumnSpec[spec.getNumColumns()];
-        Set<String> newColNames = new HashSet<String>();
+    public static final DataTableSpec createRenamedDataTableSpec(final DataTableSpec spec) {
+        final DataColumnSpec[] cspecs = new DataColumnSpec[spec.getNumColumns()];
+        final Set<String> newColNames = new HashSet<String>();
         for (int i = 0; i < cspecs.length; i++) {
-            DataColumnSpecCreator cr =
-                new DataColumnSpecCreator(spec.getColumnSpec(i));
-            String oldName = spec.getColumnSpec(i).getName();
+            final DataColumnSpecCreator cr = new DataColumnSpecCreator(spec.getColumnSpec(i));
+            final String oldName = spec.getColumnSpec(i).getName();
             // uniquify formatted column name
-            String newName = RConnectionRemote.formatColumn(oldName);
+            final String newName = RConnectionRemote.formatColumn(oldName);
             int colIdx = 0;
             String uniqueColName = newName;
             if (!oldName.equals(newName)) {
-                while (newColNames.contains(uniqueColName)
-                        || spec.containsName(uniqueColName)) {
+                while (newColNames.contains(uniqueColName) || spec.containsName(uniqueColName)) {
                     uniqueColName = newName + "_" + colIdx++;
                 }
                 cr.setName(uniqueColName);
                 newColNames.add(uniqueColName);
-                LOGGER.info("Original column \"" + oldName
-                        + "\" was renamed to \"" + uniqueColName + "\".");
+                LOGGER.info("Original column \"" + oldName + "\" was renamed to \"" + uniqueColName + "\".");
             }
             cspecs[i] = cr.createSpec();
         }
@@ -125,56 +118,52 @@ public final class RConnectionRemote {
     }
 
     /**
-     * Sends the entire table to the R server for types which are compatible
-     * to IntValue.class, DoubleValue.class, and StringValue.class.
+     * Sends the entire table to the R server for types which are compatible to IntValue.class, DoubleValue.class, and
+     * StringValue.class.
+     * 
      * @param conn The connection to the R server.
      * @param inData The data to send.
      * @param exec Used to report progress.
      * @throws RserveException If the server throws an exception.
      * @throws CanceledExecutionException If canceled.
      */
-    static final void sendData(
-            final RConnection conn, final BufferedDataTable inData,
-            final ExecutionMonitor exec)
-            throws RserveException, CanceledExecutionException {
+    static final void sendData(final RConnection conn, final BufferedDataTable inData, final ExecutionMonitor exec)
+        throws RserveException, CanceledExecutionException {
         exec.setMessage("Start sending data to R server...");
         // prepare data
-        DataTableSpec spec = RConnectionRemote.createRenamedDataTableSpec(
-                inData.getDataTableSpec());
-        int[] types = new int[spec.getNumColumns()];
+        final DataTableSpec spec = RConnectionRemote.createRenamedDataTableSpec(inData.getDataTableSpec());
+        final int[] types = new int[spec.getNumColumns()];
         for (int i = 0; i < types.length; i++) {
-            DataColumnSpec cspec = spec.getColumnSpec(i);
-            DataType type = cspec.getType();
+            final DataColumnSpec cspec = spec.getColumnSpec(i);
+            final DataType type = cspec.getType();
             if (type.isCompatible(IntValue.class)) {
                 types[i] = 1;
-            } else
-            if (type.isCompatible(DoubleValue.class)) {
+            } else if (type.isCompatible(DoubleValue.class)) {
                 types[i] = 2;
-            } else
-            if (type.isCompatible(StringValue.class)) {
+            } else if (type.isCompatible(StringValue.class)) {
                 types[i] = 3;
             } else {
                 types[i] = -1; // unsupported type
             }
             // init column empty
-            String cmd = cspec.getName() + " <- c()";
+            final String cmd = cspec.getName() + " <- c()";
             LOGGER.info(cmd);
             conn.eval(cmd);
         }
 
         // transfer data chunk-wise; one builder per column
-        StringBuilder[] data = new StringBuilder[types.length];
+        final StringBuilder[] data = new StringBuilder[types.length];
         int z = 0; // buffer size
-        int max = 1000; // send data after max number of rows
+        final int max = 1000; // send data after max number of rows
         int nsend = 0; // number of max packets sent
         int rowCount = 0;
-        for (DataRow row : inData) { // rows
+        for (final DataRow row : inData) { // rows
             exec.checkCanceled();
-            exec.setProgress(1.0 * rowCount++ / inData.getRowCount());
+            exec.setProgress((1.0 * rowCount++) / inData.getRowCount());
             for (int i = 0; i < data.length; i++) { // columns
-                DataCell cell = row.getCell(i);
+                final DataCell cell = row.getCell(i);
                 switch (types[i]) {
-                    case 1 : // int
+                    case 1: // int
                         if (data[i] == null) {
                             data[i] = new StringBuilder();
                         } else {
@@ -183,10 +172,10 @@ public final class RConnectionRemote {
                         if (cell.isMissing()) {
                             data[i].append("NA");
                         } else {
-                            data[i].append(((IntValue) cell).getIntValue());
+                            data[i].append(((IntValue)cell).getIntValue());
                         }
                         break;
-                    case 2 : // double
+                    case 2: // double
                         if (data[i] == null) {
                             data[i] = new StringBuilder();
                         } else {
@@ -195,11 +184,10 @@ public final class RConnectionRemote {
                         if (cell.isMissing()) {
                             data[i].append("NA");
                         } else {
-                            data[i].append(
-                                    ((DoubleValue) cell).getDoubleValue());
+                            data[i].append(((DoubleValue)cell).getDoubleValue());
                         }
                         break;
-                    case 3 : // String
+                    case 3: // String
                         if (data[i] == null) {
                             data[i] = new StringBuilder();
                         } else {
@@ -208,25 +196,20 @@ public final class RConnectionRemote {
                         if (cell.isMissing()) {
                             data[i].append("NA");
                         } else {
-                            data[i].append("\""
-                                    + ((StringValue) cell).getStringValue()
-                                    + "\"");
+                            data[i].append("\"" + ((StringValue)cell).getStringValue() + "\"");
                         }
                         break;
                 }
             }
             z++;
-            if (z % max == 0) {
-                String msg = "Sending data chunk " + (nsend + 1)
-                    + " (with " + max + " rows).";
+            if ((z % max) == 0) {
+                final String msg = "Sending data chunk " + (nsend + 1) + " (with " + max + " rows).";
                 LOGGER.info(msg);
                 exec.setMessage(msg);
                 for (int i = 0; i < data.length; i++) {
-                    String colName = spec.getColumnSpec(i).getName();
-                    conn.eval("ColTmp" + i + " <- c(" + data[i].toString()
-                            + ")");
-                    conn.eval(colName + " <- " + "c(" + colName + ",ColTmp"
-                            + i + ")");
+                    final String colName = spec.getColumnSpec(i).getName();
+                    conn.eval("ColTmp" + i + " <- c(" + data[i].toString() + ")");
+                    conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i + ")");
                     data[i] = null;
                 }
                 z = 0;
@@ -234,22 +217,21 @@ public final class RConnectionRemote {
             }
         }
 
-        if (z > 0 && z < max) {
+        if ((z > 0) && (z < max)) {
             for (int i = 0; i < data.length; i++) {
-                String colName = spec.getColumnSpec(i).getName();
+                final String colName = spec.getColumnSpec(i).getName();
                 conn.eval("ColTmp" + i + " <- c(" + data[i].toString() + ")");
-                conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i
-                        + ")");
+                conn.eval(colName + " <- " + "c(" + colName + ",ColTmp" + i + ")");
                 data[i] = null;
             }
         }
 
-        StringBuilder colList = new StringBuilder();
+        final StringBuilder colList = new StringBuilder();
         for (int i = 0; i < spec.getNumColumns(); i++) {
             if (i > 0) {
                 colList.append(",");
             }
-            String colName = spec.getColumnSpec(i).getName();
+            final String colName = spec.getColumnSpec(i).getName();
             colList.append(colName);
         }
         conn.eval("R <- data.frame(" + colList.toString() + ")");

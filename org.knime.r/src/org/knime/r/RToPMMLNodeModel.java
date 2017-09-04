@@ -64,72 +64,72 @@ import org.knime.core.node.port.PortObjectSpec;
  * @author Heiko Hofer
  */
 public class RToPMMLNodeModel extends RSnippetNodeModel {
-	private static final NodeLogger LOGGER = NodeLogger.getLogger("R To PMML");
+    private static final NodeLogger LOGGER = NodeLogger.getLogger("R To PMML");
 
-	public RToPMMLNodeModel(final RToPMMLNodeConfig config) {
-		super(config);
-	}
+    public RToPMMLNodeModel(final RToPMMLNodeConfig config) {
+        super(config);
+    }
 
-	@Override
-	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		return new PortObjectSpec[] { null };
-	}
+    @Override
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+        return new PortObjectSpec[]{null};
+    }
 
-	@Override
-	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
-		super.execute(inData, exec);
-		return postExecuteInternal();
-	}
+    @Override
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
+        super.execute(inData, exec);
+        return postExecuteInternal();
+    }
 
-	private PortObject[] postExecuteInternal() throws Exception {
-		if (getConfig().getImageFile().length() > 0) {
-			final PMMLImport importer = new PMMLImport(getConfig().getImageFile(), true);
-			return new PortObject[] { importer.getPortObject() };
-		} else {
-			throw new RuntimeException("No PMML file was created by thr R-Script");
-		}
-	}
+    private PortObject[] postExecuteInternal() throws Exception {
+        if (getConfig().getImageFile().length() > 0) {
+            final PMMLImport importer = new PMMLImport(getConfig().getImageFile(), true);
+            return new PortObject[]{importer.getPortObject()};
+        } else {
+            throw new RuntimeException("No PMML file was created by thr R-Script");
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-		// nothing to validate
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
+        // nothing to validate
+    }
 
-	/**
-	 * The saved image is loaded.
-	 *
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void loadInternals(final File nodeInternDir, final ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// no internals to load
-	}
+    /**
+     * The saved image is loaded.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    protected void loadInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
+        // no internals to load
+    }
 
-	/**
-	 * The created image is saved.
-	 *
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void saveInternals(final File nodeInternDir, final ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		// no internals to save
-	}
+    /**
+     * The created image is saved.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    protected void saveInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
+        // no internals to save
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void reset() {
-		// to internals to reset
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void reset() {
+        // to internals to reset
+    }
 
-	private RToPMMLNodeConfig getConfig() {
-		return (RToPMMLNodeConfig) getRSnippetNodeConfig();
-	}
+    private RToPMMLNodeConfig getConfig() {
+        return (RToPMMLNodeConfig)getRSnippetNodeConfig();
+    }
 
 }

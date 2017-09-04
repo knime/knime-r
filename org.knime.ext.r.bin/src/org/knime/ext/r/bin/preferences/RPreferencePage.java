@@ -109,7 +109,7 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
     protected void createFieldEditors() {
         addField(new RHomeDirectoryFieldEditor(RPreferenceInitializer.PREF_R_HOME, "Path to R Home",
             getFieldEditorParent()));
-        IntegerFieldEditor field = new IntegerFieldEditor(RPreferenceInitializer.PREF_RSERVE_MAXINBUF,
+        final IntegerFieldEditor field = new IntegerFieldEditor(RPreferenceInitializer.PREF_RSERVE_MAXINBUF,
             "Rserve receiving buffer size limit (in MB -- 0 for unlimited)", getFieldEditorParent());
         field.setValidRange(0, 1000000);
         addField(field);
@@ -127,7 +127,7 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
         try {
             RBinUtil.checkRHome(rHome, true);
 
-            DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
+            final DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
             final Properties props = prefProvider.getProperties();
             final String version = (props.getProperty("major") + "." + props.getProperty("minor")).replace(" ", ""); // the version numbers may contain spaces
 
@@ -138,21 +138,25 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
             }
 
             final String rservePath = props.getProperty("Rserve.path");
-            if (rservePath == null || props.getProperty("Rserve.path").isEmpty()) {
-                setMessage("The package 'Rserve' needs to be installed in your R installation. Please install it in R using \"install.packages('Rserve')\".", WARNING);
+            if ((rservePath == null) || props.getProperty("Rserve.path").isEmpty()) {
+                setMessage(
+                    "The package 'Rserve' needs to be installed in your R installation. Please install it in R using \"install.packages('Rserve')\".",
+                    WARNING);
                 return true; // to allow the user to install Rserve later without having to select the path via the annoying path dialog again.
             }
 
             final String cairoPath = props.getProperty("Cairo.path");
-            if (Platform.isMac() && (cairoPath == null || cairoPath.isEmpty())) {
+            if (Platform.isMac() && ((cairoPath == null) || cairoPath.isEmpty())) {
                 // under Mac we need Cairo package to use png()/bmp() etc devices.
-                setMessage("The package 'Cairo' needs to be installed in your R installation for bitmap graphics devices to work properly. Please install it in R using \"install.packages('Cairo')\".", WARNING);
+                setMessage(
+                    "The package 'Cairo' needs to be installed in your R installation for bitmap graphics devices to work properly. Please install it in R using \"install.packages('Cairo')\".",
+                    WARNING);
                 return true;
             }
 
             setMessage(null, NONE);
             return true;
-        } catch (InvalidRHomeException e) {
+        } catch (final InvalidRHomeException e) {
             setMessage(e.getMessage(), ERROR);
             return false;
         }

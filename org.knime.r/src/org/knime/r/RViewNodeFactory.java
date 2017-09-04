@@ -59,65 +59,65 @@ import org.knime.core.node.port.PortType;
  * @author Heiko Hofer
  */
 public class RViewNodeFactory extends NodeFactory<RViewNodeModel> {
-	private final PortType m_portType;
+    private final PortType m_portType;
 
-	/**
-	 * Empty default constructor.
-	 */
-	public RViewNodeFactory() {
-		this(BufferedDataTable.TYPE);
-	}
+    /**
+     * Empty default constructor.
+     */
+    public RViewNodeFactory() {
+        this(BufferedDataTable.TYPE);
+    }
 
-	public RViewNodeFactory(final PortType inPortType) {
-		m_portType = inPortType;
-	}
+    public RViewNodeFactory(final PortType inPortType) {
+        m_portType = inPortType;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected NodeDialogPane createNodeDialogPane() {
-		return new RViewNodeDialog(this.getClass(), new RViewNodeConfig(m_portType));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected NodeDialogPane createNodeDialogPane() {
+        return new RViewNodeDialog(this.getClass(), new RViewNodeConfig(m_portType));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RViewNodeModel createNodeModel() {
-		return new RViewNodeModel(new RViewNodeConfig(m_portType));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public RViewNodeModel createNodeModel() {
+        return new RViewNodeModel(new RViewNodeConfig(m_portType));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getNrNodeViews() {
-		return 3;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getNrNodeViews() {
+        return 3;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public NodeView<RViewNodeModel> createNodeView(final int viewIndex, final RViewNodeModel nodeModel) {
-		if (viewIndex == 0) {
-			return new RViewNodeView(nodeModel);
-		} else if (viewIndex == 1) {
-			return new ExtToolStdoutNodeView<RViewNodeModel>(nodeModel);
-		} else if (viewIndex == 2) {
-			return new ExtToolStderrNodeView<RViewNodeModel>(nodeModel);
-		} else {
-			return null;
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public NodeView<RViewNodeModel> createNodeView(final int viewIndex, final RViewNodeModel nodeModel) {
+        if (viewIndex == 0) {
+            return new RViewNodeView(nodeModel);
+        } else if (viewIndex == 1) {
+            return new ExtToolStdoutNodeView<RViewNodeModel>(nodeModel);
+        } else if (viewIndex == 2) {
+            return new ExtToolStderrNodeView<RViewNodeModel>(nodeModel);
+        } else {
+            return null;
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean hasDialog() {
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean hasDialog() {
+        return true;
+    }
 
 }

@@ -69,15 +69,14 @@ import org.knime.r.RSnippetTemplate;
  * @author Heiko Hofer
  */
 public final class FileTemplateRepository extends TemplateRepository {
-    private static NodeLogger logger
-        = NodeLogger.getLogger(FileTemplateRepository.class);
+    private static NodeLogger logger = NodeLogger.getLogger(FileTemplateRepository.class);
 
-    private File m_folder;
-    private boolean m_readonly;
+    private final File m_folder;
+
+    private final boolean m_readonly;
 
     /** Templates grouped by meta category. */
-    private Map<Class<?>, Collection<RSnippetTemplate>> m_templates;
-
+    private final Map<Class<?>, Collection<RSnippetTemplate>> m_templates;
 
     /**
      * Create a new file base template repository.
@@ -87,21 +86,19 @@ public final class FileTemplateRepository extends TemplateRepository {
      * @throws IOException if a template cannot be read
      */
 
-    private FileTemplateRepository(final File folder, final boolean readonly)
-            throws IOException {
+    private FileTemplateRepository(final File folder, final boolean readonly) throws IOException {
         super();
         m_folder = folder;
         m_readonly = readonly;
 
         m_templates = new HashMap<>();
 
-        Collection<RSnippetTemplate> templates =
-            new ArrayList<RSnippetTemplate>();
+        final Collection<RSnippetTemplate> templates = new ArrayList<RSnippetTemplate>();
 
         if (m_folder.exists()) {
-            for (File meta : m_folder.listFiles()) {
+            for (final File meta : m_folder.listFiles()) {
                 if (meta.isDirectory()) {
-                    for (File file : meta.listFiles()) {
+                    for (final File file : meta.listFiles()) {
                         addIfTemplate(templates, file);
                     }
                 }
@@ -112,21 +109,18 @@ public final class FileTemplateRepository extends TemplateRepository {
     }
 
     /**
-     * Adds the template to the give collection o a successful read. The
-     * template file is supposed to end with ".xml".
+     * Adds the template to the give collection o a successful read. The template file is supposed to end with ".xml".
+     * 
      * @param templates the templates to add to
      * @param file the file to read
      */
-    private void addIfTemplate(final Collection<RSnippetTemplate> templates,
-            final File file) {
+    private void addIfTemplate(final Collection<RSnippetTemplate> templates, final File file) {
         if (file.getName().endsWith(".xml")) {
             try {
-                NodeSettingsRO settings =
-                    NodeSettings.loadFromXML(new FileInputStream(file));
+                final NodeSettingsRO settings = NodeSettings.loadFromXML(new FileInputStream(file));
                 templates.add(RSnippetTemplate.create(settings));
-            } catch (Exception e) {
-                logger.error("The following file seems to be no template. "
-                        + file.getAbsolutePath(), e);
+            } catch (final Exception e) {
+                logger.error("The following file seems to be no template. " + file.getAbsolutePath(), e);
             }
         }
 
@@ -134,11 +128,12 @@ public final class FileTemplateRepository extends TemplateRepository {
 
     /**
      * Append given templates to the list of templates.
+     * 
      * @param templates the templates to append.
      */
     private void appendTemplates(final Collection<RSnippetTemplate> templates) {
-        for (RSnippetTemplate template : templates) {
-            Class<?> key = template.getMetaCategory();
+        for (final RSnippetTemplate template : templates) {
+            final Class<?> key = template.getMetaCategory();
             Collection<RSnippetTemplate> collection = m_templates.get(key);
             if (null == collection) {
                 collection = new ArrayList<RSnippetTemplate>();
@@ -149,26 +144,27 @@ public final class FileTemplateRepository extends TemplateRepository {
 
     }
 
-    /** Create a repository from the templates in the given folder. Templates
-     * in this repository cannot be removed or replaced.
+    /**
+     * Create a repository from the templates in the given folder. Templates in this repository cannot be removed or
+     * replaced.
+     * 
      * @param folder the folder with the repositories
      * @return the template repository
      * @throws IOException if a template cannot be read
      */
-    public static FileTemplateRepository createProtected(final File folder)
-            throws IOException {
+    public static FileTemplateRepository createProtected(final File folder) throws IOException {
         return new FileTemplateRepository(folder, true);
     }
 
-    /** Create a repository from the templates in the given folder. Templates
-     * may be removed or replaced. Use <code>createProtected</code> for a
-     * repository that is read only.
+    /**
+     * Create a repository from the templates in the given folder. Templates may be removed or replaced. Use
+     * <code>createProtected</code> for a repository that is read only.
+     * 
      * @param folder the folder with the repositories
      * @return the template repository
      * @throws IOException if a template cannot be read
      */
-    public static FileTemplateRepository create(final File folder)
-            throws IOException {
+    public static FileTemplateRepository create(final File folder) throws IOException {
         return new FileTemplateRepository(folder, false);
     }
 
@@ -176,14 +172,12 @@ public final class FileTemplateRepository extends TemplateRepository {
      * {@inheritDoc}
      */
     @Override
-    public Collection<RSnippetTemplate> getTemplates(
-            final Collection<Class<?>> metaCategories) {
+    public Collection<RSnippetTemplate> getTemplates(final Collection<Class<?>> metaCategories) {
         if (metaCategories.size() == 1) {
             return m_templates.get(metaCategories.iterator().next());
         } else {
-            Collection<RSnippetTemplate> templates =
-                new ArrayList<RSnippetTemplate>();
-            for (Class<?> c : metaCategories) {
+            final Collection<RSnippetTemplate> templates = new ArrayList<RSnippetTemplate>();
+            for (final Class<?> c : metaCategories) {
                 if (m_templates.containsKey(c)) {
                     templates.addAll(m_templates.get(c));
                 }
@@ -206,8 +200,7 @@ public final class FileTemplateRepository extends TemplateRepository {
 
     /** Returns true when the given template is in this repository. */
     private boolean isInRepository(final RSnippetTemplate template) {
-        Collection<RSnippetTemplate> templates =
-            m_templates.get(template.getMetaCategory());
+        final Collection<RSnippetTemplate> templates = m_templates.get(template.getMetaCategory());
         return null != templates ? templates.contains(template) : false;
     }
 
@@ -219,11 +212,10 @@ public final class FileTemplateRepository extends TemplateRepository {
         if (m_readonly) {
             return false;
         }
-        Collection<RSnippetTemplate> templates =
-            m_templates.get(template.getMetaCategory());
-        boolean removed = templates.remove(template);
+        final Collection<RSnippetTemplate> templates = m_templates.get(template.getMetaCategory());
+        final boolean removed = templates.remove(template);
         if (removed) {
-            File file = getFile(template);
+            final File file = getFile(template);
             if (file.exists()) {
                 file.delete();
             }
@@ -234,50 +226,47 @@ public final class FileTemplateRepository extends TemplateRepository {
 
     /**
      * Add a template to the default location.
+     * 
      * @param template the template
      */
     void addTemplate(final RSnippetTemplate template) {
         if (m_readonly) {
-            throw new RuntimeException("This repository is read only."
-                    + "Cannot add a template.");
+            throw new RuntimeException("This repository is read only." + "Cannot add a template.");
         }
         try {
-            File file = getFile(template);
-            boolean isNew = file.createNewFile();
+            final File file = getFile(template);
+            final boolean isNew = file.createNewFile();
             if (isNew) {
-                NodeSettings settings = new NodeSettings(file.getName());
+                final NodeSettings settings = new NodeSettings(file.getName());
                 template.saveSettings(settings);
                 settings.saveToXML(new FileOutputStream(file));
                 // reload settings
-                NodeSettingsRO settingsro = NodeSettings.loadFromXML(
-                        new FileInputStream(file));
+                final NodeSettingsRO settingsro = NodeSettings.loadFromXML(new FileInputStream(file));
                 // set the reloaded settings so that all references to existing
                 // objects are broken. This makes sure, that the template is not
                 // changed from outside.
                 template.loadSettings(settingsro);
                 appendTemplates(Collections.singletonList(template));
             } else {
-                throw new IOException("A file with this name does "
-                        + "already exist: " + file.getAbsolutePath());
+                throw new IOException("A file with this name does " + "already exist: " + file.getAbsolutePath());
             }
-        } catch (IOException e1) {
-            NodeLogger.getLogger(this.getClass()).error(
-                    "Could not create template at the default location.", e1);
+        } catch (final IOException e1) {
+            NodeLogger.getLogger(this.getClass()).error("Could not create template at the default location.", e1);
         }
 
     }
 
     /**
      * Get the templates file.
+     * 
      * @param template the file
      */
     private File getFile(final RSnippetTemplate template) {
-        String meta = template.getMetaCategory().getName();
-        File metaFile = new File(m_folder, meta);
+        final String meta = template.getMetaCategory().getName();
+        final File metaFile = new File(m_folder, meta);
         metaFile.mkdir();
-        String name = template.getName().replaceAll("[^a-zA-Z0-9 ]", "_")
-            + "_" + template.getUUID() + ".xml";
-        File file = new File(metaFile, name);
+        final String name = template.getName().replaceAll("[^a-zA-Z0-9 ]", "_") + "_" + template.getUUID() + ".xml";
+        final File file = new File(metaFile, name);
         return file;
     }
 
@@ -286,9 +275,9 @@ public final class FileTemplateRepository extends TemplateRepository {
      */
     @Override
     public RSnippetTemplate getTemplate(final UUID id) {
-        String refID = id.toString();
-        for (Collection<RSnippetTemplate> templates : m_templates.values()) {
-            for (RSnippetTemplate template : templates) {
+        final String refID = id.toString();
+        for (final Collection<RSnippetTemplate> templates : m_templates.values()) {
+            for (final RSnippetTemplate template : templates) {
                 if (template.getUUID().equals(refID)) {
                     return template;
                 }

@@ -133,11 +133,12 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
     };
 
     public static final int PORT_INDEX_R = 0;
+
     public static final int PORT_INDEX_DB = 1;
 
     private static final NodeLogger LOGGER = NodeLogger.getLogger("Deploy R To MSSQL");
 
-    private RunRInMSSQLNodeSettings m_settings = new RunRInMSSQLNodeSettings();
+    private final RunRInMSSQLNodeSettings m_settings = new RunRInMSSQLNodeSettings();
 
     /**
      * Constructor
@@ -226,7 +227,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             final ResultSet resultSet = tableCheckStmt.getResultSet();
             resultSet.next();
             final Object objId = resultSet.getObject(1);
-            if(objId == null) {
+            if (objId == null) {
                 // Table does not exist!
                 throw new RuntimeException("Input table does not exist.");
             }
@@ -244,7 +245,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             if (!connection.createStatement().execute(query)) {
                 throw new RuntimeException("SQL Query failed.");
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException("SQL Query failed.", e);
         }
 
@@ -259,7 +260,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         try (final InputStream stream = getClass().getResource("RunRCode.sql").openStream()) {
             final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             return String.join("\n", reader.lines().collect(Collectors.toList()));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException("CODING ERROR: Could not read RCodeQuery.sql", e);
         }
     }

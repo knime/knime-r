@@ -59,44 +59,42 @@ import org.knime.core.node.port.PortObjectSpecZipOutputStream;
  */
 public final class RPortObjectSpec implements PortObjectSpec {
 
-    /**
-     * The port object spec instance.
-     */
-    public static final RPortObjectSpec INSTANCE = new RPortObjectSpec();
+	/**
+	 * The port object spec instance.
+	 */
+	public static final RPortObjectSpec INSTANCE = new RPortObjectSpec();
 
-    /**
-     * Creating a new instance of <code>RPortObjectSpec</code>.
-     */
-    private RPortObjectSpec() {
-        // empty
-    }
+	/**
+	 * Creating a new instance of <code>RPortObjectSpec</code>.
+	 */
+	private RPortObjectSpec() {
+		// empty
+	}
 
-    /**
-     * Serializer used to save this port object spec.
-     */
-    public static final class Serializer extends PortObjectSpecSerializer<RPortObjectSpec> {
-        /** {@inheritDoc} */
-        @Override
-        public RPortObjectSpec loadPortObjectSpec(
-                final PortObjectSpecZipInputStream in)
-                throws IOException {
-            return INSTANCE;
-        }
-        /** {@inheritDoc} */
-        @Override
-        public void savePortObjectSpec(final RPortObjectSpec portObjectSpec,
-                final PortObjectSpecZipOutputStream out)
-                throws IOException {
-            // empty
-        }
-    }
+	/**
+	 * Serializer used to save this port object spec.
+	 */
+	public static final class Serializer extends PortObjectSpecSerializer<RPortObjectSpec> {
+		/** {@inheritDoc} */
+		@Override
+		public RPortObjectSpec loadPortObjectSpec(final PortObjectSpecZipInputStream in) throws IOException {
+			return INSTANCE;
+		}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public JComponent[] getViews() {
-        return new JComponent[]{};
-    }
+		/** {@inheritDoc} */
+		@Override
+		public void savePortObjectSpec(final RPortObjectSpec portObjectSpec, final PortObjectSpecZipOutputStream out)
+				throws IOException {
+			// empty
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public JComponent[] getViews() {
+		return new JComponent[] {};
+	}
 
 }

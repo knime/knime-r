@@ -72,69 +72,73 @@ import org.knime.core.util.KNIMETimer;
  * @author Jonathan Hale
  */
 public class RProgressPanel extends JPanel implements NodeProgressListener {
-	/** Generated serialVersionUID */
-	private static final long serialVersionUID = -1900970914267712698L;
+    /** Generated serialVersionUID */
+    private static final long serialVersionUID = -1900970914267712698L;
 
-	private ExecutionMonitor m_exec;
-	private JButton m_cancelButton;
-	private JProgressBar m_progressBar;
-	private JLabel m_message;
-	private CardLayout m_cardLayout;
+    private ExecutionMonitor m_exec;
 
-	public RProgressPanel() {
-		super(new CardLayout());
-		m_cardLayout = (CardLayout) super.getLayout();
-		m_exec = new ExecutionMonitor();
-		JPanel defaultPanel = new JPanel();
-		defaultPanel.setPreferredSize(new Dimension(0, 0));
-		add(defaultPanel, "default");
+    private final JButton m_cancelButton;
 
-		m_cancelButton = new JButton("Cancel");
-		m_cancelButton.addActionListener(new ActionListener() {
+    private final JProgressBar m_progressBar;
 
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				m_exec.getProgressMonitor().setExecuteCanceled();
-				stopMonitoring();
-			}
-		});
-		m_progressBar = new JProgressBar(0, 100);
-		m_progressBar.setValue(0);
-		m_progressBar.setStringPainted(true);
-		m_message = new JLabel();
+    private final JLabel m_message;
 
-		JPanel progressPanel = new JPanel(new BorderLayout(5, 5));
-		JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-		centerPanel.add(m_message);
-		progressPanel.add(centerPanel, BorderLayout.CENTER);
-		JPanel rightPanel = new JPanel(new FlowLayout());
-		rightPanel.add(m_progressBar);
-		rightPanel.add(m_cancelButton);
-		progressPanel.add(rightPanel, BorderLayout.EAST);
-		progressPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		add(progressPanel, "progress");
-		m_cardLayout.show(this, "default");
-	}
+    private final CardLayout m_cardLayout;
 
-	private final AtomicBoolean m_updateInProgress = new AtomicBoolean(false);
+    public RProgressPanel() {
+        super(new CardLayout());
+        m_cardLayout = (CardLayout)super.getLayout();
+        m_exec = new ExecutionMonitor();
+        final JPanel defaultPanel = new JPanel();
+        defaultPanel.setPreferredSize(new Dimension(0, 0));
+        add(defaultPanel, "default");
 
-	public void stopMonitoring() {
-		ViewUtils.runOrInvokeLaterInEDT(new Runnable() {
-			@Override
-			public void run() {
-				stopMonitoringInternal();
-			}
-		});
-	}
+        m_cancelButton = new JButton("Cancel");
+        m_cancelButton.addActionListener(new ActionListener() {
 
-	protected void stopMonitoringInternal() {
-		m_cancelButton.setEnabled(false);
-		m_exec.getProgressMonitor().removeProgressListener(this);
-		m_cardLayout.show(this, "default");
-	}
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                m_exec.getProgressMonitor().setExecuteCanceled();
+                stopMonitoring();
+            }
+        });
+        m_progressBar = new JProgressBar(0, 100);
+        m_progressBar.setValue(0);
+        m_progressBar.setStringPainted(true);
+        m_message = new JLabel();
 
-	public void startMonitoring(final ExecutionMonitor exec) {
+        final JPanel progressPanel = new JPanel(new BorderLayout(5, 5));
+        final JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+        centerPanel.add(m_message);
+        progressPanel.add(centerPanel, BorderLayout.CENTER);
+        final JPanel rightPanel = new JPanel(new FlowLayout());
+        rightPanel.add(m_progressBar);
+        rightPanel.add(m_cancelButton);
+        progressPanel.add(rightPanel, BorderLayout.EAST);
+        progressPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        add(progressPanel, "progress");
+        m_cardLayout.show(this, "default");
+    }
+
+    private final AtomicBoolean m_updateInProgress = new AtomicBoolean(false);
+
+    public void stopMonitoring() {
+        ViewUtils.runOrInvokeLaterInEDT(new Runnable() {
+            @Override
+            public void run() {
+                stopMonitoringInternal();
+            }
+        });
+    }
+
+    protected void stopMonitoringInternal() {
+        m_cancelButton.setEnabled(false);
+        m_exec.getProgressMonitor().removeProgressListener(this);
+        m_cardLayout.show(this, "default");
+    }
+
+    public void startMonitoring(final ExecutionMonitor exec) {
         // AP-9610: Has to be run on the EDT
         // If not, this can potentially remove a HierarchyListener through
         // > progressChangedInternal()
@@ -156,46 +160,46 @@ public class RProgressPanel extends JPanel implements NodeProgressListener {
         });
     }
 
-	@Override
-	public void progressChanged(final NodeProgressEvent pe) {
-		// if another state is waiting to be processed, simply return
-		// and leave the work to the previously started thread. This
-		// works because we are retrieving the current state information!
-		if (m_updateInProgress.compareAndSet(false, true)) {
-			ViewUtils.runOrInvokeLaterInEDT(() -> {
+    @Override
+    public void progressChanged(final NodeProgressEvent pe) {
+        // if another state is waiting to be processed, simply return
+        // and leave the work to the previously started thread. This
+        // works because we are retrieving the current state information!
+        if (m_updateInProgress.compareAndSet(false, true)) {
+            ViewUtils.runOrInvokeLaterInEDT(() -> {
                 // let others know we are in the middle of processing
                 // this update - they will now need to start their own job.
                 m_updateInProgress.set(false);
                 progressChangedInternal();
-			});
-		}
+            });
+        }
 
-	}
+    }
 
-	private void progressChangedInternal() {
-		Double progress = m_exec.getProgressMonitor().getProgress();
-		String message = m_exec.getProgressMonitor().getMessage();
-		m_message.setText(message);
-		if (progress != null) {
-			if (m_progressBar.isIndeterminate()) {
-				m_progressBar.setIndeterminate(false);
-			}
-			int p = (int) Math.round(progress * 100);
-			m_progressBar.setValue(p);
+    private void progressChangedInternal() {
+        final Double progress = m_exec.getProgressMonitor().getProgress();
+        final String message = m_exec.getProgressMonitor().getMessage();
+        m_message.setText(message);
+        if (progress != null) {
+            if (m_progressBar.isIndeterminate()) {
+                m_progressBar.setIndeterminate(false);
+            }
+            final int p = (int)Math.round(progress * 100);
+            m_progressBar.setValue(p);
 
-			if (p >= 100) {
+            if (p >= 100) {
 
-				// delay showing nothing by 200ms for the user to see that progress
-				// reached 100%
-				KNIMETimer.getInstance().schedule(new TimerTask() {
-					@Override
-					public void run() {
-						if (p >= 100) {
-							m_cardLayout.show(RProgressPanel.this, "default");
-						}
-					}
-				}, 200);
-			}
-		}
-	}
+                // delay showing nothing by 200ms for the user to see that progress
+                // reached 100%
+                KNIMETimer.getInstance().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (p >= 100) {
+                            m_cardLayout.show(RProgressPanel.this, "default");
+                        }
+                    }
+                }, 200);
+            }
+        }
+    }
 }

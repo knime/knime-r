@@ -94,9 +94,11 @@ public class RDialogPanel extends JPanel {
     private final JEditorPane m_textExpression;
 
     private final JList<DataColumnSpec> m_list;
+
     private final DefaultListModel<DataColumnSpec> m_listModel;
 
     private final JList<FlowVariable> m_listVars;
+
     private final DefaultListModel<FlowVariable> m_listModelVars;
 
     private String m_defaultCommand = DEFAULT_R_COMMAND;
@@ -110,6 +112,7 @@ public class RDialogPanel extends JPanel {
 
     /**
      * Creates a new dialog to enter R expressions with a default mouse listener.
+     *
      * @param varName variable prefix holding the input data, default is <code>R</code>.
      * @since 2.8
      */
@@ -119,16 +122,13 @@ public class RDialogPanel extends JPanel {
         // init editor pane
         m_textExpression = new JEditorPane();
         m_textExpression.setPreferredSize(new Dimension(350, 200));
-        Font font = m_textExpression.getFont();
-        Font newFont = new Font(Font.MONOSPACED, Font.PLAIN,
-                (font == null ? 12 : font.getSize()));
+        final Font font = m_textExpression.getFont();
+        final Font newFont = new Font(Font.MONOSPACED, Font.PLAIN, (font == null ? 12 : font.getSize()));
         m_textExpression.setFont(newFont);
-        m_textExpression.setBorder(BorderFactory.createTitledBorder(
-                " R Snippet "));
-        JScrollPane scroll = new JScrollPane(m_textExpression,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        JPanel textPanel = new JPanel(new BorderLayout());
+        m_textExpression.setBorder(BorderFactory.createTitledBorder(" R Snippet "));
+        final JScrollPane scroll = new JScrollPane(m_textExpression, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        final JPanel textPanel = new JPanel(new BorderLayout());
         textPanel.add(scroll, BorderLayout.CENTER);
         textPanel.setMinimumSize(new Dimension(0, 0));
         textPanel.setMaximumSize(new Dimension(0, 0));
@@ -144,9 +144,9 @@ public class RDialogPanel extends JPanel {
             @Override
             public final void mouseClicked(final MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    Object o = m_list.getSelectedValue();
+                    final Object o = m_list.getSelectedValue();
                     if (o != null) {
-                        DataColumnSpec cspec = (DataColumnSpec) o;
+                        final DataColumnSpec cspec = (DataColumnSpec)o;
                         m_textExpression.replaceSelection(formatColumnName(varName, cspec.getName()));
                         m_list.clearSelection();
                         m_textExpression.requestFocus();
@@ -154,9 +154,8 @@ public class RDialogPanel extends JPanel {
                 }
             }
         });
-        JScrollPane leftComp = new JScrollPane(m_list,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        final JScrollPane leftComp = new JScrollPane(m_list, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         // init variable list
         m_listModelVars = new DefaultListModel<>();
@@ -174,9 +173,9 @@ public class RDialogPanel extends JPanel {
             @Override
             public final void mouseClicked(final MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    Object o = m_listVars.getSelectedValue();
+                    final Object o = m_listVars.getSelectedValue();
                     if (o != null) {
-                        FlowVariable var = (FlowVariable) o;
+                        final FlowVariable var = (FlowVariable)o;
                         m_textExpression.replaceSelection(FlowVariableResolver.getPlaceHolderForVariable(var));
                         m_listVars.clearSelection();
                         m_textExpression.requestFocus();
@@ -184,41 +183,38 @@ public class RDialogPanel extends JPanel {
                 }
             }
         });
-        JScrollPane scrollVars = new JScrollPane(m_listVars,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        final JScrollPane scrollVars = new JScrollPane(m_listVars, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, leftComp, scrollVars);
+        final JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, leftComp, scrollVars);
         leftPane.setResizeWeight(0.5);
 
         allSplit.setLeftComponent(leftPane);
         super.add(allSplit, BorderLayout.CENTER);
 
-
     }
 
     /**
      * Updates the list of columns based on the given table spec.
+     *
      * @param spec to get columns compatible with String, Double, Integer
      */
     private final void update(final DataTableSpec spec, final Map<String, FlowVariable> map)
-            throws NotConfigurableException {
+        throws NotConfigurableException {
         // update column list
         m_listModel.removeAllElements();
 
         // check of null spec in case of optional input data port
         if (spec != null) {
-            DataTableSpec newSpec = RConnectionRemote.createRenamedDataTableSpec(spec);
+            final DataTableSpec newSpec = RConnectionRemote.createRenamedDataTableSpec(spec);
             for (int i = 0; i < newSpec.getNumColumns(); i++) {
-                DataColumnSpec cspec = newSpec.getColumnSpec(i);
-                DataType type = cspec.getType();
+                final DataColumnSpec cspec = newSpec.getColumnSpec(i);
+                final DataType type = cspec.getType();
                 if (type.isCompatible(IntValue.class)) {
                     m_listModel.addElement(cspec);
-                } else
-                if (type.isCompatible(DoubleValue.class)) {
+                } else if (type.isCompatible(DoubleValue.class)) {
                     m_listModel.addElement(cspec);
-                } else
-                if (type.isCompatible(StringValue.class)) {
+                } else if (type.isCompatible(StringValue.class)) {
                     m_listModel.addElement(cspec);
                 }
             }
@@ -229,7 +225,7 @@ public class RDialogPanel extends JPanel {
 
         // update list of flow/workflow variables
         m_listModelVars.removeAllElements();
-        for (Map.Entry<String, FlowVariable> e : map.entrySet()) {
+        for (final Map.Entry<String, FlowVariable> e : map.entrySet()) {
             m_listModelVars.addElement(e.getValue());
         }
         repaint();
@@ -261,15 +257,16 @@ public class RDialogPanel extends JPanel {
 
     /**
      * Loads R command string out of given settings instance.
+     *
      * @param settings settings instance to load R command string from.
      * @param specs input specs, can be null or its elements or not of type DTS
      * @param map holding flow variables together with its identifier
      * @throws NotConfigurableException if no columns are available.
      */
-    public void loadSettingsFrom(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs, final Map<String, FlowVariable> map) throws NotConfigurableException {
-        if (specs != null && specs.length > 0 && specs[0] != null && specs[0] instanceof DataTableSpec) {
-             update((DataTableSpec) specs[0], map);
+    public void loadSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs,
+        final Map<String, FlowVariable> map) throws NotConfigurableException {
+        if ((specs != null) && (specs.length > 0) && (specs[0] != null) && (specs[0] instanceof DataTableSpec)) {
+            update((DataTableSpec)specs[0], map);
         } else {
             update(null, map);
         }
@@ -287,17 +284,14 @@ public class RDialogPanel extends JPanel {
     }
 
     /**
-     * Loads expression from given settings instance and returns it as string.
-     * If no settings can be loaded, the given string is returned as default
-     * expression.
+     * Loads expression from given settings instance and returns it as string. If no settings can be loaded, the given
+     * string is returned as default expression.
      *
      * @param settings settings instance to load expression from.
-     * @param defaultExpr the default expression if no other can be loaded
-     * from settings.
+     * @param defaultExpr the default expression if no other can be loaded from settings.
      * @return The expression loaded from settings instance.
      */
-    public static final String getExpressionFrom(final NodeSettingsRO settings,
-            final String defaultExpr) {
+    public static final String getExpressionFrom(final NodeSettingsRO settings, final String defaultExpr) {
         return settings.getString(CFG_EXPRESSION, defaultExpr);
     }
 
@@ -312,14 +306,13 @@ public class RDialogPanel extends JPanel {
     }
 
     /**
-     * Loads expression from given settings instance and returns it as string
-     * array.
+     * Loads expression from given settings instance and returns it as string array.
      *
      * @param settings settings instance to load expression from.
      * @return The expression loaded from settings instance.
      */
     public static final String[] getExpressionsFrom(final NodeSettingsRO settings) {
-        String expr = settings.getString(CFG_EXPRESSION, DEFAULT_R_COMMAND);
+        final String expr = settings.getString(CFG_EXPRESSION, DEFAULT_R_COMMAND);
         return expr.split("\n");
     }
 
@@ -329,9 +322,8 @@ public class RDialogPanel extends JPanel {
      * @param settings settings instance to save expression to.
      * @param exprs array of expressions to save.
      */
-    public static final void setExpressionsTo(final NodeSettingsWO settings,
-            final String[] exprs) {
-        StringBuilder expr = new StringBuilder();
+    public static final void setExpressionsTo(final NodeSettingsWO settings, final String[] exprs) {
+        final StringBuilder expr = new StringBuilder();
         if (exprs != null) {
             for (int i = 0; i < exprs.length; i++) {
                 if (i > 0) {

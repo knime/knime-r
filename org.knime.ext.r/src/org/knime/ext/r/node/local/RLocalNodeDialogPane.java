@@ -59,15 +59,11 @@ import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObjectSpec;
 
 /**
- * The <code>RLocalNodeDialogPane</code> is a
- * dialog pane providing a file chooser to select the R executable, as well
- * as a checkbox to specify which R executable will be used to execute the
- * R script. If the checkbox is <b>not</b> checked, the R executable file
- * specified in the KNIME-R preferences is used, if the checkbox <b>is</b>
- * checked the specified file of the file chooser dialog is used.
- * This dialog can be extended to take use of this functionality but be aware
- * to call the super constructor when extending
- * <code>RLocalNodeDialogPane</code>.
+ * The <code>RLocalNodeDialogPane</code> is a dialog pane providing a file chooser to select the R executable, as well
+ * as a checkbox to specify which R executable will be used to execute the R script. If the checkbox is <b>not</b>
+ * checked, the R executable file specified in the KNIME-R preferences is used, if the checkbox <b>is</b> checked the
+ * specified file of the file chooser dialog is used. This dialog can be extended to take use of this functionality but
+ * be aware to call the super constructor when extending <code>RLocalNodeDialogPane</code>.
  *
  * @author Thomas Gabriel, University of Konstanz
  * @author Kilian Thiel, University of Konstanz
@@ -78,8 +74,8 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
     private static final String TAB_R_BINARY = "R Binary";
 
     /**
-     * @return Returns a <code>SettingsModelBoolean</code> instance specifying
-     * if the determined R executable file is used.
+     * @return Returns a <code>SettingsModelBoolean</code> instance specifying if the determined R executable file is
+     *         used.
      */
     static final SettingsModelBoolean createUseSpecifiedFileModel() {
         return new SettingsModelBoolean("R_use_specified_file", false);
@@ -88,11 +84,10 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
     private final SettingsModelBoolean m_smb;
 
     private final SettingsModelString m_fileModel;
-    
+
     /**
-     * Constructor of <code>RLocalNodeDialogPane</code> which provides a
-     * default dialog component to specify the R executable file and a checkbox
-     * to specify which R executable is used.
+     * Constructor of <code>RLocalNodeDialogPane</code> which provides a default dialog component to specify the R
+     * executable file and a checkbox to specify which R executable is used.
      */
     public RLocalNodeDialogPane() {
         super();
@@ -103,29 +98,24 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         m_smb.addChangeListener(new CheckBoxChangeListener());
 
         // create file chooser component.
-        DialogComponentFileChooser fileChooser = new DialogComponentFileChooser(
-                m_fileModel, "R_binarys", JFileChooser.OPEN_DIALOG,
-                false, new String[]{"", ".exe"});
+        final DialogComponentFileChooser fileChooser = new DialogComponentFileChooser(m_fileModel, "R_binarys",
+            JFileChooser.OPEN_DIALOG, false, new String[]{"", ".exe"});
 
         setHorizontalPlacement(true);
         createNewGroup("R binary path");
 
         // create check box component
-        DialogComponentBoolean checkbox = new DialogComponentBoolean(
-                m_smb, "Override default:");
+        final DialogComponentBoolean checkbox = new DialogComponentBoolean(m_smb, "Override default:");
         checkbox.setToolTipText("If checked, the specified file is used "
-                + "as R Binary. If not checked, the file specified in "
-                + "the KNIME's R preferences is used.");
+            + "as R Binary. If not checked, the file specified in " + "the KNIME's R preferences is used.");
 
         addDialogComponent(checkbox);
         addDialogComponent(fileChooser);
-        
+
         setHorizontalPlacement(false);
-        DialogComponentString argumentsComp = new DialogComponentString(
-                createRargumentsModel(),
-                "Arguments run together with the R binary: ", false, 25);
-        argumentsComp.setToolTipText("Add arguments for R;"
-                + " --vanilla mode ensures a clean workspace.");
+        final DialogComponentString argumentsComp =
+            new DialogComponentString(createRargumentsModel(), "Arguments run together with the R binary: ", false, 25);
+        argumentsComp.setToolTipText("Add arguments for R;" + " --vanilla mode ensures a clean workspace.");
         addDialogComponent(argumentsComp);
 
         closeCurrentGroup();
@@ -134,21 +124,19 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
         enableFileChooser();
         setDefaultTabTitle(TAB_R_BINARY);
     }
-    
+
     /**
-     * @return a new settings model for additional R arguments per default
-     *         '--vanilla' is appended
+     * @return a new settings model for additional R arguments per default '--vanilla' is appended
      */
     static final SettingsModelString createRargumentsModel() {
-        return new SettingsModelString("R-arguments", "--vanilla"); 
+        return new SettingsModelString("R-arguments", "--vanilla");
     }
 
     /**
-     * @return a <code>SettingsModelString</code> instance containing the path
-     *         to the R executable
+     * @return a <code>SettingsModelString</code> instance containing the path to the R executable
      */
     static final SettingsModelString createRBinaryFile() {
-        SettingsModelString sms = new SettingsModelString("R_binary_file", "");
+        final SettingsModelString sms = new SettingsModelString("R_binary_file", "");
         sms.setEnabled(false);
         return sms;
     }
@@ -159,8 +147,8 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
      * {@inheritDoc}
      */
     @Override
-    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs) throws NotConfigurableException {
+    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
+        throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
         enableFileChooser();
     }
@@ -174,8 +162,7 @@ public abstract class RLocalNodeDialogPane extends DefaultNodeSettingsPane {
     }
 
     /**
-     * Enables the file chooser model if checkbox is checked and disables it
-     * when the checkbox is not checked.
+     * Enables the file chooser model if checkbox is checked and disables it when the checkbox is not checked.
      */
     private void enableFileChooser() {
         if (m_smb.getBooleanValue()) {

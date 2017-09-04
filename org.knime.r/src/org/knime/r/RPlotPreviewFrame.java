@@ -76,84 +76,87 @@ import org.knime.core.util.SimpleFileFilter;
  */
 final class RPlotPreviewFrame extends JDialog {
 
-	/** Generated serialVersionUID */
-	private static final long serialVersionUID = -754394465820493813L;
+    /** Generated serialVersionUID */
+    private static final long serialVersionUID = -754394465820493813L;
 
-	private final ImageViewPanel m_plotPreviewPanel;
-	private final JPanel m_cardLayoutPanel;
-	private static final String NO_PLOT = "<no plot>";
-	private static final String PLOT = "<plot>";
+    private final ImageViewPanel m_plotPreviewPanel;
 
-	public RPlotPreviewFrame(final Frame parentFrame) {
-		super(parentFrame, "R Plot", ModalityType.MODELESS);
-		final JPanel fullPanel = new JPanel(new BorderLayout());
+    private final JPanel m_cardLayoutPanel;
 
-		final CardLayout cardLayout = new CardLayout();
-		m_cardLayoutPanel = new JPanel(cardLayout);
-		final JPanel noPlotPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		noPlotPanel.add(new JLabel(NO_PLOT));
-		m_cardLayoutPanel.add(noPlotPanel, NO_PLOT);
+    private static final String NO_PLOT = "<no plot>";
 
-		m_plotPreviewPanel = new ImageViewPanel();
-		m_cardLayoutPanel.add(new JScrollPane(m_plotPreviewPanel), PLOT);
-		fullPanel.add(m_cardLayoutPanel, BorderLayout.CENTER);
-		m_plotPreviewPanel.setScaleType(ScaleType.None);
+    private static final String PLOT = "<plot>";
 
-		final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		final JButton closeButton = new JButton("Close");
-		closeButton.addActionListener(e -> onClose());
-		southPanel.add(closeButton);
-		fullPanel.add(southPanel, BorderLayout.SOUTH);
-		getContentPane().add(fullPanel);
-	}
+    public RPlotPreviewFrame(final Frame parentFrame) {
+        super(parentFrame, "R Plot", ModalityType.MODELESS);
+        final JPanel fullPanel = new JPanel(new BorderLayout());
 
-	private void onClose() {
-		setVisible(false);
-	}
+        final CardLayout cardLayout = new CardLayout();
+        m_cardLayoutPanel = new JPanel(cardLayout);
+        final JPanel noPlotPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        noPlotPanel.add(new JLabel(NO_PLOT));
+        m_cardLayoutPanel.add(noPlotPanel, NO_PLOT);
 
-	public void setSource(final File pngFile) throws IOException {
-		BufferedImage image;
-		final CardLayout cardLayout = (CardLayout) m_cardLayoutPanel.getLayout();
-		if (pngFile != null && pngFile.length() > 0) {
-			try {
-				image = ImageIO.read(pngFile);
-			} catch (final IOException e) {
-				m_plotPreviewPanel.setImage(null);
-				cardLayout.show(m_cardLayoutPanel, NO_PLOT);
-				throw e;
-			}
-			m_plotPreviewPanel.setImage(image);
-			cardLayout.show(m_cardLayoutPanel, PLOT);
+        m_plotPreviewPanel = new ImageViewPanel();
+        m_cardLayoutPanel.add(new JScrollPane(m_plotPreviewPanel), PLOT);
+        fullPanel.add(m_cardLayoutPanel, BorderLayout.CENTER);
+        m_plotPreviewPanel.setScaleType(ScaleType.None);
 
-			/* set size of dialog to image size, but never bigger than screen size */
-			final Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-			final int windowWidth = (int) Math.min(image.getWidth() + 20, screenSize.getWidth() - 50);
-			final int windowHeight = (int) Math.min(image.getHeight() + 75, screenSize.getHeight() - 50);
+        final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        final JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> onClose());
+        southPanel.add(closeButton);
+        fullPanel.add(southPanel, BorderLayout.SOUTH);
+        getContentPane().add(fullPanel);
+    }
 
-			setSize(windowWidth, windowHeight);
-		} else {
-			m_plotPreviewPanel.setImage(null);
-			cardLayout.show(m_cardLayoutPanel, NO_PLOT);
-		}
-	}
+    private void onClose() {
+        setVisible(false);
+    }
 
-	public static void main(final String[] args) throws IOException {
-		final JFileChooser jFileChooser = new JFileChooser();
-		jFileChooser.setFileFilter(new SimpleFileFilter(".png", ".PNG"));
-		final int showOpenDialog = jFileChooser.showOpenDialog(null);
-		if (showOpenDialog != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
-		final RPlotPreviewFrame rPlotPreviewFrame = new RPlotPreviewFrame(null);
-		rPlotPreviewFrame.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentHidden(final ComponentEvent e) {
-				System.exit(0);
-			}
-		});
-		rPlotPreviewFrame.setSource(jFileChooser.getSelectedFile());
-		rPlotPreviewFrame.pack();
-		rPlotPreviewFrame.setVisible(true);
-	}
+    public void setSource(final File pngFile) throws IOException {
+        BufferedImage image;
+        final CardLayout cardLayout = (CardLayout)m_cardLayoutPanel.getLayout();
+        if ((pngFile != null) && (pngFile.length() > 0)) {
+            try {
+                image = ImageIO.read(pngFile);
+            } catch (final IOException e) {
+                m_plotPreviewPanel.setImage(null);
+                cardLayout.show(m_cardLayoutPanel, NO_PLOT);
+                throw e;
+            }
+            m_plotPreviewPanel.setImage(image);
+            cardLayout.show(m_cardLayoutPanel, PLOT);
+
+            /* set size of dialog to image size, but never bigger than screen size */
+            final Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+            final int windowWidth = (int)Math.min(image.getWidth() + 20, screenSize.getWidth() - 50);
+            final int windowHeight = (int)Math.min(image.getHeight() + 75, screenSize.getHeight() - 50);
+
+            setSize(windowWidth, windowHeight);
+        } else {
+            m_plotPreviewPanel.setImage(null);
+            cardLayout.show(m_cardLayoutPanel, NO_PLOT);
+        }
+    }
+
+    public static void main(final String[] args) throws IOException {
+        final JFileChooser jFileChooser = new JFileChooser();
+        jFileChooser.setFileFilter(new SimpleFileFilter(".png", ".PNG"));
+        final int showOpenDialog = jFileChooser.showOpenDialog(null);
+        if (showOpenDialog != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        final RPlotPreviewFrame rPlotPreviewFrame = new RPlotPreviewFrame(null);
+        rPlotPreviewFrame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentHidden(final ComponentEvent e) {
+                System.exit(0);
+            }
+        });
+        rPlotPreviewFrame.setSource(jFileChooser.getSelectedFile());
+        rPlotPreviewFrame.pack();
+        rPlotPreviewFrame.setVisible(true);
+    }
 
 }

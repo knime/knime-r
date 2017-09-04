@@ -70,308 +70,305 @@ import org.knime.r.ui.RConsole;
 import org.knime.r.ui.RProgressPanel;
 
 /**
- * Class managing a console and execution of commands pushed to the command
- * queue.
+ * Class managing a console and execution of commands pushed to the command queue.
  *
  * @author Heiko Hofer
  * @author Jonathan Hale
  */
 public class RConsoleController implements RCommandExecutionListener {
 
-	private RConsole m_pane;
+    private RConsole m_pane;
 
-	private final Action m_cancelAction;
-	private final Action m_clearAction;
-	private final RController m_controller;
-	private final RCommandQueue m_commandQueue;
+    private final Action m_cancelAction;
 
-	private final DocumentListener m_docListener;
+    private final Action m_clearAction;
 
-	/**
-	 * Constructor
-	 *
-	 * @param controller
-	 *            RController to use for executing commands etc.
-	 */
-	public RConsoleController(final RController controller, final RCommandQueue queue) {
-		m_controller = controller;
-		queue.addRCommandExecutionListener(this);
-		m_commandQueue = queue;
-		m_cancelAction = new AbstractAction("Terminate") {
-			private static final long serialVersionUID = -8509229734952079641L;
+    private final RController m_controller;
 
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				cancel();
-			}
-		};
-		final Icon cancelIcon = ViewUtils.loadIcon(this.getClass(), "progress_stop.gif");
-		m_cancelAction.putValue(Action.SMALL_ICON, cancelIcon);
-		m_cancelAction.putValue(Action.SHORT_DESCRIPTION, "Terminate");
-		m_cancelAction.setEnabled(false);
+    private final RCommandQueue m_commandQueue;
 
-		m_clearAction = new AbstractAction("Clear Console") {
-			private static final long serialVersionUID = 3103558058055836569L;
+    private final DocumentListener m_docListener;
 
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				ViewUtils.invokeLaterInEDT(() -> {
-					clear();
-				});
-			}
-		};
-		final Icon clearIcon = ViewUtils.loadIcon(this.getClass(), "clear_co.gif");
-		m_clearAction.putValue(Action.SMALL_ICON, clearIcon);
-		m_clearAction.putValue(Action.SHORT_DESCRIPTION, "Clear Console");
-		m_clearAction.setEnabled(false);
-		m_docListener = new DocumentListener() {
+    /**
+     * Constructor
+     *
+     * @param controller RController to use for executing commands etc.
+     */
+    public RConsoleController(final RController controller, final RCommandQueue queue) {
+        m_controller = controller;
+        queue.addRCommandExecutionListener(this);
+        m_commandQueue = queue;
+        m_cancelAction = new AbstractAction("Terminate") {
+            private static final long serialVersionUID = -8509229734952079641L;
 
-			@Override
-			public void removeUpdate(final DocumentEvent e) {
-				updateClearAction();
-			}
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                cancel();
+            }
+        };
+        final Icon cancelIcon = ViewUtils.loadIcon(this.getClass(), "progress_stop.gif");
+        m_cancelAction.putValue(Action.SMALL_ICON, cancelIcon);
+        m_cancelAction.putValue(Action.SHORT_DESCRIPTION, "Terminate");
+        m_cancelAction.setEnabled(false);
 
-			@Override
-			public void insertUpdate(final DocumentEvent e) {
-				updateClearAction();
-			}
+        m_clearAction = new AbstractAction("Clear Console") {
+            private static final long serialVersionUID = 3103558058055836569L;
 
-			@Override
-			public void changedUpdate(final DocumentEvent e) {
-				updateClearAction();
-			}
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                ViewUtils.invokeLaterInEDT(() -> {
+                    clear();
+                });
+            }
+        };
+        final Icon clearIcon = ViewUtils.loadIcon(this.getClass(), "clear_co.gif");
+        m_clearAction.putValue(Action.SMALL_ICON, clearIcon);
+        m_clearAction.putValue(Action.SHORT_DESCRIPTION, "Clear Console");
+        m_clearAction.setEnabled(false);
+        m_docListener = new DocumentListener() {
 
-			private void updateClearAction() {
-				m_clearAction.setEnabled(m_pane.getDocument().getLength() > 0);
-			}
-		};
-	}
+            @Override
+            public void removeUpdate(final DocumentEvent e) {
+                updateClearAction();
+            }
 
-	/**
-	 * Cancel the currently executingCommand.
-	 *
-	 * @see RConsoleController#getCancelAction()
-	 */
-	public void cancel() {
-		// clear commands in queue
-		m_commandQueue.clear();
+            @Override
+            public void insertUpdate(final DocumentEvent e) {
+                updateClearAction();
+            }
 
-		m_commandQueue.stopExecutionThread();
+            @Override
+            public void changedUpdate(final DocumentEvent e) {
+                updateClearAction();
+            }
 
-		try {
-			m_controller.terminateAndRelaunch();
-		} catch (final Exception e1) {
-			append("Could not properly terminate current command.", 1);
-		}
-	}
+            private void updateClearAction() {
+                m_clearAction.setEnabled(m_pane.getDocument().getLength() > 0);
+            }
+        };
+    }
 
-	/**
-	 * Clear the console pane
-	 *
-	 * @see RConsoleController#getClearAction()
-	 */
-	public void clear() {
-		if (m_pane != null) {
-			m_pane.setText("");
-		}
-	}
+    /**
+     * Cancel the currently executingCommand.
+     *
+     * @see RConsoleController#getCancelAction()
+     */
+    public void cancel() {
+        // clear commands in queue
+        m_commandQueue.clear();
 
-	/**
-	 * Attach a RConsole to output any commands and their output to.s
-	 *
-	 * @param pane
-	 */
-	public void attachOutput(final RConsole pane) {
-		if (m_pane != null) {
-			detach(m_pane);
-		}
+        m_commandQueue.stopExecutionThread();
 
-		m_pane = pane;
-		if (m_pane != null) {
-			m_pane.getDocument().addDocumentListener(m_docListener);
-		}
-		m_clearAction.setEnabled(false);
-	}
+        try {
+            m_controller.terminateAndRelaunch();
+        } catch (final Exception e1) {
+            append("Could not properly terminate current command.", 1);
+        }
+    }
 
-	/**
-	 * Detach a RConsole. There will be no output to it by this
-	 * RConsoleController anymore.
-	 *
-	 * @param pane
-	 */
-	public void detach(final RConsole pane) {
-		if (pane == null || m_pane != pane) {
-			throw new RuntimeException("Wrong text pane to detach.");
-		}
-		m_pane.getDocument().removeDocumentListener(m_docListener);
-		m_pane = null;
-	}
+    /**
+     * Clear the console pane
+     *
+     * @see RConsoleController#getClearAction()
+     */
+    public void clear() {
+        if (m_pane != null) {
+            m_pane.setText("");
+        }
+    }
 
-	/**
-	 * Whether the given RConsole is currently attached to this
-	 * RConsoleController.
-	 *
-	 * @param pane
-	 * @return <code>true</code> if the given pane is the currently attached
-	 *         one.
-	 */
-	public boolean isAttached(final RConsole pane) {
-		return m_pane == pane;
-	}
+    /**
+     * Attach a RConsole to output any commands and their output to.s
+     *
+     * @param pane
+     */
+    public void attachOutput(final RConsole pane) {
+        if (m_pane != null) {
+            detach(m_pane);
+        }
 
-	/**
-	 * Update the state of R engine (currently executing command or not
-	 * executing). This updates the enabled state of the terminate action.
-	 *
-	 * @param busy
-	 *            Whether currently executing.
-	 */
-	public void updateBusyState(final boolean busy) {
-		m_cancelAction.setEnabled(busy);
-	}
+        m_pane = pane;
+        if (m_pane != null) {
+            m_pane.getDocument().addDocumentListener(m_docListener);
+        }
+        m_clearAction.setEnabled(false);
+    }
 
-	/**
-	 * Interface for creating custom ExecutionMonitors to use for execution of
-	 * commands for example. Allows the user to for example attach a
-	 * {@link RProgressPanel} for example.
-	 *
-	 * @author Jonathan Hale
-	 */
-	public static interface ExecutionMonitorFactory {
-		/**
-		 * Create a new ExecutionMonitor.
-		 *
-		 * @return The created {@link ExecutionMonitor}, never <code>null</code>
-		 */
-		ExecutionMonitor create();
-	}
+    /**
+     * Detach a RConsole. There will be no output to it by this RConsoleController anymore.
+     *
+     * @param pane
+     */
+    public void detach(final RConsole pane) {
+        if ((pane == null) || (m_pane != pane)) {
+            throw new RuntimeException("Wrong text pane to detach.");
+        }
+        m_pane.getDocument().removeDocumentListener(m_docListener);
+        m_pane = null;
+    }
 
-	private final AtomicBoolean m_updateScheduled = new AtomicBoolean(false);
+    /**
+     * Whether the given RConsole is currently attached to this RConsoleController.
+     *
+     * @param pane
+     * @return <code>true</code> if the given pane is the currently attached one.
+     */
+    public boolean isAttached(final RConsole pane) {
+        return m_pane == pane;
+    }
 
-	private final ReentrantLock m_appendBufferLock = new ReentrantLock(true);
-	private Deque<Pair<StringBuilder, Integer>> m_buffer = new ArrayDeque<Pair<StringBuilder, Integer>>();
+    /**
+     * Update the state of R engine (currently executing command or not executing). This updates the enabled state of
+     * the terminate action.
+     *
+     * @param busy Whether currently executing.
+     */
+    public void updateBusyState(final boolean busy) {
+        m_cancelAction.setEnabled(busy);
+    }
 
-	public void append(final String text, final int oType) {
+    /**
+     * Interface for creating custom ExecutionMonitors to use for execution of commands for example. Allows the user to
+     * for example attach a {@link RProgressPanel} for example.
+     *
+     * @author Jonathan Hale
+     */
+    public static interface ExecutionMonitorFactory {
+        /**
+         * Create a new ExecutionMonitor.
+         *
+         * @return The created {@link ExecutionMonitor}, never <code>null</code>
+         */
+        ExecutionMonitor create();
+    }
 
-		if (m_pane != null) {
-			// update is scheduled contribute to this update
-			m_appendBufferLock.lock();
-			try {
-				if (m_buffer.size() > 0 && m_buffer.peekLast().getSecond() == oType) {
-					m_buffer.peekLast().getFirst().append(text);
-				} else {
-					m_buffer.offer(new Pair<StringBuilder, Integer>(new StringBuilder(text), oType));
-				}
-			} finally {
-				m_appendBufferLock.unlock();
-			}
-			// if update is not scheduled
-			if (m_updateScheduled.compareAndSet(false, true)) {
-				final Runnable doWork = () -> {
-					Queue<Pair<StringBuilder, Integer>> buffer = null;
-					m_appendBufferLock.lock();
-					try {
-						m_updateScheduled.set(false);
-						buffer = m_buffer;
-						m_buffer = new ArrayDeque<Pair<StringBuilder, Integer>>();
-					} finally {
-						m_appendBufferLock.unlock();
-					}
+    private final AtomicBoolean m_updateScheduled = new AtomicBoolean(false);
 
-					final StyledDocument doc = m_pane.getStyledDocument();
-					while (buffer.size() > 0) {
-						final Pair<StringBuilder, Integer> toWrite = buffer.poll();
-						try {
-							final Style style = toWrite.getSecond() == 0 ? m_pane.getNormalStyle()
-									: m_pane.getErrorStyle();
-							doc.insertString(doc.getLength(), toWrite.getFirst().toString(), style);
-							final int maxDocLength = 20 * 1024 * 1024 / 2; // 20MB
-							if (doc.getLength() > maxDocLength) {
-								// TODO: Cut by whole line
-								doc.remove(0, doc.getLength() - maxDocLength);
-							}
+    private final ReentrantLock m_appendBufferLock = new ReentrantLock(true);
 
-						} catch (final BadLocationException e) {
-							// never happens
-							throw new RuntimeException(e);
-						}
-					}
-				};
+    private Deque<Pair<StringBuilder, Integer>> m_buffer = new ArrayDeque<Pair<StringBuilder, Integer>>();
 
-				ViewUtils.runOrInvokeLaterInEDT(doWork);
-			}
-		}
-	}
+    public void append(final String text, final int oType) {
 
-	/**
-	 * @return Action for canceling current R execution
-	 */
-	public Action getCancelAction() {
-		return m_cancelAction;
-	}
+        if (m_pane != null) {
+            // update is scheduled contribute to this update
+            m_appendBufferLock.lock();
+            try {
+                if ((m_buffer.size() > 0) && (m_buffer.peekLast().getSecond() == oType)) {
+                    m_buffer.peekLast().getFirst().append(text);
+                } else {
+                    m_buffer.offer(new Pair<StringBuilder, Integer>(new StringBuilder(text), oType));
+                }
+            } finally {
+                m_appendBufferLock.unlock();
+            }
+            // if update is not scheduled
+            if (m_updateScheduled.compareAndSet(false, true)) {
+                final Runnable doWork = () -> {
+                    Queue<Pair<StringBuilder, Integer>> buffer = null;
+                    m_appendBufferLock.lock();
+                    try {
+                        m_updateScheduled.set(false);
+                        buffer = m_buffer;
+                        m_buffer = new ArrayDeque<Pair<StringBuilder, Integer>>();
+                    } finally {
+                        m_appendBufferLock.unlock();
+                    }
 
-	/**
-	 * @return Action for clearing the console.
-	 */
-	public Action getClearAction() {
-		return m_clearAction;
-	}
+                    final StyledDocument doc = m_pane.getStyledDocument();
+                    while (buffer.size() > 0) {
+                        final Pair<StringBuilder, Integer> toWrite = buffer.poll();
+                        try {
+                            final Style style =
+                                toWrite.getSecond() == 0 ? m_pane.getNormalStyle() : m_pane.getErrorStyle();
+                            doc.insertString(doc.getLength(), toWrite.getFirst().toString(), style);
+                            final int maxDocLength = (20 * 1024 * 1024) / 2; // 20MB
+                            if (doc.getLength() > maxDocLength) {
+                                // TODO: Cut by whole line
+                                doc.remove(0, doc.getLength() - maxDocLength);
+                            }
 
-	// --- RCommandExecutionListener methods ---
+                        } catch (final BadLocationException e) {
+                            // never happens
+                            throw new RuntimeException(e);
+                        }
+                    }
+                };
 
-	@Override
-	public void onCommandExecutionStart(final RCommand command) {
-		updateBusyState(true);
+                ViewUtils.runOrInvokeLaterInEDT(doWork);
+            }
+        }
+    }
 
-		if (!command.isShowInConsole()) {
-			return;
-		}
+    /**
+     * @return Action for canceling current R execution
+     */
+    public Action getCancelAction() {
+        return m_cancelAction;
+    }
 
-		final StringTokenizer tokenizer = new StringTokenizer(command.getCommand(), "\n");
+    /**
+     * @return Action for clearing the console.
+     */
+    public Action getClearAction() {
+        return m_clearAction;
+    }
 
-		boolean first = true;
-		while (tokenizer.hasMoreTokens()) {
-			final String line = tokenizer.nextToken();
-			if (first) {
-				append("> " + line + "\n", 0);
-				first = false;
-			} else {
-				append("+ " + line + "\n", 0);
-			}
-		}
-	}
+    // --- RCommandExecutionListener methods ---
 
-	@Override
-	public void onCommandExecutionEnd(final RCommand command, final String stdout, final String stderr) {
-		updateBusyState(false);
+    @Override
+    public void onCommandExecutionStart(final RCommand command) {
+        updateBusyState(true);
 
-		if (!command.isShowInConsole()) {
-			// we do not want the output to appear in the console.
-			return;
-		}
+        if (!command.isShowInConsole()) {
+            return;
+        }
 
-		append(stdout, 0);
-		append(stderr, 1);
-	}
+        final StringTokenizer tokenizer = new StringTokenizer(command.getCommand(), "\n");
 
-	@Override
-	public void onCommandExecutionCanceled() {
-		updateBusyState(false);
-	}
+        boolean first = true;
+        while (tokenizer.hasMoreTokens()) {
+            final String line = tokenizer.nextToken();
+            if (first) {
+                append("> " + line + "\n", 0);
+                first = false;
+            } else {
+                append("+ " + line + "\n", 0);
+            }
+        }
+    }
 
-	@Override
-	public void onCommandExecutionError(final RException e) {
-		Throwable exception = e;
+    @Override
+    public void onCommandExecutionEnd(final RCommand command, final String stdout, final String stderr) {
+        updateBusyState(false);
 
-		do {
-			append("ERROR: " + exception.getMessage(), 1);
-			if (exception == exception.getCause()) {
-				// avoid infinite loops for exceptions which set themselves as
-				// their cause.
-				break;
-			}
-			exception = exception.getCause();
-		} while (exception != null);
-	}
+        if (!command.isShowInConsole()) {
+            // we do not want the output to appear in the console.
+            return;
+        }
+
+        append(stdout, 0);
+        append(stderr, 1);
+    }
+
+    @Override
+    public void onCommandExecutionCanceled() {
+        updateBusyState(false);
+    }
+
+    @Override
+    public void onCommandExecutionError(final RException e) {
+        Throwable exception = e;
+
+        do {
+            append("ERROR: " + exception.getMessage(), 1);
+            if (exception == exception.getCause()) {
+                // avoid infinite loops for exceptions which set themselves as
+                // their cause.
+                break;
+            }
+            exception = exception.getCause();
+        } while (exception != null);
+    }
 
 }

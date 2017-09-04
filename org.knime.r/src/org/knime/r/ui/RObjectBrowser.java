@@ -49,72 +49,73 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
 public class RObjectBrowser extends JTable {
-	/** Generated serialVersionUID */
-	private static final long serialVersionUID = 7537899041950123910L;
+    /** Generated serialVersionUID */
+    private static final long serialVersionUID = 7537899041950123910L;
 
-	RObjectBrowserModel m_model;
+    RObjectBrowserModel m_model;
 
-	public RObjectBrowser() {
-		m_model = new RObjectBrowserModel();
-		setModel(m_model);
-		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	}
+    public RObjectBrowser() {
+        m_model = new RObjectBrowserModel();
+        setModel(m_model);
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
 
-	public void updateData(final String[] objectNames, final String[] objectClasses) {
-		m_model.updateData(objectNames, objectClasses);
-	}
+    public void updateData(final String[] objectNames, final String[] objectClasses) {
+        m_model.updateData(objectNames, objectClasses);
+    }
 
-	private static class RObjectBrowserModel extends AbstractTableModel {
-		/** Generated serialVersionUID */
-		private static final long serialVersionUID = -4121185930197219249L;
+    private static class RObjectBrowserModel extends AbstractTableModel {
+        /** Generated serialVersionUID */
+        private static final long serialVersionUID = -4121185930197219249L;
 
-		private String[] m_objectNames;
-		private String[] m_objectClasses;
+        private String[] m_objectNames;
 
-		public RObjectBrowserModel() {
-			m_objectNames = new String[0];
-			m_objectClasses = new String[0];
-		}
+        private String[] m_objectClasses;
 
-		@Override
-		public int getRowCount() {
-			return m_objectNames.length;
-		}
+        public RObjectBrowserModel() {
+            m_objectNames = new String[0];
+            m_objectClasses = new String[0];
+        }
 
-		@Override
-		public int getColumnCount() {
-			return 2;
-		}
+        @Override
+        public int getRowCount() {
+            return m_objectNames.length;
+        }
 
-		@Override
-		public String getColumnName(final int column) {
-			if (column == 0) {
-				return "Name";
-			} else {
-				return "Type";
-			}
-		}
+        @Override
+        public int getColumnCount() {
+            return 2;
+        }
 
-		@Override
-		public Object getValueAt(final int rowIndex, final int columnIndex) {
-			if (columnIndex == 0) {
-				return m_objectNames[rowIndex];
-			} else {
-				return m_objectClasses[rowIndex];
-			}
-		}
+        @Override
+        public String getColumnName(final int column) {
+            if (column == 0) {
+                return "Name";
+            } else {
+                return "Type";
+            }
+        }
 
-		public void updateData(final String[] objectNames, final String[] objectClasses) {
-			if (objectNames != null && objectClasses != null) {
-				m_objectNames = objectNames;
-				m_objectClasses = objectClasses;
-			} else {
-				m_objectNames = new String[0];
-				m_objectClasses = new String[0];
-			}
-			fireTableDataChanged();
-		}
+        @Override
+        public Object getValueAt(final int rowIndex, final int columnIndex) {
+            if (columnIndex == 0) {
+                return m_objectNames[rowIndex];
+            } else {
+                return m_objectClasses[rowIndex];
+            }
+        }
 
-	}
+        public void updateData(final String[] objectNames, final String[] objectClasses) {
+            if ((objectNames != null) && (objectClasses != null)) {
+                m_objectNames = objectNames;
+                m_objectClasses = objectClasses;
+            } else {
+                m_objectNames = new String[0];
+                m_objectClasses = new String[0];
+            }
+            fireTableDataChanged();
+        }
+
+    }
 
 }

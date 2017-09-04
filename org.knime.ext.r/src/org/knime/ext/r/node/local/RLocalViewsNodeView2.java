@@ -55,9 +55,8 @@ import org.knime.core.node.NodeView;
 import org.knime.ext.r.node.RPlotterViewPanel;
 
 /**
- * The view of the <code>RLocalViewsNodeModel</code> which is able to display
- * an image created by a certain R command. To display the image
- * {@link org.knime.ext.r.node.RPlotterViewPanel} is used.
+ * The view of the <code>RLocalViewsNodeModel</code> which is able to display an image created by a certain R command.
+ * To display the image {@link org.knime.ext.r.node.RPlotterViewPanel} is used.
  *
  * @author Kilian Thiel, University of Konstanz
  */
@@ -66,8 +65,7 @@ public class RLocalViewsNodeView2 extends NodeView<RLocalViewsNodeModel2> {
     private final RPlotterViewPanel m_panel;
 
     /**
-     * Creates a new instance of <code>RLocalViewsNodeView</code> which displays
-     * a certain image.
+     * Creates a new instance of <code>RLocalViewsNodeView</code> which displays a certain image.
      *
      * @param nodeModel the model associated with this view.
      */
@@ -84,8 +82,8 @@ public class RLocalViewsNodeView2 extends NodeView<RLocalViewsNodeModel2> {
      */
     @Override
     protected void modelChanged() {
-        RLocalViewsNodeModel2 model = super.getNodeModel();
-        Image image = model.getResultImage();
+        final RLocalViewsNodeModel2 model = super.getNodeModel();
+        final Image image = model.getResultImage();
         m_panel.update(image);
     }
 

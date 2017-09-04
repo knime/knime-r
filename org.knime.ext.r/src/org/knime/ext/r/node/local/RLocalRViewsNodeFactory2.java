@@ -87,7 +87,7 @@ public class RLocalRViewsNodeFactory2 extends RNodeFactory<RLocalRViewsNodeModel
      */
     @Override
     public NodeView<RLocalRViewsNodeModel2> createNodeView(final int viewIndex,
-            final RLocalRViewsNodeModel2 nodeModel) {
+        final RLocalRViewsNodeModel2 nodeModel) {
         if (viewIndex == 0) {
             return new RLocalRViewsNodeView2(nodeModel);
         } else if (viewIndex == 1) {

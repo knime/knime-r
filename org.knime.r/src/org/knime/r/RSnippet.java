@@ -53,110 +53,32 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
 import org.knime.core.node.NodeLogger;
 
 /**
- * The R snippet which can be controlled by changing the settings or by changing
- * the contents of the snippets document.
+ * The R snippet which can be controlled by changing the settings or by changing the contents of the snippets document.
  *
  * @author Heiko Hofer
  */
 public final class RSnippet {
-	/** Identifier for row index (starting with 0). */
-	public static final String ROWINDEX = "ROWINDEX";
-	/** Identifier for row ID. */
-	public static final String ROWID = "ROWID";
-	/** Identifier for row count. */
-	public static final String ROWCOUNT = "ROWCOUNT";
+    /** Identifier for row index (starting with 0). */
+    public static final String ROWINDEX = "ROWINDEX";
 
-	/** The version 1.x of the java snippet. */
-	public static final String VERSION_1_X = "version 1.x";
+    /** Identifier for row ID. */
+    public static final String ROWID = "ROWID";
 
-	private RSyntaxDocument m_document;
+    /** Identifier for row count. */
+    public static final String ROWCOUNT = "ROWCOUNT";
 
-	private RSnippetSettings m_settings;
+    /** The version 1.x of the java snippet. */
+    public static final String VERSION_1_X = "version 1.x";
 
-	private NodeLogger m_logger;
+    private RSyntaxDocument m_document;
 
-	public RSnippet() {
-		m_settings = new RSnippetSettings() {
+    private RSnippetSettings m_settings;
 
-			@Override
-            public String getScript() {
-				if (m_document != null) {
-					try {
-						return m_document.getText(0, m_document.getLength());
-					} catch (final BadLocationException e) {
-						// never happens
-						throw new RuntimeException(e);
-					}
-				} else {
-					return super.getScript();
-				}
-			}
+    private NodeLogger m_logger;
 
-			@Override
-            public void setScript(final String script) {
-				if (m_document != null) {
-					try {
-						final String s = m_document.getText(0, m_document.getLength());
-						if (!s.equals(script)) {
-							m_document.replace(0, m_document.getLength(), script, null);
-						}
-					} catch (final BadLocationException e) {
-						throw new IllegalStateException(e.getMessage(), e);
-					}
-				}
-				super.setScript(script);
-			}
-		};
+    public RSnippet() {
+        m_settings = new RSnippetSettings() {
 
-	}
-
-	/**
-	 * Get the updated settings java snippet.
-	 *
-	 * @return the settings
-	 */
-	public RSnippetSettings getSettings() {
-		return m_settings;
-	}
-
-	/**
-	 * Get the document with the code of the snippet.
-	 *
-	 * @return the document
-	 */
-	public RSyntaxDocument getDocument() {
-		// Lazy initialization of the document
-		if (m_document == null) {
-			final String initScript = m_settings.getScript();
-			m_document = createDocument();
-			// this changes the document to, if present
-			m_settings.setScript(initScript);
-		}
-		return m_document;
-	}
-
-	/** Create the document with the default skeleton. */
-	private RSyntaxDocument createDocument() {
-		final RSyntaxDocument doc = new RSnippetDocument();
-		return doc;
-	}
-
-	/**
-	 * Execute the snippet.
-	 *
-	 * @param table
-	 *            the data table at the inport
-	 * @param flowVariableRepository
-	 *            the flow variables at the inport
-	 * @param exec
-	 *            the execution context to report progress
-	 * @return the table for the output
-	 * @throws InvalidSettingsException
-	 *             when settings are inconsistent with the table or the flow
-	 *             variables at the input
-	 * @throws CanceledExecutionException
-	 *             when execution is canceled by the user
-	 */
 	// public ValueReport<BufferedDataTable> execute(
 	// final BufferedDataTable table,
 	// final FlowVariableRepository flowVariableRepository,
@@ -233,28 +155,99 @@ public final class RSnippet {
 	//
 	// return c;
 	// }
+            @Override
+            public String getScript() {
+                if (m_document != null) {
+                    try {
+                        return m_document.getText(0, m_document.getLength());
+                    } catch (final BadLocationException e) {
+                        // never happens
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    return super.getScript();
+                }
+            }
 
-	/**
-	 * Create a template for this snippet.
-	 *
-	 * @param metaCategory
-	 *            the meta category of the template
-	 * @return the template with a new uuid.
-	 */
-	@SuppressWarnings("rawtypes")
-	public RSnippetTemplate createTemplate(final Class metaCategory) {
-		final RSnippetTemplate template = new RSnippetTemplate(metaCategory, getSettings());
-		return template;
-	}
+            @Override
+            public void setScript(final String script) {
+                if (m_document != null) {
+                    try {
+                        final String s = m_document.getText(0, m_document.getLength());
+                        if (!s.equals(script)) {
+                            m_document.replace(0, m_document.getLength(), script, null);
+                        }
+                    } catch (final BadLocationException e) {
+                        throw new IllegalStateException(e.getMessage(), e);
+                    }
+                }
+                super.setScript(script);
+            }
+        };
 
-	/**
-	 * Attach logger to be used by this java snippet instance.
-	 *
-	 * @param logger
-	 *            the node logger
-	 */
-	public void attachLogger(final NodeLogger logger) {
-		m_logger = logger;
-	}
+    }
+
+    /**
+     * Get the updated settings java snippet.
+     *
+     * @return the settings
+     */
+    public RSnippetSettings getSettings() {
+        return m_settings;
+    }
+
+    /**
+     * Get the document with the code of the snippet.
+     *
+     * @return the document
+     */
+    public RSyntaxDocument getDocument() {
+        // Lazy initialization of the document
+        if (m_document == null) {
+            final String initScript = m_settings.getScript();
+            m_document = createDocument();
+            // this changes the document to, if present
+            m_settings.setScript(initScript);
+        }
+        return m_document;
+    }
+
+    /** Create the document with the default skeleton. */
+    private RSyntaxDocument createDocument() {
+        final RSyntaxDocument doc = new RSnippetDocument();
+        return doc;
+    }
+
+    /**
+     * Execute the snippet.
+     *
+     * @param table the data table at the inport
+     * @param flowVariableRepository the flow variables at the inport
+     * @param exec the execution context to report progress
+     * @return the table for the output
+     * @throws InvalidSettingsException when settings are inconsistent with the table or the flow variables at the input
+     * @throws CanceledExecutionException when execution is canceled by the user
+     */
+
+    /**
+     * Create a template for this snippet.
+     *
+     * @param metaCategory the meta category of the template
+     * @return the template with a new uuid.
+     */
+    @SuppressWarnings("rawtypes")
+    public RSnippetTemplate createTemplate(final Class metaCategory) {
+        final RSnippetTemplate template = new RSnippetTemplate(metaCategory, getSettings());
+        return template;
+    }
+
+    /**
+     * Attach logger to be used by this java snippet instance.
+     *
+     * @param logger the node logger
+     */
+    public void attachLogger(final NodeLogger logger) {
+        m_logger = logger;
+    }
 
 }

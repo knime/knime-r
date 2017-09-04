@@ -64,8 +64,7 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
     private final RDialogPanel m_dialogPanel;
 
     /**
-     * Constructor which creates a new instance of
-     * <code>RLocalPredictorNodeDialogPane</code>.
+     * Constructor which creates a new instance of <code>RLocalPredictorNodeDialogPane</code>.
      */
     public RLocalPredictorNodeDialogPane() {
         m_dialogPanel = new RDialogPanel("RDATA");
@@ -78,20 +77,18 @@ public class RLocalPredictorNodeDialogPane extends RLocalNodeDialogPane {
      * {@inheritDoc}
      */
     @Override
-    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs) throws NotConfigurableException {
+    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
+        throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
-        Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
-        m_dialogPanel.loadSettingsFrom(settings,
-                new DataTableSpec[]{(DataTableSpec) specs[1]}, flowMap);
+        final Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
+        m_dialogPanel.loadSettingsFrom(settings, new DataTableSpec[]{(DataTableSpec)specs[1]}, flowMap);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
-        throws InvalidSettingsException {
+    public void saveAdditionalSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
         super.saveAdditionalSettingsTo(settings);
         m_dialogPanel.saveSettingsTo(settings);
     }

@@ -66,14 +66,12 @@ import org.knime.core.node.defaultnodesettings.DialogComponentString;
 @SuppressWarnings("serial")
 final class RLoginDialogPanel extends JPanel {
 
-    private final DialogComponentString m_host =
-        new DialogComponentString(RLoginSettings.createHostModel(), "Host: ");
+    private final DialogComponentString m_host = new DialogComponentString(RLoginSettings.createHostModel(), "Host: ");
 
     private final DialogComponentNumber m_port =
         new DialogComponentNumber(RLoginSettings.createPortModel(), "Port: ", 1);
 
-    private final DialogComponentString m_user =
-        new DialogComponentString(RLoginSettings.createUserModel(), "User: ");
+    private final DialogComponentString m_user = new DialogComponentString(RLoginSettings.createUserModel(), "User: ");
 
     private final DialogComponentPasswordField m_pass =
         new DialogComponentPasswordField(RLoginSettings.createPasswordModel(), "Password: ");
@@ -90,15 +88,14 @@ final class RLoginDialogPanel extends JPanel {
     }
 
     /**
-     * Transfers the values from the specified settings object into the dialog
-     * components.
+     * Transfers the values from the specified settings object into the dialog components.
      *
      * @param settings the new settings to display in the components.
      * @param specs the table specs from the input ports.
      * @throws NotConfigurableException if settings can't be loaded
      */
-    public void loadSettingsFrom(final NodeSettingsRO settings,
-            final DataTableSpec[] specs) throws NotConfigurableException {
+    public void loadSettingsFrom(final NodeSettingsRO settings, final DataTableSpec[] specs)
+        throws NotConfigurableException {
         m_host.loadSettingsFrom(settings, specs);
         m_port.loadSettingsFrom(settings, specs);
         m_user.loadSettingsFrom(settings, specs);
@@ -106,14 +103,12 @@ final class RLoginDialogPanel extends JPanel {
     }
 
     /**
-     * Saves the current values in the dialog components into the specified
-     * settings object.
+     * Saves the current values in the dialog components into the specified settings object.
      *
      * @param settings the object to write the current settings into.
      * @throws InvalidSettingsException if the current values are invalid.
      */
-    public void saveSettingsTo(final NodeSettingsWO settings)
-            throws InvalidSettingsException {
+    public void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
         m_host.saveSettingsTo(settings);
         m_port.saveSettingsTo(settings);
         m_user.saveSettingsTo(settings);

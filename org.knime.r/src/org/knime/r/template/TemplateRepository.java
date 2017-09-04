@@ -56,27 +56,26 @@ import javax.swing.event.EventListenerList;
 
 import org.knime.r.RSnippetTemplate;
 
-
 /**
  *
  * @author Heiko Hofer
  */
 public abstract class TemplateRepository {
-    private EventListenerList m_listenerList = new EventListenerList();
+    private final EventListenerList m_listenerList = new EventListenerList();
+
     private ChangeEvent m_changeEvent;
 
     /**
      * Get the {@link RSnippetTemplate}s in the given meta category.
-     * @param metaCategories only templates from these
-     * meta categories will be returned.
+     * 
+     * @param metaCategories only templates from these meta categories will be returned.
      * @return the {@link RSnippetTemplate}s in the given meta category
      */
-    public abstract Collection<RSnippetTemplate> getTemplates(
-            final Collection<Class<?>> metaCategories);
+    public abstract Collection<RSnippetTemplate> getTemplates(final Collection<Class<?>> metaCategories);
 
     /**
-     * Test if a template can be removed. Returns only true if the template
-     * is in this repository.
+     * Test if a template can be removed. Returns only true if the template is in this repository.
+     * 
      * @param template the template
      * @return true when removeTemplate(template) could be successful
      */
@@ -84,6 +83,7 @@ public abstract class TemplateRepository {
 
     /**
      * Remove the given template.
+     * 
      * @param template the template to be removed
      * @return when the template is successfully removed
      */
@@ -91,6 +91,7 @@ public abstract class TemplateRepository {
 
     /**
      * Get the template with the given id.
+     * 
      * @param id the id
      * @return the template or null if a template with the id does not exist.
      * @throws NullPointerException if id is null.
@@ -98,11 +99,10 @@ public abstract class TemplateRepository {
     public abstract RSnippetTemplate getTemplate(final UUID id);
 
     /**
-     * Get a short descriptive string about the location of the template.
-     * This should give the user an idea where the template comes from. It can
-     * be a path to a file, or the name of a company with a template name like
-     * "Fibonacci (KNIME)" for a template from KNIME that generates the
-     * Fibonacci numbers.
+     * Get a short descriptive string about the location of the template. This should give the user an idea where the
+     * template comes from. It can be a path to a file, or the name of a company with a template name like "Fibonacci
+     * (KNIME)" for a template from KNIME that generates the Fibonacci numbers.
+     * 
      * @param template the template
      * @return the string describing the location of the template
      * @throws NullPointerException if template is null.
@@ -111,29 +111,28 @@ public abstract class TemplateRepository {
 
     /**
      * Add listener to be notified when the list of templates changed.
+     * 
      * @param l the listener
      */
     public void addChangeListener(final ChangeListener l) {
         m_listenerList.add(ChangeListener.class, l);
     }
 
-
     /**
      * Remove listener from the list of listeners.
+     * 
      * @param l the listener to be removed
      */
     public void removeChangeListener(final ChangeListener l) {
         m_listenerList.remove(ChangeListener.class, l);
     }
 
-
     /**
-     * Notify all listeners that have registered interest for
-     * notification on this event type.
+     * Notify all listeners that have registered interest for notification on this event type.
      */
     protected void fireStateChanged() {
         // Guaranteed to return a non-null array
-        Object[] listeners = m_listenerList.getListenerList();
+        final Object[] listeners = m_listenerList.getListenerList();
         // Process the listeners last to first, notifying
         // those that are interested in this event
         for (int i = listeners.length - 2; i >= 0; i -= 2) {

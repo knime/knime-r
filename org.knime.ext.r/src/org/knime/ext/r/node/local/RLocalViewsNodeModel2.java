@@ -72,9 +72,8 @@ import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
- * The <code>RLocalViewsNodeModel</code> provides functionality to create
- * a R script with user defined R code calling R plots, run it and display
- * the generated plot in the nodes view.
+ * The <code>RLocalViewsNodeModel</code> provides functionality to create a R script with user defined R code calling R
+ * plots, run it and display the generated plot in the nodes view.
  *
  * @author Kilian Thiel, University of Konstanz
  */
@@ -108,26 +107,19 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
     private static final String INTERNAL_FILE_NAME = "Rplot";
 
     /** Output spec for a PNG image. */
-    private static final ImagePortObjectSpec OUT_SPEC =
-        new ImagePortObjectSpec(PNGImageContent.TYPE);
+    private static final ImagePortObjectSpec OUT_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
 
-    private final SettingsModelIntegerBounded m_heightModel =
-        RViewsPngDialogPanel.createHeightModel();
+    private final SettingsModelIntegerBounded m_heightModel = RViewsPngDialogPanel.createHeightModel();
 
-    private final SettingsModelIntegerBounded m_widthModel =
-        RViewsPngDialogPanel.createWidthModel();
+    private final SettingsModelIntegerBounded m_widthModel = RViewsPngDialogPanel.createWidthModel();
 
-    private final SettingsModelString m_resolutionModel =
-        RViewsPngDialogPanel.createResolutionModel();
+    private final SettingsModelString m_resolutionModel = RViewsPngDialogPanel.createResolutionModel();
 
-    private final SettingsModelIntegerBounded m_pointSizeModel =
-        RViewsPngDialogPanel.createPointSizeModel();
+    private final SettingsModelIntegerBounded m_pointSizeModel = RViewsPngDialogPanel.createPointSizeModel();
 
-    private final SettingsModelString m_bgModel =
-        RViewsPngDialogPanel.createBgModel();
+    private final SettingsModelString m_bgModel = RViewsPngDialogPanel.createBgModel();
 
-    private final SettingsModelString m_viewType =
-        RViewsDialogPanel.createViewSettingsModel();
+    private final SettingsModelString m_viewType = RViewsDialogPanel.createViewSettingsModel();
 
     private Image m_resultImage;
 
@@ -136,8 +128,8 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
     private String m_viewCmd = RViewScriptingConstants.getDefaultExpressionCommand();
 
     /**
-     * Creates new instance of <code>RLocalViewsNodeModel</code> with one data
-     * in port and no data out port.
+     * Creates new instance of <code>RLocalViewsNodeModel</code> with one data in port and no data out port.
+     * 
      * @param pref provider for R executable
      */
     public RLocalViewsNodeModel2(final RPreferenceProvider pref) {
@@ -146,43 +138,34 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
     }
 
     /**
-     * @return result image for the view, only available after successful
-     *         execution of the node model.
+     * @return result image for the view, only available after successful execution of the node model.
      */
     Image getResultImage() {
         return m_resultImage;
     }
 
     /**
-     * Provides the R code to run, consisting of the <code>png()</code> command
-     * to create a new png file, the plot command specified by the user and
-     * the <code>dev.off()</code> command to shut down the standard graphic
-     * device.
+     * Provides the R code to run, consisting of the <code>png()</code> command to create a new png file, the plot
+     * command specified by the user and the <code>dev.off()</code> command to shut down the standard graphic device.
      *
      * {@inheritDoc}
      */
     @Override
     protected String getCommand() {
-        return "png(\"" + m_filename + "\""
-            + ", width=" + m_widthModel.getIntValue()
-            + ", height=" + m_heightModel.getIntValue()
-            + ", pointsize=" + m_pointSizeModel.getIntValue()
-            + ", bg=\"" + m_bgModel.getStringValue() + "\""
-            + ", res=" + m_resolutionModel.getStringValue() + ");\n"
-            + m_viewCmd
+        return "png(\"" + m_filename + "\"" + ", width=" + m_widthModel.getIntValue() + ", height="
+            + m_heightModel.getIntValue() + ", pointsize=" + m_pointSizeModel.getIntValue() + ", bg=\""
+            + m_bgModel.getStringValue() + "\"" + ", res=" + m_resolutionModel.getStringValue() + ");\n" + m_viewCmd
             + "\ndev.off();";
     }
 
     /**
-     * After execution of the R code and image instance is created which can
-     * be displayed by the nodes view.
+     * After execution of the R code and image instance is created which can be displayed by the nodes view.
      *
      * {@inheritDoc}
      */
     @Override
-    protected final BufferedDataTable[] postprocessDataTable(
-            final BufferedDataTable[] outData, final ExecutionContext exec)
-            throws CanceledExecutionException, Exception {
+    protected final BufferedDataTable[] postprocessDataTable(final BufferedDataTable[] outData,
+        final ExecutionContext exec) throws CanceledExecutionException, Exception {
         return new BufferedDataTable[]{};
     }
 
@@ -190,16 +173,15 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec)
-            throws CanceledExecutionException, Exception {
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
+        throws CanceledExecutionException, Exception {
         super.execute(inData, exec);
         // create image after execution.
-        FileInputStream fis = new FileInputStream(new File(m_filename));
-        PNGImageContent content = new PNGImageContent(fis);
+        final FileInputStream fis = new FileInputStream(new File(m_filename));
+        final PNGImageContent content = new PNGImageContent(fis);
         fis.close();
         m_resultImage = content.getImage();
-        return new PortObject[] {new ImagePortObject(content, OUT_SPEC)};
+        return new PortObject[]{new ImagePortObject(content, OUT_SPEC)};
     }
 
     /**
@@ -208,12 +190,10 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected final PortObject[] preprocessDataTable(
-            final PortObject[] inData, final ExecutionContext exec)
-            throws CanceledExecutionException, Exception {
-        m_filename =
-            FileUtil.createTempDir("R_").getAbsolutePath().replace('\\', '/')
-            + "/" + "R-View-" + System.identityHashCode(inData) + ".png";
+    protected final PortObject[] preprocessDataTable(final PortObject[] inData, final ExecutionContext exec)
+        throws CanceledExecutionException, Exception {
+        m_filename = FileUtil.createTempDir("R_").getAbsolutePath().replace('\\', '/') + "/" + "R-View-"
+            + System.identityHashCode(inData) + ".png";
 
         return inData;
     }
@@ -222,24 +202,22 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
-            throws InvalidSettingsException {
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         checkRExecutable();
-        return new PortObjectSpec[] {OUT_SPEC};
+        return new PortObjectSpec[]{OUT_SPEC};
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
         m_heightModel.loadSettingsFrom(settings);
         m_widthModel.loadSettingsFrom(settings);
         try {
             m_resolutionModel.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException ise) {
+        } catch (final InvalidSettingsException ise) {
             // ignore backward comp. < v2.3.1
         }
         m_pointSizeModel.loadSettingsFrom(settings);
@@ -247,7 +225,7 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
         m_viewCmd = RDialogPanel.getExpressionFrom(settings);
         try {
             m_viewType.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException ise) {
+        } catch (final InvalidSettingsException ise) {
             // ignore backward comp. < v2.3
         }
     }
@@ -271,14 +249,13 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.validateSettings(settings);
 
-        String viewCmd = RDialogPanel.getExpressionFrom(settings);
+        final String viewCmd = RDialogPanel.getExpressionFrom(settings);
 
         // if command not valid throw exception
-        if (viewCmd == null || viewCmd.length() < 1) {
+        if ((viewCmd == null) || (viewCmd.length() < 1)) {
             throw new InvalidSettingsException("R View command is empty!");
         }
 
@@ -290,14 +267,12 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
         m_bgModel.validateSettings(settings);
 
         // validate background color code
-        String colorCode = ((SettingsModelString)m_bgModel.
-                createCloneWithValidatedValue(settings)).getStringValue();
+        final String colorCode =
+            ((SettingsModelString)m_bgModel.createCloneWithValidatedValue(settings)).getStringValue();
         if (!colorCode.matches("^#[0-9aAbBcCdDeEfF]{6}")) {
-            throw new InvalidSettingsException("Specified color code \""
-                    + colorCode + "\" is not valid!");
+            throw new InvalidSettingsException("Specified color code \"" + colorCode + "\" is not valid!");
         }
     }
-
 
     /**
      * The saved image is loaded.
@@ -305,16 +280,16 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadInternals(final File nodeInternDir,
-            final ExecutionMonitor exec)
-            throws IOException, CanceledExecutionException {
+    protected void loadInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
         super.loadInternals(nodeInternDir, exec);
 
-        File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
+        final File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
         if (file.exists() && file.canRead()) {
-            File pngFile = File.createTempFile(INTERNAL_FILE_NAME, ".png", new File(KNIMEConstants.getKNIMETempDir()));
+            final File pngFile =
+                File.createTempFile(INTERNAL_FILE_NAME, ".png", new File(KNIMEConstants.getKNIMETempDir()));
             FileUtil.copy(file, pngFile);
-            InputStream is = new FileInputStream(pngFile);
+            final InputStream is = new FileInputStream(pngFile);
             m_resultImage = new PNGImageContent(is).getImage();
             is.close();
         }
@@ -326,14 +301,13 @@ public class RLocalViewsNodeModel2 extends RLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void saveInternals(final File nodeInternDir,
-            final ExecutionMonitor exec)
-            throws IOException, CanceledExecutionException {
+    protected void saveInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
         super.saveInternals(nodeInternDir, exec);
 
-        File imgFile = new File(m_filename);
+        final File imgFile = new File(m_filename);
         if (imgFile.exists() && imgFile.canWrite()) {
-            File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
+            final File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
             FileUtil.copy(imgFile, file);
         }
     }

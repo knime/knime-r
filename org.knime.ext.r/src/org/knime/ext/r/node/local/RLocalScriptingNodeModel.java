@@ -59,8 +59,8 @@ import org.knime.ext.r.node.RDialogPanel;
 import org.knime.ext.r.preferences.RPreferenceProvider;
 
 /**
- * The <code>RLocalScriptingNodeModel</code> provides functionality to create
- * a R script with user defined R code and run it.
+ * The <code>RLocalScriptingNodeModel</code> provides functionality to create a R script with user defined R code and
+ * run it.
  *
  * @author Kilian Thiel, University of Konstanz
  */
@@ -69,8 +69,8 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
     private String m_rCommand = RDialogPanel.DEFAULT_R_COMMAND;
 
     /**
-     * Creates new instance of <code>RLocalScriptingNodeModel</code> with one
-     * data in and data one out port.
+     * Creates new instance of <code>RLocalScriptingNodeModel</code> with one data in and data one out port.
+     * 
      * @param pref R preference provider
      */
     public RLocalScriptingNodeModel(final RPreferenceProvider pref) {
@@ -89,20 +89,16 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
-            throws InvalidSettingsException {
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         checkRExecutable();
         return new DataTableSpec[1];
     }
-
-
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
         m_rCommand = RDialogPanel.getExpressionFrom(settings);
     }
@@ -120,10 +116,9 @@ public class RLocalScriptingNodeModel extends RLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.validateSettings(settings);
-        String exp = RDialogPanel.getExpressionFrom(settings);
+        final String exp = RDialogPanel.getExpressionFrom(settings);
         RConsoleModel.testExpressions(exp.split("\n"));
     }
 }

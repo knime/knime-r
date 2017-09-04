@@ -56,8 +56,7 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  *
  * @author Kilian Thiel, University of Konstanz
  */
-public class RLocalScriptingNodeFactory
-        extends RNodeFactory<RLocalScriptingNodeModel> {
+public class RLocalScriptingNodeFactory extends RNodeFactory<RLocalScriptingNodeModel> {
 
     /**
      * Empty default constructor.
@@ -65,7 +64,7 @@ public class RLocalScriptingNodeFactory
     public RLocalScriptingNodeFactory() {
         super(RPreferenceInitializer.getRProvider());
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -86,15 +85,12 @@ public class RLocalScriptingNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public ExtToolOutputNodeView<RLocalScriptingNodeModel> createNodeView(
-            final int viewIndex,
-            final RLocalScriptingNodeModel nodeModel) {
+    public ExtToolOutputNodeView<RLocalScriptingNodeModel> createNodeView(final int viewIndex,
+        final RLocalScriptingNodeModel nodeModel) {
         if (viewIndex == 0) {
-            return
-                new ExtToolStdoutNodeView<RLocalScriptingNodeModel>(nodeModel);
+            return new ExtToolStdoutNodeView<RLocalScriptingNodeModel>(nodeModel);
         } else if (viewIndex == 1) {
-            return
-                new ExtToolStderrNodeView<RLocalScriptingNodeModel>(nodeModel);
+            return new ExtToolStderrNodeView<RLocalScriptingNodeModel>(nodeModel);
         }
         return null;
     }

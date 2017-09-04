@@ -59,61 +59,58 @@ import org.knime.core.node.workflow.FlowVariable;
  * @author Heiko Hofer
  */
 public class FlowVariableRepository {
-	private final Map<String, FlowVariable> m_input;
-	private final Map<String, FlowVariable> m_modified;
+    private final Map<String, FlowVariable> m_input;
 
-	/**
-	 * Create a new repository.
-	 *
-	 * @param input
-	 *            the flow variables from the input stack.
-	 */
-	public FlowVariableRepository(final Map<String, FlowVariable> input) {
-		super();
-		m_input = input;
-		m_modified = new LinkedHashMap<String, FlowVariable>();
-	}
+    private final Map<String, FlowVariable> m_modified;
 
-	/**
-	 * Get the flow variables at the input
-	 *
-	 * @return the flow variables at the input
-	 */
-	public Collection<FlowVariable> getInFlowVariables() {
-		return m_input.values();
-	}
+    /**
+     * Create a new repository.
+     *
+     * @param input the flow variables from the input stack.
+     */
+    public FlowVariableRepository(final Map<String, FlowVariable> input) {
+        super();
+        m_input = input;
+        m_modified = new LinkedHashMap<String, FlowVariable>();
+    }
 
-	/**
-	 * Get the modified or new flow variables.
-	 *
-	 * @return the modified or new flow variables
-	 */
-	public Collection<FlowVariable> getModified() {
-		return m_modified.values();
-	}
+    /**
+     * Get the flow variables at the input
+     *
+     * @return the flow variables at the input
+     */
+    public Collection<FlowVariable> getInFlowVariables() {
+        return m_input.values();
+    }
 
-	/**
-	 * Get the current flow variable associated with the given name or null if a
-	 * flow variable with the given name does not exist.
-	 *
-	 * @param name
-	 *            the name of the flow variable r null if a flow variable with
-	 *            the given name does not exist.
-	 * @return the flow variable
-	 */
-	public FlowVariable getFlowVariable(final String name) {
-		final FlowVariable var = m_modified.get(name);
-		return null != var ? var : m_input.get(name);
-	}
+    /**
+     * Get the modified or new flow variables.
+     *
+     * @return the modified or new flow variables
+     */
+    public Collection<FlowVariable> getModified() {
+        return m_modified.values();
+    }
 
-	/**
-	 * Add a new or updated flow variable.
-	 *
-	 * @param flowVar
-	 *            the flow variable associated with name
-	 */
-	public void put(final FlowVariable flowVar) {
-		m_modified.put(flowVar.getName(), flowVar);
-	}
+    /**
+     * Get the current flow variable associated with the given name or null if a flow variable with the given name does
+     * not exist.
+     *
+     * @param name the name of the flow variable r null if a flow variable with the given name does not exist.
+     * @return the flow variable
+     */
+    public FlowVariable getFlowVariable(final String name) {
+        final FlowVariable var = m_modified.get(name);
+        return null != var ? var : m_input.get(name);
+    }
+
+    /**
+     * Add a new or updated flow variable.
+     *
+     * @param flowVar the flow variable associated with name
+     */
+    public void put(final FlowVariable flowVar) {
+        m_modified.put(flowVar.getName(), flowVar);
+    }
 
 }

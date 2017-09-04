@@ -59,28 +59,28 @@ import org.knime.ext.r.node.local.port.RPortObject;
  */
 public class RToRNodeFactory extends RSnippetNodeFactory {
 
-	/**
-	 * Empty default constructor.
-	 */
-	public RToRNodeFactory() {
-		super(new RSnippetNodeConfig() {
-			@Override
+    /**
+     * Empty default constructor.
+     */
+    public RToRNodeFactory() {
+        super(new RSnippetNodeConfig() {
+            @Override
             public Collection<PortType> getInPortTypes() {
-				final Collection<PortType> ports = new ArrayList<PortType>();
-				ports.add(RPortObject.TYPE);
-				return ports;
-			}
+                final Collection<PortType> ports = new ArrayList<PortType>();
+                ports.add(RPortObject.TYPE);
+                return ports;
+            }
 
-			@Override
-			protected Collection<PortType> getOutPortTypes() {
-				return Collections.singleton(RPortObject.TYPE);
-			}
+            @Override
+            protected Collection<PortType> getOutPortTypes() {
+                return Collections.singleton(RPortObject.TYPE);
+            }
 
-			@Override
-			protected String getDefaultScript() {
-				return "# call more functions\n";
-			}
-		});
-	}
+            @Override
+            protected String getDefaultScript() {
+                return "# call more functions\n";
+            }
+        });
+    }
 
 }

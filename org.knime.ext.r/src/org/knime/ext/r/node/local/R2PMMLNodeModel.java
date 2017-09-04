@@ -69,25 +69,22 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
  */
 public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
 
-    private static final NodeLogger LOGGER =
-        NodeLogger.getLogger(R2PMMLNodeModel.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(R2PMMLNodeModel.class);
 
     /**
-     * Creates a new instance of <code>R2PMMLNodeModel</code> with
-     * a R input port and PMML output port.
+     * Creates a new instance of <code>R2PMMLNodeModel</code> with a R input port and PMML output port.
+     * 
      * @param pref provider for R executable
      */
     public R2PMMLNodeModel(final RPreferenceProvider pref) {
-        super(new PortType[]{RPortObject.TYPE},
-                new PortType[]{PMMLPortObject.TYPE}, pref);
+        super(new PortType[]{RPortObject.TYPE}, new PortType[]{PMMLPortObject.TYPE}, pref);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
-            throws InvalidSettingsException {
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         return new PortObjectSpec[]{null};
     }
 
@@ -95,18 +92,16 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec)
-            throws Exception {
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
         File rCommandFile = null;
         File rOutFile = null;
         try {
             // execute R cmd
-            StringBuilder completeCmd = new StringBuilder();
+            final StringBuilder completeCmd = new StringBuilder();
             completeCmd.append(getSetWorkingDirCmd());
 
             // load model
-            File fileR = ((RPortObject)inData[0]).getFile();
+            final File fileR = ((RPortObject)inData[0]).getFile();
             completeCmd.append(LOAD_MODEL_CMD_PREFIX);
             completeCmd.append(fileR.getAbsolutePath().replace('\\', '/'));
             completeCmd.append(LOAD_MODEL_CMD_SUFFIX);
@@ -114,20 +109,19 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             // generate and write pmml
             completeCmd.append("library(pmml);\n");
             completeCmd.append("RPMML<-toString(pmml(R));\n");
-            File pmmlFile = File.createTempFile("R2PMML~", ".pmml", new File(KNIMEConstants.getKNIMETempDir()));
+            final File pmmlFile = File.createTempFile("R2PMML~", ".pmml", new File(KNIMEConstants.getKNIMETempDir()));
             pmmlFile.deleteOnExit();
-            completeCmd.append("write(RPMML, file=\""
-                    + pmmlFile.getAbsolutePath().replace('\\', '/') + "\")\n");
+            completeCmd.append("write(RPMML, file=\"" + pmmlFile.getAbsolutePath().replace('\\', '/') + "\")\n");
             completeCmd.append("\n");
 
             // write R command
-            String rCmd = resolveVariablesInScript(completeCmd.toString());
+            final String rCmd = resolveVariablesInScript(completeCmd.toString());
             LOGGER.debug("R Command: \n" + rCmd);
             rCommandFile = writeRcommandFile(rCmd);
             rOutFile = new File(rCommandFile.getAbsolutePath() + ".Rout");
 
             // create shell command
-            StringBuilder shellCmd = new StringBuilder();
+            final StringBuilder shellCmd = new StringBuilder();
 
             final String rBinaryFile = getRBinaryPathAndArguments();
             shellCmd.append(rBinaryFile);
@@ -135,13 +129,13 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
             shellCmd.append(" " + rOutFile.getName());
 
             // execute shell command
-            String shcmd = shellCmd.toString();
+            final String shcmd = shellCmd.toString();
             LOGGER.debug("Shell command: \n" + shcmd);
 
-            CommandExecution cmdExec = new CommandExecution(shcmd);
+            final CommandExecution cmdExec = new CommandExecution(shcmd);
             cmdExec.addObserver(this);
             cmdExec.setExecutionDir(rCommandFile.getParentFile());
-            int exitVal = cmdExec.execute(exec);
+            final int exitVal = cmdExec.execute(exec);
 
             setExternalErrorOutput(new LinkedList<String>(cmdExec.getStdErr()));
             setExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
@@ -151,14 +145,12 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
 
                 // before we return, we save the output in the failing list
                 synchronized (cmdExec) {
-                    setFailedExternalOutput(new LinkedList<String>(cmdExec
-                            .getStdOutput()));
+                    setFailedExternalOutput(new LinkedList<String>(cmdExec.getStdOutput()));
                 }
                 synchronized (cmdExec) {
 
                     // save error description of the Rout file to the ErrorOut
-                    LinkedList<String> list = new LinkedList<String>(
-                            cmdExec.getStdErr());
+                    final LinkedList<String> list = new LinkedList<String>(cmdExec.getStdErr());
 
                     list.add("#############################################");
                     list.add("#");
@@ -166,8 +158,7 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
                     list.add("#");
                     list.add("#############################################");
                     list.add(" ");
-                    BufferedReader bfr = new BufferedReader(
-                            new FileReader(rOutFile));
+                    final BufferedReader bfr = new BufferedReader(new FileReader(rOutFile));
                     String line;
                     while ((line = bfr.readLine()) != null) {
                         list.add(line);
@@ -175,19 +166,17 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
                     bfr.close();
 
                     // use row before last as R error.
-                    int index = list.size() - 2;
+                    final int index = list.size() - 2;
                     if (index >= 0) {
                         rErr = list.get(index);
                     }
                     setFailedExternalErrorOutput(list);
                 }
 
-                LOGGER.debug("Execution of R Script failed with exit code: "
-                        + exitVal);
-                throw new IllegalStateException(
-                        "Execution of R script failed: " + rErr);
+                LOGGER.debug("Execution of R Script failed with exit code: " + exitVal);
+                throw new IllegalStateException("Execution of R script failed: " + rErr);
             }
-            PMMLImport importer = new PMMLImport(pmmlFile, true);
+            final PMMLImport importer = new PMMLImport(pmmlFile, true);
             return new PortObject[]{importer.getPortObject()};
         } finally {
             // delete all temp files
@@ -200,12 +189,11 @@ public class R2PMMLNodeModel extends RAbstractLocalNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
         try {
             m_argumentsR.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException ise) {
+        } catch (final InvalidSettingsException ise) {
             // load old workflow no option is used, overwrite new dialog dft
             m_argumentsR.setStringValue("");
         }

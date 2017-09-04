@@ -54,7 +54,7 @@ public class RControllerTest {
 	@Test
 	public void testInitialization() throws RException {
 		/* Check underlying RConnection */
-		RConnection rEngine = (RConnection) m_controller.getREngine();
+		RConnection rEngine = m_controller.getREngine();
 		assertNotNull("No RConnection exists, most likely cause is that R or Rserve are not installed or found.",
 				rEngine);
 		// this assertion is theoretically covered by the

@@ -59,62 +59,62 @@ import org.knime.ext.r.node.local.port.RPortObject;
  * @author Heiko Hofer
  */
 public final class RToPMMLNodeFactory extends NodeFactory<RToPMMLNodeModel> {
-	private final PortType m_portType;
+    private final PortType m_portType;
 
-	/**
-	 * Empty default constructor.
-	 */
-	public RToPMMLNodeFactory() {
-		this(RPortObject.TYPE);
-	}
+    /**
+     * Empty default constructor.
+     */
+    public RToPMMLNodeFactory() {
+        this(RPortObject.TYPE);
+    }
 
-	public RToPMMLNodeFactory(final PortType inPortType) {
-		m_portType = inPortType;
-	}
+    public RToPMMLNodeFactory(final PortType inPortType) {
+        m_portType = inPortType;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean hasDialog() {
-		return true;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean hasDialog() {
+        return true;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected NodeDialogPane createNodeDialogPane() {
-		return new RSnippetNodeDialog(this.getClass(), new RToPMMLNodeConfig(m_portType));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected NodeDialogPane createNodeDialogPane() {
+        return new RSnippetNodeDialog(this.getClass(), new RToPMMLNodeConfig(m_portType));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public RToPMMLNodeModel createNodeModel() {
-		return new RToPMMLNodeModel(new RToPMMLNodeConfig(m_portType));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public RToPMMLNodeModel createNodeModel() {
+        return new RToPMMLNodeModel(new RToPMMLNodeConfig(m_portType));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getNrNodeViews() {
-		return 2;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getNrNodeViews() {
+        return 2;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public NodeView<RToPMMLNodeModel> createNodeView(final int viewIndex, final RToPMMLNodeModel nodeModel) {
-		if (viewIndex == 0) {
-			return new ExtToolStdoutNodeView<RToPMMLNodeModel>(nodeModel);
-		} else if (viewIndex == 1) {
-			return new ExtToolStderrNodeView<RToPMMLNodeModel>(nodeModel);
-		}
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public NodeView<RToPMMLNodeModel> createNodeView(final int viewIndex, final RToPMMLNodeModel nodeModel) {
+        if (viewIndex == 0) {
+            return new ExtToolStdoutNodeView<RToPMMLNodeModel>(nodeModel);
+        } else if (viewIndex == 1) {
+            return new ExtToolStderrNodeView<RToPMMLNodeModel>(nodeModel);
+        }
+        return null;
+    }
 
 }

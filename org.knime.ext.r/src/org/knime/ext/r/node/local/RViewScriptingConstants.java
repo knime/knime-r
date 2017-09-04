@@ -48,8 +48,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
- * Provides a set of names of R plots as well as dummy code templates of these
- * plots.
+ * Provides a set of names of R plots as well as dummy code templates of these plots.
  *
  * @author Thomas Gabriel, University of Konstanz
  * @author Kilian Thiel, University of Konstanz
@@ -59,8 +58,7 @@ public final class RViewScriptingConstants {
     /**
      * List of view function along with their R command structure.
      */
-    public static final HashMap<String, String> LABEL2COMMAND
-        = new LinkedHashMap<String, String>();
+    public static final HashMap<String, String> LABEL2COMMAND = new LinkedHashMap<String, String>();
 
     static {
         LABEL2COMMAND.put("Generic X-Y Plotting",
@@ -161,22 +159,19 @@ public final class RViewScriptingConstants {
     /**
      * Default expression key (the name of the default plot).
      */
-    public static final String DFT_EXPRESSION_KEY =
-        LABEL2COMMAND.keySet().toArray()[0].toString();
+    public static final String DFT_EXPRESSION_KEY = LABEL2COMMAND.keySet().toArray()[0].toString();
 
     /**
-     * @return the default expression command (the R code of the default
-     * plot) as String.
+     * @return the default expression command (the R code of the default plot) as String.
      */
     public static final String[] getDefaultExpressionCommands() {
         return getDefaultExpressionCommand().split("\n");
     }
 
     /**
-     * @return the default expression command (the R code of the default
-     * plot) as String array.
+     * @return the default expression command (the R code of the default plot) as String array.
      */
     public static final String getDefaultExpressionCommand() {
-         return LABEL2COMMAND.get(DFT_EXPRESSION_KEY);
+        return LABEL2COMMAND.get(DFT_EXPRESSION_KEY);
     }
 }

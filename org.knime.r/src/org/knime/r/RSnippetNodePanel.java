@@ -124,761 +124,759 @@ import com.sun.jna.Platform;
  */
 public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
 
-	/** Generated serialVersionUID */
-	private static final long serialVersionUID = 2286323699400964363L;
+    /** Generated serialVersionUID */
+    private static final long serialVersionUID = 2286323699400964363L;
 
-	private static final NodeLogger LOGGER = NodeLogger.getLogger(RSnippetNodeDialog.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RSnippetNodeDialog.class);
 
-	private RSnippetTextArea m_snippetTextArea;
-	/** Component with a list of all input columns. */
-	protected RColumnList m_colList;
-	/** Component with a list of all input flow variables. */
-	protected RFlowVariableList m_flowVarsList;
+    private RSnippetTextArea m_snippetTextArea;
 
-	private final RSnippet m_snippet;
+    /** Component with a list of all input columns. */
+    protected RColumnList m_colList;
 
-	private RConsole m_console;
-	private final RCommandQueue m_commandQueue;
-	private final RConsoleController m_consoleController;
-	private final RController m_controller;
+    /** Component with a list of all input flow variables. */
+    protected RFlowVariableList m_flowVarsList;
 
-	private RObjectBrowser m_objectBrowser;
+    private final RSnippet m_snippet;
 
-	private boolean m_isEnabled;
-	private final boolean m_isInteractive;
+    private RConsole m_console;
 
-	/** The templates category for templates viewed or edited by this dialog. */
-	protected Class<?> m_templateMetaCategory;
-	private JLabel m_templateLocation;
+    private final RCommandQueue m_commandQueue;
 
-	private final RSnippetNodeConfig m_config;
+    private final RConsoleController m_consoleController;
 
-	private int m_tableInPort;
+    private final RController m_controller;
 
-	private PortObject[] m_input;
+    private RObjectBrowser m_objectBrowser;
 
-	private Collection<FlowVariable> m_inputFlowVars;
+    private boolean m_isEnabled;
 
-	private RProgressPanel m_progressPanel;
+    private final boolean m_isInteractive;
 
-	private JButton m_evalSelButton;
-	private JButton m_evalScriptButton;
-	private JButton m_resetWorkspace;
-	private JButton m_showPlot;
+    /** The templates category for templates viewed or edited by this dialog. */
+    protected Class<?> m_templateMetaCategory;
 
-	private RPlotPreviewFrame m_previewFrame;
+    private JLabel m_templateLocation;
 
-	private File m_tempDir;
-	private File m_imageFile;
+    private final RSnippetNodeConfig m_config;
 
-	private ExecutionMonitor m_exec;
+    private int m_tableInPort;
 
-	/** Whether the dialog is currently closing */
-	protected boolean m_closing;
+    private PortObject[] m_input;
 
-	/**
-	 * @param templateMetaCategory
-	 *            the meta category used in the templates tab or to create
-	 *            templates
-	 * @param config
-	 * @param isPreview
-	 *            if this is a preview used for showing templates.
+    private Collection<FlowVariable> m_inputFlowVars;
+
+    private RProgressPanel m_progressPanel;
+
+    private JButton m_evalSelButton;
+
+    private JButton m_evalScriptButton;
+
+    private JButton m_resetWorkspace;
+
+    private JButton m_showPlot;
+
+    private RPlotPreviewFrame m_previewFrame;
+
+    private File m_tempDir;
+
+    private File m_imageFile;
+
+    private ExecutionMonitor m_exec;
+
+    /** Whether the dialog is currently closing */
+    protected boolean m_closing;
+
+    /**
+     * @param templateMetaCategory the meta category used in the templates tab or to create templates
+     * @param config
+     * @param isPreview if this is a preview used for showing templates.
      * @param isInteractive Whether the code should be interactively executable
-	 */
-	public RSnippetNodePanel(final Class<?> templateMetaCategory, final RSnippetNodeConfig config,
-			final boolean isPreview, final boolean isInteractive) {
-		super(new BorderLayout());
-		m_config = config;
-		m_tableInPort = -1;
-		int i = 0;
-		for (final PortType portType : m_config.getInPortTypes()) {
-			if (portType.equals(BufferedDataTable.TYPE)) {
-				m_tableInPort = i;
-			}
-			i++;
-		}
+     */
+    public RSnippetNodePanel(final Class<?> templateMetaCategory, final RSnippetNodeConfig config,
+        final boolean isPreview, final boolean isInteractive) {
+        super(new BorderLayout());
+        m_config = config;
+        m_tableInPort = -1;
+        int i = 0;
+        for (final PortType portType : m_config.getInPortTypes()) {
+            if (portType.equals(BufferedDataTable.TYPE)) {
+                m_tableInPort = i;
+            }
+            i++;
+        }
 
-		m_templateMetaCategory = templateMetaCategory;
-		m_isEnabled = true;
+        m_templateMetaCategory = templateMetaCategory;
+        m_isEnabled = true;
 
-		m_isInteractive = isPreview ? false : isInteractive;
+        m_isInteractive = isPreview ? false : isInteractive;
 
-		if (m_isInteractive) {
-			m_controller = new RController(true);
-			m_commandQueue = new RCommandQueue(m_controller);
-			m_consoleController = new RConsoleController(m_controller, m_commandQueue);
-		} else {
-			m_controller = null;
-			m_consoleController = null;
-			m_commandQueue = null;
-		}
+        if (m_isInteractive) {
+            m_controller = new RController(true);
+            m_commandQueue = new RCommandQueue(m_controller);
+            m_consoleController = new RConsoleController(m_controller, m_commandQueue);
+        } else {
+            m_controller = null;
+            m_consoleController = null;
+            m_commandQueue = null;
+        }
 
-		m_snippet = new RSnippet();
+        m_snippet = new RSnippet();
 
-		final JPanel panel = createPanel(isPreview, m_isInteractive);
-		m_colList.install(m_snippetTextArea);
-		m_flowVarsList.install(m_snippetTextArea);
+        final JPanel panel = createPanel(isPreview, m_isInteractive);
+        m_colList.install(m_snippetTextArea);
+        m_flowVarsList.install(m_snippetTextArea);
 
-		setEnabled(!isPreview);
-		panel.setPreferredSize(new Dimension(1280, 720));
-	}
+        setEnabled(!isPreview);
+        panel.setPreferredSize(new Dimension(1280, 720));
+    }
 
-	private JPanel createPanel(final boolean isPreview, final boolean isInteractive) {
-		final JComponent snippet = createSnippetPanel();
-		final JPanel snippetPanel = new JPanel(new BorderLayout());
-		snippetPanel.add(snippet, BorderLayout.CENTER);
+    private JPanel createPanel(final boolean isPreview, final boolean isInteractive) {
+        final JComponent snippet = createSnippetPanel();
+        final JPanel snippetPanel = new JPanel(new BorderLayout());
+        snippetPanel.add(snippet, BorderLayout.CENTER);
 
-		if (isInteractive) {
-			final JPanel runPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-			m_evalScriptButton = new JButton("Eval Script");
-			m_evalScriptButton.addActionListener(e -> evalScriptFragment(m_snippetTextArea.getText()));
-			runPanel.add(m_evalScriptButton);
-			m_evalSelButton = new JButton("Eval Selection");
-			m_evalSelButton.addActionListener(e -> {
-				final String selected = m_snippetTextArea.getSelectedText();
-				if (selected != null) {
-					evalScriptFragment(selected);
-				}
-			});
-			runPanel.add(m_evalSelButton);
-			snippetPanel.add(runPanel, BorderLayout.SOUTH);
-		}
+        if (isInteractive) {
+            final JPanel runPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+            m_evalScriptButton = new JButton("Eval Script");
+            m_evalScriptButton.addActionListener(e -> evalScriptFragment(m_snippetTextArea.getText()));
+            runPanel.add(m_evalScriptButton);
+            m_evalSelButton = new JButton("Eval Selection");
+            m_evalSelButton.addActionListener(e -> {
+                final String selected = m_snippetTextArea.getSelectedText();
+                if (selected != null) {
+                    evalScriptFragment(selected);
+                }
+            });
+            runPanel.add(m_evalSelButton);
+            snippetPanel.add(runPanel, BorderLayout.SOUTH);
+        }
 
-		final JComponent colsAndVars = createColsAndVarsPanel();
+        final JComponent colsAndVars = createColsAndVarsPanel();
 
-		final JSplitPane leftSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		leftSplitPane.setLeftComponent(colsAndVars);
-		leftSplitPane.setRightComponent(snippetPanel);
-		leftSplitPane.setDividerLocation(200);
+        final JSplitPane leftSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        leftSplitPane.setLeftComponent(colsAndVars);
+        leftSplitPane.setRightComponent(snippetPanel);
+        leftSplitPane.setDividerLocation(200);
 
-		m_objectBrowser = new RObjectBrowser();
-		m_console = new RConsole();
+        m_objectBrowser = new RObjectBrowser();
+        m_console = new RConsole();
 
-		if (isInteractive) {
-			m_objectBrowser.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(final MouseEvent e) {
-					if (e.getClickCount() == 2) {
-						final int row = m_objectBrowser.getSelectedRow();
-						if (row > -1) {
-							final String name = (String) m_objectBrowser.getValueAt(row, 0);
-							final String cmd = "print(" + name + ")";
-							m_commandQueue.putRScript(cmd, true);
-						}
-					}
-				}
-			});
-			final JScrollPane objectBrowserScroller = new JScrollPane(m_objectBrowser);
-			objectBrowserScroller.setBorder(createEmptyTitledBorder("Workspace"));
+        if (isInteractive) {
+            m_objectBrowser.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(final MouseEvent e) {
+                    if (e.getClickCount() == 2) {
+                        final int row = m_objectBrowser.getSelectedRow();
+                        if (row > -1) {
+                            final String name = (String)m_objectBrowser.getValueAt(row, 0);
+                            final String cmd = "print(" + name + ")";
+                            m_commandQueue.putRScript(cmd, true);
+                        }
+                    }
+                }
+            });
+            final JScrollPane objectBrowserScroller = new JScrollPane(m_objectBrowser);
+            objectBrowserScroller.setBorder(createEmptyTitledBorder("Workspace"));
 
-			final JPanel objectBrowserContainer = new JPanel(new BorderLayout());
-			objectBrowserContainer.add(objectBrowserScroller, BorderLayout.CENTER);
+            final JPanel objectBrowserContainer = new JPanel(new BorderLayout());
+            objectBrowserContainer.add(objectBrowserScroller, BorderLayout.CENTER);
 
-			final JPanel objectBrowserButtons = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-			m_resetWorkspace = new JButton("Reset Workspace");
-			m_resetWorkspace.addActionListener(e -> resetWorkspace());
-			objectBrowserButtons.add(m_resetWorkspace);
+            final JPanel objectBrowserButtons = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+            m_resetWorkspace = new JButton("Reset Workspace");
+            m_resetWorkspace.addActionListener(e -> resetWorkspace());
+            objectBrowserButtons.add(m_resetWorkspace);
 
-			m_showPlot = new JButton("Show Plot");
-			m_showPlot.addActionListener(e -> showPlot());
-			objectBrowserButtons.add(m_showPlot);
+            m_showPlot = new JButton("Show Plot");
+            m_showPlot.addActionListener(e -> showPlot());
+            objectBrowserButtons.add(m_showPlot);
 
-			objectBrowserContainer.add(objectBrowserButtons, BorderLayout.SOUTH);
+            objectBrowserContainer.add(objectBrowserButtons, BorderLayout.SOUTH);
 
-			final JSplitPane rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-			rightSplitPane.setLeftComponent(leftSplitPane);
-			rightSplitPane.setRightComponent(objectBrowserContainer);
-			rightSplitPane.setResizeWeight(1.0);
-			rightSplitPane.setDividerLocation(1000);
-			rightSplitPane.setOneTouchExpandable(true);
+            final JSplitPane rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+            rightSplitPane.setLeftComponent(leftSplitPane);
+            rightSplitPane.setRightComponent(objectBrowserContainer);
+            rightSplitPane.setResizeWeight(1.0);
+            rightSplitPane.setDividerLocation(1000);
+            rightSplitPane.setOneTouchExpandable(true);
 
-			final JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-			rightSplitPane.setPreferredSize(new Dimension(rightSplitPane.getPreferredSize().width, 400));
-			mainSplitPane.setTopComponent(rightSplitPane);
+            final JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+            rightSplitPane.setPreferredSize(new Dimension(rightSplitPane.getPreferredSize().width, 400));
+            mainSplitPane.setTopComponent(rightSplitPane);
 
-			final JPanel consolePanel = new JPanel(new BorderLayout());
-			final JScrollPane consoleScroller = new JScrollPane(m_console);
-			final JPanel consoleButtons = createConsoleButtons();
+            final JPanel consolePanel = new JPanel(new BorderLayout());
+            final JScrollPane consoleScroller = new JScrollPane(m_console);
+            final JPanel consoleButtons = createConsoleButtons();
 
-			consolePanel.add(consoleButtons, BorderLayout.WEST);
-			consolePanel.add(consoleScroller, BorderLayout.CENTER);
-			consolePanel.setBorder(createEmptyTitledBorder("Console"));
-			mainSplitPane.setBottomComponent(consolePanel);
-			mainSplitPane.setOneTouchExpandable(true);
-			mainSplitPane.setResizeWeight(0.5);
+            consolePanel.add(consoleButtons, BorderLayout.WEST);
+            consolePanel.add(consoleScroller, BorderLayout.CENTER);
+            consolePanel.setBorder(createEmptyTitledBorder("Console"));
+            mainSplitPane.setBottomComponent(consolePanel);
+            mainSplitPane.setOneTouchExpandable(true);
+            mainSplitPane.setResizeWeight(0.5);
 
-			final JPanel centerPanel = new JPanel(new GridLayout(0, 1));
-			centerPanel.add(mainSplitPane);
+            final JPanel centerPanel = new JPanel(new GridLayout(0, 1));
+            centerPanel.add(mainSplitPane);
 
-			m_progressPanel = new RProgressPanel();
+            m_progressPanel = new RProgressPanel();
 
-			add(centerPanel, BorderLayout.CENTER);
-			add(m_progressPanel, BorderLayout.SOUTH);
-		} else {
-			add(leftSplitPane, BorderLayout.CENTER);
-		}
-		final JPanel templateInfoPanel = createTemplateInfoPanel(isPreview);
-		add(templateInfoPanel, BorderLayout.NORTH);
-		return this;
-	}
+            add(centerPanel, BorderLayout.CENTER);
+            add(m_progressPanel, BorderLayout.SOUTH);
+        } else {
+            add(leftSplitPane, BorderLayout.CENTER);
+        }
+        final JPanel templateInfoPanel = createTemplateInfoPanel(isPreview);
+        add(templateInfoPanel, BorderLayout.NORTH);
+        return this;
+    }
 
-	private JPanel createConsoleButtons() {
+    private JPanel createConsoleButtons() {
 
-		final JPanel p = new JPanel(new GridBagLayout());
-		final GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.BASELINE;
-		c.insets = new Insets(4, 2, 0, 4);
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 1;
-		c.weighty = 0;
+        final JPanel p = new JPanel(new GridBagLayout());
+        final GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.BASELINE;
+        c.insets = new Insets(4, 2, 0, 4);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        c.weighty = 0;
 
-		final JButton consoleCancelButton = new JButton(m_consoleController.getCancelAction());
-		consoleCancelButton.setText("");
-		consoleCancelButton.setPreferredSize(new Dimension(consoleCancelButton.getPreferredSize().height,
-				consoleCancelButton.getPreferredSize().height));
+        final JButton consoleCancelButton = new JButton(m_consoleController.getCancelAction());
+        consoleCancelButton.setText("");
+        consoleCancelButton.setPreferredSize(new Dimension(consoleCancelButton.getPreferredSize().height,
+            consoleCancelButton.getPreferredSize().height));
 
-		p.add(consoleCancelButton, c);
+        p.add(consoleCancelButton, c);
 
-		final JButton consoleClearButton = new JButton(m_consoleController.getClearAction());
-		consoleClearButton.setText("");
-		consoleClearButton.setPreferredSize(new Dimension(consoleClearButton.getPreferredSize().height,
-				consoleClearButton.getPreferredSize().height));
+        final JButton consoleClearButton = new JButton(m_consoleController.getClearAction());
+        consoleClearButton.setText("");
+        consoleClearButton.setPreferredSize(
+            new Dimension(consoleClearButton.getPreferredSize().height, consoleClearButton.getPreferredSize().height));
 
-		c.gridy++;
-		p.add(consoleClearButton, c);
+        c.gridy++;
+        p.add(consoleClearButton, c);
 
-		c.gridy++;
-		c.weighty = 1;
-		p.add(new JPanel(), c);
-		return p;
-	}
+        c.gridy++;
+        c.weighty = 1;
+        p.add(new JPanel(), c);
+        return p;
+    }
 
-	/**
-	 * Reset workspace with input data.
-	 */
-	private void resetWorkspace() {
-		new SwingWorkerWithContext<Void, Boolean>() {
+    /**
+     * Reset workspace with input data.
+     */
+    private void resetWorkspace() {
+        new SwingWorkerWithContext<Void, Boolean>() {
 
-			@Override
-			protected void processWithContext(final List<Boolean> chunks) {
-				m_resetWorkspace.setEnabled(chunks.get(chunks.size() - 1));
-			}
+            @Override
+            protected void processWithContext(final List<Boolean> chunks) {
+                m_resetWorkspace.setEnabled(chunks.get(chunks.size() - 1));
+            }
 
-			@Override
-			protected Void doInBackgroundWithContext() throws Exception {
-				publish(Boolean.FALSE);
-				try {
-					try {
-						// release some references to prevent memory leaks
-						if (m_exec != null) {
-							m_exec.getProgressMonitor().removeAllProgressListener();
-						}
-						m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
-						m_progressPanel.startMonitoring(m_exec);
+            @Override
+            protected Void doInBackgroundWithContext() throws Exception {
+                publish(Boolean.FALSE);
+                try {
+                    try {
+                        // release some references to prevent memory leaks
+                        if (m_exec != null) {
+                            m_exec.getProgressMonitor().removeAllProgressListener();
+                        }
+                        m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
+                        m_progressPanel.startMonitoring(m_exec);
 
-						// no need to load any R workspace
-						m_controller.clearWorkspace(m_exec.createSubProgress(0.3));
+                        // no need to load any R workspace
+                        m_controller.clearWorkspace(m_exec.createSubProgress(0.3));
 
-						if (m_input != null) {
-							m_exec.setMessage("Sending input data to R");
-							final RSnippetSettings s = m_snippet.getSettings();
-							m_controller.importDataFromPorts(m_input, m_exec.createSubProgress(0.6),
-								s.getSendBatchSize(), s.getKnimeInType(), s.getSendRowNames());
-						}
+                        if (m_input != null) {
+                            m_exec.setMessage("Sending input data to R");
+                            final RSnippetSettings s = m_snippet.getSettings();
+                            m_controller.importDataFromPorts(m_input, m_exec.createSubProgress(0.6),
+                                s.getSendBatchSize(), s.getKnimeInType(), s.getSendRowNames());
+                        }
 
-						m_exec.setMessage("Sending flow variables to R");
-						m_controller.exportFlowVariables(m_inputFlowVars, "knime.flow.in",
-								m_exec.createSubProgress(0.1));
+                        m_exec.setMessage("Sending flow variables to R");
+                        m_controller.exportFlowVariables(m_inputFlowVars, "knime.flow.in",
+                            m_exec.createSubProgress(0.1));
 
-						workspaceChanged();
-					} finally {
-						if (m_exec != null) {
-							m_exec.getProgressMonitor().setExecuteCanceled();
-							// make sure the m_exec is at 100% at end
-							m_exec.setProgress(1);
-						}
-					}
-				} finally {
-					publish(Boolean.TRUE);
-				}
-				return null;
-			}
-		}.execute();
-	}
+                        workspaceChanged();
+                    } finally {
+                        if (m_exec != null) {
+                            m_exec.getProgressMonitor().setExecuteCanceled();
+                            // make sure the m_exec is at 100% at end
+                            m_exec.setProgress(1);
+                        }
+                    }
+                } finally {
+                    publish(Boolean.TRUE);
+                }
+                return null;
+            }
+        }.execute();
+    }
 
-	private String setupPlotInitCommand() {
-		final StringBuilder b = new StringBuilder();
-		if (m_imageFile != null) {
-			String bitmapType = "";
+    private String setupPlotInitCommand() {
+        final StringBuilder b = new StringBuilder();
+        if (m_imageFile != null) {
+            String bitmapType = "";
 
-			if (Platform.isMac()) {
-				bitmapType = ",bitmapType='cairo'";
-				b.append("library('Cairo');");
-			}
+            if (Platform.isMac()) {
+                bitmapType = ",bitmapType='cairo'";
+                b.append("library('Cairo');");
+            }
 
-			final Dimension size = getPreviewImageDimensions();
-			b.append("options(device='png'" + bitmapType + ")").append("\n");
-			b.append("png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\",width=" + size.getWidth()
-					+ ",height=" + size.getHeight() + ")").append("\n");
-		}
-		return b.toString();
-	}
+            final Dimension size = getPreviewImageDimensions();
+            b.append("options(device='png'" + bitmapType + ")").append("\n");
+            b.append("png(\"" + m_imageFile.getAbsolutePath().replace('\\', '/') + "\",width=" + size.getWidth()
+                + ",height=" + size.getHeight() + ")").append("\n");
+        }
+        return b.toString();
+    }
 
-	private void showPlot() {
-		boolean isToPack = false;
-		if (m_previewFrame == null) {
-			m_previewFrame = new RPlotPreviewFrame((Frame) SwingUtilities.getAncestorOfClass(Frame.class, this));
-			isToPack = true;
-		}
-		try {
-			m_previewFrame.setSource(m_imageFile);
-		} catch (final IOException e) {
-			LOGGER.error("Unable to render PNG from file " + m_imageFile.getAbsolutePath(), e);
-		}
-		if (isToPack) {
-			m_previewFrame.pack();
-			if (m_imageFile == null || m_imageFile.length() == 0L) {
-				m_previewFrame.setSize(getPreviewImageDimensions());
-			}
-		}
-		m_previewFrame.setVisible(true);
-	}
+    private void showPlot() {
+        boolean isToPack = false;
+        if (m_previewFrame == null) {
+            m_previewFrame = new RPlotPreviewFrame((Frame)SwingUtilities.getAncestorOfClass(Frame.class, this));
+            isToPack = true;
+        }
+        try {
+            m_previewFrame.setSource(m_imageFile);
+        } catch (final IOException e) {
+            LOGGER.error("Unable to render PNG from file " + m_imageFile.getAbsolutePath(), e);
+        }
+        if (isToPack) {
+            m_previewFrame.pack();
+            if ((m_imageFile == null) || (m_imageFile.length() == 0L)) {
+                m_previewFrame.setSize(getPreviewImageDimensions());
+            }
+        }
+        m_previewFrame.setVisible(true);
+    }
 
-	/**
-	 * Override to change preview image dimensions. Default is `(400, 300)`.
-	 *
-	 * @return dimensions of the preview image.
-	 */
-	protected Dimension getPreviewImageDimensions() {
-		return new Dimension(400, 300);
-	}
+    /**
+     * Override to change preview image dimensions. Default is `(400, 300)`.
+     *
+     * @return dimensions of the preview image.
+     */
+    protected Dimension getPreviewImageDimensions() {
+        return new Dimension(400, 300);
+    }
 
-	/**
-	 * Create the panel with the snippet.
-	 */
-	private JComponent createSnippetPanel() {
+    /**
+     * Create the panel with the snippet.
+     */
+    private JComponent createSnippetPanel() {
 
-		m_snippetTextArea = new RSnippetTextArea(m_snippet);
+        m_snippetTextArea = new RSnippetTextArea(m_snippet);
 
-		// // reset style which causes a recreation of the folds
-		// m_snippetTextArea.setSyntaxEditingStyle(
-		// SyntaxConstants.SYNTAX_STYLE_NONE);
-		// m_snippetTextArea.setSyntaxEditingStyle(
-		// SyntaxConstants.SYNTAX_STYLE_JAVA);
-		// // collapse all folds
-		// int foldCount = m_snippetTextArea.getFoldManager().getFoldCount();
-		// for (int i = 0; i < foldCount; i++) {
-		// Fold fold = m_snippetTextArea.getFoldManager().getFold(i);
-		// fold.setCollapsed(true);
-		// }
-		final JScrollPane snippetScroller = new RTextScrollPane(m_snippetTextArea);
-		snippetScroller.setBorder(createEmptyTitledBorder("R Script"));
-		final JPanel snippet = new JPanel(new BorderLayout());
-		snippet.add(snippetScroller, BorderLayout.CENTER);
-		final ErrorStrip es = new ErrorStrip(m_snippetTextArea);
-		snippet.add(es, BorderLayout.LINE_END);
-		return snippet;
-	}
+        // // reset style which causes a recreation of the folds
+        // m_snippetTextArea.setSyntaxEditingStyle(
+        // SyntaxConstants.SYNTAX_STYLE_NONE);
+        // m_snippetTextArea.setSyntaxEditingStyle(
+        // SyntaxConstants.SYNTAX_STYLE_JAVA);
+        // // collapse all folds
+        // int foldCount = m_snippetTextArea.getFoldManager().getFoldCount();
+        // for (int i = 0; i < foldCount; i++) {
+        // Fold fold = m_snippetTextArea.getFoldManager().getFold(i);
+        // fold.setCollapsed(true);
+        // }
+        final JScrollPane snippetScroller = new RTextScrollPane(m_snippetTextArea);
+        snippetScroller.setBorder(createEmptyTitledBorder("R Script"));
+        final JPanel snippet = new JPanel(new BorderLayout());
+        snippet.add(snippetScroller, BorderLayout.CENTER);
+        final ErrorStrip es = new ErrorStrip(m_snippetTextArea);
+        snippet.add(es, BorderLayout.LINE_END);
+        return snippet;
+    }
 
-	/**
-	 * The panel at the left with the column and variables at the input.
-	 * Override this method when the columns or variables should not be
-	 * displayed.
-	 *
-	 * @return the panel at the left with the column and variables at the input.
-	 */
-	protected JComponent createColsAndVarsPanel() {
-		final JSplitPane varSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		m_colList = new RColumnList();
+    /**
+     * The panel at the left with the column and variables at the input. Override this method when the columns or
+     * variables should not be displayed.
+     *
+     * @return the panel at the left with the column and variables at the input.
+     */
+    protected JComponent createColsAndVarsPanel() {
+        final JSplitPane varSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        m_colList = new RColumnList();
 
-		// set variable panel
-		m_flowVarsList = new RFlowVariableList();
-		final JScrollPane flowVarScroller = new JScrollPane(m_flowVarsList);
-		flowVarScroller.setBorder(createEmptyTitledBorder("Flow Variable List"));
+        // set variable panel
+        m_flowVarsList = new RFlowVariableList();
+        final JScrollPane flowVarScroller = new JScrollPane(m_flowVarsList);
+        flowVarScroller.setBorder(createEmptyTitledBorder("Flow Variable List"));
 
-		if (m_tableInPort >= 0) {
-			final JScrollPane colListScroller = new JScrollPane(m_colList);
-			colListScroller.setBorder(createEmptyTitledBorder("Column List"));
-			varSplitPane.setTopComponent(colListScroller);
-			varSplitPane.setBottomComponent(flowVarScroller);
-			varSplitPane.setOneTouchExpandable(true);
-			varSplitPane.setResizeWeight(0.9);
+        if (m_tableInPort >= 0) {
+            final JScrollPane colListScroller = new JScrollPane(m_colList);
+            colListScroller.setBorder(createEmptyTitledBorder("Column List"));
+            varSplitPane.setTopComponent(colListScroller);
+            varSplitPane.setBottomComponent(flowVarScroller);
+            varSplitPane.setOneTouchExpandable(true);
+            varSplitPane.setResizeWeight(0.9);
 
-			return varSplitPane;
-		} else {
-			return flowVarScroller;
-		}
-	}
+            return varSplitPane;
+        } else {
+            return flowVarScroller;
+        }
+    }
 
-	/**
-	 * Create Panel with additional options to be displayed in the south.
-	 *
-	 * @return options panel or null if there are no additional options.
-	 */
-	protected JPanel createOptionsPanel() {
-		return null;
-	}
+    /**
+     * Create Panel with additional options to be displayed in the south.
+     *
+     * @return options panel or null if there are no additional options.
+     */
+    protected JPanel createOptionsPanel() {
+        return null;
+    }
 
-	/**
-	 * The panel at the top with the "Create Template..." Button.
-	 */
-	private JPanel createTemplateInfoPanel(final boolean isPreview) {
-		final JButton addTemplateButton = new JButton("Create Template...");
-		addTemplateButton.addActionListener(e -> {
-			final Frame parent = (Frame) SwingUtilities.getAncestorOfClass(Frame.class, addTemplateButton);
-			final RSnippetTemplate newTemplate = AddTemplateDialog.openUserDialog(parent, m_snippet,
-					m_templateMetaCategory);
-			if (null != newTemplate) {
-				TemplateProvider.getDefault().addTemplate(newTemplate);
-				// update the template UUID of the current snippet
-				m_snippet.getSettings().setTemplateUUID(newTemplate.getUUID());
-				final String loc = TemplateProvider.getDefault().getDisplayLocation(newTemplate);
-				m_templateLocation.setText(loc);
-				validate();
-			}
-		});
-		final JPanel templateInfoPanel = new JPanel(new BorderLayout());
-		final TemplateProvider provider = TemplateProvider.getDefault();
-		final String uuid = m_snippet.getSettings().getTemplateUUID();
-		final RSnippetTemplate template = null != uuid ? provider.getTemplate(UUID.fromString(uuid)) : null;
-		final String loc = null != template ? createTemplateLocationText(template) : "";
-		m_templateLocation = new JLabel(loc);
-		if (isPreview) {
-			templateInfoPanel.add(m_templateLocation, BorderLayout.CENTER);
-		} else {
-			templateInfoPanel.add(addTemplateButton, BorderLayout.LINE_END);
-		}
-		templateInfoPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-		return templateInfoPanel;
-	}
+    /**
+     * The panel at the top with the "Create Template..." Button.
+     */
+    private JPanel createTemplateInfoPanel(final boolean isPreview) {
+        final JButton addTemplateButton = new JButton("Create Template...");
+        addTemplateButton.addActionListener(e -> {
+            final Frame parent = (Frame)SwingUtilities.getAncestorOfClass(Frame.class, addTemplateButton);
+            final RSnippetTemplate newTemplate =
+                AddTemplateDialog.openUserDialog(parent, m_snippet, m_templateMetaCategory);
+            if (null != newTemplate) {
+                TemplateProvider.getDefault().addTemplate(newTemplate);
+                // update the template UUID of the current snippet
+                m_snippet.getSettings().setTemplateUUID(newTemplate.getUUID());
+                final String loc = TemplateProvider.getDefault().getDisplayLocation(newTemplate);
+                m_templateLocation.setText(loc);
+                validate();
+            }
+        });
+        final JPanel templateInfoPanel = new JPanel(new BorderLayout());
+        final TemplateProvider provider = TemplateProvider.getDefault();
+        final String uuid = m_snippet.getSettings().getTemplateUUID();
+        final RSnippetTemplate template = null != uuid ? provider.getTemplate(UUID.fromString(uuid)) : null;
+        final String loc = null != template ? createTemplateLocationText(template) : "";
+        m_templateLocation = new JLabel(loc);
+        if (isPreview) {
+            templateInfoPanel.add(m_templateLocation, BorderLayout.CENTER);
+        } else {
+            templateInfoPanel.add(addTemplateButton, BorderLayout.LINE_END);
+        }
+        templateInfoPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        return templateInfoPanel;
+    }
 
-	/**
-	 * Create an empty, titled border.
-	 *
-	 * @param title
-	 *            Title of the border.
-	 * @return Such a new border.
-	 */
-	protected Border createEmptyTitledBorder(final String title) {
-		return BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0), title,
-				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.BELOW_TOP);
-	}
+    /**
+     * Create an empty, titled border.
+     *
+     * @param title Title of the border.
+     * @return Such a new border.
+     */
+    protected Border createEmptyTitledBorder(final String title) {
+        return BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0), title,
+            TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.BELOW_TOP);
+    }
 
-	/**
-	 * Determines whether this component is enabled. An enabled component can
-	 * respond to user input and generate events.
-	 *
-	 * @return <code>true</code> if the component is enabled, <code>false</code>
-	 *         otherwise
-	 */
-	@Override
-	public boolean isEnabled() {
-		return m_isEnabled;
-	}
+    /**
+     * Determines whether this component is enabled. An enabled component can respond to user input and generate events.
+     *
+     * @return <code>true</code> if the component is enabled, <code>false</code> otherwise
+     */
+    @Override
+    public boolean isEnabled() {
+        return m_isEnabled;
+    }
 
-	/**
-	 * Sets whether or not this component is enabled. A component that is
-	 * enabled may respond to user input, while a component that is not enabled
-	 * cannot respond to user input.
-	 *
-	 * @param enabled
-	 *            true if this component should be enabled, false otherwise
-	 */
-	@Override
-	public void setEnabled(final boolean enabled) {
-		if (m_isEnabled != enabled) {
-			m_colList.setEnabled(enabled);
-			m_flowVarsList.setEnabled(enabled);
-			m_snippetTextArea.setEnabled(enabled);
-			m_objectBrowser.setEnabled(enabled);
-			m_console.setEnabled(enabled);
-		}
-		m_isEnabled = enabled;
+    /**
+     * Sets whether or not this component is enabled. A component that is enabled may respond to user input, while a
+     * component that is not enabled cannot respond to user input.
+     *
+     * @param enabled true if this component should be enabled, false otherwise
+     */
+    @Override
+    public void setEnabled(final boolean enabled) {
+        if (m_isEnabled != enabled) {
+            m_colList.setEnabled(enabled);
+            m_flowVarsList.setEnabled(enabled);
+            m_snippetTextArea.setEnabled(enabled);
+            m_objectBrowser.setEnabled(enabled);
+            m_console.setEnabled(enabled);
+        }
+        m_isEnabled = enabled;
 
-	}
+    }
 
-	/**
-	 * Get names of objects currently defined in the workspace.
-	 *
-	 * @return array of names, never <code>null</code>
-	 */
-	protected String[] rGetObjectNames() {
-		REXP rexp;
-		try {
-			// we use the command queue to make sure commands are executed
-			// strictly sequentially.
-			rexp = m_commandQueue.putRScript("ls()", false).get();
-			return (rexp != null) ? rexp.asStrings() : new String[] {};
-		} catch (final Exception e) {
-			m_consoleController.append("Warning: Could not get names of objects defined in workspace.", 1);
-			return new String[] {};
-		}
-	}
+    /**
+     * Get names of objects currently defined in the workspace.
+     *
+     * @return array of names, never <code>null</code>
+     */
+    protected String[] rGetObjectNames() {
+        REXP rexp;
+        try {
+            // we use the command queue to make sure commands are executed
+            // strictly sequentially.
+            rexp = m_commandQueue.putRScript("ls()", false).get();
+            return (rexp != null) ? rexp.asStrings() : new String[]{};
+        } catch (final Exception e) {
+            m_consoleController.append("Warning: Could not get names of objects defined in workspace.", 1);
+            return new String[]{};
+        }
+    }
 
-	/**
-	 * Get classes of objects currently defined in the workspace.
-	 *
-	 * @return array of names, never <code>null</code>
-	 */
-	protected String[] rGetObjectClasses() {
-		REXP rexp;
-		try {
-			// we use the command queue to make sure commands are executed
-			// strictly sequentially.
-			rexp = m_commandQueue.putRScript("sapply(ls(),function(a)class(get(a,envir=globalenv()))[1])", false).get();
-			return (rexp != null) ? rexp.asStrings() : new String[] {};
-		} catch (final Exception e) {
-			m_consoleController.append("Warning: Could not get classes of objects defined in workspace.", 1);
-			return new String[] {};
-		}
-	}
+    /**
+     * Get classes of objects currently defined in the workspace.
+     *
+     * @return array of names, never <code>null</code>
+     */
+    protected String[] rGetObjectClasses() {
+        REXP rexp;
+        try {
+            // we use the command queue to make sure commands are executed
+            // strictly sequentially.
+            rexp = m_commandQueue.putRScript("sapply(ls(),function(a)class(get(a,envir=globalenv()))[1])", false).get();
+            return (rexp != null) ? rexp.asStrings() : new String[]{};
+        } catch (final Exception e) {
+            m_consoleController.append("Warning: Could not get classes of objects defined in workspace.", 1);
+            return new String[]{};
+        }
+    }
 
-	/**
-	 * Reinitialize with the given blueprint.
-	 *
-	 * @param template
-	 *            the template
-	 * @param flowVariables
-	 *            the flow variables at the input
-	 * @param spec
-	 *            the input spec
-	 */
-	@Override
+    /**
+     * Reinitialize with the given blueprint.
+     *
+     * @param template the template
+     * @param flowVariables the flow variables at the input
+     * @param spec the input spec
+     */
+    @Override
     public void applyTemplate(final RSnippetTemplate template, final DataTableSpec spec,
-			final Map<String, FlowVariable> flowVariables) {
-		// save and read settings to decouple objects.
-		final NodeSettings settings = new NodeSettings(template.getUUID());
-		template.getSnippetSettings().saveSettings(settings);
-		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		try {
-			settings.saveToXML(os);
-			final NodeSettingsRO settingsro = NodeSettings
-					.loadFromXML(new ByteArrayInputStream(os.toString("UTF-8").getBytes("UTF-8")));
-			m_snippet.getSettings().loadSettings(settingsro);
-		} catch (final Exception e) {
-			LOGGER.error("Cannot apply template.", e);
-		}
+        final Map<String, FlowVariable> flowVariables) {
+        // save and read settings to decouple objects.
+        final NodeSettings settings = new NodeSettings(template.getUUID());
+        template.getSnippetSettings().saveSettings(settings);
+        final ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            settings.saveToXML(os);
+            final NodeSettingsRO settingsro =
+                NodeSettings.loadFromXML(new ByteArrayInputStream(os.toString("UTF-8").getBytes("UTF-8")));
+            m_snippet.getSettings().loadSettings(settingsro);
+        } catch (final Exception e) {
+            LOGGER.error("Cannot apply template.", e);
+        }
 
-		m_colList.setSpec(spec);
-		m_flowVarsList.setFlowVariables(flowVariables.values());
-		// update template info panel
-		m_templateLocation.setText(createTemplateLocationText(template));
+        m_colList.setSpec(spec);
+        m_flowVarsList.setFlowVariables(flowVariables.values());
+        // update template info panel
+        m_templateLocation.setText(createTemplateLocationText(template));
 
-		m_snippetTextArea.requestFocus();
-	}
+        m_snippetTextArea.requestFocus();
+    }
 
-	/**
-	 * Get the template's location for display.
-	 *
-	 * @param template
-	 *            the template
-	 * @return the template's location for display
-	 */
-	private String createTemplateLocationText(final RSnippetTemplate template) {
-		final TemplateProvider provider = TemplateProvider.getDefault();
-		return provider.getDisplayLocation(template);
-	}
+    /**
+     * Get the template's location for display.
+     *
+     * @param template the template
+     * @return the template's location for display
+     */
+    private String createTemplateLocationText(final RSnippetTemplate template) {
+        final TemplateProvider provider = TemplateProvider.getDefault();
+        return provider.getDisplayLocation(template);
+    }
 
-	/**
-	 *
-	 * @return
-	 */
-	public boolean onOpen() {
-		m_closing = false;
-		if (m_isInteractive) {
-			try {
-				m_console.setText("");
-				m_objectBrowser.updateData(new String[0], new String[0]);
+    /**
+     *
+     * @return
+     */
+    public boolean onOpen() {
+        m_closing = false;
+        if (m_isInteractive) {
+            try {
+                m_console.setText("");
+                m_objectBrowser.updateData(new String[0], new String[0]);
 
-				m_snippetTextArea.requestFocus();
-				m_snippetTextArea.requestFocusInWindow();
+                m_snippetTextArea.requestFocus();
+                m_snippetTextArea.requestFocusInWindow();
 
-				// Create temporary image for the R plot output
-				try {
-					m_tempDir = FileUtil.createTempDir("rtmp-dialog-");
-					m_imageFile = new File(m_tempDir, "rsnippet-plot.png");
+                // Create temporary image for the R plot output
+                try {
+                    m_tempDir = FileUtil.createTempDir("rtmp-dialog-");
+                    m_imageFile = new File(m_tempDir, "rsnippet-plot.png");
 
-					// switch working directory to m_tempDir:
-					m_commandQueue.putRScript("setwd(\"" + m_tempDir.getAbsolutePath().replace('\\', '/') + "\")\n",
-							false);
-				} catch (final IOException e) {
-					throw new RException("No PNG image file handle could be created - plot's won't work", e);
-				}
+                    // switch working directory to m_tempDir:
+                    m_commandQueue.putRScript("setwd(\"" + m_tempDir.getAbsolutePath().replace('\\', '/') + "\")\n",
+                        false);
+                } catch (final IOException e) {
+                    throw new RException("No PNG image file handle could be created - plot's won't work", e);
+                }
 
-				connectToR();
+                connectToR();
 
-				// enable/disable buttons depending on R according to whether
-				// initialization of RController succeeded
-				final boolean enabled = m_controller.isInitialized();
-				m_evalScriptButton.setEnabled(enabled);
-				m_evalSelButton.setEnabled(enabled);
-				m_resetWorkspace.setEnabled(enabled);
-				m_showPlot.setEnabled(enabled);
+                // enable/disable buttons depending on R according to whether
+                // initialization of RController succeeded
+                final boolean enabled = m_controller.isInitialized();
+                m_evalScriptButton.setEnabled(enabled);
+                m_evalSelButton.setEnabled(enabled);
+                m_resetWorkspace.setEnabled(enabled);
+                m_showPlot.setEnabled(enabled);
 
-			} catch (final RException e) {
-				final StyledDocument doc = m_console.getStyledDocument();
-				try {
-					doc.insertString(doc.getLength(), "R cannot be initialized.\n", m_console.getErrorStyle());
+            } catch (final RException e) {
+                final StyledDocument doc = m_console.getStyledDocument();
+                try {
+                    doc.insertString(doc.getLength(), "R cannot be initialized.\n", m_console.getErrorStyle());
 
-					doc.insertString(doc.getLength(), e.getMessage(), m_console.getErrorStyle());
-				} catch (final BadLocationException ex) {
-					// never happens
-					throw new RuntimeException(ex);
-				}
-			}
-		}
+                    doc.insertString(doc.getLength(), e.getMessage(), m_console.getErrorStyle());
+                } catch (final BadLocationException ex) {
+                    // never happens
+                    throw new RuntimeException(ex);
+                }
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	private void connectToR() throws RException {
-		m_controller.initialize();
+    private void connectToR() throws RException {
+        m_controller.initialize();
 
-		m_consoleController.attachOutput(m_console);
-		m_commandQueue.startExecutionThread(() -> {
-			if (m_exec != null) {
-				m_exec.getProgressMonitor().removeAllProgressListener();
-			}
+        m_consoleController.attachOutput(m_console);
+        m_commandQueue.startExecutionThread(() -> {
+            if (m_exec != null) {
+                m_exec.getProgressMonitor().removeAllProgressListener();
+            }
 
-			m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
-			m_exec.setProgress(0.0f); // for correct initial progress display
-			m_progressPanel.startMonitoring(m_exec);
-			return m_exec;
-		} , true);
+            m_exec = new ExecutionMonitor(new DefaultNodeProgressMonitor());
+            m_exec.setProgress(0.0f); // for correct initial progress display
+            m_progressPanel.startMonitoring(m_exec);
+            return m_exec;
+        }, true);
 
-		// send data to R
-		resetWorkspace();
-	}
+        // send data to R
+        resetWorkspace();
+    }
 
-	public void onClose() {
-		m_closing = true;
-		if (m_previewFrame != null) {
-			m_previewFrame.dispose();
-			m_previewFrame = null;
-		}
-		if (m_tempDir != null) {
-			// delete the temporary directory including its contents
-			FileUtil.deleteRecursively(m_tempDir);
-			m_imageFile = null;
-			m_tempDir = null;
-		}
-		m_progressPanel.stopMonitoring();
-		if (m_isInteractive && m_controller != null) {
-			// Stop running tasks
-			if (m_exec != null) {
-				m_exec.getProgressMonitor().setExecuteCanceled();
-			}
+    public void onClose() {
+        m_closing = true;
+        if (m_previewFrame != null) {
+            m_previewFrame.dispose();
+            m_previewFrame = null;
+        }
+        if (m_tempDir != null) {
+            // delete the temporary directory including its contents
+            FileUtil.deleteRecursively(m_tempDir);
+            m_imageFile = null;
+            m_tempDir = null;
+        }
+        m_progressPanel.stopMonitoring();
+        if (m_isInteractive && (m_controller != null)) {
+            // Stop running tasks
+            if (m_exec != null) {
+                m_exec.getProgressMonitor().setExecuteCanceled();
+            }
 
-			if (m_consoleController.isAttached(m_console)) {
-				m_consoleController.cancel();
-				m_consoleController.detach(m_console);
-			}
-		}
+            if (m_consoleController.isAttached(m_console)) {
+                m_consoleController.cancel();
+                m_consoleController.detach(m_console);
+            }
+        }
 
-		try {
-			m_controller.close();
-		} catch (RException e) {
-			LOGGER.error("Failed to close Rserve connection", e);
-		}
-	}
+        try {
+            m_controller.close();
+        } catch (final RException e) {
+            LOGGER.error("Failed to close Rserve connection", e);
+        }
+    }
 
-	protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
-		final RSnippetSettings s = m_snippet.getSettings();
+    protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
+        final RSnippetSettings s = m_snippet.getSettings();
 
-		s.saveSettings(settings);
-	}
+        s.saveSettings(settings);
+    }
 
-	public void updateData(final ConfigRO settings, final PortObjectSpec[] specs,
-			final Collection<FlowVariable> flowVariables) {
-		m_snippet.getSettings().loadSettingsForDialog(settings);
-		final DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec) specs[m_tableInPort] : null;
-		updateData(m_snippet.getSettings(), null, spec, flowVariables);
-	}
+    public void updateData(final ConfigRO settings, final PortObjectSpec[] specs,
+        final Collection<FlowVariable> flowVariables) {
+        m_snippet.getSettings().loadSettingsForDialog(settings);
+        final DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec)specs[m_tableInPort] : null;
+        updateData(m_snippet.getSettings(), null, spec, flowVariables);
+    }
 
-	public void updateData(final ConfigRO settings, final PortObject[] input,
-			final Collection<FlowVariable> flowVariables) {
-		m_snippet.getSettings().loadSettingsForDialog(settings);
-		final DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable) input[m_tableInPort]).getSpec() : null;
-		updateData(m_snippet.getSettings(), input, spec, flowVariables);
-	}
+    public void updateData(final ConfigRO settings, final PortObject[] input,
+        final Collection<FlowVariable> flowVariables) {
+        m_snippet.getSettings().loadSettingsForDialog(settings);
+        final DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable)input[m_tableInPort]).getSpec() : null;
+        updateData(m_snippet.getSettings(), input, spec, flowVariables);
+    }
 
-	private void updateData(final RSnippetSettings settings, final PortObject[] input, final DataTableSpec spec,
-			final Collection<FlowVariable> flowVariables) {
-		ViewUtils.invokeAndWaitInEDT(() -> updateDataInternal(settings, input, spec, flowVariables));
-	}
+    private void updateData(final RSnippetSettings settings, final PortObject[] input, final DataTableSpec spec,
+        final Collection<FlowVariable> flowVariables) {
+        ViewUtils.invokeAndWaitInEDT(() -> updateDataInternal(settings, input, spec, flowVariables));
+    }
 
-	protected void updateDataInternal(final RSnippetSettings settings, final PortObject[] input,
-			final DataTableSpec spec, final Collection<FlowVariable> flowVariables) {
-		m_snippet.getSettings().loadSettings(settings);
+    protected void updateDataInternal(final RSnippetSettings settings, final PortObject[] input,
+        final DataTableSpec spec, final Collection<FlowVariable> flowVariables) {
+        m_snippet.getSettings().loadSettings(settings);
 
-		m_colList.setSpec(spec);
-		m_flowVarsList.setFlowVariables(flowVariables);
-		m_input = input;
-		m_inputFlowVars = flowVariables;
+        m_colList.setSpec(spec);
+        m_flowVarsList.setFlowVariables(flowVariables);
+        m_input = input;
+        m_inputFlowVars = flowVariables;
 
-		// // set caret position to the start of the custom expression
-		// m_snippetTextArea.setCaretPosition(
-		// m_snippet.getDocument().getGuardedSection(
-		// RSnippetDocument.GUARDED_BODY_START).getEnd().getOffset()
-		// + 1);
-		m_snippetTextArea.requestFocusInWindow();
+        // // set caret position to the start of the custom expression
+        // m_snippetTextArea.setCaretPosition(
+        // m_snippet.getDocument().getGuardedSection(
+        // RSnippetDocument.GUARDED_BODY_START).getEnd().getOffset()
+        // + 1);
+        m_snippetTextArea.requestFocusInWindow();
 
-		// update template info panel
-		final TemplateProvider provider = TemplateProvider.getDefault();
-		final String uuid = m_snippet.getSettings().getTemplateUUID();
-		final RSnippetTemplate template = null != uuid ? provider.getTemplate(UUID.fromString(uuid)) : null;
-		final String loc = null != template ? createTemplateLocationText(template) : "";
-		m_templateLocation.setText(loc);
-	}
+        // update template info panel
+        final TemplateProvider provider = TemplateProvider.getDefault();
+        final String uuid = m_snippet.getSettings().getTemplateUUID();
+        final RSnippetTemplate template = null != uuid ? provider.getTemplate(UUID.fromString(uuid)) : null;
+        final String loc = null != template ? createTemplateLocationText(template) : "";
+        m_templateLocation.setText(loc);
+    }
 
-	public RSnippet getRSnippet() {
-		return m_snippet;
-	}
+    public RSnippet getRSnippet() {
+        return m_snippet;
+    }
 
-	private void evalScriptFragment(final String script) {
-		final String setupPlotInitCommand = setupPlotInitCommand();
-		m_commandQueue.putRScript(setupPlotInitCommand, false);
-		m_commandQueue.putRScript(script, true);
-		final RCommand future = m_commandQueue.putRScript("dev.off()", false);
+    private void evalScriptFragment(final String script) {
+        final String setupPlotInitCommand = setupPlotInitCommand();
+        m_commandQueue.putRScript(setupPlotInitCommand, false);
+        m_commandQueue.putRScript(script, true);
+        final RCommand future = m_commandQueue.putRScript("dev.off()", false);
 
-		// update the Panel when execution has finished.
-		final Runnable checkIfDone = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					try {
-						future.get(50, TimeUnit.MILLISECONDS);
-					} catch (TimeoutException e) {
-						SwingUtilities.invokeLater(this);
-						return;
-					}
-					workspaceChanged();
-				} catch (Exception e) {
-				}
-			}
-		};
+        // update the Panel when execution has finished.
+        final Runnable checkIfDone = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    try {
+                        future.get(50, TimeUnit.MILLISECONDS);
+                    } catch (final TimeoutException e) {
+                        SwingUtilities.invokeLater(this);
+                        return;
+                    }
+                    workspaceChanged();
+                } catch (final Exception e) {
+                }
+            }
+        };
 
-		SwingUtilities.invokeLater(checkIfDone);
-	}
+        SwingUtilities.invokeLater(checkIfDone);
+    }
 
-	/**
-	 * Update the Panel according to changes in the R workspace.
-	 */
-	public void workspaceChanged() {
-		final String[] objectNames = rGetObjectNames();
-		if (objectNames != null && objectNames.length > 0) {
-			final String[] objectClasses = rGetObjectClasses();
-			ViewUtils.runOrInvokeLaterInEDT(() -> {
-				m_objectBrowser.updateData(objectNames, objectClasses);
-				if (m_previewFrame != null && m_previewFrame.isVisible()) {
-					showPlot();
-				}
-			});
+    /**
+     * Update the Panel according to changes in the R workspace.
+     */
+    public void workspaceChanged() {
+        final String[] objectNames = rGetObjectNames();
+        if ((objectNames != null) && (objectNames.length > 0)) {
+            final String[] objectClasses = rGetObjectClasses();
+            ViewUtils.runOrInvokeLaterInEDT(() -> {
+                m_objectBrowser.updateData(objectNames, objectClasses);
+                if ((m_previewFrame != null) && m_previewFrame.isVisible()) {
+                    showPlot();
+                }
+            });
 
-		}
-	}
+        }
+    }
 
 }

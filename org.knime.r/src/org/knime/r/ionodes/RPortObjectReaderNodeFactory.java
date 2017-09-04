@@ -48,11 +48,12 @@ import org.knime.base.node.io.portobject.PortObjectReaderNodeFactory;
 import org.knime.ext.r.node.local.port.RPortObject;
 
 /**
- * Factory for R port object reader. 
+ * Factory for R port object reader.
+ * 
  * @author Bernd Wiswedel, University of Konstanz
  */
 public class RPortObjectReaderNodeFactory extends PortObjectReaderNodeFactory {
-    
+
     /** Defines output port. */
     public RPortObjectReaderNodeFactory() {
         super(RPortObject.TYPE);

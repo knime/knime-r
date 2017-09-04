@@ -81,7 +81,7 @@ public class RFlowVariableList extends JList<FlowVariable> {
             @Override
             public void keyTyped(final KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                    Object selected = getSelectedValue();
+                    final Object selected = getSelectedValue();
                     if (selected != null) {
                         onSelectionInVariableList(selected);
                     }
@@ -93,7 +93,7 @@ public class RFlowVariableList extends JList<FlowVariable> {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    Object selected = getSelectedValue();
+                    final Object selected = getSelectedValue();
                     if (selected != null) {
                         onSelectionInVariableList(selected);
                     }
@@ -104,9 +104,9 @@ public class RFlowVariableList extends JList<FlowVariable> {
     }
 
     private void onSelectionInVariableList(final Object selected) {
-        if (selected != null && selected instanceof FlowVariable) {
-            FlowVariable v = (FlowVariable) selected;
-            String enter = getFieldReadStatement(v);
+        if ((selected != null) && (selected instanceof FlowVariable)) {
+            final FlowVariable v = (FlowVariable)selected;
+            final String enter = getFieldReadStatement(v);
             clearSelection();
             if (null != m_snippet) {
                 m_snippet.replaceSelection(enter);
@@ -116,10 +116,10 @@ public class RFlowVariableList extends JList<FlowVariable> {
     }
 
     private String getFieldReadStatement(final FlowVariable v) {
-		return "knime.flow.in[[\"" + v.getName() + "\"]]";
-	}
+        return "knime.flow.in[[\"" + v.getName() + "\"]]";
+    }
 
-	/**
+    /**
      * A double click on an element will perform an insection to this text area.
      *
      * @param snippet the text area
@@ -130,11 +130,11 @@ public class RFlowVariableList extends JList<FlowVariable> {
 
     /**
      * Set the flow variables to display.
+     * 
      * @param flowVars the flow variables.
      */
     public void setFlowVariables(final Collection<FlowVariable> flowVars) {
-        DefaultListModel<FlowVariable> fvListModel =
-            (DefaultListModel<FlowVariable>)getModel();
+        final DefaultListModel<FlowVariable> fvListModel = (DefaultListModel<FlowVariable>)getModel();
         fvListModel.removeAllElements();
         for (final FlowVariable v : flowVars) {
             fvListModel.addElement(v);

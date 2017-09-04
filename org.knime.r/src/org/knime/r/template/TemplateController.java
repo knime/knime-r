@@ -51,10 +51,8 @@ import java.awt.Component;
 
 import org.knime.r.RSnippetTemplate;
 
-
 /**
- * Can generate a preview for a template and can update the settings of the
- * Java Snippet node.
+ * Can generate a preview for a template and can update the settings of the Java Snippet node.
  *
  * @author Heiko Hofer
  */
@@ -62,19 +60,21 @@ public interface TemplateController {
 
     /**
      * Get the preview component.
+     * 
      * @return the preview
      */
     public Component getPreview();
 
     /**
      * Set the parameters for the preview component.
+     * 
      * @param template the settings
      */
     public void setPreviewSettings(final RSnippetTemplate template);
 
     /**
-     * Set the parameters for the java snippet node. This will replace the
-     * settings of the java snippet by the settings of the template.
+     * Set the parameters for the java snippet node. This will replace the settings of the java snippet by the settings
+     * of the template.
      *
      * @param template the template
      */

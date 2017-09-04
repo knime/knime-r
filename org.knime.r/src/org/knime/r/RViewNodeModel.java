@@ -68,139 +68,138 @@ import org.knime.core.node.port.image.ImagePortObjectSpec;
 import org.knime.core.util.FileUtil;
 
 /**
- * The <code>RViewNodeModel</code> is the node model for the r-nodes with an
- * image output.
+ * The <code>RViewNodeModel</code> is the node model for the r-nodes with an image output.
  *
  * @author Heiko Hofer
  */
 public class RViewNodeModel extends RSnippetNodeModel {
-	private static final NodeLogger LOGGER = NodeLogger.getLogger("R View");
+    private static final NodeLogger LOGGER = NodeLogger.getLogger("R View");
 
-	private final RViewNodeSettings m_settings;
+    private final RViewNodeSettings m_settings;
 
-	private Image m_resultImage;
+    private Image m_resultImage;
 
-	/** Output spec for a PNG image. */
-	private static final ImagePortObjectSpec OUT_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
+    /** Output spec for a PNG image. */
+    private static final ImagePortObjectSpec OUT_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
 
-	private static final String INTERNAL_FILE_NAME = "Rplot";
+    private static final String INTERNAL_FILE_NAME = "Rplot";
 
-	public RViewNodeModel(final RViewNodeConfig config) {
-		super(config);
-		m_settings = new RViewNodeSettings(getSettings());
-		getConfig().setSettings(m_settings);
-	}
+    public RViewNodeModel(final RViewNodeConfig config) {
+        super(config);
+        m_settings = new RViewNodeSettings(getSettings());
+        getConfig().setSettings(m_settings);
+    }
 
-	@Override
-	protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-		return new PortObjectSpec[] { OUT_SPEC };
-	}
+    @Override
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
+        return new PortObjectSpec[]{OUT_SPEC};
+    }
 
-	@Override
-	protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
-		super.execute(inData, exec);
-		return postExecuteInternal();
+    @Override
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
+        super.execute(inData, exec);
+        return postExecuteInternal();
 
-	}
+    }
 
-	private PortObject[] postExecuteInternal() throws Exception {
-		if (getConfig().getImageFile().length() > 0) {
-			// create image after execution.
-			final FileInputStream fis = new FileInputStream(getConfig().getImageFile());
-			final PNGImageContent content = new PNGImageContent(fis);
-			fis.close();
-			m_resultImage = content.getImage();
-			return new PortObject[] { new ImagePortObject(content, OUT_SPEC) };
-		} else {
-			throw new RuntimeException("No Image was created by the R-Script");
-		}
-	}
+    private PortObject[] postExecuteInternal() throws Exception {
+        if (getConfig().getImageFile().length() > 0) {
+            // create image after execution.
+            final FileInputStream fis = new FileInputStream(getConfig().getImageFile());
+            final PNGImageContent content = new PNGImageContent(fis);
+            fis.close();
+            m_resultImage = content.getImage();
+            return new PortObject[]{new ImagePortObject(content, OUT_SPEC)};
+        } else {
+            throw new RuntimeException("No Image was created by the R-Script");
+        }
+    }
 
-	@Override
-	protected void saveSettingsTo(final NodeSettingsWO settings) {
-		m_settings.saveSettings(settings);
-	}
+    @Override
+    protected void saveSettingsTo(final NodeSettingsWO settings) {
+        m_settings.saveSettings(settings);
+    }
 
-	@Override
-	protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
-		final RViewNodeSettings s = new RViewNodeSettings();
-		s.loadSettings(settings);
+    @Override
+    protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
+        final RViewNodeSettings s = new RViewNodeSettings();
+        s.loadSettings(settings);
 
-		// validate background color code
-		final String colorCode = s.getImageBackgroundColor();
-		if (!colorCode.matches("^#[0-9aAbBcCdDeEfF]{6}")) {
-			throw new InvalidSettingsException("Specified color code \"" + colorCode + "\" is not valid!");
-		}
-	}
+        // validate background color code
+        final String colorCode = s.getImageBackgroundColor();
+        if (!colorCode.matches("^#[0-9aAbBcCdDeEfF]{6}")) {
+            throw new InvalidSettingsException("Specified color code \"" + colorCode + "\" is not valid!");
+        }
+    }
 
-	@Override
-	protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
-		m_settings.loadSettings(settings);
-		getRSnippet().getSettings().loadSettings(m_settings.getRSettings());
-	}
+    @Override
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
+        m_settings.loadSettings(settings);
+        getRSnippet().getSettings().loadSettings(m_settings.getRSettings());
+    }
 
-	/**
-	 * The saved image is loaded.
-	 *
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void loadInternals(final File nodeInternDir, final ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		super.loadInternals(nodeInternDir, exec);
+    /**
+     * The saved image is loaded.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    protected void loadInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
+        super.loadInternals(nodeInternDir, exec);
 
-		final File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
-		if (file.exists() && file.canRead()) {
-			final File pngFile = getConfig().getImageFile();
-			FileUtil.copy(file, pngFile);
-			try (InputStream is = new FileInputStream(pngFile)) {
-				m_resultImage = new PNGImageContent(is).getImage();
-			}
-		}
-	}
+        final File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
+        if (file.exists() && file.canRead()) {
+            final File pngFile = getConfig().getImageFile();
+            FileUtil.copy(file, pngFile);
+            try (InputStream is = new FileInputStream(pngFile)) {
+                m_resultImage = new PNGImageContent(is).getImage();
+            }
+        }
+    }
 
-	/**
-	 * The created image is saved.
-	 *
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void saveInternals(final File nodeInternDir, final ExecutionMonitor exec)
-			throws IOException, CanceledExecutionException {
-		super.saveInternals(nodeInternDir, exec);
+    /**
+     * The created image is saved.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    protected void saveInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
+        super.saveInternals(nodeInternDir, exec);
 
-		if (m_resultImage != null) {
-			final File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
-			FileUtil.copy(getConfig().getImageFile(), file);
-		}
-	}
+        if (m_resultImage != null) {
+            final File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
+            FileUtil.copy(getConfig().getImageFile(), file);
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void reset() {
-		m_resultImage = null;
-		// clear image file contents
-		if (getConfig().getImageFile() != null) {
-			try {
-				final FileOutputStream erasor = new FileOutputStream(getConfig().getImageFile());
-				erasor.write((new String()).getBytes());
-				erasor.close();
-			} catch (final FileNotFoundException e) {
-				LOGGER.error("Temporary file is removed.", e);
-			} catch (final IOException e) {
-				LOGGER.error("Cannot write temporary file.", e);
-			}
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void reset() {
+        m_resultImage = null;
+        // clear image file contents
+        if (getConfig().getImageFile() != null) {
+            try {
+                final FileOutputStream erasor = new FileOutputStream(getConfig().getImageFile());
+                erasor.write((new String()).getBytes());
+                erasor.close();
+            } catch (final FileNotFoundException e) {
+                LOGGER.error("Temporary file is removed.", e);
+            } catch (final IOException e) {
+                LOGGER.error("Cannot write temporary file.", e);
+            }
+        }
+    }
 
-	private RViewNodeConfig getConfig() {
-		return (RViewNodeConfig) getRSnippetNodeConfig();
-	}
+    private RViewNodeConfig getConfig() {
+        return (RViewNodeConfig)getRSnippetNodeConfig();
+    }
 
-	public Image getResultImage() {
-		return m_resultImage;
-	}
+    public Image getResultImage() {
+        return m_resultImage;
+    }
 
 }

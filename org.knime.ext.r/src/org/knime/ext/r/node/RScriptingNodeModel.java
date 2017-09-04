@@ -61,8 +61,7 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 
 /**
- * Executes R commands locally, the entire data is transfered to the R server
- * during execution.
+ * Executes R commands locally, the entire data is transfered to the R server during execution.
  *
  * @author Thomas Gabriel, University of Konstanz
  */
@@ -81,10 +80,9 @@ public class RScriptingNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec) throws CanceledExecutionException,
-            Exception {
-        BufferedDataTable data = (BufferedDataTable) inData[0];
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec)
+        throws CanceledExecutionException, Exception {
+        final BufferedDataTable data = (BufferedDataTable)inData[0];
         m_spec = data.getDataTableSpec();
         // create first a connection object
         RConnectionRemote.sendData(getRconnection(), data, exec);
@@ -111,10 +109,9 @@ public class RScriptingNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
-            throws InvalidSettingsException {
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         //checkRconnection();
-        m_spec = (DataTableSpec) inSpecs[0];
+        m_spec = (DataTableSpec)inSpecs[0];
         return new DataTableSpec[0];
     }
 
@@ -130,8 +127,7 @@ public class RScriptingNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
     }
 
@@ -139,8 +135,7 @@ public class RScriptingNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.validateSettings(settings);
     }
 
@@ -148,9 +143,8 @@ public class RScriptingNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadInternals(final File nodeInternDir,
-            final ExecutionMonitor exec)
-            throws IOException, CanceledExecutionException {
+    protected void loadInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
         throw new IOException("re-execute node to send data to R server");
     }
 
@@ -158,9 +152,8 @@ public class RScriptingNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void saveInternals(final File nodeInternDir,
-            final ExecutionMonitor exec)
-            throws IOException, CanceledExecutionException {
+    protected void saveInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
         // empty
     }
 

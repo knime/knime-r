@@ -88,34 +88,27 @@ import org.rosuda.REngine.Rserve.RserveException;
 public class RPlotterNodeModel extends RRemoteNodeModel {
 
     private Image m_resultImage;
+
     private File m_imageFile;
 
     private static final String FILE_NAME = "Rplot";
 
     // our LOGGER instance
-    private static final NodeLogger LOGGER = NodeLogger
-            .getLogger(RPlotterNodeModel.class);
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RPlotterNodeModel.class);
 
-    private final SettingsModelIntegerBounded m_heightModel =
-        RViewsPngDialogPanel.createHeightModel();
+    private final SettingsModelIntegerBounded m_heightModel = RViewsPngDialogPanel.createHeightModel();
 
-    private final SettingsModelIntegerBounded m_widthModel =
-        RViewsPngDialogPanel.createWidthModel();
+    private final SettingsModelIntegerBounded m_widthModel = RViewsPngDialogPanel.createWidthModel();
 
-    private final SettingsModelString m_resolutionModel =
-        RViewsPngDialogPanel.createResolutionModel();
+    private final SettingsModelString m_resolutionModel = RViewsPngDialogPanel.createResolutionModel();
 
-    private final SettingsModelIntegerBounded m_pointSizeModel =
-        RViewsPngDialogPanel.createPointSizeModel();
+    private final SettingsModelIntegerBounded m_pointSizeModel = RViewsPngDialogPanel.createPointSizeModel();
 
-    private final SettingsModelString m_bgModel =
-        RViewsPngDialogPanel.createBgModel();
+    private final SettingsModelString m_bgModel = RViewsPngDialogPanel.createBgModel();
 
-    private final SettingsModelString m_viewType =
-        RViewsDialogPanel.createViewSettingsModel();
+    private final SettingsModelString m_viewType = RViewsDialogPanel.createViewSettingsModel();
 
-    private String[] m_viewCmds =
-            RViewScriptingConstants.getDefaultExpressionCommands();
+    private String[] m_viewCmds = RViewScriptingConstants.getDefaultExpressionCommands();
 
     /**
      * Creates a new plotter with one data input.
@@ -129,29 +122,24 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObject[] execute(final PortObject[] inData,
-            final ExecutionContext exec) throws Exception {
-        RConnection c = getRconnection();
+    protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
+        final RConnection c = getRconnection();
         // create unique png file name
-        String fileName = FILE_NAME + "_" + System.identityHashCode(inData[0])
-            + ".png";
+        final String fileName = FILE_NAME + "_" + System.identityHashCode(inData[0]) + ".png";
         LOGGER.info("The image name: " + fileName);
-        String pngCommand = "png(\"" + fileName + "\""
-            + ", width=" + m_widthModel.getIntValue()
-            + ", height=" + m_heightModel.getIntValue()
-            + ", pointsize=" + m_pointSizeModel.getIntValue()
-            + ", bg=\"" + m_bgModel.getStringValue() + "\""
-            + ", res=" + m_resolutionModel.getStringValue() + ")";
+        final String pngCommand = "png(\"" + fileName + "\"" + ", width=" + m_widthModel.getIntValue() + ", height="
+            + m_heightModel.getIntValue() + ", pointsize=" + m_pointSizeModel.getIntValue() + ", bg=\""
+            + m_bgModel.getStringValue() + "\"" + ", res=" + m_resolutionModel.getStringValue() + ")";
         c.eval("try(" + pngCommand + ")");
 
         // send data to R server
-        RConnectionRemote.sendData(c, (BufferedDataTable) inData[0], exec);
+        RConnectionRemote.sendData(c, (BufferedDataTable)inData[0], exec);
 
         // execute view command on server
         LOGGER.debug(Arrays.toString(m_viewCmds));
         exec.setMessage("Executing view R commands...");
-        String[] parsedExp = parseExpression(m_viewCmds);
-        for (String e : parsedExp) {
+        final String[] parsedExp = parseExpression(m_viewCmds);
+        for (final String e : parsedExp) {
             LOGGER.debug("voidEval: try(" + e + ")");
             c.voidEval("try(" + e + ")");
         }
@@ -159,17 +147,17 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
 
         try {
             // read png back from server
-            RFileInputStream ris = c.openFile(fileName);
+            final RFileInputStream ris = c.openFile(fileName);
             m_imageFile = File.createTempFile(FILE_NAME, ".png", new File(KNIMEConstants.getKNIMETempDir()));
-            FileOutputStream out = new FileOutputStream(m_imageFile);
+            final FileOutputStream out = new FileOutputStream(m_imageFile);
             FileUtil.copy(ris, out);
-            FileInputStream in = new FileInputStream(m_imageFile);
+            final FileInputStream in = new FileInputStream(m_imageFile);
             m_resultImage = createImage(in);
             in.close();
         } finally {
             try {
                 c.removeFile(fileName);
-            } catch (RserveException e) {
+            } catch (final RserveException e) {
                 // ignore: file may not exist or is not removable
             }
             c.close();
@@ -179,17 +167,16 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
     }
 
     /**
-     * Creates an image instance out of the given <code>InputStream</code>.
-     * This stream can for instance a <code>FileInputStream</code> holding
-     * a image file, such as a png and so on.
+     * Creates an image instance out of the given <code>InputStream</code>. This stream can for instance a
+     * <code>FileInputStream</code> holding a image file, such as a png and so on.
      *
      * @param is The stream reading the image file.
      * @return The image instance.
      * @throws IOException If image file can no be red.
      */
     public static Image createImage(final InputStream is) throws IOException {
-        Vector<byte[]> buffers = new Vector<byte[]>();
-        int bufSize = 65536;
+        final Vector<byte[]> buffers = new Vector<byte[]>();
+        final int bufSize = 65536;
         byte[] buf = new byte[bufSize];
         int imgLength = 0;
         int n = 0;
@@ -207,10 +194,10 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
             }
         }
         LOGGER.info("The image has " + imgLength + " bytes.");
-        byte[] imgCode = new byte[imgLength];
+        final byte[] imgCode = new byte[imgLength];
         int imgPos = 0;
-        for (Enumeration<byte[]> e = buffers.elements(); e.hasMoreElements();) {
-            byte[] b = e.nextElement();
+        for (final Enumeration<byte[]> e = buffers.elements(); e.hasMoreElements();) {
+            final byte[] b = e.nextElement();
             System.arraycopy(b, 0, imgCode, imgPos, bufSize);
             imgPos += bufSize;
         }
@@ -242,8 +229,7 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs)
-            throws InvalidSettingsException {
+    protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         return new DataTableSpec[0];
     }
 
@@ -266,14 +252,13 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void loadValidatedSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.loadValidatedSettingsFrom(settings);
         m_heightModel.loadSettingsFrom(settings);
         m_widthModel.loadSettingsFrom(settings);
         try {
             m_resolutionModel.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException ise) {
+        } catch (final InvalidSettingsException ise) {
             // ignore backward comp. < v2.3.1
         }
         m_pointSizeModel.loadSettingsFrom(settings);
@@ -281,7 +266,7 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
         m_viewCmds = RDialogPanel.getExpressionsFrom(settings);
         try {
             m_viewType.loadSettingsFrom(settings);
-        } catch (InvalidSettingsException ise) {
+        } catch (final InvalidSettingsException ise) {
             // ignore backward comp. < v2.3
         }
     }
@@ -290,14 +275,13 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void validateSettings(final NodeSettingsRO settings)
-            throws InvalidSettingsException {
+    protected void validateSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
         super.validateSettings(settings);
 
-        String[] viewCmd = RDialogPanel.getExpressionsFrom(settings);
+        final String[] viewCmd = RDialogPanel.getExpressionsFrom(settings);
 
         // if command not valid throw exception
-        if (viewCmd == null || viewCmd.length == 0) {
+        if ((viewCmd == null) || (viewCmd.length == 0)) {
             throw new InvalidSettingsException("R View command is empty!");
         }
 
@@ -310,8 +294,7 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
     }
 
     /**
-     * @return result image for the view, only available after successful
-     *         evaluation
+     * @return result image for the view, only available after successful evaluation
      */
     Image getResultImage() {
         return m_resultImage;
@@ -321,10 +304,9 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void loadInternals(final File nodeInternDir,
-            final ExecutionMonitor exec)
-            throws IOException, CanceledExecutionException {
-        File file = new File(nodeInternDir, FILE_NAME + ".png");
+    protected void loadInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
+        final File file = new File(nodeInternDir, FILE_NAME + ".png");
         m_imageFile = File.createTempFile(FILE_NAME, ".png", new File(KNIMEConstants.getKNIMETempDir()));
         FileUtil.copy(file, m_imageFile);
         m_resultImage = createImage(new FileInputStream(m_imageFile));
@@ -334,10 +316,9 @@ public class RPlotterNodeModel extends RRemoteNodeModel {
      * {@inheritDoc}
      */
     @Override
-    protected void saveInternals(final File nodeInternDir,
-            final ExecutionMonitor exec)
-            throws IOException, CanceledExecutionException {
-        File file = new File(nodeInternDir, FILE_NAME + ".png");
+    protected void saveInternals(final File nodeInternDir, final ExecutionMonitor exec)
+        throws IOException, CanceledExecutionException {
+        final File file = new File(nodeInternDir, FILE_NAME + ".png");
         FileUtil.copy(m_imageFile, file);
     }
 

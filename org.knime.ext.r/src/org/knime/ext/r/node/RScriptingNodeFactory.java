@@ -41,24 +41,23 @@
  *  may freely choose the license terms applicable to such Node, including
  *  when such Node is propagated with or for interoperation with KNIME.
  * ------------------------------------------------------------------------
- * 
+ *
  */
 package org.knime.ext.r.node;
 
+import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
-import org.knime.core.node.NodeDialogPane;
 
 /**
  * <code>NodeFactory</code> for the "RScripting" Node.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  * @deprecated not supported anymore, since 1.3
  */
 @Deprecated
-public class RScriptingNodeFactory 
-        extends NodeFactory<RScriptingNodeModel> {
-    
+public class RScriptingNodeFactory extends NodeFactory<RScriptingNodeModel> {
+
     /**
      * {@inheritDoc}
      */
@@ -79,8 +78,7 @@ public class RScriptingNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public NodeView<RScriptingNodeModel> createNodeView(
-            final int viewIndex, final RScriptingNodeModel nodeModel) {
+    public NodeView<RScriptingNodeModel> createNodeView(final int viewIndex, final RScriptingNodeModel nodeModel) {
         return new RScriptingNodeView(nodeModel);
     }
 
@@ -97,7 +95,7 @@ public class RScriptingNodeFactory
      */
     @Override
     public NodeDialogPane createNodeDialogPane() {
-        RNodeDialogPane pane = new RNodeDialogPane();
+        final RNodeDialogPane pane = new RNodeDialogPane();
         pane.addLoginTab();
         return pane;
     }

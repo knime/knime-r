@@ -41,13 +41,13 @@
  *  may freely choose the license terms applicable to such Node, including
  *  when such Node is propagated with or for interoperation with KNIME.
  * ------------------------------------------------------------------------
- * 
+ *
  */
 package org.knime.ext.r.preferences;
 
 /**
  * Class provides a path to an R executable.
- * 
+ *
  * @author Thomas Gabriel, KNIME.com, Zurich
  */
 public interface RPreferenceProvider {
@@ -56,5 +56,5 @@ public interface RPreferenceProvider {
      * @return path to an R executable
      */
     public String getRPath();
-    
+
 }

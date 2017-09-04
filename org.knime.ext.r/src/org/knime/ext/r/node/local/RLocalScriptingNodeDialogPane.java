@@ -55,7 +55,6 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.ext.r.node.RDialogPanel;
 
-
 /**
  * A dialog containing a multi line text field to specify the R code to run.
  *
@@ -66,9 +65,8 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
     private final RDialogPanel m_dialogPanel;
 
     /**
-     * Constructor which creates a new instance of
-     * <code>RLocalScriptingNodeDialogPane</code>. A dialog component is added
-     * which allows users to enter R code.
+     * Constructor which creates a new instance of <code>RLocalScriptingNodeDialogPane</code>. A dialog component is
+     * added which allows users to enter R code.
      */
     public RLocalScriptingNodeDialogPane() {
         super();
@@ -81,10 +79,10 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
      * {@inheritDoc}
      */
     @Override
-    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings,
-            final PortObjectSpec[] specs) throws NotConfigurableException {
+    public void loadAdditionalSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
+        throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
-        Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
+        final Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
         m_dialogPanel.loadSettingsFrom(settings, specs, flowMap);
     }
 
@@ -92,8 +90,7 @@ public class RLocalScriptingNodeDialogPane extends RLocalNodeDialogPane {
      * {@inheritDoc}
      */
     @Override
-    public void saveAdditionalSettingsTo(final NodeSettingsWO settings)
-        throws InvalidSettingsException {
+    public void saveAdditionalSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
         super.saveAdditionalSettingsTo(settings);
         m_dialogPanel.saveSettingsTo(settings);
     }

@@ -52,46 +52,49 @@ import javax.swing.text.StyleConstants;
 
 /**
  * {@link JTextPane} with special styling to hold the R output.
- * 
+ *
  * @author Heiko Hofer
  * @author Jonathan Hale
  */
 public class RConsole extends JTextPane {
 
-	/** Generated serialVersionUID */
-	private static final long serialVersionUID = 4957382192224648665L;
+    /** Generated serialVersionUID */
+    private static final long serialVersionUID = 4957382192224648665L;
 
-	private final Style m_errorStyle;
-	private final Style m_normalStyle;
-	private final Style m_commandStyle;
-	private final Style m_resultStyle;
+    private final Style m_errorStyle;
 
-	public RConsole() {
-		m_errorStyle = addStyle("Error Style", null);
-		StyleConstants.setForeground(m_errorStyle, Color.red);
-		m_normalStyle = addStyle("Normal Style", null);
-		StyleConstants.setForeground(m_normalStyle, Color.black);
-		m_commandStyle = addStyle("Command Style", null);
-		StyleConstants.setForeground(m_commandStyle, Color.darkGray);
-		m_resultStyle = addStyle("Result Style", null);
-		StyleConstants.setForeground(m_resultStyle, Color.black);
+    private final Style m_normalStyle;
 
-		setEditable(false);
-		setDragEnabled(true);
-	}
+    private final Style m_commandStyle;
 
-	/**
-	 * @return the error style
-	 */
-	public Style getErrorStyle() {
-		return m_errorStyle;
-	}
+    private final Style m_resultStyle;
 
-	/**
-	 * @return the normal style
-	 */
-	public Style getNormalStyle() {
-		return m_normalStyle;
-	}
+    public RConsole() {
+        m_errorStyle = addStyle("Error Style", null);
+        StyleConstants.setForeground(m_errorStyle, Color.red);
+        m_normalStyle = addStyle("Normal Style", null);
+        StyleConstants.setForeground(m_normalStyle, Color.black);
+        m_commandStyle = addStyle("Command Style", null);
+        StyleConstants.setForeground(m_commandStyle, Color.darkGray);
+        m_resultStyle = addStyle("Result Style", null);
+        StyleConstants.setForeground(m_resultStyle, Color.black);
+
+        setEditable(false);
+        setDragEnabled(true);
+    }
+
+    /**
+     * @return the error style
+     */
+    public Style getErrorStyle() {
+        return m_errorStyle;
+    }
+
+    /**
+     * @return the normal style
+     */
+    public Style getNormalStyle() {
+        return m_normalStyle;
+    }
 
 }

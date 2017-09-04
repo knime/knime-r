@@ -76,6 +76,7 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
 
     /**
      * Returns a provider for the R executable.
+     * 
      * @return provider to the path to the R executable
      */
     public static final RPreferenceProvider getRProvider() {

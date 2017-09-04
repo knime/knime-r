@@ -59,28 +59,28 @@ import org.knime.ext.r.node.local.port.RPortObject;
  */
 public class RLearnerNodeFactory extends RSnippetNodeFactory {
 
-	/**
-	 * Empty default constructor.
-	 */
-	public RLearnerNodeFactory() {
-		super(new RSnippetNodeConfig() {
-			@Override
+    /**
+     * Empty default constructor.
+     */
+    public RLearnerNodeFactory() {
+        super(new RSnippetNodeConfig() {
+            @Override
             public Collection<PortType> getInPortTypes() {
-				return Collections.singleton(BufferedDataTable.TYPE);
-			}
+                return Collections.singleton(BufferedDataTable.TYPE);
+            }
 
-			@Override
-			protected Collection<PortType> getOutPortTypes() {
-				return Collections.singleton(RPortObject.TYPE);
-			}
+            @Override
+            protected Collection<PortType> getOutPortTypes() {
+                return Collections.singleton(RPortObject.TYPE);
+            }
 
-			@Override
+            @Override
             protected String getDefaultScript() {
-				return "library(rpart) # load the learner library\n"
-						+ "data <- iris # use knime.in here and fix class column\n"
-						+ "knime.model <- rpart(data$\"Species\" ~ ., data[1:(ncol(data) - 1)])\n";
-			}
-		});
-	}
+                return "library(rpart) # load the learner library\n"
+                    + "data <- iris # use knime.in here and fix class column\n"
+                    + "knime.model <- rpart(data$\"Species\" ~ ., data[1:(ncol(data) - 1)])\n";
+            }
+        });
+    }
 
 }

@@ -62,9 +62,9 @@ import org.knime.r.RSnippetTemplate;
  * @author Jontathan Hale, KNIME, Konstanz, Germany
  */
 public class DefaultTemplateController<T extends Component & TemplateReceiver> implements TemplateController {
-    private T m_model;
+    private final T m_model;
 
-    private T m_preview;
+    private final T m_preview;
 
     private DataTableSpec m_spec;
 

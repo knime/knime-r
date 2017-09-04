@@ -35,712 +35,692 @@ import com.sun.jna.Platform;
  */
 public class RConnectionFactory {
 
-	private static final NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
-
-	private static final boolean DEBUG_RSERVE = Boolean.getBoolean(KNIMEConstants.PROPERTY_R_RSERVE_DEBUG);
-
-	private static final ReentrantLock RESOURCES_LOCK = new ReentrantLock();
-	private static final ArrayList<RConnectionResource> RESOURCES = new ArrayList<>();
-
-	/**
-	 * Class which allows locking a lock in a try-with-resource statement to be implicitly unlocked in finally.
-	 * <pre><code>
-	 *    try(LockHolder lh = new LockHolder(myLock)) {
-	 *    	// lock() has been called on myLock
-	 *    }
-	 *    // unlock() has been called on myLock
-	 * <code></pre>
-	 */
-	private static class LockHolder implements AutoCloseable {
-
-		private final Lock m_lock;
-
-		/**
-		 * Constructor
-		 * @param lock Lock to lock and unlock
-		 */
-		public LockHolder(final Lock lock) {
-			m_lock = lock;
-			lock.lock();
-		}
-
-		@Override
-		public void close() {
-			m_lock.unlock();
-		}
-	}
-
-	private static final File tempDir;
-
-	static {
-		// create temporary directory for R
-		File dir;
-		try {
-			// try creating a subdirectory in the KNIME temp folder to have all
-			// R stuff in one place.
-			dir = FileUtil.createTempDir("knime-r-tmp", KNIMEConstants.getKNIMETempPath().toFile());
-		} catch (final IOException e) {
-			// this should never happen, but if it does, using the existing
-			// KNIME temp folder directly should work well enough.
-			LOGGER.warn("Could not create temporary directory for R integration.", e);
-			dir = KNIMEConstants.getKNIMETempPath().toFile();
-		}
-
-		tempDir = dir;
-	}
-
-	/*
-	 * Whether the shutdown hooks have been added. Using atomic boolean enables
-	 * us to make sure we only add the shutdown hooks once.
-	 */
-	private static final AtomicBoolean m_initialized = new AtomicBoolean(false);
-
-	/**
-	 * For testing purposes.
-	 *
-	 * @return Read only collection of currently running Rserve processes.
-	 */
-	public static Collection<Process> getRunningRProcesses() {
-		final ArrayList<Process> list = new ArrayList<>();
-
-		try(LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
-			for (final RConnectionResource res : RESOURCES) {
-				final Process p = res.getUnderlyingRInstance().getProcess();
-
-				if (p.isAlive()) {
-					list.add(p);
-				}
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * @return Configuration file for Rserve
-	 */
-	private static File createRserveConfig() {
-		final File file = new File(tempDir, "Rserve.conf");
-		try (FileWriter writer = new FileWriter(file)) {
-		    // convert preference from MB (more intuitive) to kB (required by Rserve)
-		    int bufferSizeInKB = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getMaxInfBuf() * 1024;
-			writer.write("maxinbuf " + bufferSizeInKB + "\n");
-			writer.write("maxsendbuf " + bufferSizeInKB + "\n");
-			writer.write("encoding utf8\n"); // encoding for java clients
-
-			/* YES, EA! See https://github.com/s-u/Rserve/blob/
-			 * 4800e9dc1c67cf4fbc14c502dc7615b644610152/src/Rserv.c#L1134
-			 */
-			writer.write("deamon disable\n");
-			// keeping this incase the typo one is removed in a future version:
-			writer.write("daemon disable\n");
-			if (Boolean.getBoolean("java.awt.headless")) {
-				// make sure to run R in non-interactive mode when running
-				// headless KNIME (see AP-5748)
-				writer.write("interactive no\n");
-			}
-		} catch (IOException e) {
-			LOGGER.warn("Could not write configuration file for Rserve.", e);
-		}
-
-		return file;
-	}
-
-	/**
-	 * Start an Rserve process with a given Rserve executable command.
-	 *
-	 * @param command
-	 *            Rserve executable command
-	 * @param host
-	 *            Host of the Rserve server
-	 * @param port
-	 *            Port to start the Rserve server on
-	 * @return the started Rserve process
-	 * @throws IOException
-	 */
-	private static Process launchRserveProcess(final String command, final String host, final Integer port)
-			throws IOException {
-		final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
-
-		final File configFile = createRserveConfig();
-		final ProcessBuilder builder = new ProcessBuilder();
-		builder.command(command, "--RS-port", port.toString(), "--RS-conf", configFile.getAbsolutePath(), "--vanilla");
-
-		final Map<String, String> env = builder.environment();
-		if (Platform.isWindows()) {
-			// on windows, the Rserve executable is not reside in the R bin
-			// folder, but still requires the R.dll, so we need to put the R
-			// bin folder on path
-			env.put("PATH", rHome + File.pathSeparator + rHome
-					+ ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator + env.get("PATH"));
-		} else {
-			// on Unix we need priorize the "R_HOME/lib" folder in the
-			// LD_LIBRARY_PATH to ensure that the shared libraries of the
-			// selected R installation are used.
-			env.put("LD_LIBRARY_PATH",
-					rHome + File.separator + "lib" + File.pathSeparator + env.get("LD_LIBRARY_PATH"));
-
-		}
-		// R HOME is required for Rserve/R to know where default libraries
-		// are located.
-		env.put("R_HOME", rHome);
-
-		// so that we can clean up everything Rserve spits out
-		env.put("TMPDIR", tempDir.getAbsolutePath());
-
-		return builder.start();
-	}
-
-	/**
-	 * Attempt to start Rserve and create a connection to it.
-	 *
-	 * @param cmd
-	 *            command necessary to start Rserve ("Rserve.exe" on Windows)
-	 * @param host
-	 *            For creating the RConnection in RInstance. Launching a remote
-	 *            processes is not supported, this should always be "127.0.0.1"
-	 * @param port
-	 *            Port to launch the Rserve process on.
-	 * @return <code>true</code> if Rserve is running or was successfully
-	 *         started, <code>false</code> otherwise.
-	 * @throws IOException
-	 *             if Rserve could not be launched. This may be the case if R is
-	 *             either not found or does not have Rserve package installed.
-	 */
-	private static RInstance launchRserve(final String command, final String host, final Integer port)
-			throws IOException {
-		// if debugging, launch debug version of Rserve.
-		final String cmd = (DEBUG_RSERVE)
-				? ((Platform.isWindows()) ? command.replace(".exe", "_d.exe") : command + ".dbg") : command;
-
-		File commandFile = new File(cmd);
-		if (!commandFile.exists()) {
-			throw new IOException("Command not found: " + cmd);
-		}
-		if (!commandFile.canExecute()) {
-			throw new IOException("Command is not an executable: " + cmd);
-		}
-
-		RInstance rInstance = null;
-		try {
-			final Process p = launchRserveProcess(cmd, host, port);
-
-			// wrap the process, requires host and port to create RConnections
-			// later.
-			rInstance = new RInstance(p, host, port);
-
-			/*
-			 * Consume output of process, to ensure buffer does not fill up,
-			 * which blocks processes on some OSs. Also, we can log errors in
-			 * the external process this way.
-			 */
-			new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
-				if (DEBUG_RSERVE) {
-					LOGGER.debug(line);
-				} /* else discard */
-			}).start();
-			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")",
-					(line) -> LOGGER.debug(line)).start();
-
-			// try connecting up to 5 times over the course of 500ms. Attempts
-			// may fail if Rserve is currently starting up.
-			for (int i = 1; i <= 4; i++) {
-				try {
-					RConnection connection = rInstance.createConnection();
-					if (connection != null) {
-						LOGGER.debug("Connected to Rserve in " + i + " attempts.");
-						break;
-					}
-				} catch (RserveException e) {
-					LOGGER.debug("An attempt (" + i + "/5) to connect to Rserve failed.", e);
-					Thread.sleep(2 ^ i * 100);
-				}
-			}
-			try {
-				if (rInstance.getLastConnection() == null) {
-					// try one last (5th) time.
-					rInstance.createConnection();
-				}
-			} catch (RserveException e) {
-				LOGGER.debug("Last attempt (5/5) to connect to Rserve failed.", e);
-				throw new IOException("Could not connect to RServe (host: " + host + ", port: " + port + ").");
-			}
-
-			return rInstance;
-		} catch (Exception x) {
-			if (rInstance != null) {
-				// terminate the R process in case still running
-				rInstance.close();
-			}
-			throw new IOException("Could not start Rserve process.", x);
-		}
-	}
-
-	/**
-	 * Create a new {@link RConnection}, creating a new R instance beforehand,
-	 * unless a connection of an existing instance has been closed in which case
-	 * an R instance will be reused.
-	 *
-	 * The method does not check {@link RConnection#isConnected()}.
-	 *
-	 * @return an RConnectionResource which has already been acquired, never
-	 *         <code>null</code>
-	 * @throws RserveException
-	 * @throws IOException
-	 *             if Rserve could not be launched. This may be the case if R is
-	 *             either not found or does not have Rserve package installed.
-	 *             Or if there was no open port found.
-	 */
-	public static RConnectionResource createConnection() throws RserveException, IOException {
-		initializeShutdownHook(); // checks for re-initialization
-
-		// synchronizing on the entire class would completely lag out KNIME for
-		// some reason
-		try(LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
-			// try to reuse an existing instance. Ensures there is max one R
-			// instance per parallel executed node.
-			for (RConnectionResource resource : RESOURCES) {
-				if (resource.acquireIfAvailable()) {
-					// connections are closed when released => we need to
-					// reconnect
-					resource.getUnderlyingRInstance().createConnection();
-
-					return resource;
-				}
-			}
-			// no existing resource is available. Create a new one.
-
-			final RInstance instance = launchRserve(
-					org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRServeBinPath(),
-					"127.0.0.1", findFreePort());
-			RConnectionResource resource = new RConnectionResource(instance);
-			if (!resource.acquireIfAvailable()) {
-				// this could also be an assertion
-				throw new IllegalStateException("Newly created RConnectionResource was not available.");
-			}
-			RESOURCES.add(resource);
-			return resource;
-		}
-	}
-
-	/**
-	 * Set all resources to be destroyed as soon as they become available. This
-	 * is useful when settings or preferences changed and old Rserve processes
-	 * (which still use the old settings) should not be used anymore. This is a
-	 * better alternative to aborting running nodes.
-	 */
-	public static void clearExistingResources() {
-		try(LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
-		    LOGGER.debugWithFormat("Retiring RServe processes (%d instances)", RESOURCES.size());
-			final ArrayList<RConnectionResource> destroyedResources = new ArrayList<>();
-			for (final RConnectionResource res : RESOURCES) {
-				res.setDestroyOnAvailable();
-				if (res.getUnderlyingRInstance() == null) {
-					// resource has been destroyed already and should be removed
-					// from list.
-					destroyedResources.add(res);
-				}
-			}
-
-			RESOURCES.removeAll(destroyedResources);
-		}
-	}
-
-	/*
-	 * Find a free port to launch Rserve on
-	 */
-	public static int findFreePort() throws IOException {
-		try (ServerSocket socket = new ServerSocket(0)) {
-			return socket.getLocalPort();
-		} catch (IOException e) {
-			throw new IOException("Could not find a free port for Rserve. Is KNIME not permitted to open ports?", e);
-		}
-	}
-
-	/*
-	 * Add the Shutdown hook. Does nothing if already called once.
-	 */
-	private static void initializeShutdownHook() {
-		// if (m_initialized != false) return;
-		// else m_initialized = true;
-		if (!m_initialized.compareAndSet(false, true)) {
-			/* already initialized */
-			return;
-		}
-
-		// m_initialized was false (aka. compareAndSet returned true), we need to initialize.
-
-		/*
-		 * Cleanup remaining Rserve processes on VM exit.
-		 */
-		Runtime.getRuntime().addShutdownHook(new Thread("R Processes Cleanup") {
-
-			@Override
-			public void run() {
-				try(LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
-					for (final RConnectionResource resource : RESOURCES) {
-						if (resource != null && resource.getUnderlyingRInstance() != null) {
-							resource.destroy(false);
-						}
-					}
-				}
-			}
-		});
-
-		// m_initialized already set to true in compareAndSet
-	}
-
-	/**
-	 * An instance of R running in an external process. The process is
-	 * terminated on {@link #close()}.
-	 *
-	 * @author Jonathan Hale
-	 */
-	private static class RInstance implements AutoCloseable {
-		private final Process m_process;
-		private final String m_host;
-		private final int m_port;
-
-		private RConnection m_lastConnection = null;
-
-		/**
-		 * Constructor
-		 *
-		 * @param p
-		 *            An Rserve process
-		 * @param host
-		 *            Host on which the Rserve process is running. TODO:
-		 *            Currently always localhost.
-		 * @param port
-		 *            Port on which Rserve is running.
-		 */
-		private RInstance(final Process p, final String host, final int port) {
-			m_process = p;
-			m_host = host;
-			m_port = port;
-		}
-
-		/**
-		 * @return Connect to Rserve using the host and port given in the constructor.
-		 * @throws RserveException
-		 */
-		public RConnection createConnection() throws RserveException {
-			m_lastConnection = new RConnection(m_host, m_port);
-			return m_lastConnection;
-		}
-
-		/**
-		 * @return The RConnection which was connected to last (may be closed).
-		 */
-		public RConnection getLastConnection() {
-			return m_lastConnection;
-		}
-
-		@Override
-		public void close() {
-
-			// close connection to process, if existent
-			if (m_lastConnection != null && m_lastConnection.isConnected()) {
-				m_lastConnection.close();
-			}
-
-			// terminate processes the nicer way
-			m_process.destroy();
-
-			// make sure the processes really are terminated
-			if (m_process.isAlive()) {
-				m_process.destroyForcibly();
-			}
-		}
-
-		/**
-		 * Potentially forcefully terminate the process.
-		 */
-		public Process getProcess() {
-			return m_process;
-		}
-
-		/**
-		 * @return Whether this Instance is up and running.
-		 */
-		public boolean isAlive() {
-			return m_process != null && m_process.isAlive();
-		}
-
-	}
-
-	/**
-	 * Thread which processes an InputStream line by line via a processing
-	 * function specified by the user.
-	 *
-	 * @author Jonathan Hale
-	 */
-	private static final class StreamReaderThread extends Thread {
-
-		/**
-		 * Interface for functions processing input line by line.
-		 *
-		 * @author Jonathan Hale
-		 */
-		@FunctionalInterface
-		interface LineProcessor {
-			void processLine(String s);
-		}
-
-		private final InputStream m_stream;
-		private final LineProcessor m_processor;
-
-		/**
-		 * Constructor
-		 *
-		 * @param stream
-		 *            to read from
-		 * @param name
-		 *            for the Thread
-		 * @param processor
-		 *            to process lines
-		 */
-		public StreamReaderThread(final InputStream stream, final String name, final LineProcessor processor) {
-			super(name);
-			m_stream = stream;
-			m_processor = processor;
-		}
-
-		@Override
-		public void run() {
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(m_stream));
-			try {
-				String line;
-				while ((line = reader.readLine()) != null && !isInterrupted()) {
-					m_processor.processLine(line);
-				}
-			} catch (IOException e) {
-				// nothing to do
-			}
-		}
-	}
-
-	/**
-	 * This class holds an RInstance and returns its RConnection on
-	 * {@link RConnectionResource#get()}. If released, a timeout will make sure
-	 * that the underlying {@link RInstance} is shutdown after a certain amount
-	 * of time.
-	 *
-	 * @author Jonathan Hale
-	 */
-	public static class RConnectionResource {
-
-		private final AtomicBoolean m_available = new AtomicBoolean(true);
-		private boolean m_destroyOnAvailable = false;
-		private RInstance m_instance;
-		private TimerTask m_pendingDestructionTask = null;
-
-		private static final int RPROCESS_TIMEOUT = 60000;
-
-		/**
-		 * Constructor
-		 *
-		 * @param inst
-		 *            RInstance which will provide the value of this resource.
-		 */
-		public RConnectionResource(final RInstance inst) {
-			if (inst == null) {
-				throw new NullPointerException("The RInstance provided to an RConnectionResource may not be null.");
-			}
-
-			m_instance = inst;
-		}
-
-		/**
-		 * Acquire ownership of this resource, if it is available. Only the
-		 * factory should be able to do this.
-		 *
-		 * @return Whether the resource has been acquired.
-		 */
-		synchronized boolean acquireIfAvailable() {
-			if (m_instance == null) {
-				throw new NullPointerException("The resource has been destroyed already.");
-			}
-
-			if (m_available.compareAndSet(true, false)) {
-				if (m_pendingDestructionTask != null) {
-					m_pendingDestructionTask.cancel();
-					m_pendingDestructionTask = null;
-				}
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		/**
-		 * @return The RInstance which holds this resources RConnection.
-		 */
-		RInstance getUnderlyingRInstance() {
-			return m_instance;
-		}
-
-		/**
-		 * Check whether the resource has been acquired. A return value of
-		 * <code>true</code> does <em>not</em> guarantee
-		 * {@link #acquireIfAvailable()} is going to succeed.
-		 *
-		 * @return <code>true</code> if the resource has not been acquired yet.
-		 */
-		public boolean isAvailable() {
-			return m_available.get();
-		}
-
-		/**
-		 * Set whether to destroy this resource as soon as the resource becomes
-		 * available (may destroy the resource immediately).
-		 */
-		public void setDestroyOnAvailable() {
-			if (m_available.compareAndSet(true, false)) {
-				destroy(false);
-			} else {
-				m_destroyOnAvailable = true;
-			}
-		}
-
-		/**
-		 * Note: Always call {@link #acquire()} or {@link #acquireIfAvailable()}
-		 * before using this method.
-		 *
-		 * @return The value of the resource.
-		 * @throws IllegalAccessError
-		 *             If the resource has not been acquired yet.
-		 */
-		public RConnection get() {
-			if (isAvailable()) {
-				throw new IllegalAccessError("Please RConnectionResource#acquire() first before calling get.");
-			}
-			if (m_instance == null) {
-				throw new NullPointerException("The resource has been closed already.");
-			}
-
-			return m_instance.getLastConnection();
-		}
-
-		/**
-		 * Release ownership of this resource for it to be reacquired.
-		 *
-		 * @throws RException
-		 *             If the RConnection could not be closed/detached
-		 */
-		public synchronized void release() throws RException {
-		    // we allow release() to be called multiple times (though synchronized) but ignore invocations
-		    // when already released
-			if (!m_available.get()) {
-				if (m_instance.getLastConnection() != null && m_instance.getLastConnection().isConnected()) {
-					// connection was not closed before release. Clean that up.
-					final RConnection connection = m_instance.getLastConnection();
-					try {
-
-						// m_instance.getLastConnection().detach(); would be the
-						// way to go, but...
-						// FIXME: https://github.com/s-u/REngine/issues/7
-
-						// clear workspace in the same method used in
-						// RController. This is copied (!) code,
-						// since considered a (hopefully) temporary option until
-						// the above issue is resolved.
-						if (Platform.isWindows()) {
-							final StringBuilder b = new StringBuilder();
-							b.append("unloader <- function() {\n");
-							b.append("  defaults = getOption(\"defaultPackages\")\n");
-							b.append("  installed = (.packages())\n");
-							b.append("  for (pkg in installed){\n");
-							b.append("      if (!(as.character(pkg) %in% defaults)) {\n");
-							b.append("          if(!(pkg == \"base\")){\n");
-							b.append("              package_name = paste(\"package:\", as.character(pkg), sep=\"\")\n");
-							b.append("              detach(package_name, character.only = TRUE)\n");
-							b.append("          }\n");
-							b.append("      }\n");
-							b.append("  }\n");
-							b.append("}\n");
-							b.append("unloader();\n");
-							b.append("rm(list = ls());"); // also includes the
-															// unloader function
-							connection.eval(b.toString());
-						} // unix automatically gets independent workspaces for
-							// every connection
-					} catch (RserveException e) {
-						throw new RException(
-								"Could not detach connection to R, could leak objects to other workspaces.", e);
-					} finally {
-						connection.close();
-					}
-				}
-
-				if (m_destroyOnAvailable) {
-					destroy(true);
-				} else {
-					// Either m_pendingDestructionTask is null, which means
-					// this resource is being held, or the resource is available
-					// and has destruction pending.
-					assert m_pendingDestructionTask == null;
-
-					m_pendingDestructionTask = new TimerTask() {
-						@Override
-						public void run() {
-							try {
-								if (m_available.compareAndSet(true, false)) {
-									// if not acquired in the meantime,
-									// destroy the resource
-									destroy(true);
-								}
-							} catch (Throwable t) {
-								// FIXME: There is a known bug where TimerTasks
-								// in KnimeTimer can crash KNIME. We are simply
-								// making 100% sure this will not happen here by
-								// catching everything.
-							}
-						}
-
-					};
-					KNIMETimer.getInstance().schedule(m_pendingDestructionTask, RPROCESS_TIMEOUT);
-					m_available.set(true);
-				}
-			} // else: release had been called already, but we allow this.
-		}
-
-		/**
-		 * Destroy the underlying resource.
-		 *
-		 * @param remove
-		 *            Whether to automatically remove this resource from
-		 *            m_resources.
-		 */
-		public synchronized void destroy(final boolean remove) {
-			if (m_instance == null) {
-				throw new NullPointerException("The resource has been destroyed already.");
-			}
-
-			m_available.set(false);
-			m_instance.close();
-
-			if (remove) {
-				try(LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
-					RESOURCES.remove(this);
-				}
-			}
-			m_instance = null;
-
-			// cleanup TimerTask
-			if (m_pendingDestructionTask != null) {
-				m_pendingDestructionTask.cancel();
-				m_pendingDestructionTask = null;
-			}
-		}
-
-		/**
-		 * @return whether the underlying RInstance is up and running.
-		 */
-		public boolean isRInstanceAlive() {
-			return m_instance != null && m_instance.isAlive();
-		}
-
-	}
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
+
+    private static final boolean DEBUG_RSERVE = Boolean.getBoolean(KNIMEConstants.PROPERTY_R_RSERVE_DEBUG);
+
+    private static final ReentrantLock RESOURCES_LOCK = new ReentrantLock();
+
+    private static final ArrayList<RConnectionResource> RESOURCES = new ArrayList<>();
+
+    /**
+     * Class which allows locking a lock in a try-with-resource statement to be implicitly unlocked in finally.
+     * 
+     * <pre>
+     * <code>
+     *    try(LockHolder lh = new LockHolder(myLock)) {
+     *    	// lock() has been called on myLock
+     *    }
+     *    // unlock() has been called on myLock
+     * <code>
+     * </pre>
+     */
+    private static class LockHolder implements AutoCloseable {
+
+        private final Lock m_lock;
+
+        /**
+         * Constructor
+         * 
+         * @param lock Lock to lock and unlock
+         */
+        public LockHolder(final Lock lock) {
+            m_lock = lock;
+            lock.lock();
+        }
+
+        @Override
+        public void close() {
+            m_lock.unlock();
+        }
+    }
+
+    private static final File tempDir;
+
+    static {
+        // create temporary directory for R
+        File dir;
+        try {
+            // try creating a subdirectory in the KNIME temp folder to have all
+            // R stuff in one place.
+            dir = FileUtil.createTempDir("knime-r-tmp", KNIMEConstants.getKNIMETempPath().toFile());
+        } catch (final IOException e) {
+            // this should never happen, but if it does, using the existing
+            // KNIME temp folder directly should work well enough.
+            LOGGER.warn("Could not create temporary directory for R integration.", e);
+            dir = KNIMEConstants.getKNIMETempPath().toFile();
+        }
+
+        tempDir = dir;
+    }
+
+    /*
+     * Whether the shutdown hooks have been added. Using atomic boolean enables
+     * us to make sure we only add the shutdown hooks once.
+     */
+    private static final AtomicBoolean m_initialized = new AtomicBoolean(false);
+
+    /**
+     * For testing purposes.
+     *
+     * @return Read only collection of currently running Rserve processes.
+     */
+    public static Collection<Process> getRunningRProcesses() {
+        final ArrayList<Process> list = new ArrayList<>();
+
+        try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+            for (final RConnectionResource res : RESOURCES) {
+                final Process p = res.getUnderlyingRInstance().getProcess();
+
+                if (p.isAlive()) {
+                    list.add(p);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    /**
+     * @return Configuration file for Rserve
+     */
+    private static File createRserveConfig() {
+        final File file = new File(tempDir, "Rserve.conf");
+        try (FileWriter writer = new FileWriter(file)) {
+            // convert preference from MB (more intuitive) to kB (required by Rserve)
+            final int bufferSizeInKB =
+                org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getMaxInfBuf() * 1024;
+            writer.write("maxinbuf " + bufferSizeInKB + "\n");
+            writer.write("maxsendbuf " + bufferSizeInKB + "\n");
+            writer.write("encoding utf8\n"); // encoding for java clients
+
+            /* YES, EA! See https://github.com/s-u/Rserve/blob/
+             * 4800e9dc1c67cf4fbc14c502dc7615b644610152/src/Rserv.c#L1134
+             */
+            writer.write("deamon disable\n");
+            // keeping this incase the typo one is removed in a future version:
+            writer.write("daemon disable\n");
+            if (Boolean.getBoolean("java.awt.headless")) {
+                // make sure to run R in non-interactive mode when running
+                // headless KNIME (see AP-5748)
+                writer.write("interactive no\n");
+            }
+        } catch (final IOException e) {
+            LOGGER.warn("Could not write configuration file for Rserve.", e);
+        }
+
+        return file;
+    }
+
+    /**
+     * Start an Rserve process with a given Rserve executable command.
+     *
+     * @param command Rserve executable command
+     * @param host Host of the Rserve server
+     * @param port Port to start the Rserve server on
+     * @return the started Rserve process
+     * @throws IOException
+     */
+    private static Process launchRserveProcess(final String command, final String host, final Integer port)
+        throws IOException {
+        final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
+
+        final File configFile = createRserveConfig();
+        final ProcessBuilder builder = new ProcessBuilder();
+        builder.command(command, "--RS-port", port.toString(), "--RS-conf", configFile.getAbsolutePath(), "--vanilla");
+
+        final Map<String, String> env = builder.environment();
+        if (Platform.isWindows()) {
+            // on windows, the Rserve executable is not reside in the R bin
+            // folder, but still requires the R.dll, so we need to put the R
+            // bin folder on path
+            env.put("PATH", rHome + File.pathSeparator + rHome
+                + ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator + env.get("PATH"));
+        } else {
+            // on Unix we need priorize the "R_HOME/lib" folder in the
+            // LD_LIBRARY_PATH to ensure that the shared libraries of the
+            // selected R installation are used.
+            env.put("LD_LIBRARY_PATH",
+                rHome + File.separator + "lib" + File.pathSeparator + env.get("LD_LIBRARY_PATH"));
+
+        }
+        // R HOME is required for Rserve/R to know where default libraries
+        // are located.
+        env.put("R_HOME", rHome);
+
+        // so that we can clean up everything Rserve spits out
+        env.put("TMPDIR", tempDir.getAbsolutePath());
+
+        return builder.start();
+    }
+
+    /**
+     * Attempt to start Rserve and create a connection to it.
+     *
+     * @param cmd command necessary to start Rserve ("Rserve.exe" on Windows)
+     * @param host For creating the RConnection in RInstance. Launching a remote processes is not supported, this should
+     *            always be "127.0.0.1"
+     * @param port Port to launch the Rserve process on.
+     * @return <code>true</code> if Rserve is running or was successfully started, <code>false</code> otherwise.
+     * @throws IOException if Rserve could not be launched. This may be the case if R is either not found or does not
+     *             have Rserve package installed.
+     */
+    private static RInstance launchRserve(final String command, final String host, final Integer port)
+        throws IOException {
+        // if debugging, launch debug version of Rserve.
+        final String cmd =
+            (DEBUG_RSERVE) ? ((Platform.isWindows()) ? command.replace(".exe", "_d.exe") : command + ".dbg") : command;
+
+        final File commandFile = new File(cmd);
+        if (!commandFile.exists()) {
+            throw new IOException("Command not found: " + cmd);
+        }
+        if (!commandFile.canExecute()) {
+            throw new IOException("Command is not an executable: " + cmd);
+        }
+
+        RInstance rInstance = null;
+        try {
+            final Process p = launchRserveProcess(cmd, host, port);
+
+            // wrap the process, requires host and port to create RConnections
+            // later.
+            rInstance = new RInstance(p, host, port);
+
+            /*
+             * Consume output of process, to ensure buffer does not fill up,
+             * which blocks processes on some OSs. Also, we can log errors in
+             * the external process this way.
+             */
+            new StreamReaderThread(p.getInputStream(), "R Output Reader (port: " + port + ")", (line) -> {
+                if (DEBUG_RSERVE) {
+                    LOGGER.debug(line);
+                } /* else discard */
+            }).start();
+            new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")",
+                (line) -> LOGGER.debug(line)).start();
+
+            // try connecting up to 5 times over the course of 500ms. Attempts
+            // may fail if Rserve is currently starting up.
+            for (int i = 1; i <= 4; i++) {
+                try {
+                    final RConnection connection = rInstance.createConnection();
+                    if (connection != null) {
+                        LOGGER.debug("Connected to Rserve in " + i + " attempts.");
+                        break;
+                    }
+                } catch (final RserveException e) {
+                    LOGGER.debug("An attempt (" + i + "/5) to connect to Rserve failed.", e);
+                    Thread.sleep(2 ^ (i * 100));
+                }
+            }
+            try {
+                if (rInstance.getLastConnection() == null) {
+                    // try one last (5th) time.
+                    rInstance.createConnection();
+                }
+            } catch (final RserveException e) {
+                LOGGER.debug("Last attempt (5/5) to connect to Rserve failed.", e);
+                throw new IOException("Could not connect to RServe (host: " + host + ", port: " + port + ").");
+            }
+
+            return rInstance;
+        } catch (final Exception x) {
+            if (rInstance != null) {
+                // terminate the R process in case still running
+                rInstance.close();
+            }
+            throw new IOException("Could not start Rserve process.", x);
+        }
+    }
+
+    /**
+     * Create a new {@link RConnection}, creating a new R instance beforehand, unless a connection of an existing
+     * instance has been closed in which case an R instance will be reused.
+     *
+     * The method does not check {@link RConnection#isConnected()}.
+     *
+     * @return an RConnectionResource which has already been acquired, never <code>null</code>
+     * @throws RserveException
+     * @throws IOException if Rserve could not be launched. This may be the case if R is either not found or does not
+     *             have Rserve package installed. Or if there was no open port found.
+     */
+    public static RConnectionResource createConnection() throws RserveException, IOException {
+        initializeShutdownHook(); // checks for re-initialization
+
+        // synchronizing on the entire class would completely lag out KNIME for
+        // some reason
+        try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+            // try to reuse an existing instance. Ensures there is max one R
+            // instance per parallel executed node.
+            for (final RConnectionResource resource : RESOURCES) {
+                if (resource.acquireIfAvailable()) {
+                    // connections are closed when released => we need to
+                    // reconnect
+                    resource.getUnderlyingRInstance().createConnection();
+
+                    return resource;
+                }
+            }
+            // no existing resource is available. Create a new one.
+
+            final RInstance instance =
+                launchRserve(org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRServeBinPath(),
+                    "127.0.0.1", findFreePort());
+            final RConnectionResource resource = new RConnectionResource(instance);
+            if (!resource.acquireIfAvailable()) {
+                // this could also be an assertion
+                throw new IllegalStateException("Newly created RConnectionResource was not available.");
+            }
+            RESOURCES.add(resource);
+            return resource;
+        }
+    }
+
+    /**
+     * Set all resources to be destroyed as soon as they become available. This is useful when settings or preferences
+     * changed and old Rserve processes (which still use the old settings) should not be used anymore. This is a better
+     * alternative to aborting running nodes.
+     */
+    public static void clearExistingResources() {
+        try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+            LOGGER.debugWithFormat("Retiring RServe processes (%d instances)", RESOURCES.size());
+            final ArrayList<RConnectionResource> destroyedResources = new ArrayList<>();
+            for (final RConnectionResource res : RESOURCES) {
+                res.setDestroyOnAvailable();
+                if (res.getUnderlyingRInstance() == null) {
+                    // resource has been destroyed already and should be removed
+                    // from list.
+                    destroyedResources.add(res);
+                }
+            }
+
+            RESOURCES.removeAll(destroyedResources);
+        }
+    }
+
+    /*
+     * Find a free port to launch Rserve on
+     */
+    public static int findFreePort() throws IOException {
+        try (ServerSocket socket = new ServerSocket(0)) {
+            return socket.getLocalPort();
+        } catch (final IOException e) {
+            throw new IOException("Could not find a free port for Rserve. Is KNIME not permitted to open ports?", e);
+        }
+    }
+
+    /*
+     * Add the Shutdown hook. Does nothing if already called once.
+     */
+    private static void initializeShutdownHook() {
+        // if (m_initialized != false) return;
+        // else m_initialized = true;
+        if (!m_initialized.compareAndSet(false, true)) {
+            /* already initialized */
+            return;
+        }
+
+        // m_initialized was false (aka. compareAndSet returned true), we need to initialize.
+
+        /*
+         * Cleanup remaining Rserve processes on VM exit.
+         */
+        Runtime.getRuntime().addShutdownHook(new Thread("R Processes Cleanup") {
+
+            @Override
+            public void run() {
+                try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+                    for (final RConnectionResource resource : RESOURCES) {
+                        if ((resource != null) && (resource.getUnderlyingRInstance() != null)) {
+                            resource.destroy(false);
+                        }
+                    }
+                }
+            }
+        });
+
+        // m_initialized already set to true in compareAndSet
+    }
+
+    /**
+     * An instance of R running in an external process. The process is terminated on {@link #close()}.
+     *
+     * @author Jonathan Hale
+     */
+    private static class RInstance implements AutoCloseable {
+        private final Process m_process;
+
+        private final String m_host;
+
+        private final int m_port;
+
+        private RConnection m_lastConnection = null;
+
+        /**
+         * Constructor
+         *
+         * @param p An Rserve process
+         * @param host Host on which the Rserve process is running. TODO: Currently always localhost.
+         * @param port Port on which Rserve is running.
+         */
+        private RInstance(final Process p, final String host, final int port) {
+            m_process = p;
+            m_host = host;
+            m_port = port;
+        }
+
+        /**
+         * @return Connect to Rserve using the host and port given in the constructor.
+         * @throws RserveException
+         */
+        public RConnection createConnection() throws RserveException {
+            m_lastConnection = new RConnection(m_host, m_port);
+            return m_lastConnection;
+        }
+
+        /**
+         * @return The RConnection which was connected to last (may be closed).
+         */
+        public RConnection getLastConnection() {
+            return m_lastConnection;
+        }
+
+        @Override
+        public void close() {
+
+            // close connection to process, if existent
+            if ((m_lastConnection != null) && m_lastConnection.isConnected()) {
+                m_lastConnection.close();
+            }
+
+            // terminate processes the nicer way
+            m_process.destroy();
+
+            // make sure the processes really are terminated
+            if (m_process.isAlive()) {
+                m_process.destroyForcibly();
+            }
+        }
+
+        /**
+         * Potentially forcefully terminate the process.
+         */
+        public Process getProcess() {
+            return m_process;
+        }
+
+        /**
+         * @return Whether this Instance is up and running.
+         */
+        public boolean isAlive() {
+            return (m_process != null) && m_process.isAlive();
+        }
+
+    }
+
+    /**
+     * Thread which processes an InputStream line by line via a processing function specified by the user.
+     *
+     * @author Jonathan Hale
+     */
+    private static final class StreamReaderThread extends Thread {
+
+        /**
+         * Interface for functions processing input line by line.
+         *
+         * @author Jonathan Hale
+         */
+        @FunctionalInterface
+        interface LineProcessor {
+            void processLine(String s);
+        }
+
+        private final InputStream m_stream;
+
+        private final LineProcessor m_processor;
+
+        /**
+         * Constructor
+         *
+         * @param stream to read from
+         * @param name for the Thread
+         * @param processor to process lines
+         */
+        public StreamReaderThread(final InputStream stream, final String name, final LineProcessor processor) {
+            super(name);
+            m_stream = stream;
+            m_processor = processor;
+        }
+
+        @Override
+        public void run() {
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(m_stream));
+            try {
+                String line;
+                while (((line = reader.readLine()) != null) && !isInterrupted()) {
+                    m_processor.processLine(line);
+                }
+            } catch (final IOException e) {
+                // nothing to do
+            }
+        }
+    }
+
+    /**
+     * This class holds an RInstance and returns its RConnection on {@link RConnectionResource#get()}. If released, a
+     * timeout will make sure that the underlying {@link RInstance} is shutdown after a certain amount of time.
+     *
+     * @author Jonathan Hale
+     */
+    public static class RConnectionResource {
+
+        private final AtomicBoolean m_available = new AtomicBoolean(true);
+
+        private boolean m_destroyOnAvailable = false;
+
+        private RInstance m_instance;
+
+        private TimerTask m_pendingDestructionTask = null;
+
+        private static final int RPROCESS_TIMEOUT = 60000;
+
+        /**
+         * Constructor
+         *
+         * @param inst RInstance which will provide the value of this resource.
+         */
+        public RConnectionResource(final RInstance inst) {
+            if (inst == null) {
+                throw new NullPointerException("The RInstance provided to an RConnectionResource may not be null.");
+            }
+
+            m_instance = inst;
+        }
+
+        /**
+         * Acquire ownership of this resource, if it is available. Only the factory should be able to do this.
+         *
+         * @return Whether the resource has been acquired.
+         */
+        synchronized boolean acquireIfAvailable() {
+            if (m_instance == null) {
+                throw new NullPointerException("The resource has been destroyed already.");
+            }
+
+            if (m_available.compareAndSet(true, false)) {
+                if (m_pendingDestructionTask != null) {
+                    m_pendingDestructionTask.cancel();
+                    m_pendingDestructionTask = null;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /**
+         * @return The RInstance which holds this resources RConnection.
+         */
+        RInstance getUnderlyingRInstance() {
+            return m_instance;
+        }
+
+        /**
+         * Check whether the resource has been acquired. A return value of <code>true</code> does <em>not</em> guarantee
+         * {@link #acquireIfAvailable()} is going to succeed.
+         *
+         * @return <code>true</code> if the resource has not been acquired yet.
+         */
+        public boolean isAvailable() {
+            return m_available.get();
+        }
+
+        /**
+         * Set whether to destroy this resource as soon as the resource becomes available (may destroy the resource
+         * immediately).
+         */
+        public void setDestroyOnAvailable() {
+            if (m_available.compareAndSet(true, false)) {
+                destroy(false);
+            } else {
+                m_destroyOnAvailable = true;
+            }
+        }
+
+        /**
+         * Note: Always call {@link #acquire()} or {@link #acquireIfAvailable()} before using this method.
+         *
+         * @return The value of the resource.
+         * @throws IllegalAccessError If the resource has not been acquired yet.
+         */
+        public RConnection get() {
+            if (isAvailable()) {
+                throw new IllegalAccessError("Please RConnectionResource#acquire() first before calling get.");
+            }
+            if (m_instance == null) {
+                throw new NullPointerException("The resource has been closed already.");
+            }
+
+            return m_instance.getLastConnection();
+        }
+
+        /**
+         * Release ownership of this resource for it to be reacquired.
+         *
+         * @throws RException If the RConnection could not be closed/detached
+         */
+        public synchronized void release() throws RException {
+            // we allow release() to be called multiple times (though synchronized) but ignore invocations
+            // when already released
+            if (!m_available.get()) {
+                if ((m_instance.getLastConnection() != null) && m_instance.getLastConnection().isConnected()) {
+                    // connection was not closed before release. Clean that up.
+                    final RConnection connection = m_instance.getLastConnection();
+                    try {
+
+                        // m_instance.getLastConnection().detach(); would be the
+                        // way to go, but...
+                        // FIXME: https://github.com/s-u/REngine/issues/7
+
+                        // clear workspace in the same method used in
+                        // RController. This is copied (!) code,
+                        // since considered a (hopefully) temporary option until
+                        // the above issue is resolved.
+                        if (Platform.isWindows()) {
+                            final StringBuilder b = new StringBuilder();
+                            b.append("unloader <- function() {\n");
+                            b.append("  defaults = getOption(\"defaultPackages\")\n");
+                            b.append("  installed = (.packages())\n");
+                            b.append("  for (pkg in installed){\n");
+                            b.append("      if (!(as.character(pkg) %in% defaults)) {\n");
+                            b.append("          if(!(pkg == \"base\")){\n");
+                            b.append("              package_name = paste(\"package:\", as.character(pkg), sep=\"\")\n");
+                            b.append("              detach(package_name, character.only = TRUE)\n");
+                            b.append("          }\n");
+                            b.append("      }\n");
+                            b.append("  }\n");
+                            b.append("}\n");
+                            b.append("unloader();\n");
+                            b.append("rm(list = ls());"); // also includes the
+                            // unloader function
+                            connection.eval(b.toString());
+                        } // unix automatically gets independent workspaces for
+                          // every connection
+                    } catch (final RserveException e) {
+                        throw new RException(
+                            "Could not detach connection to R, could leak objects to other workspaces.", e);
+                    } finally {
+                        connection.close();
+                    }
+                }
+
+                if (m_destroyOnAvailable) {
+                    destroy(true);
+                } else {
+                    // Either m_pendingDestructionTask is null, which means
+                    // this resource is being held, or the resource is available
+                    // and has destruction pending.
+                    assert m_pendingDestructionTask == null;
+
+                    m_pendingDestructionTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (m_available.compareAndSet(true, false)) {
+                                    // if not acquired in the meantime,
+                                    // destroy the resource
+                                    destroy(true);
+                                }
+                            } catch (final Throwable t) {
+                                // FIXME: There is a known bug where TimerTasks
+                                // in KnimeTimer can crash KNIME. We are simply
+                                // making 100% sure this will not happen here by
+                                // catching everything.
+                            }
+                        }
+
+                    };
+                    KNIMETimer.getInstance().schedule(m_pendingDestructionTask, RPROCESS_TIMEOUT);
+                    m_available.set(true);
+                }
+            } // else: release had been called already, but we allow this.
+        }
+
+        /**
+         * Destroy the underlying resource.
+         *
+         * @param remove Whether to automatically remove this resource from m_resources.
+         */
+        public synchronized void destroy(final boolean remove) {
+            if (m_instance == null) {
+                throw new NullPointerException("The resource has been destroyed already.");
+            }
+
+            m_available.set(false);
+            m_instance.close();
+
+            if (remove) {
+                try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+                    RESOURCES.remove(this);
+                }
+            }
+            m_instance = null;
+
+            // cleanup TimerTask
+            if (m_pendingDestructionTask != null) {
+                m_pendingDestructionTask.cancel();
+                m_pendingDestructionTask = null;
+            }
+        }
+
+        /**
+         * @return whether the underlying RInstance is up and running.
+         */
+        public boolean isRInstanceAlive() {
+            return (m_instance != null) && m_instance.isAlive();
+        }
+
+    }
 
 }

@@ -84,14 +84,12 @@ public class RLocalSourceNodeFactory extends RNodeFactory<RLocalSourceNodeModel>
      * {@inheritDoc}
      */
     @Override
-    public ExtToolOutputNodeView<RLocalSourceNodeModel> createNodeView(
-            final int viewIndex, final RLocalSourceNodeModel nodeModel) {
+    public ExtToolOutputNodeView<RLocalSourceNodeModel> createNodeView(final int viewIndex,
+        final RLocalSourceNodeModel nodeModel) {
         if (viewIndex == 0) {
-            return
-                new ExtToolStdoutNodeView<RLocalSourceNodeModel>(nodeModel);
+            return new ExtToolStdoutNodeView<RLocalSourceNodeModel>(nodeModel);
         } else if (viewIndex == 1) {
-            return
-                new ExtToolStderrNodeView<RLocalSourceNodeModel>(nodeModel);
+            return new ExtToolStderrNodeView<RLocalSourceNodeModel>(nodeModel);
         }
         return null;
     }

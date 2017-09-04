@@ -64,6 +64,7 @@ public final class RPlotterViewPanel extends JPanel {
 
     /**
      * Creates a new panel with an empty label.
+     * 
      * @param image The content to show.
      */
     public RPlotterViewPanel(final Image image) {
@@ -94,6 +95,5 @@ public final class RPlotterViewPanel extends JPanel {
         }
         super.repaint();
     }
-
 
 }

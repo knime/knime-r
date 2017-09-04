@@ -41,7 +41,7 @@
  *  may freely choose the license terms applicable to such Node, including
  *  when such Node is propagated with or for interoperation with KNIME.
  * ------------------------------------------------------------------------
- * 
+ *
  */
 package org.knime.ext.r.node;
 
@@ -54,12 +54,12 @@ import org.knime.core.node.NotConfigurableException;
 
 /**
  * Dialog pane holding the default login panel.
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 class RNodeDialogPane extends NodeDialogPane {
-    
-    private final RLoginDialogPanel m_loginDialog;    
+
+    private final RLoginDialogPanel m_loginDialog;
 
     /**
      * Creates a new pane with the login panel.
@@ -68,30 +68,29 @@ class RNodeDialogPane extends NodeDialogPane {
         super();
         m_loginDialog = new RLoginDialogPanel();
     }
-    
+
     /**
      * Adds the default login panel to the dialog. Useful for derived dialogs.
      */
     protected void addLoginTab() {
         super.addTab("Login", m_loginDialog);
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void loadSettingsFrom(final NodeSettingsRO settings, 
-            final DataTableSpec[] specs) throws NotConfigurableException {
+    protected void loadSettingsFrom(final NodeSettingsRO settings, final DataTableSpec[] specs)
+        throws NotConfigurableException {
         m_loginDialog.loadSettingsFrom(settings, specs);
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings)
-            throws InvalidSettingsException {
+    protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
         m_loginDialog.saveSettingsTo(settings);
     }
-    
+
 }

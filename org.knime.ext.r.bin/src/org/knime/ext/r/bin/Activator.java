@@ -57,50 +57,50 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin implements IPropertyChangeListener {
 
-	/** The plug-in ID. <code>"org.knime.ext.r.bin"</code> */
+    /** The plug-in ID. <code>"org.knime.ext.r.bin"</code> */
     public static final String PLUGIN_ID = "org.knime.ext.r.bin"; //$NON-NLS-1$
 
-	// The shared instance
-	private static Activator plugin;
+    // The shared instance
+    private static Activator plugin;
 
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
+    /**
+     * The constructor
+     */
+    public Activator() {
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+     */
+    @Override
     public void start(final BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-		getPreferenceStore().addPropertyChangeListener(this);
+        super.start(context);
+        plugin = this;
+        getPreferenceStore().addPropertyChangeListener(this);
 
-		R_HOME = new File(getPreferenceStore().getString(RPreferenceInitializer.PREF_R_HOME));
-	}
+        R_HOME = new File(getPreferenceStore().getString(RPreferenceInitializer.PREF_R_HOME));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
     public void stop(final BundleContext context) throws Exception {
-		getPreferenceStore().removePropertyChangeListener(this);
-		plugin = null;
-		super.stop(context);
-	}
+        getPreferenceStore().removePropertyChangeListener(this);
+        plugin = null;
+        super.stop(context);
+    }
 
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
+    /**
+     * Returns the shared instance
+     *
+     * @return the shared instance
+     */
+    public static Activator getDefault() {
+        return plugin;
+    }
 
     private static File R_HOME;
 
@@ -108,13 +108,13 @@ public class Activator extends AbstractUIPlugin implements IPropertyChangeListen
      * @return R executable
      */
     public static File getRHOME() {
-    	return R_HOME;
+        return R_HOME;
     }
 
     @Override
     public void propertyChange(final PropertyChangeEvent event) {
-    	if (RPreferenceInitializer.PREF_R_HOME.equals(event.getProperty())) {
-    		R_HOME = new File(event.getNewValue().toString());
-    	}
+        if (RPreferenceInitializer.PREF_R_HOME.equals(event.getProperty())) {
+            R_HOME = new File(event.getNewValue().toString());
+        }
     }
 }

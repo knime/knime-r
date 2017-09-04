@@ -51,12 +51,11 @@ import org.knime.core.node.NodeDialogPane;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
- * 
+ *
  * @author Kilian Thiel, University of Konstanz
  */
-public class RLocalPredictorNodeFactory 
-        extends RNodeFactory<RLocalPredictorNodeModel> {
-    
+public class RLocalPredictorNodeFactory extends RNodeFactory<RLocalPredictorNodeModel> {
+
     /**
      * Create a new factory class for a local R predictor node.
      */
@@ -84,14 +83,12 @@ public class RLocalPredictorNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public ExtToolOutputNodeView<RLocalPredictorNodeModel> createNodeView(
-            final int viewIndex, final RLocalPredictorNodeModel nodeModel) {
+    public ExtToolOutputNodeView<RLocalPredictorNodeModel> createNodeView(final int viewIndex,
+        final RLocalPredictorNodeModel nodeModel) {
         if (viewIndex == 0) {
-            return
-                new ExtToolStdoutNodeView<RLocalPredictorNodeModel>(nodeModel);
+            return new ExtToolStdoutNodeView<RLocalPredictorNodeModel>(nodeModel);
         } else if (viewIndex == 1) {
-            return
-                new ExtToolStderrNodeView<RLocalPredictorNodeModel>(nodeModel);
+            return new ExtToolStderrNodeView<RLocalPredictorNodeModel>(nodeModel);
         }
         return null;
     }

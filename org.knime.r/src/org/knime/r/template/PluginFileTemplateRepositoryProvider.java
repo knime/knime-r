@@ -59,23 +59,22 @@ import org.knime.core.util.FileUtil;
 import org.osgi.framework.Bundle;
 
 /**
- * A m_file template provider for templates relative to a plugin. Since the
- * templates are shipped out by a plugin, they cannot be removed or replaced.
+ * A m_file template provider for templates relative to a plugin. Since the templates are shipped out by a plugin, they
+ * cannot be removed or replaced.
  *
  * @author Heiko Hofer
  */
-public class PluginFileTemplateRepositoryProvider
-        implements TemplateRepositoryProvider {
-    private static NodeLogger logger
-        = NodeLogger.getLogger(PluginFileTemplateRepositoryProvider.class);
+public class PluginFileTemplateRepositoryProvider implements TemplateRepositoryProvider {
+    private static NodeLogger logger = NodeLogger.getLogger(PluginFileTemplateRepositoryProvider.class);
+
     private static FileTemplateRepository repo;
+
     private final Object m_lock = new Object[0];
 
     private File m_file;
 
     /**
-     * Create a instance for the bundle "org.knime.r" and the relative
-     * path "/rsnippets".
+     * Create a instance for the bundle "org.knime.r" and the relative path "/rsnippets".
      */
     public PluginFileTemplateRepositoryProvider() {
         this("org.knime.r", "rsnippets");
@@ -83,19 +82,16 @@ public class PluginFileTemplateRepositoryProvider
 
     /**
      * @param symbolicName the name of the bundle like "org.nime.r"
-     * @param relativePath the path to the repositories base folder,
-     *  i.e. "/rsnippes"
+     * @param relativePath the path to the repositories base folder, i.e. "/rsnippes"
      */
-    public PluginFileTemplateRepositoryProvider(final String symbolicName,
-            final String relativePath) {
+    public PluginFileTemplateRepositoryProvider(final String symbolicName, final String relativePath) {
         try {
-            Bundle bundle = Platform.getBundle(symbolicName);
-            URL url = FileLocator.find(bundle, new Path(relativePath), null);
+            final Bundle bundle = Platform.getBundle(symbolicName);
+            final URL url = FileLocator.find(bundle, new Path(relativePath), null);
             m_file = FileUtil.getFileFromURL(FileLocator.toFileURL(url));
-        } catch (Exception e) {
-            logger.error("Cannot locate rsnippet templates in path "
-                    + symbolicName + " of the bundle "
-                    + relativePath + ".", e);
+        } catch (final Exception e) {
+            logger.error(
+                "Cannot locate rsnippet templates in path " + symbolicName + " of the bundle " + relativePath + ".", e);
         }
     }
 
@@ -108,9 +104,9 @@ public class PluginFileTemplateRepositoryProvider
             if (null == repo) {
                 try {
                     repo = FileTemplateRepository.createProtected(m_file);
-                } catch (IOException e) {
-                    logger.error("Cannot create the template provider with "
-                            + "base file " + m_file.getAbsolutePath(), e);
+                } catch (final IOException e) {
+                    logger.error("Cannot create the template provider with " + "base file " + m_file.getAbsolutePath(),
+                        e);
                 }
             }
         }

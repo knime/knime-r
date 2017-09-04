@@ -58,9 +58,8 @@ import org.knime.ext.r.preferences.RPreferenceInitializer;
  *
  * @author Kilian Thiel, University of Konstanz
  */
-public class RLocalLearnerNodeFactory
-        extends RNodeFactory<RLocalLearnerNodeModel> {
-    
+public class RLocalLearnerNodeFactory extends RNodeFactory<RLocalLearnerNodeModel> {
+
     /**
      * Empty default constructor.
      */
@@ -88,15 +87,12 @@ public class RLocalLearnerNodeFactory
      * {@inheritDoc}
      */
     @Override
-    public ExtToolOutputNodeView<RLocalLearnerNodeModel> createNodeView(
-            final int viewIndex,
-            final RLocalLearnerNodeModel nodeModel) {
+    public ExtToolOutputNodeView<RLocalLearnerNodeModel> createNodeView(final int viewIndex,
+        final RLocalLearnerNodeModel nodeModel) {
         if (viewIndex == 0) {
-            return
-                new ExtToolStdoutNodeView<RLocalLearnerNodeModel>(nodeModel);
+            return new ExtToolStdoutNodeView<RLocalLearnerNodeModel>(nodeModel);
         } else if (viewIndex == 1) {
-            return
-                new ExtToolStderrNodeView<RLocalLearnerNodeModel>(nodeModel);
+            return new ExtToolStderrNodeView<RLocalLearnerNodeModel>(nodeModel);
         }
         return null;
     }

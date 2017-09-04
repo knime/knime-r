@@ -49,11 +49,11 @@ import org.knime.core.node.NodeView;
 import org.knime.ext.r.preferences.RPreferenceInitializer;
 
 /**
- * 
+ *
  * @author Thomas Gabriel, University of Konstanz
  */
 public class R2PMMLNodeFactory extends RNodeFactory<R2PMMLNodeModel> {
-    
+
     /**
      * Creates a new factor for the R2PMML node.
      */
@@ -81,8 +81,7 @@ public class R2PMMLNodeFactory extends RNodeFactory<R2PMMLNodeModel> {
      * {@inheritDoc}
      */
     @Override
-    public NodeView<R2PMMLNodeModel> createNodeView(final int viewIndex, 
-            final R2PMMLNodeModel nodeModel) {
+    public NodeView<R2PMMLNodeModel> createNodeView(final int viewIndex, final R2PMMLNodeModel nodeModel) {
         return null;
     }
 

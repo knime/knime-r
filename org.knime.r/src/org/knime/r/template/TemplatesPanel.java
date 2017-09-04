@@ -79,7 +79,6 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import org.knime.r.RSnippetTemplate;
 
-
 /**
  * The Panel displayed in the templates tab of a R snippet dialog.
  *
@@ -88,27 +87,37 @@ import org.knime.r.RSnippetTemplate;
 @SuppressWarnings("serial")
 public class TemplatesPanel extends JPanel {
     private static final String CARD_EMPTY_SELECTION = "CARD_EMPTY_SELECTION";
+
     private static final String CARD_PREVIEW = "CARD_PREVIEW";
-    private JComboBox<String> m_categories;
+
+    private final JComboBox<String> m_categories;
+
     /** Displays templates that are in the currently selected category. */
-    private JList<RSnippetTemplate> m_templates;
-    private JTextPane m_description;
-    private Collection<Class<?>> m_metaCategories;
-    private JPanel m_previewPanel;
-    private JPanel m_previewPane;
-    private TemplateController m_controller;
-    private ActionListener m_categoriesListener;
+    private final JList<RSnippetTemplate> m_templates;
+
+    private final JTextPane m_description;
+
+    private final Collection<Class<?>> m_metaCategories;
+
+    private final JPanel m_previewPanel;
+
+    private final JPanel m_previewPane;
+
+    private final TemplateController m_controller;
+
+    private final ActionListener m_categoriesListener;
+
     private JButton m_removeTemplateButton;
+
     private JButton m_applyTemplateButton;
 
     /**
      * Create a new instance.
+     * 
      * @param set the meta categories to display
-     * @param controller the controller used to create the preview and to apply
-     * template to the java snippet node
+     * @param controller the controller used to create the preview and to apply template to the java snippet node
      */
-    public TemplatesPanel(final Set<Class<?>> set,
-            final TemplateController controller) {
+    public TemplatesPanel(final Set<Class<?>> set, final TemplateController controller) {
         super(new BorderLayout());
         m_controller = controller;
         m_metaCategories = set;
@@ -118,8 +127,8 @@ public class TemplatesPanel extends JPanel {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 @SuppressWarnings("unchecked") // listener only added to m_categories
-				JComboBox<String> cb = (JComboBox<String>)e.getSource();
-                String category = (String)cb.getSelectedItem();
+                final JComboBox<String> cb = (JComboBox<String>)e.getSource();
+                final String category = (String)cb.getSelectedItem();
                 updateTemplatesList(category);
             }
         };
@@ -127,15 +136,14 @@ public class TemplatesPanel extends JPanel {
         updateCategories();
 
         m_templates = new JList<>(new DefaultListModel<RSnippetTemplate>());
-        m_templates.setSelectionMode(
-                ListSelectionModel.SINGLE_SELECTION);
+        m_templates.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         m_templates.setCellRenderer(new TemplateListCellRenderer());
 
         m_templates.addListSelectionListener(new ListSelectionListener() {
 
             @Override
             public void valueChanged(final ListSelectionEvent e) {
-                Object selected = m_templates.getSelectedValue();
+                final Object selected = m_templates.getSelectedValue();
 
                 onSelectionInTemplateList(selected);
             }
@@ -170,12 +178,12 @@ public class TemplatesPanel extends JPanel {
     }
 
     private void updateCategories() {
-        TemplateProvider provider = TemplateProvider.getDefault();
+        final TemplateProvider provider = TemplateProvider.getDefault();
 
         m_categories.removeActionListener(m_categoriesListener);
         m_categories.removeAllItems();
-        Set<String> categories = provider.getCategories(m_metaCategories);
-        for (String category : categories) {
+        final Set<String> categories = provider.getCategories(m_metaCategories);
+        for (final String category : categories) {
             m_categories.addItem(category);
         }
         m_categories.setSelectedItem(TemplateProvider.ALL_CATEGORY);
@@ -183,23 +191,20 @@ public class TemplatesPanel extends JPanel {
     }
 
     private void onSelectionInTemplateList(final Object selected) {
-        CardLayout cl = (CardLayout)(m_previewPane.getLayout());
+        final CardLayout cl = (CardLayout)(m_previewPane.getLayout());
         if (selected != null) {
-            RSnippetTemplate template = (RSnippetTemplate) selected;
+            final RSnippetTemplate template = (RSnippetTemplate)selected;
             m_description.setText(template.getDescription());
             m_description.setCaretPosition(0);
 
-            boolean removeable =
-                TemplateProvider.getDefault().isRemoveable(template);
+            final boolean removeable = TemplateProvider.getDefault().isRemoveable(template);
             m_removeTemplateButton.setEnabled(removeable);
             m_applyTemplateButton.setEnabled(true);
-
 
             m_controller.setPreviewSettings(template);
 
             if (m_previewPanel.getComponents().length == 0) {
-                m_previewPanel.add(m_controller.getPreview(),
-                        BorderLayout.CENTER);
+                m_previewPanel.add(m_controller.getPreview(), BorderLayout.CENTER);
             }
             cl.show(m_previewPane, CARD_PREVIEW);
             this.validate();
@@ -214,12 +219,11 @@ public class TemplatesPanel extends JPanel {
     }
 
     private void updateTemplatesList(final String category) {
-        Object selected = m_templates.getSelectedValue();
-        DefaultListModel<RSnippetTemplate> model = (DefaultListModel<RSnippetTemplate>)m_templates.getModel();
+        final Object selected = m_templates.getSelectedValue();
+        final DefaultListModel<RSnippetTemplate> model = (DefaultListModel<RSnippetTemplate>)m_templates.getModel();
         model.clear();
-        TemplateProvider provider = TemplateProvider.getDefault();
-        for (RSnippetTemplate template : provider.getTemplates(
-                m_metaCategories, category)) {
+        final TemplateProvider provider = TemplateProvider.getDefault();
+        for (final RSnippetTemplate template : provider.getTemplates(m_metaCategories, category)) {
             model.addElement(template);
         }
         m_templates.setSelectedValue(selected, true);
@@ -228,26 +232,22 @@ public class TemplatesPanel extends JPanel {
     /**
      * Renderer the name of Java Snippet templates.
      */
-    private static class TemplateListCellRenderer extends
-            DefaultListCellRenderer {
+    private static class TemplateListCellRenderer extends DefaultListCellRenderer {
         /**
          * {@inheritDoc}
          */
         @Override
-        public Component getListCellRendererComponent(final JList list,
-                final Object value, final int index, final boolean isSelected,
-                final boolean cellHasFocus) {
-            RSnippetTemplate m = (RSnippetTemplate)value;
-            Component c = super.getListCellRendererComponent(list,
-                    m.getName(),
-                    index, isSelected, cellHasFocus);
+        public Component getListCellRendererComponent(final JList list, final Object value, final int index,
+            final boolean isSelected, final boolean cellHasFocus) {
+            final RSnippetTemplate m = (RSnippetTemplate)value;
+            final Component c = super.getListCellRendererComponent(list, m.getName(), index, isSelected, cellHasFocus);
             return c;
         }
     }
 
     private JPanel createTemplatesPanel() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        final JPanel p = new JPanel(new GridBagLayout());
+        final GridBagConstraints c = new GridBagConstraints();
 
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.LINE_START;
@@ -269,12 +269,10 @@ public class TemplatesPanel extends JPanel {
         c.gridy++;
         c.weighty = 0.8;
         c.insets = new Insets(2, 6, 4, 6);
-        JScrollPane manipScroller = new JScrollPane(m_templates);
-        manipScroller.setHorizontalScrollBarPolicy(
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        final JScrollPane manipScroller = new JScrollPane(m_templates);
+        manipScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         p.add(manipScroller, c);
         c.weighty = 0;
-
 
         c.gridy++;
         c.insets = new Insets(6, 6, 4, 6);
@@ -284,11 +282,9 @@ public class TemplatesPanel extends JPanel {
         c.weighty = 1;
         c.insets = new Insets(2, 6, 4, 6);
         m_description.setPreferredSize(m_description.getMinimumSize());
-        JScrollPane descScroller = new JScrollPane(m_description);
-        descScroller.setVerticalScrollBarPolicy(
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        descScroller.setHorizontalScrollBarPolicy(
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        final JScrollPane descScroller = new JScrollPane(m_description);
+        descScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        descScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         descScroller.setPreferredSize(descScroller.getMinimumSize());
         p.add(descScroller, c);
 
@@ -300,8 +296,7 @@ public class TemplatesPanel extends JPanel {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                RSnippetTemplate template =
-                    (RSnippetTemplate)m_templates.getSelectedValue();
+                final RSnippetTemplate template = m_templates.getSelectedValue();
                 if (null != template) {
                     m_controller.setSettings(template);
                 }
@@ -313,16 +308,14 @@ public class TemplatesPanel extends JPanel {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                RSnippetTemplate template =
-                    (RSnippetTemplate)m_templates.getSelectedValue();
+                final RSnippetTemplate template = m_templates.getSelectedValue();
                 if (null != template) {
                     TemplateProvider.getDefault().removeTemplate(template);
                 }
             }
         });
 
-
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+        final JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         buttonsPanel.add(m_applyTemplateButton);
         buttonsPanel.add(m_removeTemplateButton);
         c.weightx = 1.0;

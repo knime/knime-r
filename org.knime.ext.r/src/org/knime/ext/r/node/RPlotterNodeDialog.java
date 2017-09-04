@@ -56,7 +56,6 @@ import org.knime.core.node.workflow.FlowVariable;
 import org.knime.ext.r.node.local.RViewsDialogPanel;
 import org.knime.ext.r.node.local.RViewsPngDialogPanel;
 
-
 /**
  * Dialog of the R plotter to select two numeric columns.
  *
@@ -81,35 +80,32 @@ public class RPlotterNodeDialog extends RNodeDialogPane {
     }
 
     /**
-     * Calls the update method of the underlying filter panel using the input
-     * data table spec from this <code>FilterColumnNodeModel</code>.
+     * Calls the update method of the underlying filter panel using the input data table spec from this
+     * <code>FilterColumnNodeModel</code>.
      *
      * @param settings The <code>NodeSettings</code> to read from.
      * @param specs The input specs.
      * @throws NotConfigurableException If no columns in spec.
      */
     @Override
-    protected void loadSettingsFrom(
-            final NodeSettingsRO settings, final DataTableSpec[] specs)
-            throws NotConfigurableException {
+    protected void loadSettingsFrom(final NodeSettingsRO settings, final DataTableSpec[] specs)
+        throws NotConfigurableException {
         super.loadSettingsFrom(settings, specs);
-        Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
+        final Map<String, FlowVariable> flowMap = getAvailableFlowVariables();
         m_plotCommandPanel.loadSettings(settings, specs, flowMap);
         m_viewPngPanel.loadSettings(settings, specs);
     }
 
     /**
-     * Sets the list of columns to exclude inside the underlying
-     * <code>FilterColumnNodeModel</code> retrieving them from the filter panel.
+     * Sets the list of columns to exclude inside the underlying <code>FilterColumnNodeModel</code> retrieving them from
+     * the filter panel.
+     * 
      * @param settings The <code>NodeSettings</code> to write into.
-     * @throws InvalidSettingsException If column list does not contain two
-     *         items.
-     * @see org.knime.core.node.NodeDialogPane#saveSettingsTo(
-     * NodeSettingsWO)
+     * @throws InvalidSettingsException If column list does not contain two items.
+     * @see org.knime.core.node.NodeDialogPane#saveSettingsTo( NodeSettingsWO)
      */
     @Override
-    protected void saveSettingsTo(final NodeSettingsWO settings)
-            throws InvalidSettingsException {
+    protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
         super.saveSettingsTo(settings);
         m_plotCommandPanel.saveSettings(settings);
         m_viewPngPanel.saveSettings(settings);

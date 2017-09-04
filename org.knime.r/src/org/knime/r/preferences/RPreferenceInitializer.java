@@ -53,9 +53,8 @@ import org.knime.core.node.NodeLogger;
  * @author Heiko Hofer
  */
 public class RPreferenceInitializer extends AbstractPreferenceInitializer {
-    
-    private static final NodeLogger LOGGER = 
-        NodeLogger.getLogger(RPreferenceInitializer.class); 
+
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RPreferenceInitializer.class);
 
     /** Preference key for the path to the R executable setting. */
     public static final String PREF_R_HOME = "knime.r.home";
