@@ -69,6 +69,8 @@ public class RViewNodeSettings {
 
     private static final String R_SETTINGS = "R settings";
 
+    private static final String IMAGE_TYPE = "Image type";
+
     /** Image width. */
     private int m_imgWidth = 640;
 
@@ -86,6 +88,9 @@ public class RViewNodeSettings {
 
     /** R settings */
     private RSnippetSettings m_rSettings;
+
+    /** Image type ("PNG"/"SVG") (Since 3.5) */
+    private String m_imgType = "PNG";
 
     /**
      * Constructor
@@ -134,6 +139,9 @@ public class RViewNodeSettings {
         settings.addString(IMAGE_BACKGROUND_COLOR, m_imgBackgroundColor);
         settings.addInt(TEXT_POINT_SIZE, m_textPointSize);
         m_rSettings.saveSettings(settings.addConfig(R_SETTINGS));
+
+        // Since 3.5
+        settings.addString(IMAGE_TYPE, m_imgType);
     }
 
     /**
@@ -151,6 +159,9 @@ public class RViewNodeSettings {
             m_imgBackgroundColor = settings.getString(IMAGE_BACKGROUND_COLOR);
             m_textPointSize = settings.getInt(TEXT_POINT_SIZE);
             m_rSettings.loadSettings(settings.getConfig(R_SETTINGS));
+
+            // Since 3.5
+            m_imgType = settings.getString(IMAGE_TYPE, "PNG");
         } else {
             // Support just R Settings
             m_rSettings.loadSettings(settings);
@@ -178,6 +189,9 @@ public class RViewNodeSettings {
         } else {
             m_rSettings = new RSnippetSettings();
         }
+
+        // Since 3.5
+        m_imgType = settings.getString(IMAGE_TYPE, "PNG");
     }
 
     /**
@@ -270,4 +284,19 @@ public class RViewNodeSettings {
         m_rSettings = rSettings;
     }
 
+    /**
+     * @return Type for the output image ("PNG" or "SVG")
+     */
+    public String getImageType() {
+        return m_imgType;
+    }
+
+    /**
+     * Set the type for the output image ("PNG" or "SVG").
+     *
+     * @param imgType Image type for the output
+     */
+    public void setImageType(final String imgType) {
+        m_imgType = imgType;
+    }
 }
