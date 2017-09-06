@@ -45,7 +45,6 @@
  */
 package org.knime.r;
 
-import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -53,6 +52,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.knime.base.data.xml.SvgCell;
+import org.knime.base.data.xml.SvgImageContent;
+import org.knime.core.data.DataType;
+import org.knime.core.data.image.ImageContent;
 import org.knime.core.data.image.png.PNGImageContent;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
@@ -75,13 +78,15 @@ public class RViewNodeModel extends RSnippetNodeModel {
 
     private final RViewNodeSettings m_settings;
 
-    private Image m_resultImage;
-
-    /** Output spec for a PNG image. */
-    private static final ImagePortObjectSpec OUT_SPEC = new ImagePortObjectSpec(PNGImageContent.TYPE);
+    private ImageContent m_resultImage;
 
     private static final String INTERNAL_FILE_NAME = "Rplot";
 
+    /**
+     * Constructor
+     *
+     * @param config Used to configure the generic R base node.
+     */
     public RViewNodeModel(final RViewNodeConfig config) {
         super(config);
         m_settings = new RViewNodeSettings(getSettings());
@@ -90,7 +95,12 @@ public class RViewNodeModel extends RSnippetNodeModel {
 
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
-        return new PortObjectSpec[]{OUT_SPEC};
+        final String imgType = m_settings.getImageType();
+        if (!(imgType.equals("PNG") || imgType.equals("SVG"))) {
+            throw new InvalidSettingsException("Unknown image type \"" + imgType + "\"");
+        }
+
+        return new PortObjectSpec[]{createOutSpec()};
     }
 
     @Override
@@ -100,14 +110,22 @@ public class RViewNodeModel extends RSnippetNodeModel {
 
     }
 
+    private ImagePortObjectSpec createOutSpec() {
+        final DataType type = (m_settings.getImageType().equals("PNG")) ? PNGImageContent.TYPE : SvgCell.TYPE;
+        return new ImagePortObjectSpec(type);
+    }
+
     private PortObject[] postExecuteInternal() throws Exception {
         if (getConfig().getImageFile().length() > 0) {
             // create image after execution.
             final FileInputStream fis = new FileInputStream(getConfig().getImageFile());
-            final PNGImageContent content = new PNGImageContent(fis);
+            if (m_settings.getImageType().equals("PNG")) {
+                m_resultImage = new PNGImageContent(fis);
+            } else if (m_settings.getImageType().equals("SVG")) {
+                m_resultImage = new SvgImageContent(fis);
+            }
             fis.close();
-            m_resultImage = content.getImage();
-            return new PortObject[]{new ImagePortObject(content, OUT_SPEC)};
+            return new PortObject[]{new ImagePortObject(m_resultImage, createOutSpec())};
         } else {
             throw new RuntimeException("No Image was created by the R-Script");
         }
@@ -137,29 +155,37 @@ public class RViewNodeModel extends RSnippetNodeModel {
     }
 
     /**
-     * The saved image is loaded.
-     *
      * {@inheritDoc}
+     *
+     * The saved image is loaded.
      */
     @Override
     protected void loadInternals(final File nodeInternDir, final ExecutionMonitor exec)
         throws IOException, CanceledExecutionException {
         super.loadInternals(nodeInternDir, exec);
 
-        final File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
+        final String imgType = m_settings.getImageType();
+        final File file = new File(nodeInternDir, INTERNAL_FILE_NAME + "." + imgType.toLowerCase());
         if (file.exists() && file.canRead()) {
-            final File pngFile = getConfig().getImageFile();
-            FileUtil.copy(file, pngFile);
-            try (InputStream is = new FileInputStream(pngFile)) {
-                m_resultImage = new PNGImageContent(is).getImage();
+            final File imgFile = getConfig().getImageFile();
+            FileUtil.copy(file, imgFile);
+
+            if (imgType.equals("PNG")) {
+                try (InputStream is = new FileInputStream(imgFile)) {
+                    m_resultImage = new PNGImageContent(is);
+                }
+            } else if (imgType.equals("SVG")) {
+                try (InputStream is = new FileInputStream(imgFile)) {
+                    m_resultImage = new SvgImageContent(is);
+                }
             }
         }
     }
 
     /**
-     * The created image is saved.
-     *
      * {@inheritDoc}
+     *
+     * The created image is saved.
      */
     @Override
     protected void saveInternals(final File nodeInternDir, final ExecutionMonitor exec)
@@ -167,7 +193,8 @@ public class RViewNodeModel extends RSnippetNodeModel {
         super.saveInternals(nodeInternDir, exec);
 
         if (m_resultImage != null) {
-            final File file = new File(nodeInternDir, INTERNAL_FILE_NAME + ".png");
+            final File file =
+                new File(nodeInternDir, INTERNAL_FILE_NAME + "." + m_settings.getImageType().toLowerCase());
             FileUtil.copy(getConfig().getImageFile(), file);
         }
     }
