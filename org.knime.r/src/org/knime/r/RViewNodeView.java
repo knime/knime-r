@@ -47,10 +47,9 @@
  */
 package org.knime.r;
 
-import java.awt.Image;
-
 import javax.swing.JScrollPane;
 
+import org.knime.core.data.image.ImageContent;
 import org.knime.core.node.NodeView;
 import org.knime.r.ui.RPlotterViewPanel;
 
@@ -82,7 +81,7 @@ public class RViewNodeView extends NodeView<RViewNodeModel> {
     @Override
     protected void modelChanged() {
         final RViewNodeModel model = super.getNodeModel();
-        final Image image = model.getResultImage();
+        final ImageContent image = model.getResultImage();
         m_panel.update(image);
     }
 

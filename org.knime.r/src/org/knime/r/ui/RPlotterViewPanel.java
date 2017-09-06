@@ -45,12 +45,16 @@
  */
 package org.knime.r.ui;
 
-import java.awt.GridLayout;
-import java.awt.Image;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
-import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import org.knime.core.data.image.ImageContent;
 
 /**
  * Displays the R result image.
@@ -60,17 +64,17 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public final class RPlotterViewPanel extends JPanel {
 
-    private final JLabel m_label;
+    private final JLabel m_noPlotLabel = new JLabel("<No Plot>");
+
+    private final ImagePanel m_imagePanel = new ImagePanel();
 
     /**
      * Creates a new panel with an empty label.
-     * 
+     *
      * @param image The content to show.
      */
-    public RPlotterViewPanel(final Image image) {
-        m_label = new JLabel("<No Plot>");
-        super.setLayout(new GridLayout(1, 1));
-        super.add(m_label);
+    public RPlotterViewPanel(final ImageContent image) {
+        this();
         update(image);
     }
 
@@ -78,22 +82,55 @@ public final class RPlotterViewPanel extends JPanel {
      * Creates a new panel with an empty label.
      */
     public RPlotterViewPanel() {
-        m_label = new JLabel("<No Plot>");
-        super.add(m_label);
+        setLayout(new BorderLayout());
+        add(m_noPlotLabel, BorderLayout.CENTER);
+        add(m_imagePanel, BorderLayout.CENTER);
+
+        m_imagePanel.setVisible(false);
     }
 
     /**
      * @param image The new image or null to display.
      */
-    public void update(final Image image) {
+    public void update(final ImageContent image) {
         if (image == null) {
-            m_label.setIcon(null);
-            m_label.setText("<No Plot>");
+            m_noPlotLabel.setVisible(true);
+            m_imagePanel.setVisible(false);
         } else {
-            m_label.setText(null);
-            m_label.setIcon(new ImageIcon(image));
+            m_noPlotLabel.setVisible(false);
+            m_imagePanel.setImageContent(image);
+            m_imagePanel.setVisible(true);
         }
         super.repaint();
+    }
+
+    private static final class ImagePanel extends JComponent {
+        ImageContent m_content;
+
+        /**
+         * Update the image for this panel to show.
+         *
+         * @param content Image content to show in the panel
+         */
+        void setImageContent(final ImageContent content) {
+            m_content = content;
+            this.repaint();
+        }
+
+        @Override
+        protected void paintComponent(final Graphics g) {
+            super.paintComponent(g);
+
+            final Graphics gClip = g.create(getX(), getY(), getWidth(), getHeight());
+            final Graphics2D g2d = (Graphics2D)gClip;
+
+            m_content.paint(g2d, getWidth(), getHeight());
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return m_content.getPreferredSize();
+        }
     }
 
 }
