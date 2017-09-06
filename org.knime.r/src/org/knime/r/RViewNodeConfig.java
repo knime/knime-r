@@ -88,7 +88,6 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 
     @Override
     protected String getScriptPrefix() {
-        final File imageFile = getImageFile();
         final StringBuilder prefix = new StringBuilder();
 
         String bitmapType = "";
@@ -97,11 +96,44 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
             prefix.append("library('Cairo');");
         }
 
-        prefix.append("options(device = 'png'" + bitmapType + ")").append("\n");
-        prefix.append(
-            "png(\"" + imageFile.getAbsolutePath().replace('\\', '/') + "\"" + ", width=" + m_settings.getImageWidth()
-                + ", height=" + m_settings.getImageHeight() + ", pointsize=" + m_settings.getTextPointSize() + ", bg=\""
-                + m_settings.getImageBackgroundColor() + "\"" + ", res=" + m_settings.getImageResolution() + ")");
+        // Image type: SVG or PNG
+        final String imgType = m_settings.getImageType().toLowerCase();
+
+        prefix.append("options(device = '" + imgType + "'" + bitmapType + ")").append("\n");
+
+        prefix.append(imgType.toLowerCase() + "(");
+
+        final File imageFile = getImageFile();
+        prefix.append("\"" + imageFile.getAbsolutePath().replace('\\', '/') + "\",");
+
+        int svgResolution = 1;
+        if(imgType.equals("svg")) {
+            svgResolution = 300;
+            try {
+                svgResolution = Integer.parseInt(m_settings.getImageResolution());
+            } catch (NumberFormatException e) {
+                // Either NA or invalid for SVG resolution, just use default 300.
+            }
+        }
+
+        /* For svg() height is measured in inch, which is why we divide by the dpi
+         * specified by the resolution. With png the resolution is set to 1 so that
+         * the division has no effect.
+         */
+        final int width = m_settings.getImageWidth() / svgResolution;
+        final int height = m_settings.getImageHeight() / svgResolution;
+
+        prefix.append("width=" + width + ",");
+        prefix.append("height=" + height + ",");
+        prefix.append("pointsize=" + m_settings.getTextPointSize() + ",");
+        prefix.append("bg=\"" + m_settings.getImageBackgroundColor() + "\",");
+
+        if(imgType.equals("png")) {
+            prefix.append("res=" + m_settings.getImageResolution() + ")");
+        } else {
+            prefix.append(")");
+        }
+
         return prefix.toString();
     }
 
@@ -112,11 +144,13 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
 
     /**
      * Non-null image file to use for this current node. Lazy-initialized to temp location.
+     *
+     * @return File of the created image
      */
     public File getImageFile() {
         if (m_imageFile == null) {
             try {
-                m_imageFile = FileUtil.createTempFile("R-view-", ".png");
+                m_imageFile = FileUtil.createTempFile("R-view-", "." + m_settings.getImageType().toLowerCase());
             } catch (final IOException e) {
                 LOGGER.error("Cannot create temporary file.", e);
                 throw new RuntimeException(e);
@@ -126,6 +160,9 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
         return m_imageFile;
     }
 
+    /**
+     * @param settings Settings of the node that should be configured with this config
+     */
     public void setSettings(final RViewNodeSettings settings) {
         m_settings = settings;
     }
