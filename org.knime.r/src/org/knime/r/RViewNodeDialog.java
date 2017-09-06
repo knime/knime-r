@@ -55,6 +55,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -85,7 +86,7 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 
     private static final String SNIPPET_TAB = "R Snippet";
 
-    private static final String PNG_SETTINGS_TAB = "PNG Settings";
+    private static final String IMAGE_SETTINGS_TAB = "Image Settings";
 
     private final RViewNodeSettings m_settings;
 
@@ -108,6 +109,8 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
     private JTextField m_textPointSize;
 
     private JTextField m_imgBackgroundColor;
+
+    private JComboBox<String> m_imgType = new JComboBox<String>(new String[]{"PNG", "SVG"});
 
     /**
      * Create a new Dialog.
@@ -149,7 +152,7 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
         };
 
         addTab(SNIPPET_TAB, m_panel);
-        addTab(PNG_SETTINGS_TAB, createPNGSettingsPanel());
+        addTab(IMAGE_SETTINGS_TAB, createPNGSettingsPanel());
         // The preview does not have the templates tab
         addTab("Templates", createTemplatesPanel());
 
@@ -248,45 +251,45 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
     }
 
     private JPanel createAppearancePanel() {
-        final JPanel p = new JPanel(new GridBagLayout());
-        final GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.anchor = GridBagConstraints.BASELINE;
-        c.insets = new Insets(2, 2, 2, 2);
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 1;
-        c.weightx = 0;
-        c.weighty = 0;
-
         final Insets leftInsets = new Insets(3, 0, 3, 8);
         final Insets rightInsets = new Insets(3, 0, 3, 0);
-        new Insets(0, 0, 3, 8);
-        new Insets(0, 0, 3, 0);
 
-        c.gridy++;
-        c.gridx = 0;
-        c.insets = leftInsets;
-        c.gridwidth = 1;
-        c.weightx = 0;
+        final GridBagConstraints gbcLeft = new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.BASELINE,
+            GridBagConstraints.HORIZONTAL, leftInsets, 0, 0);
+        final GridBagConstraints gbcRight = new GridBagConstraints(1, 0, 1, 1, 1, 0, GridBagConstraints.BASELINE,
+            GridBagConstraints.HORIZONTAL, rightInsets, 0, 0);
+
+        final JPanel p = new JPanel(new GridBagLayout());
+        GridBagConstraints c = null;
+
+        int gridy = 0;
+
+        c = (GridBagConstraints)gbcLeft.clone();
+        c.gridy = gridy;
         p.add(new JLabel("Text point size:"), c);
-        c.gridx = 1;
-        c.insets = rightInsets;
-        c.weightx = 1;
+
+        c = (GridBagConstraints)gbcRight.clone();
         m_textPointSize = new JTextField();
         p.add(m_textPointSize, c);
 
-        c.gridy++;
-        c.gridx = 0;
-        c.insets = leftInsets;
-        c.gridwidth = 1;
-        c.weightx = 0;
+        gridy++;
+        c = (GridBagConstraints)gbcLeft.clone();
+        c.gridy = gridy;
         p.add(new JLabel("Background color:"), c);
-        c.gridx = 1;
-        c.insets = rightInsets;
-        c.weightx = 1;
+
+        c = (GridBagConstraints)gbcRight.clone();
+        c.gridy = gridy;
         m_imgBackgroundColor = new JTextField();
         p.add(m_imgBackgroundColor, c);
+
+        gridy++;
+        c = (GridBagConstraints)gbcLeft.clone();
+        c.gridy = gridy;
+        p.add(new JLabel("Image type:"), c);
+
+        c = (GridBagConstraints)gbcRight.clone();
+        c.gridy = gridy;
+        p.add(m_imgType, c);
 
         return p;
     }
@@ -337,6 +340,7 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
         m_imgResolution.setText(m_settings.getImageResolution());
         m_textPointSize.setText(Integer.toString(m_settings.getTextPointSize()));
         m_imgBackgroundColor.setText(m_settings.getImageBackgroundColor());
+        m_imgType.setSelectedItem(m_settings.getImageType());
     }
 
     @Override
@@ -358,6 +362,7 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
         m_settings.setImageResolution(m_imgResolution.getText());
         m_settings.setTextPointSize(Integer.valueOf(m_textPointSize.getText()));
         m_settings.setImageBackgroundColor(m_imgBackgroundColor.getText());
+        m_settings.setImageType((String)m_imgType.getSelectedItem());
 
         m_settings.saveSettings(settings);
     }
