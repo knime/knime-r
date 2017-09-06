@@ -444,7 +444,7 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
         try {
             m_previewFrame.setSource(m_imageFile);
         } catch (final IOException e) {
-            LOGGER.error("Unable to render PNG from file " + m_imageFile.getAbsolutePath(), e);
+            LOGGER.error("Unable to render PNG/SVG from file " + m_imageFile.getAbsolutePath(), e);
         }
         if (isToPack) {
             m_previewFrame.pack();

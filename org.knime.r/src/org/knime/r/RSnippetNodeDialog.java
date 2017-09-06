@@ -113,6 +113,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
      * Create a new Dialog.
      *
      * @param templateMetaCategory the meta category used in the templates tab or to create templates
+     * @param config Config for the generic R node base.
      */
     protected RSnippetNodeDialog(final Class<?> templateMetaCategory, final RSnippetNodeConfig config) {
         m_templateMetaCategory = templateMetaCategory;
@@ -280,7 +281,6 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 
         m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getAvailableFlowVariables());
-
     }
 
     @Override
