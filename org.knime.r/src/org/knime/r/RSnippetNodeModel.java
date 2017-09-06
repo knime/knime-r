@@ -61,7 +61,6 @@ import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -87,8 +86,6 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
     private final RSnippetNodeConfig m_config;
 
-    private static final NodeLogger LOGGER = NodeLogger.getLogger("R Snippet");
-
     private boolean m_hasROutPorts = true;
 
     private List<String> m_librariesInR = null;
@@ -102,7 +99,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
         super(config.getInPortTypes().toArray(new PortType[config.getInPortTypes().size()]),
             config.getOutPortTypes().toArray(new PortType[config.getOutPortTypes().size()]));
         m_snippet = new RSnippet();
-        m_snippet.attachLogger(LOGGER);
+        m_snippet.attachLogger(getLogger());
         m_snippet.getSettings().setScript(config.getDefaultScript());
         m_config = config;
     }

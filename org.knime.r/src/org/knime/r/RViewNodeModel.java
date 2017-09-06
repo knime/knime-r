@@ -58,7 +58,6 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -73,7 +72,6 @@ import org.knime.core.util.FileUtil;
  * @author Heiko Hofer
  */
 public class RViewNodeModel extends RSnippetNodeModel {
-    private static final NodeLogger LOGGER = NodeLogger.getLogger("R View");
 
     private final RViewNodeSettings m_settings;
 
@@ -187,9 +185,9 @@ public class RViewNodeModel extends RSnippetNodeModel {
                 erasor.write((new String()).getBytes());
                 erasor.close();
             } catch (final FileNotFoundException e) {
-                LOGGER.error("Temporary file is removed.", e);
+                getLogger().error("Temporary file is removed.", e);
             } catch (final IOException e) {
-                LOGGER.error("Cannot write temporary file.", e);
+                getLogger().error("Cannot write temporary file.", e);
             }
         }
     }

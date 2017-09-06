@@ -64,7 +64,7 @@ import com.sun.jna.Platform;
  * @author Heiko Hofer
  */
 public class RViewNodeConfig extends RSnippetNodeConfig {
-    private static final NodeLogger LOGGER = NodeLogger.getLogger("R Snippet");
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RViewNodeConfig.class);
 
     private final PortType m_inPortType;
 

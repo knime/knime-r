@@ -53,7 +53,6 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
@@ -64,7 +63,6 @@ import org.knime.core.node.port.PortObjectSpec;
  * @author Heiko Hofer
  */
 public class RToPMMLNodeModel extends RSnippetNodeModel {
-    private static final NodeLogger LOGGER = NodeLogger.getLogger("R To PMML");
 
     public RToPMMLNodeModel(final RToPMMLNodeConfig config) {
         super(config);

@@ -61,7 +61,6 @@ import java.util.stream.Collectors;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -136,8 +135,6 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
 
     public static final int PORT_INDEX_DB = 1;
 
-    private static final NodeLogger LOGGER = NodeLogger.getLogger("Deploy R To MSSQL");
-
     private final RunRInMSSQLNodeSettings m_settings = new RunRInMSSQLNodeSettings();
 
     /**
@@ -161,7 +158,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             databasePort.getConnectionSettings(getCredentialsProvider());
 
         if (!databaseSettings.getDriver().startsWith("com.microsoft")) {
-            LOGGER.error("Deploy R To MSSQL Node does not support " + databasePort.getDatabaseIdentifier()
+            getLogger().error("Deploy R To MSSQL Node does not support " + databasePort.getDatabaseIdentifier()
                 + ".\nMake sure to use the Microsoft database connector and the Microsoft JDBC driver.");
             throw new InvalidSettingsException("This node only works with Microsoft SQL Server 2016+");
         }
@@ -239,7 +236,8 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             .replace("${pwd}", connectionSettings.getPassword(getCredentialsProvider()))
             .replace("${inTableName}", inTable).replace("${outTableName}", outTable);
 
-        LOGGER.debug("Running SQL R query with input table \"" + inTable + "\" and output table \"" + outTable + "\".");
+       getLogger().debugWithFormat(
+           "Running SQL R query with input table \"%s\" and output table \"%s\".", inTable, outTable);
 
         try {
             if (!connection.createStatement().execute(query)) {

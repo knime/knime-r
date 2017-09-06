@@ -61,7 +61,7 @@ import org.knime.core.util.FileUtil;
  * @author Heiko Hofer
  */
 final class RToPMMLNodeConfig extends RSnippetNodeConfig {
-    private static final NodeLogger LOGGER = NodeLogger.getLogger("R Snippet");
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RToPMMLNodeConfig.class);
 
     private final PortType m_inPortType;
 

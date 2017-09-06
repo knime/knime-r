@@ -70,7 +70,7 @@ public class RCommandQueue extends LinkedBlockingQueue<RCommand> {
     /** Generated serialVersionUID */
     private static final long serialVersionUID = 1850919045704831064L;
 
-    private final NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
+    private final NodeLogger LOGGER = NodeLogger.getLogger(RCommandQueue.class);
 
     private RCommandConsumer m_thread = null;
 
