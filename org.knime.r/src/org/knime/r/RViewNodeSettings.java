@@ -70,37 +70,46 @@ public class RViewNodeSettings {
     private static final String R_SETTINGS = "R settings";
 
     /** Image width. */
-    private int m_imgWidth;
+    private int m_imgWidth = 640;
 
     /** Image height. */
-    private int m_imgHeight;
+    private int m_imgHeight = 640;
 
     /** Image resolution. */
-    private String m_imgResolution;
+    private String m_imgResolution = "NA";
 
     /** Image background color. */
-    private String m_imgBackgroundColor;
+    private String m_imgBackgroundColor = "#ffffff";
 
     /** Text point size. */
-    private int m_textPointSize;
+    private int m_textPointSize = 12;
 
     /** R settings */
     private RSnippetSettings m_rSettings;
 
+    /**
+     * Constructor
+     */
     public RViewNodeSettings() {
         this(new RSnippetSettings());
     }
 
+    /**
+     * Constructor
+     *
+     * @param rSnippetSettings Settings for the base (generic RSnippet node).
+     */
     public RViewNodeSettings(final RSnippetSettings rSnippetSettings) {
-        m_imgWidth = 640;
-        m_imgHeight = 640;
-        m_imgResolution = "NA";
-        m_imgBackgroundColor = "#ffffff";
-        m_textPointSize = 12;
         m_rSettings = rSnippetSettings;
     }
 
-    public static ConfigRO extractRSettings(final ConfigRO config) {
+    /**
+     * Load only the settings of the generic RSnippet base node from config.
+     *
+     * @param config The config to load from.
+     * @return Config for the RSnippet node, stored at the {@link RViewNodeSettings#R_SETTINGS} key.
+     */
+    static ConfigRO extractRSettings(final ConfigRO config) {
         if (config.containsKey(R_SETTINGS)) {
             try {
                 return config.getConfig(R_SETTINGS);
@@ -172,45 +181,51 @@ public class RViewNodeSettings {
     }
 
     /**
-     * @return the m_imgWidth
+     * @return the width for the output image
      */
     public int getImageWidth() {
         return m_imgWidth;
     }
 
     /**
-     * @param m_imgWidth the m_imgWidth to set
+     * Set width for the output image
+     *
+     * @param imgWidth the m_imgWidth to set
      */
     public void setImageWidth(final int imgWidth) {
         this.m_imgWidth = imgWidth;
     }
 
     /**
-     * @return the m_imgHeight
+     * @return the height for the output image
      */
     public int getImageHeight() {
         return m_imgHeight;
     }
 
     /**
-     * @param m_imgHeight the m_imgHeight to set
+     * Set height for the output image
+     *
+     * @param imgHeight the height
      */
     public void setImageHeight(final int imgHeight) {
-        this.m_imgHeight = imgHeight;
+        m_imgHeight = imgHeight;
     }
 
     /**
-     * @return the m_imgResolution
+     * @return the R expression for the output image resolution
      */
     public String getImageResolution() {
         return m_imgResolution;
     }
 
     /**
-     * @param m_imgResolution the m_imgResolution to set
+     * Set resolution for the output image.
+     *
+     * @param imgResolution the R expression for the resolution (can be "NA")
      */
     public void setImageResolution(final String imgResolution) {
-        this.m_imgResolution = imgResolution;
+        m_imgResolution = imgResolution;
     }
 
     /**
@@ -221,24 +236,24 @@ public class RViewNodeSettings {
     }
 
     /**
-     * @param m_imgBackgroundColor the m_imgBackgroundColor to set
+     * @param imgBackgroundColor the background color for output images
      */
     public void setImageBackgroundColor(final String imgBackgroundColor) {
-        this.m_imgBackgroundColor = imgBackgroundColor;
+        m_imgBackgroundColor = imgBackgroundColor;
     }
 
     /**
-     * @return the m_textPointSize
+     * @return the text size in output plots (in pt)
      */
     public int getTextPointSize() {
         return m_textPointSize;
     }
 
     /**
-     * @param m_textPointSize the m_textPointSize to set
+     * @param textPointSize the m_textPointSize to set
      */
     public void setTextPointSize(final int textPointSize) {
-        this.m_textPointSize = textPointSize;
+        m_textPointSize = textPointSize;
     }
 
     /**
@@ -249,10 +264,10 @@ public class RViewNodeSettings {
     }
 
     /**
-     * @param m_rSettings the m_rSettings to set
+     * @param rSettings The RSnippet settings (settings of the generic RSnippet node base)
      */
     public void setRSettings(final RSnippetSettings rSettings) {
-        this.m_rSettings = rSettings;
+        m_rSettings = rSettings;
     }
 
 }
