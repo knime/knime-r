@@ -1,4 +1,4 @@
-# KNIME® - R Integration
+# ![Image](https://www.knime.com/files/knime_logo_github_40x40_4layers.png) KNIME® - R Integration
 
 This repository contains the plugins for the
 
