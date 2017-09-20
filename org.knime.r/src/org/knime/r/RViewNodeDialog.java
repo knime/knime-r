@@ -64,13 +64,13 @@ import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.r.template.DefaultTemplateController;
@@ -82,7 +82,6 @@ import org.knime.r.template.TemplatesPanel;
  * @author Heiko Hofer
  */
 public class RViewNodeDialog extends DataAwareNodeDialogPane {
-    private static final NodeLogger LOGGER = NodeLogger.getLogger(RViewNodeDialog.class);
 
     private static final String SNIPPET_TAB = "R Snippet";
 
@@ -92,7 +91,7 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 
     private final RSnippetNodePanel m_panel;
 
-    private DefaultTemplateController m_templatesController;
+    private DefaultTemplateController<RSnippetNodePanel> m_templatesController;
 
     private final Class<?> m_templateMetaCategory;
 
@@ -110,17 +109,18 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 
     private JTextField m_imgBackgroundColor;
 
-    private JComboBox<String> m_imgType = new JComboBox<String>(new String[]{"PNG", "SVG"});
+    private JComboBox<String> m_imgType = new JComboBox<String>(RViewNodeConfig.IMAGE_TYPES);
 
     /**
      * Create a new Dialog.
      *
      * @param templateMetaCategory the meta category used in the templates tab or to create templates
+     * @param config
      */
     protected RViewNodeDialog(final Class<?> templateMetaCategory, final RSnippetNodeConfig config) {
         m_settings = new RViewNodeSettings();
         m_templateMetaCategory = templateMetaCategory;
-        m_config = config;
+        m_config = CheckUtils.checkArgumentNotNull(config);
         m_tableInPort = -1;
         int i = 0;
         for (final PortType portType : m_config.getInPortTypes()) {
@@ -298,7 +298,7 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
     private JPanel createTemplatesPanel() {
         final RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, m_config, true, false);
 
-        m_templatesController = new DefaultTemplateController(m_panel, preview);
+        m_templatesController = new DefaultTemplateController<RSnippetNodePanel>(m_panel, preview);
         final TemplatesPanel templatesPanel =
             new TemplatesPanel(Collections.<Class<?>> singleton(m_templateMetaCategory), m_templatesController);
         return templatesPanel;

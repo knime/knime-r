@@ -52,6 +52,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.knime.base.data.xml.SvgCell;
 import org.knime.base.data.xml.SvgImageContent;
 import org.knime.core.data.DataType;
@@ -67,6 +68,7 @@ import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.image.ImagePortObject;
 import org.knime.core.node.port.image.ImagePortObjectSpec;
+import org.knime.core.node.util.CheckUtils;
 import org.knime.core.util.FileUtil;
 
 /**
@@ -96,10 +98,8 @@ public class RViewNodeModel extends RSnippetNodeModel {
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         final String imgType = m_settings.getImageType();
-        if (!(imgType.equals("PNG") || imgType.equals("SVG"))) {
-            throw new InvalidSettingsException("Unknown image type \"" + imgType + "\"");
-        }
-
+        CheckUtils.checkSetting(ArrayUtils.contains(RViewNodeConfig.IMAGE_TYPES, imgType),
+            "Unknown image type \"%s\"", imgType);
         return new PortObjectSpec[]{createOutSpec()};
     }
 
@@ -115,19 +115,19 @@ public class RViewNodeModel extends RSnippetNodeModel {
         return new ImagePortObjectSpec(type);
     }
 
-    private PortObject[] postExecuteInternal() throws Exception {
+    private PortObject[] postExecuteInternal() throws IOException {
         if (getConfig().getImageFile().length() > 0) {
             // create image after execution.
-            final FileInputStream fis = new FileInputStream(getConfig().getImageFile());
-            if (m_settings.getImageType().equals("PNG")) {
-                m_resultImage = new PNGImageContent(fis);
-            } else if (m_settings.getImageType().equals("SVG")) {
-                m_resultImage = new SvgImageContent(fis);
+            try (FileInputStream fis = new FileInputStream(getConfig().getImageFile())) {
+                if (m_settings.getImageType().equals("PNG")) {
+                    m_resultImage = new PNGImageContent(fis);
+                } else if (m_settings.getImageType().equals("SVG")) {
+                    m_resultImage = new SvgImageContent(fis);
+                }
             }
-            fis.close();
             return new PortObject[]{new ImagePortObject(m_resultImage, createOutSpec())};
         } else {
-            throw new RuntimeException("No Image was created by the R-Script");
+            throw new IOException("No Image was created by the R-Script");
         }
     }
 
@@ -208,9 +208,9 @@ public class RViewNodeModel extends RSnippetNodeModel {
         // clear image file contents
         if (getConfig().getImageFile() != null) {
             try {
-                final FileOutputStream erasor = new FileOutputStream(getConfig().getImageFile());
-                erasor.write((new String()).getBytes());
-                erasor.close();
+                try (FileOutputStream erasor = new FileOutputStream(getConfig().getImageFile())) {
+                    erasor.write(ArrayUtils.EMPTY_BYTE_ARRAY);
+                }
             } catch (final FileNotFoundException e) {
                 getLogger().error("Temporary file is removed.", e);
             } catch (final IOException e) {

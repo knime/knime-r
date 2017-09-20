@@ -64,7 +64,10 @@ import com.sun.jna.Platform;
  * @author Heiko Hofer
  */
 public class RViewNodeConfig extends RSnippetNodeConfig {
+
     private static final NodeLogger LOGGER = NodeLogger.getLogger(RViewNodeConfig.class);
+
+    static final String[] IMAGE_TYPES = new String[]{"PNG", "SVG"};
 
     private final PortType m_inPortType;
 
