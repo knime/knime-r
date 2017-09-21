@@ -110,7 +110,8 @@ public class RViewNodeConfig extends RSnippetNodeConfig {
         prefix.append("\"" + imageFile.getAbsolutePath().replace('\\', '/') + "\",");
 
         int svgResolution = 1;
-        if(imgType.equals("svg")) {
+        if (imgType.equals("svg")) {
+            // default as per https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/cairo.html (Sep '17)
             svgResolution = 300;
             try {
                 svgResolution = Integer.parseInt(m_settings.getImageResolution());
