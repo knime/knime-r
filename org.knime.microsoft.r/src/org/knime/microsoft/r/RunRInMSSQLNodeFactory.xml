@@ -17,7 +17,7 @@
 			Please download it from <a href="https://docs.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server">here</a>
 			and add <i>sqljdbc_6.0\enu\jre8\sqljdbc42.jar</i> in the "Preferences -> Databases" panel.
 		</intro>
-		<tab name="R Editor">
+		<tab name="R Snippet">
 			<option name="SQL Input Table Name">
 				Name of the SQL table which will be available as <b>knime.in</b>.
 			</option>
@@ -29,7 +29,7 @@
 			</option>
 		</tab>
 		<tab name="Templates">
-			<option name="category">
+			<option name="Category">
 				A template category defined by the author.
 			</option>
 			<option name="Title">
