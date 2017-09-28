@@ -13,7 +13,7 @@
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 		<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-		<tab name="R Editor">
+		<tab name="R Snippet">
 		  <option name ="R Script">
             The code being executed in R.  Input data is available as a data frame named <i>knime.in</i>, 
 			while the desired output data must be generated as a data frame named <i>knime.out</i>. Code may
@@ -33,7 +33,7 @@
           </option>
         </tab>
         <tab name="Templates">
-		  <option name ="category">
+		  <option name ="Category">
 			A template category defined by the author.
 			 
 		  </option>

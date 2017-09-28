@@ -26,7 +26,7 @@
         <a href="http://cran.r-project.org/web/packages/foreign/index.html">library(foreign)</a>
         </intro>
         		
-		<tab name="R Editor">
+		<tab name="R Snippet">
 		  <option name ="R Script">
             The R commands being executed in R. Variables will be saved to the R Workspace port.
           </option>
@@ -38,7 +38,7 @@
           </option>
         </tab>
         <tab name="Templates">
-		  <option name ="category">
+		  <option name ="Category">
 			A template category defined by the author.
 			 
 		  </option>

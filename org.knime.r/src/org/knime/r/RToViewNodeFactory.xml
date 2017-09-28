@@ -14,7 +14,7 @@
 		<a href="http://www.r-project.org/">http://www.r-project.org/</a><br />
 		<a href="http://cran.r-project.org/doc/contrib/Short-refcard.pdf">Short-refcard.pdf</a>
 		</intro>
-		<tab name="R Editor">
+		<tab name="R Snippet">
 		  <option name ="R Script">
             The code being executed in R.  Input data should be previously made available in the R 
 			workspace and while the desired output image must be generated as an R view 
@@ -50,7 +50,7 @@
           </option>
 	    </tab>
 		<tab name="Templates">
-		  <option name ="category">
+		  <option name ="Category">
 			A template category defined by the author.
 			 
 		  </option>

@@ -19,7 +19,7 @@
 		<a href="http://www.r-project.org/">R project</a><br/>
 		<a href="http://www.dmg.org/">PMML standard</a>
 		</intro>
-		<tab name="R Editor">
+		<tab name="R Snippet">
           <option name ="R Script">
             The code being executed in R.  Input model should be previously made available in the R 
             workspace as <i>knime.model</i>, while the desired output must be a string named <i>knime.model.pmml</i>.
