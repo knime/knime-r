@@ -53,9 +53,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -70,9 +72,12 @@ import com.sun.jna.Platform;
  *
  * @author Heiko Hofer
  */
-public class RBinUtil {
+public final class RBinUtil {
+
+    private RBinUtil() {}
+
     /**
-     * The temp directory used as a working directory for R
+     * The temp directory used as a working directory for R.
      */
     static final String TEMP_PATH = KNIMEConstants.getKNIMETempDir().replace('\\', '/');
 
@@ -89,7 +94,7 @@ public class RBinUtil {
         private static final long serialVersionUID = -4082365839749450179L;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param msg error message
          */
@@ -98,10 +103,10 @@ public class RBinUtil {
         }
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param msg error message
-         * @param parent Throwable which caused this exception
+         * @param cause Throwable which caused this exception
          */
         public InvalidRHomeException(final String msg, final Throwable cause) {
             super(cause);
@@ -131,8 +136,8 @@ public class RBinUtil {
         try {
             propsFile = FileUtil.createTempFile("R-propsTempFile-", ".r", true);
             rOutFile = FileUtil.createTempFile("R-propsTempFile-", ".Rout", tmpPath, true);
-        } catch (final IOException e2) {
-            LOGGER.error("Could not create temporary files for R execution.");
+        } catch (final IOException e) {
+            LOGGER.error("Could not create temporary files for R execution.", e);
             return new Properties();
         }
 
@@ -148,8 +153,8 @@ public class RBinUtil {
         File rCommandFile = null;
         try {
             rCommandFile = writeRcommandFile(script);
-        } catch (final IOException e1) {
-            LOGGER.error("Could not write R command file.");
+        } catch (final IOException e) {
+            LOGGER.error("Could not write R command file.", e);
             return new Properties();
         }
         final ProcessBuilder builder = new ProcessBuilder();
@@ -157,10 +162,15 @@ public class RBinUtil {
         builder.directory(rCommandFile.getParentFile());
 
         /* Run R on the script to get properties */
+        Process process = null;
+        InputStream inputStream = null;
+        InputStream errorStream = null;
         try {
-            final Process process = builder.start();
-            final BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            final BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            process = builder.start();
+            inputStream = process.getInputStream();
+            errorStream = process.getErrorStream();
+            final BufferedReader outputReader = new BufferedReader(new InputStreamReader(inputStream));
+            final BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
 
             // Consume the output produced by the R process, otherwise may block process on some operating systems
             new Thread(() -> {
@@ -192,12 +202,18 @@ public class RBinUtil {
         } catch (final Exception e) {
             LOGGER.debug(e.getMessage(), e);
             return new Properties();
+        } finally {
+            if (process != null && process.isAlive()) {
+                process.destroy();
+            }
+            IOUtils.closeQuietly(inputStream);
+            IOUtils.closeQuietly(errorStream);
         }
 
         // load properties from propsFile
         final Properties props = new Properties();
-        try {
-            props.load(new FileInputStream(propsFile));
+        try(final FileInputStream is = new FileInputStream(propsFile)) {
+            props.load(is);
         } catch (final IOException e) {
             LOGGER.warn("Could not retrieve properties from R.", e);
         }
@@ -214,9 +230,9 @@ public class RBinUtil {
      */
     private static File writeRcommandFile(final String cmd) throws IOException {
         final File tempCommandFile = FileUtil.createTempFile("R-readPropsTempFile-", ".r", new File(TEMP_PATH), true);
-        final FileWriter fw = new FileWriter(tempCommandFile);
-        fw.write(cmd);
-        fw.close();
+        try (final FileWriter fw = new FileWriter(tempCommandFile)) {
+            fw.write(cmd);
+        }
         return tempCommandFile;
     }
 
@@ -269,20 +285,14 @@ public class RBinUtil {
         }
         /* On windows, we expect the appropriate platform-specific folders corresponding to our Platform */
         if (Platform.isWindows()) {
-            if (Platform.is64Bit()) {
-                final File expectedFolder = new File(binDir, "x64");
-                if (!expectedFolder.isDirectory()) {
-                    throw new InvalidRHomeException(
-                        R_HOME_NAME + " does not contain a folder with name 'bin\\x64'. Please install R 64-bit files."
-                            + msgSuffix);
-                }
-            } else {
-                final File expectedFolder = new File(binDir, "i386");
-                if (!expectedFolder.isDirectory()) {
-                    throw new InvalidRHomeException(
-                        R_HOME_NAME + " does not contain a folder with name 'bin\\i386'. Please install R 32-bit files."
-                            + msgSuffix);
-                }
+            final int bits = Platform.is64Bit() ? 64 : 32;
+            final String folderName = Platform.is64Bit() ? "x64" : "i386";
+
+            final File expectedFolder = new File(binDir, folderName);
+            if (!expectedFolder.isDirectory()) {
+                throw new InvalidRHomeException(
+                    R_HOME_NAME + " does not contain a folder with name 'bin\\" + folderName + "'. Please install R " + bits + "-bit files."
+                        + msgSuffix);
             }
         }
     }

@@ -129,6 +129,6 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
             m_properties = RBinUtil.retrieveRProperties(this);
         }
 
-        return m_properties;
+        return (Properties)m_properties.clone();
     }
 }
