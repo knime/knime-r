@@ -73,8 +73,12 @@ import com.sun.jna.Platform;
  * @author Heiko Hofer
  */
 public class RPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+
+    /* Maximal value for the receive buffer size */
+    private static final int MAX_RECEIVE_BUFFER_SIZE = 1000000;
+
     /**
-     * Constructor
+     * Constructor.
      */
     public RPreferencePage() {
         super(GRID);
@@ -93,8 +97,8 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
          */
         public RHomeDirectoryFieldEditor(final String name, final String labelText, final Composite parent) {
             // we do most of the parent code, but set a different validate strategy.
-            init(name, labelText);
-            setChangeButtonText(JFaceResources.getString("openBrowse"));//$NON-NLS-1$
+            super.init(name, labelText);
+            setChangeButtonText(JFaceResources.getString("openBrowse")); //$NON-NLS-1$
             setValidateStrategy(VALIDATE_ON_KEY_STROKE);
             createControl(parent);
         }
@@ -109,9 +113,9 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
     protected void createFieldEditors() {
         addField(new RHomeDirectoryFieldEditor(RPreferenceInitializer.PREF_R_HOME, "Path to R Home",
             getFieldEditorParent()));
-        IntegerFieldEditor field = new IntegerFieldEditor(RPreferenceInitializer.PREF_RSERVE_MAXINBUF,
+        final IntegerFieldEditor field = new IntegerFieldEditor(RPreferenceInitializer.PREF_RSERVE_MAXINBUF,
             "Rserve receiving buffer size limit (in MB -- 0 for unlimited)", getFieldEditorParent());
-        field.setValidRange(0, 1000000);
+        field.setValidRange(0, MAX_RECEIVE_BUFFER_SIZE);
         addField(field);
 
         checkRVersion(Activator.getRHOME().getAbsolutePath());
@@ -127,9 +131,11 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
         try {
             RBinUtil.checkRHome(rHome, true);
 
-            DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
+            final DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
             final Properties props = prefProvider.getProperties();
-            final String version = (props.getProperty("major") + "." + props.getProperty("minor")).replace(" ", ""); // the version numbers may contain spaces
+            final String version = (props.getProperty("major") + "." + props.getProperty("minor"))
+                    // the version numbers may contain spaces
+                    .replace(" ", "");
 
             if ("3.1.0".equals(version)) {
                 setMessage("You have selected an R 3.1.0 installation. "
@@ -138,21 +144,26 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
             }
 
             final String rservePath = props.getProperty("Rserve.path");
-            if (rservePath == null || props.getProperty("Rserve.path").isEmpty()) {
-                setMessage("The package 'Rserve' needs to be installed in your R installation. Please install it in R using \"install.packages('Rserve')\".", WARNING);
-                return true; // to allow the user to install Rserve later without having to select the path via the annoying path dialog again.
+            if ((rservePath == null) || props.getProperty("Rserve.path").isEmpty()) {
+                setMessage("The package 'Rserve' needs to be installed in your R installation. "
+                    + "Please install it in R using \"install.packages('Rserve')\".", WARNING);
+                // Return true anyway, to allow the user to install Rserve later without having
+                // to select the path via the annoying path dialog again.
+                return true;
             }
 
             final String cairoPath = props.getProperty("Cairo.path");
             if (Platform.isMac() && (cairoPath == null || cairoPath.isEmpty())) {
                 // under Mac we need Cairo package to use png()/bmp() etc devices.
-                setMessage("The package 'Cairo' needs to be installed in your R installation for bitmap graphics devices to work properly. Please install it in R using \"install.packages('Cairo')\".", WARNING);
+                setMessage("The package 'Cairo' needs to be installed in your R installation for bitmap graphics "
+                    + "devices to work properly. Please install it in R using \"install.packages('Cairo')\".",
+                    WARNING);
                 return true;
             }
 
             setMessage(null, NONE);
             return true;
-        } catch (InvalidRHomeException e) {
+        } catch (final InvalidRHomeException e) {
             setMessage(e.getMessage(), ERROR);
             return false;
         }
