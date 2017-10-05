@@ -1,7 +1,7 @@
 /*
  * ------------------------------------------------------------------------
  *  Copyright by KNIME GmbH, Konstanz, Germany
- *  Website: http://www.knime.org; Email: contact@knime.org
+ *  Website: http://www.knime.com; Email: contact@knime.com
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License, Version 3, as
@@ -133,7 +133,7 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
 
             if ("3.1.0".equals(version)) {
                 setMessage("You have selected an R 3.1.0 installation. "
-                    + "Please see http://tech.knime.org/faq#q26 for details.", WARNING);
+                    + "Please see https://www.knime.com/faq#q26 for details.", WARNING);
                 return true;
             }
 
