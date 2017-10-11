@@ -52,8 +52,6 @@ import java.io.InputStreamReader;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -66,9 +64,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
-import org.knime.core.node.port.database.DatabaseConnectionPortObject;
-import org.knime.core.node.port.database.DatabaseConnectionPortObjectSpec;
-import org.knime.core.node.port.database.DatabaseConnectionSettings;
+import org.knime.core.node.port.database.DatabasePortObject;
 import org.knime.core.node.port.database.DatabasePortObjectSpec;
 import org.knime.core.node.port.database.DatabaseQueryConnectionSettings;
 import org.knime.ext.r.node.local.port.RPortObject;
@@ -104,12 +100,12 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
     static final RSnippetNodeConfig RSNIPPET_NODE_CONFIG = new RSnippetNodeConfig() {
         @Override
         public Collection<PortType> getInPortTypes() {
-            return Arrays.asList(RPortObject.TYPE, DatabaseConnectionPortObject.TYPE);
+            return Arrays.asList(RPortObject.TYPE, DatabasePortObject.TYPE);
         }
 
         @Override
         protected Collection<PortType> getOutPortTypes() {
-            return Arrays.asList(DatabaseConnectionPortObject.TYPE);
+            return Arrays.asList(DatabasePortObject.TYPE);
         }
 
         @Override
@@ -149,12 +145,12 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         super.configure(inSpecs);
 
         assert inSpecs[PORT_INDEX_R] instanceof RPortObjectSpec;
-        assert inSpecs[PORT_INDEX_DB] instanceof DatabaseConnectionPortObjectSpec;
+        assert inSpecs[PORT_INDEX_DB] instanceof DatabasePortObjectSpec;
 
-        final DatabaseConnectionPortObjectSpec databasePort = (DatabaseConnectionPortObjectSpec)inSpecs[PORT_INDEX_DB];
+        final DatabasePortObjectSpec databasePort = (DatabasePortObjectSpec)inSpecs[PORT_INDEX_DB];
 
         /* Check if we are connected to a MSSQL database, since we require support for sq_execute_external_script */
-        final DatabaseConnectionSettings databaseSettings =
+        final DatabaseQueryConnectionSettings databaseSettings =
             databasePort.getConnectionSettings(getCredentialsProvider());
 
         if (!databaseSettings.getDriver().startsWith("com.microsoft")) {
@@ -163,14 +159,14 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             throw new InvalidSettingsException("This node only works with Microsoft SQL Server 2016+");
         }
 
-        return new PortObjectSpec[]{new DatabaseConnectionPortObjectSpec(databaseSettings)};
+        return new PortObjectSpec[]{null};
     }
 
     @Override
     protected PortObject[] execute(final PortObject[] inData, final ExecutionContext exec) throws Exception {
-        final DatabaseConnectionPortObject databasePort = (DatabaseConnectionPortObject)inData[PORT_INDEX_DB];
+        final DatabasePortObject databasePort = (DatabasePortObject)inData[PORT_INDEX_DB];
 
-        final DatabaseConnectionSettings connectionSettings =
+        final DatabaseQueryConnectionSettings connectionSettings =
             databasePort.getConnectionSettings(getCredentialsProvider());
         final Connection connection = connectionSettings.createConnection(getCredentialsProvider());
 
@@ -213,31 +209,17 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
 
         /* Execute R code via SQL statement */
         final String rCode = getRSnippet().getDocument().getText(0, getRSnippet().getDocument().getLength()).trim();
-        final String inTable = m_settings.getInputTableName();
+        final String inputQuery = connectionSettings.getQuery();
         final String outTable = m_settings.getOutputTableName();
-
-        /* Make sure input table exists */
-        final Statement tableCheckStmt = connection.createStatement();
-        if (!tableCheckStmt.execute("SELECT OBJECT_ID('" + inTable + "', 'U')")) {
-            throw new RuntimeException("Check for input table failed.");
-        } else {
-            final ResultSet resultSet = tableCheckStmt.getResultSet();
-            resultSet.next();
-            final Object objId = resultSet.getObject(1);
-            if (objId == null) {
-                // Table does not exist!
-                throw new RuntimeException("Input table does not exist.");
-            }
-        }
 
         /* Resolve variables in SQL query template. */
         final String query = getRunRCodeQuery().replace("${userRCode}", rCode.replace("'", "\""))
             .replace("${usr}", connectionSettings.getUserName(getCredentialsProvider()))
             .replace("${pwd}", connectionSettings.getPassword(getCredentialsProvider()))
-            .replace("${inTableName}", inTable).replace("${outTableName}", outTable);
+            .replace("${inputQuery}", inputQuery).replace("${outTableName}", outTable);
 
        getLogger().debugWithFormat(
-           "Running SQL R query with input table \"%s\" and output table \"%s\".", inTable, outTable);
+           "Running SQL R query with input query \"%s\" and output table \"%s\".", inputQuery, outTable);
 
         try {
             if (!connection.createStatement().execute(query)) {
@@ -247,8 +229,9 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             throw new RuntimeException("SQL Query failed.", e);
         }
 
-        return new PortObject[]{new DatabaseConnectionPortObject(new DatabasePortObjectSpec(new DataTableSpec(),
-            new DatabaseQueryConnectionSettings(connectionSettings, query)))};
+        /* On MSSQL we can use [ ] to specify an identifier */
+        return new PortObject[]{new DatabasePortObject(new DatabasePortObjectSpec(new DataTableSpec(),
+            new DatabaseQueryConnectionSettings(connectionSettings, "SELECT * FROM [" + outTable + "]")))};
     }
 
     /**

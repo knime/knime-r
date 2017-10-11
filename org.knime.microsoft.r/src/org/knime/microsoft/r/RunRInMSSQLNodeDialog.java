@@ -61,6 +61,7 @@ import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
+import org.knime.core.node.port.database.DatabasePortObject;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.r.RSnippetNodeConfig;
@@ -147,6 +148,14 @@ final class RunRInMSSQLNodeDialog extends DataAwareNodeDialogPane {
         m_panel.updateData(settings, input, getAvailableFlowVariables().values());
         m_settings.loadSettingsForDialog(settings);
         m_panel.getSnippetSettings().loadSettingsForDialog(settings);
+
+        String inputSQL;
+        try {
+            inputSQL = ((DatabasePortObject)input[1]).getConnectionSettings(getCredentialsProvider()).getQuery();
+            m_panel.setInputSQL(inputSQL);
+        } catch (InvalidSettingsException e) {
+            m_panel.setInputSQL("<Check database input port>");
+        }
     }
 
     @Override

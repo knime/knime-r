@@ -21,7 +21,7 @@ EXEC sp_execute_external_script
 	outputTable <- RxOdbcData(connectionString=knime.db.connection, table="${outTableName}")
 	rxDataStep(inData=knime.out, outFile=outputTable, overwrite=TRUE)
 ',
-@input_data_1=N'SELECT * from ${inTableName}',
+@input_data_1=N'${inputQuery}',
 @input_data_1_name=N'knime.in',
 @output_data_1_name=N'knime.out',
 @params=N'@knimeserialized varbinary(MAX), @knimedbserver nvarchar(100), @knimedbname nvarchar(128)',

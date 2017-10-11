@@ -166,8 +166,10 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
         setEnabled(!isPreview);
         panel.setPreferredSize(new Dimension(1280, 720));
 
-        m_sqlInTableNameTextField.setMinimumSize(new Dimension(200, 23));
-        m_sqlInTableNameTextField.setMinimumSize(new Dimension(200, 40));
+        m_sqlInTableNameTextField.setMinimumSize(new Dimension(300, 23));
+        m_sqlInTableNameTextField.setMinimumSize(new Dimension(300, 40));
+        m_sqlInTableNameTextField.setEditable(false);
+        m_sqlInTableNameTextField.setEnabled(false);
         m_sqlInTableNameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -190,8 +192,8 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
             }
         });
 
-        m_sqlOutTableNameTextField.setMinimumSize(new Dimension(200, 23));
-        m_sqlOutTableNameTextField.setMinimumSize(new Dimension(200, 40));
+        m_sqlOutTableNameTextField.setMinimumSize(new Dimension(300, 23));
+        m_sqlOutTableNameTextField.setMinimumSize(new Dimension(300, 40));
         m_sqlOutTableNameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -302,7 +304,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
             templateInfoPanel.add(m_templateLocation, BorderLayout.CENTER);
         } else {
             final JPanel tableNamePanel = new JPanel(new GridLayout(2, 3));
-            tableNamePanel.add(new JLabel("SQL Input Table Name: "));
+            tableNamePanel.add(new JLabel("SQL Input: "));
             tableNamePanel.add(m_sqlInTableNameTextField);
             tableNamePanel.add(new JLabel("(knime.in)"));
 
@@ -460,5 +462,14 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
         final RSnippetTemplate template = null != uuid ? provider.getTemplate(UUID.fromString(uuid)) : null;
         final String loc = null != template ? createTemplateLocationText(template) : "";
         m_templateLocation.setText(loc);
+    }
+
+    /**
+     * Set query to use for R script input (knime.in)
+     *
+     * @param inputSQL Query which is used for input to R script
+     */
+    public void setInputSQL(final String inputSQL) {
+        m_sqlInTableNameTextField.setText(inputSQL);
     }
 }
