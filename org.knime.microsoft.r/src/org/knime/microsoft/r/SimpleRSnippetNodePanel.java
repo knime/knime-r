@@ -170,27 +170,6 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
         m_sqlInTableNameTextField.setMinimumSize(new Dimension(300, 40));
         m_sqlInTableNameTextField.setEditable(false);
         m_sqlInTableNameTextField.setEnabled(false);
-        m_sqlInTableNameTextField.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                setSettings();
-            }
-
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                setSettings();
-            }
-
-            @Override
-            public void changedUpdate(final DocumentEvent e) {
-                setSettings();
-            }
-
-            private void setSettings() {
-                settings.setInputTableName(m_sqlInTableNameTextField.getText());
-            }
-        });
 
         m_sqlOutTableNameTextField.setMinimumSize(new Dimension(300, 23));
         m_sqlOutTableNameTextField.setMinimumSize(new Dimension(300, 40));
@@ -395,7 +374,6 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
         m_snippetTextArea.requestFocus();
         m_snippetTextArea.requestFocusInWindow();
 
-        m_sqlInTableNameTextField.setText(m_settings.getInputTableName());
         m_sqlOutTableNameTextField.setText(m_settings.getOutputTableName());
 
         return true;
