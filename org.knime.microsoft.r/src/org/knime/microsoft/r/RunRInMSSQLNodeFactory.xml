@@ -18,8 +18,8 @@
 			and add <i>sqljdbc_6.0\enu\jre8\sqljdbc42.jar</i> in the "Preferences -> Databases" panel.
 		</intro>
 		<tab name="R Snippet">
-			<option name="SQL Input Table Name">
-				Name of the SQL table which will be available as <b>knime.in</b>.
+			<option name="SQL Input">
+				Shows the SQL query defined by the input port. Its result will be available as <b>knime.in</b>.
 			</option>
 			<option name="SQL Output Table Name">
 				Name of the SQL table which <b>knime.out</b> will be written to.
