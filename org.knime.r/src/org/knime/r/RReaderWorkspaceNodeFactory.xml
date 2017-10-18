@@ -62,7 +62,7 @@
     </fullDescription>
     
     <ports>
-        <outPort index="0" name="R Worrkspace">A workspace containing new data from within R</outPort>
+        <outPort index="0" name="R Workspace">A workspace containing new data from within R</outPort>
     </ports>    
     <views>
         <view index="0" name="R Std Output">
