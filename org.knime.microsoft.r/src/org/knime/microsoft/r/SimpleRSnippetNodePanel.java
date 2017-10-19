@@ -47,8 +47,8 @@ package org.knime.microsoft.r;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.awt.GridLayout;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Collection;
@@ -132,8 +132,6 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
 
     private final JTextField m_sqlOutTableNameTextField = new JTextField();
 
-    private final JTextField m_sqlInTableNameTextField = new JTextField();
-
     /**
      * @param templateMetaCategory the meta category used in the templates tab or to create templates
      * @param config
@@ -166,13 +164,6 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
         setEnabled(!isPreview);
         panel.setPreferredSize(new Dimension(1280, 720));
 
-        m_sqlInTableNameTextField.setMinimumSize(new Dimension(300, 23));
-        m_sqlInTableNameTextField.setMinimumSize(new Dimension(300, 40));
-        m_sqlInTableNameTextField.setEditable(false);
-        m_sqlInTableNameTextField.setEnabled(false);
-
-        m_sqlOutTableNameTextField.setMinimumSize(new Dimension(300, 23));
-        m_sqlOutTableNameTextField.setMinimumSize(new Dimension(300, 40));
         m_sqlOutTableNameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -282,18 +273,13 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
         if (isPreview) {
             templateInfoPanel.add(m_templateLocation, BorderLayout.CENTER);
         } else {
-            final JPanel tableNamePanel = new JPanel(new GridLayout(2, 3));
-            tableNamePanel.add(new JLabel("SQL Input: "));
-            tableNamePanel.add(m_sqlInTableNameTextField);
-            tableNamePanel.add(new JLabel("(knime.in)"));
-
+            final JPanel tableNamePanel = new JPanel(new FlowLayout());
             tableNamePanel.add(new JLabel("SQL Output Table Name: "));
             tableNamePanel.add(m_sqlOutTableNameTextField);
             tableNamePanel.add(new JLabel("(knime.out)"));
 
             final Dimension d = m_sqlOutTableNameTextField.getPreferredSize();
             d.width = 150;
-            m_sqlInTableNameTextField.setPreferredSize(d);
             m_sqlOutTableNameTextField.setPreferredSize(d);
 
             templateInfoPanel.add(tableNamePanel, BorderLayout.LINE_START);
@@ -440,14 +426,5 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
         final RSnippetTemplate template = null != uuid ? provider.getTemplate(UUID.fromString(uuid)) : null;
         final String loc = null != template ? createTemplateLocationText(template) : "";
         m_templateLocation.setText(loc);
-    }
-
-    /**
-     * Set query to use for R script input (knime.in)
-     *
-     * @param inputSQL Query which is used for input to R script
-     */
-    public void setInputSQL(final String inputSQL) {
-        m_sqlInTableNameTextField.setText(inputSQL);
     }
 }
