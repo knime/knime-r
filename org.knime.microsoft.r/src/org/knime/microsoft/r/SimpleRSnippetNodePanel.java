@@ -81,6 +81,8 @@ import org.knime.core.node.config.ConfigRO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.database.DatabasePortObject;
+import org.knime.core.node.port.database.DatabasePortObjectSpec;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.r.RSnippet;
@@ -91,6 +93,7 @@ import org.knime.r.RSnippetTemplate;
 import org.knime.r.template.AddTemplateDialog;
 import org.knime.r.template.TemplateProvider;
 import org.knime.r.template.TemplateReceiver;
+import org.knime.r.ui.RColumnList;
 import org.knime.r.ui.RFlowVariableList;
 import org.knime.r.ui.RSnippetTextArea;
 
@@ -114,6 +117,8 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
 
     /** Component with a list of all input flow variables. */
     protected RFlowVariableList m_flowVarsList;
+
+    private RColumnList m_dbColumnsList = new RColumnList();
 
     private final RSnippet m_snippet;
 
@@ -185,6 +190,8 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
                 settings.setOutputTableName(m_sqlOutTableNameTextField.getText());
             }
         });
+
+        m_dbColumnsList.install(m_snippetTextArea);
     }
 
     private JPanel createPanel(final boolean isPreview, final boolean isInteractive) {
@@ -237,10 +244,23 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
      * @return the panel at the left with the column and variables at the input.
      */
     protected JComponent createColsAndVarsPanel() {
+        final JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+
+        final JPanel columnPanel = new JPanel(new BorderLayout());
+        final JScrollPane columnScroller = new JScrollPane(m_dbColumnsList);
+        columnScroller.setBorder(createEmptyTitledBorder("Input Columns"));
+        columnPanel.add(columnScroller, BorderLayout.CENTER);
+
+
         m_flowVarsList = new RFlowVariableList();
         final JScrollPane flowVarScroller = new JScrollPane(m_flowVarsList);
         flowVarScroller.setBorder(createEmptyTitledBorder("Flow Variable List"));
-        return flowVarScroller;
+
+        split.setTopComponent(columnPanel);
+        split.setBottomComponent(flowVarScroller);
+        split.setDividerLocation(0.5);
+
+        return split;
     }
 
     /**
@@ -307,6 +327,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
             super.setEnabled(enabled);
             m_flowVarsList.setEnabled(enabled);
             m_snippetTextArea.setEnabled(enabled);
+            m_dbColumnsList.setEnabled(enabled);
         }
     }
 
@@ -375,7 +396,17 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
     public void updateData(final ConfigRO settings, final PortObjectSpec[] specs,
         final Collection<FlowVariable> flowVariables) {
         m_snippet.getSettings().loadSettingsForDialog(settings);
-        final DataTableSpec spec = m_tableInPort >= 0 ? (DataTableSpec)specs[m_tableInPort] : null;
+        DataTableSpec spec = null;
+        if(m_tableInPort >= 0) {
+            spec = (DataTableSpec)specs[m_tableInPort];
+        } else {
+            for (final PortObjectSpec s : specs) {
+                if(s instanceof DatabasePortObjectSpec) {
+                    spec = ((DatabasePortObjectSpec)s).getDataTableSpec();
+                    break;
+                }
+            }
+        }
         updateData(m_snippet.getSettings(), null, spec, flowVariables);
     }
 
@@ -389,7 +420,17 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
     public void updateData(final ConfigRO settings, final PortObject[] input,
         final Collection<FlowVariable> flowVariables) {
         m_snippet.getSettings().loadSettingsForDialog(settings);
-        final DataTableSpec spec = m_tableInPort >= 0 ? ((BufferedDataTable)input[m_tableInPort]).getSpec() : null;
+        DataTableSpec spec = null;
+        if(m_tableInPort >= 0) {
+            spec = ((BufferedDataTable)input[m_tableInPort]).getSpec();
+        } else {
+            for (final PortObject o : input) {
+                if(o instanceof DatabasePortObject) {
+                    spec = ((DatabasePortObject)o).getSpec().getDataTableSpec();
+                    break;
+                }
+            }
+        }
         updateData(m_snippet.getSettings(), input, spec, flowVariables);
     }
 
@@ -419,6 +460,8 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
         m_snippet.getSettings().loadSettings(settings);
 
         m_flowVarsList.setFlowVariables(flowVariables);
+
+        m_dbColumnsList.setSpec(spec);
 
         // update template info panel
         final TemplateProvider provider = TemplateProvider.getDefault();
