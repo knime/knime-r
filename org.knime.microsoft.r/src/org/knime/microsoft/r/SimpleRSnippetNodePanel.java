@@ -72,7 +72,6 @@ import javax.swing.event.DocumentListener;
 import org.fife.ui.rsyntaxtextarea.ErrorStrip;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.knime.core.data.DataTableSpec;
-import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.NodeDialogPane;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettings;
@@ -80,7 +79,6 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.config.ConfigRO;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
-import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.database.DatabasePortObject;
 import org.knime.core.node.port.database.DatabasePortObjectSpec;
 import org.knime.core.node.util.ViewUtils;
@@ -133,8 +131,6 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
 
     private final RSnippetNodeConfig m_config;
 
-    private int m_tableInPort;
-
     private final JTextField m_sqlOutTableNameTextField = new JTextField();
 
     /**
@@ -148,15 +144,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
         final RunRInMSSQLNodeSettings settings, final boolean isPreview, final boolean isInteractive) {
         super(new BorderLayout());
         m_config = config;
-        m_tableInPort = -1;
         m_settings = settings;
-        int i = 0;
-        for (final PortType portType : m_config.getInPortTypes()) {
-            if (portType.equals(BufferedDataTable.TYPE)) {
-                m_tableInPort = i;
-            }
-            i++;
-        }
 
         m_templateMetaCategory = templateMetaCategory;
 
@@ -396,17 +384,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
     public void updateData(final ConfigRO settings, final PortObjectSpec[] specs,
         final Collection<FlowVariable> flowVariables) {
         m_snippet.getSettings().loadSettingsForDialog(settings);
-        DataTableSpec spec = null;
-        if(m_tableInPort >= 0) {
-            spec = (DataTableSpec)specs[m_tableInPort];
-        } else {
-            for (final PortObjectSpec s : specs) {
-                if(s instanceof DatabasePortObjectSpec) {
-                    spec = ((DatabasePortObjectSpec)s).getDataTableSpec();
-                    break;
-                }
-            }
-        }
+        final DataTableSpec spec = ((DatabasePortObjectSpec)specs[1]).getDataTableSpec();
         updateData(m_snippet.getSettings(), null, spec, flowVariables);
     }
 
@@ -420,17 +398,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
     public void updateData(final ConfigRO settings, final PortObject[] input,
         final Collection<FlowVariable> flowVariables) {
         m_snippet.getSettings().loadSettingsForDialog(settings);
-        DataTableSpec spec = null;
-        if(m_tableInPort >= 0) {
-            spec = ((BufferedDataTable)input[m_tableInPort]).getSpec();
-        } else {
-            for (final PortObject o : input) {
-                if(o instanceof DatabasePortObject) {
-                    spec = ((DatabasePortObject)o).getSpec().getDataTableSpec();
-                    break;
-                }
-            }
-        }
+        final DataTableSpec spec = ((DatabasePortObject)input[1]).getSpec().getDataTableSpec();
         updateData(m_snippet.getSettings(), input, spec, flowVariables);
     }
 
