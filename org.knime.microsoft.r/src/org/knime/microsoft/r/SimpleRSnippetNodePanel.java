@@ -384,7 +384,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
     public void updateData(final ConfigRO settings, final PortObjectSpec[] specs,
         final Collection<FlowVariable> flowVariables) {
         m_snippet.getSettings().loadSettingsForDialog(settings);
-        final DataTableSpec spec = ((DatabasePortObjectSpec)specs[1]).getDataTableSpec();
+        final DataTableSpec spec = specs[1] == null ? null : ((DatabasePortObjectSpec)specs[1]).getDataTableSpec();
         updateData(m_snippet.getSettings(), null, spec, flowVariables);
     }
 
@@ -398,7 +398,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
     public void updateData(final ConfigRO settings, final PortObject[] input,
         final Collection<FlowVariable> flowVariables) {
         m_snippet.getSettings().loadSettingsForDialog(settings);
-        final DataTableSpec spec = ((DatabasePortObject)input[1]).getSpec().getDataTableSpec();
+        final DataTableSpec spec = input[1] == null ? null : ((DatabasePortObject)input[1]).getSpec().getDataTableSpec();
         updateData(m_snippet.getSettings(), input, spec, flowVariables);
     }
 
