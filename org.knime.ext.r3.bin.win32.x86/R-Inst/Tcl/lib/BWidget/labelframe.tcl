@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------
 #  labelframe.tcl
 #  This file is part of Unifix BWidget Toolkit
-#  $Id: labelframe.tcl,v 1.6 2003/10/20 21:23:52 damonc Exp $
+#  $Id: labelframe.tcl,v 1.6.2.1 2011/02/14 16:56:09 oehhar Exp $
 # ------------------------------------------------------------------------------
 #  Index of commands:
 #     - LabelFrame::create
@@ -33,8 +33,6 @@ namespace eval LabelFrame {
     Widget::addmap LabelFrame "" :cmd {-background {}}
     Widget::addmap LabelFrame "" .f   {-background {} -relief {} -borderwidth {}}
 
-    Widget::syncoptions LabelFrame Label .l {-text {} -underline {}}
-
     bind BwLabelFrame <FocusIn> [list Label::setfocus %W.l]
     bind BwLabelFrame <Destroy> [list LabelFrame::_destroy %W]
 }
@@ -46,15 +44,25 @@ namespace eval LabelFrame {
 proc LabelFrame::create { path args } {
     Widget::init LabelFrame $path $args
 
-    set path  [eval [list frame $path] [Widget::subcget $path :cmd] \
-	    -relief flat -bd 0 -takefocus 0 -highlightthickness 0 \
-	    -class LabelFrame]
+    if {[Widget::theme]} {
+        set path  [eval [list ttk::frame $path] [Widget::subcget $path :cmd] \
+            -takefocus 0 \
+            -class LabelFrame]
+    }  else  {
+        set path  [eval [list frame $path] [Widget::subcget $path :cmd] \
+            -relief flat -bd 0 -takefocus 0 -highlightthickness 0 \
+            -class LabelFrame]
+    }
 
     set label [eval [list Label::create $path.l] [Widget::subcget $path .l] \
-                   -takefocus 0 -highlightthickness 0 -relief flat \
-		   -borderwidth 0 -dropenabled 0 -dragenabled 0]
-    set frame [eval [list frame $path.f] [Widget::subcget $path .f] \
-                   -highlightthickness 0 -takefocus 0]
+        -takefocus 0 -dropenabled 0 -dragenabled 0]
+    if {[Widget::theme]} {
+        set frame [eval [list ttk::frame $path.f] [Widget::subcget $path .f] \
+            -takefocus 0]
+    }  else  {
+        set frame [eval [list frame $path.f] [Widget::subcget $path .f] \
+            -highlightthickness 0 -takefocus 0]
+    }
 
     switch  [Widget::getoption $path -side] {
         left   {set packopt "-side left"}

@@ -58,6 +58,18 @@ proc PanedWindow::create { path args } {
     set _panedw($path,weights) ""
     set _panedw($path,configuredone) 0
 
+    set activator [Widget::getoption $path -activator]
+    if {[string equal $activator ""]} {
+        if { $::tcl_platform(platform) != "windows" } {
+            Widget::setMegawidgetOption $path -activator button
+        } else {
+            Widget::setMegawidgetOption $path -activator line
+        }
+    }
+    if {[string equal [Widget::getoption $path -activator] "line"]} {
+        Widget::setMegawidgetOption $path -width 3
+    }
+    
     bind $path <Configure> [list PanedWindow::_realize $path %w %h]
     bind $path <Destroy>   [list PanedWindow::_destroy $path]
 
@@ -116,28 +128,20 @@ proc PanedWindow::add { path args } {
 
     if { $num > 0 } {
         set frame [frame $path.sash$num -relief flat -bd 0 \
-		-highlightthickness 0 -width $width -height $width -bg $bg]
-        set sep   [frame $frame.sep -bd 5 -relief raised \
-		-highlightthickness 0 -bg $bg]
-        set but   [frame $frame.but -bd 1 -relief raised \
-		-highlightthickness 0 -bg $bg -width $wbut -height $wbut]
-	set placeButton 1
-	set sepsize     2
+                       -highlightthickness 0 -width $width -height $width -bg $bg]
+        set sep [frame $frame.sep -bd 5 -relief raised \
+                     -highlightthickness 0 -bg $bg]
+        set but [frame $frame.but -bd 1 -relief raised \
+                     -highlightthickness 0 -bg $bg -width $wbut -height $wbut]
+	set sepsize 2
 
-	set activator [Widget::getoption $path -activator]
-	if {$activator == ""} {
-	    if { $::tcl_platform(platform) != "windows" } {
-		set activator button
-	    } else {
-		set activator line
-	    }
-	}
+        set activator [Widget::getoption $path -activator]
 	if {$activator == "button"} {
 	    set activator $but
+	    set placeButton 1
 	} else {
 	    set activator $sep
-	    set sepsize 4
-	    $sep configure -bd 3
+	    $sep configure -bd 1
 	    set placeButton 0
 	}
         if {[string equal $side "top"] || [string equal $side "bottom"]} {

@@ -65,4 +65,4 @@ anova( fm2Machine )
 # cleanup
 
 proc.time()
-q("no")
+

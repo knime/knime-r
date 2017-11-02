@@ -17,10 +17,10 @@ export(addterm, area, as.fractions, bandwidth.nrd, bcv, boxcox,
 # formerly in package lqs
 export(cov.mcd, cov.mve, cov.rob, lmsreg, lqs, lqs.formula, ltsreg)
 
-# needed for Recall
-export(denumerate.formula, renumerate.formula)
+# formerly needed for Recall
+# export(denumerate.formula, renumerate.formula)
 
-# documented but unexported methods
+# documented, registered but unexported methods
 # export(addterm.default, addterm.glm, addterm.lm,
 #        anova.loglm, anova.negbin,
 #        boxcox.default, boxcox.formula, boxcox.lm,
@@ -35,12 +35,28 @@ export(denumerate.formula, renumerate.formula)
 #        profile.glm, select.ridgelm,
 #        summary.loglm, summary.negbin, summary.rlm)
 
-importFrom(graphics, pairs, plot)
+importFrom(grDevices, dev.flush, dev.hold, nclass.FD, nclass.scott, palette)
+importFrom(graphics, abline, axis, box, frame, hist, lines, matplot, mtext,
+           pairs, par, plot, points, rect, segments, symbols, text)
+#import(stats) # triggers bug in wmtsa
 importFrom(stats, add1, anova, biplot, coef, confint, drop1,
 	   extractAIC, family, fitted, logLik, model.frame, nobs,
 	   predict, profile, residuals, se.contrast, simulate, terms,
-	   update, vcov)
-
+	   update, vcov,
+           ## added in 7.3-42
+           .checkMFClasses, .getXlevels, IQR, add.scope, aov, approx,
+           as.formula, binomial, cmdscale, contr.helmert, dbeta, dcauchy,
+           dchisq, delete.response, density, deviance, dexp, df,
+           dgamma, dgeom, dist, dlnorm, dlogis, dnbinom, dnorm, dpois,
+           drop.scope, dt, dweibull, factor.scope, formula, glm,
+           glm.control, glm.fit, is.empty.model, lm, lm.fit,
+           lm.influence, lm.wfit, loglin, lsfit, mad, mahalanobis,
+           make.link, median, model.extract, model.matrix,
+           model.offset, model.response, model.weights, na.pass,
+           napredict, naprint, naresid, optim, optimize, pcauchy,
+           pchisq, pf, plogis, pnorm, qchisq, qf, qnorm, qt, quantile,
+           rcauchy, rexp, rgamma, rlogis, rnorm, rpois, runif, sd,
+           spline, summary.glm, uniroot, update.formula, var)
 
 S3method("[", fractions)
 S3method("[<-", fractions)
@@ -153,6 +169,7 @@ S3method(qda, data.frame)
 S3method(qda, default)
 S3method(qda, formula)
 S3method(qda, matrix)
+S3method(renumerate, formula)
 S3method(residuals, loglm)
 S3method(rlm, default)
 S3method(rlm, formula)

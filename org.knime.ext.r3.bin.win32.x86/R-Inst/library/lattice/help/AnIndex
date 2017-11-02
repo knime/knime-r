@@ -207,6 +207,8 @@ trellis.switchFocus	interaction
 trellis.unfocus	interaction
 trellis.vpname	interaction
 update.trellis	update.trellis
+USMortality	USMortality
+USRegionalMortality	USMortality
 utilities.3d	utilities.3d
 which.packet	panel.number
 wireframe	cloud

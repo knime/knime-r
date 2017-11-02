@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 #  scrollw.tcl
 #  This file is part of Unifix BWidget Toolkit
-#  $Id: scrollw.tcl,v 1.12 2006/08/21 20:54:14 dev_null42a Exp $
+#  $Id: scrollw.tcl,v 1.13.2.2 2011/02/14 16:56:09 oehhar Exp $
 # -----------------------------------------------------------------------------
 #  Index of commands:
 #     - ScrolledWindow::create
@@ -47,21 +47,32 @@ proc ScrolledWindow::create { path args } {
 
     set bg     [Widget::cget $path -background]
     set sbsize [Widget::cget $path -size]
-    set sw     [eval [list frame $path \
-			  -relief flat -borderwidth 0 -background $bg \
-			  -highlightthickness 0 -takefocus 0] \
-		    [Widget::subcget $path :cmd]]
 
-    scrollbar $path.hscroll \
-	    -highlightthickness 0 -takefocus 0 \
-	    -orient	 horiz	\
-	    -relief	 sunken	\
-	    -bg	 $bg
-    scrollbar $path.vscroll \
-	    -highlightthickness 0 -takefocus 0 \
-	    -orient	 vert	\
-	    -relief	 sunken	\
-	    -bg	 $bg
+    if { $::Widget::_theme } {
+        set sw     [eval [list ttk::frame $path \
+                      -relief flat -borderwidth 0 -takefocus 0] \
+                        [Widget::subcget $path :cmd]]
+        ttk::scrollbar $path.hscroll \
+            -takefocus 0 -orient horiz
+        ttk::scrollbar $path.vscroll \
+            -takefocus 0 -orient vert
+    } else {
+        if {$bg != ""} {
+            set bg [list -background $bg]
+        }
+        set sw     [eval [list frame $path \
+                      -relief flat -borderwidth 0] $bg [list \
+                      -highlightthickness 0 -takefocus 0] \
+                        [Widget::subcget $path :cmd]]
+        scrollbar $path.hscroll \
+            -highlightthickness 0 -takefocus 0 \
+            -orient	 horiz	\
+            -relief	 sunken
+        scrollbar $path.vscroll \
+            -highlightthickness 0 -takefocus 0 \
+            -orient	 vert	\
+            -relief	 sunken
+    }
 
     set data(realized) 0
 
@@ -77,11 +88,13 @@ proc ScrolledWindow::create { path args } {
 	set data(hsb,packed) 0
 	set data(vsb,packed) 0
     }
-    if {$sbsize} {
-	$path.vscroll configure -width $sbsize
-	$path.hscroll configure -width $sbsize
-    } else {
-	set sbsize [$path.vscroll cget -width]
+    if { ! $::Widget::_theme } {
+        if {$sbsize} {
+            $path.vscroll configure -width $sbsize
+            $path.hscroll configure -width $sbsize
+        } else {
+            set sbsize [$path.vscroll cget -width]
+        }
     }
     set data(ipad) [Widget::cget $path -ipad]
 
@@ -125,6 +138,7 @@ proc ScrolledWindow::setwidget { path widget } {
     }
     set data(widget) $widget
     grid $widget -in $path -row 1 -column 1 -sticky news
+    raise $widget;
 
     $path.hscroll configure -command [list $widget xview]
     $path.vscroll configure -command [list $widget yview]
@@ -141,10 +155,10 @@ proc ScrolledWindow::configure { path args } {
     Widget::getVariable $path data
 
     set res [Widget::configure $path $args]
-    if { [Widget::hasChanged $path -background bg] } {
-	$path configure -background $bg
-	catch {$path.hscroll configure -background $bg}
-	catch {$path.vscroll configure -background $bg}
+    if { ! $::Widget::_theme && [Widget::hasChanged $path -background bg] } {
+        $path configure -background $bg
+        catch {$path.hscroll configure -background $bg}
+        catch {$path.vscroll configure -background $bg}
     }
 
     if {[Widget::hasChanged $path -scrollbar scrollbar] | \
@@ -198,12 +212,13 @@ proc ScrolledWindow::_set_hscroll { path vmin vmax } {
     Widget::getVariable $path data
 
     if {$data(realized) && $data(hsb,present)} {
-	if {$data(hsb,auto)} {
+	if {$data(hsb,auto) && ![info exists data(hlock)]} {
 	    if {$data(hsb,packed) && $vmin == 0 && $vmax == 1} {
-		if {![info exists data(hlock)]} {
-		    set data(hsb,packed) 0
-		    grid remove $path.hscroll
-		}
+		set data(hsb,packed) 0
+		grid remove $path.hscroll
+		set data(hlock) 1
+		update idletasks
+		unset data(hlock)
 	    } elseif {!$data(hsb,packed) && ($vmin != 0 || $vmax != 1)} {
 		set data(hsb,packed) 1
 		grid $path.hscroll -column 1 -row $data(hsb,row) \
@@ -225,12 +240,13 @@ proc ScrolledWindow::_set_vscroll { path vmin vmax } {
     Widget::getVariable $path data
 
     if {$data(realized) && $data(vsb,present)} {
-	if {$data(vsb,auto)} {
+	if {$data(vsb,auto) && ![info exists data(vlock)]} {
 	    if {$data(vsb,packed) && $vmin == 0 && $vmax == 1} {
-		if {![info exists data(vlock)]} {
-		    set data(vsb,packed) 0
-		    grid remove $path.vscroll
-		}
+		set data(vsb,packed) 0
+		grid remove $path.vscroll
+		set data(vlock) 1
+		update idletasks
+		unset data(vlock)
 	    } elseif {!$data(vsb,packed) && ($vmin != 0 || $vmax != 1) } {
 		set data(vsb,packed) 1
 		grid $path.vscroll -column $data(vsb,column) -row 1 \

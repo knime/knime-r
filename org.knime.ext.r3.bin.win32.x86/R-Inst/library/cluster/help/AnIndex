@@ -39,7 +39,7 @@ plot.mona	plot.mona
 plot.partition	plot.partition
 plot.silhouette	silhouette
 pltree	pltree
-pltree.twins	pltree.twins
+pltree.twins	pltree
 pluton	pluton
 predict.ellipsoid	predict.ellipsoid
 print.agnes	print.agnes

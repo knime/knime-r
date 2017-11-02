@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------
 #  dialog.tcl
 #  This file is part of Unifix BWidget Toolkit
-#  $Id: dialog.tcl,v 1.15 2004/09/24 23:56:59 hobbs Exp $
+#  $Id: dialog.tcl,v 1.15.2.1 2010/08/04 13:07:59 oehhar Exp $
 # ----------------------------------------------------------------------------
 #  Index of commands:
 #     - Dialog::create
@@ -118,7 +118,11 @@ proc Dialog::create { path args } {
     set _widget($path,realized) 0
     set _widget($path,nbut)     0
 
-    bind $path <Escape>  [list ButtonBox::invoke $path.bbox [Widget::getoption $path -cancel]]
+    set cancel [Widget::getoption $path -cancel]
+    bind $path <Escape>  [list ButtonBox::invoke $path.bbox $cancel]
+    if {$cancel != -1} {
+        wm protocol $path WM_DELETE_WINDOW [list ButtonBox::invoke $path.bbox $cancel]
+    }
     bind $path <Return>  [list ButtonBox::invoke $path.bbox default]
 
     return [Widget::create Dialog $path]
@@ -140,6 +144,14 @@ proc Dialog::configure { path args } {
         }
         if { [winfo exists $path.sep] } {
             Separator::configure $path.sep -background $bg
+        }
+    }
+    if { [Widget::hasChanged $path -cancel cancel] } {
+        bind $path <Escape>  [list ButtonBox::invoke $path.bbox $cancel]
+        if {$cancel == -1} {
+            wm protocol $path WM_DELETE_WINDOW ""
+        } else {
+            wm protocol $path WM_DELETE_WINDOW [list ButtonBox::invoke $path.bbox $cancel]
         }
     }
     return $res

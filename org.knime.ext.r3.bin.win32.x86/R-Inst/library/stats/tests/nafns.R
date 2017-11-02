@@ -1,5 +1,5 @@
 #  File src/library/stats/tests/nafns.R
-#  Part of the R package, http://www.R-project.org
+#  Part of the R package, https://www.R-project.org
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #  GNU General Public License for more details.
 #
 #  A copy of the GNU General Public License is available at
-#  http://www.r-project.org/Licenses/
+#  https://www.R-project.org/Licenses/
 
 ## Tests of functions handling NAs in fits
 ## These functions were introduced in 1.3.0.
@@ -108,6 +108,7 @@ stopifnot(max(abs(p1 - p2[common])) <= 256*.Machine$double.eps)
 stopifnot(all(is.na(p2[-common])))
 
 ## tests of diagnostic measures.
+set.seed(11)
 x <- 1:10
 y <- c(rnorm(9),NA)
 fit <- lm(y ~ x, na.action=na.exclude)

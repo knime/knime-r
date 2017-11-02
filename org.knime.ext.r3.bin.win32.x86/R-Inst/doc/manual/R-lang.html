@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- This manual is for R, version 3.0.3 (2014-03-06).
+<!-- This manual is for R, version 3.4.2 (2017-09-28).
 
-Copyright (C) 2000-2013 R Core Team
+Copyright (C) 2000-2016 R Core Team
 
 Permission is granted to make and distribute verbatim copies of this
 manual provided the copyright notice and this permission notice are
@@ -30,7 +30,6 @@ approved by the R Core Team. -->
 <link href="#Top" rel="start" title="Top">
 <link href="#Function-and-Variable-Index" rel="index" title="Function and Variable Index">
 <link href="#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="dir.html#Top" rel="up" title="(dir)">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -57,51 +56,70 @@ span.nolinebreak {white-space:nowrap}
 span.roman {font-family:serif; font-weight:normal}
 span.sansserif {font-family:sans-serif; font-weight:normal}
 ul.no-bullet {list-style: none}
-body {margin-left: 5%; margin-right: 5%;}
+body {
+    margin-left: 5%;
+    margin-right: 5%;
+}
 
-H1 {             
+h1 {             
     background: white;
     color: rgb(25%, 25%, 25%);
     font-family: monospace;
     font-size: xx-large;
-    text-align: center
+    text-align: center;
 }
 
-H2 {
+h2 {
     background: white;
     color: rgb(40%, 40%, 40%);
     font-family: monospace;
     font-size: x-large;
-    text-align: center
+    text-align: center;
 }
 
-H3 {
+h3 {
     background: white;
     color: rgb(40%, 40%, 40%);
     font-family: monospace;
-    font-size: large
+    font-size: large;
 }
 
-H4 {
+h4 {
     background: white;
     color: rgb(40%, 40%, 40%);
-    font-family: monospace
+    font-family: monospace;
 }
 
-span.samp{font-family: monospace}
-span.command{font-family: monospace}
-span.option{font-family: monospace}
-span.file{font-family: monospace}
-span.env{font-family: monospace}
+span.samp {
+    font-family: monospace;
+}
+
+span.command {
+    font-family: monospace;
+}
+
+span.option {
+    font-family: monospace;
+}
+
+span.file {
+    font-family: monospace;
+}
+
+span.env {
+    font-family: monospace;
+}
 
 ul {
     margin-top: 0.25ex;
     margin-bottom: 0.25ex;
 }
+
 li {
     margin-top: 0.25ex;
     margin-bottom: 0.25ex;
 }
+
 p {
     margin-top: 0.6ex;
     margin-bottom: 1.2ex;
@@ -315,7 +333,7 @@ p {
 <a name="Top"></a>
 <div class="header">
 <p>
-Next: <a href="#Introduction" accesskey="n" rel="next">Introduction</a>, Previous: <a href="dir.html#Top" accesskey="p" rel="prev">(dir)</a>, Up: <a href="dir.html#Top" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Introduction" accesskey="n" rel="next">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="R-Language-Definition"></a>
 <h1 class="top">R Language Definition</h1>
@@ -324,9 +342,9 @@ Next: <a href="#Introduction" accesskey="n" rel="next">Introduction</a>, Previou
 parsing, object oriented programming, computing on the language, and so
 forth.
 </p>
-<p>This manual is for R, version 3.0.3 (2014-03-06).
+<p>This manual is for R, version 3.4.2 (2017-09-28).
 </p>
-<p>Copyright &copy; 2000&ndash;2013 R Core Team
+<p>Copyright &copy; 2000&ndash;2016 R Core Team
 </p>
 <blockquote>
 <p>Permission is granted to make and distribute verbatim copies of this
@@ -346,7 +364,7 @@ approved by the R Core Team.
 
 
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Introduction" accesskey="1">Introduction</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Objects" accesskey="2">Objects</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -475,7 +493,7 @@ parts of the structure is used.
 <code>typeof</code> and what they are.
 </p>
 <blockquote>
-<table>
+<table summary="">
 <tr><td width="20%"><code>&quot;NULL&quot;</code></td><td width="70%">NULL</td></tr>
 <tr><td width="20%"><code>&quot;symbol&quot;</code></td><td width="70%">a variable name</td></tr>
 <tr><td width="20%"><code>&quot;pairlist&quot;</code></td><td width="70%">a pairlist object (mainly internal)</td></tr>
@@ -544,7 +562,7 @@ doesn&rsquo;t affect the computations, however, when dealing with foreign
 languages or the operating system it is often necessary to ensure that
 an object is of the correct type.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Basic-types" accesskey="1">Basic types</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Attributes" accesskey="2">Attributes</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -564,7 +582,7 @@ Next: <a href="#Attributes" accesskey="n" rel="next">Attributes</a>, Previous: <
 <h3 class="section">2.1 Basic types</h3>
 
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Vector-objects" accesskey="1">Vector objects</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#List-objects" accesskey="2">List objects</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -615,7 +633,7 @@ complex, string (or character) and raw.  The modes and storage modes for
 the different vector types are listed in the following table.
 </p>
 <blockquote>
-<table>
+<table summary="">
 <thead><tr><th>typeof</th><th>mode</th><th>storage.mode</th></tr></thead>
 <tr><td><code>logical</code></td><td><code>logical</code></td><td><code>logical</code></td></tr>
 <tr><td><code>integer</code></td><td><code>numeric</code></td><td><code>integer</code></td></tr>
@@ -689,7 +707,7 @@ Components of the
 parse tree can be extracted using the standard
 indexing operations.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Symbol-objects" accesskey="1">Symbol objects</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -1066,7 +1084,7 @@ during
 evaluation.  The class structure in R is described in detail
 in <a href="#Object_002doriented-programming">Object-oriented programming</a>.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Names" accesskey="1">Names</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Dimensions" accesskey="2">Dimensions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1222,7 +1240,7 @@ Previous: <a href="#Attributes" accesskey="p" rel="prev">Attributes</a>, Up: <a 
 <a name="Special-compound-objects-1"></a>
 <h3 class="section">2.3 Special compound objects</h3>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Factors" accesskey="1">Factors</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Data-frame-objects" accesskey="2">Data frame objects</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1326,7 +1344,7 @@ be sufficient documentation.
 </p>
 <p>Users can construct expressions and invoke the evaluator on them.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Simple-evaluation" accesskey="1">Simple evaluation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Control-structures" accesskey="2">Control structures</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1348,7 +1366,7 @@ Next: <a href="#Control-structures" accesskey="n" rel="next">Control structures<
 <a name="Simple-evaluation-1"></a>
 <h3 class="section">3.1 Simple evaluation</h3>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Constants" accesskey="1">Constants</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Symbol-lookup" accesskey="2">Symbol lookup</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1473,7 +1491,7 @@ used for their side effects, e.g., printing and plotting functions.
 <a name="index-function-7"></a>
 <a name="index-function-arguments"></a>
 <p>Function calls can have <em>tagged</em> (or <em>named</em>) arguments, as in
-<code>plot(x, y, pch = 3)</code> arguments without tags are known as
+<code>plot(x, y, pch = 3)</code>.  Arguments without tags are known as
 <em>positional</em> since the function must distinguish their meaning from
 their sequential positions among the arguments of the call, e.g., that
 <code>x</code> denotes the abscissa variable and <code>y</code> the ordinate.  The
@@ -1526,7 +1544,7 @@ and assigned to variables in a straightforward manner
 below.
 </p>
 <blockquote>
-<table>
+<table summary="">
 <tr><td width="10%"><code>-</code></td><td width="70%">Minus, can be unary or binary</td></tr>
 <tr><td width="10%"><code>+</code></td><td width="70%">Plus, can be unary or binary</td></tr>
 <tr><td width="10%"><code>!</code></td><td width="70%">Unary not</td></tr>
@@ -1657,7 +1675,7 @@ block.
 [1] 5
 </pre></div>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#if" accesskey="1">if</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Looping" accesskey="2">Looping</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1705,10 +1723,10 @@ Only the first element of <var>value1</var> is used.  All other elements are
 ignored.  If <var>value1</var> has any type other than a logical or a numeric
 vector an error is signalled.
 </p>
-<p>If/else statements can be used to avoid numeric problems such as taking
-the logarithm of a negative number.  Because if/else statements are the
-same as other statements you can assign the value of them.  The two
-examples below are equivalent.
+<p><code>if</code>/<code>else</code> statements can be used to avoid numeric problems
+such as taking the logarithm of a negative number.  Because
+<code>if</code>/<code>else</code> statements are the same as other statements you
+can assign the value of them.  The two examples below are equivalent.
 </p>
 <div class="example">
 <pre class="example">&gt; if( any(x &lt;= 0) ) y &lt;- log(1+x) else y &lt;- log(x)
@@ -1724,7 +1742,7 @@ complete statement that is evaluated.  A simple solution is to use a
 compound statement wrapped in braces, putting the <code>else</code> on the
 same line as the closing brace that marks the end of the statement.
 </p>
-<p>If/else statements can be nested.
+<p><code>if</code>/<code>else</code> statements can be nested.
 </p>
 <div class="example">
 <pre class="example">if ( <var>statement1</var> ) {
@@ -1739,7 +1757,7 @@ same line as the closing brace that marks the end of the statement.
 
 <p>One of the even numbered statements will be evaluated and the resulting
 value returned.  If the optional <code>else</code> clause is omitted and all
-the odd numbered <var>statement</var>&rsquo;s evaluate to <code>FALSE</code> no statement
+the odd numbered <var>statement</var>s evaluate to <code>FALSE</code> no statement
 will be evaluated and <code>NULL</code> is returned.
 </p>
 <p>The odd numbered <var>statement</var>s are evaluated, in order, until one
@@ -1762,10 +1780,8 @@ Next: <a href="#repeat" accesskey="n" rel="next">repeat</a>, Previous: <a href="
 <p>R has three statements that provide explicit
 looping.<a name="DOCF3" href="#FOOT3"><sup>3</sup></a>  They are <code>for</code>, <code>while</code> and
 <code>repeat</code>.  The two built-in constructs, <code>next</code> and
-<code>break</code>, provide additional control over the evaluation.  Each of
-the three statements returns the value of the last statement that was
-evaluated.  It is possible, although uncommon, to assign the result of
-one of these statements to a symbol.  R provides other functions for
+<code>break</code>, provide additional control over the evaluation. 
+R provides other functions for
 implicit looping such as <code>tapply</code>, <code>apply</code>, and <code>lapply</code>.
 In addition many operations, especially arithmetic ones, are vectorized
 so you may not need to use a loop.
@@ -1780,7 +1796,7 @@ causes control to return to the start of the loop.  The next iteration
 of the loop (if there is one) is then executed.  No statement below
 <code>next</code> in the current loop is evaluated.
 </p>
-<p>The value returned by a loop statement statement is always <code>NULL</code>
+<p>The value returned by a loop statement is always <code>NULL</code>
 and is returned invisibly.
 </p>
 <hr>
@@ -1874,7 +1890,7 @@ languages.
 <p>where the elements of <var>list</var> may be named.  First, <var>statement</var>
 is evaluated and the result, <var>value</var>, obtained.  If <var>value</var> is a
 number between 1 and the length of <var>list</var> then the corresponding
-element <var>list</var> is evaluated and the result returned.  If <var>value</var>
+element of <var>list</var> is evaluated and the result returned.  If <var>value</var>
 is too large or too small <code>NULL</code> is returned.
 </p>
 <div class="example">
@@ -1937,7 +1953,7 @@ Next: <a href="#Indexing" accesskey="n" rel="next">Indexing</a>, Previous: <a hr
 <a name="Elementary-arithmetic-operations-1"></a>
 <h3 class="section">3.3 Elementary arithmetic operations</h3>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Recycling-rules" accesskey="1">Recycling rules</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Propagation-of-names" accesskey="2">Propagation of names</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1968,9 +1984,6 @@ vector is not a multiple of the shorter one, a warning is given.
 </p>
 <p>As from R 1.4.0, any arithmetic operation involving a zero-length
 vector has a zero-length result.
-</p>
-<p>One exception is that when adding vectors to matrices, a warning is not
-given if the lengths are incompatible.
 </p>
 <hr>
 <a name="Propagation-of-names"></a>
@@ -2052,12 +2065,11 @@ string <code>&quot;NA&quot;</code>.  Programmers who need to specify an explicit
 <code>NA</code> should use &lsquo;<samp>as.character(NA)</samp>&rsquo; rather than <code>&quot;NA&quot;</code>, or
 set elements to <code>NA</code> using <code>is.na&lt;-</code>.
 </p>
-<p>As from R 2.5.0 there are constants <code>NA_integer_</code>,
-<code>NA_real_</code>, <code>NA_complex_</code> and <code>NA_character_</code> which will
-generate (in the parser) an <code>NA</code> value of the appropriate type,
-and will be used in deparsing when it is not otherwise possible to
-identify the type of an <code>NA</code> (and the <code>control</code> options ask
-for this to be done).
+<p>There are constants <code>NA_integer_</code>, <code>NA_real_</code>,
+<code>NA_complex_</code> and <code>NA_character_</code> which will generate (in the
+parser) an <code>NA</code> value of the appropriate type, and will be used in
+deparsing when it is not otherwise possible to identify the type of an
+<code>NA</code> (and the <code>control</code> options ask for this to be done).
 </p>
 <p>There is no <code>NA</code> value for raw vectors.
 </p>
@@ -2115,11 +2127,10 @@ that component, and so on. The result is still a single element.
 <p>The form using <code>$</code> applies to recursive objects such as lists and
 pairlists.  It allows only a literal character string or a symbol as the
 index.  That is, the index is not computable: for cases where you need
-to evaluate an expression to find the index, use <code>x[[expr]]</code>.  When
-<code>$</code> is applied to a non-recursive object the result used to be
-always <code>NULL</code>: as from R 2.6.0 this is an error.
+to evaluate an expression to find the index, use <code>x[[expr]]</code>.
+Applying <code>$</code> to a non-recursive object is an error.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Indexing-by-vectors" accesskey="1">Indexing by vectors</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Indexing-matrices-and-arrays" accesskey="2">Indexing matrices and arrays</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2152,8 +2163,10 @@ selected.  If <code>i</code> contains negative elements, all elements except
 those indicated are selected.
 
 <p>If <code>i</code> is positive and exceeds <code>length(x)</code> then the
-corresponding selection is <code>NA</code>.  A negative out of bounds value
-for <code>i</code> causes an error.
+corresponding selection is <code>NA</code>.  Negative out of bounds values
+for <code>i</code> are silently disregarded since R version 2.6.0, S compatibly,
+as they mean to drop non-existing elements and that is an empty operation
+(&ldquo;no-op&rdquo;). 
 </p>
 <p>A special case is the zero index, which has null effects: <code>x[0]</code> is
 an empty vector and otherwise including zeros among positive or negative
@@ -2257,7 +2270,7 @@ operation.
 [1] 1 4
 </pre></div>
 
-<p>Negative indices are not allowed in indexing matrices.  <code>NA</code> and
+<p>Indexing matrices may not contain negative indices.  <code>NA</code> and
 zero values are allowed: rows in an index matrix containing a zero are
 ignored, whereas rows containing an <code>NA</code> produce an <code>NA</code> in
 the result.
@@ -2315,8 +2328,8 @@ the same way as the basic methods, for example with respect to partial
 matching.
 </p>
 <p>The most important example of a class method for <code>[</code> is that used
-for data frames.  It is not be described in detail here (see the help
-page for <code>[.data.frame</code>, but in broad terms, if two indices are
+for data frames.  It is not described in detail here (see the help
+page for <code>[.data.frame</code>), but in broad terms, if two indices are
 supplied (even if one is empty) it creates matrix-like indexing for a
 structure that is basically a list of vectors of the same length.  If a
 single index is supplied, it is interpreted as indexing the list of
@@ -2344,7 +2357,7 @@ mechanism for complex assignment:
 </p><div class="example">
 <pre class="example">x[3:5] &lt;- 13:15
 </pre></div>
-<p>The result of this commands is as if the following had been executed
+<p>The result of this command is as if the following had been executed
 </p><div class="example">
 <pre class="example">`*tmp*` &lt;- x
 x &lt;- &quot;[&lt;-&quot;(`*tmp*`, 3:5, value=13:15)
@@ -2422,9 +2435,9 @@ value of <code>e</code> on the RHS of the superassignment statement.  It sets
 </pre></div>
 <p>That is, the superassignment is equivalent to the four lines
 </p><div class="example">
-<pre class="example">`*tmp*` &lt;- get(x,envir=parent.env(), inherits=TRUE)
+<pre class="example">`*tmp*` &lt;- get(e, envir=parent.env(), inherits=TRUE)
 `*tmp*`[i] &lt;- e[i]+1
-x &lt;&lt;- `*tmp*`
+e &lt;&lt;- `*tmp*`
 rm(`*tmp*`)
 </pre></div>
 
@@ -2486,7 +2499,7 @@ Pascal.  However, R is a <em>functional programming language</em> and
 allows dynamic creation and manipulation of functions and language
 objects, and has additional features reflecting this fact.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Global-environment" accesskey="1">Global environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Lexical-environment" accesskey="2">Lexical environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2676,7 +2689,7 @@ Next: <a href="#Object_002doriented-programming" accesskey="n" rel="next">Object
 <a name="Functions-1"></a>
 <h2 class="chapter">4 Functions</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Writing-functions" accesskey="1">Writing functions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Functions-as-objects" accesskey="2">Functions as objects</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2705,7 +2718,7 @@ they find more appropriate.
 <p>R also provides facilities that make it easy to document any
 functions that you have created.  See <a href="R-exts.html#Writing-R-documentation">Writing R documentation</a> in <cite>Writing R Extensions</cite>.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Syntax-and-examples" accesskey="1">Syntax and examples</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Arguments" accesskey="2">Arguments</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2751,7 +2764,7 @@ The value returned by the call to <code>function</code> is a function.  If
 this is not given a name it is referred to as an
 <a name="index-function_002c-anonymous"></a>
 anonymous
-function. Anonymous functions are most frequently used as arguments
+function. Anonymous functions are most frequently used as arguments to
 other functions such as the <code>apply</code> family or <code>outer</code>.
 </p>
 <p>Here is a simple function: <code>echo &lt;- function(x) print(x)</code>.  So
@@ -2823,7 +2836,7 @@ Previous: <a href="#Functions-as-objects" accesskey="p" rel="prev">Functions as 
 <a name="Evaluation-1"></a>
 <h3 class="section">4.3 Evaluation</h3>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Evaluation-environment" accesskey="1">Evaluation environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Argument-matching" accesskey="2">Argument matching</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2995,7 +3008,7 @@ to the local environment.
 <p>The process of filling the value slot of a promise by
 <a name="index-evaluation-2"></a>
 evaluating the
-contents of the expression slot in the promises environment is called
+contents of the expression slot in the promise&rsquo;s environment is called
 <em>forcing</em> the promise.  A promise will only be forced once, the
 value slot content being used directly later on.
 </p>
@@ -3194,7 +3207,7 @@ example as a density, when it exists or as a moment generating function
 when it exists.
 </p>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Definition" accesskey="1">Definition</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Inheritance" accesskey="2">Inheritance</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3231,10 +3244,10 @@ objects are <code>.Generic</code>, <code>.Class</code>, <code>.Method</code> and
 functions and types that will be discussed elsewhere.
 </p>
 <p>The class system is facilitated through the <code>class</code> attribute.
-This attribute is a list of class names.  So to create an object of
-class <code>&quot;foo&quot;</code> one simply attaches a class attribute with the string
-&lsquo;<samp>&quot;foo&quot;</samp>&rsquo; in it.  Thus, virtually anything can be turned in to an
-object of class <code>&quot;foo&quot;</code>.
+This attribute is a character vector of class names.  So to create an
+object of class <code>&quot;foo&quot;</code> one simply attaches a class attribute with
+the string &lsquo;<samp>&quot;foo&quot;</samp>&rsquo; in it.  Thus, virtually anything can be turned
+in to an object of class <code>&quot;foo&quot;</code>.
 </p>
 <p>The object system makes use of
 <a name="index-function_002c-generic-1"></a>
@@ -3332,7 +3345,7 @@ new generic function only the methods.  This makes it easy to add to
 existing systems since the user is only responsible for dealing with the
 new representation and not with any of the existing representations.
 </p>
-<p>The bulk of the uses of this methodology are to provided specialized
+<p>The bulk of the uses of this methodology are to provide specialized
 printing for objects of different types; there are about 40 methods for
 <code>print</code>.
 </p>
@@ -3476,10 +3489,6 @@ return to the generic and hence any expressions after a call to
 <p>Any arguments to the generic that were evaluated prior to the call to
 <code>UseMethod</code> remain evaluated.
 </p>
-<p>The arguments in the call to the generic are rematched with the
-arguments for the method using the standard argument matching mechanism.
-The first argument, i.e. the object, will have been evaluated.
-</p>
 <p>If the first argument to <code>UseMethod</code> is not supplied it is assumed
 to be the name of the current function.  If two arguments are supplied
 to <code>UseMethod</code> then the first is the name of the method and the
@@ -3487,7 +3496,7 @@ second is assumed to be the object that will be dispatched on.  It is
 evaluated so that the required method can be determined.  In this case
 the first argument in the call to the generic is not evaluated and is
 discarded.  There is no way to change the other arguments in the call to
-the method these remain as they were in the call to the generic.  This
+the method; these remain as they were in the call to the generic.  This
 is in contrast to <code>NextMethod</code> where the arguments in the call to
 the next method can be altered.
 </p>
@@ -3589,9 +3598,9 @@ possible to write methods specific to any function within a group.
 </p>
 <dl compact="compact">
 <dt>&lsquo;<samp>Math</samp>&rsquo;</dt>
-<dd><p>abs, acos, acosh, asin, asinh, atan, atanh, ceiling, cos, cosh, cumsum,
-exp, floor, gamma, lgamma, log, log10, round, signif, sin, sinh, tan,
-tanh, trunc
+<dd><p>abs, acos, acosh, asin, asinh, atan, atanh, ceiling, cos, cosh, cospi, cumsum,
+exp, floor, gamma, lgamma, log, log10, round, signif, sin, sinh, sinpi, 
+tan, tanh, tanpi, trunc
 </p>
 </dd>
 <dt>&lsquo;<samp>Summary</samp>&rsquo;</dt>
@@ -3698,7 +3707,7 @@ mathematical expressions.
 <p>In this chapter, we give an introduction to the set of facilities that
 are available for computing on the language.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Direct-manipulation-of-language-objects" accesskey="1">Direct manipulation of language objects</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Substitutions" accesskey="2">Substitutions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3954,7 +3963,7 @@ evaluation that comes as a surprise to some.  Consider
 
 <p>This looks straightforward, but one will discover that the y label
 becomes an ugly <code>c(...)</code> expression.  It happens because the rules
-of lazy evaluation causes the evaluation of the <code>ylab</code> expression
+of lazy evaluation cause the evaluation of the <code>ylab</code> expression
 to happen <em>after</em> <code>y</code> has been modified.  The solution is to
 force <code>ylab</code> to be evaluated first, i.e.,
 </p>
@@ -4355,7 +4364,7 @@ Next: <a href="#Exception-handling" accesskey="n" rel="next">Exception handling<
 <a name="System-and-foreign-language-interfaces-1"></a>
 <h2 class="chapter">7 System and foreign language interfaces</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Operating-system-access" accesskey="1">Operating system access</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Foreign-language-interfaces" accesskey="2">Foreign language interfaces</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -4394,7 +4403,7 @@ limited on non-Unix-like platforms).
 <a name="index-environment-17"></a>
 environment can be accessed and manipulated with
 </p><blockquote>
-<table>
+<table summary="">
 <tr><td width="30%"><code>Sys.getenv</code></td><td width="70%">OS environment variables
 <a name="index-Sys_002egetenv"></a></td></tr>
 <tr><td width="30%"><code>Sys.putenv</code>                               
@@ -4415,7 +4424,7 @@ environment can be accessed and manipulated with
 
 <p>A uniform set of file access functions is provided on all platforms:
 </p><blockquote>
-<table>
+<table summary="">
 <tr><td width="30%"><code>file.access</code></td><td width="70%">Ascertain File Accessibility 
 <a name="index-file_002eaccess"></a></td></tr>
 <tr><td width="30%"><code>file.append</code></td><td width="70%">Concatenate files            
@@ -4444,7 +4453,7 @@ environment can be accessed and manipulated with
 <p>There are also functions for manipulating file names and paths in a
 platform-independent way.
 </p><blockquote>
-<table>
+<table summary="">
 <tr><td width="30%"><code>basename</code></td><td width="70%">File name without directory     
 <a name="index-basename"></a></td></tr>
 <tr><td width="30%"><code>dirname</code></td><td width="70%">Directory name                   
@@ -4512,7 +4521,7 @@ mechanisms.  Functions such as <code>stop</code> or <code>warning</code> can be
 called directly or options such as <code>&quot;warn&quot;</code> can be used to control
 the handling of problems.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#stop" accesskey="1">stop</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#warning" accesskey="2">warning</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -4603,7 +4612,7 @@ Previous: <a href="#on_002eexit" accesskey="p" rel="prev">on.exit</a>, Up: <a hr
 <h3 class="section">8.4 Error options</h3>
 
 <p>There are a number of <code>options</code> variables that can be used to
-control how R handles errors and warnings.  The are listed in the
+control how R handles errors and warnings.  They are listed in the
 table below.
 </p>
 <dl compact="compact">
@@ -4689,7 +4698,7 @@ statements in that language is provided.  Execution will halt on the
 next statement that is evaluated in R. A symbolic debugger such as
 <code>gdb</code> can be used to debug compiled code.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#browser" accesskey="1">browser</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#debug_002fundebug" accesskey="2">debug/undebug</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -4840,7 +4849,7 @@ causes the specified instructions to be carried out.  The internal form
 is itself an R object and can be saved and otherwise manipulated
 within the R system.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#The-parsing-process" accesskey="1">The parsing process</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Comments" accesskey="2">Comments</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -4862,7 +4871,7 @@ Next: <a href="#Comments" accesskey="n" rel="next">Comments</a>, Previous: <a hr
 <a name="The-parsing-process-1"></a>
 <h3 class="section">10.1 The parsing process</h3>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Modes-of-parsing" accesskey="1">Modes of parsing</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Internal-representation" accesskey="2">Internal representation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -4991,7 +5000,7 @@ They are recognised during <em>lexical analysis</em> which (conceptually,
 at least) takes place prior to the syntactic analysis performed by the
 parser itself.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Literal-constants" accesskey="1">Literal constants</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Identifiers" accesskey="2">Identifiers</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -5144,10 +5153,10 @@ eight hex digits.
 <p>A single quote may also be embedded directly in a double-quote delimited
 string and vice versa.
 </p>
-<p>As from R 2.8.0, a &lsquo;nul&rsquo; (<code>\0</code>) is not allowed in a character
-string, so using <code>\0</code> in a string constant terminates the constant
-(usually with a warning): further characters up to the closing quote are
-scanned but ignored.
+<p>A &lsquo;nul&rsquo; (<code>\0</code>) is not allowed in a character string, so using
+<code>\0</code> in a string constant terminates the constant (usually with a
+warning): further characters up to the closing quote are scanned but
+ignored.
 </p>
 <hr>
 <a name="Identifiers"></a>
@@ -5160,8 +5169,8 @@ Next: <a href="#Reserved-words" accesskey="n" rel="next">Reserved words</a>, Pre
 
 <a name="index-identifier"></a>
 <p>Identifiers consist of a sequence of letters, digits, the period
-(&lsquo;<samp>.</samp>&rsquo;) and the underscore.  They must not start with a digit nor
-underscore, nor with a period followed by a digit.
+(&lsquo;<samp>.</samp>&rsquo;) and the underscore.  They must not start with a digit or
+an underscore, or with a period followed by a digit.
 </p>
 <p>The definition of a letter depends on the current locale: the precise
 set of characters allowed is given by the C expression <code>(isalnum(c)
@@ -5183,7 +5192,7 @@ following pairs are <em>not</em> equivalent
 <a name="index-assign"></a>
 </p>
 <blockquote>
-<table>
+<table summary="">
 <tr><td><code>x$a&lt;-1</code></td><td><code>assign(&quot;x$a&quot;,1)</code></td></tr>
 <tr><td><code>x[[1]]</code></td><td><code>get(&quot;x[[1]]&quot;)</code></td></tr>
 <tr><td><code>names(x)&lt;-nm</code></td><td><code>assign(&quot;names(x)&quot;,nm)</code></td></tr>
@@ -5278,7 +5287,7 @@ Next: <a href="#Grouping" accesskey="n" rel="next">Grouping</a>, Previous: <a hr
 <p>R uses the following operator tokens
 </p>
 <blockquote>
-<table>
+<table summary="">
 <tr><td width="30%"><code>+ - * / %% ^</code></td><td width="60%">arithmetic</td></tr>
 <tr><td width="30%"><code>&gt; &gt;= &lt; &lt;= == !=</code></td><td width="60%">relational</td></tr>
 <tr><td width="30%"><code>! &amp; |</code></td><td width="60%">logical</td></tr>
@@ -5316,7 +5325,7 @@ Previous: <a href="#Grouping" accesskey="p" rel="prev">Grouping</a>, Up: <a href
 <a name="Indexing-tokens-1"></a>
 <h4 class="subsection">10.3.8 Indexing tokens</h4>
 
-<p>Indexing of arrays and vectors performed using the single and double
+<p>Indexing of arrays and vectors is performed using the single and double
 brackets, &lsquo;<samp>[]</samp>&rsquo; and &lsquo;<samp>[[]]</samp>&rsquo;.  Also, indexing tagged lists
 may be done using the &lsquo;<samp>$</samp>&rsquo; operator.
 </p>
@@ -5338,7 +5347,7 @@ parts (which may themselves be expressions).
 <p>The following sections detail the various syntactical constructs that
 are available.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Function-calls-_0028expressions_0029" accesskey="1">Function calls (expressions)</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Infix-and-prefix-operators" accesskey="2">Infix and prefix operators</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -5403,7 +5412,7 @@ Next: <a href="#Index-constructions" accesskey="n" rel="next">Index construction
 <a name="Infix-and-prefix-operators-1"></a>
 <h4 class="subsection">10.4.2 Infix and prefix operators</h4>
 
-<p>The order of precedence (highest first) of the operators are
+<p>The order of precedence (highest first) of the operators is
 </p>
 <div class="example">
 <pre class="example">::
@@ -5423,10 +5432,12 @@ $ @
 =                  <span class="roman">(as assignment)</span>
 &lt;- &lt;&lt;-
 </pre></div>
-
+<p>Note that <code>:</code> precedes binary +/-, but not <code>^</code>. Hence,
+<code>1:3-1</code> is <em>0 1 2</em>, but <code>1:2^3</code> is <code>1:8</code>. 
+</p>
 <p>The exponentiation operator &lsquo;<samp>^</samp>&rsquo; and the
 <a name="index-assignment-11"></a>
-left assignment operators
+left assignment plus minus operators
 &lsquo;<samp>&lt;- - = &lt;&lt;-</samp>&rsquo; group right to left, all other operators group left to
 right.  That is, <code>2 ^ 2 ^ 3</code> is <em>2 ^ 8</em>, not <em>4 ^ 3</em>,
 whereas <code>1 - 1 - 1</code> is <em>-1</em>, not 1.
@@ -5454,7 +5465,7 @@ operator precedence (e.g., <code>a * (b + c)</code>).
 <p>Notice that the
 <a name="index-assignment-12"></a>
 assignment symbols are operators just like the arithmetic, relational,
-and logical ones.  Any expressions is allowed also on the target side of
+and logical ones.  Any expression is allowed also on the target side of
 an assignment, as far as the parser is concerned (<code>2 + 2 &lt;- 5</code> is a
 valid expression as far as the parser is concerned.  The evaluator will
 object, though).  Similar comments apply to the model formula operator.
@@ -5633,7 +5644,7 @@ Next: <a href="#Concept-Index" accesskey="n" rel="next">Concept Index</a>, Previ
 <a name="Function-and-Variable-Index-1"></a>
 <h2 class="unnumbered">Function and Variable Index</h2>
 
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-Variable-Index_vr_symbol-1"><b>#</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-Variable-Index_vr_symbol-1"><b>#</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Function-and-Variable-Index_vr_symbol-2"><b>$</b></a>
  &nbsp; 
@@ -5677,11 +5688,11 @@ Next: <a href="#Concept-Index" accesskey="n" rel="next">Concept Index</a>, Previ
 <a class="summary-letter" href="#Function-and-Variable-Index_vr_letter-W"><b>W</b></a>
  &nbsp; 
 </td></tr></table>
-<table class="index-vr" border="0">
+<table summary="" class="index-vr" border="0">
 <tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Function-and-Variable-Index_vr_symbol-1">#</a></th><td></td><td></td></tr>
-<tr><td></td><td valign="top"><a href="#index-_0023"><code><code>#</code></code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Comments">Comments</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_0023"><code>#</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Comments">Comments</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Function-and-Variable-Index_vr_symbol-2">$</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_0024"><code>$</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Indexing">Indexing</a></td></tr>
@@ -5823,7 +5834,7 @@ Next: <a href="#Concept-Index" accesskey="n" rel="next">Concept Index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-while"><code>while</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#while">while</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 </table>
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-Variable-Index_vr_symbol-1"><b>#</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-Variable-Index_vr_symbol-1"><b>#</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Function-and-Variable-Index_vr_symbol-2"><b>$</b></a>
  &nbsp; 
@@ -5877,7 +5888,7 @@ Next: <a href="#References" accesskey="n" rel="next">References</a>, Previous: <
 <a name="Concept-Index-1"></a>
 <h2 class="unnumbered">Concept Index</h2>
 
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-Index_cp_symbol-1"><b>#</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-Index_cp_symbol-1"><b>#</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_symbol-2"><b>.</b></a>
  &nbsp; 
@@ -5909,7 +5920,7 @@ Next: <a href="#References" accesskey="n" rel="next">References</a>, Previous: <
 <a class="summary-letter" href="#Concept-Index_cp_letter-V"><b>V</b></a>
  &nbsp; 
 </td></tr></table>
-<table class="index-cp" border="0">
+<table summary="" class="index-cp" border="0">
 <tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Concept-Index_cp_symbol-1">#</a></th><td></td><td></td></tr>
@@ -6140,7 +6151,7 @@ Next: <a href="#References" accesskey="n" rel="next">References</a>, Previous: <
 <tr><td></td><td valign="top"><a href="#index-vector-2">vector</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Operators">Operators</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 </table>
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-Index_cp_symbol-1"><b>#</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-Index_cp_symbol-1"><b>#</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-Index_cp_symbol-2"><b>.</b></a>
  &nbsp; 

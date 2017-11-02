@@ -194,7 +194,7 @@ proc Demo::main {} {
     variable DEMODIR
 
     lappend ::auto_path [file dirname $DEMODIR]
-    namespace inscope :: package require BWidget
+    package require BWidget
 
     option add *TitleFrame.l.font {helvetica 11 bold italic}
 

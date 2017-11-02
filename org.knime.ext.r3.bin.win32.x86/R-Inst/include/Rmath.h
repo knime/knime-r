@@ -1,6 +1,6 @@
 /* -*- C -*-
  *  Mathlib : A C Library of Special Functions
- *  Copyright (C) 1998-2013  The R Core Team
+ *  Copyright (C) 1998-2016  The R Core Team
  *  Copyright (C) 2004       The R Foundation
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program; if not, a copy is available at
- *  http://www.r-project.org/Licenses/
+ *  https://www.R-project.org/Licenses/
  *
 
  * Rmath.h  should contain ALL headers from R's C code in `src/nmath'
@@ -31,16 +31,28 @@
 #ifndef RMATH_H
 #define RMATH_H
 
-/* Note that on some systems we need to include math.h before the
-   defines below, to avoid redefining ftrunc */
-#ifndef NO_C_HEADERS
+/* needed for cospi etc */
+#ifndef __STDC_WANT_IEC_60559_FUNCS_EXT__
+# define __STDC_WANT_IEC_60559_FUNCS_EXT__ 1
+#endif
+#if defined(__cplusplus) && !defined(DO_NOT_USE_CXX_HEADERS)
+# include <cmath>
+// See comment in R.h
+# ifdef __SUNPRO_CC
+using namespace std;
+# endif
+#else
 # include <math.h>
+#endif
+
+#ifdef NO_C_HEADERS
+# warning "use of NO_C_HEADERS is defunct and will be ignored"
 #endif
 
 /*-- Mathlib as part of R --  define this for standalone : */
 /* #undef MATHLIB_STANDALONE */
 
-#define R_VERSION_STRING "3.0.3"
+#define R_VERSION_STRING "3.4.2"
 
 #ifndef HAVE_EXPM1
 # define HAVE_EXPM1 1
@@ -67,14 +79,16 @@ double  Rlog1p(double);
 
 	/* Undo SGI Madness */
 
-#ifdef ftrunc
-# undef ftrunc
-#endif
-#ifdef qexp
-# undef qexp
-#endif
-#ifdef qgamma
-# undef qgamma
+#ifdef __sgi
+# ifdef ftrunc
+#  undef ftrunc
+# endif
+# ifdef qexp
+#  undef qexp
+# endif
+# ifdef qgamma
+#  undef qgamma
+# endif
 #endif
 
 
@@ -169,6 +183,10 @@ double  Rlog1p(double);
 #endif
 
 
+#ifndef M_LN_2PI
+#define M_LN_2PI	1.837877066409345483560659472811	/* log(2*pi) */
+#endif
+
 #ifndef M_LN_SQRT_PI
 #define M_LN_SQRT_PI	0.572364942924700087071713675677	/* log(sqrt(pi))
 								   == log(pi)/2 */
@@ -180,7 +198,8 @@ double  Rlog1p(double);
 #endif
 
 #ifndef M_LN_SQRT_PId2
-#define M_LN_SQRT_PId2	0.225791352644727432363097614947	/* log(sqrt(pi/2)) */
+#define M_LN_SQRT_PId2	0.225791352644727432363097614947	/* log(sqrt(pi/2))
+								   == log(pi/2)/2 */
 #endif
 
 
@@ -197,7 +216,7 @@ double  Rlog1p(double);
 #endif
 
 
-#ifndef MATHLIB_STANDALONE
+#if !defined(MATHLIB_STANDALONE) && !defined(R_NO_REMAP_RMATH)
 #define bessel_i	Rf_bessel_i
 #define bessel_j	Rf_bessel_j
 #define bessel_k	Rf_bessel_k
@@ -210,6 +229,7 @@ double  Rlog1p(double);
 #define choose		Rf_choose
 #define dbeta		Rf_dbeta
 #define dbinom		Rf_dbinom
+#define dbinom_raw	Rf_dbinom_raw
 #define dcauchy		Rf_dcauchy
 #define dchisq		Rf_dchisq
 #define dexp		Rf_dexp
@@ -227,6 +247,7 @@ double  Rlog1p(double);
 #define dnf		Rf_dnf
 #define dnorm4		Rf_dnorm4
 #define dnt		Rf_dnt
+#define dpois_raw	Rf_dpois_raw
 #define dpois		Rf_dpois
 #define dpsifn		Rf_dpsifn
 #define dsignrank	Rf_dsignrank
@@ -249,9 +270,11 @@ double  Rlog1p(double);
 #define lgammafn	Rf_lgammafn
 #define lgammafn_sign	Rf_lgammafn_sign
 #define lgamma1p	Rf_lgamma1p
+#define log1pexp       	Rf_log1pexp
 #define log1pmx		Rf_log1pmx
 #define logspace_add	Rf_logspace_add
 #define logspace_sub	Rf_logspace_sub
+#define logspace_sum	Rf_logspace_sum
 #define pbeta		Rf_pbeta
 #define pbeta_raw	Rf_pbeta_raw
 #define pbinom		Rf_pbinom
@@ -319,8 +342,10 @@ double  Rlog1p(double);
 #define rhyper		Rf_rhyper
 #define rlnorm		Rf_rlnorm
 #define rlogis		Rf_rlogis
+#define rmultinom	Rf_rmultinom
 #define rnbeta		Rf_rnbeta
 #define rnbinom		Rf_rnbinom
+#define rnbinom_mu     	Rf_rnbinom_mu
 #define rnchisq		Rf_rnchisq
 #define rnf		Rf_rnf
 #define rnorm		Rf_rnorm
@@ -337,13 +362,9 @@ double  Rlog1p(double);
 #define trigamma	Rf_trigamma
 #endif
 
-#if !defined(__cplusplus)
-// NB: these remappings were deprecated for R 3.0.3.
-#define	rround	fround
-#define	prec	fprec
-#undef trunc
-#define	trunc	ftrunc
-#endif
+#define dnorm dnorm4
+#define pnorm pnorm5
+#define qnorm qnorm5
 
 #ifdef  __cplusplus
 extern "C" {
@@ -364,10 +385,6 @@ void	get_seed(unsigned int *, unsigned int *);
 #endif
 
 	/* Normal Distribution */
-
-#define pnorm pnorm5
-#define qnorm qnorm5
-#define dnorm dnorm4
 
 double	dnorm(double, double, double, int);
 double	pnorm(double, double, double, int, int);
@@ -394,6 +411,7 @@ double  log1pexp(double); // <-- ../nmath/plogis.c
 double  lgamma1p(double);
 double  logspace_add(double, double);
 double  logspace_sub(double, double);
+double  logspace_sum(const double *, int);
 
 	/* Beta Distribution */
 
@@ -439,6 +457,7 @@ double	rt(double);
 
 	/* Binomial Distribution */
 
+double  dbinom_raw(double x, double n, double p, double q, int give_log);
 double	dbinom(double, double, double, int);
 double	pbinom(double, double, double, int, int);
 double	qbinom(double, double, double, int, int);
@@ -490,6 +509,7 @@ double	rnbinom_mu(double, double);
 
 	/* Poisson Distribution */
 
+double	dpois_raw (double, double, int);
 double	dpois(double, double, int);
 double	ppois(double, double, int, int);
 double	qpois(double, double, int, int);
@@ -601,6 +621,20 @@ double	ftrunc(double);
 double  log1pmx(double); /* Accurate log(1+x) - x, {care for small x} */
 double  lgamma1p(double);/* accurate log(gamma(x+1)), small x (0 < x < 0.5) */
 
+/* More accurate cos(pi*x), sin(pi*x), tan(pi*x)
+
+   These declarations might clash with system headers if someone had
+   already included math.h with __STDC_WANT_IEC_60559_FUNCS_EXT__
+   defined (and we try, above).
+   We can add a check for that via the value of
+   __STDC_IEC_60559_FUNCS__ (>= 201506L).
+*/
+#if !(defined(__STDC_IEC_60559_FUNCS__) && __STDC_IEC_60559_FUNCS__ >= 201506L)
+double cospi(double);
+double sinpi(double);
+double tanpi(double);
+#endif
+
 /* Compute the log of a sum or difference from logs of terms, i.e.,
  *
  *     log (exp (logx) + exp (logy))
@@ -610,8 +644,6 @@ double  lgamma1p(double);/* accurate log(gamma(x+1)), small x (0 < x < 0.5) */
  */
 double  logspace_add(double logx, double logy);
 double  logspace_sub(double logx, double logy);
-
-
 
 
 /* ----------------- Private part of the header file ------------------- */
@@ -628,7 +660,7 @@ double  logspace_sub(double logx, double logy);
 /* second is defined by nmath.h */
 
 /* If isnan is a macro, as C99 specifies, the C++
-   math header will undefine it. This happens on OS X */
+   math header will undefine it. This happens on macOS */
 # ifdef __cplusplus
   int R_isnancpp(double); /* in mlutils.c */
 #  define ISNAN(x)     R_isnancpp(x)
@@ -639,7 +671,7 @@ double  logspace_sub(double logx, double logy);
 # define R_FINITE(x)    R_finite(x)
 int R_finite(double);
 
-# ifdef WIN32  /* not Win32 as no config information */
+# ifdef _WIN32  /* not Win32 as no config information */
 #  ifdef RMATH_DLL
 #   define R_EXTERN extern __declspec(dllimport)
 #  else

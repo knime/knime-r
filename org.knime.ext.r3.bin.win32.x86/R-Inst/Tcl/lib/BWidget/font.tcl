@@ -227,8 +227,12 @@ proc SelectFont::create { path args } {
 		set script "set [list SelectFont::${path}(fontcolor)] \[tk_chooseColor -parent $colf.button -initialcolor \[set [list SelectFont::${path}(fontcolor)]\]\];\
 			SelectFont::_update [list $path]"
 		
+		set name [lindex [BWidget::getname colorPicker] 0]
+		if { $name == "" } {
+			set name "Color..."
+		}
 		set but  [button $colf.button -command $script \
-			-text "Color..."]
+			-text $name]
 		
 		$lab configure -foreground $thecolor
 		$frc configure -bg $thecolor

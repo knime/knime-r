@@ -88,7 +88,7 @@ plot(augPred(fm2Oran.nlme, level = 0:1),
      layout = c(5,1))
 qqnorm(fm2Oran.nlme, abline = c(0,1))
 (fm1Theo.nlme <- nlme(fm1Theo.lis))
-if (interactive()) intervals(fm1Theo.nlme, which = "var-cov")
+try( intervals(fm1Theo.nlme, which="var-cov") ) ## failing: Non-positive definite...
 (fm2Theo.nlme <- update(fm1Theo.nlme,
   random = pdDiag(lKe + lKa + lCl ~ 1)))
 fm3Theo.nlme <-
@@ -290,4 +290,4 @@ anova( fm2Dial.lmeML, fm3Dial.glsML, fm3Dial.gnls, test = FALSE)
 # cleanup
 
 proc.time()
-q("no")
+

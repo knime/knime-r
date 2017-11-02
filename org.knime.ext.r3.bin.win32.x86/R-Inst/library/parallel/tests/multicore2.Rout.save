@@ -1,7 +1,7 @@
 
-R version 3.0.3 RC (2014-02-27 r65086) -- "Warm Puppy"
-Copyright (C) 2014 The R Foundation for Statistical Computing
-Platform: x86_64-unknown-linux-gnu (64-bit)
+R version 3.4.1 Patched (2017-07-19 r72930) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -17,18 +17,20 @@ Type 'q()' to quit R.
 
 > library(parallel)
 > 
-> library(boot)
-> cd4.rg <- function(data, mle) MASS::mvrnorm(nrow(data), mle$m, mle$v)
-> cd4.mle <- list(m = colMeans(cd4), v = var(cd4))
-> mc <- getOption("mc.cores", 2)
-> run1 <- function(...) boot(cd4, corr, R = 500, sim = "parametric",
-+                            ran.gen = cd4.rg, mle = cd4.mle)
-> ## To make this reproducible:
-> set.seed(123, "L'Ecuyer"); mc.reset.stream()
-> res <- mclapply(seq_len(mc), run1)
-> cd4.boot <- do.call(c, res)
-> boot.ci(cd4.boot,  type = c("norm", "basic", "perc"),
-+         conf = 0.9, h = atanh, hinv = tanh)
+> if(require(boot)) {
++     cd4.rg <- function(data, mle) MASS::mvrnorm(nrow(data), mle$m, mle$v)
++     cd4.mle <- list(m = colMeans(cd4), v = var(cd4))
++     mc <- getOption("mc.cores", 2)
++     run1 <- function(...) boot(cd4, corr, R = 500, sim = "parametric",
++                                ran.gen = cd4.rg, mle = cd4.mle)
++     ## To make this reproducible:
++     set.seed(123, "L'Ecuyer"); mc.reset.stream()
++     res <- mclapply(seq_len(mc), run1)
++     cd4.boot <- do.call(c, res)
++     boot.ci(cd4.boot,  type = c("norm", "basic", "perc"),
++             conf = 0.9, h = atanh, hinv = tanh)
++ }
+Loading required package: boot
 BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 Based on 1000 bootstrap replicates
 
@@ -43,4 +45,4 @@ Calculations on Transformed Scale;  Intervals on Original Scale
 > 
 > proc.time()
    user  system elapsed 
-  0.147   0.019   0.254 
+  0.181   0.023   0.311 

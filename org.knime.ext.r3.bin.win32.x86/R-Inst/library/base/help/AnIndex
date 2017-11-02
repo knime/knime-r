@@ -5,6 +5,7 @@ base-package	base-package
 !=	Comparison
 "	Quotes
 $	Extract
+$.data.frame	Extract.data.frame
 $.DLLInfo	getLoadedDLLs
 $.package_version	numeric_version
 $<-	Extract
@@ -74,11 +75,12 @@ $<-.data.frame	Extract.data.frame
 .External	CallExternal
 .External.graphics	Foreign-internal
 .External2	Foreign-internal
-.find.package	base-deprecated
+.find.package	base-defunct
 .First	Startup
 .First.lib	base-defunct
 .First.sys	Startup
 .Firstlib_as_onLoad	base-internal
+.format.zeros	formatc
 .Fortran	Foreign
 .F_dchdc	base-internal
 .F_dqrcf	base-internal
@@ -91,6 +93,7 @@ $<-.data.frame	Extract.data.frame
 .Generic	UseMethod
 .GenericArgsEnv	base-internal
 .getNamespace	ns-internal
+.getNamespaceInfo	ns-internal
 .getRequiredPackages	base-internal
 .getRequiredPackages2	base-internal
 .GlobalEnv	environment
@@ -119,6 +122,7 @@ $<-.data.frame	Extract.data.frame
 .makeMessage	message
 .make_numeric_version	numeric_version
 .mapply	base-internal
+.maskedMsg	base-internal
 .mergeExportMethods	ns-internal
 .mergeImportMethods	ns-internal
 .Method	UseMethod
@@ -134,7 +138,7 @@ $<-.data.frame	Extract.data.frame
 .OptRequireMethods	Startup
 .packages	zpackages
 .packageStartupMessage	message
-.path.package	base-deprecated
+.path.package	base-defunct
 .Platform	Platform
 .popath	base-internal
 .POSIXct	base-internal
@@ -146,6 +150,7 @@ $<-.data.frame	Extract.data.frame
 .Random.seed	Random
 .readRDS	base-defunct
 .Renviron	Startup
+.rmpkg	search
 .rowMeans	colSums
 .rowSums	colSums
 .row_names_info	base-internal
@@ -161,7 +166,10 @@ $<-.data.frame	Extract.data.frame
 .subset2	base-internal
 .TAOCP1997init	base-internal
 .Traceback	traceback
+.traceback	traceback
+.tryResumeInterrupt	conditions
 .userHooksEnv	userhooks
+.valid.factor	factor
 .__H__.cbind	cbind
 .__H__.rbind	cbind
 .__S3MethodsTable__.	ns-internal
@@ -190,17 +198,20 @@ acosh	Hyperbolic
 addNA	factor
 addTaskCallback	taskCallback
 agrep	agrep
+agrepl	agrep
 alist	list
 all	all
 all.equal	all.equal
 all.equal.character	all.equal
 all.equal.default	all.equal
+all.equal.environment	all.equal
+all.equal.envRefClass	all.equal
 all.equal.factor	all.equal
 all.equal.formula	all.equal
 all.equal.language	all.equal
 all.equal.list	all.equal
 all.equal.numeric	all.equal
-all.equal.POSIXct	all.equal
+all.equal.POSIXt	all.equal
 all.equal.raw	all.equal
 all.names	allnames
 all.vars	allnames
@@ -210,11 +221,18 @@ anyDuplicated.array	duplicated
 anyDuplicated.data.frame	duplicated
 anyDuplicated.default	duplicated
 anyDuplicated.matrix	duplicated
+anyMissing	NA
+anyNA	NA
+anyNA.numeric_version	numeric_version
+anyNA.POSIXlt	DateTimeClasses
 aperm	aperm
 aperm.default	aperm
 aperm.table	aperm
 append	append
 apply	apply
+arccos	Trig
+arcsin	Trig
+arctan	Trig
 Arg	complex
 args	args
 Arithmetic	Arithmetic
@@ -250,6 +268,7 @@ as.data.frame.list	as.data.frame
 as.data.frame.logical	as.data.frame
 as.data.frame.matrix	as.data.frame
 as.data.frame.model.matrix	as.data.frame
+as.data.frame.noquote	as.data.frame
 as.data.frame.numeric	as.data.frame
 as.data.frame.numeric_version	numeric_version
 as.data.frame.ordered	as.data.frame
@@ -393,10 +412,13 @@ by.default	by
 bzfile	connections
 c	c
 c.Date	Dates
+c.default	c
+c.difftime	difftime
 c.noquote	noquote
 c.numeric_version	numeric_version
 c.POSIXct	DateTimeClasses
 c.POSIXlt	DateTimeClasses
+c.warnings	warnings
 call	call
 callCC	callCC
 capabilities	capabilities
@@ -412,6 +434,7 @@ charmatch	charmatch
 charToRaw	rawConversion
 chartr	chartr
 check_tzones	DateTimeClasses
+chkDots	chkDots
 chol	chol
 chol.default	chol
 chol2inv	chol2inv
@@ -462,12 +485,14 @@ copyright	copyright
 copyrights	copyright
 cos	Trig
 cosh	Hyperbolic
+cospi	Trig
 crossprod	crossprod
 Cstack_info	Cstack_info
 cummax	cumsum
 cummin	cumsum
 cumprod	cumsum
 cumsum	cumsum
+curlGetHeaders	curlGetHeaders
 cut	cut
 cut.Date	cut.POSIXt
 cut.default	cut
@@ -481,6 +506,7 @@ date-time	DateTimeClasses
 Dates	Dates
 DateTimeClasses	DateTimeClasses
 debug	debug
+debuggingState	debug
 debugonce	debug
 default.stringsAsFactors	data.frame
 Defunct	Defunct
@@ -500,6 +526,7 @@ diag<-	diag
 diff	diff
 diff.Date	diff
 diff.default	diff
+diff.difftime	difftime
 diff.POSIXt	diff
 difftime	difftime
 digamma	Special
@@ -512,11 +539,13 @@ dimnames<-	dimnames
 dimnames<-.data.frame	dimnames
 dir	list.files
 dir.create	files2
+dir.exists	files2
 dirname	basename
 DLLInfo	getLoadedDLLs
 DLLInfoList	getLoadedDLLs
 DLLpath	dynload
 do.call	do.call
+dontCheck	dontCheck
 double	double
 dput	dput
 dQuote	sQuote
@@ -532,8 +561,10 @@ duplicated.default	duplicated
 duplicated.matrix	duplicated
 duplicated.numeric_version	numeric_version
 duplicated.POSIXlt	DateTimeClasses
+duplicated.warnings	warnings
 dyn.load	dynload
 dyn.unload	dynload
+dynGet	get
 eapply	eapply
 eigen	eigen
 else	Control
@@ -544,6 +575,7 @@ enclosure	environment
 encodeString	encodeString
 Encoding	Encoding
 Encoding<-	Encoding
+endsWith	startsWith
 enquote	substitute
 env.profile	environment
 environment	environment
@@ -560,6 +592,7 @@ expand.grid	expand.grid
 expm1	Log
 expression	expression
 Extract	Extract
+extSoftVersion	extSoftVersion
 F	logical
 factor	factor
 factorial	Special
@@ -574,13 +607,17 @@ file.create	files
 file.exists	files
 file.info	file.info
 file.link	files
+file.mode	file.info
+file.mtime	file.info
 file.path	file.path
 file.remove	files
 file.rename	files
 file.show	file.show
+file.size	file.info
 file.symlink	files
 files	files
 Filter	funprog
+finalizer	reg.finalizer
 Find	funprog
 find.package	find.package
 findInterval	findInterval
@@ -592,6 +629,7 @@ flush	connections
 flush.connection	connections
 for	Control
 force	force
+forceAndCall	forceAndCall
 Foreign	Foreign
 formals	formals
 formals<-	formals
@@ -626,6 +664,7 @@ gcinfo	gc
 gctorture	gctorture
 gctorture2	gctorture
 get	get
+get0	exists
 getAllConnections	showConnections
 getCallingDLL	getCallingDLL
 getCallingDLLe	getCallingDLL
@@ -662,6 +701,7 @@ grepl	grep
 grepRaw	grepRaw
 group generic	groupGeneric
 groupGeneric	groupGeneric
+grouping	grouping
 GSC	EnvVar
 gsub	grep
 gzcon	gzcon
@@ -672,6 +712,7 @@ httpclient	base-defunct
 I	AsIs
 iconv	iconv
 iconvlist	iconv
+icuGetCollate	icuSetCollate
 icuSetCollate	icuSetCollate
 identical	identical
 identity	identity
@@ -681,6 +722,7 @@ Im	complex
 importIntoEnv	ns-internal
 in	Control
 Inf	is.finite
+infinite	is.finite
 inherits	class
 integer	integer
 interaction	interaction
@@ -723,6 +765,7 @@ is.na.POSIXlt	DateTimeClasses
 is.na<-	NA
 is.na<-.default	NA
 is.na<-.factor	factor
+is.na<-.numeric_version	numeric_version
 is.name	name
 is.nan	is.finite
 is.null	NULL
@@ -751,6 +794,7 @@ isBaseNamespace	ns-internal
 isdebugged	debug
 isIncomplete	connections
 isNamespace	ns-internal
+isNamespaceLoaded	ns-load
 ISOdate	ISOdatetime
 ISOdatetime	ISOdatetime
 isOpen	connections
@@ -777,11 +821,14 @@ La.svd	svd
 labels	labels
 labels.default	labels
 LANGUAGE	EnvVar
+language object	is.language
+language objects	is.language
 lapply	lapply
 last.warning	warnings
 lazyLoad	lazyload
 lazyLoadDBexec	lazyload
 lazyLoadDBfetch	base-internal
+La_library	La_library
 La_version	La_version
 lbeta	Special
 lchoose	Special
@@ -795,6 +842,7 @@ length	length
 length.POSIXlt	DateTimeClasses
 length<-	length
 length<-.factor	length
+lengths	lengths
 LETTERS	Constants
 letters	Constants
 levels	levels
@@ -803,6 +851,7 @@ levels<-	levels
 levels<-.factor	levels
 lfactorial	Special
 lgamma	Special
+libcurlVersion	libcurlVersion
 library	library
 library.dynam	library.dynam
 library.dynam.unload	library.dynam
@@ -860,6 +909,7 @@ matmult	matmult
 matrix	matrix
 max	Extremes
 max.col	maxCol
+MC_CORES	options
 mean	mean
 mean.Date	Dates
 mean.default	mean
@@ -934,6 +984,7 @@ objects	ls
 octmode	octmode
 oldClass	class
 oldClass<-	class
+OlsonNames	timezones
 on.exit	on.exit
 open	connections
 open.connection	connections
@@ -971,6 +1022,7 @@ paste	paste
 paste0	paste
 path.expand	path.expand
 path.package	find.package
+pcre_config	pcre_config
 pentagamma	base-defunct
 pi	Constants
 pipe	connections
@@ -1002,13 +1054,14 @@ print.data.frame	print.dataframe
 print.Date	Dates
 print.default	print.default
 print.difftime	difftime
+print.Dlist	print
 print.DLLInfo	getLoadedDLLs
 print.DLLInfoList	getLoadedDLLs
 print.DLLRegisteredRoutines	getDLLRegisteredRoutines
+print.eigen	eigen
 print.factor	print
 print.function	print
 print.hexmode	hexmode
-print.htest	print
 print.libraryIQR	library
 print.listof	print
 print.NativeRoutineList	getDLLRegisteredRoutines
@@ -1081,6 +1134,7 @@ rbind	cbind
 rbind.data.frame	cbind
 rcond	kappa
 Rd2pdf	RdUtils
+RD2PDF_INPUTENC	RdUtils
 Rdconv	RdUtils
 Re	complex
 read.dcf	dcf
@@ -1129,6 +1183,7 @@ restartDescription	conditions
 restartFormals	conditions
 retracemem	tracemem
 return	function
+returnValue	trace
 rev	rev
 rev.default	rev
 rle	rle
@@ -1158,6 +1213,8 @@ Rprofile.site	Startup
 R_BATCH	EnvVar
 R_BROWSER	EnvVar
 R_COMPLETION	EnvVar
+R_C_BOUNDS_CHECK	options
+R_DEFAULT_DEVICE	options
 R_DEFAULT_PACKAGES	Startup
 R_DOC_DIR	EnvVar
 R_ENVIRON	Startup
@@ -1169,11 +1226,15 @@ R_GSCMD	EnvVar
 R_HISTFILE	EnvVar
 R_HISTSIZE	EnvVar
 R_HOME	Rhome
+R_ICU_LOCALE	icuSetCollate
 R_INCLUDE_DIR	EnvVar
+R_INTERACTIVE_DEVICE	options
+R_KEEP_PKG_SOURCE	options
 R_LIBS	libPaths
 R_LIBS_SITE	libPaths
 R_LIBS_USER	libPaths
 R_PAPERSIZE	EnvVar
+R_PCRE_JIT_STACK_MAXSIZE	EnvVar
 R_PDFVIEWER	EnvVar
 R_PLATFORM	EnvVar
 R_PROFILE	Startup
@@ -1237,6 +1298,7 @@ single	double
 sinh	Hyperbolic
 sink	sink
 sink.number	sink
+sinpi	Trig
 slice.index	slice.index
 socketConnection	connections
 socketSelect	socketSelect
@@ -1271,6 +1333,7 @@ srcfilecopy-class	srcfile
 srcref	srcfile
 srcref-class	srcfile
 standardGeneric	standardGeneric
+startsWith	startsWith
 Startup	Startup
 stderr	showConnections
 stdin	showConnections
@@ -1282,6 +1345,7 @@ storage.mode<-	mode
 str.POSIXt	DateTimeClasses
 strftime	strptime
 strptime	strptime
+strrep	strrep
 strsplit	strsplit
 strtoi	strtoi
 strtrim	strtrim
@@ -1376,6 +1440,7 @@ table	table
 tabulate	tabulate
 tan	Trig
 tanh	Hyperbolic
+tanpi	Trig
 tapply	tapply
 taskCallbackManager	taskCallbackManager
 tcrossprod	crossprod
@@ -1407,6 +1472,7 @@ transform.data.frame	transform
 transform.default	transform
 Trig	Trig
 trigamma	Special
+trimws	trimws
 TRUE	logical
 trunc	Round
 trunc.Date	round.POSIXt
@@ -1431,6 +1497,7 @@ unique.default	unique
 unique.matrix	unique
 unique.numeric_version	numeric_version
 unique.POSIXlt	DateTimeClasses
+unique.warnings	warnings
 units	difftime
 units.difftime	difftime
 units<-	difftime
@@ -1451,6 +1518,8 @@ upper.tri	lower.tri
 url	connections
 UseMethod	UseMethod
 utf8ToInt	utf8Conversion
+validEnc	validUTF8
+validUTF8	validUTF8
 vapply	lapply
 vector	vector
 Vectorize	Vectorize
@@ -1467,6 +1536,7 @@ which.min	which.min
 while	Control
 with	with
 with.default	with
+withAutoprint	source
 withCallingHandlers	conditions
 within	with
 within.data.frame	with
@@ -1500,6 +1570,7 @@ zapsmall	zapsmall
 [.data.frame	Extract.data.frame
 [.Date	Dates
 [.difftime	difftime
+[.Dlist	Extract
 [.factor	Extract.factor
 [.hexmode	hexmode
 [.listof	Extract
@@ -1509,11 +1580,13 @@ zapsmall	zapsmall
 [.POSIXct	DateTimeClasses
 [.POSIXlt	DateTimeClasses
 [.simple.list	Extract
+[.table	table
 [.warnings	warnings
 [<-	Extract
 [<-.data.frame	Extract.data.frame
 [<-.Date	Dates
 [<-.factor	Extract.factor
+[<-.numeric_version	numeric_version
 [<-.POSIXct	DateTimeClasses
 [<-.POSIXlt	DateTimeClasses
 [[	Extract

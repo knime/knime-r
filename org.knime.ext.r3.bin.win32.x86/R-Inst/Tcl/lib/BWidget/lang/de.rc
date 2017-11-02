@@ -18,13 +18,14 @@
 
 ! --- symbolic names of label of SelectFont dialog ----------------------------
 
-*boldName:       Fett
-*italicName:     Kursiv
-*underlineName:  Unterstrichen
-*overstrikeName: Durchgestrichen
-*fontName:       &Schriftart
-*sizeName:       S&chriftgrad
-*styleName:      Sc&hriftschnitt
+*boldName:          Fett
+*italicName:        Kursiv
+*underlineName:     Unterstrichen
+*overstrikeName:    Durchgestrichen
+*fontName:          &Schriftart
+*sizeName:          S&chriftgrad
+*styleName:         Sc&hriftschnitt
+*colorPickerName:   &Farbe...
 
 ! --- symbolic names of label of PasswdDlg dialog -----------------------------
 
@@ -50,3 +51,9 @@
 ! --- resource for PasswdDlg dialog -------------------------------------------
 
 *PasswdDlg.title:  Enter login and password
+
+! --- symbolic names of label of SelectColor dialog ----------------------------
+
+*baseColorsName: Grundfarben
+*userColorsName: Benutzerdefinierte Farben
+

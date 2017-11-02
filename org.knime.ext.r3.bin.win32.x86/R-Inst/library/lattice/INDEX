@@ -1,5 +1,6 @@
 Lattice                 Lattice Graphics
 Rows                    Extract rows from a list
+USMortality             Mortality Rates in US by Cause and Gender
 axis.default            Default axis annotation utilities
 banking                 Banking
 barchart.table          table methods for barchart and dotplot

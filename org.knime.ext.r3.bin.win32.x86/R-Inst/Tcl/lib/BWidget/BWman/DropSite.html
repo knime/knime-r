@@ -67,9 +67,21 @@ This command is used to declare <I>path</I> as a drop site. Options are:
 <DL><DT><A NAME="DropSite-dropcmd"><B>-dropcmd</B></A></DT>
 <DD>
 
-This command is called when user release the drag icon over a valid drop target widget.
-It takes the same arguments as <B>-dragovercmd</B> command. Its return values is passed
-as a result to the <B>-dragendcmd</B> command of the drag source widget.
+This command is called when user release the drag icon over a valid
+drop target widget.  Arguments passed to the command are:
+
+<UL>
+<LI>pathname of the drop target (the widget itself),
+<LI>pathname of the drag source,
+<LI>root x-coordinate of the pointer,
+<LI>root y-coordinate of the pointer,
+<LI>operation,
+<LI>type of the dragged data,
+<LI>dragged data.
+</UL>
+
+Its return values is passed as a result to the <B>-dragendcmd</B>
+command of the drag source widget.
 
 </DD>
 </DL>

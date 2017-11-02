@@ -1,5 +1,415 @@
 \name{NEWS}
 \title{NEWS file for the survival package}
+\section{Changes in version 2.41-3}{
+  \itemize{
+    \item A check for infinite loglik was incorrect in agfit4.c, and could
+    fail to detect the need for step halving.  It required a very
+    unusual data set to trigger this.
+
+    \item The survfit routine would fail for interval censored data, on
+    a group that had only a single step in the curve.  (Needed to add
+    drop=FALSE to a matrix subscript.)
+
+    \item Minor change to Surv to ensure that its check for difftime
+    objects will not trigger a "length >1 inside an if ()" warning.
+
+    \item The summary.survfit function had n.censor wrong when there
+    were multiple curves and censor=TRUE (spurious NA values).  Added more
+    lines to the test suite.
+
+    \item Pointed out by Mikko Korpela: the dynamic symbols check added
+    in 2.41-0 requires R version 2.16 or later.  Add an ifdef to init.c
+    that checks the version of R, mimicing a similar line in the MASS library.
+}}
+
+\section{Changes in version 2.41-2}{
+  \itemize{
+    \item Fix two memory leaks and an uninitialized array, found by B Ripley. 
+
+    \item With Surv(a,b, type='interval2') and a or b infinite, the
+    infinite values were incorrectly retained rather then being
+    transformed into left or right censoring.  The downstream survfit
+    and/or survreg results could then sometimes be in error.
+
+    \item Update cch to correctly deal with nearly tied times, in line
+     with the many changes in version 2.40.
+
+     \item Update the README.md file, for github users who didn't read
+    noweb/Readme and then get R CMD build errors.
+  }
+}
+\section{Changes in version 2.41-0}{
+  \itemize{
+    \item Per request if the R-core, add R_useDynamicSymbols(dll,FALSE)
+      to the initialization.  This prevents .Call from accessing the
+      library when its first argument is a character string.  The reason
+      is to stop accidental linking to the routines.
+    \item Fix a bug in tmerge, if data2 was not sorted by time within id
+      then a tdc(time, x) call's outcomte was incorrect.  Add the ability
+      to use a factor as the second variable in a tdc call, and add the
+      tdcstart option.
+    \item Expose the aeqSurv routine, which is used rectify tied
+     time issues.
+     \item The survfit routines now save the start.time option (if used) in
+     the output object.  This is then used as a default starting point for
+     the x-axis in any plots.
+     \item Allow survfit.matrix to use different p0 values for different
+     curves.
+     \item Add type="survival" to predict.coxph
+ }}
+ 
+\section{Changes in version 2.40-2}{
+  \itemize{
+    \item Fix an error in the finegray routine: with strata() the
+    resulting data sets could have incorrect status values.  Pointed out
+    by Mark Donoghoe.  Added a strata test to tests/finegray.R.  
+
+    \item Remove many "is.R" and "oldClass" calls (vestiges of Splus).
+    \item The summary.pyears routine now prints pandoc style tables.
+    \item Fix multiple spelling errors in the Rd files; contributed by
+    Luca Braglia.
+    \item For a multi-state curve, the cumhaz component accidentally had
+    the final state removed.  All values were correct, simply an
+    overzealous trimming of the final result.
+
+    \item Add a short vignette describing the issue with round off error
+    and tied survival times.
+
+    \item Errors in survSplit: a factor status was not propogated, and a
+    missing time gave a spurious error message.
+}}
+
+\section{Changes in version 2.40-1}{
+  \itemize{
+    \item For multi-state survival with a big data set and the
+    influence=TRUE option, the resulting object could be so long that it
+    overflowed an integer counter in the C code.  Add a check in the R
+    code and a caution in the help file.
+  }
+}
+\section{Changes in version 2.40-0}{
+  \itemize{
+    \item Code changes to void the new warnings for multiplication of a
+    vector * (1 by 1 matrix). 
+    
+    \item Add a more thorough test case for multi-state survival:
+    not all subjects start in the same state, delayed entry, and
+    case weights that change within a subject.  This uncovered some
+    errors.  More carefully document the influence option.
+    
+    \item Consistently deal with "almost tied" survival times in the survfit and
+    coxph routines.  Uses the same rule and tolerance as the all.equal
+    function to declare two time value equal.  The issue arises due to
+    round off errors, e.g., from cacluations using days/365.25.
+    
+    \item Add the statefig function and a multi-state vignette.
+
+    \item The rsurvreg function was not exported.  NAMESPACE fix.
+
+    \item Fix some labeling errors in the graphs for the adjusted
+    survival curves vignette (consequences of the xscale change in
+    2.38-5).
+
+    \item Update multi-state survival so that the robust (default)
+    variance for a weighted data set treats these as sampling weights
+    rather than case weights.  This makes it consistent with the
+    behavior of coxph.  (Multiplication of all the weights by a constant
+    now leaves the variance unchanged.) (9/2016)
+
+    \item Surv(time, status) would fail when status was a factor with
+    only two levels.  This was due to an assumption that no user would
+    ever want this, i.e., ever do it on purpose, and so it must be a mistake
+    which should be caught.  This was a bad assumption.
+
+    \item Add the start.time argument to survfit.coxph. 10Sep2017
+}}
+\section{Changes in version 2.39-5}{
+  \itemize{
+    \item The summary.survfit routine assumed that the times argument
+    was sorted, contrary to the documentation.  Pointed out by Torsten
+    Hothorn.
+    \item The tmerge function would fail if the time variable was a Date
+      object.  It was due to the fact that as.Date(as.numeric(x)) 
+      fails when x is a date.  (A design flaw in Date, IMHO).  There were
+      also flaws when both the first and second data set were not sorted
+      by id; added a more complete test case for this.
+
+    \item An earlier change in dim.survfit had felled the survfit.matrix
+    function: it incorrectly assumed strata when there were none.
+    Unfortunately this didn't generate an error but rather multiple
+    copies of a single curve (and an incomprehensible explanation of
+    this single curve in the vignette).  Pointed out by E Lundt.
+
+    \item print.summary.survfitms would complain if only a single time
+    was returned.  A case where drop=FALSE was needed.
+
+    \item Add a test for survSplit to ensure that it works with both the
+    formula based and old interface.  Add documention on
+    how variable names are chosen to the help file.
+
+    \item Error in subscripting survival curves: if fit was a survfit
+    curve from left-truncated data, fit[k] had an incorrect n.enter
+    component.  (An old error, which shows how rarely that component is
+    used.)  Pointed out by Beth Atkinson.
+
+    \item Remove n.enter from the default printout of summary.survfit,
+    to make the printout more compact.
+    It remains in the summary object but was very rarely used.
+    \item Update the points.survfit function to handle multiple colors
+    and/or plotting characters.  If a survfit object has multiple curves
+    we cycle through these in the same manner as matpoints would.
+    
+}}
+
+\section{Changes in version 2.39-4}{
+  \itemize{
+    \item Create a stronger test suite for summary.survfit, and use
+    it to actually fix the error that 2.39-3 claimed to fix.  This
+    uncovered a long-standing inaccuracy with n.risk for in-between
+    time points.
+    \item Add a section on monotone splines to the splines vignette.
+}}
+  
+\section{Changes in version 2.39-3}{
+  \itemize{
+    \item For multi-state curves, the returned n.event component lost
+    its dimensions if any of the curves had only one observation.
+
+    \item Fix error in summary.survreg.  For multiple curves and
+    requested time points at or before the first time point in the data,
+    the values from curve 1 was used for all.  Pointed out by T Eigentler.
+
+    \item Fix an unitialized variable in C code, pointed out by Brian Ripley.
+}}
+
+\section{Changes in version 2.39-2}{
+  \itemize{
+    \item Small updates based on feedback from CRAN
+}}
+
+\section{Changes in version 2.39-1}{
+  \itemize{
+    \item Label the output dimnames from pyears with the variable names
+    from the model.  This makes it easier to read.
+    
+    \item Replace any refrences to model.frame with "stats::model.frame"
+    (all 38 of them).  The model.frame function uses non-standard
+    evaluation rules, and holding its hand like this is the only way to
+    ensure that we don't call a user function of the same name.
+    
+    \item The Surv function would almost always label the columns of the
+    resulting matrix, and the glmnet function depended on this. It now
+    always labels them per a request from Trevor Hastie.
+
+    \item Add the finegray function and expand the competing risks
+    vignette to document it.
+
+    \item Add a check to the quantile.survfit function for multi-state
+    models; quantiles are not well defined for this case.
+
+    \item Changes to the iteration path and convergence tests for coxph
+    models with (start, stop] data, driven by two user examples that
+    failed.  The data sets had serious statistical issues of
+    collinearity and/or outliers such that the final fits are not
+    practically useful, but now the routine finishes gracefully instead
+    of dying.  The upshot is much more care about the order in which
+    additions and subtractions of large numbers are done so as to avoid
+    cancellation error.
+
+    \item Fix an error to summary.survfit with the times argument: for
+    intermediate time points it would sometimes choose the wrong value
+    for the number at risk.  (Number at risk is a left continuous
+    function.) 
+}}
+    
+\section{Changes in version 2.38-5}{
+  \itemize{
+    \item Add more graphical arguments to plot.cox.zph in response to a user
+    request.
+    
+    \item Remove some of last vestiges of Splus support from the header
+    files for the C code, per a request from R core to remove mention of S.h.
+    
+    \item Multiple updates and corrections to the tmerge function,
+    including improvements to the vignette.  (As a result of using it in
+    a class where the TA tried out all manner of combinations.)
+    
+    \item Update survSplit: it now handles all types of status variables
+    (0/1, TRUE/FALSE, factors), the id and episode arguments are useful
+    for start/stop data, the data retains its original sort order (new
+    observations are inserted rather than put at the end), and the
+    function is illustrated in a vignette.
+    
+    \item Add the conf.times argument to plot.survfit.  This
+    allows for confidence bars at specified times, which are useful
+    when the plot is crowded.
+
+    \item Survfit changes that are NOT backward compatable!
+    \itemize{
+      \item Change the default for mark.time to FALSE
+      \item Change the behavior of xscale so that it matches that of
+      yscale, i.e., it changes only the label and not the underlying
+      scale.  Follow on annotations such as legend or locator are in the
+      orignal scale of the data.
+      \item For a matrix of curves, e.g. competing risks, print and
+      plot them in column major order rather than row major, so as 
+      to match the usual R behavior.
+      }
+    
+    \item Fix an error in the help page for the cohort
+    argument of survexp, pointed out by Karl Ove Hufthammer.
+
+    \item The anova and logLik functions would fail when given a
+    null model (right hand side of 1 or only an offset).  Pointed
+    out by Karl Ove Hufthammer.
+
+    \item The recently added code to generate an error when the same
+    variable appears on both sides of a formula in coxph (a good idea)
+    caused a failure if there was offset statement that contains a '-'
+    sign.  Pointed out by Abra Jeffers.
+}}
+
+\section{Changes in version 2.38-3}{
+  \itemize{
+    \item Add more imports to the NAMESPACE file per a request from CRAN
+
+    \item Add a length method for Surv objects.  Requested by Max Kuhn.
+    (2015/6/17).
+
+    \item Fix an error in neardate. When both input data sets were
+    unsorted the last match could be wrong.
+}}
+
+\section{Changes in version 2.38-2}{
+  \itemize{
+    \item Change print.coxph to use the printCoefmat routine, which l
+    leads to nicer p-values.  Other print routines will follow unless
+    there is an outcry.  (But I forced signif.stars=FALSE: my tolerance of
+    bad practice has limits.)
+    
+    \item Make those parts of the competing risks vignette which depend
+    on the cmprsk library conditional.  Otherwise the build fails for
+    those without the pacakge.
+    
+    \item The coxph function could fail converge for a set of very collinear
+    predictors when using (start, stop) data; revealed in a test case
+    sent by G Borstrom.  This was due to deficiency in a check for
+    near infinite coefficients, which had already been updated for some
+    but not all cases.  (2015/6/3)
+    
+    \item Update anova.coxph to use the model.frame.coxph function; the 
+    current code had scoping errors if embedded in a function.  Add an
+    anova.coxph.penal function to correctly handle models with pspline
+    terms.
+
+    \item Fix an error in the tmerge function.  Using the options
+    argument would generate a spurious error.
+    \item Pyears could fail on very long formulas due to a deparse() issue.
+    
+    \item Add the number of observations used and deleted due to missing
+    to summary.pyears.
+    
+    \item Allow the combination of a null coxph model (~1 on the right)
+    and the exact calculation for tied times.  No one had ever asked for
+    this before.  (2015/3/25)
+    
+    \item Shorten the default printout for survfit. The records, n.max
+    and n.start columns are often the same: if so suppress duplicates.
+    
+    \item Move the anova.coxphlist function from the survival package to
+    coxme.  (2015/3/3)
+
+    \item Change the logLik method for coxph models so that the nobs
+    component is the number of events rather than the number of rows in
+    the data.  This is superior for follow on methods such as AIC.
+
+    \item Add a test to the coxexact.c routine for too large a data set;
+    too many tied times could lead to integer overflow.  "Fixing" the error
+    is not sensible: the computation for such a data set would take decades.
+    Add some more explanation to the help pages as well.
+}}
+
+\section{Changes in version 2.38-1}{
+  \itemize{
+    \item Fix an error discovered by CRAN, which triggered a core dump
+    for them on a particular manual page (but never for me).  The linear
+    predictors from a frailty model contained NA values (incorrect),
+    leading to failure in survConcordance.fit. (2015/2/16).
+    
+    \item An error was found in the mgus data set (a progression after
+    death).  Now corrected, and added a little more follow-up time for
+    some subjects.
+    
+    \item Add error check for infitinte weights or offsets.  This in respose
+    to a bug report where someone did this on purpose, trying to mimic
+    cure fractions, and then found that survfit.coxph failed.
+
+    \item Robust variance is not supported for a coxph model with the
+    "exact" approximation.  (Rarely requested and a lot of work to add.)
+    Add an error message to clogit(), so users get a more useful notice of
+    the issue rather than a late error from residuals.coxph.
+    
+    \item Update the rats data set: it now includes both female and male
+    litters so as to match the documentation.
+    
+    \item The term frailty(x) would fail if x were a factor, and not all
+    levels were present.  Pointed out by Theodor Balan.
+    
+    \item Fix error of "abs" instead of "fabs" in the agfit4.c code;
+    pointed out to me by CRAN.
+    
+    \item Replace all instances of the obsolete prmatrix function.
+    
+    \item Modify pyears to allow cbind(time, count) as the response,
+    giving a cumulative sum of counts, when the counts per observation
+    may be other than 0/1.
+    
+    \item The lines.survfit function was incorrect for data sets that
+    used the start.time option and xscale (it neglected to rescale the
+    start time.)
+
+    \item An increasingly common error is for user to put the time
+    variable on both sides of a coxph equation in the mistaken belief
+    that this is a way to create time-dependent coefficients.  Generate
+    a warning message for this case.
+    
+    \item Update the basehaz function to a simple alias for "survfit".
+    Prior versions called surfit but then only returned part of the
+    object.  Update 2/2015: reverted the change.  It turns out that 6
+    different packages that depend on survival also depended on the
+    old behavior.  
+    
+    \item Make the default value for the shortlabel argument of strata()
+    more nuanced.  If the argument is a single factor, assume that we
+    don't need to prepend the variable name to its levels.
+    
+    \item Return the weights vector, if present, as part of the survreg
+    object.
+    
+    \item For interval censored points and the symmetric distributions
+    (Gaussian and logistic) response type residuals were incorrect.
+    Silly error: needed (x-mean)/scale not x/scale - mean.
+
+    \item Martingale residuals could be incorrect for the case of model with
+    (start, stop] data and a pspline term.  Refactor the code so that
+    all of the possible code paths call the same C routine to do the residuals.
+    Add a new test for this case, and further tests to verify that
+    predict(type='expected') and residuals agree.
+        
+    \item Fix bug pointed out by D Dunker: if a model had both tt() and
+    cluster() terms it would fail with a length error.
+    
+    \item Fix a rare bug in plot.survfit: if a multistate curve rose and
+    then later fell to exactly the same value, the line would be
+    incorrect.
+    
+    \item Add calls to the R_CheckUserInterrupt to several routines, so
+    that long calculations can be interrupted by the user.
+
+    \item The anova.coxph function would fail if the original call had a
+    subset argument. Pointed out by R Fisher.   11May2014
+}}
+    
 \section{Changes in version 2.37-7}{
   \itemize{
     \item Remove a dependency on the survey package from the adjusted
@@ -69,7 +479,7 @@
     The result of survfit now (sometimes) includes the cumulative
     hazard.  This will be expanded. 29Jul13
     
-    \item Change code in the coxpenal.fit routine: the use of a vector of
+2    \item Change code in the coxpenal.fit routine: the use of a vector of
     symbols as arguments to my .C calls was confusing to a new CRAN
     consistency check.  Both the old and new are legal R; but the old
     was admittedly an unusual construction and it was simpler to change it.
@@ -869,8 +1279,8 @@ succeed, when "goodlines" is the subset with correct values.}
 
 \subsection{Older changes}{
  \itemize{
-  \item{25SepO7: How embarrassing -- someone pointed out that I had Dave Harrington's
-name spelled wrong in the options to survfit.coxph!}
+   \item{25SepO7: How embarrassing -- someone pointed out that I had Dave
+     Harrington's name spelled wrong in the options to survfit.coxph!}
 
   \item{9Jul07: In a model with offsets, survreg mistakenly omitted the offset
 from the returned linear.predictor component.}

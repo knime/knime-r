@@ -5,14 +5,9 @@ export(anova.trls, anovalist.trls, correlogram, expcov, gaucov, Kaver,
        predict.trls, prmat, Psim, semat, sphercov, SSI, Strauss,
        surf.gls, surf.ls, trls.influence, trmat, variogram)
 
-importFrom(graphics, plot)
-importFrom(stats, anova)
-importFrom(stats, deviance)
-importFrom(stats, df.residual)
-importFrom(stats, extractAIC)
-importFrom(stats, fitted)
-importFrom(stats, predict)
-importFrom(stats, residuals)
+importFrom(graphics, abline, plot, points, symbols)
+importFrom(stats, anova, deviance, df.residual, extractAIC, fitted,
+           pf, predict, quantile, residuals, var)
 
 S3method(anova,trls)
 S3method(deviance,trls)

@@ -9,6 +9,7 @@ as.raster.character	as.raster
 as.raster.logical	as.raster
 as.raster.matrix	as.raster
 as.raster.numeric	as.raster
+as.raster.raw	as.raster
 atop	plotmath
 axisTicks	axisTicks
 bar	plotmath
@@ -74,6 +75,7 @@ grDevices	grDevices-package
 grey	gray
 grey.colors	gray.colors
 group	plotmath
+grSoftVersion	grSoftVersion
 hat	plotmath
 hcl	hcl
 heat.colors	palettes
@@ -102,7 +104,6 @@ plain	plotmath
 plotmath	plotmath
 png	png
 postscript	postscript
-postscriptFont	grDevices-defunct
 postscriptFonts	postscriptFonts
 pretty.Date	pretty.Date
 pretty.POSIXt	pretty.Date

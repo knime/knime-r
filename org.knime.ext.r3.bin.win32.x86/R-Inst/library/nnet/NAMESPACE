@@ -5,14 +5,9 @@ export(class.ind, multinom, nnet, nnetHess, which.is.max)
 # match.call problem
 export(nnet.default, nnet.formula)
 
-importFrom(stats, add1)
-importFrom(stats, anova)
-importFrom(stats, coef)
-importFrom(stats, drop1)
-importFrom(stats, extractAIC)
-importFrom(stats, model.frame)
-importFrom(stats, predict)
-importFrom(stats, vcov)
+#importFrom(stats, add1, anova, coef, drop1, extractAIC, model.frame, predict, vcov)
+import(stats)
+importFrom(utils, flush.console)
 
 S3method(add1, multinom)
 S3method(anova, multinom)

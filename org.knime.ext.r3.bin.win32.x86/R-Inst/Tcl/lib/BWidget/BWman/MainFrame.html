@@ -22,21 +22,25 @@
 </TR>
 <TR>
 <TD>&nbsp;&nbsp;-progressvar (see <B>-variable</B>)</TD>
+</TR>
 </TABLE></DD>
 </DL>
 <DL>
 <DT><I><A HREF="#wso">WIDGET-SPECIFIC OPTIONS</A></I></DT>
 <DD><TABLE CELLSPACING=0 CELLSPACING=0 BORDER=0>
 <TR>
-<TD>&nbsp;&nbsp;<A HREF="#-height">-height</A></TR>
-<TD>&nbsp;&nbsp;<A HREF="#-menu">-menu</A></TR>
+<TD>&nbsp;&nbsp;<A HREF="#-height">-height</A></TD></TR>
+<TR>
+<TD>&nbsp;&nbsp;<A HREF="#-menu">-menu</A></TD>
 </TR>
 <TR>
-<TD>&nbsp;&nbsp;<A HREF="#-separator">-separator</A></TR>
-<TD>&nbsp;&nbsp;<A HREF="#-textvariable">-textvariable</A></TR>
+<TD>&nbsp;&nbsp;<A HREF="#-separator">-separator</A></TD></TR>
+<TR>
+<TD>&nbsp;&nbsp;<A HREF="#-textvariable">-textvariable</A></TD>
 </TR>
 <TR>
-<TD>&nbsp;&nbsp;<A HREF="#-width">-width</A></TR>
+<TD>&nbsp;&nbsp;<A HREF="#-width">-width</A></TD></TR>
+<TD>&nbsp;&nbsp;<A HREF="#-sizegrip">-sizegrip</A></TR>
 </TABLE></DD>
 </DL>
 <DL>
@@ -82,10 +86,10 @@
 MainFrame manage toplevel to have:<BR>
 <UL>
 <LI>simple menu creation, with automatic accelerator bindings and
-<A HREF="DynamicHelp.html">DynamicHelp</A> association,
-<LI>one or more toolbars that user can hide,
-<LI>a status bar, displaying a user message or a menu description, and optionally a 
-<A HREF="ProgressBar.html">ProgressBar</A>.
+<A HREF="DynamicHelp.html">DynamicHelp</A> association,</LI>
+<LI>one or more toolbars that user can hide,</LI>
+<LI>a status bar, displaying a user message or a menu description, and optionally a
+<A HREF="ProgressBar.html">ProgressBar</A>.</LI>
 </UL>
 </P>
 <BR><HR WIDTH="50%"><BR>
@@ -107,33 +111,35 @@ one cascade menu. It has the following form:
 where <I>menuentries</I> is a list where each element describe one menu entry, which can be:
 <UL>
 <LI>for a separator:<BR>
-  {<B>separator</B>}
+  {<B>separator</B>}</LI>
 <LI>for a command:<BR>
-  {<B>command</B> <I>menuname</I> ?<I>tags</I>? ?<I>description</I>? ?<I>accelerator</I>? ?<I>option</I> <I>value</I>? ...}
+  {<B>command</B> <I>menuname</I> ?<I>tags</I>? ?<I>description</I>? ?<I>accelerator</I>? ?<I>option</I> <I>value</I>? ...}</LI>
 <LI>for a check button:<BR>
-  {<B>checkbutton</B> <I>menuname</I> ?<I>tags</I>? ?<I>description</I>? ?<I>accelerator</I>? ?<I>option</I> <I>value</I>? ...}
+  {<B>checkbutton</B> <I>menuname</I> ?<I>tags</I>? ?<I>description</I>? ?<I>accelerator</I>? ?<I>option</I> <I>value</I>? ...}</LI>
 <LI>for a radio button:<BR>
-  {<B>radiobutton</B> <I>menuname</I> ?<I>tags</I>? ?<I>description</I>? ?<I>accelerator</I> ?<I>option</I> <I>value</I>? ...}
+  {<B>radiobutton</B> <I>menuname</I> ?<I>tags</I>? ?<I>description</I>? ?<I>accelerator</I> ?<I>option</I> <I>value</I>? ...}</LI>
 <LI>for a cascade menu:<BR>
-  {<B>cascade</B> <I>menuname</I> <I>tags</I> <I>menuId</I> <I>tearoff</I> <I>menuentries</I>}
+  {<B>cascade</B> <I>menuname</I> <I>tags</I> <I>menuId</I> <I>tearoff</I> <I>menuentries</I>}</LI>
 </UL>
 where:
 <UL>
 <LI><I>menuname</I> is the name of the menu. If it contains a &amp;, the following character
 is automatically converted to the corresponding <B>-underline</B> option of <B>menu add</B>
-command.
+command.</LI>
 <LI><I>tags</I> is the tags list for the entry, used for enabling or disabling menu
-entries with <B>MainFrame::setmenustate</B>.
+entries with <B>MainFrame::setmenustate</B>.</LI>
 <LI><I>menuId</I> is an id for the menu, from which you can get menu pathname with
- <B>MainFrame::getmenu</B>.
-<LI><I>tearoff</I> specifies if menu has tearoff entry.
-<LI><I>description</I> specifies a string for <A HREF=\"DynamicHelp.html\">DynamicHelp</A>.
+ <B>MainFrame::getmenu</B>.</LI>
+<LI><I>tearoff</I> specifies if menu has tearoff entry.</LI>
+<LI><I>description</I> specifies a string for <A HREF=\"DynamicHelp.html\">DynamicHelp</A>.</LI>
 <LI><I>accelerator</I> specifies a key sequence. It is a list of two elements, where the first
-is one of <B>Ctrl</B>, <B>Alt</B> or <B>CtrlAlt</B>, and the second as letter or a digit.
+is one of <B>Shift</B>, <B>Ctrl</B>, <B>Alt</B>, <B>CtrlAlt</B>, <B>Cmd</B>,  or <B>ShiftCmd</B>, and the second as letter
+(see <A HREF="#-casesensitive">-casesensitive</A> option for interpretation),  digit or
+a special key name.
 An accelerator string is build and corresponding binding set on the toplevel to invoke the
-menu entry.
+menu entry.</LI>
 <LI><I>option value</I> specifies additionnal options for the entry (see <B>menu add</B>
-command).
+command).</LI>
 </UL>
 Each value enclosed by ? are optional and defaulted to empty string, but must be
 provided if one or more following options is not empty.
@@ -154,7 +160,7 @@ set descmenu {
         {command "E&xit" {} "Exit the application" {} -command Menu::exit}
     }
     "&Options" {} {} 0 {
-        {checkbutton "Toolbar" {} "Show/hide toolbar" {} 
+        {checkbutton "Toolbar" {} "Show/hide toolbar" {}
             -variable Menu::_drawtoolbar
             -command  {$Menu::_mainframe showtoolbar toolbar $Menu::_drawtoolbar}
         }
@@ -191,6 +197,11 @@ Tk_GetPixels. If this option is less than or equal to zero (the default) then th
 will not request any size at all.
 </DD>
 </DL>
+<DL><DT><A NAME="-sizegrip"><B>-sizegrip (themed, read-only)</B></A></DT>
+<DD>
+
+If bool argument is true and themed mode, show a ttk sizegrip widget in the lower-right corner.
+</DD>
 <HR WIDTH="50%"><BR>
 <B><A NAME="wc">WIDGET COMMAND</A></B><BR>
 <DL><DT><A NAME="addindicator"><I>pathName</I> <B>addindicator</B></A>
@@ -247,6 +258,13 @@ Returns the pathname of the <I>index</I>th added indicator.
 
 Returns the pathname of the menu whose id is <I>menuid</I>.
 </DD></DL>
+<DL><DT><A NAME="getmenustate"><I>pathName</I> <B>getmenustate</B></A>
+ <I>tag</I>
+ <I>state</I>
+</DT><DD>
+
+Returns the state of the given menu <I>tag</I>.
+</DD></DL>
 <DL><DT><A NAME="gettoolbar"><I>pathName</I> <B>gettoolbar</B></A>
  <I>index</I>
 </DT><DD>
@@ -260,6 +278,7 @@ Returns the pathname of the <I>index</I>th added toolbar.
 
 Set the <B>-state</B> option value of all the menu entries that have the tag <I>tag</I>
 to <I>state</I>.
+A menu entry is disabled, if one of its associated tags have state <B>disabled</B>.
 
 </DD></DL>
 <DL><DT><A NAME="showstatusbar"><I>pathName</I> <B>showstatusbar</B></A>

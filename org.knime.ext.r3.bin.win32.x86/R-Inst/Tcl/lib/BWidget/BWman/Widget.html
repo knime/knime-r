@@ -337,6 +337,9 @@ string defining the set.
     <li><i>class</i> is the name of the new widget class.</li>
     <li><i>filename</i> is the name of the file (without extension) in the
     BWidget distribution that defines this class.</li>
+    <li><i>?-classonly?</i> If present, the class is not setup.</li>
+    <li><i>?-namespace ns?</i> The namespace where the widget's procedures live
+    in; defaults to the class name.</li>
 </ul>
 
     <p>
@@ -346,14 +349,14 @@ string defining the set.
     </p>
 
     <p>
-    This command does several things to setup the new class.  First, it
-    creates an alias in the global namespace for the name of the class
-    that points to the class's ::create subcommand.  Second, it defines
-    a ::use subcommand for the class which other classes can use to load
-    this class on the fly.  Lastly, it creates a default binding to the
-    &lt;Destroy&gt; event for the class that calls Widget::destroy on
-    the path.  This is the default setup for almost all widgets in the
-    BWidget package.
+    If <i>-classonly</i> option is not given this command does several things to
+    setup the new class.  First, it creates an alias in the global namespace for
+    the name of the class that points to the class's ::create subcommand.
+    Second, it defines a ::use subcommand for the class which other classes can
+    use to load this class on the fly.  Lastly, it creates a default binding to
+    the &lt;Destroy&gt; event for the class that calls Widget::destroy on the
+    path.  This is the default setup for almost all widgets in the BWidget
+    package.
     </p>
 
 </DD></DL>

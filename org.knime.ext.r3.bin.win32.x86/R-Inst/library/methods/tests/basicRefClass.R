@@ -257,6 +257,29 @@ load(tf)
 unlink(tf)
 stopifnot(identical(xx$data, .self$data))
 
+## tests of $trace() methods
+## debugging an object
+xx$trace(edit, quote(xxTrace <<- TRUE))
+
+## debugging all objects from class mEditor in method $undo()
+mEditor$trace(undo, quote(mETrace <<- TRUE))
+
+xxTrace <- mETrace <- FALSE
+xx$edit(2,3,100)
+xx$undo()
+
+## will not have changed the xx$undo() method (already used)
+stopifnot(identical(xxTrace, TRUE), identical(mETrace, FALSE))
+
+## but a new object works the other way around
+xxTrace <- mETrace <- FALSE
+xx <- mEditor(data = xMat)
+xx$edit(2,3,100)
+xx$undo()
+stopifnot(identical(xxTrace, FALSE), identical(mETrace, TRUE))
+
+
+
 markViewer <- ""
 setMarkViewer <- function(what)
     markViewer <<- what
@@ -302,7 +325,8 @@ ff <- mv( data = xMat)
 stopifnot(identical(markViewer, "ON")) # check initialize
 ff$edit(2,2,0)
 ff$data
-stopifnot(identical(ff$counts(), length(ff$edits[[1]][[3]])))
+if(methods:::.hasCodeTools())  # otherwise 'counter' is not visible
+    stopifnot(identical(ff$counts(), length(ff$edits[[1]][[3]])))
 ff$undo()
 stopifnot(all.equal(ff$data, xMat))
 rm(ff)

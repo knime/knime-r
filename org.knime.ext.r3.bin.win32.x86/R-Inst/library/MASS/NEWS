@@ -191,7 +191,11 @@ This file documents software changes since the third edition.
 - ldahist(sep = TRUE) was missing a dev.flush().
 - addterm.glm() mis-calculated F statistics for df > 1.
 - anova.loglm() needed revision for changes in R.
-- The addterm() default method allows update() to fail.
+- the addterm() default method allows update() to fail.
 - polr(method = "cloglog") implemented what is more commonly called
   the log-log link.  Now both are provided.
 - lqs() fits with intercepts and contrasts lost the latter from the return value.
+- addterm() and dropterm() now handle empty scopes, transparently.
+- glmmPQL uses requireNamespace('nlme'), not require().
+- mvnorm(EISPACK = TRUE) is now an error: it is unsupported by R >= 3.1.0.
+- the log-likelihood returned for fitdistr(, "geometric") was incorrect.

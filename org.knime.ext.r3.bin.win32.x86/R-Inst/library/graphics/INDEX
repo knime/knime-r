@@ -46,6 +46,7 @@ plot.design             Plot Univariate Effects of a Design or Model
 plot.factor             Plotting Factor Variables
 plot.formula            Formula Notation for Scatterplots
 plot.histogram          Plot Histograms
+plot.raster             Plotting Raster Images
 plot.table              Plot Methods for 'table' Objects
 plot.window             Set up World Coordinates for Graphics Window
 plot.xy                 Basic Internal Plot Function

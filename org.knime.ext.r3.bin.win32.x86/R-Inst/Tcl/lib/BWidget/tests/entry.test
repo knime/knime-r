@@ -23,7 +23,7 @@ foreach test {
     {-command foo foo {} {}}
     {-disabledforeground blue blue non-existent \
 	    {unknown color name "non-existent"}}
-    {-editable false false shazbot {expected boolean value but got "shazbot"}}
+    {-editable false 0 shazbot {expected boolean value but got "shazbot"}}
     {-exportselection yes 1 xyzzy {expected boolean value but got "xyzzy"}}
     {-fg #110022 #110022 bogus {unknown color name "bogus"}}
     {-font {Helvetica 12 italic} {Helvetica 12 italic} {} \
@@ -65,7 +65,7 @@ destroy .e
 
 test Entry-2.1 {Entry} {
     list [catch {Entry} msg] $msg
-} {1 {no value given for parameter "path" to "Entry"}}
+} {1 {wrong # args: should be "Entry path ..."}}
 test Entry-2.2 {Entry} {
     list [catch {Entry gorp} msg] $msg
 } {1 {bad window path name "gorp"}}

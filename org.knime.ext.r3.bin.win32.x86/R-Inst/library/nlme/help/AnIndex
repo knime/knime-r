@@ -396,6 +396,7 @@ print.ranef	random.effects
 print.ranef.lme	ranef.lme
 print.reStruct	reStruct
 print.simulate.lme	simulate.lme
+print.summary.lme	summary.lme
 print.summary.pdMat	print.summary.pdMat
 print.varComb	print.varFunc
 print.VarCorr.lme	VarCorr
@@ -442,6 +443,8 @@ residuals.lmeStruct	residuals.lmeStruct
 residuals.lmList	residuals.lmList
 residuals.nlmeStruct	residuals.nlmeStruct
 reStruct	reStruct
+sigma	lmeObject
+sigma.lme	lmeObject
 simulate.lme	simulate.lme
 solve.pdBlocked	solve.pdMat
 solve.pdDiag	solve.pdMat
@@ -483,7 +486,6 @@ summary.pdSymm	summary.pdMat
 summary.reStruct	summary.modelStruct
 summary.varComb	summary.varFunc
 summary.varConstPower	summary.varFunc
-summary.VarCorr.lme	VarCorr
 summary.varExp	summary.varFunc
 summary.varFixed	summary.varFunc
 summary.varFunc	summary.varFunc

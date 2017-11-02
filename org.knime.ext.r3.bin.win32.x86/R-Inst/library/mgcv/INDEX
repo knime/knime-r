@@ -4,21 +4,36 @@ Predict.matrix.cr.smooth
 Predict.matrix.soap.film
                         Prediction matrix for soap film smooth
 Rrank                   Find rank of upper triangular matrix
-Tweedie                 GAM Tweedie family
+Sl.initial.repara       Re-parametrizing model matrix X
+Sl.repara               Applying re-parameterization from
+                        log-determinant of penalty matrix to model
+                        matrix.
+Sl.setup                Setting up a list representing a block diagonal
+                        penalty matrix
+Tweedie                 GAM Tweedie families
 anova.gam               Approximate hypothesis tests related to GAM
                         fits
 bam                     Generalized additive models for very large
                         datasets
 bam.update              Update a strictly additive bam model for new
                         data.
+bandchol                Choleski decomposition of a band diagonal
+                        matrix
+betar                   GAM beta regression family
+bug.reports.mgcv        Reporting mgcv bugs.
 cSplineDes              Evaluate cyclic B spline basis
 choose.k                Basis dimension choice for smooths
 columb                  Reduced version of Columbus OH crime data
 concurvity              GAM concurvity measures
+cox.ph                  Additive Cox Proportional Hazard Model
+cox.pht                 Additive Cox proportional hazard models with
+                        time varying covariates
+dDeta                   Obtaining derivative w.r.t. linear predictor
 exclude.too.far         Exclude prediction grid points too far from
                         data
 extract.lme.cov         Extract the data covariance matrix from an lme
                         object
+family.mgcv             Distribution families in mgcv
 fix.family.link         Modify families for use in GAM fitting and
                         checking
 fixDependence           Detect linear dependencies of one matrix on
@@ -36,9 +51,13 @@ gam.fit                 GAM P-IRLS estimation with GCV/UBRE smoothness
                         estimation
 gam.fit3                P-IRLS GAM estimation with GCV & UBRE/AIC or
                         RE/ML derivative calculation
+gam.fit5.post.proc      Post-processing output of gam.fit5
 gam.models              Specifying generalized additive models
 gam.outer               Minimize GCV or UBRE score of a GAM using
                         'outer' iteration
+gam.reparam             Finding stable orthogonal re-parameterization
+                        of the square root penalty.
+gam.scale               Scale parameter estimation in GAMs
 gam.selection           Generalized Additive Model Selection
 gam.side                Identifiability side conditions for a GAM
 gam.vcomp               Report gam smoothness estimates as variance
@@ -47,9 +66,17 @@ gam2objective           Objective functions for GAM smoothing parameter
                         estimation
 gamObject               Fitted gam object
 gamSim                  Simulate example data for GAMs
+gamlss.etamu            Transform derivatives wrt mu to derivatives wrt
+                        linear predictor
+gamlss.gH               Calculating derivatives of log-likelihood wrt
+                        regression coefficients
 gamm                    Generalized Additive Mixed Models
+gaulss                  Gaussian location-scale model family
 get.var                 Get named variable or evaluate expression from
                         list or data.frame
+gevlss                  Generalized Extreme Value location-scale model
+                        family
+identifiability         Identifiability constraints
 in.out                  Which of a set of points lie within a polygon
                         defined region
 inSide                  Are points inside boundary?
@@ -58,23 +85,31 @@ influence.gam           Extract the diagonal of the influence/hat
 initial.sp              Starting values for multiple smoothing
                         parameter estimation
 interpret.gam           Interpret a GAM formula
+jagam                   Just Another Gibbs Additive Modeller: JAGS
+                        support for mgcv.
 ldTweedie               Log Tweedie density evaluation
+ldetS                   Getting log generalized determinant of penalty
+                        matrices
 linear.functional.terms
                         Linear functionals of a smooth in GAMs
-logLik.gam              Extract the log likelihood for a fitted GAM
+logLik.gam              Log likelihood for a fitted GAM, for AIC
 ls.size                 Size of list elements
 magic                   Stable Multiple Smoothing Parameter Estimation
                         by GCV or UBRE
 magic.post.proc         Auxilliary information from magic fit
-mgcv-FAQ                Frequently Asked Questions for package mgcv
-mgcv-package            Mixed GAM Computation Vehicle with GCV/AIC/REML
+mgcv.FAQ                Frequently Asked Questions for package mgcv
+mgcv.package            Mixed GAM Computation Vehicle with GCV/AIC/REML
                         smoothness estimation and GAMMs by REML/PQL
-mgcv-parallel           Parallel computation in mgcv.
+mgcv.parallel           Parallel computation in mgcv.
+mini.roots              Obtain square roots of penalty matrices
+missing.data            Missing data in GAMs
 model.matrix.gam        Extract model matrix from GAM fit
 mono.con                Monotonicity constraints for a cubic regression
                         spline
 mroot                   Smallest square root of matrix
-negbin                  GAM negative binomial family
+multinom                GAM multinomial logistic regression
+mvn                     Multivariate normal additive models
+negbin                  GAM negative binomial families
 new.name                Obtain a name for a new variable that is not
                         already in use
 notExp                  Functions for better-than-log positive
@@ -83,6 +118,8 @@ notExp2                 Alternative to log parameterization for
                         variance components
 null.space.dimension    The basis of the space of un-penalized
                         functions for a TPRS
+ocat                    GAM ordered categorical family
+one.se.rule             The one standard error rule for smoother models
 pcls                    Penalized Constrained Least Squares Fitting
 pdIdnot                 Overflow proof pdMat class for multiples of the
                         identity matrix
@@ -102,18 +139,26 @@ rTweedie                Generate Tweedie random deviates
 random.effects          Random effects in GAMs
 residuals.gam           Generalized Additive Model residuals
 rig                     Generate inverse Gaussian random deviates
+rmvn                    Generate multivariate normal deviates
 s                       Defining smooths in GAM formulae
+scat                    GAM scaled t family for heavy tailed data
+sdiag                   Extract or modify diagonals of a matrix
+single.index            Single index models with mgcv
 slanczos                Compute truncated eigen decomposition of a
                         symmetric matrix
 smooth.construct        Constructor functions for smooth terms in a GAM
 smooth.construct.ad.smooth.spec
                         Adaptive smooths in GAMs
+smooth.construct.bs.smooth.spec
+                        Penalized B-splines in GAMs
 smooth.construct.cr.smooth.spec
                         Penalized Cubic regression splines in GAMs
 smooth.construct.ds.smooth.spec
                         Low rank Duchon 1977 splines
 smooth.construct.fs.smooth.spec
                         Factor smooth interactions in GAMs
+smooth.construct.gp.smooth.spec
+                        Low rank Gaussian process smooths
 smooth.construct.mrf.smooth.spec
                         Markov Random Field Smooths
 smooth.construct.ps.smooth.spec
@@ -131,6 +176,8 @@ smooth.construct.tensor.smooth.spec
 smooth.construct.tp.smooth.spec
                         Penalized thin plate regression splines in GAMs
 smooth.terms            Smooth terms in GAM
+smooth2random           Convert a smooth to a form suitable for
+                        estimating as random effect
 smoothCon               Prediction/Construction wrapper functions for
                         GAM smooth terms
 sp.vcov                 Extract smoothing parameter estimator
@@ -145,7 +192,15 @@ te                      Define tensor product smooths or tensor product
 tensor.prod.model.matrix
                         Utility functions for constructing tensor
                         product smooths
+totalPenaltySpace       Obtaining (orthogonal) basis for null space and
+                        range of the penalty matrix
+trichol                 Choleski decomposition of a tri-diagonal matrix
+trind.generator         Generates index arrays for upper triangular
+                        storage
 uniquecombs             find the unique rows in a matrix
 vcov.gam                Extract parameter (estimator) covariance matrix
                         from GAM fit
 vis.gam                 Visualization of GAM objects
+ziP                     GAM zero-inflated Poisson regression family
+ziplss                  Zero inflated Poisson location-scale model
+                        family

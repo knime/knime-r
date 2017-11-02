@@ -64,8 +64,9 @@ fm4Soy.nlme <-
          start = c(17, 0, 0, 0, 0, 0, 52, 0, 0, 0, 7.5, 0, 0),
          weights = varPower(0.95), control = list(verbose = TRUE))
 # FIXME: An update doesn't work for the fixed argument when fixed is a list
+## p. 293-4 :
 summary(fm4Soy.nlme)
-plot(augPred(fm4Soy.nlme))
+plot(augPred(fm4Soy.nlme))# Fig 6.14, p. 295
 
 # 6.4 Clinical Study of Phenobarbital Kinetics
 
@@ -96,4 +97,4 @@ options(contrasts = c("contr.treatment", "contr.poly"))
 # cleanup
 
 proc.time()
-q("no")
+

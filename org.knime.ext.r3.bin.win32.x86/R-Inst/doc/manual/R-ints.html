@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- This manual is for R, version 3.0.3 (2014-03-06).
+<!-- This manual is for R, version 3.4.2 (2017-09-28).
 
-Copyright (C) 1999-2013 R Core Team
+Copyright (C) 1999-2016 R Core Team
 
 Permission is granted to make and distribute verbatim copies of this
 manual provided the copyright notice and this permission notice are
@@ -30,7 +30,6 @@ approved by the R Core Team. -->
 <link href="#Top" rel="start" title="Top">
 <link href="#Function-and-variable-index" rel="index" title="Function and variable index">
 <link href="#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="dir.html#Top" rel="up" title="(dir)">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -57,51 +56,70 @@ span.nolinebreak {white-space:nowrap}
 span.roman {font-family:serif; font-weight:normal}
 span.sansserif {font-family:sans-serif; font-weight:normal}
 ul.no-bullet {list-style: none}
-body {margin-left: 5%; margin-right: 5%;}
+body {
+    margin-left: 5%;
+    margin-right: 5%;
+}
 
-H1 {             
+h1 {             
     background: white;
     color: rgb(25%, 25%, 25%);
     font-family: monospace;
     font-size: xx-large;
-    text-align: center
+    text-align: center;
 }
 
-H2 {
+h2 {
     background: white;
     color: rgb(40%, 40%, 40%);
     font-family: monospace;
     font-size: x-large;
-    text-align: center
+    text-align: center;
 }
 
-H3 {
+h3 {
     background: white;
     color: rgb(40%, 40%, 40%);
     font-family: monospace;
-    font-size: large
+    font-size: large;
 }
 
-H4 {
+h4 {
     background: white;
     color: rgb(40%, 40%, 40%);
-    font-family: monospace
+    font-family: monospace;
 }
 
-span.samp{font-family: monospace}
-span.command{font-family: monospace}
-span.option{font-family: monospace}
-span.file{font-family: monospace}
-span.env{font-family: monospace}
+span.samp {
+    font-family: monospace;
+}
+
+span.command {
+    font-family: monospace;
+}
+
+span.option {
+    font-family: monospace;
+}
+
+span.file {
+    font-family: monospace;
+}
+
+span.env {
+    font-family: monospace;
+}
 
 ul {
     margin-top: 0.25ex;
     margin-bottom: 0.25ex;
 }
+
 li {
     margin-top: 0.25ex;
     margin-bottom: 0.25ex;
 }
+
 p {
     margin-top: 0.6ex;
     margin-bottom: 1.2ex;
@@ -207,7 +225,7 @@ p {
     <li><a name="toc-R-code-1" href="#R-code">3.1 R code</a></li>
     <li><a name="toc-Main-C-code-1" href="#Main-C-code">3.2 Main C code</a></li>
     <li><a name="toc-Windows_002dGUI_002dspecific-code-1" href="#Windows_002dGUI_002dspecific-code">3.3 Windows-GUI-specific code</a></li>
-    <li><a name="toc-OS-X-GUI-1" href="#OS-X-GUI">3.4 OS X GUI</a></li>
+    <li><a name="toc-macOS-GUI-1" href="#macOS-GUI">3.4 macOS GUI</a></li>
     <li><a name="toc-Updating-1" href="#Updating">3.5 Updating</a></li>
   </ul></li>
   <li><a name="toc-Structure-of-an-Installed-Package" href="#Package-Structure">4 Structure of an Installed Package</a>
@@ -262,7 +280,7 @@ p {
 <a name="Top"></a>
 <div class="header">
 <p>
-Next: <a href="#R-Internal-Structures" accesskey="n" rel="next">R Internal Structures</a>, Previous: <a href="dir.html#Top" accesskey="p" rel="prev">(dir)</a>, Up: <a href="dir.html#Top" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#R-Internal-Structures" accesskey="n" rel="next">R Internal Structures</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="R-Internals"></a>
 <h1 class="top">R Internals</h1>
@@ -270,9 +288,9 @@ Next: <a href="#R-Internal-Structures" accesskey="n" rel="next">R Internal Struc
 <p>This is a guide to the internal structures of R and coding standards for
 the core team working on R itself.
 </p>
-<p>This manual is for R, version 3.0.3 (2014-03-06).
+<p>This manual is for R, version 3.4.2 (2017-09-28).
 </p>
-<p>Copyright &copy; 1999&ndash;2013 R Core Team
+<p>Copyright &copy; 1999&ndash;2016 R Core Team
 </p>
 <blockquote>
 <p>Permission is granted to make and distribute verbatim copies of this
@@ -292,7 +310,7 @@ approved by the R Core Team.
 
 
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#R-Internal-Structures" accesskey="1">R Internal Structures</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#g_t_002eInternal-vs-_002ePrimitive" accesskey="2">.Internal vs .Primitive</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -322,6 +340,7 @@ approved by the R Core Team.
 <tr><td align="left" valign="top">&bull; <a href="#Concept-index">Concept index</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
+
 <hr>
 <a name="R-Internal-Structures"></a>
 <div class="header">
@@ -340,7 +359,7 @@ version of the source code.  Versions for R 2.x.y contain historical
 comments about when features were introduced: this version is for the
 3.x.y series.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#SEXPs" accesskey="1">SEXPs</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Environments-and-variable-lookup" accesskey="2">Environments and variable lookup</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -410,7 +429,7 @@ bytes (depending on alignment constraints).
 <p>The first five bits of the <code>sxpinfo</code> header specify one of up to 32
 <code>SEXPTYPE</code>s.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#SEXPTYPEs" accesskey="1">SEXPTYPEs</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Rest-of-header" accesskey="2">Rest of header</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -439,7 +458,7 @@ gap cannot easily be reused.
 </p>
 <a name="index-SEXPTYPE-table"></a>
 <blockquote>
-<table>
+<table summary="">
 <thead><tr><th>no</th><th>SEXPTYPE</th><th>Description</th></tr></thead>
 <tr><td><code>0</code></td><td><code>NILSXP</code></td><td><code>NULL</code></td></tr>
 <tr><td><code>1</code></td><td><code>SYMSXP</code></td><td>symbols</td></tr>
@@ -524,7 +543,7 @@ Next: <a href="#The-_0027data_0027" accesskey="n" rel="next">The 'data'</a>, Pre
     unsigned int mark  :  1;  /* <span class="roman">mark object as &lsquo;in use&rsquo; in GC</span> */
     unsigned int debug :  1;
     unsigned int trace :  1;
-    unsigned int spare :  1;  /* <span class="roman">unused</span> */
+    unsigned int spare :  1;  /* <span class="roman">debug once</span> */
     unsigned int gcgen :  1;  /* <span class="roman">generation for GC</span> */
     unsigned int gccls :  3;  /* <span class="roman">class of node for GC</span> */
 };  /*              Tot: 32 */
@@ -540,6 +559,10 @@ single-step mode.
 <a name="index-trace-bit"></a>
 <p>The <code>trace</code> bit is used for functions for <code>trace()</code> and for
 other objects when tracing duplications (see <code>tracemem</code>).
+</p>
+<a name="index-spare-bit"></a>
+<p>The <code>spare</code> bit is used for closures to mark them for one
+time debugging.
 </p>
 <a name="index-named-bit"></a>
 <a name="index-NAMED"></a>
@@ -822,11 +845,15 @@ Previous: <a href="#The-_0027data_0027" accesskey="p" rel="prev">The 'data'</a>,
 <a name="index-allocation-classes"></a>
 <p>As we have seen, the field <code>gccls</code> in the header is three bits to
 label up to 8 classes of nodes.  Non-vector nodes are of class 0, and
-&lsquo;small&rsquo; vector nodes are of classes 1 to 6, with &lsquo;large&rsquo; vector nodes
-being of class 7.  The &lsquo;small&rsquo; vector nodes are able to store vector
-data of up to 8, 16, 32, 48, 64 and 128 bytes: larger vectors are
-<code>malloc</code>-ed individually whereas the &lsquo;small&rsquo; nodes are allocated
-from pages of about 2000 bytes.
+&lsquo;small&rsquo; vector nodes are of classes 1 to 5, with a class for custom
+allocator vector nodes 6 and &lsquo;large&rsquo; vector nodes being of class 7.  The
+&lsquo;small&rsquo; vector nodes are able to store vector data of up to 8, 16, 32,
+64 and 128 bytes: larger vectors are <code>malloc</code>-ed individually
+whereas the &lsquo;small&rsquo; nodes are allocated from pages of about 2000
+bytes. Vector nodes allocated using custom allocators (via
+<code>allocVector3</code>) are not counted in the gc memory usage statistics
+since their memory semantics is not under R&rsquo;s control and may be
+non-standard (e.g., memory could be partially shared across nodes).
 </p>
 
 <hr>
@@ -850,7 +877,7 @@ enclosure.
 <p>There are additional places that &lsquo;variables&rsquo; can be looked up, called
 &lsquo;user databases&rsquo; in comments in the code.  These seem undocumented in
 the R sources, but apparently refer to the <strong>RObjectTable</strong> package
-at <a href="http://www.omegahat.org/RObjectTables/">http://www.omegahat.org/RObjectTables/</a>.
+at <a href="http://www.omegahat.net/RObjectTables/">http://www.omegahat.net/RObjectTables/</a>.
 </p>
 <a name="index-base-environment"></a>
 <a name="index-environment_002c-base"></a>
@@ -878,7 +905,7 @@ environment plus environments<a name="DOCF4" href="#FOOT4"><sup>4</sup></a> whic
 from the cache.  The cache is used whenever searching for variables from
 the global environment (possibly as part of a recursive search).
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Search-paths" accesskey="1">Search paths</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Namespaces" accesskey="2">Namespaces</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -934,7 +961,7 @@ Next: <a href="#Hash-table" accesskey="n" rel="next">Hash table</a>, Previous: <
 <a name="index-namespace"></a>
 <p>Namespaces are environments associated with packages (and once again
 the base package is special and will be considered separately).  A
-package <code><var>pkg</var></code> with a namespace defines two environments
+package <code><var>pkg</var></code> defines two environments
 <code>namespace:<var>pkg</var></code> and <code>package:<var>pkg</var></code>: it is
 <code>package:<var>pkg</var></code> that can be <code>attach</code>ed and form part of
 the search path.
@@ -1283,7 +1310,7 @@ allowing only one argument, some having two (with a default for the
 second) and <code>trunc</code> allows one or more but the default method only
 accepts one.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Missingness" accesskey="1">Missingness</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Dot_002ddot_002ddot-arguments" accesskey="2">Dot-dot-dot arguments</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1413,7 +1440,7 @@ change the visibility flag: examples<a name="DOCF6" href="#FOOT6"><sup>6</sup></
 </p>
 <p>&lsquo;Special&rsquo; primitive and internal functions evaluate their arguments
 internally <em>after</em> <code>R_Visible</code> has been set, and evaluation of
-the arguments (e.g. an assignment as in PR#9263)) can change the value
+the arguments (e.g. an assignment as in PR#9263) can change the value
 of the flag.
 </p>
 <p>The <code>R_Visible</code> flag can also get altered during the evaluation of
@@ -1483,8 +1510,8 @@ functions are defined and also in file <samp>size.c</samp> which needs access
 to the sizes of the internal structures.)
 </p>
 <p>For background papers see
-<a href="http://www.stat.uiowa.edu/~luke/R/barrier.html">http://www.stat.uiowa.edu/~luke/R/barrier.html</a> and
-<a href="http://www.stat.uiowa.edu/~luke/R/gengcnotes.html">http://www.stat.uiowa.edu/~luke/R/gengcnotes.html</a>.
+<a href="http://homepage.stat.uiowa.edu/~luke/R/barrier.html">http://homepage.stat.uiowa.edu/~luke/R/barrier.html</a> and
+<a href="http://homepage.stat.uiowa.edu/~luke/R/gengcnotes.html">http://homepage.stat.uiowa.edu/~luke/R/gengcnotes.html</a>.
 </p>
 <hr>
 <a name="Serialization-Formats"></a>
@@ -1640,7 +1667,7 @@ such strings into the <code>CHARSXP</code> cache.
 systems are capable of producing UTF-8 strings and this is the nearest
 we have to a universal format.  For those that do not (for example those
 lacking a powerful enough <code>iconv</code>), it is likely that they work in
-Latin-1, the old R assumption. The the parser can return a
+Latin-1, the old R assumption. Then the parser can return a
 UTF-8-encoded string if it encounters a &lsquo;<samp>\uxxx</samp>&rsquo; escape for a
 Unicode point that cannot be represented in the current charset.  (This
 needs MBCS support, and was only enabled<a name="DOCF9" href="#FOOT9"><sup>9</sup></a> on
@@ -1665,13 +1692,14 @@ were encoded in Latin-1 rather than Adobe Symbol: this is selected by
 <code>wantSymbolUTF8 = NA_LOGICAL</code>.
 </p>
 <p>Windows has no UTF-8 locales, but rather expects to work with
-UCS-2<a name="DOCF10" href="#FOOT10"><sup>10</sup></a> strings.
-R (being written in standard C) would not work internally with UCS-2
-without extensive changes.  The <samp>Rgui</samp> console<a name="DOCF11" href="#FOOT11"><sup>11</sup></a> uses UCS-2 internally, but communicates with the R
-engine in the native encoding.  To allow UTF-8 strings to be printed in
-UTF-8 in <samp>Rgui.exe</samp>, an escape convention is used (see header file
-<samp>rgui_UTF8.h</samp>) which is used by <code>cat</code>, <code>print</code> and
-autoprinting.
+UCS-2<a name="DOCF10" href="#FOOT10"><sup>10</sup></a>
+strings.  R (being written in standard C) would not work internally
+with UCS-2 without extensive changes.  The <samp>Rgui</samp>
+console<a name="DOCF11" href="#FOOT11"><sup>11</sup></a> uses UCS-2 internally,
+but communicates with the R engine in the native encoding.  To allow
+UTF-8 strings to be printed in UTF-8 in <samp>Rgui.exe</samp>, an escape
+convention is used (see header file <samp>rgui_UTF8.h</samp>) by
+<code>cat</code>, <code>print</code> and autoprinting.
 </p>
 <p>&lsquo;Unicode&rsquo; (UCS-2LE) files are common in the Windows world, and
 <code>readLines</code> and <code>scan</code> will read them into UTF-8 strings on
@@ -1771,7 +1799,7 @@ Next: <a href="#Memory-allocators" accesskey="n" rel="next">Memory allocators</a
 as definitive.  The description assumes that <code>R_NO_METHODS_TABLES</code>
 has not been set.]
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Representation-of-S4-objects" accesskey="1">Representation of S4 objects</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#S4-classes" accesskey="2">S4 classes</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1840,21 +1868,21 @@ Next: <a href="#Mechanics-of-S4-dispatch" accesskey="n" rel="next">Mechanics of 
 <a name="S4-methods-1"></a>
 <h4 class="subsection">1.12.3 S4 methods</h4>
 
-<p>Details of methods are stored in S4 objects of class
-<code>&quot;MethodsList&quot;</code>.  They have a non-syntactic name of the form
-<code>.__M__<var>generic</var>:<var>package</var></code> for all methods defined in the
-current environment for the named generic derived from a specific
-package (which might be <code>.GlobalEnv</code>).
+<p>Details of the methods are stored in environments (typically hidden in the
+respective namespace) with a non-syntactic name of the form
+<code>.__T__<var>generic</var>:<var>package</var></code> containing objects of class
+<code>MethodDefinition</code> for all methods defined in the current environment
+for the named generic derived from a specific package (which might be <code>.GlobalEnv</code>).
+This is sometimes referred to as a &lsquo;methods table&rsquo;.
 </p>
-<p>There is also environment <code>.__T__<var>generic</var>:<var>package</var></code> which
-has names the signatures of the methods defined, and values the
-corresponding method functions.  This is often referred to as a &lsquo;methods
-table&rsquo;.
-</p>
-<p>When a package without a namespace is attached these objects become
-visible on the search path.  <code>library</code> calls
-<code>methods:::cacheMetaData</code> to update the internal tables.
-</p>
+<p>For example,
+</p><div class="example">
+<pre class="example"> length(nM &lt;- asNamespace(&quot;Matrix&quot;) )                    # 941 for Matrix 1.2-6
+ length(meth &lt;- grep(&quot;^[.]__T__&quot;, names(nM), value=TRUE))# 107 generics with methods
+ length(meth.Ops &lt;- nM$`.__T__Ops:base‘) # 71 methods for the ’Ops' (group)generic
+ head(sort(names(meth.Ops))) ## &quot;abIndex#abIndex&quot; ... &quot;ANY#ddiMatrix&quot; &quot;ANY#ldiMatrix&quot; &quot;ANY#Matrix&quot;
+</pre></div>
+
 <p>During an R session there is an environment associated with each
 non-primitive generic containing objects <code>.AllMTable</code>,
 <code>.Generic</code>, <code>.Methods</code>, <code>.MTable</code>, <code>.SigArgs</code> and
@@ -1868,8 +1896,8 @@ directive <code>exportMethods</code> will export all the methods defined in
 the namespace for a specified generic: the code also adds to the list
 of generics any that are exported directly.  For generics which are
 listed via <code>exportMethods</code> or exported themselves, the
-corresponding <code>&quot;MethodsList&quot;</code> and environment are exported and so
-will appear (as hidden objects) in the package environment.
+corresponding environment is exported and so
+will appear (as hidden object) in the package environment.
 </p>
 <p>Methods for primitives which are internally S4 generic (see below) are
 always exported, whether mentioned in the <samp>NAMESPACE</samp> file or not.
@@ -1883,7 +1911,7 @@ methods defined on generics in other packages.  Since methods for a
 generic could be imported from several different packages, the methods
 tables are merged.
 </p>
-<p>When a package with a namespace is attached
+<p>When a package is attached
 <code>methods:::cacheMetaData</code> is called to update the internal tables:
 only the visible methods will be cached.
 </p>
@@ -1898,7 +1926,7 @@ Previous: <a href="#S4-methods" accesskey="p" rel="prev">S4 methods</a>, Up: <a 
 <h4 class="subsection">1.12.4 Mechanics of S4 dispatch</h4>
 
 <p>This subsection does not discuss how S4 methods are chosen: see
-<a href="http://developer.r-project.org/howMethodsWork.pdf">http://developer.r-project.org/howMethodsWork.pdf</a>.
+<a href="https://developer.r-project.org/howMethodsWork.pdf">https://developer.r-project.org/howMethodsWork.pdf</a>.
 </p>
 <p>For all but primitive functions, setting a method on an existing
 function that is not itself S4 generic creates a new object in the
@@ -1912,7 +1940,7 @@ space there will be two functions called <code>myfn</code> on the search
 paths, and which will be called depends on which search path is in use.
 This is starkest for functions in the base namespace, where the
 original will be found ahead of the newly created function from any
-other package with a namespace.
+other package.
 </p>
 <p>Primitive functions are treated quite differently, for efficiency
 reasons: this results in different semantics.  <code>setGeneric</code> is
@@ -2087,7 +2115,7 @@ R ever allows concurrent evaluation threads.  So the idiom is
 </pre></div>
 
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Internals-of-R_005falloc" accesskey="1">Internals of R_alloc</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -2131,7 +2159,7 @@ Next: <a href="#Modules" accesskey="n" rel="next">Modules</a>, Previous: <a href
 <p>This section notes known use by the system of these environments: the
 intention is to minimize or eliminate such uses.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Base-environment" accesskey="1">Base environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Global-environment" accesskey="2">Global environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2211,17 +2239,15 @@ Next: <a href="#Visibility" accesskey="n" rel="next">Visibility</a>, Previous: <
 chosen to be loaded &lsquo;on demand&rsquo; rather than linked as dynamic libraries
 or incorporated into the main executable/dynamic library.
 </p>
-<p>For a few of these (e.g. <code>vfonts</code>) the issue is size: the
-database for the Hershey fonts is included in the C code of the module
-and was at one time an appreciable part of the codebase for a rarely
-used feature.  However, for most of the modules the motivation has been
-the amount of (often optional) code they will bring in via libraries to
-which they are linked.
+<p>For the remaining modules the motivation has been the amount of (often
+optional) code they will bring in <em>via</em> libraries to which they are
+linked.
 </p>
 <dl compact="compact">
 <dt><code>internet</code></dt>
 <dd><p>The internal HTTP and FTP clients and socket support, which link to
-system-specific support libraries.
+system-specific support libraries.  This may load <code>libcurl</code> and on
+Windows will load <samp>wininet.dll</samp> and <samp>ws2_32.dll</samp>.
 </p>
 </dd>
 <dt><code>lapack</code></dt>
@@ -2229,21 +2255,11 @@ system-specific support libraries.
 <samp>libRlapack</samp> or an external LAPACK library.
 </p>
 </dd>
-<dt><code>vfonts</code></dt>
-<dd><p>The Hershey font databases and the code to draw with them.
-</p>
-</dd>
 <dt><code>X11</code></dt>
 <dd><p>(Unix-alikes only.)  The <code>X11()</code>, <code>jpeg()</code>, <code>png()</code> and
 <code>tiff()</code> devices. These are optional, and links to some or all of
 the <code>X11</code>, <code>pango</code>, <code>cairo</code>, <code>jpeg</code>, <code>libpng</code>
 and <code>libtiff</code> libraries.
-</p>
-</dd>
-<dt><samp>internet2.dll</samp></dt>
-<dd><p>(Windows only.)  An alternative version of the internet access routines,
-compiled against Internet Explorer internals (and so loads
-<samp>wininet.dll</samp> and <samp>wsock32.dll</samp>).
 </p></dd>
 </dl>
 
@@ -2257,7 +2273,7 @@ Next: <a href="#Lazy-loading" accesskey="n" rel="next">Lazy loading</a>, Previou
 <h3 class="section">1.16 Visibility</h3>
 <a name="index-visibility"></a>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Hiding-C-entry-points" accesskey="1">Hiding C entry points</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Variables-in-Windows-DLLs" accesskey="2">Variables in Windows DLLs</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2387,7 +2403,7 @@ indicating if the serialized objects were compressed: compression is
 always used nowadays. We later added the values <code>compressed = 2</code>
 and <code>3</code> for <code>bzip2</code> and <code>xz</code> compression (with the
 possibility of future expansion to other methods): these formats add a
-fifth byte to the header for the type of compression, and stores
+fifth byte to the header for the type of compression, and store
 serialized objects uncompressed if compression expands them.
 </p>
 <p>The loader for a lazy-load database of code or data is function
@@ -2404,6 +2420,16 @@ entries is done by calls to <code>.Call(&quot;R_lazyLoadDBinsertValue&quot;,
 <p>Lazy-load databases of less than 10MB are cached in memory at first use:
 this was found necessary when using file systems with high latency
 (removable devices and network-mounted file systems on Windows).
+</p>
+<p>Lazy-load databases are loaded into the exports for a package, but not
+into the namespace environment itself.  Thus they are visible when the
+package is <em>attached</em>, and also <em>via</em> the <code>::</code> operator.
+This was a deliberate design decision, as packages mostly make datasets
+available for use by the end user (or other packages), and they should
+not be found preferentially from functions in the package, surprising
+users who expected the normal search path to be used.  (There is an
+alternative mechanism, <samp>sysdata.rda</samp>, for &lsquo;system datasets&rsquo; that
+are intended primarily to be used within the package.)
 </p>
 <p>The same database mechanism is used to store parsed <samp>Rd</samp> files.
 One or all of the parsed objects is fetched by a call to
@@ -2478,7 +2504,7 @@ return  function  quote  switch
 
 </li><li> Language elements and basic <em>operator</em>s (i.e., functions usually
 <em>not</em> called as <code>foo(a, b, ...)</code>) for subsetting, assignment,
-arithmetic and logic:
+arithmetic, comparison and logic:
 
 <div class="example">
 <pre class="example">               [    [[    $    @
@@ -2489,6 +2515,9 @@ arithmetic and logic:
 |    ||   &amp;    &amp;&amp;    !
 </pre></div>
 
+<p>When the arithmetic, comparison and logical operators are called as
+functions, any argument names are discarded so positional matching is used.
+</p>
 </li><li> &ldquo;Low level&rdquo; 0&ndash; and 1&ndash;argument functions which belong to one of the
 following groups of functions:
 
@@ -2505,6 +2534,7 @@ cos     sin     tan
 acos    asin    atan
 cosh    sinh    tanh
 acosh   asinh   atanh
+cospi   sinpi   tanpi
 </pre><pre class="example">
 </pre><pre class="example">gamma   lgamma  digamma trigamma
 </pre><pre class="example">
@@ -2616,10 +2646,11 @@ documentation: this is also done for replacement functions with one
 argument plus <code>value</code>.
 </p>
 <p>The net effect is that argument matching for primitives intended for
-end-user use is done in the same way as for interpreted functions except
-for the six exceptions where positional matching is required.
+end-user use <em>as functions</em> is done in the same way as for
+interpreted functions except for the six exceptions where positional
+matching is required.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Special-primitives" accesskey="1">Special primitives</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Special-internals" accesskey="2">Special internals</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2687,7 +2718,7 @@ Next: <a href="#Adding-a-primitive" accesskey="n" rel="next">Adding a primitive<
 
 <p>Prototypes are available for the primitive functions and operators, and
 these are used for printing, <code>args</code> and package checking (e.g. by
-<code>tools::checkS3methods</code> and by package <a href="http://CRAN.R-project.org/package=codetools"><strong>codetools</strong></a>).  There are
+<code>tools::checkS3methods</code> and by package <a href="https://CRAN.R-project.org/package=codetools"><strong>codetools</strong></a>).  There are
 two environments in the <strong>base</strong> package (and namespace),
 &lsquo;<samp>.GenericArgsEnv</samp>&rsquo; for those primitives which are internal S3
 generics, and &lsquo;<samp>.ArgsEnv</samp>&rsquo; for the rest.  Those environments contain
@@ -2711,7 +2742,7 @@ break  for function  if  next  repeat  return  while
 
 <p>).  One could argue about <code>~</code>, but it is known to the parser and has
 semantics quite unlike a normal function.  And <code>:</code> is documented
-with different argument names in its two meanings.)
+with different argument names in its two meanings.
 </p>
 <p>The QC functions <code>codoc</code> and <code>checkS3methods</code> also make use of
 these environments (effectively placing them in front of base in the
@@ -2795,14 +2826,14 @@ and the standard packages included with R have (with an exception in
 <strong>grDevices</strong> for the menus of the <code>windows()</code> device) been
 internationalized in the same way as other packages.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#R-code" accesskey="1">R code</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Main-C-code" accesskey="2">Main C code</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Windows_002dGUI_002dspecific-code" accesskey="3">Windows-GUI-specific code</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#OS-X-GUI" accesskey="4">OS X GUI</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="#macOS-GUI" accesskey="4">macOS GUI</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Updating" accesskey="5">Updating</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
@@ -2885,7 +2916,7 @@ translation.  (This does not apply to <code>N_</code> or <code>P_</code>).
 <a name="Windows_002dGUI_002dspecific-code"></a>
 <div class="header">
 <p>
-Next: <a href="#OS-X-GUI" accesskey="n" rel="next">OS X GUI</a>, Previous: <a href="#Main-C-code" accesskey="p" rel="prev">Main C code</a>, Up: <a href="#Internationalization-in-the-R-sources" accesskey="u" rel="up">Internationalization in the R sources</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#macOS-GUI" accesskey="n" rel="next">macOS GUI</a>, Previous: <a href="#Main-C-code" accesskey="p" rel="prev">Main C code</a>, Up: <a href="#Internationalization-in-the-R-sources" accesskey="u" rel="up">Internationalization in the R sources</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Windows_002dGUI_002dspecific-code-1"></a>
 <h3 class="section">3.3 Windows-GUI-specific code</h3>
@@ -2916,23 +2947,23 @@ top-level <samp>po</samp> directory.
 </p>
 
 <hr>
-<a name="OS-X-GUI"></a>
+<a name="macOS-GUI"></a>
 <div class="header">
 <p>
 Next: <a href="#Updating" accesskey="n" rel="next">Updating</a>, Previous: <a href="#Windows_002dGUI_002dspecific-code" accesskey="p" rel="prev">Windows-GUI-specific code</a>, Up: <a href="#Internationalization-in-the-R-sources" accesskey="u" rel="up">Internationalization in the R sources</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="OS-X-GUI-1"></a>
-<h3 class="section">3.4 OS X GUI</h3>
+<a name="macOS-GUI-1"></a>
+<h3 class="section">3.4 macOS GUI</h3>
 
 <p>This is handled separately: see
-<a href="http://developer.r-project.org/Translations.html">http://developer.r-project.org/Translations.html</a>.
+<a href="https://developer.r-project.org/Translations30.html">https://developer.r-project.org/Translations30.html</a>.
 </p>
 
 <hr>
 <a name="Updating"></a>
 <div class="header">
 <p>
-Previous: <a href="#OS-X-GUI" accesskey="p" rel="prev">OS X GUI</a>, Up: <a href="#Internationalization-in-the-R-sources" accesskey="u" rel="up">Internationalization in the R sources</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
+Previous: <a href="#macOS-GUI" accesskey="p" rel="prev">macOS GUI</a>, Up: <a href="#Internationalization-in-the-R-sources" accesskey="u" rel="up">Internationalization in the R sources</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Updating-1"></a>
 <h3 class="section">3.5 Updating</h3>
@@ -2948,7 +2979,7 @@ Next: <a href="#Files" accesskey="n" rel="next">Files</a>, Previous: <a href="#I
 <a name="Structure-of-an-Installed-Package"></a>
 <h2 class="chapter">4 Structure of an Installed Package</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Metadata" accesskey="1">Metadata</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Help" accesskey="2">Help</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3011,7 +3042,8 @@ Next: <a href="#Help" accesskey="n" rel="next">Help</a>, Previous: <a href="#Pac
 
 <p>Directory <samp>Meta</samp> contains several files in <code>.rds</code> format, that
 is serialized R objects written by <code>saveRDS</code>.  All packages
-have files <samp>Rd.rds</samp>, <samp>hsearch.rds</samp>, <samp>links.rds</samp> and
+have files <samp>Rd.rds</samp>, <samp>hsearch.rds</samp>, <samp>links.rds</samp>,
+<samp>features.rds</samp>, and
 <samp>package.rds</samp>.  Packages with namespaces have a file
 <samp>nsInfo.rds</samp>, and those with data, demos or vignettes have
 <samp>data.rds</samp>, <samp>demo.rds</samp> or <samp>vignette.rds</samp> files.
@@ -3069,7 +3101,7 @@ aliases and the values character strings of the form
 of dataset names and titles from the corresponding help file.  File
 <samp>demo.rds</samp> has the same structure for package demos.
 </p>
-<p>File <samp>vignette.rds</samp> records a dataframe with one row for each
+<p>File <samp>vignette.rds</samp> records a data frame with one row for each
 &lsquo;vignette&rsquo; (<samp>.[RS]nw</samp> file in <samp>inst/doc</samp>) and with columns
 &lsquo;<samp>File</samp>&rsquo; (the full file path in the sources), &lsquo;<samp>Title</samp>&rsquo;,
 &lsquo;<samp>PDF</samp>&rsquo; (the pathless file name of the installed PDF version, if
@@ -3147,13 +3179,13 @@ with filepaths encoded in the current codepage.
 <code>path.expand</code>, with the deliberate exception of <code>Sys.glob</code>.
 </p>
 <p>File names may be case sensitive or not: the latter is the norm on
-Windows and OS X, the former on other Unix-alikes.  Note that this
+Windows and macOS, the former on other Unix-alikes.  Note that this
 is a property of both the OS and the file system: it is often possible
 to map names to upper or lower case when mounting the file system.  This
 can affect the matching of patterns in <code>list.files</code> and
 <code>Sys.glob</code>.
 </p>
-<p>File names commonly contain spaces on Windows and OS X but not
+<p>File names commonly contain spaces on Windows and macOS but not
 elsewhere.  As file names are handled as character strings by R,
 spaces are not usually a concern unless file names are passed to other
 process, e.g. by a <code>system</code> call.
@@ -3164,7 +3196,7 @@ mounted onto logical directories under that root), Windows has separate
 roots for each physical or logical file system (&lsquo;volume&rsquo;), organized
 under <em>drives</em> (with file paths starting <code>D:</code> for an
 <acronym>ASCII</acronym> letter, case-insensitively) and <em>network shares</em>
-(with paths like <code>\netname\topdir\myfiles\a file</code>.  There is a
+(with paths like <code>\netname\topdir\myfiles\a file</code>).  There is a
 current drive, and path names without a drive part are relative to the
 current drive.  Further, each drive has a current directory, and
 relative paths are relative to that current directory, on a particular
@@ -3190,8 +3222,8 @@ that in S and whose R code<a name="DOCF15" href="#FOOT15"><sup>15</sup></a> is i
 <strong>graphics</strong>) and one implemented in package <strong>grid</strong>.
 </p>
 <p>Some notes on the historical changes can be found at
-<a href="http://www.stat.auckland.ac.nz/~paul/R/basegraph.html">http://www.stat.auckland.ac.nz/~paul/R/basegraph.html</a> and
-<a href="http://www.stat.auckland.ac.nz/~paul/R/graphicsChanges.html">http://www.stat.auckland.ac.nz/~paul/R/graphicsChanges.html</a>.
+<a href="https://www.stat.auckland.ac.nz/~paul/R/basegraph.html">https://www.stat.auckland.ac.nz/~paul/R/basegraph.html</a> and
+<a href="https://www.stat.auckland.ac.nz/~paul/R/graphicsChanges.html">https://www.stat.auckland.ac.nz/~paul/R/graphicsChanges.html</a>.
 </p>
 <p>At the lowest level is a graphics device, which manages a plotting
 surface (a screen window or a representation to be written to a file).
@@ -3288,7 +3320,7 @@ for use with <strong>grid</strong>, and hence has been transferred from package
 <strong>graphics</strong> to <strong>grDevices</strong>.  This is principally concerned with
 the handling of colours and recording and replaying plots.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Graphics-devices" accesskey="1">Graphics devices</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Colours" accesskey="2">Colours</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3313,7 +3345,7 @@ third-party packages to provide additional devices&mdash;several packages
 now do.  This section describes the device internals from the viewpoint
 of a would-be writer of a graphics device.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Device-structures" accesskey="1">Device structures</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Device-capabilities" accesskey="2">Device capabilities</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3765,7 +3797,7 @@ returned.  C functions <code>doMouseEvent</code> and <code>doKeybd</code> are
 provided to call the R event handlers <code>onMouseDown</code>,
 <code>onMouseMove</code>, <code>onMouseUp</code>, and <code>onKeybd</code> and set
 <code>eventEnv$result</code> during this step.  Finally, <code>initEvent</code> is
-called again with <code>init=false</code> to inform the the devices that the
+called again with <code>init=false</code> to inform the devices that the
 loop is done, and the result is returned to the user.
 </p>
 <hr>
@@ -3782,7 +3814,7 @@ although for devices of many years&rsquo; standing those comments can be in
 need of updating.  This subsection is a repository of notes on design
 decisions.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#X11_0028_0029" accesskey="1">X11()</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#windows_0028_0029" accesskey="2">windows()</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3956,16 +3988,15 @@ names: the 657 known names are given in the character vector
 <p>Integer or character <code>NA</code> colours are mapped internally to
 transparent white, as is the character string <code>&quot;NA&quot;</code>.
 </p>
-<p>The handling of negative colour numbers was undefined (and inconsistent)
-prior to R 3.0.0, which made them an error.  Colours greater than
+<p>Negative colour numbers are an error.  Colours greater than
 &lsquo;<samp><var>N</var></samp>&rsquo; are wrapped around, so that for example with the default
 palette of size 8, colour &lsquo;<samp>10</samp>&rsquo; is colour &lsquo;<samp>2</samp>&rsquo; in the palette.
 </p>
 <p>Integer colours have been used more widely than the base graphics
 sub-system, as they are supported by package <strong>grid</strong> and hence by
-<a href="http://CRAN.R-project.org/package=lattice"><strong>lattice</strong></a> and <a href="http://CRAN.R-project.org/package=ggplot2"><strong>ggplot2</strong></a>.  (They are also used by package
-<a href="http://CRAN.R-project.org/package=rgl"><strong>rgl</strong></a>.)  <strong>grid</strong> did re-define colour &lsquo;<samp>0</samp>&rsquo; to be
-transparent white, but <a href="http://CRAN.R-project.org/package=rgl"><strong>rgl</strong></a> used <code>col2rgb</code> and hence the
+<a href="https://CRAN.R-project.org/package=lattice"><strong>lattice</strong></a> and <a href="https://CRAN.R-project.org/package=ggplot2"><strong>ggplot2</strong></a>.  (They are also used by package
+<a href="https://CRAN.R-project.org/package=rgl"><strong>rgl</strong></a>.)  <strong>grid</strong> did re-define colour &lsquo;<samp>0</samp>&rsquo; to be
+transparent white, but <a href="https://CRAN.R-project.org/package=rgl"><strong>rgl</strong></a> used <code>col2rgb</code> and hence the
 background colour of base graphics.
 </p>
 <p>Note that positive integer colours refer to the current palette and
@@ -4069,7 +4100,7 @@ high-level graphics calls (handled by <code>ProcessInlinePars</code>).
 <p>Snapshots of the base subsystem record the &lsquo;saved device copy&rsquo; of the
 <code>GPar</code> structure.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Arguments-and-parameters" accesskey="1">Arguments and parameters</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -4115,10 +4146,10 @@ parameters) multiply.
 Generally these are errors when used in <code>par</code> but cause the
 corresponding element of the plot to be omitted when used as an element
 of a vector argument.  Originally the interpretation of arguments was
-mainly left to the device, but as from R 3.0.0 some of this is
-pre-empted in the graphics engine (but for example the handling of
-<code>lwd = 0</code> remains device-specific, with some interpreting it as a
-&lsquo;thinnest possible&rsquo; line).
+mainly left to the device, but nowadays some of this is pre-empted in
+the graphics engine (but for example the handling of <code>lwd = 0</code>
+remains device-specific, with some interpreting it as a &lsquo;thinnest
+possible&rsquo; line).
 </p>
 <hr>
 <a name="Grid-graphics"></a>
@@ -4145,7 +4176,7 @@ there are several ways to provide a GUI console.
 </p>
 <p>This can be done by a package which is loaded from terminal-based R
 and launches a console as part of its startup code or by the user
-running a specific function: package <a href="http://CRAN.R-project.org/package=Rcmdr"><strong>Rcmdr</strong></a> is a well-known
+running a specific function: package <a href="https://CRAN.R-project.org/package=Rcmdr"><strong>Rcmdr</strong></a> is a well-known
 example with a Tk-based GUI.
 </p>
 <p>There used to be a Gtk-based console invoked by <code>R --gui=GNOME</code>:
@@ -4156,10 +4187,10 @@ modified startup sequence.
 </p>
 <p>However, the main way to run a GUI console is to launch a separate
 program which runs embedded R: this is done by <code>Rgui.exe</code> on
-Windows and <code>R.app</code> on OS X.  The first is an integral part
+Windows and <code>R.app</code> on macOS.  The first is an integral part
 of R and the code for the console is currently in <samp>R.dll</samp>.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#R_002eapp" accesskey="1">R.app</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -4173,15 +4204,15 @@ Previous: <a href="#GUI-consoles" accesskey="p" rel="prev">GUI consoles</a>, Up:
 <a name="R_002eapp-1"></a>
 <h3 class="section">7.1 R.app</h3>
 
-<p><code>R.app</code> is a OS X application which provides a console.  Its
+<p><code>R.app</code> is a macOS application which provides a console.  Its
 sources are a separate project<a name="DOCF21" href="#FOOT21"><sup>21</sup></a>, and its binaries
 link to an R installation which it runs as a dynamic library
 <samp>libR.dylib</samp>.  The standard <acronym>CRAN</acronym> distribution of R for
-OS X bundles the GUI and R itself, but installing the GUI is optional
+macOS bundles the GUI and R itself, but installing the GUI is optional
 and either component can be updated separately.
 </p>
 <p><code>R.app</code> relies on <samp>libR.dylib</samp> being in a specific place,
-and hence on R having been built and installed as a Mac OS X
+and hence on R having been built and installed as a Mac macOS
 &lsquo;framework&rsquo;.  Specifically, it uses
 <samp>/Library/Frameworks/R.framework/R</samp>.  This is a symbolic link, as
 frameworks can contain multiple versions of R.  It eventually
@@ -4190,14 +4221,13 @@ resolves to
 which is (in the <acronym>CRAN</acronym> distribution) a &lsquo;fat&rsquo; binary containing
 multiple sub-architectures.
 </p>
-<p>OS X applications are directory trees: each <code>R.app</code> contains
+<p>macOS applications are directory trees: each <code>R.app</code> contains
 a front-end written in Objective-C for one sub-architecture: in the
 standard distribution there are separate applications for 32- and 64-bit
 Intel architectures.
 </p>
 <p>Originally the R sources contained quite a lot of code used only by
-the OS X GUI, but by R 3.0.0 this was been migrated to the
-<code>R.app</code> sources.
+the macOS GUI, but this was migrated to the <code>R.app</code> sources.
 </p>
 <p><code>R.app</code> starts R as an embedded application with a
 command-line which includes <samp>--gui=aqua</samp> (see below).  It uses
@@ -4214,7 +4244,7 @@ versions save the history in a way specific to <code>R.app</code>.
 which customizes the way R is built: this is distinct from the
 <samp>--enable-R-framework</samp> option which causes <code>make install</code>
 to install R as the framework needed for use with <code>R.app</code>.  (The
-option <samp>--with-aqua</samp> is the default on OS X.)  It sets the
+option <samp>--with-aqua</samp> is the default on macOS.)  It sets the
 macro <code>HAVE_AQUA</code> in <samp>config.h</samp> and the make variable
 <code>BUILD_AQUA_TRUE</code>.  These have several consequences:
 </p>
@@ -4222,7 +4252,7 @@ macro <code>HAVE_AQUA</code> in <samp>config.h</samp> and the make variable
 <li> The <code>quartz()</code> device is built (other than as a stub) in package
 <strong>grDevices</strong>: this needs an Objective-C compiler.  Then
 <code>quartz()</code> can be used with terminal R provided the latter has
-access to the OS X screen.
+access to the macOS screen.
 
 </li><li> File <samp>src/unix/aqua.c</samp> is compiled.  This now only contains an
 interface pointer for the <code>quartz()</code> device(s).
@@ -4386,10 +4416,10 @@ Default: &lsquo;<samp>default</samp>&rsquo; (which checks only tarballs, and che
 <dt><code>_R_CHECK_USE_CODETOOLS_</code>
 <a name="index-_005fR_005fCHECK_005fUSE_005fCODETOOLS_005f"></a>
 </dt>
-<dd><p>If true, make use of the <a href="http://CRAN.R-project.org/package=codetools"><strong>codetools</strong></a> package, which provides a
+<dd><p>If true, make use of the <a href="https://CRAN.R-project.org/package=codetools"><strong>codetools</strong></a> package, which provides a
 detailed analysis of visibility of objects (but may give false
 positives).
-Default: true.
+Default: true (if recommended packages are installed).
 </p></dd>
 <dt><code>_R_CHECK_USE_INSTALL_LOG_</code>
 <a name="index-_005fR_005fCHECK_005fUSE_005fINSTALL_005fLOG_005f"></a>
@@ -4402,9 +4432,10 @@ Default: true.
 <dt><code>_R_CHECK_VIGNETTES_NLINES_</code>
 <a name="index-_005fR_005fCHECK_005fVIGNETTES_005fNLINES_005f"></a>
 </dt>
-<dd><p>Maximum number of lines to show at the bottom of the output when reporting
-errors in running vignettes.
-Default: 10.
+<dd><p>Maximum number of lines to show from the bottom of the output when
+reporting errors in running or re-building vignettes. (As from R
+3.4.0, <code>0</code> means all lines will be shown.)
+Default: 10 for running, 25 for re-building.
 </p></dd>
 <dt><code>_R_CHECK_CODOC_S4_METHODS_</code>
 <a name="index-_005fR_005fCHECK_005fCODOC_005fS4_005fMETHODS_005f"></a>
@@ -4443,8 +4474,17 @@ Default: true iff <code>.Platform$OS.type == &quot;unix&quot;</code>.
 <dt><code>_R_CHECK_FF_CALLS_</code>
 <a name="index-_005fR_005fCHECK_005fFF_005fCALLS_005f"></a>
 </dt>
-<dd><p>Allows turning off <code>checkFF()</code> testing.  Legacy mostly.
+<dd><p>Allows turning off <code>checkFF()</code> testing. If set to
+&lsquo;<samp>registration</samp>&rsquo;, checks the registration information (number of
+arguments, correct choice of <code>.C/.Fortran/.Call/.External</code>) for
+such calls provided the package is installed.
 Default: true.
+</p></dd>
+<dt><code>_R_CHECK_FF_DUP_</code>
+<a name="index-_005fR_005fCHECK_005fFF_005fDUP_005f"></a>
+</dt>
+<dd><p>Controls <code>checkFF(check_DUP)</code>
+Default: true (and forced to be true for CRAN submission checks).
 </p></dd>
 <dt><code>_R_CHECK_LICENSE_</code>
 <a name="index-_005fR_005fCHECK_005fLICENSE_005f"></a>
@@ -4471,8 +4511,8 @@ Default: -1.
 <a name="index-_005fR_005fCHECK_005fXREFS_005fREPOSITORIES_005f"></a>
 </dt>
 <dd><p>If set to a non-empty value, a space-separated list of repositories to
-use to determine known packages.  Default: empty, when the CRAN,
-Omegahat and Bioconductor repositories known to R is used.
+use to determine known packages.  Default: empty, when the CRAN
+and Bioconductor repositories known to R is used.
 </p></dd>
 <dt><code>_R_CHECK_SRC_MINUS_W_IMPLICIT_</code>
 <a name="index-_005fR_005fCHECK_005fSRC_005fMINUS_005fW_005fIMPLICIT_005f"></a>
@@ -4554,7 +4594,7 @@ Default: true for tarballs.
 but this option allows the check to be overruled if an unsuitable
 command is found (including one that does not respect the <samp>-k</samp>
 flag to report in units of 1Kb, or reports in a different format &ndash; the
-GNU, OS X and Solaris <code>du</code> commands have been tested).
+GNU, macOS and Solaris <code>du</code> commands have been tested).
 Default: true if <code>du</code> is found.
 </p></dd>
 <dt><code>_R_CHECK_DOC_SIZES_</code>
@@ -4578,13 +4618,15 @@ Default: false (but true for CRAN submission checks).
 <a name="index-_005fR_005fCHECK_005fALWAYS_005fLOG_005fVIGNETTE_005fOUTPUT_005f"></a>
 </dt>
 <dd><p>By default the output from running the R code in the vignettes is
-kept only if there is an error.
+kept only if there is an error.  This also applies to the
+<samp>build_vignettes.log</samp> log from the re-building of vignettes.
 Default: false.
 </p></dd>
 <dt><code>_R_CHECK_CLEAN_VIGN_TEST_</code>
 <a name="index-_005fR_005fCHECK_005fCLEAN_005fVIGN_005fTEST_005f"></a>
 </dt>
-<dd><p>Should the <samp>vign_test</samp> directory be removed if the test is successful?
+<dd><p>Should the <samp>vign_test</samp> directory be removed if the test is
+successful?
 Default: true.
 </p></dd>
 <dt><code>_R_CHECK_REPLACING_IMPORTS_</code>
@@ -4594,7 +4636,7 @@ Default: true.
 from auto-generated <samp>NAMESPACE</samp> files in other packages, but most
 often from importing the whole of a namespace rather than using
 <code>importFrom</code>.
-Default: false (but true for CRAN submission checks).
+Default: true.
 </p></dd>
 <dt><code>_R_CHECK_UNSAFE_CALLS_</code>
 <a name="index-_005fR_005fCHECK_005fUNSAFE_005fCALLS_005f"></a>
@@ -4646,9 +4688,10 @@ is available to those who first install recording to a log, then call
 with <code>.libPaths()</code> containing just a temporary library directory
 and <code>.Library</code>.  The temporary library is populated by symbolic
 links<a name="DOCF23" href="#FOOT23"><sup>23</sup></a> to the installed copies of
-all the Depends/Imports/LinkingTo and (for the second only) Suggests
-packages which are not in <code>.Library</code>.  Default: false (but true for
-CRAN checks).
+all the Depends/Imports and (for the second only) Suggests packages
+which are not in <code>.Library</code>.  (As an exception, packages in a
+&lsquo;<samp>VignetteBuilder</samp>&rsquo; field are always made available.)
+Default: false (but <code>_R_CHECK_SUGGESTS_ONLY_</code> is true for CRAN checks).
 </p>
 </dd>
 <dt><code>_R_CHECK_NO_RECOMMENDED_</code>
@@ -4660,7 +4703,7 @@ Default: false (but true for CRAN submission checks).
 </p>
 <p>This may give false positives on code which uses
 <code>grDevices::densCols</code> and <code>stats:::asSparse</code> as these invoke
-<a href="http://CRAN.R-project.org/package=KernSmooth"><strong>KernSmooth</strong></a> and <a href="http://CRAN.R-project.org/package=Matrix"><strong>Matrix</strong></a> respectively.
+<a href="https://CRAN.R-project.org/package=KernSmooth"><strong>KernSmooth</strong></a> and <a href="https://CRAN.R-project.org/package=Matrix"><strong>Matrix</strong></a> respectively.
 </p>
 </dd>
 <dt><code>_R_CHECK_CODETOOLS_PROFILE_</code>
@@ -4668,7 +4711,7 @@ Default: false (but true for CRAN submission checks).
 </dt>
 <dd><p>A string with comma-separated <code><var>name</var>=<var>value</var></code> pairs (with
 <var>value</var> a logical constant) giving additional arguments for the
-<a href="http://CRAN.R-project.org/package=codetools"><strong>codetools</strong></a> functions used for analyzing package code.  E.g.,
+<a href="https://CRAN.R-project.org/package=codetools"><strong>codetools</strong></a> functions used for analyzing package code.  E.g.,
 use <code>_R_CHECK_CODETOOLS_PROFILE_=&quot;suppressLocalUnused=FALSE&quot;</code> to
 turn off suppressing warnings about unused local variables.  Default: no
 additional arguments, corresponding to using <code>skipWith = TRUE</code>,
@@ -4681,6 +4724,13 @@ TRUE</code>.
 </dt>
 <dd><p>Check whether package is suitable for publication on CRAN.
 Default: false, except for CRAN submission checks.
+</p>
+</dd>
+<dt><code>_R_CHECK_CRAN_INCOMING_REMOTE_</code>
+<a name="index-_005fR_005fCHECK_005fCRAN_005fINCOMING_005fREMOTE_005f"></a>
+</dt>
+<dd><p>Include checks that require remote access among the above.
+Default: same as <code>_R_CHECK_CRAN_INCOMING_</code>
 </p>
 </dd>
 <dt><code>_R_CHECK_XREFS_USE_ALIASES_FROM_CRAN_</code>
@@ -4696,7 +4746,7 @@ Default: false.
 </dt>
 <dd><p>Make the checks of compiled code more accurate by recording the symbol
 tables for objects (<samp>.o</samp> files) at installation in a file
-<samp>symbols.rds</samp>.  (Only currently supported on Linux, Solaris, OS X,
+<samp>symbols.rds</samp>.  (Only currently supported on Linux, Solaris, macOS,
 Windows and FreeBSD.)
 Default: true.
 </p>
@@ -4736,8 +4786,26 @@ Default: false (but true for CRAN submission checks).
 <a name="index-_005fR_005fCHECK_005fDEPRECATED_005fDEFUNCT_005f"></a>
 </dt>
 <dd><p>Should the package code be checked for the presence of recently deprecated
-or defunct functions (including completely removed functions). 
+or defunct functions (including completely removed functions).  Also for
+platform-specific graphics devices.
 Default: false (but true for CRAN submission checks).
+</p>
+</dd>
+<dt><code>_R_CHECK_SCREEN_DEVICE_</code>
+<a name="index-_005fR_005fCHECK_005fSCREEN_005fDEVICE_005f"></a>
+</dt>
+<dd><p>If set to &lsquo;<samp>warn</samp>&rsquo;, give a warning if examples etc open a screen
+device.  If set to &lsquo;<samp>stop</samp>&rsquo;, give an error.
+Default: empty (but &lsquo;<samp>stop</samp>&rsquo; for CRAN submission checks).
+</p>
+</dd>
+<dt><code>_R_CHECK_WINDOWS_DEVICE_</code>
+<a name="index-_005fR_005fCHECK_005fWINDOWS_005fDEVICE_005f"></a>
+</dt>
+<dd><p>If set to &lsquo;<samp>stop</samp>&rsquo;, give an error if a Windows-only device is used in
+example etc.  This is only useful on Windows: the devices do not exist
+elsewhere.
+Default: empty (but &lsquo;<samp>stop</samp>&rsquo; for CRAN submission checks on Windows).
 </p>
 </dd>
 <dt><code>_R_CHECK_TOPLEVEL_FILES_</code>
@@ -4749,7 +4817,14 @@ in &lsquo;Writing R Extensions&rsquo; nor are commonly understood (like
 <samp>COPYRIGHT</samp>) are also reported.
 Default: false (but true for CRAN submission checks).
 </p>
-
+</dd>
+<dt><code>_R_CHECK_GCT_N_</code>
+<a name="index-_005fR_005fCHECK_005fGCT_005fN_005f"></a>
+</dt>
+<dd><p>Should the <samp>--use-gct</samp> use <code>gctorture2(<var>n</var>)</code> rather than
+<code>gctorture(TRUE)</code>?  Use to a positive integer to enable this.
+Default: <code>0</code>.
+</p>
 </dd>
 <dt><code>_R_CHECK_LIMIT_CORES_</code>
 <a name="index-_005fR_005fCHECK_005fLIMIT_005fCORES_005f"></a>
@@ -4759,6 +4834,67 @@ set to &lsquo;<samp>warn</samp>&rsquo; gives a warning, to &lsquo;<samp>false</s
 check is skipped, and any other non-empty value gives an error when more
 than 2 children are spawned.
 Default: unset (but &lsquo;<samp>TRUE</samp>&rsquo; for CRAN submission checks).
+</p>
+</dd>
+<dt><code>_R_CHECK_CODE_USAGE_VIA_NAMESPACES_</code>
+<a name="index-_005fR_005fCHECK_005fCODE_005fUSAGE_005fVIA_005fNAMESPACES_005f"></a>
+</dt>
+<dd><p>If set, check code usage (via <a href="https://CRAN.R-project.org/package=codetools"><strong>codetools</strong></a>) directly on the
+package namespace without loading and attaching the package and its
+suggests and enhances.
+Default: true (and true for CRAN submission checks).
+</p>
+</dd>
+<dt><code>_R_CHECK_CODE_USAGE_WITH_ONLY_BASE_ATTACHED_</code>
+<a name="index-_005fR_005fCHECK_005fCODE_005fUSAGE_005fWITH_005fONLY_005fBASE_005fATTACHED_005f"></a>
+</dt>
+<dd><p>If set, check code usage (via <a href="https://CRAN.R-project.org/package=codetools"><strong>codetools</strong></a>) with only the base
+package attached.
+Default: true.
+</p>
+</dd>
+<dt><code>_R_CHECK_EXIT_ON_FIRST_ERROR_</code>
+<a name="index-_005fR_005fCHECK_005fEXIT_005fON_005fFIRST_005fERROR_005f"></a>
+</dt>
+<dd><p>If set to a true value, the check will exit on the first error.
+Default: false.
+</p>
+</dd>
+<dt><code>_R_CHECK_S3_METHODS_NOT_REGISTERED_</code>
+<a name="index-_005fR_005fCHECK_005fS3_005fMETHODS_005fNOT_005fREGISTERED_005f"></a>
+</dt>
+<dd><p>If set to a true value, report (apparent) S3 methods exported but not
+registered.
+Default: false (but true for CRAN submission checks).
+</p>
+</dd>
+<dt><code>_R_CHECK_OVERWRITE_REGISTERED_S3_METHODS_</code>
+<a name="index-_005fR_005fCHECK_005fOVERWRITE_005fREGISTERED_005fS3_005fMETHODS_005f"></a>
+</dt>
+<dd><p>If set to a true value, report already registered S3 methods in
+base/recommended packages which are overwritten when this package&rsquo;s
+namespace is loaded. 
+Default: false (but true for CRAN submission checks).
+</p>
+</dd>
+<dt><code>_R_CHECK_TESTS_NLINES_</code>
+<a name="index-_005fR_005fCHECK_005fTESTS_005fNLINES_005f"></a>
+</dt>
+<dd><p>Number of trailing lines of test output to reproduce in the log.  If
+<code>0</code> all lines except the R preamble are reproduced.
+Default: 13.
+</p>
+</dd>
+<dt><code>_R_CHECK_NATIVE_ROUTINE_REGISTRATION_</code>
+<a name="index-_005fR_005fCHECK_005fNATIVE_005fROUTINE_005fREGISTRATION_005f"></a>
+</dt>
+<dd><p>If set to a true value, report if the entry points to register native
+routines and to suppress dynamic search are not found in a package&rsquo;s
+DLL.  (<strong>NB:</strong> this requires system commands <code>nm</code> and on
+Windows, <code>objdump.exe</code> to be on the <code>PATH</code>.  This would be
+normal when using a package with compiled code (which are the only ones
+this checks), but Windows&rsquo; users should check.)
+Default: false (but true for CRAN submission checks).
 </p></dd>
 </dl>
 
@@ -4766,6 +4902,7 @@ Default: unset (but &lsquo;<samp>TRUE</samp>&rsquo; for CRAN submission checks).
 </p>
 <div class="example">
 <pre class="example">_R_CHECK_CRAN_INCOMING_=TRUE
+_R_CHECK_CRAN_INCOMING_REMOTE_=TRUE
 _R_CHECK_VC_DIRS_=TRUE
 _R_CHECK_TIMINGS_=10
 _R_CHECK_INSTALL_DEPENDS_=TRUE
@@ -4776,10 +4913,14 @@ _R_CHECK_DOC_SIZES2_=TRUE
 _R_CHECK_CODE_ASSIGN_TO_GLOBALENV_=TRUE
 _R_CHECK_CODE_ATTACH_=TRUE
 _R_CHECK_CODE_DATA_INTO_GLOBALENV_=TRUE
+_R_CHECK_CODE_USAGE_VIA_NAMESPACES_=TRUE
 _R_CHECK_DOT_FIRSTLIB_=TRUE
 _R_CHECK_DEPRECATED_DEFUNCT_=TRUE
 _R_CHECK_REPLACING_IMPORTS_=TRUE
+_R_CHECK_SCREEN_DEVICE_=stop
 _R_CHECK_TOPLEVEL_FILES_=TRUE
+_R_CHECK_S3_METHODS_NOT_REGISTERED_=TRUE
+_R_CHECK_OVERWRITE_REGISTERED_S3_METHODS_=TRUE
 </pre></div>
 
 <p>These are turned on by <code>R CMD check --as-cran</code>: the incoming
@@ -4791,7 +4932,16 @@ checks also use
 <p>since some packages do suggest other packages not available on CRAN or
 other commonly-used repositories.
 </p>
-
+<p>Another variable which enables stricter checks is to set
+<code>R_CHECK_CONSTANTS</code> to <code>5</code>.  This checks that
+nothing<a name="DOCF24" href="#FOOT24"><sup>24</sup></a> changes the values of &lsquo;constants&rsquo;<a name="DOCF25" href="#FOOT25"><sup>25</sup></a> in R
+code.  This is best used in conjunction with setting
+<code>R_JIT_STRATEGY</code> to <code>3</code>, which checks code on first use (by
+default most code is only checked after byte-compilation on second use).
+Unfortunately these checks slow down checking of examples, tests and
+vignettes, typically two-fold but in the worst cases at least a
+hundred-fold.
+</p>
 <hr>
 <a name="R-coding-standards"></a>
 <div class="header">
@@ -4803,7 +4953,7 @@ Next: <a href="#Testing-R-code" accesskey="n" rel="next">Testing R code</a>, Pre
 
 <a name="index-coding-standards"></a>
 <p>R is meant to run on a wide variety of platforms, including Linux and
-most variants of Unix as well as Windows and OS X.
+most variants of Unix as well as Windows and macOS.
 Therefore, when extending R by either adding to the R base
 distribution or by providing an add-on package, one should not rely on
 features specific to only a few supported platforms, if this can be
@@ -4820,7 +4970,7 @@ Nevertheless, R is a <acronym>GNU</acronym> project, and the spirit of the
 <li> An ISO C99 C compiler.  Note that extensions such as <acronym>POSIX</acronym>
 1003.1 must be tested for, typically using Autoconf unless you are sure
 they are supported on all mainstream R platforms (including Windows
-and OS X).
+and macOS).
 
 </li><li> A FORTRAN 77 compiler (but not Fortran 9x, although it is nowadays
 widely available).
@@ -4948,7 +5098,7 @@ Next: <a href="#Current-and-future-directions" accesskey="n" rel="next">Current 
 <a name="Use-of-TeX-dialects-1"></a>
 <h2 class="chapter">11 Use of TeX dialects</h2>
 
-<p>Various dialects of TeX and used for different purposes in R.  The
+<p>Various dialects of TeX are used for different purposes in R.  The
 policy is that manuals be written in &lsquo;<samp>texinfo</samp>&rsquo;, and for convenience
 the main and Windows FAQs are also.  This has the advantage that is is
 easy to produce <acronym>HTML</acronym> and plain text versions as well as typeset manuals.
@@ -4974,7 +5124,7 @@ a sequence of <code>(pdf)latex</code>, <code>bibtex</code> and
 </p>
 <p>This process has been rather vulnerable to the versions of the external
 software used: particular issues have been <code>texi2dvi</code> and
-<samp>texinfo.tex</samp> updates, mismatches between the two<a name="DOCF24" href="#FOOT24"><sup>24</sup></a>,
+<samp>texinfo.tex</samp> updates, mismatches between the two<a name="DOCF26" href="#FOOT26"><sup>26</sup></a>,
 versions of the LaTeX package &lsquo;<samp>hyperref</samp>&rsquo; and quirks in index
 production.  The licenses used for LaTeX and latterly &lsquo;<samp>texinfo</samp>&rsquo;
 prohibit us from including &lsquo;known good&rsquo; versions in the R
@@ -5001,7 +5151,7 @@ Next: <a href="#Function-and-variable-index" accesskey="n" rel="next">Function a
 to R: there is no commitment to release such changes, let alone to a
 timescale.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Long-vectors" accesskey="1">Long vectors</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#g_t64_002dbit-types" accesskey="2">64-bit types</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -5062,8 +5212,7 @@ to 2^48 on unserialization.
 </li><li> The type <code>R_xlen_t</code> is made available to packages in C header
 <samp>Rinternals.h</samp>: this should be fine in C code since C99 is
 required.  People do try to use R internals in C++, but C++98
-compilers are not required to support these types (and there are
-currently no C++11 compilers).
+compilers are not required to support these types.
 
 </li><li> Indexing can be done via the use of doubles.  The internal indexing code
 used to work with positive integer indices (and negative, logical and
@@ -5129,12 +5278,12 @@ vectors.
 <p>The remaining interfaces will need to cope with the changed
 <code>VECTOR_SEXPREC</code> types.  It seems likely that in most cases lengths
 are accessed by the <code>length</code> and <code>LENGTH</code>
-functions<a name="DOCF25" href="#FOOT25"><sup>25</sup></a>  The current approach is to keep these returning 32-bit lengths and
+functions<a name="DOCF27" href="#FOOT27"><sup>27</sup></a>  The current approach is to keep these returning 32-bit lengths and
 introduce &lsquo;long&rsquo; versions <code>xlength</code> and <code>XLENGTH</code> which return
 <code>R_xlen_t</code> values.
 </p>
 
-<p>See also <a href="http://www.cs.uiowa.edu/~luke/talks/useR10.pdf">http://www.cs.uiowa.edu/~luke/talks/useR10.pdf</a>.
+<p>See also <a href="http://homepage.cs.uiowa.edu/~luke/talks/useR10.pdf">http://homepage.cs.uiowa.edu/~luke/talks/useR10.pdf</a>.
 </p>
 <hr>
 <a name="Large-matrices"></a>
@@ -5146,9 +5295,9 @@ Previous: <a href="#g_t64_002dbit-types" accesskey="p" rel="prev">64-bit types</
 <h3 class="section">12.3 Large matrices</h3>
 
 <p>Matrices are stored as vectors and so were also limited to 2^31-1
-elements.  Now longer vectors are allowed, matrices with more elements
-are supported provided that each of the dimensions is no more than
-2^31-1.  However, not all applications can be supported.
+elements.  Now longer vectors are allowed on 64-bit platforms, matrices
+with more elements are supported provided that each of the dimensions is
+no more than 2^31-1.  However, not all applications can be supported.
 </p>
 <p>The main problem is linear algebra done by FORTRAN code compiled
 with 32-bit <code>INTEGER</code>.  Although not guaranteed, it seems that all
@@ -5180,7 +5329,7 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <a name="Function-and-variable-index-1"></a>
 <h2 class="unnumbered">Function and variable index</h2>
 
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index_vr_symbol-1"><b>.</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index_vr_symbol-1"><b>.</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Function-and-variable-index_vr_symbol-2"><b>_</b></a>
  &nbsp; 
@@ -5220,7 +5369,7 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <a class="summary-letter" href="#Function-and-variable-index_vr_letter-W"><b>W</b></a>
  &nbsp; 
 </td></tr></table>
-<table class="index-vr" border="0">
+<table summary="" class="index-vr" border="0">
 <tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Function-and-variable-index_vr_symbol-1">.</a></th><td></td><td></td></tr>
@@ -5244,9 +5393,12 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fCODE_005fASSIGN_005fTO_005fGLOBALENV_005f"><code>_R_CHECK_CODE_ASSIGN_TO_GLOBALENV_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fCODE_005fATTACH_005f"><code>_R_CHECK_CODE_ATTACH_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fCODE_005fDATA_005fINTO_005fGLOBALENV_005f"><code>_R_CHECK_CODE_DATA_INTO_GLOBALENV_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fCODE_005fUSAGE_005fVIA_005fNAMESPACES_005f"><code>_R_CHECK_CODE_USAGE_VIA_NAMESPACES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fCODE_005fUSAGE_005fWITH_005fONLY_005fBASE_005fATTACHED_005f"><code>_R_CHECK_CODE_USAGE_WITH_ONLY_BASE_ATTACHED_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fCODOC_005fS4_005fMETHODS_005f"><code>_R_CHECK_CODOC_S4_METHODS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fCOMPACT_005fDATA_005f"><code>_R_CHECK_COMPACT_DATA_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fCRAN_005fINCOMING_005f"><code>_R_CHECK_CRAN_INCOMING_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fCRAN_005fINCOMING_005fREMOTE_005f"><code>_R_CHECK_CRAN_INCOMING_REMOTE_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fDEPENDS_005fONLY_005f"><code>_R_CHECK_DEPENDS_ONLY_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fDEPRECATED_005fDEFUNCT_005f"><code>_R_CHECK_DEPRECATED_DEFUNCT_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fDOC_005fSIZES2_005f"><code>_R_CHECK_DOC_SIZES2_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
@@ -5255,12 +5407,17 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fDOT_005fINTERNAL_005f"><code>_R_CHECK_DOT_INTERNAL_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fEXECUTABLES_005f"><code>_R_CHECK_EXECUTABLES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fEXECUTABLES_005fEXCLUSIONS_005f"><code>_R_CHECK_EXECUTABLES_EXCLUSIONS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fEXIT_005fON_005fFIRST_005fERROR_005f"><code>_R_CHECK_EXIT_ON_FIRST_ERROR_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fFF_005fCALLS_005f"><code>_R_CHECK_FF_CALLS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fFF_005fDUP_005f"><code>_R_CHECK_FF_DUP_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fFORCE_005fSUGGESTS_005f"><code>_R_CHECK_FORCE_SUGGESTS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fGCT_005fN_005f"><code>_R_CHECK_GCT_N_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fINSTALL_005fDEPENDS_005f"><code>_R_CHECK_INSTALL_DEPENDS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fLICENSE_005f"><code>_R_CHECK_LICENSE_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fLIMIT_005fCORES_005f"><code>_R_CHECK_LIMIT_CORES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fNATIVE_005fROUTINE_005fREGISTRATION_005f"><code>_R_CHECK_NATIVE_ROUTINE_REGISTRATION_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fNO_005fRECOMMENDED_005f"><code>_R_CHECK_NO_RECOMMENDED_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fOVERWRITE_005fREGISTERED_005fS3_005fMETHODS_005f"><code>_R_CHECK_OVERWRITE_REGISTERED_S3_METHODS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fPERMISSIONS_005f"><code>_R_CHECK_PERMISSIONS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fPKG_005fSIZES_005f"><code>_R_CHECK_PKG_SIZES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fRD_005fCHECKRD_005fMINLEVEL_005f"><code>_R_CHECK_RD_CHECKRD_MINLEVEL_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
@@ -5270,6 +5427,8 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fRD_005fSTYLE_005f"><code>_R_CHECK_RD_STYLE_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fRD_005fXREFS_005f"><code>_R_CHECK_RD_XREFS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fREPLACING_005fIMPORTS_005f"><code>_R_CHECK_REPLACING_IMPORTS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fS3_005fMETHODS_005fNOT_005fREGISTERED_005f"><code>_R_CHECK_S3_METHODS_NOT_REGISTERED_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSCREEN_005fDEVICE_005f"><code>_R_CHECK_SCREEN_DEVICE_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSKIP_005fARCH_005f"><code>_R_CHECK_SKIP_ARCH_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSKIP_005fEXAMPLES_005fARCH_005f"><code>_R_CHECK_SKIP_EXAMPLES_ARCH_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSKIP_005fTESTS_005fARCH_005f"><code>_R_CHECK_SKIP_TESTS_ARCH_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
@@ -5278,6 +5437,7 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSUBDIRS_005fNOCASE_005f"><code>_R_CHECK_SUBDIRS_NOCASE_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSUBDIRS_005fSTRICT_005f"><code>_R_CHECK_SUBDIRS_STRICT_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fSUGGESTS_005fONLY_005f"><code>_R_CHECK_SUGGESTS_ONLY_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fTESTS_005fNLINES_005f"><code>_R_CHECK_TESTS_NLINES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fTIMINGS_005f"><code>_R_CHECK_TIMINGS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fTOPLEVEL_005fFILES_005f"><code>_R_CHECK_TOPLEVEL_FILES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fUNSAFE_005fCALLS_005f"><code>_R_CHECK_UNSAFE_CALLS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
@@ -5286,6 +5446,7 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fVC_005fDIRS_005f"><code>_R_CHECK_VC_DIRS_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fVIGNETTES_005fNLINES_005f"><code>_R_CHECK_VIGNETTES_NLINES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fWALL_005fFORTRAN_005f"><code>_R_CHECK_WALL_FORTRAN_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fWINDOWS_005fDEVICE_005f"><code>_R_CHECK_WINDOWS_DEVICE_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fXREFS_005fREPOSITORIES_005f"><code>_R_CHECK_XREFS_REPOSITORIES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fCHECK_005fXREFS_005fUSE_005fALIASES_005fFROM_005fCRAN_005f"><code>_R_CHECK_XREFS_USE_ALIASES_FROM_CRAN_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-_005fR_005fSHLIB_005fBUILD_005fOBJECTS_005fSYMBOL_005fTABLES_005f"><code>_R_SHLIB_BUILD_OBJECTS_SYMBOL_TABLES_</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Tools">Tools</a></td></tr>
@@ -5365,6 +5526,7 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-SET_005fDDVAL"><code>SET_DDVAL</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rest-of-header">Rest of header</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SET_005fMISSING"><code>SET_MISSING</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rest-of-header">Rest of header</a></td></tr>
 <tr><td></td><td valign="top"><a href="#index-SET_005fNAMED"><code>SET_NAMED</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rest-of-header">Rest of header</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-spare-bit"><code>spare bit</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rest-of-header">Rest of header</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Function-and-variable-index_vr_letter-T">T</a></th><td></td><td></td></tr>
 <tr><td></td><td valign="top"><a href="#index-trace-bit"><code>trace bit</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Rest-of-header">Rest of header</a></td></tr>
@@ -5381,7 +5543,7 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-warningcall"><code>warningcall</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Warnings-and-errors">Warnings and errors</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 </table>
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index_vr_symbol-1"><b>.</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index_vr_symbol-1"><b>.</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Function-and-variable-index_vr_symbol-2"><b>_</b></a>
  &nbsp; 
@@ -5431,7 +5593,7 @@ Previous: <a href="#Function-and-variable-index" accesskey="p" rel="prev">Functi
 <a name="Concept-index-1"></a>
 <h2 class="unnumbered">Concept index</h2>
 
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-index_cp_symbol-1"><b>.</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-index_cp_symbol-1"><b>.</b></a>
  &nbsp; 
 <br>
 <a class="summary-letter" href="#Concept-index_cp_letter-A"><b>A</b></a>
@@ -5463,7 +5625,7 @@ Previous: <a href="#Function-and-variable-index" accesskey="p" rel="prev">Functi
 <a class="summary-letter" href="#Concept-index_cp_letter-W"><b>W</b></a>
  &nbsp; 
 </td></tr></table>
-<table class="index-cp" border="0">
+<table summary="" class="index-cp" border="0">
 <tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Concept-index_cp_symbol-1">.</a></th><td></td><td></td></tr>
@@ -5548,7 +5710,7 @@ Previous: <a href="#Function-and-variable-index" accesskey="p" rel="prev">Functi
 <tr><td></td><td valign="top"><a href="#index-write-barrier">write barrier</a>:</td><td>&nbsp;</td><td valign="top"><a href="#The-write-barrier">The write barrier</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 </table>
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-index_cp_symbol-1"><b>.</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-index_cp_symbol-1"><b>.</b></a>
  &nbsp; 
 <br>
 <a class="summary-letter" href="#Concept-index_cp_letter-A"><b>A</b></a>
@@ -5622,11 +5784,9 @@ pseudo-<code>SEXPTYPE</code>s.</p>
 <code>USE_UTF8_IF_POSSIBLE</code> in file <samp>src/main/gram.c</samp>.</p>
 <h3><a name="FOOT10" href="#DOCF10">(10)</a></h3>
 <p>or UTF-16 if support for surrogates is enabled in the OS,
-which it is not normally so at least for Western versions of Windows,
-despite some claims to the contrary on the Microsoft website.</p>
+which it used not to be when encoding support was added to R.</p>
 <h3><a name="FOOT11" href="#DOCF11">(11)</a></h3>
-<p>but not the
-GraphApp toolkit.</p>
+<p>but not the GraphApp toolkit.</p>
 <h3><a name="FOOT12" href="#DOCF12">(12)</a></h3>
 <p>This can also create
 non-S4 objects, as in <code>new(&quot;integer&quot;)</code>.</p>
@@ -5667,9 +5827,16 @@ environment variable <code>R_WIN_NO_JUNCTIONS</code> has a non-empty value.</p>
 <h3><a name="FOOT23" href="#DOCF23">(23)</a></h3>
 <p>see the previous footnote.</p>
 <h3><a name="FOOT24" href="#DOCF24">(24)</a></h3>
+<p>The usual culprits are calls to compiled code
+<em>via</em> <code>.Call</code> or <code>.External</code> which alter their
+arguments.</p>
+<h3><a name="FOOT25" href="#DOCF25">(25)</a></h3>
+<p>things which the
+byte compiler assumes do not change, e.g. function bodies.</p>
+<h3><a name="FOOT26" href="#DOCF26">(26)</a></h3>
 <p>Linux
 distributions tend to unbundle <samp>texinfo.tex</samp> from &lsquo;<samp>texinfo</samp>&rsquo;.</p>
-<h3><a name="FOOT25" href="#DOCF25">(25)</a></h3>
+<h3><a name="FOOT27" href="#DOCF27">(27)</a></h3>
 <p>but <code>LENGTH</code> is a macro under some internal
 uses.</p>
 </div>

@@ -20,12 +20,16 @@
 <DT><I><A HREF="#wso">WIDGET-SPECIFIC OPTIONS</A></I></DT>
 <DD><TABLE CELLSPACING=0 CELLSPACING=0 BORDER=0>
 <TR>
-<TD>&nbsp;&nbsp;<A HREF="#-pad">-pad</A></TR>
-<TD>&nbsp;&nbsp;<A HREF="#-side">-side</A></TR>
+<TD>&nbsp;&nbsp;<A HREF="#-activator">-activator</A></TD>
+<TD>&nbsp;&nbsp;<A HREF="#-pad">-pad</A></TD>
 </TR>
 <TR>
-<TD>&nbsp;&nbsp;<A HREF="#-weights">-weights</A></TR>
-<TD>&nbsp;&nbsp;<A HREF="#-width">-width</A></TR>
+<TD>&nbsp;&nbsp;<A HREF="#-side">-side</A></TD>
+<TD>&nbsp;&nbsp;<A HREF="#-weights">-weights</A></TD>
+</TR>
+<TR>
+<TD>&nbsp;&nbsp;<A HREF="#-width">-width</A></TD>
+</TR>
 </TABLE></DD>
 </DL>
 <DL>
@@ -54,6 +58,17 @@ between children.
 </P>
 <BR><HR WIDTH="50%"><BR>
 <B><A NAME="wso">WIDGET-SPECIFIC OPTIONS</A></B><BR>
+<DL><DT><A NAME="-activator"><B>-activator (read-only)</B></A></DT>
+<DD>
+
+By default, the control sash is either a button or a line depending
+upon the underlying operating system.  This sash may be explicitly set
+using this option.  If set to <B>line</B> then the sash consists of
+just a dividing line.  Otherwise if set to <B>button</B> then it
+constists of a knob that can be dragged.
+
+</DD>
+</DL>
 <DL><DT><A NAME="-pad"><B>-pad (read-only)</B></A></DT>
 <DD>
 
@@ -82,7 +97,8 @@ their weight. Default value for <B>weights</B> is <I>extra</I>.
 <DL><DT><A NAME="-width"><B>-width (read-only)</B></A></DT>
 <DD>
 
-Specifies the width of the button of the sash.
+Specifies the width of the button of the sash.  This option is ignored
+if the activator is set to <B>line</B>.
 
 </DD>
 </DL>

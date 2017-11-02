@@ -7,4 +7,5 @@ export(data.restore, lookup.xport, read.arff, read.dbf, read.dta,
 
 # not exported: SModeNames writeForeignStata writeForeignSPSS
 
-importFrom(utils, write.table)
+importFrom(utils, download.file, read.table, write.table)
+importFrom(stats, na.omit)

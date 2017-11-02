@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- This manual is for R, version 3.0.3 (2014-03-06).
+<!-- This manual is for R, version 3.4.2 (2017-09-28).
 
 Copyright (C) 1990 W. N. Venables
 
@@ -10,7 +10,7 @@ Copyright (C) 1997 R. Gentleman & R. Ihaka
 
 Copyright (C) 1997, 1998 M. Maechler
 
-Copyright (C) 1999-2013 R Core Team
+Copyright (C) 1999-2016 R Core Team
 
 Permission is granted to make and distribute verbatim copies of this
 manual provided the copyright notice and this permission notice are
@@ -38,7 +38,6 @@ approved by the R Core Team. -->
 <link href="#Top" rel="start" title="Top">
 <link href="#Function-and-variable-index" rel="index" title="Function and variable index">
 <link href="#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="dir.html#Top" rel="up" title="(dir)">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -65,51 +64,70 @@ span.nolinebreak {white-space:nowrap}
 span.roman {font-family:serif; font-weight:normal}
 span.sansserif {font-family:sans-serif; font-weight:normal}
 ul.no-bullet {list-style: none}
-body {margin-left: 5%; margin-right: 5%;}
+body {
+    margin-left: 5%;
+    margin-right: 5%;
+}
 
-H1 {             
+h1 {             
     background: white;
     color: rgb(25%, 25%, 25%);
     font-family: monospace;
     font-size: xx-large;
-    text-align: center
+    text-align: center;
 }
 
-H2 {
+h2 {
     background: white;
     color: rgb(40%, 40%, 40%);
     font-family: monospace;
     font-size: x-large;
-    text-align: center
+    text-align: center;
 }
 
-H3 {
+h3 {
     background: white;
     color: rgb(40%, 40%, 40%);
     font-family: monospace;
-    font-size: large
+    font-size: large;
 }
 
-H4 {
+h4 {
     background: white;
     color: rgb(40%, 40%, 40%);
-    font-family: monospace
+    font-family: monospace;
 }
 
-span.samp{font-family: monospace}
-span.command{font-family: monospace}
-span.option{font-family: monospace}
-span.file{font-family: monospace}
-span.env{font-family: monospace}
+span.samp {
+    font-family: monospace;
+}
+
+span.command {
+    font-family: monospace;
+}
+
+span.option {
+    font-family: monospace;
+}
+
+span.file {
+    font-family: monospace;
+}
+
+span.env {
+    font-family: monospace;
+}
 
 ul {
     margin-top: 0.25ex;
     margin-bottom: 0.25ex;
 }
+
 li {
     margin-top: 0.25ex;
     margin-bottom: 0.25ex;
 }
+
 p {
     margin-top: 0.6ex;
     margin-bottom: 1.2ex;
@@ -226,7 +244,7 @@ p {
     <li><a name="toc-Data-frames-1" href="#Data-frames">6.3 Data frames</a>
     <ul class="no-bullet">
       <li><a name="toc-Making-data-frames-1" href="#Making-data-frames">6.3.1 Making data frames</a></li>
-      <li><a name="toc-attach_0028_0029-and-detach_0028_0029-1" href="#attach_0028_0029-and-detach_0028_0029">6.3.2 <code>attach() and <code>detach()</code></code></a></li>
+      <li><a name="toc-attach_0028_0029-and-detach_0028_0029-1" href="#attach_0028_0029-and-detach_0028_0029">6.3.2 <code>attach()</code> and <code>detach()</code></a></li>
       <li><a name="toc-Working-with-data-frames-1" href="#Working-with-data-frames">6.3.3 Working with data frames</a></li>
       <li><a name="toc-Attaching-arbitrary-lists-1" href="#Attaching-arbitrary-lists">6.3.4 Attaching arbitrary lists</a></li>
       <li><a name="toc-Managing-the-search-path-1" href="#Managing-the-search-path">6.3.5 Managing the search path</a></li>
@@ -351,7 +369,7 @@ p {
   <ul class="no-bullet">
     <li><a name="toc-Invoking-R-from-the-command-line-1" href="#Invoking-R-from-the-command-line">B.1 Invoking R from the command line</a></li>
     <li><a name="toc-Invoking-R-under-Windows-1" href="#Invoking-R-under-Windows">B.2 Invoking R under Windows</a></li>
-    <li><a name="toc-Invoking-R-under-OS-X-1" href="#Invoking-R-under-OS-X">B.3 Invoking R under OS X</a></li>
+    <li><a name="toc-Invoking-R-under-macOS-1" href="#Invoking-R-under-macOS">B.3 Invoking R under macOS</a></li>
     <li><a name="toc-Scripting-with-R-1" href="#Scripting-with-R">B.4 Scripting with R</a></li>
   </ul></li>
   <li><a name="toc-The-command_002dline-editor-1" href="#The-command_002dline-editor">Appendix C The command-line editor</a>
@@ -370,7 +388,7 @@ p {
 <a name="Top"></a>
 <div class="header">
 <p>
-Next: <a href="#Preface" accesskey="n" rel="next">Preface</a>, Previous: <a href="dir.html#Top" accesskey="p" rel="prev">(dir)</a>, Up: <a href="dir.html#Top" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Preface" accesskey="n" rel="next">Preface</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="An-Introduction-to-R"></a>
 <h1 class="top">An Introduction to R</h1>
@@ -386,13 +404,13 @@ analysis, classification, clustering, ...).
 <p>This manual provides information on data types, programming elements,
 statistical modelling and graphics.
 </p>
-<p>This manual is for R, version 3.0.3 (2014-03-06).
+<p>This manual is for R, version 3.4.2 (2017-09-28).
 </p>
 <p>Copyright &copy; 1990 W. N. Venables<br>
 Copyright &copy; 1992 W. N. Venables &amp; D. M. Smith<br>
 Copyright &copy; 1997 R. Gentleman &amp; R. Ihaka<br>
 Copyright &copy; 1997, 1998 M. Maechler<br>
-Copyright &copy; 1999&ndash;2013 R Core Team
+Copyright &copy; 1999&ndash;2016 R Core Team
 </p>
 <blockquote>
 <p>Permission is granted to make and distribute verbatim copies of this
@@ -412,7 +430,7 @@ approved by the R Core Team.
 
 
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Preface" accesskey="1">Preface</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Introduction-and-preliminaries" accesskey="2">Introduction and preliminaries</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -490,7 +508,7 @@ and more importantly some instant feedback on what actually happens.
 See <a href="#Graphics">Graphics</a>, which can be read at almost any time and need not wait
 until all the preceding sections have been digested.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Introduction-and-preliminaries" accesskey="1">Introduction and preliminaries</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -504,7 +522,7 @@ Next: <a href="#Simple-manipulations-numbers-and-vectors" accesskey="n" rel="nex
 <a name="Introduction-and-preliminaries-1"></a>
 <h2 class="chapter">1 Introduction and preliminaries</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#The-R-environment" accesskey="1">The R environment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Related-software-and-documentation" accesskey="2">Related software and documentation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -611,7 +629,7 @@ built into the base R environment, but many are supplied as
 <em>packages</em>.  There are about 25 packages supplied with R (called
 &ldquo;standard&rdquo; and &ldquo;recommended&rdquo; packages) and many more are available
 through the <acronym>CRAN</acronym> family of Internet sites (via
-<a href="http://CRAN.R-project.org">http://CRAN.R-project.org</a>) and elsewhere.  More details on
+<a href="https://CRAN.R-project.org">https://CRAN.R-project.org</a>) and elsewhere.  More details on
 packages are given later (see <a href="#Packages">Packages</a>).
 </p>
 <p>Most classical statistics and much of the latest methodology is
@@ -644,7 +662,7 @@ generally to any implementation of the R environment.
 <p>Most users will find it necessary to interact directly with the
 operating system on their computer from time to time.  In this guide, we
 mainly discuss interaction with the operating system on UNIX machines.
-If you are running R under Windows or OS X you will need to make
+If you are running R under Windows or macOS you will need to make
 some small adjustments.
 </p>
 <p>Setting up a workstation to take full advantage of the customizable
@@ -988,7 +1006,7 @@ Next: <a href="#Objects" accesskey="n" rel="next">Objects</a>, Previous: <a href
 <h2 class="chapter">2 Simple manipulations; numbers and vectors</h2>
 <a name="index-Vectors"></a>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Vectors-and-assignment" accesskey="1">Vectors and assignment</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Vector-arithmetic" accesskey="2">Vector arithmetic</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1190,7 +1208,7 @@ precision complex numbers if the input data are complex.
 
 <p>will do the computations as complex numbers.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Generating-regular-sequences" accesskey="1">Generating regular sequences</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -1225,12 +1243,12 @@ beginning and end of the sequence, and if these are the only two
 arguments given the result is the same as the colon operator.  That is
 <code>seq(2,10)</code> is the same vector as <code>2:10</code>.
 </p>
-<p>Parameters to <code>seq()</code>, and to many other R functions, can also
+<p>Arguments to <code>seq()</code>, and to many other R functions, can also
 be given in named form, in which case the order in which they appear is
-irrelevant.  The first two parameters may be named
+irrelevant.  The first two arguments may be named
 <code>from=<var>value</var></code> and <code>to=<var>value</var></code>; thus
 <code>seq(1,30)</code>, <code>seq(from=1, to=30)</code> and <code>seq(to=30,
-from=1)</code> are all the same as <code>1:30</code>.  The next two parameters to
+from=1)</code> are all the same as <code>1:30</code>.  The next two arguments to
 <code>seq()</code> may be named <code>by=<var>value</var></code> and
 <code>length=<var>value</var></code>, which specify a step size and a length for
 the sequence respectively.  If neither of these is given, the default
@@ -1251,8 +1269,8 @@ the sequence respectively.  If neither of these is given, the default
 
 <p>generates the same vector in <code>s4</code>.
 </p>
-<p>The fifth parameter may be named <code>along=<var>vector</var></code>, which if
-used must be the only parameter, and creates a sequence <code>1, 2,
+<p>The fifth argument may be named <code>along=<var>vector</var></code>, which is
+normally used as the only argument to create the sequence <code>1, 2,
 &hellip;, length(<var>vector</var>)</code>, or the empty sequence if the vector is
 empty (as it can be).
 </p>
@@ -1423,7 +1441,7 @@ concatenates them one by one into character strings.  Any numbers given
 among the arguments are coerced into character strings in the evident
 way, that is, in the same way they would be if they were printed.  The
 arguments are by default separated in the result by a single blank
-character, but this can be changed by the named parameter,
+character, but this can be changed by the named argument,
 <code>sep=<var>string</var></code>, which changes it to <code><var>string</var></code>,
 possibly empty.
 </p>
@@ -1464,7 +1482,7 @@ brackets immediately after the expression.
 <p>Such index vectors can be any of four distinct types.
 </p>
 <ol>
-<li> <strong>A logical vector</strong>.  In this case the index vector must be of the
+<li> <strong>A logical vector</strong>.  In this case the index vector is recycled to the
 same length as the vector from which elements are to be selected.
 Values corresponding to <code>TRUE</code> in the index vector are selected and
 those corresponding to <code>FALSE</code> are omitted.  For example
@@ -1609,7 +1627,7 @@ Next: <a href="#Factors" accesskey="n" rel="next">Factors</a>, Previous: <a href
 <a name="index-Attributes"></a>
 
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#The-intrinsic-attributes-mode-and-length" accesskey="1">The intrinsic attributes mode and length</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Changing-the-length-of-an-object" accesskey="2">Changing the length of an object</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1894,7 +1912,7 @@ used.
 [1] &quot;act&quot; &quot;nsw&quot; &quot;nt&quot;  &quot;qld&quot; &quot;sa&quot;  &quot;tas&quot; &quot;vic&quot; &quot;wa&quot;
 </pre></div>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#The-function-tapply_0028_0029-and-ragged-arrays" accesskey="1">The function tapply() and ragged arrays</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Ordered-factors" accesskey="2">Ordered factors</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1950,17 +1968,16 @@ function <code>var()</code> to calculate the sample variance, such a function
 is a very simple one liner, specified by the assignment:
 </p>
 <div class="example">
-<pre class="example">&gt; stderr &lt;- function(x) sqrt(var(x)/length(x))
+<pre class="example">&gt; stdError &lt;- function(x) sqrt(var(x)/length(x))
 </pre></div>
 
-<p>(Writing functions will be considered later in <a href="#Writing-your-own-functions">Writing your own functions</a>, and in this case was unnecessary as R also has a builtin
-function <code>sd()</code>.)
+<p>(Writing functions will be considered later in <a href="#Writing-your-own-functions">Writing your own functions</a>.  Note that R&rsquo;s a builtin function <code>sd()</code> is something different.)
 <a name="index-sd"></a>
 <a name="index-var-1"></a>
 After this assignment, the standard errors are calculated by
 </p>
 <div class="example">
-<pre class="example">&gt; incster &lt;- tapply(incomes, statef, stderr)
+<pre class="example">&gt; incster &lt;- tapply(incomes, statef, stdError)
 </pre></div>
 
 <p>and the values calculated are then
@@ -2027,7 +2044,7 @@ Next: <a href="#Lists-and-data-frames" accesskey="n" rel="next">Lists and data f
 <a name="Arrays-and-matrices-1"></a>
 <h2 class="chapter">5 Arrays and matrices</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Arrays" accesskey="1">Arrays</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Array-indexing" accesskey="2">Array indexing</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2140,7 +2157,7 @@ in this case the dimension vector is ignored.  This is not the case,
 however, if the single index is not a vector but itself an array, as we
 next discuss.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Index-matrices" accesskey="1">Index matrices</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#The-array_0028_0029-function" accesskey="2">The array() function</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2306,7 +2323,7 @@ the given element-by-element operations.  However the precise rule
 concerning mixed array and vector calculations has to be considered a
 little more carefully.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#The-recycling-rule" accesskey="1">The recycling rule</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -2404,13 +2421,12 @@ independently and uniformly at random.
 <div class="example">
 <pre class="example">&gt; d &lt;- outer(0:9, 0:9)
 &gt; fr &lt;- table(outer(d, d, &quot;-&quot;))
-&gt; plot(as.numeric(names(fr)), fr, type=&quot;h&quot;,
-       xlab=&quot;Determinant&quot;, ylab=&quot;Frequency&quot;)
+&gt; plot(fr, xlab=&quot;Determinant&quot;, ylab=&quot;Frequency&quot;)
 </pre></div>
 
-<p>Notice the coercion of the <code>names</code> attribute of the frequency table
-to numeric in order to recover the range of the determinant values.  The
-&ldquo;obvious&rdquo; way of doing this problem with <code>for</code> loops, to be
+<p>Notice that <code>plot()</code> here uses a histogram like plot method, because
+it &ldquo;sees&rdquo; that <code>fr</code> is of class <code>&quot;table&quot;</code>.
+The &ldquo;obvious&rdquo; way of doing this problem with <code>for</code> loops, to be
 discussed in <a href="#Loops-and-conditional-execution">Loops and conditional execution</a>, is so inefficient as
 to be impractical.
 </p>
@@ -2467,7 +2483,7 @@ number of rows and columns in the matrix <code>A</code> respectively.
 <a name="index-nrow"></a>
 <a name="index-ncol"></a>
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Multiplication" accesskey="1">Multiplication</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Linear-equations-and-inversion" accesskey="2">Linear equations and inversion</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2879,7 +2895,7 @@ Next: <a href="#Reading-data-from-files" accesskey="n" rel="next">Reading data f
 <a name="Lists-and-data-frames-1"></a>
 <h2 class="chapter">6 Lists and data frames</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Lists" accesskey="1">Lists</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Constructing-and-modifying-lists" accesskey="2">Constructing and modifying lists</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3004,7 +3020,7 @@ additional components.  For example
 <pre class="example">&gt; Lst[5] &lt;- list(matrix=Mat)
 </pre></div>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Concatenating-lists" accesskey="1">Concatenating lists</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -3065,7 +3081,7 @@ possibly of differing modes and attributes.  It may be displayed in
 matrix form, and its rows and columns extracted using matrix indexing
 conventions.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Making-data-frames" accesskey="1">Making data frames</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#attach_0028_0029-and-detach_0028_0029" accesskey="2">attach() and detach()</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3112,7 +3128,7 @@ external file.  This is discussed further in <a href="#Reading-data-from-files">
 Next: <a href="#Working-with-data-frames" accesskey="n" rel="next">Working with data frames</a>, Previous: <a href="#Making-data-frames" accesskey="p" rel="prev">Making data frames</a>, Up: <a href="#Data-frames" accesskey="u" rel="up">Data frames</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="attach_0028_0029-and-detach_0028_0029-1"></a>
-<h4 class="subsection">6.3.2 <code>attach() and <code>detach()</code></code></h4>
+<h4 class="subsection">6.3.2 <code>attach()</code> and <code>detach()</code></h4>
 <a name="index-attach"></a>
 <a name="index-detach"></a>
 
@@ -3292,7 +3308,7 @@ function, <code>scan()</code>, that can be called directly.
 <p>For more details on importing data into R and also exporting data,
 see the <em>R Data Import/Export</em> manual.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#The-read_002etable_0028_0029-function" accesskey="1">The read.table() function</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#The-scan_0028_0029-function" accesskey="2">The scan() function</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3329,7 +3345,7 @@ arrangement is presumed to be in force.  So the first few lines of a file
 to be read as a data frame might look as follows.
 </p>
 <blockquote>
-<table class="cartouche" border="1"><tr><td>
+<table summary="" class="cartouche" border="1"><tr><td>
 <div class="example">
 <pre class="example"><span class="roman">Input file form with names and row labels:</span>
 
@@ -3360,7 +3376,7 @@ default labels.  In this case the file may omit the row label column as in
 the following.
 </p>
 <blockquote>
-<table class="cartouche" border="1"><tr><td>
+<table summary="" class="cartouche" border="1"><tr><td>
 <div class="example">
 <pre class="example"><span class="roman">Input file form without row labels:</span>
 
@@ -3385,7 +3401,7 @@ Price    Floor     Area   Rooms     Age  Cent.heat
 line of headings, and hence, by implication from the form of the file,
 that no explicit row labels are given.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#The-scan_0028_0029-function" accesskey="1">The scan() function</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -3538,7 +3554,7 @@ Next: <a href="#Loops-and-conditional-execution" accesskey="n" rel="next">Loops 
 <h2 class="chapter">8 Probability distributions</h2>
 <a name="index-Probability-distributions"></a>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#R-as-a-set-of-statistical-tables" accesskey="1">R as a set of statistical tables</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Examining-the-distribution-of-a-set-of-data" accesskey="2">Examining the distribution of a set of data</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3564,7 +3580,7 @@ the probability density function and the quantile function (given
 and to simulate from the distribution.
 </p>
 <blockquote>
-<table>
+<table summary="">
 <thead><tr><th>Distribution</th><th>R name</th><th>additional arguments</th></tr></thead>
 <tr><td>beta</td><td><code>beta</code></td><td><code>shape1, shape2, ncp</code></td></tr>
 <tr><td>binomial</td><td><code>binom</code></td><td><code>size, prob</code></td></tr>
@@ -3613,7 +3629,7 @@ TRUE)</code>), directly.
 distribution of the studentized range of samples from a normal
 distribution, and <code>dmultinom</code> and <code>rmultinom</code> for the
 multinomial distribution. Further distributions are available in
-contributed packages, notably <a href="http://CRAN.R-project.org/package=SuppDists"><strong>SuppDists</strong></a>.
+contributed packages, notably <a href="https://CRAN.R-project.org/package=SuppDists"><strong>SuppDists</strong></a>.
 </p>
 <p>Here are some examples
 </p>
@@ -3946,7 +3962,7 @@ Next: <a href="#Writing-your-own-functions" accesskey="n" rel="next">Writing you
 <h2 class="chapter">9 Grouping, loops and conditional execution</h2>
 <a name="index-Loops-and-conditional-execution"></a>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Grouped-expressions" accesskey="1">Grouped expressions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Control-statements" accesskey="2">Control statements</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3973,7 +3989,7 @@ are possible.
 <var>&hellip;</var>; <var>expr_m</var>}</code>, in which case the value of the group
 is the result of the last expression in the group evaluated.  Since such
 a group is also an expression it may, for example, be itself included in
-parentheses and used a part of an even larger expression, and so on.
+parentheses and used as part of an even larger expression, and so on.
 </p>
 <hr>
 <a name="Control-statements"></a>
@@ -3985,7 +4001,7 @@ Previous: <a href="#Grouped-expressions" accesskey="p" rel="prev">Grouped expres
 <h3 class="section">9.2 Control statements</h3>
 <a name="index-Control-statements"></a>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Conditional-execution" accesskey="1">Conditional execution</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Repetitive-execution" accesskey="2">Repetitive execution</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -4024,9 +4040,9 @@ if necessary.
 <a name="index-ifelse"></a>
 <p>There is a vectorized version of the <code>if</code>/<code>else</code> construct,
 the <code>ifelse</code> function.  This has the form <code>ifelse(condition, a,
-b)</code> and returns a vector of the length of its longest argument, with
+b)</code> and returns a vector of the same length as <code>condition</code>, with
 elements <code>a[i]</code> if <code>condition[i]</code> is true, otherwise
-<code>b[i]</code>.
+<code>b[i]</code> (where <code>a</code> and <code>b</code> are recycled as necessary).
 </p>
 
 <hr>
@@ -4147,7 +4163,7 @@ The value of the expression is the value returned for the function.
 <code><var>name</var>(<var>expr_1</var>, <var>expr_2</var>, &hellip;)</code> and may occur
 anywhere a function call is legitimate.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Simple-examples" accesskey="1">Simple examples</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Defining-new-binary-operators" accesskey="2">Defining new binary operators</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -4402,7 +4418,7 @@ Next: <a href="#Scope" accesskey="n" rel="next">Scope</a>, Previous: <a href="#A
 <a name="More-advanced-examples-1"></a>
 <h3 class="section">10.6 More advanced examples</h3>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Efficiency-factors-in-block-designs" accesskey="1">Efficiency factors in block designs</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Dropping-all-names-in-a-printed-array" accesskey="2">Dropping all names in a printed array</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -4556,7 +4572,7 @@ very difficult to evaluate.
 }
 </pre></div>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Scope" accesskey="1">Scope</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Object-orientation" accesskey="2">Object orientation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -4855,7 +4871,10 @@ function (object, ...)
 }
 </pre></div>
 
-
+<p>A function named <code><var>gen</var>.<var>cl</var></code> will be invoked by the
+generic <code><var>gen</var></code> for class <code><var>cl</var></code>, so do not name
+functions in this style unless they are intended to be methods.
+</p>
 <p>The reader is referred to the <em>R Language Definition</em> for a more
 complete discussion of this mechanism.
 </p>
@@ -4885,7 +4904,7 @@ statistical models very simple.  As we mention in the introduction, the
 basic output is minimal, and one needs to ask for the details by calling
 extractor functions.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Formulae-for-statistical-models" accesskey="1">Formulae for statistical models</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Linear-models" accesskey="2">Linear models</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -5113,7 +5132,7 @@ of the model matrix</em>, the specification of the parameters being
 implicit.  This is not the case in other contexts, for example in
 specifying nonlinear models.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Contrasts" accesskey="1">Contrasts</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -5322,7 +5341,7 @@ Next: <a href="#Updating-fitted-models" accesskey="n" rel="next">Updating fitted
 <h3 class="section">11.4 Analysis of variance and model comparison</h3>
 <a name="index-Analysis-of-variance"></a>
 
-<p>The model fitting function <code>aov(<code>formula</code>,
+<p>The model fitting function <code>aov(<var>formula</var>,
 data=<var>data.frame</var>)</code>
 <a name="index-aov"></a>
 operates at the simplest level in a very similar way to the function
@@ -5355,7 +5374,7 @@ as that in:
 <code>v + n*p*k</code> and three error strata, namely &ldquo;between farms&rdquo;,
 &ldquo;within farms, between blocks&rdquo; and &ldquo;within blocks&rdquo;.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#ANOVA-tables" accesskey="1">ANOVA tables</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
@@ -5510,7 +5529,7 @@ least approximately.  The reader is referred to any of the current
 reference works on the subject for full details, such as McCullagh &amp;
 Nelder (1989) or Dobson (1990).
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Families" accesskey="1">Families</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#The-glm_0028_0029-function" accesskey="2">The glm() function</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -5540,7 +5559,7 @@ the mean with the linear predictor.  Those automatically available are
 shown in the following table:
 </p>
 <blockquote>
-<table>
+<table summary="">
 <thead><tr><th width="25%">Family name</th><th width="55%">Link functions</th></tr></thead>
 <tr><td width="25%"><code>binomial</code></td><td width="55%"><code>logit</code>, <code>probit</code>, <code>log</code>, <code>cloglog</code></td></tr>
 <tr><td width="25%"><code>gaussian</code></td><td width="55%"><code>identity</code>, <code>log</code>, <code>inverse</code></td></tr>
@@ -5624,7 +5643,7 @@ congenital eye disease, the effects of which become more marked with
 increasing age.  Samples of islander males of various ages were tested
 for blindness and the results recorded.  The data is shown below:
 </p>
-<table>
+<table summary="">
 <tr><td>Age:</td><td>20</td><td>35</td><td>45</td><td>55</td><td>70</td></tr>
 <tr><td>No. tested:</td><td>50</td><td>50</td><td>50</td><td>50</td><td>50</td></tr>
 <tr><td>No. blind:</td><td>&nbsp;6<!-- /@w --></td><td>17</td><td>26</td><td>37</td><td>44</td></tr>
@@ -5786,7 +5805,7 @@ All the methods require initial guesses about what parameter values to
 try, and convergence may depend critically upon the quality of the
 starting values.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Least-squares" accesskey="1">Least squares</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Maximum-likelihood" accesskey="2">Maximum likelihood</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -5847,9 +5866,10 @@ To obtain the approximate standard errors (SE) of the estimates we do:
 <pre class="example">&gt; sqrt(diag(2*out$minimum/(length(y) - 2) * solve(out$hessian)))
 </pre></div>
 
-<p>The 2 in the line above represents the number of parameters.  A 95%
-confidence interval would be the parameter estimate +/- 1.96
-SE.  We can superimpose the least squares fit on a new plot:
+<p>The <code>2</code> which is subtracted in the line above represents the number
+of parameters.  A 95% confidence interval would be the parameter
+estimate +/- 1.96 SE.  We can superimpose the least squares
+fit on a new plot:
 </p>
 <div class="example">
 <pre class="example">&gt; plot(x, y)
@@ -5953,7 +5973,7 @@ problems.
 </p>
 <ul>
 <li> <a name="index-Mixed-models"></a>
-<strong>Mixed models.</strong>  The recommended <a href="http://CRAN.R-project.org/package=nlme"><strong>nlme</strong></a> package provides
+<strong>Mixed models.</strong>  The recommended <a href="https://CRAN.R-project.org/package=nlme"><strong>nlme</strong></a> package provides
 functions <code>lme()</code> and <code>nlme()</code>
 <a name="index-lme"></a>
 <a name="index-nlme"></a>
@@ -5979,12 +5999,12 @@ with code for projection pursuit regression.
 fitting regression models in a way resistant to the influence of extreme
 outliers in the data.  Function <code>lqs</code>
 <a name="index-lqs"></a>
-in the recommended package <a href="http://CRAN.R-project.org/package=MASS"><strong>MASS</strong></a> provides state-of-art algorithms
+in the recommended package <a href="https://CRAN.R-project.org/package=MASS"><strong>MASS</strong></a> provides state-of-art algorithms
 for highly-resistant fits.  Less resistant but statistically more
 efficient methods are available in packages, for example function
 <code>rlm</code>
 <a name="index-rlm"></a>
-in package <a href="http://CRAN.R-project.org/package=MASS"><strong>MASS</strong></a>.
+in package <a href="https://CRAN.R-project.org/package=MASS"><strong>MASS</strong></a>.
 
 </li><li> <a name="index-Additive-models"></a>
 <strong>Additive models.</strong> This technique aims to construct a regression
@@ -5993,13 +6013,13 @@ usually one for each determining variable.  Functions <code>avas</code> and
 <code>ace</code>
 <a name="index-avas"></a>
 <a name="index-ace"></a>
-in package <a href="http://CRAN.R-project.org/package=acepack"><strong>acepack</strong></a> and functions <code>bruto</code> and <code>mars</code>
+in package <a href="https://CRAN.R-project.org/package=acepack"><strong>acepack</strong></a> and functions <code>bruto</code> and <code>mars</code>
 <a name="index-bruto"></a>
 <a name="index-mars"></a>
-in package <a href="http://CRAN.R-project.org/package=mda"><strong>mda</strong></a> provide some examples of these techniques in
+in package <a href="https://CRAN.R-project.org/package=mda"><strong>mda</strong></a> provide some examples of these techniques in
 user-contributed packages to R.  An extension is <strong>Generalized
-Additive Models</strong>, implemented in user-contributed packages <a href="http://CRAN.R-project.org/package=gam"><strong>gam</strong></a> and
-<a href="http://CRAN.R-project.org/package=mgcv"><strong>mgcv</strong></a>.
+Additive Models</strong>, implemented in user-contributed packages <a href="https://CRAN.R-project.org/package=gam"><strong>gam</strong></a> and
+<a href="https://CRAN.R-project.org/package=mgcv"><strong>mgcv</strong></a>.
 
 </li><li> <a name="index-Tree_002dbased-models"></a>
 <strong>Tree-based models.</strong> Rather than seek an explicit global linear
@@ -6018,7 +6038,7 @@ are well adapted to displaying the results of a tree-based model fit in
 a graphical way.
 </p>
 <p>Tree models are available in R <em>via</em> the user-contributed
-packages <a href="http://CRAN.R-project.org/package=rpart"><strong>rpart</strong></a> and <a href="http://CRAN.R-project.org/package=tree"><strong>tree</strong></a>.
+packages <a href="https://CRAN.R-project.org/package=rpart"><strong>rpart</strong></a> and <a href="https://CRAN.R-project.org/package=tree"><strong>tree</strong></a>.
 </p>
 </li></ul>
 
@@ -6043,7 +6063,7 @@ is also easy because at startup time R initiates a graphics
 the display of interactive graphics.  Although this is done
 automatically, it may useful to know that the command used is
 <code>X11()</code> under UNIX, <code>windows()</code> under Windows and
-<code>quartz()</code> under OS X.  A new device can always be opened by
+<code>quartz()</code> under macOS.  A new device can always be opened by
 <code>dev.new()</code>.
 </p>
 <p>Once the device driver is running, R plotting commands can be used to
@@ -6068,10 +6088,10 @@ can be manipulated to customize your plots.
 <p>This manual only describes what are known as &lsquo;base&rsquo; graphics.  A
 separate graphics sub-system in package <strong>grid</strong> coexists with base &ndash;
 it is more powerful but harder to use.  There is a recommended package
-<a href="http://CRAN.R-project.org/package=lattice"><strong>lattice</strong></a> which builds on <strong>grid</strong> and provides ways to produce
+<a href="https://CRAN.R-project.org/package=lattice"><strong>lattice</strong></a> which builds on <strong>grid</strong> and provides ways to produce
 multi-panel plots akin to those in the <em>Trellis</em> system in S.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#High_002dlevel-plotting-commands" accesskey="1">High-level plotting commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Low_002dlevel-plotting-commands" accesskey="2">Low-level plotting commands</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -6103,7 +6123,7 @@ axes, labels and titles are automatically generated (unless you request
 otherwise.) High-level plotting commands always start a new plot,
 erasing the current plot if necessary.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#The-plot_0028_0029-function" accesskey="1">The plot() function</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Displaying-multivariate-data" accesskey="2">Displaying multivariate data</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -6484,7 +6504,7 @@ sufficient to supply a single argument being a list with elements named
 valid input.  In this way functions such as <code>locator()</code> (see below)
 may be used to specify positions on a plot interactively.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Mathematical-annotation" accesskey="1">Mathematical annotation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Hershey-vector-fonts" accesskey="2">Hershey vector fonts</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -6649,7 +6669,7 @@ initialized.  Graphics parameters can be set in two ways: either
 permanently, affecting all graphics functions which access the current
 device; or temporarily, affecting only a single graphics function call.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#The-par_0028_0029-function" accesskey="1">The par() function</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Arguments-to-graphics-functions" accesskey="2">Arguments to graphics functions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -6771,7 +6791,7 @@ setting the parameter.
 <p>Note that <code>axes</code> is <strong>not</strong> a graphics parameter but an
 argument to a few <code>plot</code> methods: see <code>xaxt</code> and <code>yaxt</code>.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Graphical-elements" accesskey="1">Graphical elements</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Axes-and-tick-marks" accesskey="2">Axes and tick marks</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -7063,7 +7083,7 @@ however, so you must create them explicitly using <code>oma</code> or
 </p>
 <p>More complicated arrangements of multiple figures can be produced by the
 <code>split.screen()</code> and <code>layout()</code> functions, as well as by the
-<strong>grid</strong> and <a href="http://CRAN.R-project.org/package=lattice"><strong>lattice</strong></a> packages.
+<strong>grid</strong> and <a href="https://CRAN.R-project.org/package=lattice"><strong>lattice</strong></a> packages.
 </p>
 <hr>
 <a name="Device-drivers"></a>
@@ -7104,7 +7124,7 @@ PostScript format.  Some commonly-used device drivers are:
 </p></dd>
 <dt><code>quartz()</code></dt>
 <dd><a name="index-quartz"></a>
-<p>For use on OS X
+<p>For use on macOS
 </p></dd>
 <dt><code>postscript()</code></dt>
 <dd><a name="index-postscript"></a>
@@ -7138,7 +7158,7 @@ of hardcopy devices this ensures that every page is completed and has
 been sent to the printer.  (This will happen automatically at the normal
 end of a session.)
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#PostScript-diagrams-for-typeset-documents" accesskey="1">PostScript diagrams for typeset documents</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Multiple-graphics-devices" accesskey="2">Multiple graphics devices</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -7214,7 +7234,7 @@ meanings are as follows:
 <dd><p>[Windows]
 </p></dd>
 <dt><code>quartz()</code></dt>
-<dd><p>[OS X]
+<dd><p>[macOS]
 </p></dd>
 <dt><code>postscript()</code></dt>
 <dt><code>pdf()</code></dt>
@@ -7291,10 +7311,10 @@ available from
 <p><a href="http://www.ggobi.org/">http://www.ggobi.org/</a>
 </p></blockquote>
 
-<p>and these can be accessed from R via the package <a href="http://CRAN.R-project.org/package=rggobi"><strong>rggobi</strong></a>, described at
+<p>and these can be accessed from R via the package <a href="https://CRAN.R-project.org/package=rggobi"><strong>rggobi</strong></a>, described at
 <a href="http://www.ggobi.org/rggobi">http://www.ggobi.org/rggobi</a>.
 </p>
-<p>Also, package <a href="http://CRAN.R-project.org/package=rgl"><strong>rgl</strong></a> provides ways to interact with 3D plots, for example
+<p>Also, package <a href="https://CRAN.R-project.org/package=rgl"><strong>rgl</strong></a> provides ways to interact with 3D plots, for example
 of surfaces.
 </p>
 <hr>
@@ -7322,7 +7342,7 @@ from a user&rsquo;s point of view.
 <pre class="example">&gt; library()
 </pre></div>
 
-<p>with no arguments.  To load a particular package (e.g., the <a href="http://CRAN.R-project.org/package=boot"><strong>boot</strong></a>
+<p>with no arguments.  To load a particular package (e.g., the <a href="https://CRAN.R-project.org/package=boot"><strong>boot</strong></a>
 package containing functions from Davison &amp; Hinkley (1997)), use a
 command like
 </p>
@@ -7332,7 +7352,7 @@ command like
 
 <p>Users connected to the Internet can use the <code>install.packages()</code>
 and <code>update.packages()</code> functions (available through the
-<code>Packages</code> menu in the Windows and OS X GUIs, see <a href="R-admin.html#Installing-packages">Installing
+<code>Packages</code> menu in the Windows and macOS GUIs, see <a href="R-admin.html#Installing-packages">Installing
 packages</a> in <cite>R Installation and Administration</cite>) to install
 and update packages.
 </p>
@@ -7361,7 +7381,7 @@ use
 <p>to start the <acronym>HTML</acronym> help system, and then navigate to the package
 listing in the <code>Reference</code> section.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Standard-packages" accesskey="1">Standard packages</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Contributed-packages-and-CRAN" accesskey="2">Contributed packages and CRAN</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -7402,9 +7422,9 @@ statistical methods, others give access to data or hardware, and others
 are designed to complement textbooks.  Some (the <em>recommended</em>
 packages) are distributed with every binary distribution of R.  Most
 are available for download from <acronym>CRAN</acronym>
-(<a href="http://CRAN.R-project.org/">http://CRAN.R-project.org/</a> and its mirrors) and other
-repositories such as Bioconductor (<a href="http://www.bioconductor.org/">http://www.bioconductor.org/</a>)
-and Omegahat (<a href="http://www.omegahat.org/">http://www.omegahat.org/</a>).  The <em>R FAQ</em>
+(<a href="https://CRAN.R-project.org/">https://CRAN.R-project.org/</a> and its mirrors) and other
+repositories such as Bioconductor (<a href="https://www.bioconductor.org/">https://www.bioconductor.org/</a>).
+and Omegahat (<a href="http://www.omegahat.net/">http://www.omegahat.net/</a>).  The <em>R FAQ</em>
 contains a list of CRAN packages current at the time of release, but the
 collection of available packages changes very frequently.
 </p>
@@ -7420,12 +7440,11 @@ Previous: <a href="#Contributed-packages-and-CRAN" accesskey="p" rel="prev">Cont
 <a name="index-_003a_003a"></a>
 <a name="index-_003a_003a_003a"></a>
 
-<p>All packages have <em>namespaces</em>, and have since R 2.14.0.
-Namespaces do three things: they allow the package writer to hide
-functions and data that are meant only for internal use, they prevent
-functions from breaking when a user (or other package writer) picks a
-name that clashes with one in the package, and they provide a way to
-refer to an object within a particular package.
+<p>Packages have <em>namespaces</em>, which do three things: they allow the
+package writer to hide functions and data that are meant only for
+internal use, they prevent functions from breaking when a user (or other
+package writer) picks a name that clashes with one in the package, and
+they provide a way to refer to an object within a particular package.
 </p>
 <p>For example, <code>t()</code> is the transpose function in R, but users
 might define their own function named <code>t</code>.  Namespaces prevent
@@ -7467,7 +7486,7 @@ ability is much used by R itself, for example to install packages.
 considerable effort has gone into make the scripting facilities as
 platform-independent as is feasible.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Files-and-directories" accesskey="1">Files and directories</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Filepaths" accesskey="2">Filepaths</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -7491,7 +7510,7 @@ Next: <a href="#Filepaths" accesskey="n" rel="next">Filepaths</a>, Previous: <a 
 pointers to some of the more commonly used ones.
 </p>
 <p>To create an (empty) file or directory, use <code>file.create</code> or
-<code>create.dir</code>.  (These are the analogues of the POSIX utilities
+<code>dir.create</code>.  (These are the analogues of the POSIX utilities
 <code>touch</code> and <code>mkdir</code>.)  For temporary files and
 directories in the R session directory see <code>tempfile</code>.
 </p>
@@ -7505,7 +7524,7 @@ expression: to select by wildcards use <code>Sys.glob</code>.
 <p>Many types of information on a filepath (including for example if it is
 a file or directory) can be found by <code>file.info</code>.
 </p>
-<p>There are several ways to find out if a file &lsquo;exists&rsquo; (and file can
+<p>There are several ways to find out if a file &lsquo;exists&rsquo; (a file can
 exist on the filesystem and not be visible to the current user).
 There are functions <code>file.exists</code>, <code>file.access</code> and
 <code>file_test</code> with various versions of this test: <code>file_test</code> is
@@ -7522,7 +7541,7 @@ package: <code>tk_choose.files</code> and <code>tk_choose.dir</code>.
 </p>
 <p>Functions <code>file.show</code> and <code>file.edit</code> will display and edit
 one or more files in a way appropriate to the R port, using the
-facilities of a console (such as RGui on Windows or R.app on OS X) if
+facilities of a console (such as RGui on Windows or R.app on macOS) if
 one is in use.
 </p>
 <p>There is some support for <em>links</em> in the filesystem: see functions
@@ -7550,7 +7569,7 @@ other OSes may be less than completely compliant.
 <ul>
 <li> POSIX filesystems are case-sensitive, so <samp>foo.png</samp> and
 <samp>Foo.PNG</samp> are different files.  However, the defaults on Windows
-and OS X are to be case-insensitive, and FAT filesystems (commonly used
+and macOS are to be case-insensitive, and FAT filesystems (commonly used
 on removable storage) are not normally case-sensitive (and all filepaths
 may be mapped to lower case).
 
@@ -7598,7 +7617,7 @@ is sometimes useful for exporting names from R.
 </p>
 <p>File <em>permissions</em> are a related topic.  R has support for the
 POSIX concepts of read/write/execute permission for owner/group/all but
-this may be only partially supported on the filesystem (so for example
+this may be only partially supported on the filesystem, so for example
 on Windows only read-only files (for the account running the R
 session) are recognized.  Access Control Lists (ACLs) are employed on
 several filesystems, but do not have an agreed standard and R has no
@@ -7656,8 +7675,8 @@ available.  These generally achieve higher rates of compression
 decompression and much slower compression.
 </p>
 <p>There is some confusion between <code>xz</code> and <code>lzma</code>
-compression (see <a href="http://en.wikipedia.org/wiki/Xz">http://en.wikipedia.org/wiki/Xz</a> and
-<a href="http://en.wikipedia.org/wiki/LZMA">http://en.wikipedia.org/wiki/LZMA</a>): R can read files
+compression (see <a href="https://en.wikipedia.org/wiki/Xz">https://en.wikipedia.org/wiki/Xz</a> and
+<a href="https://en.wikipedia.org/wiki/LZMA">https://en.wikipedia.org/wiki/LZMA</a>): R can read files
 compressed by most versions of either.
 </p>
 <p>File archives are single files which contain a collection of files, the
@@ -7952,15 +7971,15 @@ Next: <a href="#The-command_002dline-editor" accesskey="n" rel="next">The comman
 <a name="Invoking-R-1"></a>
 <h2 class="appendix">Appendix B Invoking R</h2>
 
-<p>Users of R on Windows or OS X should read the OS-specific section
+<p>Users of R on Windows or macOS should read the OS-specific section
 first, but command-line use is also supported.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Invoking-R-from-the-command-line" accesskey="1">Invoking R from the command line</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Invoking-R-under-Windows" accesskey="2">Invoking R under Windows</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#Invoking-R-under-OS-X" accesskey="3">Invoking R under OS X</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="#Invoking-R-under-macOS" accesskey="3">Invoking R under macOS</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Scripting-with-R" accesskey="4">Scripting with R</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
@@ -8352,7 +8371,7 @@ appropriate interpreter (if available) is called to run it.
 <a name="Invoking-R-under-Windows"></a>
 <div class="header">
 <p>
-Next: <a href="#Invoking-R-under-OS-X" accesskey="n" rel="next">Invoking R under OS X</a>, Previous: <a href="#Invoking-R-from-the-command-line" accesskey="p" rel="prev">Invoking R from the command line</a>, Up: <a href="#Invoking-R" accesskey="u" rel="up">Invoking R</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="#Invoking-R-under-macOS" accesskey="n" rel="next">Invoking R under macOS</a>, Previous: <a href="#Invoking-R-from-the-command-line" accesskey="p" rel="prev">Invoking R from the command line</a>, Up: <a href="#Invoking-R" accesskey="u" rel="up">Invoking R</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Invoking-R-under-Windows-1"></a>
 <h3 class="appendixsec">B.2 Invoking R under Windows</h3>
@@ -8370,8 +8389,8 @@ this is not always defined on Windows.  If the environment variable
 environment variable <code>HOME</code> is defined, that gives the home
 directory.  After those two user-controllable settings, R tries to
 find system defined home directories.  It first tries to use the
-Windows &quot;personal&quot; directory (typically <code>C:\Documents and
-Settings\username\My Documents</code> in Windows XP).  If that fails, and
+Windows &quot;personal&quot; directory (typically <code>My Documents</code> in 
+recent versions of Windows).  If that fails, and
 environment variables <code>HOMEDRIVE</code> and <code>HOMEPATH</code> are defined
 (and they normally are) these define the home directory.  Failing all
 those, the home directory is taken to be the starting directory.
@@ -8426,21 +8445,21 @@ this does not help with the MiKTeX build of LaTeX, but
 <code>R CMD texify mydoc</code> will work in that case.)
 </p>
 <hr>
-<a name="Invoking-R-under-OS-X"></a>
+<a name="Invoking-R-under-macOS"></a>
 <div class="header">
 <p>
 Next: <a href="#Scripting-with-R" accesskey="n" rel="next">Scripting with R</a>, Previous: <a href="#Invoking-R-under-Windows" accesskey="p" rel="prev">Invoking R under Windows</a>, Up: <a href="#Invoking-R" accesskey="u" rel="up">Invoking R</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
-<a name="Invoking-R-under-OS-X-1"></a>
-<h3 class="appendixsec">B.3 Invoking R under OS X</h3>
+<a name="Invoking-R-under-macOS-1"></a>
+<h3 class="appendixsec">B.3 Invoking R under macOS</h3>
 
-<p>There are two ways to run R under OS X.  Within a <code>Terminal.app</code>
+<p>There are two ways to run R under macOS.  Within a <code>Terminal.app</code>
 window by invoking <code>R</code>, the methods described in the first
 subsection apply.  There is also console-based GUI (<code>R.app</code>) that by
 default is installed in the <code>Applications</code> folder on your
-system.  It is a standard double-clickable OS X application.
+system.  It is a standard double-clickable macOS application.
 </p>
-<p>The startup procedure under OS X is very similar to that under UNIX, but
+<p>The startup procedure under macOS is very similar to that under UNIX, but
 <code>R.app</code> does not make use of command-line arguments.  The &lsquo;home
 directory&rsquo; is the one inside the R.framework, but the startup and
 current working directory are set as the user&rsquo;s home directory unless a
@@ -8451,7 +8470,7 @@ accessible from within the GUI.
 <a name="Scripting-with-R"></a>
 <div class="header">
 <p>
-Previous: <a href="#Invoking-R-under-OS-X" accesskey="p" rel="prev">Invoking R under OS X</a>, Up: <a href="#Invoking-R" accesskey="u" rel="up">Invoking R</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
+Previous: <a href="#Invoking-R-under-macOS" accesskey="p" rel="prev">Invoking R under macOS</a>, Up: <a href="#Invoking-R" accesskey="u" rel="up">Invoking R</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="#Function-and-variable-index" title="Index" rel="index">Index</a>]</p>
 </div>
 <a name="Scripting-with-R-1"></a>
 <h3 class="appendixsec">B.4 Scripting with R</h3>
@@ -8508,7 +8527,7 @@ the usual way for the shell running the command.
 </p>
 <p>If you do not wish to hardcode the path to <code>Rscript</code> but have it
 in your path (which is normally the case for an installed R except on
-Windows, but e.g. OS X users may need to add <samp>/usr/local/bin</samp>
+Windows, but e.g. macOS users may need to add <samp>/usr/local/bin</samp>
 to their path), use
 </p>
 <div class="example">
@@ -8572,7 +8591,7 @@ Next: <a href="#Function-and-variable-index" accesskey="n" rel="next">Function a
 time R is configured for compilation under UNIX, an inbuilt command
 line editor allowing recall, editing and re-submission of prior commands
 is used.  Note that other versions of <strong>readline</strong> exist and may be
-used by the inbuilt command line editor: this used to happen on OS X.
+used by the inbuilt command line editor: this used to happen on macOS.
 </p>
 <p>It can be disabled (useful for usage with <acronym>ESS</acronym> <a name="DOCF27" href="#FOOT27"><sup>27</sup></a>) using the startup option
 <samp>--no-readline</samp>.
@@ -8582,21 +8601,24 @@ used by the inbuilt command line editor: this used to happen on OS X.
 file <samp>README.Rterm</samp> for command-line editing under
 <code>Rterm.exe</code>.
 </p>
-<p>When using R with <strong>readline</strong> capabilities, the functions
-described below are available, as well as others (probably) documented
-in <code>man readline</code> or <code>info readline</code> on your system.
+<p>When using R with GNU<a name="DOCF28" href="#FOOT28"><sup>28</sup></a> <strong>readline</strong> capabilities, the functions described
+below are available, as well as others (probably) documented in
+<code>man readline</code> or <code>info readline</code> on your system.
 </p>
 <p>Many of these use either Control or Meta characters.  Control
 characters, such as <kbd>Control-m</kbd>, are obtained by holding the
 <tt class="key">CTRL</tt> down while you press the <tt class="key">m</tt> key, and are written as
 <kbd>C-m</kbd> below.  Meta characters, such as <kbd>Meta-b</kbd>, are typed by
-holding down <tt class="key">META</tt><a name="DOCF28" href="#FOOT28"><sup>28</sup></a> and pressing <tt class="key">b</tt>, and written as <kbd>M-b</kbd>
+holding down <tt class="key">META</tt><a name="DOCF29" href="#FOOT29"><sup>29</sup></a> and pressing <tt class="key">b</tt>, and written as <kbd>M-b</kbd>
 in the following.  If your terminal does not have a <tt class="key">META</tt> key
 enabled, you can still type Meta characters using two-character
 sequences starting with <kbd>ESC</kbd>.  Thus, to enter <kbd>M-b</kbd>, you could
 type <tt class="key">ESC</tt><tt class="key">b</tt>.  The <kbd>ESC</kbd> character sequences are also
 allowed on terminals with real Meta keys.  Note that case is significant
 for Meta characters.
+</p>
+<p>Some but not all versions<a name="DOCF30" href="#FOOT30"><sup>30</sup></a> of <strong>readline</strong>
+will recognize resizing of the terminal window so this is best avoided.
 </p>
 <a name="Editing-actions"></a>
 <h3 class="appendixsection">C.2 Editing actions</h3>
@@ -8632,7 +8654,8 @@ re-submitted.
 <dd><p>Go to the next command (forwards in the history).
 </p></dd>
 <dt><kbd>C-r <var>text</var></kbd></dt>
-<dd><p>Find the last command with the <var>text</var> string in it.
+<dd><p>Find the last command with the <var>text</var> string in it.  This can be
+cancelled by <code>C-g</code> (and on some versions of R by <code>C-c</code>).
 </p></dd>
 </dl>
 
@@ -8726,7 +8749,7 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <a name="Function-and-variable-index-1"></a>
 <h2 class="appendix">Appendix D Function and variable index</h2>
 
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index_vr_symbol-1"><b>!</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index_vr_symbol-1"><b>!</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Function-and-variable-index_vr_symbol-2"><b>%</b></a>
  &nbsp; 
@@ -8808,7 +8831,7 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <a class="summary-letter" href="#Function-and-variable-index_vr_letter-X"><b>X</b></a>
  &nbsp; 
 </td></tr></table>
-<table class="index-vr" border="0">
+<table summary="" class="index-vr" border="0">
 <tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Function-and-variable-index_vr_symbol-1">!</a></th><td></td><td></td></tr>
@@ -9111,7 +9134,7 @@ Next: <a href="#Concept-index" accesskey="n" rel="next">Concept index</a>, Previ
 <tr><td></td><td valign="top"><a href="#index-X11"><code>X11</code></a>:</td><td>&nbsp;</td><td valign="top"><a href="#Device-drivers">Device drivers</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 </table>
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index_vr_symbol-1"><b>!</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index_vr_symbol-1"><b>!</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Function-and-variable-index_vr_symbol-2"><b>%</b></a>
  &nbsp; 
@@ -9203,7 +9226,7 @@ Next: <a href="#References" accesskey="n" rel="next">References</a>, Previous: <
 <a name="Concept-index-1"></a>
 <h2 class="appendix">Appendix E Concept index</h2>
 
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-index_cp_letter-A"><b>A</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-index_cp_letter-A"><b>A</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-index_cp_letter-B"><b>B</b></a>
  &nbsp; 
@@ -9246,7 +9269,7 @@ Next: <a href="#References" accesskey="n" rel="next">References</a>, Previous: <
 <a class="summary-letter" href="#Concept-index_cp_letter-W"><b>W</b></a>
  &nbsp; 
 </td></tr></table>
-<table class="index-cp" border="0">
+<table summary="" class="index-cp" border="0">
 <tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
 <tr><td colspan="4"> <hr></td></tr>
 <tr><th><a name="Concept-index_cp_letter-A">A</a></th><td></td><td></td></tr>
@@ -9374,7 +9397,7 @@ Next: <a href="#References" accesskey="n" rel="next">References</a>, Previous: <
 <tr><td></td><td valign="top"><a href="#index-Writing-functions">Writing functions</a>:</td><td>&nbsp;</td><td valign="top"><a href="#Writing-your-own-functions">Writing your own functions</a></td></tr>
 <tr><td colspan="4"> <hr></td></tr>
 </table>
-<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-index_cp_letter-A"><b>A</b></a>
+<table summary=""><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Concept-index_cp_letter-A"><b>A</b></a>
  &nbsp; 
 <a class="summary-letter" href="#Concept-index_cp_letter-B"><b>B</b></a>
  &nbsp; 
@@ -9462,7 +9485,7 @@ Second edition.  Duxbury Press, Belmont, CA.
 
 <h3><a name="FOOT1" href="#DOCF1">(1)</a></h3>
 <p>ACM Software Systems award, 1998:
-<a href="http://awards.acm.org/award_winners/chambers_6640862.cfm">http://awards.acm.org/award_winners/chambers_6640862.cfm</a>.</p>
+<a href="https://awards.acm.org/award_winners/chambers_6640862.cfm">https://awards.acm.org/award_winners/chambers_6640862.cfm</a>.</p>
 <h3><a name="FOOT2" href="#DOCF2">(2)</a></h3>
 <p>For portable R code (including that to
 be used in R packages) only A&ndash;Za&ndash;z0&ndash;9 should be used.</p>
@@ -9479,7 +9502,7 @@ of the next line.</p>
 <h3><a name="FOOT6" href="#DOCF6">(6)</a></h3>
 <p>The leading &ldquo;dot&rdquo; in
 this file name makes it <em>invisible</em> in normal file listings in
-UNIX, and in default GUI file listings on OS X and Windows.</p>
+UNIX, and in default GUI file listings on macOS and Windows.</p>
 <h3><a name="FOOT7" href="#DOCF7">(7)</a></h3>
 <p>With other than vector types of argument,
 such as <code>list</code> mode arguments, the action of <code>c()</code> is rather
@@ -9489,8 +9512,8 @@ different.  See <a href="#Concatenating-lists">Concatenating lists</a>.</p>
 <code>.Last.value</code> before any other statements are executed.</p>
 <h3><a name="FOOT9" href="#DOCF9">(9)</a></h3>
 <p><code>paste(..., collapse=<var>ss</var>)</code> joins the
-arguments into a single character string putting <var>ss</var> in between.
-There are more tools for character manipulation, see the help
+arguments into a single character string putting <var>ss</var> in between, e.g.,
+<code>ss &lt;- &quot;|&quot;</code>.  There are more tools for character manipulation, see the help
 for <code>sub</code> and <code>substring</code>.</p>
 <h3><a name="FOOT10" href="#DOCF10">(10)</a></h3>
 <p><em>numeric</em> mode is
@@ -9544,7 +9567,7 @@ for <code>autoload</code> for the meaning of the second term.</p>
 <code>sed</code> or<code>awk</code> can be used.</p>
 <h3><a name="FOOT21" href="#DOCF21">(21)</a></h3>
 <p>to be
-discussed later, or use <code>xyplot</code> from package <a href="http://CRAN.R-project.org/package=lattice"><strong>lattice</strong></a>.</p>
+discussed later, or use <code>xyplot</code> from package <a href="https://CRAN.R-project.org/package=lattice"><strong>lattice</strong></a>.</p>
 <h3><a name="FOOT22" href="#DOCF22">(22)</a></h3>
 <p>See also the methods described in <a href="#Statistical-models-in-R">Statistical models in R</a></p>
 <h3><a name="FOOT23" href="#DOCF23">(23)</a></h3>
@@ -9565,11 +9588,19 @@ on most 64-bit versions of Windows.</p>
 <h3><a name="FOOT27" href="#DOCF27">(27)</a></h3>
 <p>The
 &lsquo;Emacs Speaks Statistics&rsquo; package; see the <acronym>URL</acronym>
-<a href="http://ESS.R-project.org">http://ESS.R-project.org</a></p>
+<a href="https://ESS.R-project.org/">https://ESS.R-project.org/</a></p>
 <h3><a name="FOOT28" href="#DOCF28">(28)</a></h3>
+<p>It is possible to build R using an
+emulation of GNU <strong>readline</strong>, such as one based on NetBSD&rsquo;s
+<strong>editline</strong>, it which case only a subset of the capabilities may
+be provided.</p>
+<h3><a name="FOOT29" href="#DOCF29">(29)</a></h3>
 <p>On a PC keyboard this is usually the
 Alt key, occasionally the &lsquo;Windows&rsquo; key.  On a Mac keyboard normally no
 meta key is available.</p>
+<h3><a name="FOOT30" href="#DOCF30">(30)</a></h3>
+<p>In particular, not versions 6.3 or
+later: this is worked around as from R 3.4.0.</p>
 </div>
 <hr>
 

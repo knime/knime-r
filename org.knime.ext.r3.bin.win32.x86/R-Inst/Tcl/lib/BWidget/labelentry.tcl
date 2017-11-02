@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------
 #  labelentry.tcl
 #  This file is part of Unifix BWidget Toolkit
-#  $Id: labelentry.tcl,v 1.6 2003/10/20 21:23:52 damonc Exp $
+#  $Id: labelentry.tcl,v 1.6.2.1 2011/02/14 16:56:09 oehhar Exp $
 # ------------------------------------------------------------------------------
 #  Index of commands:
 #     - LabelEntry::create
@@ -24,9 +24,6 @@ namespace eval LabelEntry {
 
     Widget::addmap LabelEntry "" :cmd {-background {}}
 
-    Widget::syncoptions LabelEntry Entry .e {-text {}}
-    Widget::syncoptions LabelEntry LabelFrame .labf {-label -text -underline {}}
-
     ::bind BwLabelEntry <FocusIn> [list focus %W.labf]
     ::bind BwLabelEntry <Destroy> [list LabelEntry::_destroy %W]
 }
@@ -39,8 +36,13 @@ proc LabelEntry::create { path args } {
     array set maps [list LabelEntry {} :cmd {} .labf {} .e {}]
     array set maps [Widget::parseArgs LabelEntry $args]
 
-    eval [list frame $path] $maps(:cmd) -class LabelEntry \
-	    -relief flat -bd 0 -highlightthickness 0 -takefocus 0
+    if {[Widget::theme]} {
+        eval [list ttk::frame $path] $maps(:cmd) -class LabelEntry \
+            -takefocus 0
+    }  else  {
+        eval [list frame $path] $maps(:cmd) -class LabelEntry \
+            -relief flat -bd 0 -highlightthickness 0 -takefocus 0
+    }
     Widget::initFromODB LabelEntry $path $maps(LabelEntry)
 	
     set labf  [eval [list LabelFrame::create $path.labf] $maps(.labf) \
@@ -53,7 +55,10 @@ proc LabelEntry::create { path args } {
 
     bindtags $path [list $path BwLabelEntry [winfo toplevel $path] all]
 
-    return [Widget::create LabelEntry $path]
+    Widget::create LabelEntry $path
+    proc ::$path { cmd args } \
+    	"return \[LabelEntry::_path_command [list $path] \$cmd \$args\]"
+    return $path
 }
 
 

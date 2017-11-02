@@ -119,7 +119,7 @@ CHANGES IN R VERSION 2.14.1:
   BUG FIXES:
 
     * The fix for PR#14543 caused stack problems with outputting large
-      R objects (e.g. data frames of 25,000 items).  (PR#14698)
+      R objects (e.g., data frames of 25,000 items).  (PR#14698)
 
     * In a double-byte locale (Chinese, Japanese, Korean), grep() and
       friends might have used byte-wise matching of strings in the
@@ -275,7 +275,7 @@ CHANGES IN R VERSION 2.13.1:
     * Shutting down the R session cleaned up the temporary directory
       before closing all graphics devices.  On Windows this
       necessitated changing the working directory, so some devices
-      (e.g. tiff()) could write files in the wrong directory if closed
+      (e.g., tiff()) could write files in the wrong directory if closed
       during shutdown.  The order has been reversed.
 
 CHANGES IN R VERSION 2.13.0:
@@ -639,7 +639,7 @@ CHANGES IN R VERSION 2.10.1 patched:
 
   BUG FIXES:
 
-    * Some of the MDI toolbar buttons (e.g. "Open Script") did not
+    * Some of the MDI toolbar buttons (e.g., "Open Script") did not
       return the focus to the console if the user cancelled the action.
 
     * system() (and hence shell()) did not always set the standard file

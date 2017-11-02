@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------
 #  scrollframe.tcl
 #  This file is part of Unifix BWidget Toolkit
-#  $Id: scrollframe.tcl,v 1.7 2005/07/28 00:40:42 hobbs Exp $
+#  $Id: scrollframe.tcl,v 1.11 2009/07/17 15:29:51 oehhar Exp $
 # ----------------------------------------------------------------------------
 #  Index of commands:
 #     - ScrollableFrame::create
@@ -17,27 +17,45 @@
 namespace eval ScrollableFrame {
     Widget::define ScrollableFrame scrollframe
 
-    Widget::declare ScrollableFrame {
-        {-background        TkResource "" 0 frame}
-        {-width             Int        0  0 {}}
-        {-height            Int        0  0 {}}
-        {-areawidth         Int        0  0 {}}
-        {-areaheight        Int        0  0 {}}
-        {-constrainedwidth  Boolean    0 0}
-        {-constrainedheight Boolean    0 0}
-        {-xscrollcommand    TkResource "" 0 canvas}
-        {-yscrollcommand    TkResource "" 0 canvas}
-        {-xscrollincrement  TkResource "" 0 canvas}
-        {-yscrollincrement  TkResource "" 0 canvas}
-        {-bg                Synonym    -background}
+    # If themed, there is no background and -bg option
+    if {[Widget::theme]} {
+        Widget::declare ScrollableFrame {
+            {-width             Int        0  0 {}}
+            {-height            Int        0  0 {}}
+            {-areawidth         Int        0  0 {}}
+            {-areaheight        Int        0  0 {}}
+            {-constrainedwidth  Boolean    0 0}
+            {-constrainedheight Boolean    0 0}
+            {-xscrollcommand    TkResource "" 0 canvas}
+            {-yscrollcommand    TkResource "" 0 canvas}
+            {-xscrollincrement  TkResource "" 0 canvas}
+            {-yscrollincrement  TkResource "" 0 canvas}
+        }
+    } else {
+        Widget::declare ScrollableFrame {
+            {-background        TkResource "" 0 frame}
+            {-width             Int        0  0 {}}
+            {-height            Int        0  0 {}}
+            {-areawidth         Int        0  0 {}}
+            {-areaheight        Int        0  0 {}}
+            {-constrainedwidth  Boolean    0 0}
+            {-constrainedheight Boolean    0 0}
+            {-xscrollcommand    TkResource "" 0 canvas}
+            {-yscrollcommand    TkResource "" 0 canvas}
+            {-xscrollincrement  TkResource "" 0 canvas}
+            {-yscrollincrement  TkResource "" 0 canvas}
+            {-bg                Synonym    -background}
+        }
     }
 
     Widget::addmap ScrollableFrame "" :cmd {
-        -background {} -width {} -height {} 
+        -width {} -height {} 
         -xscrollcommand {} -yscrollcommand {}
         -xscrollincrement {} -yscrollincrement {}
     }
-    Widget::addmap ScrollableFrame "" .frame {-background {}}
+    if { ! [Widget::theme]} {
+        Widget::addmap ScrollableFrame "" .frame {-background {}}
+    }
 
     variable _widget
 
@@ -58,18 +76,30 @@ proc ScrollableFrame::create { path args } {
     if {[Widget::theme]} {
 	set frame [eval [list ttk::frame $path.frame] \
 		       [Widget::subcget $path .frame]]
+	set bg [ttk::style lookup TFrame -background]
     } else {
 	set frame [eval [list frame $path.frame] \
 		       [Widget::subcget $path .frame] \
 		       -highlightthickness 0 -borderwidth 0 -relief flat]
+	set bg [$frame cget -background]
     }
+    # Give canvas frame (or theme) background
+    $canvas configure -background $bg
 
     $canvas create window 0 0 -anchor nw -window $frame -tags win \
         -width  [Widget::cget $path -areawidth] \
         -height [Widget::cget $path -areaheight]
 
     bind $frame <Configure> \
-	    [list ScrollableFrame::_frameConfigure $canvas $frame %w %h]
+        [list ScrollableFrame::_frameConfigure $canvas]
+    # add <unmap> binding: <configure> is not called when frame
+    # becomes so small that it suddenly falls outside of currently visible area.
+    # but now we need to add a <map> binding too
+    bind $frame <Map> \
+        [list ScrollableFrame::_frameConfigure $canvas]
+    bind $frame <Unmap> \
+        [list ScrollableFrame::_frameConfigure $canvas 1]
+
     bindtags $path [list $path BwScrollableFrame [winfo toplevel $path] all]
 
     return [Widget::create ScrollableFrame $path]
@@ -86,19 +116,19 @@ proc ScrollableFrame::configure { path args } {
     set modcw [Widget::hasChanged $path -constrainedwidth cw]
     set modw  [Widget::hasChanged $path -areawidth w]
     if { $modcw || (!$cw && $modw) } {
-        if { $cw } {
-            set w [winfo width $path]
-        }
         set upd 1
+    }
+    if { $cw } {
+        set w [winfo width $path]
     }
 
     set modch [Widget::hasChanged $path -constrainedheight ch]
     set modh  [Widget::hasChanged $path -areaheight h]
     if { $modch || (!$ch && $modh) } {
-        if { $ch } {
-            set h [winfo height $path]
-        }
         set upd 1
+    }
+    if { $ch } {
+        set h [winfo height $path]
     }
 
     if { $upd } {
@@ -207,20 +237,26 @@ proc ScrollableFrame::_resize { path } {
     if { [Widget::getoption $path -constrainedheight] } {
         $path:cmd itemconfigure win -height [winfo height $path]
     }
+    # scollregion must also be reset when canvas size changes
+    _frameConfigure $path
 }
 
 
 # ----------------------------------------------------------------------------
 #  Command ScrollableFrame::_frameConfigure
 # ----------------------------------------------------------------------------
-proc ScrollableFrame::_frameConfigure {canvas frame width height} {
+proc ScrollableFrame::_max {a b} {return [expr {$a <= $b ? $b : $a}]}
+proc ScrollableFrame::_frameConfigure {canvas {unmap 0}} {
     # This ensures that we don't get funny scrollability in the frame
     # when it is smaller than the canvas space
-    if {[winfo height $frame] < [winfo height $canvas]} {
-	set height [winfo height $canvas]
-    }
-    if {[winfo width $frame] < [winfo width $canvas]} {
-	set width [winfo width $canvas]
-    }
+    # use [winfo] to get height & width of frame
+
+    # [winfo] doesn't work for unmapped frame
+    set frameh [expr {$unmap ? 0 : [winfo height $canvas.frame]}]
+    set framew [expr {$unmap ? 0 : [winfo width  $canvas.frame]}]
+
+    set height [_max $frameh [winfo height $canvas]]
+    set width  [_max $framew [winfo width  $canvas]]
+
     $canvas:cmd configure -scrollregion [list 0 0 $width $height]
 }

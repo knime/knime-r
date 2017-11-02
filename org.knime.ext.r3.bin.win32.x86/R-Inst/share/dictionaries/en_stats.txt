@@ -3,6 +3,7 @@ accessor
 accessors
 ACF
 Affymetrix
+agglomerative
 AIC
 Akaike
 Akaike's
@@ -40,7 +41,6 @@ biplots
 bitwise
 Bivariate
 bivariate
-bivariate
 biweight
 boolean
 boxplot
@@ -67,6 +67,7 @@ cophenetic
 correlation
 covariables
 covariance
+covariances
 Covariate
 covariate
 Covariates
@@ -104,6 +105,9 @@ deviances
 DIC
 dichotomized
 differenced
+differentiable
+differentially
+dimensionality
 dimnames
 discretization
 discretize
@@ -142,7 +146,10 @@ GARCH
 gaussian
 Gaussians
 GCV
+genomic
+genotype
 genotyped
+genotypes
 genotypic
 genotyping
 Ghostscript
@@ -181,6 +188,7 @@ informations
 inline
 internet
 interquartile
+invariance
 invertibility
 IQR
 IRT
@@ -227,6 +235,7 @@ MCMC
 MDI
 medoids
 metacharacters
+metadata
 microarray
 microarrays
 microsatellite
@@ -255,6 +264,8 @@ NAs
 NCBI
 nonlinearity
 nonnegative
+Nonparametric
+nonparametric
 numerics
 OECD
 ok
@@ -263,6 +274,8 @@ Omegahat
 one's
 online
 orthogonalized
+outlier
+outliers
 overdispersed
 overdispersion
 overfitting
@@ -271,10 +284,13 @@ overplotting
 pairlist
 pairlists
 parallelized
+parameterisation
 parameterization
 parameterizations
 parameterize
 parameterized
+parametrization
+parametrizations
 pathname
 patient's
 PCA
@@ -284,11 +300,15 @@ PDF
 pdf
 periodogram
 phenotypic
+Phylogenetic
+phylogenetic
+piecewise
 PLS
 plugin
 PNG
 pointsize
 pointwise
+polytomous
 POSIX
 PostScript
 precalculated
@@ -339,6 +359,7 @@ semiparametric
 shapefile
 sib
 significand
+skewness
 Smirnov
 smoothers
 SNP
@@ -355,6 +376,7 @@ sqrt
 startup
 stationarity
 stepsize
+stepwise
 stochastically
 studentized
 subdirectories

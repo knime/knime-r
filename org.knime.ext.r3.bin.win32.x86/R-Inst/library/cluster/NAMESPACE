@@ -15,18 +15,21 @@ export(bannerplot, ellipsoidhull, ellipsoidPoints,
 export(predict.ellipsoid)
 export(coef.hclust, coefHier)
 
-importFrom("stats", as.hclust, as.dist, as.dendrogram, coef,
-           mahalanobis, princomp, setNames, weighted.mean)
+importFrom("stats", as.hclust, as.dist, as.dendrogram, cmdscale,
+           coef, cov.wt, dist,
+           mahalanobis, median, na.omit,
+           princomp, runif, setNames, var, weighted.mean)
 ## For now, we keep *depending* on 'stats' just so that
 ## S3 methods *.hclust, *.dist etc will work
 
 importFrom("graphics", ## probably needs more:
-           plot, barplot, text, axis, title, par)
+           arrows, axis, barplot,
+           identify, mtext,
+           par, plot, points, polygon, rect, segments, text, title)
 
 importFrom("grDevices", dev.interactive)
 
-## still always depend on 'utils', for many examples etc:
-importFrom("utils", str)
+importFrom("utils", menu, str)
 
 ###---- Methods ---- all documented but not exported
 
@@ -52,7 +55,8 @@ S3method(plot, partition)
 S3method(plot, silhouette)
 S3method(plot, clusGap)
 
-#exported: S3method(predict, ellipsoid)
+#exported:
+S3method(predict, ellipsoid)
 
 S3method(print, agnes)
 S3method(print, clara)

@@ -1,1 +1,0 @@
-export(area.map, identify.map, map, map.axes, map.cities, map.scale, map.text, map.where, map.wrap, match.map, smooth.map, .map.range)

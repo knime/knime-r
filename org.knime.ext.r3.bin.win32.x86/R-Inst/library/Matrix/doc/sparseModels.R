@@ -1,4 +1,5 @@
 ### R code from vignette source 'sparseModels.Rnw'
+### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: preliminaries

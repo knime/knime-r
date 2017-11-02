@@ -145,11 +145,16 @@ proc ButtonBox::insert { path idx args } {
 	set args [array get flags]
     }
 
-    eval [list Button::create $but \
-	      -background [Widget::getoption $path -background]\
-	      -padx       [Widget::getoption $path -padx] \
-	      -pady       [Widget::getoption $path -pady]] \
-        $args [list -default $style]
+    if { $::Widget::_theme} {
+        eval [list Button::create $but] \
+            $args [list -default $style]
+	} else {
+        eval [list Button::create $but \
+    	      -background [Widget::getoption $path -background]\
+	          -padx       [Widget::getoption $path -padx] \
+	          -pady       [Widget::getoption $path -pady]] \
+            $args [list -default $style]
+	}
 
     # ericm@scriptics.com:  set up tags, just like the menu items
     foreach tag $tags {
@@ -335,6 +340,11 @@ proc ButtonBox::_redraw { path } {
     upvar 0  $path data
     Widget::getVariable $path buttons
 
+    # For tk >= 8.4, -uniform gridding option is used.
+    # Otherwise, there is the constraint, that button size may not change after
+    # creation.
+    set uniformAvailable [expr {0 <= [package vcompare [info patchlevel] 8.4.0]}]
+
     ## We re-grid the buttons from left-to-right.  As we go through
     ## each button, we check its spacing and which direction the
     ## spacing applies to.  Once spacing has been applied to an index,
@@ -350,12 +360,16 @@ proc ButtonBox::_redraw { path } {
         if {[string equal [Widget::getoption $path -orient] "horizontal"]} {
             grid $but -column $idx -row 0 -sticky nsew
             if { [Widget::getoption $path -homogeneous] } {
-                set req [winfo reqwidth $but]
-                if { $req > $data(max) } {
-                    grid columnconfigure $path [expr {2*$i}] -minsize $req
-                    set data(max) $req
+                if {$uniformAvailable} {
+                    grid columnconfigure $path $idx -uniform koen -weight 1
+                } else {
+                    set req [winfo reqwidth $but]
+                    if { $req > $data(max) } {
+                        grid columnconfigure $path [expr {2*$i}] -minsize $req
+                        set data(max) $req
+                    }
+                    grid columnconfigure $path $idx -weight 1
                 }
-                grid columnconfigure $path $idx -weight 1
             } else {
                 grid columnconfigure $path $idx -weight 0
             }
@@ -380,13 +394,15 @@ proc ButtonBox::_redraw { path } {
         incr idx 2
     }
 
-    # Now that the maximum size has been calculated, go back through
-    # and correctly set the size for homogeneous horizontal buttons.
-    if { [string equal [Widget::getoption $path -orient] "horizontal"] && [Widget::getoption $path -homogeneous] } {
-        set idx 0
-        foreach i $data(buttons) {
-            grid columnconfigure $path $idx -minsize $data(max)
-            incr idx 2
+    if {!$uniformAvailable} {
+        # Now that the maximum size has been calculated, go back through
+        # and correctly set the size for homogeneous horizontal buttons.
+        if { [string equal [Widget::getoption $path -orient] "horizontal"] && [Widget::getoption $path -homogeneous] } {
+            set idx 0
+            foreach i $data(buttons) {
+                grid columnconfigure $path $idx -minsize $data(max)
+                incr idx 2
+            }
         }
     }
 }

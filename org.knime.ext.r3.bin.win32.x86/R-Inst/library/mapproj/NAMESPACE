@@ -1,6 +1,0 @@
-useDynLib("mapproj")
-
-importFrom(maps, map.wrap)
-
-export(map.grid, mapproject, .Last.projection)
-

@@ -29,7 +29,22 @@ proc Widget::_opt_defaults {{prio widgetDefault}} {
 }
 Widget::_opt_defaults
 
-option read [file join $::BWIDGET::LIBRARY "lang" "en.rc"]
+# Try to load lang file corresponding to current msgcat locale
+proc Widget::_opt_lang {} {
+    if {0 != [llength [info commands ::msgcat::mcpreferences]]} {
+        set langs [::msgcat::mcpreferences]
+    }
+    lappend langs en
+
+    foreach lang $langs {
+        set l [file join $::BWIDGET::LIBRARY "lang" "$lang.rc"]
+        if {(![catch {file readable $l} result]) && ($result)} {
+            option read $l
+            break
+        }
+    }
+}
+Widget::_opt_lang
 
 ## Add a TraverseIn binding to standard Tk widgets to handle some of
 ## the BWidget-specific things we do.

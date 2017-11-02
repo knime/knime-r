@@ -56,7 +56,8 @@ datasets-package        The R Datasets Package
 discoveries             Yearly Numbers of Important Discoveries
 esoph                   Smoking, Alcohol and (O)esophageal Cancer
 euro                    Conversion Rates of Euro Currencies
-eurodist                Distances Between European Cities
+eurodist                Distances Between European Cities and Between
+                        US Cities
 faithful                Old Faithful Geyser Data
 freeny                  Freeny's Revenue Data
 infert                  Infertility after Spontaneous and Induced
@@ -85,7 +86,7 @@ rock                    Measurements on Petroleum Rock Samples
 sleep                   Student's Sleep Data
 stackloss               Brownlee's Stack Loss Plant Data
 state                   US State Facts and Figures
-sunspot.month           Monthly Sunspot Data, 1749-1997
+sunspot.month           Monthly Sunspot Data, from 1749 to "Present"
 sunspot.year            Yearly Sunspot Data, 1700-1988
 sunspots                Monthly Sunspot Numbers, 1749-1983
 swiss                   Swiss Fertility and Socioeconomic Indicators

@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------
 #  widget.tcl
 #  This file is part of Unifix BWidget Toolkit
-#  $Id: widget.tcl,v 1.29 2005/07/28 00:40:42 hobbs Exp $
+#  $Id: widget.tcl,v 1.35.2.1 2011/11/14 14:33:29 oehhar Exp $
 # ----------------------------------------------------------------------------
 #  Index of commands:
 #     - Widget::tkinclude
@@ -137,7 +137,6 @@ proc Widget::tkinclude { class tkwidget subpath args } {
     upvar 0 ${class}::map$subpath submap
     upvar 0 ${class}::optionExports exports
 
-    set foo [$tkwidget ".ericFoo###"]
     # create resources informations from tk widget resources
     foreach optdesc [_get_tkwidget_options $tkwidget] {
         set option [lindex $optdesc 0]
@@ -175,7 +174,7 @@ proc Widget::tkinclude { class tkwidget subpath args } {
 			[list TkResource $value $ro [list $tkwidget $realopt]]
 
 		# Add an option database entry for this option
-		set optionDbName ".[lindex [_configure_option $option ""] 0]"
+		set optionDbName ".[lindex [_configure_option $realopt ""] 0]"
 		if { ![string equal $subpath ":cmd"] } {
 		    set optionDbName "$subpath$optionDbName"
 		}
@@ -189,7 +188,6 @@ proc Widget::tkinclude { class tkwidget subpath args } {
             }
         }
     }
-    ::destroy $foo
 }
 
 
@@ -374,24 +372,24 @@ proc Widget::declare { class optlist } {
         # retreive default value for TkResource
         if { [string equal $type "TkResource"] } {
             set tkwidget [lindex $arg 0]
-	    set foo [$tkwidget ".ericFoo##"]
             set realopt  [lindex $arg 1]
             if { ![string length $realopt] } {
                 set realopt $option
             }
             set tkoptions [_get_tkwidget_options $tkwidget]
+            set ind [lsearch $tkoptions [list $realopt *]]
+            set optdesc [lindex $tkoptions $ind];
+            set tkoptions [_get_tkwidget_options $tkwidget]
             if { ![string length $value] } {
                 # We initialize default value
-		set ind [lsearch $tkoptions [list $realopt *]]
-                set value [lindex [lindex $tkoptions $ind] end]
+                set value [lindex $optdesc end]
             }
 	    set optionDbName ".[lindex [_configure_option $option ""] 0]"
 	    option add *${class}${optionDbName} $value widgetDefault
 	    set exports($option) $optionDbName
             set classopt($option) [list TkResource $value $ro \
 		    [list $tkwidget $realopt]]
-	    set optionClass($option) [lindex [$foo configure $realopt] 1]
-	    ::destroy $foo
+	    set optionClass($option) [lindex $optdesc 1]
             continue
         }
 
@@ -404,29 +402,86 @@ proc Widget::declare { class optlist } {
 }
 
 
+# ----------------------------------------------------------------------------
+#  Command Widget::define
+#  	Declares a new class and loads its dependencies.
+#
+# Arguments:
+#	class		megawidget class
+#	filename	file where the class resides
+#	options    	The following options are supported:
+#			-classonly	Prevents megawidget setup: creation of
+#					megawidget alias, binding of the
+#					<Destroy> event and stubbing of the
+#					'use' procedure.
+#			-namespace ns	Indicate the namespace where the
+#					megawidget's procedures reside. Defaults
+#					to ::${class}.
+#	dependencies   	classes the class being defined depends on.
+#
+# ----------------------------------------------------------------------------
 proc Widget::define { class filename args } {
     variable ::BWidget::use
+    set classonly 0;
+    set ns ::${class};
+    for {set i 0; set n [llength $args]} {$i < $n} {incr i} {
+	set option [lindex $args $i];
+	switch -- $option {
+	    -classonly {
+		set classonly 1;
+	    }
+	    -namespace {
+		incr i;
+		set ns [lindex $args $i];
+	    }
+	    default {
+		# stop processing options
+		break;
+	    }
+	}
+    }
+    set args [lrange $args $i end]
+
     set use($class)      $args
     set use($class,file) $filename
+    set use($class,namespace) $ns;
     lappend use(classes) $class
 
-    if {[set x [lsearch -exact $args "-classonly"]] > -1} {
-	set args [lreplace $args $x $x]
-    } else {
-	interp alias {} ::${class} {} ${class}::create
-	proc ::${class}::use {} {}
+    # Make sure the class description namespace exists.
+    namespace eval $class {}
+    # Make sure the megawidget namespace exists.
+    namespace eval $ns {}
 
+    if {!$classonly} {
+	interp alias {} ${ns} {} ${ns}::create
+	proc ${ns}::use {} {}
 	bind $class <Destroy> [list Widget::destroy %W]
     }
 
-    foreach class $args { ${class}::use }
+    foreach dep $args {
+	if {![info exists use(${dep},namespace)]} {
+	    # Lazy-loaded modules are not yet loaded (actually that seems to be
+	    # the whole point of this 'use' mechanism.) so they have not configured
+	    # a namespace. Use namespace=class convention. Note that the class MUST
+	    # not be prefixed by ::.
+	    ${dep}::use;
+	} else {
+	    $use(${dep},namespace)::use;
+	}
+    }
 }
 
 
 proc Widget::create { class path {rename 1} } {
     if {$rename} { rename $path ::$path:cmd }
+
+    variable ::BWidget::use;
+    set ns [expr {[info exists use(${class},namespace)]
+		  ? $use(${class},namespace)
+		  : $class}];
+
     proc ::$path { cmd args } \
-    	[subst {return \[eval \[linsert \$args 0 ${class}::\$cmd [list $path]\]\]}]
+	[subst {return \[eval \[linsert \$args 0 ${ns}::\$cmd [list $path]\]\]}]
     return $path
 }
 
@@ -437,7 +492,6 @@ proc Widget::create { class path {rename 1} } {
 proc Widget::addmap { class subclass subpath options } {
     upvar 0 ${class}::opt classopt
     upvar 0 ${class}::optionExports exports
-    upvar 0 ${class}::optionClass optionClass
     upvar 0 ${class}::map classmap
     upvar 0 ${class}::map$subpath submap
 
@@ -461,25 +515,12 @@ proc Widget::addmap { class subclass subpath options } {
 
 
 # ----------------------------------------------------------------------------
-#  Command Widget::syncoptions
-# ----------------------------------------------------------------------------
-proc Widget::syncoptions { class subclass subpath options } {
-    upvar 0 ${class}::sync classync
-
-    foreach {option realopt} $options {
-        if { ![string length $realopt] } {
-            set realopt $option
-        }
-        set classync($option) [list $subpath $subclass $realopt]
-    }
-}
-
-
-# ----------------------------------------------------------------------------
 #  Command Widget::init
 # ----------------------------------------------------------------------------
 proc Widget::init { class path options } {
     variable _inuse
+    variable _class
+    variable _optiontype
 
     upvar 0 ${class}::opt classopt
     upvar 0 ${class}::$path:opt  pathopt
@@ -532,7 +573,7 @@ proc Widget::init { class path options } {
     if {![info exists _inuse($class)]} { set _inuse($class) 0 }
     incr _inuse($class)
 
-    set Widget::_class($path) $class
+    set _class($path) $class
     foreach {option value} $options {
         if { ![info exists classopt($option)] } {
             unset pathopt
@@ -546,7 +587,17 @@ proc Widget::init { class path options } {
             set optdesc $classopt($option)
             set type    [lindex $optdesc 0]
         }
-        set pathopt($option) [$Widget::_optiontype($type) $option $value [lindex $optdesc 3]]
+        # this may fail if a wrong enum element was used
+        if {[catch {
+             $_optiontype($type) $option $value [lindex $optdesc 3]
+        } msg]} {
+            if {[info exists pathopt]} {
+                unset pathopt
+            }
+            unset pathmod
+            return -code error $msg
+        }
+        set pathopt($option) $msg
 	set pathinit($option) $pathopt($option)
     }
 }
@@ -569,6 +620,8 @@ proc Widget::init { class path options } {
 #  Command Widget::copyinit
 # ----------------------------------------------------------------------------
 proc Widget::copyinit { class templatepath path options } {
+    variable _class
+    variable _optiontype
     upvar 0 ${class}::opt classopt \
 	    ${class}::$path:opt	 pathopt \
 	    ${class}::$path:mod	 pathmod \
@@ -589,7 +642,7 @@ proc Widget::copyinit { class templatepath path options } {
     array set pathopt  [array get templatepathopt]
     array set pathinit [array get templatepathinit]
 
-    set Widget::_class($path) $class
+    set _class($path) $class
     foreach {option value} $options {
 	if { ![info exists classopt($option)] } {
 	    unset pathopt
@@ -603,7 +656,7 @@ proc Widget::copyinit { class templatepath path options } {
 	    set optdesc $classopt($option)
 	    set type	[lindex $optdesc 0]
 	}
-	set pathopt($option) [$Widget::_optiontype($type) $option $value [lindex $optdesc 3]]
+	set pathopt($option) [$_optiontype($type) $option $value [lindex $optdesc 3]]
 	set pathinit($option) $pathopt($option)
     }
 }
@@ -625,6 +678,7 @@ proc Widget::copyinit { class templatepath path options } {
 #		the command line in which that portion is interested.
 
 proc Widget::parseArgs {class options} {
+    variable _optiontype
     upvar 0 ${class}::opt classopt
     upvar 0 ${class}::map classmap
     
@@ -643,7 +697,7 @@ proc Widget::parseArgs {class options} {
 	    # Make sure that the widget used for this TkResource exists
 	    Widget::_get_tkwidget_options [lindex [lindex $optdesc 3] 0]
 	}
-	set val [$Widget::_optiontype($type) $option $val [lindex $optdesc 3]]
+	set val [$_optiontype($type) $option $val [lindex $optdesc 3]]
 		
 	if { [info exists classmap($option)] } {
 	    foreach {subpath subclass realopt} $classmap($option) {
@@ -757,8 +811,15 @@ proc Widget::destroy { path } {
 
     if {![string equal [info commands $path] ""]} { rename $path "" }
 
-    ## Unset any variables used in this widget.
-    foreach var [info vars ::${class}::$path:*] { unset $var }
+    # Unset any variables used in this widget.
+    # Guard, as some internal classes (Bitmap, LabelEntry, ListBox::Item,
+    # NoteBook::Page, PanedWindow::Pane, ScrollableFrame, ScrollableFrame,
+    # ScrollableFrame, Tree::Node, Wizard::Branch, Wizard::Step, Wizard::Widget)
+    # are declared but not defined.
+    if {[info exists ::BWidget::use(${class},namespace)]} {
+	set ns $::BWidget::use(${class},namespace);
+	foreach var [info vars ${ns}::${path}:*] { unset $var }
+    }
 
     unset _class($path)
 }
@@ -801,11 +862,24 @@ proc Widget::configure { path options } {
             if { [info exists classmap($option)] } {
 		set window [_get_window $class $window]
                 foreach {subpath subclass realopt} $classmap($option) {
-                    if { [string length $subclass] } {
-			set curval [${subclass}::cget $window$subpath $realopt]
-                        ${subclass}::configure $window$subpath $realopt $newval
+                    # Interpretation of special pointers:
+                    # | subclass | subpath | widget           | path           | class   |
+                    # +----------+---------+------------------+----------------+-context-+
+                    # | :cmd     | :cmd    | herited widget   | window:cmd     |window   |
+                    # | :cmd     | *       | subwidget        | window.subpath | window  |
+                    # | ""       | :cmd    | herited widget   | window:cmd     | window  |
+                    # | ""       | *       | own              | window         | window  |
+                    # | *        | :cmd    | own              | window         | current |
+                    # | *        | *       | subwidget        | window.subpath | current |
+                    if { [string length $subclass] && ! [string equal $subclass ":cmd"] } {
+                        if { [string equal $subpath ":cmd"] } {
+                            set subpath ""
+                        }
+                        set ns $::BWidget::use(${subclass},namespace);
+                        set curval [${ns}::cget $window$subpath $realopt]
+                        ${ns}::configure $window$subpath $realopt $newval
                     } else {
-			set curval [$window$subpath cget $realopt]
+                        set curval [$window$subpath cget $realopt]
                         $window$subpath configure $realopt $newval
                     }
                 }
@@ -825,11 +899,12 @@ proc Widget::configure { path options } {
 #  Command Widget::cget
 # ----------------------------------------------------------------------------
 proc Widget::cget { path option } {
-    if { ![info exists ::Widget::_class($path)] } {
+    variable _class
+    if { ![info exists _class($path)] } {
         return -code error "unknown widget $path"
     }
 
-    set class $::Widget::_class($path)
+    set class $_class($path)
     if { ![info exists ${class}::opt($option)] } {
         return -code error "unknown option \"$option\""
     }
@@ -854,7 +929,8 @@ proc Widget::cget { path option } {
 #  Command Widget::subcget
 # ----------------------------------------------------------------------------
 proc Widget::subcget { path subwidget } {
-    set class $::Widget::_class($path)
+    variable _class
+    set class $_class($path)
     upvar 0 ${class}::$path:opt pathopt
     upvar 0 ${class}::map$subwidget submap
     upvar 0 ${class}::$path:init pathinit
@@ -873,8 +949,9 @@ proc Widget::subcget { path subwidget } {
 #  Command Widget::hasChanged
 # ----------------------------------------------------------------------------
 proc Widget::hasChanged { path option pvalue } {
-    upvar    $pvalue value
-    set class $::Widget::_class($path)
+    variable _class
+    upvar $pvalue value
+    set class $_class($path)
     upvar 0 ${class}::$path:mod pathmod
 
     set value   [Widget::cget $path $option]
@@ -885,7 +962,8 @@ proc Widget::hasChanged { path option pvalue } {
 }
 
 proc Widget::hasChangedX { path option args } {
-    set class $::Widget::_class($path)
+    variable _class
+    set class $_class($path)
     upvar 0 ${class}::$path:mod pathmod
 
     set result  $pathmod($option)
@@ -938,7 +1016,8 @@ proc Widget::getoption { path option } {
 #	value	option value.
 
 proc Widget::getMegawidgetOption {path option} {
-    set class $::Widget::_class($path)
+    variable _class
+    set class $_class($path)
     upvar 0 ${class}::${path}:opt pathopt
     set pathopt($option)
 }
@@ -958,7 +1037,8 @@ proc Widget::getMegawidgetOption {path option} {
 #	value	option value.
 
 proc Widget::setMegawidgetOption {path option value} {
-    set class $::Widget::_class($path)
+    variable _class
+    set class $_class($path)
     upvar 0 ${class}::${path}:opt pathopt
     set pathopt($option) $value
 }
@@ -1067,6 +1147,19 @@ proc Widget::_configure_option { option altopt } {
     return [list $optdb $optclass]
 }
 
+# ----------------------------------------------------------------------------
+#  Command Widget::_make_tk_widget_name
+# ----------------------------------------------------------------------------
+# Before, the widget meta name was build as: ".#BWidget.#$tkwidget"
+# This does not work for ttk widgets, as they have an "::" in their name.
+# Thus replace any "::" by "__" will do the job.
+proc Widget::_make_tk_widget_name { tkwidget } {
+    set pos 0
+    for {set pos 0} {0 <= [set pos [string first "::" $tkwidget $pos]]} {incr pos} {
+	set tkwidget [string range $tkwidget 0 [expr {$pos-1}]]__[string range $tkwidget [expr {$pos+2}] end]
+    }
+    return ".#BWidget.#$tkwidget"
+}
 
 # ----------------------------------------------------------------------------
 #  Command Widget::_get_tkwidget_options
@@ -1076,7 +1169,7 @@ proc Widget::_get_tkwidget_options { tkwidget } {
     variable _optiondb
     variable _optionclass
 
-    set widget ".#BWidget.#$tkwidget"
+    set widget [_make_tk_widget_name $tkwidget]
     # encapsulation frame to not pollute '.' childspace
     if {![winfo exists ".#BWidget"]} { frame ".#BWidget" }
     if { ![winfo exists $widget] || ![info exists _tk_widget($tkwidget)] } {
@@ -1129,7 +1222,7 @@ proc Widget::_test_tkresource { option value arg } {
 #    set tkwidget [lindex $arg 0]
 #    set realopt  [lindex $arg 1]
     foreach {tkwidget realopt} $arg break
-    set path     ".#BWidget.#$tkwidget"
+    set path     [_make_tk_widget_name $tkwidget]
     set old      [$path cget $realopt]
     $path configure $realopt $value
     set res      [$path cget $realopt]
@@ -1402,7 +1495,7 @@ proc Widget::focusOK { w } {
 	} elseif {$value == 1} {
 	    return [winfo viewable $w]
 	} else {
-	    set value [uplevel \#0 $value $w]
+	    set value [uplevel \#0 [list $value $w]]
             if {$value != ""} {
 		return $value
 	    }
@@ -1442,12 +1535,69 @@ proc Widget::traverseTo { w } {
     event generate $w <<TraverseIn>>
 }
 
+# Widget::which --
+#
+#	Retrieve a fully qualified variable name for the specified option or
+#	widget variable.
+#
+#	If the option is not one for which a variable exists, throw an error
+#	(ie, those options that map directly to widget options).
+#
+#	For widget variables, return the fully qualified name even if the
+#	variable had not been previously set, in order to allow adding variable
+#	traces prior to their creation.
+#
+# Arguments:
+#	path	megawidget to get an option var for.
+#	type	either -option or -variable.
+#	name    name of the option or widget variable.
+#
+# Results:
+#	Fully qualified name of the variable for the option or the widget
+#	variable.
+#
+proc Widget::which {path args} {
+    switch -- [llength $args] {
+	1 {
+	    set type -option;
+	    set name [lindex $args 0];
+	}
+	2 {
+	    set type [lindex $args 0];
+	    set name [lindex $args 1];
+	}
+	default {
+	    return -code error "incorrect number of arguments";
+	}
+    }
+
+    variable _class;
+    set class $_class($path);
+
+    switch -- $type {
+	-option {
+	    upvar 0 ${class}::$path:opt pathopt;
+
+	    if { ![info exists pathopt($name)] } {
+		error "unable to find variable for option \"$name\"";
+	    }
+
+	    return ::Widget::${class}::${path}:opt(${name});
+	}
+	-variable {
+	    set ns $::BWidget::use(${class},namespace);
+	    return ${ns}::${path}:${name};
+	}
+    }
+}
+
 
 # Widget::varForOption --
 #
 #	Retrieve a fully qualified variable name for the option specified.
 #	If the option is not one for which a variable exists, throw an error 
-#	(ie, those options that map directly to widget options).
+#	(ie, those options that map directly to widget options) Superseded by
+#       widget::which.
 #
 # Arguments:
 #	path	megawidget to get an option var for.
@@ -1457,17 +1607,7 @@ proc Widget::traverseTo { w } {
 #	varname	name of the variable, fully qualified, suitable for tracing.
 
 proc Widget::varForOption {path option} {
-    variable _class
-    variable _optiontype
-
-    set class $_class($path)
-    upvar 0 ${class}::$path:opt pathopt
-
-    if { ![info exists pathopt($option)] } {
-	error "unable to find variable for option \"$option\""
-    }
-    set varname "::Widget::${class}::$path:opt($option)"
-    return $varname
+    return [::Widget::which $path -option $option];
 }
 
 # Widget::getVariable --
@@ -1484,8 +1624,9 @@ proc Widget::varForOption {path option} {
 proc Widget::getVariable { path varName {newVarName ""} } {
     variable _class
     set class $_class($path)
+    set ns $::BWidget::use(${class},namespace);
     if {![string length $newVarName]} { set newVarName $varName }
-    uplevel 1 [list upvar \#0 ${class}::$path:$varName $newVarName]
+    uplevel 1 [list ::upvar \#0 ${ns}::${path}:${varName} $newVarName]
 }
 
 # Widget::options --
@@ -1564,7 +1705,8 @@ proc Widget::theme {{bool {}}} {
     variable _theme
     if {[llength [info level 0]] == 2} {
 	# set theme-ability
-	if {[catch {package require tile 0.6}]
+	if {[catch {package require Tk 8.5a6}]
+	    && [catch {package require tile 0.6}]
 	    && [catch {package require tile 1}]} {
 	    return -code error "BWidget's theming requires tile 0.6+"
 	} else {

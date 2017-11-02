@@ -1,5 +1,0 @@
-abbreviate              Abbreviate function for item labels in
-                        transactions, itemMatrix and rules
-plot                    Plot method to visualize association rules and
-                        itemsets
-saveAsGraph             Save rules or itemsets as a graph description.

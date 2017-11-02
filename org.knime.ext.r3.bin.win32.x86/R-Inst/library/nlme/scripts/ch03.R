@@ -112,5 +112,5 @@ Quinidine[Quinidine[["Subject"]] == 4, ]
 # cleanup
 
 proc.time()
-q("no")
+
 

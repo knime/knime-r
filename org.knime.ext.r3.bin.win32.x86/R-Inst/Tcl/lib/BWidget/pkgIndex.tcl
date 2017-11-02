@@ -1,7 +1,7 @@
 if {[catch {package require Tcl}]} return
-package ifneeded BWidget 1.8 "\
+package ifneeded BWidget 1.9.9 "\
     package require Tk 8.1.1;\
-    [list tclPkgSetup $dir BWidget 1.8 {
+    [list tclPkgSetup $dir BWidget 1.9.9 {
 {arrow.tcl source {ArrowButton ArrowButton::create ArrowButton::use}}
 {labelframe.tcl source {LabelFrame LabelFrame::create LabelFrame::use}}
 {labelentry.tcl source {LabelEntry LabelEntry::create LabelEntry::use}}
@@ -35,7 +35,6 @@ package ifneeded BWidget 1.8 "\
 {dialog.tcl source {Dialog Dialog::create Dialog::use}}
 {messagedlg.tcl source {MessageDlg MessageDlg::create MessageDlg::use}}
 {font.tcl source {SelectFont SelectFont::create SelectFont::use SelectFont::loadfont}}
-{widgetdoc.tcl source {Widget::generate-doc Widget::generate-widget-doc}}
 {wizard.tcl source {Wizard Wizard::create Wizard::use SimpleWizard ClassicWizard}}
 {xpm2image.tcl source {xpm-to-image}}
 }]; \

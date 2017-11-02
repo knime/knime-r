@@ -62,8 +62,8 @@ This command adds dynamic help to the given <i>widget</i>.
 
     <DL><DT><A NAME="add-item"><B>-item</B></A></DT>
     <DD>
-	If specified, refers to an item or tag on a canvas to bind the
-	help to instead of a widget.
+    	If specified, refers to an item or tag on a canvas widget or to a tag
+        in a text widget to bind the help to instead of to a widget.
     </DD>
     </DL>
 
@@ -201,9 +201,12 @@ Depending on <I>type</I>, other options must be provided.
 </TABLE>
 <BR>If one of the option is missing or is empty, help is removed for this widget.
 <p>
-If <i>tagOrItem</i> is specified, then <i>path</i> is a canvas, and
-<i>tagOrItem</i> is the name of a tag or item on the canvas to which
-the help will be bound.
+
+If <i>tagOrItem</i> is specified, then <i>path</i> is a canvas or a text. In
+case of a canvas, <i>tagOrItem</i> is the name of a tag or item on the canvas
+to which the help will be bound. In case of a text, <i>tagOrItem</i> is the
+name of a tag on the text to which the help will be bound.
+
 </p>
 For type other than <I>balloon</I>, <I>varName</I> is typically a variable
 linked to a label.

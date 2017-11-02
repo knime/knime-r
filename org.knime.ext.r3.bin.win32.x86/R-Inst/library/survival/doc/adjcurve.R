@@ -1,21 +1,25 @@
 ### R code from vignette source 'adjcurve.Rnw'
 
 ###################################################
-### code chunk number 1: adjcurve.Rnw:20-24
+### code chunk number 1: init
 ###################################################
 options(continue="  ", width=60)
 options(SweaveHooks=list(fig=function() par(mar=c(4.1, 4.1, .3, 1.1))))
 pdf.options(pointsize=8) #text in graph about the same as regular text
-if (!exists('coxph')) library(survival)
+require(survival, quietly=TRUE)
+fdata <- flchain[flchain$futime > 7,]
+fdata$age2 <- cut(fdata$age, c(0,54, 59,64, 69,74,79, 89, 110),
+                  labels = c(paste(c(50,55,60,65,70,75,80),
+                                 c(54,59,64,69,74,79,89), sep='-'), "90+"))
 
 
 ###################################################
-### code chunk number 2: adjcurve.Rnw:133-147
+### code chunk number 2: adjcurve.Rnw:181-195
 ###################################################
-group3 <- factor(1+ 1*(flchain$flc.grp >7) + 1*(flchain$flc.grp >9),
+group3 <- factor(1+ 1*(fdata$flc.grp >7) + 1*(fdata$flc.grp >9),
                       levels=1:3, 
                       labels=c("FLC < 3.38", "3.38 - 4.71", "FLC > 4.71"))
-age1 <- cut(flchain$age, c(49,59,69,79, 110))
+age1 <- cut(fdata$age, c(49,59,69,79, 110))
 levels(age1) <- c(paste(c(50,60,70), c(59,69,79), sep='-'), '80+')
 temp1 <- table(group3, age1)
 temp2 <- round(100* temp1/rowSums(temp1))
@@ -23,65 +27,33 @@ pfun <- function(x,y) {
     paste(ifelse(x<1000, "\\phantom{0}", ""), x, " (", 
           ifelse(y<10,   "\\phantom{0}", ""), y,  ") ", sep="")
 }
-cat(paste(c("FLC low", pfun(temp1[1,], temp2[1,])), collapse=" & "), "\\\\\n")
-cat(paste(c("FLC med", pfun(temp1[2,], temp2[2,])), collapse=" & "), "\\\\\n")
-cat(paste(c("FLC high", pfun(temp1[3,], temp2[3,])), collapse=" & "), "\n")
+cat(paste(c("FLC $<$ 3.38", pfun(temp1[1,], temp2[1,])), collapse=" & "), "\\\\\n")
+cat(paste(c("FLC 3.38--4.71", pfun(temp1[2,], temp2[2,])), collapse=" & "), "\\\\\n")
+cat(paste(c("FLC $>$ 4.71", pfun(temp1[3,], temp2[3,])), collapse=" & "), "\n")
 
 
 ###################################################
 ### code chunk number 3: flc1
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-fdata <- flchain[flchain$futime > 7,]
+fdata <- flchain[flchain$futime >=7,]
+fdata$age2 <- cut(fdata$age, c(0,54, 59,64, 69,74,79, 89, 110),
+                  labels = c(paste(c(50,55,60,65,70,75,80),
+                                 c(54,59,64,69,74,79,89), sep='-'), "90+"))
 fdata$group <- factor(1+ 1*(fdata$flc.grp >7) + 1*(fdata$flc.grp >9),
                       levels=1:3, 
                       labels=c("FLC < 3.38", "3.38 - 4.71", "FLC > 4.71"))
-fdata$age2 <- cut(fdata$age, c(49,54, 59,64, 69,74,79, 89, 110),
-                  labels = c(paste(c(50,55,60,65,70,75,80),
-                                 c(54,59,64,69,74,79,89), sep='-'), "90+"))
 		      
 sfit1 <- survfit(Surv(futime, death) ~ group, fdata)
 plot(sfit1, mark.time=F, col=c(1,2,4), lty=1, lwd=2,
      xscale=365.25, xlab="Years from Sample", 
      ylab="Survival")
-text(c(11.1, 10.5, 7.5), c(.88, .57, .4),
+text(c(11.1, 10.5, 7.5)*365.25, c(.88, .57, .4),
      c("FLC < 3.38", "3.38 - 4.71", "FLC > 4.71"), col=c(1,2,4))     
 
 
 ###################################################
-### code chunk number 4: flc2
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-temp <- with(fdata, table(group, age2, sex))
-size <- apply(temp, 2:3, min)
-
-set.seed(1978)
-select <- NULL
-dd <- dim(temp)
-for (i in 1:dd[1]) {
-    for (j in 1:dd[2]) {
-        for (k in 1:dd[3]) {
-            indx <- which(as.numeric(fdata$group)==i &
-                          as.numeric(fdata$age2) ==j &
-                          as.numeric(fdata$sex) ==k)
-            select <- c(select, sample(indx, size[j,k]))
-        }
-    }
-}
-
-data2 <- fdata[select,]
-sfit2 <- survfit(Surv(futime, death) ~ group, data2)
-plot(sfit2, mark.time=F, col=c(1,2,4), lty=1, lwd=2,
-     xscale=365.25, xlab="Years from Sample", 
-     ylab="Survival")
-lines(sfit1,  mark.time=F, col=c(1,2,4), lty=2, lwd=1,
-      xscale=365.25)
-legend(2,.4, levels(fdata$group), lty=1, col=c(1,2,4),
-               bty='n', lwd=2)
-
-
-###################################################
-### code chunk number 5: adjcurve.Rnw:244-249
+### code chunk number 4: adjcurve.Rnw:271-276
 ###################################################
 
 tab1 <- with(fdata, table(group, age2, sex))
@@ -91,7 +63,7 @@ cat("High&", paste(tab1[3,,1], collapse=" &"), "\\\\\n")
 
 
 ###################################################
-### code chunk number 6: adjcurve.Rnw:254-257
+### code chunk number 5: adjcurve.Rnw:281-284
 ###################################################
 cat("Low&", paste(tab1[1,,2], collapse=" &"), "\\\\\n")
 cat("Med&", paste(tab1[2,,2], collapse=" &"), "\\\\\n")
@@ -99,23 +71,44 @@ cat("High&", paste(tab1[3,,2], collapse=" &"), "\n")
 
 
 ###################################################
-### code chunk number 7: adjcurve.Rnw:281-292
+### code chunk number 6: flc2
 ###################################################
-tab3 <- with(fdata, table(age2, group))
-tab3 <- round(100*scale(tab3, center=F, scale=colSums(tab3)))
-tab4 <- with(data2, table(age2, group))
-tab4 <- round(100*scale(tab4, center=F, scale=colSums(tab4)))
-tab5 <- cbind(tab3[,1], tab4[,1], tab3[,2], tab4[,2], tab3[,3], tab4[,3])
-pfun <- function(x) paste(ifelse(x<10, paste("\\phantom{0}", x), x),
-                          collapse=" &")
-dtemp <- dimnames(tab5)[[1]]
-for (j in 1:7) 
-    cat(dtemp[j], " &", pfun(tab5[j,]), "\\\\\n")
-cat(dtemp[8], " & ",    pfun(tab5[8,]), "\n")
+getOption("SweaveHooks")[["fig"]]()
+temp <- with(fdata, table(group, age2, sex))
+dd <- dim(temp)
+
+# Select subjects
+set.seed(1978)
+select <- array(vector('list', length=prod(dd)), dim=dd)
+for (j in 1:dd[2]) {
+    for (k in 1:dd[3]) {
+        n <- temp[3,j,k] # how many to select
+        for (i in 1:2) {
+            indx <- which(as.numeric(fdata$group)==i &
+                          as.numeric(fdata$age2) ==j &
+                          as.numeric(fdata$sex) ==k)
+            select[i,j,k] <- list(sample(indx, n, replace=(n> temp[i,j,k])))
+        }
+        indx <- which(as.numeric(fdata$group)==3 &
+                      as.numeric(fdata$age2) ==j &
+                      as.numeric(fdata$sex) ==k)
+        select[3,j,k] <- list(indx)  #keep all the group 3 = high
+    }
+}
+
+data2 <- fdata[unlist(select),]
+sfit2 <- survfit(Surv(futime, death) ~ group, data2)
+plot(sfit2,col=c(1,2,4),  lty=1, lwd=2,
+     xscale=365.25, xlab="Years from Sample", 
+     ylab="Survival")
+lines(sfit1, col=c(1,2,4), lty=2, lwd=1,
+      xscale=365.25)
+legend(730, .4, levels(fdata$group), lty=1, col=c(1,2,4),
+               bty='n', lwd=2)
 
 
 ###################################################
-### code chunk number 8: adjcurve.Rnw:323-330
+### code chunk number 7: adjcurve.Rnw:390-396
 ###################################################
 # I can't seem to put this all into an Sexpr
 z1 <- with(fdata,table(age, sex, group))
@@ -125,15 +118,14 @@ z1b <- with(fdata, table(age>64, sex, group))
 ztemp2 <- sum(apply(z1b, 1:2, min))
 
 
-
 ###################################################
-### code chunk number 9: adjcurve.Rnw:359-360
+### code chunk number 8: adjcurve.Rnw:414-415
 ###################################################
 survdiff(Surv(futime, death) ~ group, data=data2)
 
 
 ###################################################
-### code chunk number 10: adjcurve.Rnw:393-399
+### code chunk number 9: adjcurve.Rnw:443-449
 ###################################################
 refpop <- uspop2[as.character(50:100),c("female", "male"), "2000"]
 pi.us  <- refpop/sum(refpop)
@@ -144,7 +136,7 @@ range(us.wt)
 
 
 ###################################################
-### code chunk number 11: adjcurve.Rnw:410-419
+### code chunk number 10: adjcurve.Rnw:460-469
 ###################################################
 temp <- as.numeric(cut(50:100, c(49, 54, 59, 64, 69, 74, 79, 89, 110)+.5))
 pi.us<- tapply(refpop, list(temp[row(refpop)], col(refpop)), sum)/sum(refpop)
@@ -158,7 +150,7 @@ sfit3a <-survfit(Surv(futime, death) ~ group, data=fdata, weight=uswt)
 
 
 ###################################################
-### code chunk number 12: flc3a
+### code chunk number 11: flc3a
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 tab1 <- with(fdata, table(age2, sex))/ nrow(fdata)
@@ -171,13 +163,16 @@ tab2 <- with(fdata, table(age2, sex, group))/nrow(fdata)
 tab3 <- with(fdata, table(group)) / nrow(fdata)
 
 rwt <- rep(tab1,3)/tab2 
-round(rwt[,1,], 1) #show female data
 fdata$rwt <- rwt[index]  # add per subject weights to the data set
 sfit3 <- survfit(Surv(futime, death) ~ group, data=fdata, weight=rwt)
 
+temp <- rwt[,1,]   #show female data
+temp <- temp %*% diag(1/apply(temp,2,min))
+round(temp, 1) #show female data
+
 
 ###################################################
-### code chunk number 13: flc3
+### code chunk number 12: flc3
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plot(sfit3, mark.time=F, col=c(1,2,4), lty=1, lwd=2,
@@ -187,12 +182,12 @@ lines(sfit3a,  mark.time=F, col=c(1,2,4), lty=1, lwd=1,
       xscale=365.25)
 lines(sfit1,  mark.time=F, col=c(1,2,4), lty=2, lwd=1,
       xscale=365.25)
-legend(2,.4, levels(fdata$group), lty=1, col=c(1,2,4),
+legend(730, .4, levels(fdata$group), lty=1, col=c(1,2,4),
                bty='n', lwd=2)
 
 
 ###################################################
-### code chunk number 14: adjcurve.Rnw:498-507
+### code chunk number 13: adjcurve.Rnw:553-562
 ###################################################
 id <- 1:nrow(fdata)
 cfit <- coxph(Surv(futime, death) ~ group + cluster(id), data=fdata, 
@@ -206,7 +201,7 @@ if (exists("svykm")) { #true if the survey package is loaded
 
 
 ###################################################
-### code chunk number 15: ipw
+### code chunk number 14: ipw
 ###################################################
 options(na.action="na.exclude")
 gg <- as.numeric(fdata$group)
@@ -223,7 +218,7 @@ all.equal(1/temp, fdata$rwt)
 
 
 ###################################################
-### code chunk number 16: flc4
+### code chunk number 15: flc4
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 lfit1b <-glm(I(gg==1) ~ age + sex, data=fdata,
@@ -261,7 +256,7 @@ axis(1, 1:8, levels(fdata$age2))
 
 
 ###################################################
-### code chunk number 17: adjcurve.Rnw:638-648
+### code chunk number 16: adjcurve.Rnw:694-704
 ###################################################
 # compute new weights
 wtscale <- table(fdata$group)/ tapply(fdata$rwt, fdata$group, sum)
@@ -276,19 +271,19 @@ round(c(cfit2a$rscore, cfit2b$rscore),1)
 
 
 ###################################################
-### code chunk number 18: strata
+### code chunk number 17: strata
 ###################################################
-allfit <- survfit(Surv(futime/365.25, death) ~ group + 
+allfit <- survfit(Surv(futime, death) ~ group + 
                                age2 + sex, fdata)
 temp <- summary(allfit)$table
 temp[1:6, c(1,4)] #abbrev printout to fit page
 
 
 ###################################################
-### code chunk number 19: flc5
+### code chunk number 18: flc5
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-xtime <- seq(0, 14, length=57)  #four points/year for 14 years
+xtime <- seq(0, 14, length=57)*365.25  #four points/year for 14 years
 smat <- matrix(0, nrow=57, ncol=3) # survival curves
 serr <- smat  #matrix of standard errors
 pi <- with(fdata, table(age2, sex))/nrow(fdata)  #overall dist
@@ -302,19 +297,19 @@ for (i in 1:3) {
     }
 serr <- sqrt(serr)
 
-matplot(xtime, smat, type='l', lwd=2, col=c(1,2,4), ylim=c(0,1),
-        lty=1, xlab="Years from sample", ylab="Survival")
-lines(sfit1, mark.time=F, lty=2, col=c(1,2,4), xscale=365.25)
+plot(sfit1, lty=2, col=c(1,2,4), xscale=365.25,
+     xlab="Years from sample", ylab="Survival")
+matlines(xtime, smat, type='l', lwd=2, col=c(1,2,4),lty=1)
 
 
 ###################################################
-### code chunk number 20: adjcurve.Rnw:773-774
+### code chunk number 19: adjcurve.Rnw:829-830
 ###################################################
 survdiff(Surv(futime, death) ~ group + strata(age2, sex), fdata)
 
 
 ###################################################
-### code chunk number 21: flc8
+### code chunk number 20: flc8
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 cfit4a <- coxph(Surv(futime, death) ~ age + sex + strata(group),
@@ -325,7 +320,7 @@ plot(surv4a, col=c(1,2,4), mark.time=F, xscale=365.25,
 
 
 ###################################################
-### code chunk number 22: flc6
+### code chunk number 21: flc6
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 tab4a <- with(fdata, table(age, sex))
@@ -344,12 +339,12 @@ plot(sfit4a, mark.time=F, col=c(1,2,4), lty=1, lwd=2,
      ylab="Survival")
 lines(sfit3,  mark.time=F, col=c(1,2,4), lty=2, lwd=1,
       xscale=365.25)
-legend(2,.4, c("FLC low", "FLC med", "FLC high"), lty=1, col=c(1,2,4),
+legend(730,.4, c("FLC low", "FLC med", "FLC high"), lty=1, col=c(1,2,4),
                bty='n', lwd=2)
 
 
 ###################################################
-### code chunk number 23: adjcurve.Rnw:885-892
+### code chunk number 22: adjcurve.Rnw:941-948
 ###################################################
 tfit <- survfit(cfit4a, newdata=tdata, se.fit=FALSE)
 curves <- vector('list', 3)
@@ -361,7 +356,7 @@ for (i in 1:3) {
 
 
 ###################################################
-### code chunk number 24: flc6b
+### code chunk number 23: flc6b
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 par(mfrow=c(1,2))
@@ -388,7 +383,7 @@ abline(0, 1, lty=2, col=4)
 
 
 ###################################################
-### code chunk number 25: adjcurve.Rnw:963-971
+### code chunk number 24: adjcurve.Rnw:1019-1027
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 obs <- with(fdata, tapply(death, list(age2, sex, group), sum))
@@ -402,14 +397,11 @@ round(excess, 1)
 
 
 ###################################################
-### code chunk number 26: adjcurve.Rnw:987-999
+### code chunk number 25: adjcurve.Rnw:1043-1052
 ###################################################
-cfit5a <- coxph(Surv(futime, death) ~ group:age +sex + 
-                strata(group), fdata) 
-cfit5b <- coxph(Surv(futime, death) ~ group:(age +sex) + 
-                strata(group), fdata)
-cfit5c <- coxph(Surv(futime, death) ~ group:(age *sex) + 
-                strata(group), fdata)
+cfit5a <- coxph(Surv(futime, death) ~ strata(group):age +sex, fdata)
+cfit5b <- coxph(Surv(futime, death) ~ strata(group):(age +sex), fdata)
+cfit5c <- coxph(Surv(futime, death) ~ strata(group):(age *sex), fdata)
 
 options(show.signif.stars=FALSE) # see footnote
 anova(cfit4a, cfit5a, cfit5b, cfit5c)
@@ -419,7 +411,7 @@ round(temp,3)
 
 
 ###################################################
-### code chunk number 27: flc7
+### code chunk number 26: flc7
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 pred5a <- with(fdata, tapply(predict(cfit5a, type='expected'),
@@ -429,8 +421,25 @@ excess5a <- matrix(obs/pred5a, nrow=8,
 round(excess5a, 1)
 
 sfit5  <- survexp(~group,  data=tdata3, ratetable=cfit5a, weights=count)
-plot(sfit3, fun='event', xscale=365.25, mark.time=FALSE, lty=2,
+plot(sfit3, fun='event', xscale=365.25, mark.time=FALSE, lty=2, col=c(1,2,4),
      xlab="Years from sample", ylab="Deaths")
-lines(sfit5, fun='event', xscale=365.25)
+lines(sfit5, fun='event', xscale=365.25, col=c(1,2,4))
+
+
+###################################################
+### code chunk number 27: flc8
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+# there is a spurious warning from the model below: R creates 3 unneeded
+# columns in the X matrix
+cfit6 <- coxph(Surv(futime, death) ~ strata(group):age2 + sex, fdata)
+
+saspop <- with(fdata, expand.grid(age2= levels(age2), sex= levels(sex),
+                                  group = levels(group)))
+
+sfit6  <- survexp(~group,  data=saspop, ratetable=cfit6)
+plot(sfit6, fun='event', xscale=365.25, mark.time=FALSE, lty=1, col=c(1,2,4),
+     xlab="Years from sample", ylab="Deaths")
+lines(sfit5, fun='event', xscale=365.25, lty=2, col=c(1,2,4))
 
 

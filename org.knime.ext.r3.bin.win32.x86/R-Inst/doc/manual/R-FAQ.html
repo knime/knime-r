@@ -12,7 +12,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link href="#Top" rel="start" title="Top">
 <link href="#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="dir.html#Top" rel="up" title="(dir)">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
@@ -39,36 +38,63 @@ span.nolinebreak {white-space:nowrap}
 span.roman {font-family:serif; font-weight:normal}
 span.sansserif {font-family:sans-serif; font-weight:normal}
 ul.no-bullet {list-style: none}
-body {margin-left: 5%; margin-right: 5%;}
+body {
+    margin-left: 5%;
+    margin-right: 5%;
+}
 
-H1{             background: white;
-                color: rgb(25%, 25%, 25%);
-                font-family: monospace;
-                font-size: xx-large;
-                text-align: center }
+h1 {
+    background: white;
+    color: rgb(25%, 25%, 25%);
+    font-family: monospace;
+    font-size: xx-large;
+    text-align: center;
+}
 
-H2{             background: white;
-                color: rgb(40%, 40%, 40%);
-                font-family: monospace;
-                font-size: x-large;
-                text-align: center }
+h2 {
+    background: white;
+    color: rgb(40%, 40%, 40%);
+    font-family: monospace;
+    font-size: x-large;
+    text-align: center;
+}
 
-H3{             background: white;
-                color: rgb(40%, 40%, 40%);
-                font-family: monospace;
-                font-size: large }
+h3 {
+    background: white;
+    color: rgb(40%, 40%, 40%);
+    font-family: monospace;
+    font-size: large;
+}
 
-H4{             background: white;
-                color: rgb(40%, 40%, 40%);
-                font-family: monospace }
+h4 {
+    background: white;
+    color: rgb(40%, 40%, 40%);
+    font-family: monospace;
+}
 
-span.samp{font-family: monospace}
-span.command{font-family: monospace}
-span.option{font-family: monospace}
-span.file{font-family: monospace}
-span.env{font-family: monospace}
+span.samp {
+    font-family: monospace;
+}
 
-ul.menu{list-style-type: decimal}
+span.command {
+    font-family: monospace;
+}
+
+span.option {
+    font-family: monospace;
+}
+
+span.file {
+    font-family: monospace;
+}
+
+span.env {
+    font-family: monospace;
+}
+
+ul.menu {
+    list-style-type: decimal;
+}
 
 -->
 </style>
@@ -92,9 +118,9 @@ ul.menu{list-style-type: decimal}
 
 
 <h2>Frequently Asked Questions on R</h2>
-<h2>Version 3.0.2014-03-03</h2>
-<address>Kurt Hornik</address>
-<p><p><hr><p>
+<h3 style="text-align: center;">Version 2016-06-06</h3>
+<h3 style="text-align: center;">Kurt Hornik</h3>
+<hr>
 <a name="SEC_Contents"></a>
 <h2 class="contents-heading">Table of Contents</h2>
 
@@ -119,7 +145,7 @@ ul.menu{list-style-type: decimal}
     <ul class="no-bullet">
       <li><a name="toc-How-can-R-be-installed-_0028Unix_002dlike_0029-1" href="#How-can-R-be-installed-_0028Unix_002dlike_0029">2.5.1 How can R be installed (Unix-like)</a></li>
       <li><a name="toc-How-can-R-be-installed-_0028Windows_0029-1" href="#How-can-R-be-installed-_0028Windows_0029">2.5.2 How can R be installed (Windows)</a></li>
-      <li><a name="toc-How-can-R-be-installed-_0028Macintosh_0029-1" href="#How-can-R-be-installed-_0028Macintosh_0029">2.5.3 How can R be installed (Macintosh)</a></li>
+      <li><a name="toc-How-can-R-be-installed-_0028Mac_0029-1" href="#How-can-R-be-installed-_0028Mac_0029">2.5.3 How can R be installed (Mac)</a></li>
     </ul></li>
     <li><a name="toc-Are-there-Unix_002dlike-binaries-for-R_003f-1" href="#Are-there-Unix_002dlike-binaries-for-R_003f">2.6 Are there Unix-like binaries for R?</a></li>
     <li><a name="toc-What-documentation-exists-for-R_003f-1" href="#What-documentation-exists-for-R_003f">2.7 What documentation exists for R?</a></li>
@@ -211,6 +237,8 @@ ul.menu{list-style-type: decimal}
     <li><a name="toc-How-do-I-access-the-source-code-for-a-function_003f-1" href="#How-do-I-access-the-source-code-for-a-function_003f">7.40 How do I access the source code for a function?</a></li>
     <li><a name="toc-Why-does-summary_0028_0029-report-strange-results-for-the-R_005e2-estimate-when-I-fit-a-linear-model-with-no-intercept_003f-1" href="#Why-does-summary_0028_0029-report-strange-results-for-the-R_005e2-estimate-when-I-fit-a-linear-model-with-no-intercept_003f">7.41 Why does summary() report strange results for the R^2 estimate when I fit a linear model with no intercept?</a></li>
     <li><a name="toc-Why-is-R-apparently-not-releasing-memory_003f-1" href="#Why-is-R-apparently-not-releasing-memory_003f">7.42 Why is R apparently not releasing memory?</a></li>
+    <li><a name="toc-How-can-I-enable-secure-https-downloads-in-R_003f-1" href="#How-can-I-enable-secure-https-downloads-in-R_003f">7.43 How can I enable secure https downloads in R?</a></li>
+    <li><a name="toc-How-can-I-get-CRAN-package-binaries-for-outdated-versions-of-R_003f-1" href="#How-can-I-get-CRAN-package-binaries-for-outdated-versions-of-R_003f">7.44 How can I get CRAN package binaries for outdated versions of R?</a></li>
   </ul></li>
   <li><a name="toc-R-Programming-1" href="#R-Programming">8 R Programming</a>
   <ul class="no-bullet">
@@ -233,12 +261,12 @@ ul.menu{list-style-type: decimal}
 <a name="Top"></a>
 <div class="header">
 <p>
-Next: <a href="#Introduction" accesskey="n" rel="next">Introduction</a>, Previous: <a href="dir.html#Top" accesskey="p" rel="prev">(dir)</a>, Up: <a href="dir.html#Top" accesskey="u" rel="up">(dir)</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="#Introduction" accesskey="n" rel="next">Introduction</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <a name="R-FAQ"></a>
 <h1 class="top">R FAQ</h1>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Introduction" accesskey="1">Introduction</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#R-Basics" accesskey="2">R Basics</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -273,7 +301,7 @@ Next: <a href="#R-Basics" accesskey="n" rel="next">R Basics</a>, Previous: <a hr
 <p>This document contains answers to some of the most frequently asked
 questions about R.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Legalese" accesskey="1">Legalese</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Obtaining-this-document" accesskey="2">Obtaining this document</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -295,7 +323,7 @@ Next: <a href="#Obtaining-this-document" accesskey="n" rel="next">Obtaining this
 <a name="Legalese-1"></a>
 <h3 class="section">1.1 Legalese</h3>
 
-<p>This document is copyright &copy; 1998&ndash;2014 by Kurt
+<p>This document is copyright &copy; 1998&ndash;2016 by Kurt
 Hornik.
 </p>
 <p>This document is free software; you can redistribute it and/or modify it
@@ -312,7 +340,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 available at
 </p>
 <div class="display">
-<pre class="display"><a href="http://www.R-project.org/Licenses/">http://www.R-project.org/Licenses/</a>
+<pre class="display"><a href="https://www.R-project.org/Licenses/">https://www.R-project.org/Licenses/</a>
 </pre></div>
 
 
@@ -328,17 +356,17 @@ Next: <a href="#Citing-this-document" accesskey="n" rel="next">Citing this docum
 <p>The latest version of this document is always available from
 </p>
 <div class="display">
-<pre class="display"><a href="http://CRAN.R-project.org/doc/FAQ/">http://CRAN.R-project.org/doc/FAQ/</a>
+<pre class="display"><a href="https://CRAN.R-project.org/doc/FAQ/">https://CRAN.R-project.org/doc/FAQ/</a>
 </pre></div>
 
 <p>From there, you can obtain versions converted to
-<a href="http://CRAN.R-project.org/doc/FAQ/R-FAQ.txt">plain
+<a href="https://CRAN.R-project.org/doc/FAQ/R-FAQ.txt">plain
 <acronym>ASCII</acronym> text</a>,
-<a href="http://CRAN.R-project.org/doc/FAQ/R-FAQ.info.gz"><acronym>GNU</acronym>
-info</a>, <a href="http://CRAN.R-project.org/doc/FAQ/R-FAQ.html"><acronym>HTML</acronym></a>,
-<a href="http://CRAN.R-project.org/doc/FAQ/R-FAQ.pdf">PDF</a>,
-as well as the <a href="http://CRAN.R-project.org/doc/FAQ/R-FAQ.texi">Texinfo source</a> used for creating all these formats using the
-<a href="http://texinfo.org/"><acronym>GNU</acronym> Texinfo system</a>.
+<a href="https://CRAN.R-project.org/doc/FAQ/R-FAQ.info.gz"><acronym>GNU</acronym>
+info</a>, <a href="https://CRAN.R-project.org/doc/FAQ/R-FAQ.html"><acronym>HTML</acronym></a>,
+<a href="https://CRAN.R-project.org/doc/FAQ/R-FAQ.pdf">PDF</a>,
+as well as the <a href="https://CRAN.R-project.org/doc/FAQ/R-FAQ.texi">Texinfo source</a> used for creating all these formats using the
+<acronym>GNU</acronym> Texinfo system.
 </p>
 <p>You can also obtain the R <acronym>FAQ</acronym> from the <samp>doc/FAQ</samp>
 subdirectory of a <acronym>CRAN</acronym> site (see <a href="#What-is-CRAN_003f">What is CRAN?</a>).
@@ -353,15 +381,15 @@ Next: <a href="#Notation" accesskey="n" rel="next">Notation</a>, Previous: <a hr
 <h3 class="section">1.3 Citing this document</h3>
 
 <p>In publications, please refer to this <acronym>FAQ</acronym> as Hornik
-(2014), &ldquo;The R <acronym>FAQ</acronym>&rdquo;, and give the above,
+(2016), &ldquo;The R <acronym>FAQ</acronym>&rdquo;, and give the above,
 <em>official</em> <acronym>URL</acronym>:
 </p>
 <div class="example">
 <pre class="example">@Misc{,
   author        = {Kurt Hornik},
   title         = {{R} {FAQ}},
-  year          = {2014},
-  url           = {http://CRAN.R-project.org/doc/FAQ/R-FAQ.html}
+  year          = {2016},
+  url           = {https://CRAN.R-project.org/doc/FAQ/R-FAQ.html}
 }
 </pre></div>
 
@@ -390,13 +418,13 @@ Previous: <a href="#Notation" accesskey="p" rel="prev">Notation</a>, Up: <a href
 <p>Feedback via email to <a href="mailto:Kurt.Hornik@R-project.org">Kurt.Hornik@R-project.org</a> is of course
 most welcome.
 </p>
-<p>In particular, note that I do not have access to Windows or Macintosh
-systems.  Features specific to the Windows and Mac OS X ports of R are
+<p>In particular, note that I do not have access to Windows or Mac
+systems.  Features specific to the Windows and macOS ports of R are
 described in the
-<a href="http://CRAN.R-project.org/bin/windows/base/rw-FAQ.html">&ldquo;R for
+<a href="https://CRAN.R-project.org/bin/windows/base/rw-FAQ.html">&ldquo;R for
 Windows <acronym>FAQ</acronym>&rdquo;</a> and the
-<a href="http://CRAN.R-project.org/bin/macosx/RMacOSX-FAQ.html">&ldquo;R for Mac
-OS X <acronym>FAQ</acronym>&rdquo;</a>.  If you have information on Macintosh or Windows
+<a href="https://CRAN.R-project.org/bin/macosx/RMacOSX-FAQ.html">&ldquo;R for Mac
+OS X <acronym>FAQ</acronym>&rdquo;</a>.  If you have information on Mac or Windows
 systems that you think should be added to this document, please let me
 know.
 </p>
@@ -410,7 +438,7 @@ Next: <a href="#R-and-S" accesskey="n" rel="next">R and S</a>, Previous: <a href
 <a name="R-Basics-1"></a>
 <h2 class="chapter">2 R Basics</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#What-is-R_003f" accesskey="1">What is R?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#What-machines-does-R-run-on_003f" accesskey="2">What machines does R run on?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -457,7 +485,7 @@ script files.
 </p>
 <p>The design of R has been heavily influenced by two existing languages:
 Becker, Chambers &amp; Wilks&rsquo; S (see <a href="#What-is-S_003f">What is S?</a>) and Sussman&rsquo;s
-<a href="http://www.cs.indiana.edu/scheme-repository/home.html">Scheme</a>.
+<a href="https://www.cs.indiana.edu/scheme-repository/home.html">Scheme</a>.
 Whereas the resulting language is very similar in appearance to S, the
 underlying implementation and semantics are derived from Scheme.
 See <a href="#What-are-the-differences-between-R-and-S_003f">What are the differences between R and S?</a>, for further details.
@@ -489,11 +517,11 @@ Thomas Lumley, Martin Maechler, Duncan Murdoch, Paul Murrell, Martyn
 Plummer, Brian Ripley, Deepayan Sarkar, Duncan Temple Lang, Luke
 Tierney, and Simon Urbanek.
 </p>
-<p>R has a home page at <a href="http://www.R-project.org/">http://www.R-project.org/</a>.  It is
-<a href="http://www.gnu.org/philosophy/free-sw.html">free software</a>
+<p>R has a home page at <a href="https://www.R-project.org/">https://www.R-project.org/</a>.  It is
+<a href="https://www.gnu.org/philosophy/free-sw.html">free software</a>
 distributed under a <acronym>GNU</acronym>-style
-<a href="http://www.gnu.org/copyleft/copyleft.html">copyleft</a>, and an
-official part of the <a href="http://www.gnu.org/"><acronym>GNU</acronym></a> project
+<a href="https://www.gnu.org/copyleft/copyleft.html">copyleft</a>, and an
+official part of the <a href="https://www.gnu.org/"><acronym>GNU</acronym></a> project
 (&ldquo;<acronym>GNU</acronym> S&rdquo;).
 </p>
 <hr>
@@ -509,14 +537,14 @@ Next: <a href="#What-is-the-current-version-of-R_003f" accesskey="n" rel="next">
 operating systems.  Support for Mac OS Classic ended with R 1.7.1.
 </p>
 <p>The current version of R will configure and build under a number of
-common Unix-like (e.g., <a href="http://en.wikipedia.org/wiki/Unix-like">http://en.wikipedia.org/wiki/Unix-like</a>)
-platforms including <var>cpu</var>-linux-gnu for the i386, amd64, alpha,
-arm/armel, hppa, ia64, m68k, mips/mipsel, powerpc, s390 and sparc 
-<acronym>CPU</acronym>s (e.g., <a href="http://buildd.debian.org/build.php?&amp;pkg=r-base">http://buildd.debian.org/build.php?&amp;pkg=r-base</a>),
-i386-hurd-gnu, <var>cpu</var>-kfreebsd-gnu for i386 and amd64, 
-powerpc-apple-darwin, mips-sgi-irix,
-i386-freebsd,
-rs6000-ibm-aix, and sparc-sun-solaris.
+common Unix-like (e.g., <a href="https://en.wikipedia.org/wiki/Unix-like">https://en.wikipedia.org/wiki/Unix-like</a>)
+platforms including <var>cpu</var>-linux-gnu for the i386, amd64/x86_64,
+alpha, arm, arm64, hppa, mips/mipsel, powerpc, s390x and sparc
+<acronym>CPU</acronym>s (e.g.,
+<a href="https://buildd.debian.org/build.php?&amp;pkg=r-base">https://buildd.debian.org/build.php?&amp;pkg=r-base</a>), i386-hurd-gnu,
+<var>cpu</var>-kfreebsd-gnu for i386 and amd64,
+i386-pc-solaris, rs6000-ibm-aix, sparc-sun-solaris, x86_64-apple-darwin,
+x86_64-unknown-freebsd and x86_64-unknown-openbsd.
 </p>
 
 <p>If you know about other platforms, please drop us a note.
@@ -530,12 +558,15 @@ Next: <a href="#How-can-R-be-obtained_003f" accesskey="n" rel="next">How can R b
 <a name="What-is-the-current-version-of-R_003f-1"></a>
 <h3 class="section">2.3 What is the current version of R?</h3>
  
-<p>The current released version is 3.0.3.  Based on this
-&lsquo;major.minor.patchlevel&rsquo; numbering scheme, there are two development
-versions of R, a patched version of the current release (&lsquo;r-patched&rsquo;)
-and one working towards the next minor or eventually major (&lsquo;r-devel&rsquo;)
-releases of R, respectively.  Version r-patched is for bug fixes mostly.
-New features are typically introduced in r-devel.
+<p>R uses a &lsquo;major.minor.patchlevel&rsquo; numbering scheme.  Based on this,
+there are the current release version of R (&lsquo;r-release&rsquo;) as well as two
+development versions of R, a patched version of the current release
+(&lsquo;r-patched&rsquo;) and one working towards the next minor or eventually major
+(&lsquo;r-devel&rsquo;) releases of R, respectively.  New features are typically
+introduced in r-devel, while r-patched is for bug fixes mostly.
+</p>
+<p>See <a href="https://CRAN.R-project.org/sources.html">https://CRAN.R-project.org/sources.html</a> for the current
+versions of r-release, r-patched and r-devel.
 </p>
 <hr>
 <a name="How-can-R-be-obtained_003f"></a>
@@ -555,7 +586,7 @@ CVS).
 </p>
 <p>Tarballs with daily snapshots of the r-devel and r-patched development
 versions of R can be found at
-<a href="ftp://ftp.stat.math.ethz.ch/Software/R">ftp://ftp.stat.math.ethz.ch/Software/R</a>.
+<a href="https://stat.ethz.ch/R/daily">https://stat.ethz.ch/R/daily</a>.
 </p>
 
 
@@ -571,12 +602,12 @@ Next: <a href="#Are-there-Unix_002dlike-binaries-for-R_003f" accesskey="n" rel="
 <a name="How-can-R-be-installed_003f-1"></a>
 <h3 class="section">2.5 How can R be installed?</h3>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#How-can-R-be-installed-_0028Unix_002dlike_0029" accesskey="1">How can R be installed (Unix-like)</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#How-can-R-be-installed-_0028Windows_0029" accesskey="2">How can R be installed (Windows)</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
-<tr><td align="left" valign="top">&bull; <a href="#How-can-R-be-installed-_0028Macintosh_0029" accesskey="3">How can R be installed (Macintosh)</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="#How-can-R-be-installed-_0028Mac_0029" accesskey="3">How can R be installed (Mac)</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
 
@@ -669,44 +700,45 @@ respectively.
 <a name="How-can-R-be-installed-_0028Windows_0029"></a>
 <div class="header">
 <p>
-Next: <a href="#How-can-R-be-installed-_0028Macintosh_0029" accesskey="n" rel="next">How can R be installed (Macintosh)</a>, Previous: <a href="#How-can-R-be-installed-_0028Unix_002dlike_0029" accesskey="p" rel="prev">How can R be installed (Unix-like)</a>, Up: <a href="#How-can-R-be-installed_003f" accesskey="u" rel="up">How can R be installed?</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="#How-can-R-be-installed-_0028Mac_0029" accesskey="n" rel="next">How can R be installed (Mac)</a>, Previous: <a href="#How-can-R-be-installed-_0028Unix_002dlike_0029" accesskey="p" rel="prev">How can R be installed (Unix-like)</a>, Up: <a href="#How-can-R-be-installed_003f" accesskey="u" rel="up">How can R be installed?</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <a name="How-can-R-be-installed-_0028Windows_0029-1"></a>
 <h4 class="subsection">2.5.2 How can R be installed (Windows)</h4>
 
 <p>The <samp>bin/windows</samp> directory of a <acronym>CRAN</acronym> site contains binaries for
 a base distribution and add-on packages from <acronym>CRAN</acronym> to run on Windows
-XP and later (including 64-bit versions of Windows) on ix86 and x86_64
+7 and later (including 64-bit versions of Windows) on ix86 and x86_64
 chips. The Windows version of R was created by Robert Gentleman and
-Guido Masarotto, and is now being developed and maintained by
-<a href="mailto:murdoch@stats.uwo.ca">Duncan Murdoch</a> and
-<a href="mailto:Brian.Ripley@R-project.org">Brian D. Ripley</a>.
+Guido Masarotto, Brian D. Ripley made substantial contributions
+and it is now being maintained by
+<a href="mailto:murdoch@stats.uwo.ca">Duncan Murdoch</a> and other members 
+of the R Core team.
 </p>
 <p>The same directory has links to snapshots of the r-patched and r-devel
 versions of R.
 </p>
-<p>See the <a href="http://CRAN.R-project.org/bin/windows/base/rw-FAQ.html">&ldquo;R for Windows <acronym>FAQ</acronym>&rdquo;</a> for more details.
+<p>See the <a href="https://CRAN.R-project.org/bin/windows/base/rw-FAQ.html">&ldquo;R for Windows <acronym>FAQ</acronym>&rdquo;</a> for more details.
 </p>
 <hr>
-<a name="How-can-R-be-installed-_0028Macintosh_0029"></a>
+<a name="How-can-R-be-installed-_0028Mac_0029"></a>
 <div class="header">
 <p>
 Previous: <a href="#How-can-R-be-installed-_0028Windows_0029" accesskey="p" rel="prev">How can R be installed (Windows)</a>, Up: <a href="#How-can-R-be-installed_003f" accesskey="u" rel="up">How can R be installed?</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
-<a name="How-can-R-be-installed-_0028Macintosh_0029-1"></a>
-<h4 class="subsection">2.5.3 How can R be installed (Macintosh)</h4>
+<a name="How-can-R-be-installed-_0028Mac_0029-1"></a>
+<h4 class="subsection">2.5.3 How can R be installed (Mac)</h4>
 
 <p>The <samp>bin/macosx</samp> directory of a <acronym>CRAN</acronym> site contains a standard
-Apple installer package to run on OS X 10.6 (&lsquo;Snow Leopard&rsquo;) and later.
+Apple installer package to run on macOS 10.9 (&lsquo;Mavericks&rsquo;) and later.
 Once downloaded and executed, the installer will install the current
-release of R and a R.app Mac OS X <acronym>GUI</acronym>.  This port of R for Mac
-OS X is maintained by <a href="mailto:Simon.Urbanek@R-project.org">Simon
-Urbanek</a> (and previously by Stefano Iacus).  The
-<a href="http://CRAN.R-project.org/bin/macosx/RMacOSX-FAQ.html">&ldquo;R for Mac
-OS X <acronym>FAQ</acronym></a> has more details.
+release of R and R.app, the macOS <acronym>GUI</acronym>.  This port of R for macOS
+is maintained by <a href="mailto:Simon.Urbanek@R-project.org">Simon Urbanek</a>
+(and previously by Stefano Iacus).  The
+<a href="https://CRAN.R-project.org/bin/macosx/RMacOSX-FAQ.html">&ldquo;R for Mac
+macOS <acronym>FAQ</acronym></a> has more details.
 </p>
 <p>Snapshots of the r-patched and r-devel versions of R are available as
-Apple installer packages at <a href="http://r.research.att.com">http://r.research.att.com</a>.
+Apple installer packages at <a href="https://r.research.att.com">https://r.research.att.com</a>.
 </p>
 <hr>
 <a name="Are-there-Unix_002dlike-binaries-for-R_003f"></a>
@@ -722,11 +754,11 @@ Next: <a href="#What-documentation-exists-for-R_003f" accesskey="n" rel="next">W
 packages.
 </p>
 <blockquote>
-<table>
+<table summary="">
 <thead><tr><th></th><th>CPU</th><th>Versions</th><th>Provider</th></tr></thead>
-<tr><td>Debian</td><td>i386/amd64</td><td>etch/lenny/squeeze</td><td>Johannes Ranke</td></tr>
-<tr><td>Red Hat</td><td>i386/x86_64</td><td>fedora10/fedora11</td><td>Martyn Plummer</td></tr>
-<tr><td>Ubuntu</td><td>i386/amd64</td><td>hardy/lucid/natty/oneiric/precise</td><td>Michael Rutter</td></tr>
+<tr><td>Debian</td><td>i386/amd64</td><td>squeeze/wheezy</td><td>Johannes Ranke</td></tr>
+<tr><td></td><td>armel</td><td>wheezy</td><td>Johannes Ranke</td></tr>
+<tr><td>Ubuntu</td><td>i386/amd64</td><td>lucid/precise/trusty</td><td>Michael Rutter</td></tr>
 </table>
 </blockquote>
 
@@ -739,35 +771,37 @@ install r-base-dev</code> to obtain the additional tools required for this.
 So-called &ldquo;backports&rdquo; of the current R packages for at least the
 <em>stable</em> distribution of Debian are provided by Johannes Ranke, and
 available from <acronym>CRAN</acronym>.  See
-<a href="http://CRAN.R-project.org/bin/linux/debian/README">http://CRAN.R-project.org/bin/linux/debian/README</a> for details on R
+<a href="https://CRAN.R-project.org/bin/linux/debian/index.html">https://CRAN.R-project.org/bin/linux/debian/index.html</a> for details on R
 Debian packages and installing the backports, which should also be
 suitable for other Debian derivatives.  Native backports for Ubuntu are
 provided by Michael Rutter.
 </p>
 <p>R binaries for Fedora, maintained by Tom &ldquo;Spot&rdquo; Callaway, are provided
 as part of the Fedora distribution and can be accessed through
-<code>yum</code>, the RPM installer/updater.  The Fedora R RPM is a
-&ldquo;meta-package&rdquo; which installs all the user and developer components of
-R (available separately as <code>R-core</code> and <code>R-devel</code>), as well as
-the standalone R math library (<code>libRmath</code> and
-<code>libRmath-devel</code>).  RPMs for a selection of R packages are also
-provided by Fedora.  The Extra Packages for Enterprise Linux (EPEL)
-project (<a href="http://fedoraproject.org/wiki/EPEL">http://fedoraproject.org/wiki/EPEL</a>) provides ports of the
-Fedora RPMs for RedHat Enterprise Linux and compatible distributions.
-When a new version of R is released, there may be a delay of up to 2 
-weeks until the Fedora RPM becomes publicly available, as it must pass
-through the statutory Fedora review process.
+<code>yum</code>, the RPM installer/updater.  Note that the &ldquo;Software&rdquo;
+application (gnome-software), which is the default <acronym>GUI</acronym> for
+software installation in Fedora 20, cannot be used to install R.  It is
+therefore recommended to use the yum command line tool.
+The Fedora R RPM is a &ldquo;meta-package&rdquo; which installs all the user and
+developer components of R (available separately as <code>R-core</code> and
+<code>R-devel</code>), as well as <code>R-java</code>, which ensures that R is
+configured for use with Java.  The R RPM also installs the standalone R
+math library (<code>libRmath</code> and <code>libRmath-devel</code>), although this
+is not necessary to use R.  When a new version of R is released, there
+may be a delay of up to 2 weeks until the Fedora RPM becomes publicly
+available, as it must pass through the statutory Fedora review process.
+RPMs for a selection of R packages are also provided by Fedora.  The
+Extra Packages for Enterprise Linux (EPEL) project
+(<a href="https://fedoraproject.org/wiki/EPEL">https://fedoraproject.org/wiki/EPEL</a>) provides ports of the Fedora
+RPMs for RedHat Enterprise Linux and compatible distributions (e.g.,
+Centos, Scientific Linux, Oracle Linux).
 </p>
-<p>See <a href="http://CRAN.R-project.org/bin/linux/suse/README.html">http://CRAN.R-project.org/bin/linux/suse/README.html</a> for
+<p>See <a href="https://CRAN.R-project.org/bin/linux/suse/README.html">https://CRAN.R-project.org/bin/linux/suse/README.html</a> for
 information about RPMs for openSUSE.
 </p>
-
-
-
 <p>No other binary distributions are currently publically available via
 <acronym>CRAN</acronym>.
 </p>
-
 <hr>
 <a name="What-documentation-exists-for-R_003f"></a>
 <div class="header">
@@ -788,7 +822,7 @@ quoted.)
 for on-line reading in <acronym>HTML</acronym> and PDF formats, and as hardcopy via
 LaTeX, see <a href="#How-can-R-be-installed_003f">How can R be installed?</a>.  An up-to-date <acronym>HTML</acronym>
 version is always available for web browsing at
-<a href="http://stat.ethz.ch/R-manual/">http://stat.ethz.ch/R-manual/</a>.
+<a href="https://stat.ethz.ch/R-manual/">https://stat.ethz.ch/R-manual/</a>.
 </p>
 <p>Printed copies of the R reference manual for some version(s) are
 available from Network Theory Ltd, at
@@ -822,7 +856,7 @@ is a guide to R&rsquo;s internal structures.
 can be found at
 </p>
 <div class="display">
-<pre class="display"><a href="http://www.R-project.org/doc/bib/R.bib">http://www.R-project.org/doc/bib/R.bib</a>
+<pre class="display"><a href="https://www.R-project.org/doc/bib/R.bib">https://www.R-project.org/doc/bib/R.bib</a>
 </pre></div>
 
 <p>Books on R by R Core Team members include
@@ -830,15 +864,15 @@ can be found at
 <blockquote>
 <p>John M. Chambers (2008), &ldquo;Software for Data Analysis: Programming with
 R&rdquo;.  Springer, New York, ISBN 978-0-387-75935-7,
-<a href="http://stat.stanford.edu/~jmc4/Rbook/">http://stat.stanford.edu/~jmc4/Rbook/</a>.
+<a href="http://statweb.stanford.edu/~jmc4/Rbook/">http://statweb.stanford.edu/~jmc4/Rbook/</a>.
 </p>
 <p>Peter Dalgaard (2008), &ldquo;Introductory Statistics with R&rdquo;, 2nd edition.
 Springer, ISBN 978-0-387-79053-4,
-<a href="http://www.biostat.ku.dk/~pd/ISwR.html">http://www.biostat.ku.dk/~pd/ISwR.html</a>.
+<a href="http://publicifsv.sund.ku.dk/~pd/ISwR.html">http://publicifsv.sund.ku.dk/~pd/ISwR.html</a>.
 </p>
 <p>Robert Gentleman (2008), &ldquo;R Programming for Bioinformatics&rdquo;.  Chapman
 &amp; Hall/CRC, Boca Raton, FL, ISBN 978-1-420-06367-7,
-<a href="http://www.bioconductor.org/pub/RBioinf/">http://www.bioconductor.org/pub/RBioinf/</a>.
+<a href="https://www.bioconductor.org/pub/RBioinf/">https://www.bioconductor.org/pub/RBioinf/</a>.
 </p>
 <p>Stefano M. Iacus (2008), &ldquo;Simulation and Inference for Stochastic
 Differential Equations: With R Examples&rdquo;. Springer, New York, ISBN
@@ -853,11 +887,11 @@ Cambridge, ISBN 978-0521872652.
 </p>
 <p>P. Murrell (2005), &ldquo;R Graphics&rdquo;, Chapman &amp; Hall/CRC, ISBN:
 1-584-88486-X,
-<a href="http://www.stat.auckland.ac.nz/~paul/RGraphics/rgraphics.html">http://www.stat.auckland.ac.nz/~paul/RGraphics/rgraphics.html</a>.
+<a href="https://www.stat.auckland.ac.nz/~paul/RGraphics/rgraphics.html">https://www.stat.auckland.ac.nz/~paul/RGraphics/rgraphics.html</a>.
 </p>
 <p>William N. Venables and Brian D. Ripley (2002), &ldquo;Modern Applied
 Statistics with S&rdquo; (4th edition).  Springer, ISBN 0-387-95457-0,
-<a href="http://www.stats.ox.ac.uk/pub/MASS4/">http://www.stats.ox.ac.uk/pub/MASS4/</a>.
+<a href="https://www.stats.ox.ac.uk/pub/MASS4/">https://www.stats.ox.ac.uk/pub/MASS4/</a>.
 </p>
 <p>Jose C. Pinheiro and Douglas M. Bates (2000), &ldquo;Mixed-Effects Models in
 S and S-Plus&rdquo;. Springer, ISBN 0-387-98957-0.
@@ -887,11 +921,13 @@ Next: <a href="#What-mailing-lists-exist-for-R_003f" accesskey="n" rel="next">Wh
   author       = {{R Core Team}},
   organization = {R Foundation for Statistical Computing},
   address      = {Vienna, Austria},
-  year         = 2014,
-  url          = {http://www.R-project.org}
+  year         = <var>YEAR</var>,
+  url          = {https://www.R-project.org}
 }
 </pre></div>
-
+<p>where <var>YEAR</var> is the release year of the version of R used and can
+determined as <code>R.version$year</code>.
+</p>
 <p>Citation strings (or BibTeX entries) for R and R packages can also be
 obtained by <code>citation()</code>.
 </p>
@@ -905,7 +941,7 @@ Next: <a href="#What-is-CRAN_003f" accesskey="n" rel="next">What is CRAN?</a>, P
 <h3 class="section">2.9 What mailing lists exist for R?</h3>
 
 <p>Thanks to <a href="mailto:Martin.Maechler@R-project.org">Martin Maechler</a>, there
-are four mailing lists devoted to R.
+are several mailing lists devoted to R, including the following:
 </p>
 <dl compact="compact">
 <dt><code>R-announce</code></dt>
@@ -924,9 +960,13 @@ about the development of R and the availability of new code.
 <dt><code>R-devel</code></dt>
 <dd><p>This list is for questions and discussion about code development in R.
 </p></dd>
+<dt><code>R-package-devel</code></dt>
+<dd><p>A list which which provides a forum for learning about the R package
+development process.
+</p></dd>
 </dl>
 
-<p>Please read the <a href="http://www.R-project.org/posting-guide.html">posting guide</a> <em>before</em> sending anything to any mailing list.
+<p>Please read the <a href="https://www.R-project.org/posting-guide.html">posting guide</a> <em>before</em> sending anything to any mailing list.
 </p>
 <p>Note in particular that R-help is intended to be comprehensible to
 people who want to use R to solve problems but who are not necessarily
@@ -936,7 +976,7 @@ involving C or C++) should go to R-devel.
 </p>
 <p>Convenient access to information on these lists, subscription, and
 archives is provided by the web interface at
-<a href="http://stat.ethz.ch/mailman/listinfo/">http://stat.ethz.ch/mailman/listinfo/</a>.  One can also subscribe
+<a href="https://stat.ethz.ch/mailman/listinfo/">https://stat.ethz.ch/mailman/listinfo/</a>.  One can also subscribe
 (or unsubscribe) via email, e.g. to R-help by sending &lsquo;<samp>subscribe</samp>&rsquo;
 (or &lsquo;<samp>unsubscribe</samp>&rsquo;) in the <em>body</em> of the message (not in the
 subject!) to <a href="mailto:R-help-request@lists.R-project.org">R-help-request@lists.R-project.org</a>.
@@ -959,7 +999,7 @@ code which reliably reproduces the problem.  Also, make sure that you
 include information on the system and version of R being used.  See
 <a href="#R-Bugs">R Bugs</a> for more details.
 </p>
-<p>See <a href="http://www.R-project.org/mail.html">http://www.R-project.org/mail.html</a> for more information on
+<p>See <a href="https://www.R-project.org/mail.html">https://www.R-project.org/mail.html</a> for more information on
 the R mailing lists.
 </p>
 <p>The R Core Team can be reached at <a href="mailto:R-core@lists.R-project.org">R-core@lists.R-project.org</a>
@@ -990,27 +1030,11 @@ binaries.
 can be found at the <acronym>URL</acronym>
 </p>
 <blockquote>
-<p><a href="http://CRAN.R-project.org/">http://CRAN.R-project.org/</a>
+<p><a href="https://CRAN.R-project.org/">https://CRAN.R-project.org/</a>
 </p></blockquote>
 
-<p>Daily mirrors are available at <acronym>URL</acronym>s including
-</p>
-<blockquote>
-<table>
-<tr><td width="45%"><a href="http://cran.at.R-project.org/">http://cran.at.R-project.org/</a></td><td width="40%">(WU Wien, Austria)</td></tr>
-<tr><td width="45%"><a href="http://cran.au.R-project.org/">http://cran.au.R-project.org/</a></td><td width="40%">(PlanetMirror, Australia)</td></tr>
-<tr><td width="45%"><a href="http://cran.br.R-project.org/">http://cran.br.R-project.org/</a></td><td width="40%">(Universidade Federal do Paran&aacute;, Brazil)</td></tr>
-<tr><td width="45%"><a href="http://cran.ch.R-project.org/">http://cran.ch.R-project.org/</a></td><td width="40%">(ETH Z&uuml;rich, Switzerland)</td></tr>
-<tr><td width="45%"><a href="http://cran.dk.R-project.org/">http://cran.dk.R-project.org/</a></td><td width="40%">(SunSITE, Denmark)</td></tr>
-<tr><td width="45%"><a href="http://cran.es.R-project.org/">http://cran.es.R-project.org/</a></td><td width="40%">(Spanish National Research Network, Madrid, Spain)</td></tr>
-<tr><td width="45%"><a href="http://cran.fr.R-project.org/">http://cran.fr.R-project.org/</a></td><td width="40%">(INRA, Toulouse, France)</td></tr>
-<tr><td width="45%"><a href="http://cran.pt.R-project.org/">http://cran.pt.R-project.org/</a></td><td width="40%">(Universidade do Porto, Portugal)</td></tr>
-<tr><td width="45%"><a href="http://cran.uk.R-project.org/">http://cran.uk.R-project.org/</a></td><td width="40%">(U of Bristol, United Kingdom)</td></tr>
-<tr><td width="45%"><a href="http://cran.za.R-project.org/">http://cran.za.R-project.org/</a></td><td width="40%">(Rhodes U, South Africa)</td></tr>
-</table>
-</blockquote>
-
-<p>See <a href="http://CRAN.R-project.org/mirrors.html">http://CRAN.R-project.org/mirrors.html</a> for a complete list of
+<p>and is mirrored daily to many sites around the world.
+See <a href="https://CRAN.R-project.org/mirrors.html">https://CRAN.R-project.org/mirrors.html</a> for a complete list of
 mirrors.  Please use the <acronym>CRAN</acronym> site closest to you to reduce network
 load.
 </p>
@@ -1018,9 +1042,12 @@ load.
 snapshots of R (copies of the current source trees), as gzipped and
 bzipped tar files, a wealth of additional contributed code, as well as
 prebuilt binaries for various operating systems (Linux, Mac OS Classic,
-Mac OS X, and MS Windows).  <acronym>CRAN</acronym> also provides access to
+macOS, and MS Windows).  <acronym>CRAN</acronym> also provides access to
 documentation on R, existing mailing lists and the R Bug Tracking
 system.
+</p>
+<p>Since March 2016, &ldquo;old&rdquo; material is made available from a central
+<acronym>CRAN</acronym> archive server (<a href="https://CRAN-archive.R-project.org/">https://CRAN-archive.R-project.org/</a>).
 </p>
 <p>Please always use the <acronym>URL</acronym> of the master site when referring to
 <acronym>CRAN</acronym>.
@@ -1035,7 +1062,7 @@ Next: <a href="#Why-is-R-named-R_003f" accesskey="n" rel="next">Why is R named R
 <h3 class="section">2.11 Can I use R for commercial purposes?</h3>
 
 <p>R is released under the
-<a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html"><acronym>GNU</acronym> General Public License (<acronym>GPL</acronym>), version 2</a>.  If
+<a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"><acronym>GNU</acronym> General Public License (<acronym>GPL</acronym>), version 2</a>.  If
 you have any questions regarding the legality of using R in any
 particular situation you should bring it up with your legal counsel.  We
 are in no position to offer legal advice.
@@ -1046,7 +1073,7 @@ all Open Source licenses, permits all and any use of the package.  It
 only restricts distribution of R or of other programs containing code
 from R.  This is made clear in clause 6 (&ldquo;No Discrimination Against
 Fields of Endeavor&rdquo;) of the
-<a href="http://www.opensource.org/docs/definition.html">Open Source
+<a href="https://opensource.org/docs/definition.html">Open Source
 Definition</a>:
 </p>
 <blockquote>
@@ -1103,7 +1130,7 @@ computing, provide a reference point for individuals, institutions or
 commercial enterprises that want to support or interact with the R
 development community, and to hold and administer the copyright of R
 software and documentation.  See
-<a href="http://www.R-project.org/foundation/">http://www.R-project.org/foundation/</a> for more information.
+<a href="https://www.R-project.org/foundation/">https://www.R-project.org/foundation/</a> for more information.
 </p>
 <hr>
 <a name="What-is-R_002dForge_003f"></a>
@@ -1114,15 +1141,15 @@ Previous: <a href="#What-is-the-R-Foundation_003f" accesskey="p" rel="prev">What
 <a name="What-is-R_002dForge_003f-1"></a>
 <h3 class="section">2.14 What is R-Forge?</h3>
 
-<p>R-Forge (<a href="http://R-Forge.R-project.org/">http://R-Forge.R-project.org/</a>) offers a central platform
+<p>R-Forge (<a href="https://R-Forge.R-project.org/">https://R-Forge.R-project.org/</a>) offers a central platform
 for the development of R packages, R-related software and further
-projects.  It is based on <a href="http://www.gforge.org/">GForge</a> offering
+projects.  It is based on <a href="https://en.wikipedia.org/wiki/GForge">GForge</a> offering
 easy access to the best in SVN, daily built and checked packages,
 mailing lists, bug tracking, message boards/forums, site hosting,
 permanent file archival, full backups, and total web-based
 administration.  For more information, see the R-Forge web page and
 Stefan Theu&szlig;l and Achim Zeileis (2009), &ldquo;Collaborative software
-development using R-Forge&rdquo;, <a href="http://journal.R-project.org/"><em>The R Journal</em></a>, <strong>1</strong>(1):9&ndash;14.
+development using R-Forge&rdquo;, <a href="https://journal.R-project.org/"><em>The R Journal</em></a>, <strong>1</strong>(1):9&ndash;14.
 </p>
 
 <hr>
@@ -1134,7 +1161,7 @@ Next: <a href="#R-Web-Interfaces" accesskey="n" rel="next">R Web Interfaces</a>,
 <a name="R-and-S-1"></a>
 <h2 class="chapter">3 R and S</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#What-is-S_003f" accesskey="1">What is S?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#What-is-S_002dPLUS_003f" accesskey="2">What is S-PLUS?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1195,19 +1222,17 @@ S,&rdquo;  London: Chapman &amp; Hall.
 </p>
 </li><li> John M. Chambers (1998), &ldquo;Programming with Data,&rdquo; New York: Springer,
 ISBN 0-387-98503-4
-(<a href="http://cm.bell-labs.com/cm/ms/departments/sia/Sbook/">http://cm.bell-labs.com/cm/ms/departments/sia/Sbook/</a>).
+(<a href="http://statweb.stanford.edu/~jmc4/Sbook/">http://statweb.stanford.edu/~jmc4/Sbook/</a>).
 
 <p>This &ldquo;<em>Green Book</em>&rdquo; describes version 4 of S, a major revision of
 S designed by John Chambers to improve its usefulness at every stage of
 the programming process.
 </p></li></ul>
 
-<p>See <a href="http://cm.bell-labs.com/cm/ms/departments/sia/S/history.html">http://cm.bell-labs.com/cm/ms/departments/sia/S/history.html</a>
-for further information on &ldquo;Stages in the Evolution of S&rdquo;.
+<p>See <a href="http://statweb.stanford.edu/~jmc4/papers/96.7.ps">http://statweb.stanford.edu/~jmc4/papers/96.7.ps</a>
+for further information on the &ldquo;Evolution of the S Language&rdquo;.
 </p>
-<p>There is a huge amount of user-contributed code for S, available at the
-<a href="http://lib.stat.cmu.edu/S/">S Repository</a> at <acronym>CMU</acronym>.
-</p>
+
 
 <hr>
 <a name="What-is-S_002dPLUS_003f"></a>
@@ -1218,13 +1243,9 @@ Next: <a href="#What-are-the-differences-between-R-and-S_003f" accesskey="n" rel
 <a name="What-is-S_002dPLUS_003f-1"></a>
 <h3 class="section">3.2 What is <small>S-PLUS</small>?</h3>
 
-<p><small>S-PLUS</small> is a value-added version of S sold by
-<a href="http://www.insightful.com">Insightful Corporation</a>, which in 2008
-was acquired by <a href="http://www.tibco.com/">TIBCO Software Inc</a>.  See
-the <a href="http://www.insightful.com/products/splus/">Insightful <small>S-PLUS</small>
-page</a> and the
-<a href="http://spotfire.tibco.com/Products/S-Plus-Overview.aspx">TIBCO
-Spotfire S+ Products page</a> for further information.
+<p><small>S-PLUS</small> is a value-added version of S currently sold by
+<a href="http://www.tibco.com/">TIBCO Software Inc</a> as &lsquo;TIBCO Spotfire S+&rsquo;.
+See <a href="https://en.wikipedia.org/wiki/S-PLUS">https://en.wikipedia.org/wiki/S-PLUS</a> for more information.
 </p>
 <hr>
 <a name="What-are-the-differences-between-R-and-S_003f"></a>
@@ -1245,7 +1266,7 @@ the S language, i.e., the difference between the R and S <em>engines</em>.
 <p>For the remainder of this section, &ldquo;S&rdquo; refers to the S engines and not
 the S language.
 </p>
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Lexical-scoping" accesskey="1">Lexical scoping</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Models" accesskey="2">Models</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1714,19 +1735,15 @@ Previous: <a href="#Is-there-anything-R-can-do-that-S_002dPLUS-cannot_003f" acce
 currently beta testing a commercially supported version of R named R+
 (read R plus).
 </p>
-<p><a href="http://www.revolution-computing.com/">REvolution Computing</a> has
+<p><a href="http://www.revolution-computing.com/">Revolution Analytics</a> has
 released
 <a href="http://www.revolution-computing.com/products/revolution-r.php">REvolution R</a>, an enterprise-class statistical analysis system based on
 R, suitable for deployment in professional, commercial and regulated
 environments.
 </p>
-<p><a href="http://www.random-technologies-llc.com/">Random Technologies</a>
-offers <a href="http://random-technologies-llc.com/products/RStat/rstat">RStat</a>, an enterprise-strength statistical computing environment which
-combines R with enterprise-level validation, documentation, software
-support, and consulting services, as well as related R-based products.
-</p>
+
 <p>See also
-<a href="http://en.wikipedia.org/wiki/R_programming_language#Commercialized_versions_of_R">http://en.wikipedia.org/wiki/R_programming_language#Commercialized_versions_of_R</a>
+<a href="https://en.wikipedia.org/wiki/R_programming_language#Commercialized_versions_of_R">https://en.wikipedia.org/wiki/R_programming_language#Commercialized_versions_of_R</a>
 for pointers to commercialized versions of R.
 </p>
 <hr>
@@ -1740,7 +1757,7 @@ Next: <a href="#R-Add_002dOn-Packages" accesskey="n" rel="next">R Add-On Package
 
 <p><strong>Rweb</strong> is developed and maintained by
 <a href="mailto:jeff@math.montana.edu">Jeff Banfield</a>.  The
-<a href="http://www.math.montana.edu/Rweb/">Rweb Home Page</a> provides access
+<a href="https://rweb.stat.umn.edu/Rweb/">Rweb Home Page</a> provides access
 to all three versions of Rweb&mdash;a simple text entry form that returns
 output and graphs, a more sophisticated JavaScript version that provides
 a multiple window environment, and a set of point and click modules that
@@ -1758,7 +1775,7 @@ Rweb works, was published in the Journal of Statistical Software
 intends to make the first steps in statistical programming with R
 (especially with time series) as easy as possible.  There is no need for
 a local installation since the only requirement for the user is a
-JavaScript capable browser.  See <a href="http://osvisions.com/r-online/">http://osvisions.com/r-online/</a>
+JavaScript capable browser.  See <a href="http://www.osvisions.com/r_online/">http://www.osvisions.com/r_online/</a>
 for more information.
 </p>
 <p><strong>Rcgi</strong> is a CGI WWW interface to R by <a href="mailto:mjr@dsl.pipex.com">MJ Ray</a>.  It had the ability to use &ldquo;embedded code&rdquo;: you could mix
@@ -1767,19 +1784,14 @@ load in data sets to enter most of the commands for users without
 writing CGI scripts.  Graphical output was possible in PostScript or GIF
 formats and the executed code was presented to the user for revision.
 However, it is not clear if the project is still active.
-Currently, a modified version of <strong>Rcgi</strong> by
-<a href="mailto:mai@ms.uky.edu">Mai Zhou</a> (actually, two versions: one with
-(bitmap) graphics and one without) as well as the original code are
-available from <a href="http://www.ms.uky.edu/~statweb/">http://www.ms.uky.edu/~statweb/</a>.
 </p>
-<p>CGI-based web access to R is also provided at
-<a href="http://hermes.sdu.dk/cgi-bin/go/">http://hermes.sdu.dk/cgi-bin/go/</a>.  There are many additional
-examples of web interfaces to R which basically allow to submit R code
-to a remote server, see for example the collection of links available from
+<p>There are many additional examples of web interfaces to R which
+basically allow to submit R code to a remote server, see for example the
+collection of links available from
 <a href="http://biostat.mc.vanderbilt.edu/twiki/bin/view/Main/StatCompCourse">http://biostat.mc.vanderbilt.edu/twiki/bin/view/Main/StatCompCourse</a>.
 </p>
 <p><a href="http://www.warwick.ac.uk/go/dfirth">David Firth</a> has written
-<a href="http://CRAN.R-project.org/package=CGIwithR"><strong>CGIwithR</strong></a>, an R add-on package available from <acronym>CRAN</acronym>.  It
+<a href="https://CRAN.R-project.org/package=CGIwithR"><strong>CGIwithR</strong></a>, an R add-on package available from <acronym>CRAN</acronym>.  It
 provides some simple extensions to R to facilitate running R scripts
 through the CGI interface to a web server, and allows submission of data
 using both GET and POST methods.  It is easily installed using Apache
@@ -1788,32 +1800,22 @@ and a web server provided that the installer has the necessary security
 permissions.  David&rsquo;s paper &ldquo;CGIwithR: Facilities for Processing Web
 Forms Using R&rdquo; was published in the Journal of Statistical Software
 (<a href="http://www.jstatsoft.org/v08/i10/">http://www.jstatsoft.org/v08/i10/</a>).  The package is now
-maintained by <a href="mailto:duncan@wald.ucdavis.edu">Duncan Temple Lang</a> and
-has a web page at <a href="http://www.omegahat.org/CGIwithR/">http://www.omegahat.org/CGIwithR/</a>.
+maintained by <a href="mailto:duncan@wald.ucdavis.edu">Duncan Temple Lang</a>.
+and has a web page at <a href="http://www.omegahat.net/CGIwithR/">http://www.omegahat.net/CGIwithR/</a>.
 </p>
-<p><a href="http://www.rpad.org/Rpad">Rpad</a>, developed and actively maintained
-by Tom Short, provides a sophisticated environment which combines some
-of the features of the previous approaches with quite a bit of
-JavaScript, allowing for a <acronym>GUI</acronym>-like behavior (with sortable
-tables, clickable graphics, editable output), etc.
-</p>
+
 <p>Jeff Horner is working on the R/Apache Integration Project which embeds
 the R interpreter inside Apache 2 (and beyond).  A tutorial and
 presentation are available from the project web page at
 <a href="http://biostat.mc.vanderbilt.edu/twiki/bin/view/Main/RApacheProject">http://biostat.mc.vanderbilt.edu/twiki/bin/view/Main/RApacheProject</a>.
 </p>
-<p><a href="http://stats.math.uni-augsburg.de/Rserve/">Rserve</a> is a project
+<p><a href="https://www.rforge.net/Rserve/">Rserve</a> is a project
 actively developed by Simon Urbanek.  It implements a TCP/IP server which
 allows other programs to use facilities of R.  Clients are available from
 the web site for Java and C++ (and could be written for other languages
 that support TCP/IP sockets).
 </p>
-<p><a href="http://openstatserver.org/index.html">OpenStatServer</a> is being
-developed by a team lead by Greg Warnes; it aims &ldquo;to provide clean access
-to computational modules defined in a variety of computational
-environments (R, SAS, Matlab, etc) via a single well-defined client
-interface&rdquo; and to turn computational services into web services.
-</p>
+
 <p>Two projects use PHP to provide a web interface to R.
 <a href="http://steve-chen.net/R_PHP/">R_PHP_Online</a> by Steve Chen (though
 it is unclear if this project is still active) is somewhat similar to
@@ -1821,7 +1823,7 @@ the above Rcgi and Rweb.  <a href="http://dssm.unipa.it/R-php/?cmd=home">R-php</
 provides both a web interface to R and a set of pre-specified analyses
 that need no R code input.
 </p>
-<p><a href="http://www.bioconductor.org/">webbioc</a> is &ldquo;an integrated web
+<p><a href="https://www.bioconductor.org/">webbioc</a> is &ldquo;an integrated web
 interface for doing microarray analysis using several of the
 Bioconductor packages&rdquo; and is designed to be installed at local sites
 as a shared computing resource.
@@ -1831,16 +1833,17 @@ create user-friendly web interfaces for R scripts.  All code for the web
 interface is created automatically.  There is no need for the user to do
 any extra scripting or learn any new scripting techniques.
 </p>
-<p>The <a href="http://CRAN.R-project.org/package=R.rsp"><strong>R.rsp</strong></a> package by Henrik Bengtsson introduces &ldquo;R Server
+<p>The <a href="https://CRAN.R-project.org/package=R.rsp"><strong>R.rsp</strong></a> package by Henrik Bengtsson introduces &ldquo;R Server
 Pages&rdquo;.  Analogous to Java Server Pages, an R server page is typically
 <acronym>HTML</acronym> with embedded R code that gets evaluated when the page is
-requested.  The package includes an internal cross-platform HTTP server
-implemented in Tcl, so provides a good framework for including web-based
-user interfaces in packages.  The approach is similar to the use of the
-<a href="http://CRAN.R-project.org/package=brew"><strong>brew</strong></a> package with <a href="http://rapache.net/">Rapache</a> with the
-advantage of cross-platform support and easy installation.
+requested.  The package includes an internal cross-platform
+<acronym>HTTP</acronym> server implemented in Tcl, so provides a good framework
+for including web-based user interfaces in packages.  The approach is
+similar to the use of the <a href="https://CRAN.R-project.org/package=brew"><strong>brew</strong></a> package with
+<a href="http://rapache.net/">Rapache</a> with the advantage of cross-platform
+support and easy installation.
 </p>
-<p>The <a href="http://CRAN.R-project.org/package=Rook"><strong>Rook</strong></a> package by Jeffrey Horner provides a web server
+<p>The <a href="https://CRAN.R-project.org/package=Rook"><strong>Rook</strong></a> package by Jeffrey Horner provides a web server
 interface borrowing heavily from Ruby&rsquo;s Rack project.
 </p>
 <p>Finally, <a href="http://code.google.com/p/concerto-platform/">Concerto</a> is
@@ -1852,12 +1855,10 @@ with no programming or web designing background to quickly develop
 flexible and powerful online applications, websites, and psychometrics
 tests.  To maximize its reliability, security, and performance, Concerto
 relies on the popular and reliable open-source elements such as MySQL
-server (exchange and storage of the data), <a href="http://rstudio.org/">Rstudio</a> (R code designing and testing, file management), CKEditor
+server (exchange and storage of the data), <a href="https://rstudio.org/">Rstudio</a> (R code designing and testing, file management), CKEditor
 (<acronym>HTML</acronym> Layer design), and PHP.
 </p>
-<p>See <a href="http://rwiki.sciviews.org/doku.php?id=faq-r#web_interfaces">http://rwiki.sciviews.org/doku.php?id=faq-r#web_interfaces</a> for
-additional information.
-</p>
+
 
 <hr>
 <a name="R-Add_002dOn-Packages"></a>
@@ -1868,7 +1869,7 @@ Next: <a href="#R-and-Emacs" accesskey="n" rel="next">R and Emacs</a>, Previous:
 <a name="R-Add_002dOn-Packages-1"></a>
 <h2 class="chapter">5 R Add-On Packages</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Which-add_002don-packages-exist-for-R_003f" accesskey="1">Which add-on packages exist for R?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#How-can-add_002don-packages-be-installed_003f" accesskey="2">How can add-on packages be installed?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1892,7 +1893,7 @@ Next: <a href="#How-can-add_002don-packages-be-installed_003f" accesskey="n" rel
 <a name="Which-add_002don-packages-exist-for-R_003f-1"></a>
 <h3 class="section">5.1 Which add-on packages exist for R?</h3>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Add_002don-packages-in-R" accesskey="1">Add-on packages in R</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Add_002don-packages-from-CRAN" accesskey="2">Add-on packages from CRAN</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -1968,7 +1969,7 @@ former <strong>base</strong> was split into the four packages <strong>base</stro
 <strong>graphics</strong>, <strong>stats</strong>, and <strong>utils</strong>.  Packages <strong>ctest</strong>,
 <strong>eda</strong>, <strong>modreg</strong>, <strong>mva</strong>, <strong>nls</strong>, <strong>stepfun</strong> and
 <strong>ts</strong> were merged into <strong>stats</strong>, package <strong>lqs</strong> returned to the
-recommended package <a href="http://CRAN.R-project.org/package=MASS"><strong>MASS</strong></a>, and package <strong>mle</strong> moved to
+recommended package <a href="https://CRAN.R-project.org/package=MASS"><strong>MASS</strong></a>, and package <strong>mle</strong> moved to
 <strong>stats4</strong>.
 </p>
 <hr>
@@ -2045,11 +2046,11 @@ Statistics with S&rdquo; by W. Venables and B. Ripley.
 <dd><p>Functions for survival analysis, including penalized likelihood.
 </p></dd>
 </dl>
-<p>See the <a href="http://CRAN.R-project.org/web/packages/"><acronym>CRAN</acronym>
+<p>See the <a href="https://CRAN.R-project.org/web/packages/"><acronym>CRAN</acronym>
 contributed packages page</a> for more information.
 </p>
 <p>Many of these packages are categorized into
-<a href="http://CRAN.R-project.org/web/views/"><acronym>CRAN</acronym> Task Views</a>, allowing
+<a href="https://CRAN.R-project.org/web/views/"><acronym>CRAN</acronym> Task Views</a>, allowing
 to browse packages by topic and providing tools to automatically install
 all packages for special areas of interest.
 </p>
@@ -2058,7 +2059,7 @@ require additional software, or are shipping third party libraries for
 Windows cannot be made available on <acronym>CRAN</acronym> in form of a Windows binary
 packages.  Nevertheless, some of these packages are available at the
 &ldquo;<acronym>CRAN</acronym> extras&rdquo; repository at
-<a href="http://www.stats.ox.ac.uk/pub/RWin/">http://www.stats.ox.ac.uk/pub/RWin/</a> kindly provided by Brian
+<a href="https://www.stats.ox.ac.uk/pub/RWin/">https://www.stats.ox.ac.uk/pub/RWin/</a> kindly provided by Brian
 D. Ripley.  Note that this repository is a default repository for recent
 versions of R for Windows.
 </p>
@@ -2071,12 +2072,12 @@ Next: <a href="#Add_002don-packages-from-Bioconductor" accesskey="n" rel="next">
 <a name="Add_002don-packages-from-Omegahat-1"></a>
 <h4 class="subsection">5.1.3 Add-on packages from Omegahat</h4>
 
-<p>The <a href="http://www.omegahat.org/">Omega Project for Statistical
+<p>The <a href="http://www.omegahat.net/">Omega Project for Statistical
 Computing</a> provides a variety of open-source software for statistical
 applications, with special emphasis on web-based software, Java, the
 Java virtual machine, and distributed computing.  A <acronym>CRAN</acronym> style
-R package repository is available via <a href="http://www.omegahat.org/R/">http://www.omegahat.org/R/</a>.
-See <a href="http://www.omegahat.org/">http://www.omegahat.org/</a> for information on most R packages
+R package repository is available via <a href="http://www.omegahat.net/R/">http://www.omegahat.net/R/</a>.
+See <a href="http://www.omegahat.net/">http://www.omegahat.net/</a> for information on most R packages
 available from the Omega project.
 </p>
 <hr>
@@ -2088,17 +2089,17 @@ Next: <a href="#Other-add_002don-packages" accesskey="n" rel="next">Other add-on
 <a name="Add_002don-packages-from-Bioconductor-1"></a>
 <h4 class="subsection">5.1.4 Add-on packages from Bioconductor</h4>
 
-<p><a href="http://www.bioconductor.org/">Bioconductor</a> is an open source and
+<p><a href="https://www.bioconductor.org/">Bioconductor</a> is an open source and
 open development software project for the analysis and comprehension of
 genomic data.  Most Bioconductor components are distributed as R add-on
 packages.  Initially most of the
-<a href="http://www.bioconductor.org/packages/bioc/">Bioconductor software
-packages</a> focused primarily on DNA microarray data analysis.  As the
+<a href="https://bioconductor.org/packages/release/BiocViews.html#___Software">Bioconductor software packages</a>
+focused primarily on DNA microarray data analysis.  As the 
 project has matured, the functional scope of the software packages
 broadened to include the analysis of all types of genomic data, such as
 SAGE, sequence, or SNP data.  In addition, there are metadata
 (annotation, CDF and probe) and experiment data packages.  See
-<a href="http://www.bioconductor.org/download/">http://www.bioconductor.org/download/</a> for available packages and a
+<a href="https://www.bioconductor.org/download/">https://www.bioconductor.org/download/</a> for available packages and a
 complete taxonomy via BioC Views.
 </p>
 <hr>
@@ -2113,7 +2114,7 @@ Previous: <a href="#Add_002don-packages-from-Bioconductor" accesskey="p" rel="pr
 <p>Many more packages are available from places other than the three
 default repositories discussed above (<acronym>CRAN</acronym>, Bioconductor and
 Omegahat).  In particular, R-Forge provides a <acronym>CRAN</acronym> style repository
-at <a href="http://R-Forge.R-project.org/">http://R-Forge.R-project.org/</a>.
+at <a href="https://R-Forge.R-project.org/">https://R-Forge.R-project.org/</a>.
 </p>
 <p>More code has been posted to the R-help mailing list, and can be
 obtained from the mailing list archive.
@@ -2179,7 +2180,7 @@ Next: <a href="#How-can-add_002don-packages-be-removed_003f" accesskey="n" rel="
 <p>This produces something like
 </p>
 <blockquote>
-<table class="cartouche" border="1"><tr><td>
+<table summary="" class="cartouche" border="1"><tr><td>
 <div class="smallexample">
 <pre class="smallexample">Packages in ‘/home/me/lib/R’:
 
@@ -2309,7 +2310,7 @@ in.  Also, the developers do not have access to all possible machines
 capable of running R.  So, simply using it and communicating problems is
 certainly of great value.
 </p>
-<p>The <a href="http://developer.R-project.org/">R Developer Page</a> acts as an
+<p>The <a href="https://developer.R-project.org/">R Developer Page</a> acts as an
 intermediate repository for more or less finalized ideas and plans for
 the R statistical system.  It contains (pointers to) TODO lists, RFCs,
 various other writeups, ideas lists, and SVN miscellanea.
@@ -2323,7 +2324,7 @@ Next: <a href="#R-Miscellanea" accesskey="n" rel="next">R Miscellanea</a>, Previ
 <a name="R-and-Emacs-1"></a>
 <h2 class="chapter">6 R and Emacs</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#Is-there-Emacs-support-for-R_003f" accesskey="1">Is there Emacs support for R?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Should-I-run-R-from-within-Emacs_003f" accesskey="2">Should I run R from within Emacs?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2373,16 +2374,15 @@ editing saved transcripts, and re-evaluating commands from transcript
 files).
 </p>
 <p>The latest stable version of <acronym>ESS</acronym> is available via <acronym>CRAN</acronym> or
-the <a href="http://ESS.R-project.org/">ESS web page</a>.  The <acronym>HTML</acronym> version
-of the documentation can be found at <a href="http://stat.ethz.ch/ESS/">http://stat.ethz.ch/ESS/</a>.
+the <a href="https://ESS.R-project.org/">ESS web page</a>.
 </p>
 <p><acronym>ESS</acronym> comes with detailed installation instructions.
 </p>
 <p>For help with <acronym>ESS</acronym>, send email to
-<a href="mailto:ESS-help@stat.math.ethz.ch">ESS-help@stat.math.ethz.ch</a>.
+<a href="mailto:ESS-help@r-project.org">ESS-help@r-project.org</a>.
 </p>
 <p>Please send bug reports and suggestions on <acronym>ESS</acronym> to
-<a href="mailto:ESS-bugs@stat.math.ethz.ch">ESS-bugs@stat.math.ethz.ch</a>.  The easiest way to do this from is
+<a href="mailto:ESS-bugs@r-project.org">ESS-bugs@r-project.org</a>.  The easiest way to do this from is
 within Emacs by typing <kbd>M-x ess-submit-bug-report</kbd> or using the
 [ESS] or [iESS] pulldown menus.
 </p>
@@ -2472,7 +2472,7 @@ Next: <a href="#R-Programming" accesskey="n" rel="next">R Programming</a>, Previ
 <a name="R-Miscellanea-1"></a>
 <h2 class="chapter">7 R Miscellanea</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#How-can-I-set-components-of-a-list-to-NULL_003f" accesskey="1">How can I set components of a list to NULL?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#How-can-I-save-my-workspace_003f" accesskey="2">How can I save my workspace?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -2556,6 +2556,10 @@ Next: <a href="#R-Programming" accesskey="n" rel="next">R Programming</a>, Previ
 <tr><td align="left" valign="top">&bull; <a href="#Why-does-summary_0028_0029-report-strange-results-for-the-R_005e2-estimate-when-I-fit-a-linear-model-with-no-intercept_003f">Why does summary() report strange results for the R^2 estimate when I fit a linear model with no intercept?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#Why-is-R-apparently-not-releasing-memory_003f">Why is R apparently not releasing memory?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#How-can-I-enable-secure-https-downloads-in-R_003f">How can I enable secure https downloads in R?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="#How-can-I-get-CRAN-package-binaries-for-outdated-versions-of-R_003f">How can I get CRAN package binaries for outdated versions of R?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
 
@@ -2852,7 +2856,7 @@ Next: <a href="#What-are-the-enclosing-and-parent-environments_003f" accesskey="
 <a name="Are-Trellis-displays-implemented-in-R_003f-1"></a>
 <h3 class="section">7.11 Are Trellis displays implemented in R?</h3>
 
-<p>The recommended package <a href="http://CRAN.R-project.org/package=lattice"><strong>lattice</strong></a> (which is based on base
+<p>The recommended package <a href="https://CRAN.R-project.org/package=lattice"><strong>lattice</strong></a> (which is based on base
 package <strong>grid</strong>) provides graphical functionality that is compatible
 with most Trellis commands.
 </p>
@@ -3014,15 +3018,15 @@ Next: <a href="#Why-is-the-output-not-printed-when-I-source_0028_0029-a-file_003
 <a name="Are-GAMs-implemented-in-R_003f-1"></a>
 <h3 class="section">7.15 Are GAMs implemented in R?</h3>
 
-<p>Package <a href="http://CRAN.R-project.org/package=gam"><strong>gam</strong></a> from <acronym>CRAN</acronym> implements all the Generalized
+<p>Package <a href="https://CRAN.R-project.org/package=gam"><strong>gam</strong></a> from <acronym>CRAN</acronym> implements all the Generalized
 Additive Models (GAM) functionality as described in the GAM chapter of
 the White Book.  In particular, it implements backfitting with both
 local regression and smoothing splines, and is extendable.  There is a
-<code>gam()</code> function for GAMs in package <a href="http://CRAN.R-project.org/package=mgcv"><strong>mgcv</strong></a>, but it is not
+<code>gam()</code> function for GAMs in package <a href="https://CRAN.R-project.org/package=mgcv"><strong>mgcv</strong></a>, but it is not
 an exact clone of what is described in the White Book (no <code>lo()</code>
-for example).  Package <a href="http://CRAN.R-project.org/package=gss"><strong>gss</strong></a> can fit spline-based GAMs too.  And
+for example).  Package <a href="https://CRAN.R-project.org/package=gss"><strong>gss</strong></a> can fit spline-based GAMs too.  And
 if you can accept regression splines you can use <code>glm()</code>.  For
-Gaussian GAMs you can use <code>bruto()</code> from package <a href="http://CRAN.R-project.org/package=mda"><strong>mda</strong></a>.
+Gaussian GAMs you can use <code>bruto()</code> from package <a href="https://CRAN.R-project.org/package=mda"><strong>mda</strong></a>.
 </p>
 <hr>
 <a name="Why-is-the-output-not-printed-when-I-source_0028_0029-a-file_003f"></a>
@@ -3159,7 +3163,7 @@ Next: <a href="#How-can-I-get-command-line-editing-to-work_003f" accesskey="n" r
 problems, and the default settings should just work.  This option is not
 available for versions of R prior to 2.7.0, or without support for
 cairo.  From R 2.7.0 <code>png()</code> by default uses the Quartz device
-on Mac OS X, and that too works in batch mode.
+on macOS, and that too works in batch mode.
 </p>
 <p>Earlier versions of the <code>png()</code> device used the X11 driver, which
 is a problem in batch mode or for remote operation.  If you have
@@ -3167,9 +3171,9 @@ Ghostscript you can use <code>bitmap()</code>, which produces a PostScript or
 PDF file then converts it to any bitmap format supported by Ghostscript.
 On some installations this produces ugly output, on others it is
 perfectly satisfactory.  Many systems now come with Xvfb from
-<a href="http://www.x.org/Downloads.html">X.Org</a> (possibly as an optional
+<a href="http://www.x.org/">X.Org</a> (possibly as an optional
 install), which is an X11 server that does not require a screen; and
-there is the <a href="http://CRAN.R-project.org/package=GDD"><strong>GDD</strong></a> package from <acronym>CRAN</acronym>, which produces PNG,
+there is the <a href="https://CRAN.R-project.org/package=GDD"><strong>GDD</strong></a> package from <acronym>CRAN</acronym>, which produces PNG,
 JPEG and GIF bitmaps without X11.
 </p>
 <hr>
@@ -3263,7 +3267,7 @@ Next: <a href="#How-can-I-sort-the-rows-of-a-data-frame_003f" accesskey="n" rel=
 
 <p>The most likely reason is that you forgot to tell R to display the
 graph.  Lattice functions such as <code>xyplot()</code> create a graph object,
-but do not display it (the same is true of <a href="http://CRAN.R-project.org/package=ggplot2"><strong>ggplot2</strong></a> graphics,
+but do not display it (the same is true of <a href="https://CRAN.R-project.org/package=ggplot2"><strong>ggplot2</strong></a> graphics,
 and Trellis graphics in <small>S-PLUS</small>).  The <code>print()</code> method for the
 graph object produces the actual display.  When you use these functions
 interactively at the command line, the result is automatically printed,
@@ -3453,12 +3457,12 @@ Next: <a href="#How-can-I-capture-or-ignore-errors-in-a-long-simulation_003f" ac
 <a name="Why-doesn_0027t-R-think-these-numbers-are-equal_003f-1"></a>
 <h3 class="section">7.31 Why doesn&rsquo;t R think these numbers are equal?</h3>
 
-<p>The only numbers that can be represented exactly in R&rsquo;s numeric type 
-are integers and fractions whose denominator is a power of 2.  Other 
-numbers have to be rounded to (typically) 53 binary digits accuracy.  As a 
-result, two floating point numbers will not reliably be equal unless they 
-have been computed by the same algorithm, and not always even then.  For 
-example
+<p>The only numbers that can be represented exactly in R&rsquo;s numeric type are
+integers and fractions whose denominator is a power of 2.  All other
+numbers are internally rounded to (typically) 53 binary digits accuracy.
+As a result, two floating point numbers will not reliably be equal
+unless they have been computed by the same algorithm, and not always
+even then.  For example
 </p>
 <div class="example">
 <pre class="example">R&gt; a &lt;- sqrt(2)
@@ -3466,6 +3470,8 @@ R&gt; a * a == 2
 [1] FALSE
 R&gt; a * a - 2
 [1] 4.440892e-16
+R&gt; print(a * a, digits = 18)
+[1] 2.00000000000000044
 </pre></div>
 
 <p>The function <code>all.equal()</code> compares two objects using a numeric
@@ -3473,17 +3479,32 @@ tolerance of <code>.Machine$double.eps ^ 0.5</code>.  If you want much greater
 accuracy than this you will need to consider error propagation
 carefully.
 </p>
+<p>A discussion with many easily followed examples is in Appendix G
+&ldquo;Computational Precision and Floating Point Arithmetic&rdquo;, pages
+753&ndash;771 of <em>Statistical Analysis and Data Display: An Intermediate
+Course with Examples in R</em>, Richard M. Heiberger and Burt Holland
+(Springer 2015, second edition).  This appendix is a free download from
+<a href="http://link.springer.com/content/pdf/bbm%3A978-1-4939-2122-5%2F1.pdf">http://link.springer.com/content/pdf/bbm%3A978-1-4939-2122-5%2F1.pdf</a>.
+</p>
 <p>For more information, see e.g. David Goldberg (1991), &ldquo;What Every
 Computer Scientist Should Know About Floating-Point Arithmetic&rdquo;,
 <em>ACM Computing Surveys</em>, <strong>23/1</strong>, 5&ndash;48, also available via
 <a href="http://www.validlab.com/goldberg/paper.pdf">http://www.validlab.com/goldberg/paper.pdf</a>.
 </p>
-<p>To quote from &ldquo;The Elements of Programming Style&rdquo; by Kernighan and
-Plauger:
+<p>Here is another example, this time using addition:
 </p>
-<blockquote>
-<p><em>10.0 times 0.1 is hardly ever 1.0</em>.
-</p></blockquote>
+<div class="example">
+<pre class="example">R&gt; .3 + .6 == .9
+[1] FALSE
+R&gt; .3 + .6 - .9
+[1] -1.110223e-16
+R&gt; print(matrix(c(.3,  .6,  .9, .3 + .6)), digits = 18)
+                     [,1]
+[1,] 0.299999999999999989
+[2,] 0.599999999999999978
+[3,] 0.900000000000000022
+[4,] 0.899999999999999911
+</pre></div>
 
 
 <hr>
@@ -3610,8 +3631,8 @@ For some common viewers, consider the following:
 smoothing and line art smoothing.
 Disable line art smoothing.
 </p></dd>
-<dt>Preview (Mac OS X)
-<a name="index-Preview-_0028Mac-OS-X_0029"></a>
+<dt>Preview (macOS)
+<a name="index-Preview-_0028macOS_0029"></a>
 </dt>
 <dd><p>There is an option in Preferences to enable/disable anti-aliasing of
 text and line art.
@@ -3721,17 +3742,17 @@ Next: <a href="#How-do-I-create-a-plot-with-two-y_002daxes_003f" accesskey="n" r
 <h3 class="section">7.38 How can I put error bars or confidence bands on my plot?</h3>
 
 <p>Some functions will display a particular kind of plot with error bars,
-such as the <code>bar.err()</code> function in the <a href="http://CRAN.R-project.org/package=agricolae"><strong>agricolae</strong></a>
-package, the <code>plotCI()</code> function in the <a href="http://CRAN.R-project.org/package=gplots"><strong>gplots</strong></a> package,
+such as the <code>bar.err()</code> function in the <a href="https://CRAN.R-project.org/package=agricolae"><strong>agricolae</strong></a>
+package, the <code>plotCI()</code> function in the <a href="https://CRAN.R-project.org/package=gplots"><strong>gplots</strong></a> package,
 the <code>plotCI()</code> and <code>brkdn.plot()</code> functions in the
-<a href="http://CRAN.R-project.org/package=plotrix"><strong>plotrix</strong></a> package and the <code>error.bars()</code>,
+<a href="https://CRAN.R-project.org/package=plotrix"><strong>plotrix</strong></a> package and the <code>error.bars()</code>,
 <code>error.crosses()</code> and <code>error.bars.by()</code> functions in the
-<a href="http://CRAN.R-project.org/package=psych"><strong>psych</strong></a> package.  Within these types of functions, some will
+<a href="https://CRAN.R-project.org/package=psych"><strong>psych</strong></a> package.  Within these types of functions, some will
 accept the measures of dispersion (e.g., <code>plotCI</code>), some will
 calculate the dispersion measures from the raw values (<code>bar.err</code>,
 <code>brkdn.plot</code>), and some will do both (<code>error.bars</code>).  Still
 other functions will just display error bars, like the dispersion
-function in the <a href="http://CRAN.R-project.org/package=plotrix"><strong>plotrix</strong></a> package.  Most of the above functions
+function in the <a href="https://CRAN.R-project.org/package=plotrix"><strong>plotrix</strong></a> package.  Most of the above functions
 use the <code>arrows()</code> function in the base <strong>graphics</strong> package to
 draw the error bars.
 </p>
@@ -3741,10 +3762,10 @@ error bars, e.g., the <code>grid.arrow()</code> function in the <strong>grid</st
 package, and the <code>geom_errorbar()</code>, <code>geom_errorbarh()</code>,
 <code>geom_pointrange()</code>, <code>geom_linerange()</code>,
 <code>geom_crossbar()</code> and <code>geom_ribbon()</code> functions in the
-<a href="http://CRAN.R-project.org/package=ggplot2"><strong>ggplot2</strong></a> package.  In the lattice system, error bars can be
+<a href="https://CRAN.R-project.org/package=ggplot2"><strong>ggplot2</strong></a> package.  In the lattice system, error bars can be
 displayed with <code>Dotplot()</code> or <code>xYplot()</code> in the
-<a href="http://CRAN.R-project.org/package=Hmisc"><strong>Hmisc</strong></a> package and <code>segplot()</code> in the
-<a href="http://CRAN.R-project.org/package=latticeExtra"><strong>latticeExtra</strong></a> package.
+<a href="https://CRAN.R-project.org/package=Hmisc"><strong>Hmisc</strong></a> package and <code>segplot()</code> in the
+<a href="https://CRAN.R-project.org/package=latticeExtra"><strong>latticeExtra</strong></a> package.
 </p>
 <hr>
 <a name="How-do-I-create-a-plot-with-two-y_002daxes_003f"></a>
@@ -3760,12 +3781,9 @@ scaled to the same vertical size and showing separate vertical axes on
 the left and right sides of the plot that reflect the original scales of
 the data, is possible in R but is not recommended.  The basic approach
 for constructing such graphs is to use <code>par(new=TRUE)</code> (see
-<code>?par</code>); functions <code>twoord.plot()</code> (in the <a href="http://CRAN.R-project.org/package=plotrix"><strong>plotrix</strong></a>
-package) and <code>doubleYScale()</code> (in the <a href="http://CRAN.R-project.org/package=latticeExtra"><strong>latticeExtra</strong></a>
-package) automate the process somewhat.  See
-<a href="http://rwiki.sciviews.org/doku.php?id=tips:graphics-base:2yaxes">http://rwiki.sciviews.org/doku.php?id=tips:graphics-base:2yaxes</a>
-for more information, including strong arguments against this sort of
-graph.
+<code>?par</code>); functions <code>twoord.plot()</code> (in the <a href="https://CRAN.R-project.org/package=plotrix"><strong>plotrix</strong></a>
+package) and <code>doubleYScale()</code> (in the <a href="https://CRAN.R-project.org/package=latticeExtra"><strong>latticeExtra</strong></a>
+package) automate the process somewhat.
 </p>
 <hr>
 <a name="How-do-I-access-the-source-code-for-a-function_003f"></a>
@@ -3780,7 +3798,7 @@ Next: <a href="#Why-does-summary_0028_0029-report-strange-results-for-the-R_005e
 code. However, code is sometimes hidden in a namespace, or compiled.  For 
 a complete overview on how to access source code, see Uwe Ligges (2006),
 &ldquo;Help Desk: Accessing the sources&rdquo;, <em>R News</em>, <strong>6/4</strong>,
-43&ndash;45 (<a href="http://CRAN.R-project.org/doc/Rnews/Rnews_2006-4.pdf">http://CRAN.R-project.org/doc/Rnews/Rnews_2006-4.pdf</a>).
+43&ndash;45 (<a href="https://CRAN.R-project.org/doc/Rnews/Rnews_2006-4.pdf">https://CRAN.R-project.org/doc/Rnews/Rnews_2006-4.pdf</a>).
 </p>
 <hr>
 <a name="Why-does-summary_0028_0029-report-strange-results-for-the-R_005e2-estimate-when-I-fit-a-linear-model-with-no-intercept_003f"></a>
@@ -3819,7 +3837,7 @@ probably shouldn&rsquo;t be fitting a line through the origin.)
 <a name="Why-is-R-apparently-not-releasing-memory_003f"></a>
 <div class="header">
 <p>
-Previous: <a href="#Why-does-summary_0028_0029-report-strange-results-for-the-R_005e2-estimate-when-I-fit-a-linear-model-with-no-intercept_003f" accesskey="p" rel="prev">Why does summary() report strange results for the R^2 estimate when I fit a linear model with no intercept?</a>, Up: <a href="#R-Miscellanea" accesskey="u" rel="up">R Miscellanea</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="#How-can-I-enable-secure-https-downloads-in-R_003f" accesskey="n" rel="next">How can I enable secure https downloads in R?</a>, Previous: <a href="#Why-does-summary_0028_0029-report-strange-results-for-the-R_005e2-estimate-when-I-fit-a-linear-model-with-no-intercept_003f" accesskey="p" rel="prev">Why does summary() report strange results for the R^2 estimate when I fit a linear model with no intercept?</a>, Up: <a href="#R-Miscellanea" accesskey="u" rel="up">R Miscellanea</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <a name="Why-is-R-apparently-not-releasing-memory_003f-1"></a>
 <h3 class="section">7.42 Why is R apparently not releasing memory?</h3>
@@ -3872,9 +3890,73 @@ small objects such as strings or pairlists will be affected by this
 behavior, whereas large objects such as long vectors will be allocated
 using <code>mmap</code> and thus not affected.  On Linux (and possibly other
 Unix-like systems) it is possible to use the <code>mallinfo</code> system call
-(also see the <a href="http://rforge.net/mallinfo">mallinfo</a> package) to
+(also see the <a href="https://rforge.net/mallinfo">mallinfo</a> package) to
 query the allocator about the layout of the allocations, including the
 actually used memory as well as unused memory that cannot be released.
+</p>
+<hr>
+<a name="How-can-I-enable-secure-https-downloads-in-R_003f"></a>
+<div class="header">
+<p>
+Next: <a href="#How-can-I-get-CRAN-package-binaries-for-outdated-versions-of-R_003f" accesskey="n" rel="next">How can I get CRAN package binaries for outdated versions of R?</a>, Previous: <a href="#Why-is-R-apparently-not-releasing-memory_003f" accesskey="p" rel="prev">Why is R apparently not releasing memory?</a>, Up: <a href="#R-Miscellanea" accesskey="u" rel="up">R Miscellanea</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<a name="How-can-I-enable-secure-https-downloads-in-R_003f-1"></a>
+<h3 class="section">7.43 How can I enable secure https downloads in R?</h3>
+
+
+<p>When R transfers files over <acronym>HTTP</acronym> (e.g., using the
+<code>install.packages()</code> or <code>download.file()</code> function), a
+download method is chosen based on the <samp>download.file.method</samp>
+option.  There are several methods available and the default behavior if
+no option is explicitly specified is to use R&rsquo;s internal <acronym>HTTP</acronym>
+implementation.  In most circumstances this internal method will not
+support <acronym>HTTPS</acronym> URLs so you will need to override the default:
+this is done automatically for such URLs as from R 3.2.2.
+</p>
+<p>R versions 3.2.0 and greater include two download methods
+(<code>&quot;libcurl&quot;</code> and <code>&quot;wininet&quot;</code>) that both support
+<acronym>HTTPS</acronym> connections: we recommend that you use these methods.
+The requisite code to add to <samp>.Rprofile</samp> or <samp>Rprofile.site</samp> is:
+</p>
+<div class="example">
+<pre class="example">options(download.file.method = &quot;wininet&quot;, url.method = &quot;wininet&quot;)
+<span class="roman">(Windows)</span>
+options(download.file.method = &quot;libcurl&quot;, url.method = &quot;libcurl&quot;)
+<span class="roman">(Linux and macOS)</span>
+</pre></div>
+
+<p>(Method <code>&quot;wininet&quot;</code> is the default on Windows as from R 3.2.2.)
+</p>
+<p>Note that the <code>&quot;libcurl&quot;</code> method may or may not have been compiled
+in.  In the case that it was not, i.e.. <code>capabilities(&quot;libcurl&quot;) ==
+FALSE</code>, we recommend method <code>&quot;wget&quot;</code> on Linux and <code>&quot;curl&quot;</code> on
+macOS.  It is possible that system versions of <code>&quot;libcurl&quot;</code>,
+<code>wget</code> or <code>curl</code> may have been compiled without
+<acronym>HTTPS</acronym> support, but this is unlikely.  As from R 3.3.0
+<code>&quot;libcurl&quot;</code> with <acronym>HTTPS</acronym> support is required except on
+Windows.
+</p>
+<hr>
+<a name="How-can-I-get-CRAN-package-binaries-for-outdated-versions-of-R_003f"></a>
+<div class="header">
+<p>
+Previous: <a href="#How-can-I-enable-secure-https-downloads-in-R_003f" accesskey="p" rel="prev">How can I enable secure https downloads in R?</a>, Up: <a href="#R-Miscellanea" accesskey="u" rel="up">R Miscellanea</a> &nbsp; [<a href="#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<a name="How-can-I-get-CRAN-package-binaries-for-outdated-versions-of-R_003f-1"></a>
+<h3 class="section">7.44 How can I get CRAN package binaries for outdated versions of R?</h3>
+
+<p>Since March 2016, Windows and macOS binaries of <acronym>CRAN</acronym> packages for old
+versions of R (released more than 5 years ago) are made available from a
+central <acronym>CRAN</acronym> archive server instead of the <acronym>CRAN</acronym> mirrors.  To get
+these, one should set the <acronym>CRAN</acronym> &ldquo;mirror&rdquo; element of the <code>repos</code>
+option accordingly, by something like
+</p><div class="example">
+<pre class="example">local({r &lt;- getOption(&quot;repos&quot;)
+       r[&quot;CRAN&quot;] &lt;- &quot;http://CRAN-archive.R-project.org&quot;
+       options(repos = r)
+      })
+</pre></div>
+<p>(see <code>?options</code> for more information).
 </p>
 <hr>
 <a name="R-Programming"></a>
@@ -3885,7 +3967,7 @@ Next: <a href="#R-Bugs" accesskey="n" rel="next">R Bugs</a>, Previous: <a href="
 <a name="R-Programming-1"></a>
 <h2 class="chapter">8 R Programming</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#How-should-I-write-summary-methods_003f" accesskey="1">How should I write summary methods?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#How-can-I-debug-dynamically-loaded-code_003f" accesskey="2">How can I debug dynamically loaded code?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -3992,7 +4074,7 @@ Next: <a href="#Acknowledgments" accesskey="n" rel="next">Acknowledgments</a>, P
 <a name="R-Bugs-1"></a>
 <h2 class="chapter">9 R Bugs</h2>
 
-<table class="menu" border="0" cellspacing="0">
+<table summary="" class="menu" border="0" cellspacing="0">
 <tr><td align="left" valign="top">&bull; <a href="#What-is-a-bug_003f" accesskey="1">What is a bug?</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 <tr><td align="left" valign="top">&bull; <a href="#How-to-report-a-bug" accesskey="2">How to report a bug</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
@@ -4104,7 +4186,7 @@ that might be expected to produce the bug but actually do not.  If you
 want to debug the problem and find exactly what caused it, that is
 wonderful.  You should still report the facts as well as any
 explanations or solutions.  Please include an example that reproduces
-(e.g., <a href="http://en.wikipedia.org/wiki/Reproducibility">http://en.wikipedia.org/wiki/Reproducibility</a>) the problem,
+(e.g., <a href="https://en.wikipedia.org/wiki/Reproducibility">https://en.wikipedia.org/wiki/Reproducibility</a>) the problem,
 preferably the simplest one you have found.
 </p>
 <p>Invoking R with the <samp>--vanilla</samp> option may help in isolating a
@@ -4114,7 +4196,7 @@ read.
 <p>Before you actually submit a bug report, you should check whether the
 bug has already been reported and/or fixed.  First, try the &ldquo;Show open
 bugs new-to-old&rdquo; or the search facility on
-<a href="http://bugs.R-project.org/">http://bugs.R-project.org/</a>.  Second, consult
+<a href="https://bugs.R-project.org/">https://bugs.R-project.org/</a>.  Second, consult
 <a href="https://svn.R-project.org/R/trunk/doc/NEWS.Rd">https://svn.R-project.org/R/trunk/doc/NEWS.Rd</a>, which
 records changes that will appear in the <em>next</em> release of R,
 including bug fixes that do not appear on the Bug Tracker.  
@@ -4128,7 +4210,7 @@ the subject line.
 </p>
 <p>A bug report can be generated using the function <code>bug.report()</code>.
 For reports on R this will open the Web page at
-<a href="http://bugs.R-project.org/">http://bugs.R-project.org/</a>: for a contributed package it will open
+<a href="https://bugs.R-project.org/">https://bugs.R-project.org/</a>: for a contributed package it will open
 the package&rsquo;s bug tracker Web page or help you compose an email to the
 maintainer.
 </p>
@@ -4144,7 +4226,7 @@ example by starting with &lsquo;<samp>Wishlist:</samp>&rsquo;.
 <p>Corrections to and comments on message translations should be sent to the
 last translator (listed at the top of the appropriate &lsquo;<samp>.po</samp>&rsquo; file)
 or to the translation team as listed at
-<a href="http://developer.R-project.org/TranslationTeams.html">http://developer.R-project.org/TranslationTeams.html</a>.
+<a href="https://developer.R-project.org/TranslationTeams.html">https://developer.R-project.org/TranslationTeams.html</a>.
 </p>
 <hr>
 <a name="Acknowledgments"></a>

@@ -1,59 +1,73 @@
 useDynLib(Matrix, .registration=TRUE)
 
-## Import non-base functions we need explicitly,
-## notably for which we define methods:
-importFrom("lattice", levelplot, panel.levelplot.raster)
-importFrom("graphics", image)
-importFrom("utils", head, tail, assignInNamespace)
-importFrom("stats", cov2cor, toeplitz, update#, vcov
-	   )
-
+## Import functions we need explicitly, notably for which we define methods:
+importFrom("grDevices", colorRampPalette, grey)
+importFrom("graphics", par, image)
 importFrom("grid", grid.rect, gpar, grob)# others via 'grid::'
+importFrom("lattice", levelplot, panel.levelplot.raster)
+
+importFrom("utils", str, head, tail, assignInNamespace, capture.output)
+importFrom("stats"
+         , "contrasts<-", cov2cor
+         , diffinv, model.frame, rnorm, runif
+         , symnum, terms
+         , toeplitz, update#, vcov
+           )
 
 ## try to import all we need, but not more
-importFrom("methods",
+importFrom("methods"
 	   ## still needed {group generics needed to be explicitly imported} ?
-	   Ops, Arith, Compare, Logic, Math, Math2, Summary, Complex,
+         , Ops, Arith, Compare, Logic, Math, Math2, Summary, Complex
 	   ## generics for which we export new methods:
-	   cbind2, rbind2, coerce, show
-	   , kronecker
+         , cbind2, rbind2, coerce, show
+         , kronecker
 	   ## things we call,.. necessary when Matrix is loaded, but not attached, as in
 	   ## Rscript --vanilla -e 'require(methods);(M <- Matrix::Matrix(0:1,3,3));as(M,"sparseMatrix")'
-	   , callGeneric, as, is, extends, new
-	   , getClass, getClassDef, validObject
-	   , setClass, setClassUnion, setMethod, setOldClass
-	   , setValidity, slot, "slot<-", .hasSlot
-	   , signature, representation, prototype)
+         , as, is, extends, new
+         , callGeneric, callNextMethod
+         , .selectSuperClasses, .slotNames, canCoerce, packageSlot
+         , getClass, getClassDef, validObject
+         , setClass, setClassUnion, setMethod, setOldClass
+         , setValidity, slot, "slot<-", slotNames, .hasSlot
+         , signature, representation, prototype)
+
 
 
 ## Generics and functions defined in this package
-export("Cholesky", ".SuiteSparse_version",
-       "Diagonal", ".symDiagonal", ".sparseDiagonal",
+export("%&%",
+       "Cholesky", ".SuiteSparse_version",
+       "Diagonal", ".symDiagonal", ".sparseDiagonal", ".trDiagonal",
        "Hilbert", "KhatriRao",
        "Matrix",
+       "MatrixClass",
        "spMatrix",
-       "sparseMatrix",
+       "sparseMatrix", "rsparsematrix",
        "Schur",
        "abIseq", "abIseq1", "rep2abI",
        "band",
        "bandSparse",
        "bdiag", ".bdiag",
+       "c.sparseVector", # export to be used explicitly when 1st arg is not sparseVector
 ## no longer; implicit generics now
        ## "colMeans", "colSums", ## these needed a "..." added
        ## "rowMeans", "rowSums",
        "condest", "onenormest",
        "det",# << "identical" as base - but with correct determinant()
        ## "mkDet", # <- useful in other packages (Rmpfr, gmp) .. hmm --> 'stats' ?
-       ".dsy2mat", ".dxC2mat", ".T2Cmat", "..2dge",
+       .asmatrix,
+       ## FIXME: why exactly these and not e.g. dsp2dsy and many more?
+       ".dsy2mat", ".dsy2dsp", ".dxC2mat", ".T2Cmat", "..2dge", ".dense2sy",
+       ".C2nC", ".nC2d", ".nC2l",
        ".diag.dsC",# -> R/dsCMatrix.R --has FIXME
-       "diagN2U", "diagU2N", ".diagU2N", ".diag2tT", ".diag2sT",
+       .solve.dgC.chol, .solve.dgC.qr, .solve.dgC.lu,
+       "diagN2U", "diagU2N", ".diagU2N", ".diag2tT", ".diag2sT", ".diag2mat",
        "drop0",
        "expand",
        "expm",
        "facmul", "fac2sparse", "fac2Sparse",
        "forceSymmetric",
-       ## 'graph' package (and class) related:
-       "T2graph", "graph2T",
+       "T2graph", "graph2T", ## <- 'graph' package (and class) related
+       "anyDuplicatedT", "uniqTsparse",
        "isTriangular",
        "isDiagonal",
        "isLDL",
@@ -73,7 +87,6 @@ export("Cholesky", ".SuiteSparse_version",
        "sparseVector",
        "symmpart",
        "skewpart",
-       "tcrossprod",
        "tril", "triu",
        "updown",
        "pack", "unpack"
@@ -81,10 +94,9 @@ export("Cholesky", ".SuiteSparse_version",
        , ".validateCsparse"
        , "writeMM"
        )
-if(getRversion() < "2.15.0")
-    export(".M.classEnv")
 
 ## substitute for using  cbind() / rbind()
+## .Deprecated() for R version >= 3.2.0 [2015-04]:
 export("cBind",
        "rBind")
 
@@ -97,9 +109,9 @@ exportClasses(
 	      "number",
 	      "xsparseVector", # the class union of all 'x' slot sparseVector's
               ## not exported (but exporting does not help for method dispatch bug!)
-              ## "numLike", 
-              ## "xMatrix", 
-              ## "mMatrix", 
+              ## "numLike",
+              ## "xMatrix",
+              ## "mMatrix",
 
     ## all others:
 ## LOGIC      "logic",
@@ -275,6 +287,7 @@ exportMethods(## for both own and "other" generics:
 	      "dimnames",
 	      "dimnames<-",
 	      "drop",
+               ## "eigen", "svd", # only if(.Matrix.avoiding.as.matrix) <--> ./R/Auxiliaries.R
 	      "expand",
 	      "expm",
 	      "format",
@@ -327,8 +340,13 @@ exportMethods("cbind2")
 S3method(print, sparseSummary)
 S3method(print, diagSummary)
 S3method(c, abIndex)# < for now -- S4 method on c() seems "difficult"
+S3method(c, sparseVector)#  (ditto)
 
 ## So that such dispatch also works inside base functions:
 S3method(as.array, Matrix)
+S3method(as.array, sparseVector)
 S3method(as.matrix, Matrix)
+S3method(as.matrix, sparseVector)
 S3method(as.vector, Matrix)
+S3method(as.vector, sparseVector)
+

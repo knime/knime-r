@@ -1,9 +1,0 @@
-evaluate                Evaluate input and return all details of
-                        evaluation.
-getSrcRegion            Extract a rectangular region of a srcfile
-line_prompt             Line prompt.
-new_output_handler      Custom output handlers.
-parse_all               Parse, retaining comments.
-replay                  Replay a list of evaluated results.
-watchout                Watch for changes in output, text and
-                        graphical.

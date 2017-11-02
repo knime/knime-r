@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------
 #  entry.tcl
 #  This file is part of Unifix BWidget Toolkit
-#  $Id: entry.tcl,v 1.21 2004/04/21 22:26:30 hobbs Exp $
+#  $Id: entry.tcl,v 1.22.2.2 2012/04/02 09:53:41 oehhar Exp $
 # ------------------------------------------------------------------------------
 #  Index of commands:
 #     - Entry::create
@@ -22,34 +22,42 @@ namespace eval Entry {
     # Note:  -textvariable is pulled off of the tk entry and put onto the
     # BW Entry so that we avoid the TkResource test for it, which screws up
     # the existance/non-existance bits of the -textvariable.
-    Widget::tkinclude Entry entry :cmd \
-    	remove { -state -background -foreground -textvariable
-    		 -disabledforeground -disabledbackground }
+    if {[Widget::theme]} {
+	Widget::tkinclude Entry ttk::entry :cmd \
+	    remove { -state -textvariable }
+    } else {
+	Widget::tkinclude Entry entry :cmd \
+	    remove { -state -background -foreground -textvariable
+		     -disabledforeground -disabledbackground }
+    }
 
     set declare [list \
-	    [list -background   TkResource  ""	   0  entry] \
-	    [list -foreground   TkResource  ""	   0  entry] \
 	    [list -state        Enum        normal 0  [list normal disabled]] \
 	    [list -text         String      ""	   0] \
 	    [list -textvariable String      ""     0] \
 	    [list -editable     Boolean     1      0] \
 	    [list -command      String      ""     0] \
-	    [list -relief       TkResource  ""     0  entry] \
-	    [list -borderwidth  TkResource  ""     0  entry] \
-	    [list -fg           Synonym     -foreground] \
-	    [list -bg           Synonym     -background] \
-	    [list -bd           Synonym     -borderwidth] \
 	]
+    if {![Widget::theme]} {
+	lappend declare \
+		[list -background   TkResource  ""	   0  entry] \
+		[list -foreground   TkResource  ""	   0  entry] \
+		[list -relief       TkResource  ""     0  entry] \
+		[list -borderwidth  TkResource  ""     0  entry] \
+		[list -fg           Synonym     -foreground] \
+		[list -bg           Synonym     -background] \
+		[list -bd           Synonym     -borderwidth]
 
-    if {![package vsatisfies [package provide Tk] 8.4]} {
-	## If we're not running version 8.4 or higher, get our
-	## disabled resources from the button widget.
-	lappend declare [list -disabledforeground TkResource "" 0 button]
-	lappend declare [list -disabledbackground TkResource "" 0 \
-							{button -background}]
-    } else {
-	lappend declare [list -disabledforeground TkResource "" 0 entry]
-	lappend declare [list -disabledbackground TkResource "" 0 entry]
+	if {![package vsatisfies [package provide Tk] 8.4]} {
+	    ## If we're not running version 8.4 or higher, get our
+	    ## disabled resources from the button widget.
+	    lappend declare [list -disabledforeground TkResource "" 0 button]
+	    lappend declare [list -disabledbackground TkResource "" 0 \
+							    {button -background}]
+	} else {
+	    lappend declare [list -disabledforeground TkResource "" 0 entry]
+	    lappend declare [list -disabledbackground TkResource "" 0 entry]
+	}
     }
 
     Widget::declare Entry $declare
@@ -64,9 +72,15 @@ namespace eval Entry {
         COLOR   {move {}}
     }
 
-    foreach event [bind Entry] {
-        bind BwEntry $event [bind Entry $event]
-    }
+    if {[Widget::theme]} {
+        foreach event [bind TEntry] {
+            bind BwEntry $event [bind TEntry $event]
+        }
+    }  else  {
+        foreach event [bind Entry] {
+            bind BwEntry $event [bind Entry $event]
+        }
+     }
 
     # Copy is kind of a special event.  It should be enabled when the
     # widget is editable but not disabled, and not when the widget is disabled.
@@ -92,29 +106,47 @@ proc Entry::create { path args } {
     array set maps [Widget::parseArgs Entry $args]
 
     set data(afterid) ""
-    eval [list entry $path] $maps(:cmd)
+    if {[Widget::theme]} {
+        eval [list ttk::entry $path] $maps(:cmd)
+    }  else  {
+        eval [list entry $path] $maps(:cmd)
+    }
     Widget::initFromODB Entry $path $maps(Entry)
     set state    [Widget::getMegawidgetOption $path -state]
     set editable [Widget::getMegawidgetOption $path -editable]
     set text     [Widget::getMegawidgetOption $path -text]
     if { $editable && [string equal $state "normal"] } {
         bindtags $path [list $path BwEntry [winfo toplevel $path] all]
-        $path configure -takefocus 1 -insertontime 600
+        if {[Widget::theme]} {
+            $path configure -takefocus 1
+        } else {
+            $path configure -takefocus 1 -insertontime 600
+        }
     } else {
         bindtags $path [list $path BwDisabledEntry [winfo toplevel $path] all]
-        $path configure -takefocus 0 -insertontime 0
+        if {[Widget::theme]} {
+            $path configure -takefocus 0
+        } else {
+            $path configure -takefocus 0 -insertontime 0
+        }
     }
     if { $editable == 0 } {
         $path configure -cursor left_ptr
     }
     if { [string equal $state "disabled"] } {
-        $path configure \
-            -foreground [Widget::getMegawidgetOption $path -disabledforeground] \
-            -background [Widget::getMegawidgetOption $path -disabledbackground]
+        if {[Widget::theme]} {
+	    $path state disabled
+	} else {
+	    $path configure \
+		-foreground [Widget::getMegawidgetOption $path -disabledforeground] \
+		-background [Widget::getMegawidgetOption $path -disabledbackground]
+	}
     } else {
-	$path configure \
-                -foreground [Widget::getMegawidgetOption $path -foreground] \
-                -background [Widget::getMegawidgetOption $path -background]
+	if {![Widget::theme]} {
+	    $path configure \
+		    -foreground [Widget::getMegawidgetOption $path -foreground] \
+		    -background [Widget::getMegawidgetOption $path -background]
+	}
 	bindtags $path [linsert [bindtags $path] 2 BwEditableEntry]
     }
     if { [string length $text] } {
@@ -152,9 +184,14 @@ proc Entry::configure { path args } {
     set res [Widget::configure $path $args]
 
     # Extract the modified bits that we are interested in.
-    set vars [list chstate cheditable chfg chdfg chbg chdbg chtext]
-    set opts [list -state -editable -foreground -disabledforeground \
-                -background -disabledbackground -text]
+    if {[Widget::theme]} {
+	set vars [list chstate cheditable chtext]
+	set opts [list -state -editable -text]
+    } else {
+	set vars [list chstate cheditable chfg chdfg chbg chdbg chtext]
+	set opts [list -state -editable -foreground -disabledforeground \
+		    -background -disabledbackground -text]
+    }
     foreach $vars [eval [linsert $opts 0 Widget::hasChangedX $path]] { break }
 
     if { $chstate || $cheditable } {
@@ -166,20 +203,36 @@ proc Entry::configure { path args } {
             if { $idx != -1 } {
                 bindtags $path [lreplace $btags $idx $idx BwEntry]
             }
-            $path:cmd configure -takefocus 1 -insertontime 600
+            if {[Widget::theme]} {
+                $path:cmd configure -takefocus 1
+            } else {
+                $path:cmd configure -takefocus 1 -insertontime 600
+            }
         } else {
             set idx [lsearch $btags BwEntry]
             if { $idx != -1 } {
                 bindtags $path [lreplace $btags $idx $idx BwDisabledEntry]
             }
-            $path:cmd configure -takefocus 0 -insertontime 0
+            if {[Widget::theme]} {
+                $path:cmd configure -takefocus 0
+            } else {
+                 $path:cmd configure -takefocus 0 -insertontime 0
+            }
             if { [string equal [focus] $path] } {
                 focus .
             }
         }
     }
 
-    if { $chstate || $chfg || $chdfg || $chbg || $chdbg } {
+    if { [Widget::theme] && $chstate } {
+	set state [Widget::getMegawidgetOption $path -state]
+        if { [string equal $state "disabled"] } {
+            $path:cmd state disabled
+        } else {
+            $path:cmd state !disabled
+        }
+    }
+    if { ![Widget::theme] && ($chstate || $chfg || $chdfg || $chbg || $chdbg) } {
 	set state [Widget::getMegawidgetOption $path -state]
         if { [string equal $state "disabled"] } {
             $path:cmd configure \
@@ -262,10 +315,13 @@ proc Entry::invoke { path } {
 #  Command Entry::_path_command
 # ------------------------------------------------------------------------------
 proc Entry::_path_command { path cmd larg } {
-    if {[string equal $cmd "configure"] || [string equal $cmd "cget"]} {
-        return [eval [linsert $larg 0 Entry::$cmd $path]]
-    } else {
-        return [eval [linsert $larg 0 $path:cmd $cmd]]
+    switch -exact -- $cmd {
+        configure - cget - invoke {
+            return [eval [linsert $larg 0 Entry::$cmd $path]]
+        }
+        default {
+            return [uplevel 2 [linsert $larg 0 $path:cmd $cmd]]
+        }
     }
 }
 

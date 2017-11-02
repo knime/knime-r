@@ -1,3 +1,678 @@
+2015-10-18 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	**** BWidget 1.9.9 tagged ****
+
+2015-03-18 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	widget.tcl: Widget::define got new parameter -namespace,
+	allowing megawidget namespace be different to
+	class name. This allows lower case namespace names.
+	Patch by Adrian Medrano Calvo. Ticket [023a631b20]
+
+2014-09-10 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	**** BWidget 1.9.8 tagged ****
+
+2014-09-05 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	widget.tcl: Widget::which errors when option not present.
+	Ticket [397db23424]
+
+2014-05-21 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	widget.tcl: Don't invoke unqualified upvar in callers
+	scope. Patch by Adrian Medrano Calvo. Ticket [046fa04231]
+
+	widget.tcl: Don't double creation of temporary widget for
+	default values retrieval. Use result of _get_tkwidget_options
+	instead. By Adrian Medrano Calvo. Ticket [393b67ab19]
+
+	widget.tcl: New procedure Widget::which (as in [namespace which]),
+	that returns the fully qualified name for a widget option or
+	widget variable. By Adrian Medrano Calvo. Ticket [a8705e5fd9]
+
+	widget.tcl: Remove unneeded upvar. By Adrian Medrano Calvo.
+	Ticket [43f93e0a97]
+
+	widget.tcl et al: remove apparently unused procedure
+	Widget::syncoptions and all calls. By Adrian Medrano Calvo.
+	Ticket [3c2b8eafc6]
+
+
+2013-12-13 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	scrollframe.tcl: Make -constrainedwidth 1 and
+	-constrainedheight 1 work together.
+	Patch by Simon Bachmann. Ticket [2fa44401d5]
+
+	2013-10-17 Harald Oehlmann <oehhar@users.sourceforge.net>
+	widget.tcl: Remove temporary widget.
+	By Wolfgang S. Kechel. Ticket [6cd041bcc1]
+
+2013-10-15 Harald Oehlmann <oehhar@users.sourceforge.net>
+	combobox.tcl: Themed ComboBox color specifications
+	are honored. By Wolfgang S. Kechel. Ticket [6c6704e40f]
+
+2013-10-14 Harald Oehlmann <oehhar@users.sourceforge.net>
+	combobox.tcl: Fails in themed mode with "unknown
+	option -bg". Patch solves this but listbox items
+	are white on white when "-foreground" is specified.
+	By Wolfgang S. Kechel. Ticket [6632134ce9]
+	
+	listbox.tcl: Update on option -deltay added.
+	Set x0 to 2 to make highlight work and look nice for
+	listbox with image.
+	Take image into account to show selection.
+	By Wolfgang S. Kechel. Ticket [ff1787af9c]
+
+	scrollw.tcl: Raise scrolled window if it is below in
+	the window hierarchy. By Wolfgang S. Kechel.
+	Ticket [ff1787af9c]
+
+2013-10-07 Harald Oehlmann <oehhar@users.sourceforge.net>
+	dynhelp.tcl: Sometimes the tooltip does not occur under
+	gnome/metacity on ubuntu. By Wolfgang S. Kechel.
+	Ticket [a588d2f800]
+
+2013-09-15 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	**** BWidget 1.9.7 tagged ****
+
+2013-09-11 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	xpm2image.tcl: many issues fixed in xpm import
+	by Mattias Hembruch. Ticket [9a8b2ee42e]
+	
+2013-08-14 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* notebook.tcl: cured error in _resize, that
+	data($p,width) is not (jet) present. Ticket [a4cbba655d].
+
+2013-06-28 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* mainframe.tcl: Included Patch [9f67a66609]
+	curing issues of Shift-Accellerators with Shift-Lock
+	on Mac. By Keith Nash, Ticket [83ce3e84e7].
+
+2013-06-26 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* mainframe.tcl: Reverted Patch [1977644]
+	(-casesensitive for accellerators). It has
+	issues with shift-lock.
+
+2013-06-21 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* labelentry.tcl: Bug fixed:
+	Methods from Tk entry widget restored [Bug 1002844].
+	
+	* mainframe.tcl: Allow case sensitive accelerators
+	by new option -casesensitive.
+	Patch by cmard [Patch 1977644]
+	
+	* mainframe.tcl: Allow new modifiers Shift, Cmd and ShiftCmd
+	for accelerators. Patch by K.J.Nash [Patch-83ce3e84e7]
+
+	* mainframe.tcl: When changing MainFrame -background, do
+	not change menu colors on Aqua.
+	Fix by Keith J.Nash [Bug-a81b7afc1e]
+	
+	* init.tcl: Make loadable in save interpreter.
+	Fix by Keith J.Nash [Bug-4365a23bd3]
+
+	* combobox.tcl: Add method getentry to return entry
+	widget path for bind purposes.
+	Patch by Michael [Patch-2340355]
+	
+2013-01-09 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* widget.tcl: Bug fixed:
+	Error 'invalid command name ".#BWidget.#ttk::entry"'
+	arises in themed mode when an Entry widget should get
+	focus by the tab key.
+	The temporary widget creation fails due to the "::" in
+	the command name of ttk widgets.
+	Any "::" is replaced by "__" [Bug 3599955].
+	
+2011-07-27 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	**** BWidget 1.9.6 tagged ****
+
+2012-04-12 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* listbox.tcl ListBox::selection Only redraw if
+	selection changed. Patch by Wolfgang S. Kechel [Bug 3517145]
+
+2012-04-02 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* entry.tcl, BWMan/entry.tcl checkbox.tcl Themed mode:
+	Invoking "configure" without arguments results in errors
+	that non-ttk options are not present.
+	Removed Entry options: -background -foreground -relief
+	-borderwidth -fg -bg -bd. Reported by Wolfgang S. Kechel
+	[Bug 3513263]
+	* entry.tcl mapped entry option -state to ttk::entry
+	state in themed mode to make state change visible.
+
+2012-03-06 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* BWMan/ListBox.html documented options -selectfill and
+	-autofocus as read-only. Reported by Wolfgang S. Kechel
+	[Bug 3497592]
+
+2011-11-14 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* widget.tcl (Widget::focusOK) fixed list with update.
+	Arises, if a ttk widget with a widget path with spaces
+	is the next widget. Reported by jaspertheperson
+	[Bug 3437761]
+
+2011-06-24 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	**** BWidget 1.9.5 tagged ****
+
+2011-06-23 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* listbox.tcl (listbox::generate_data) fixed last patch
+	by ryotakatsuki [Bug 3324610]
+
+2011-06-23 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* listbox.tcl Fix of Bug 3000293 broke listbox tags.
+	The bindImage subcommand did not report right tag.
+	Patch by ryotakatsuki [Bug 3324610]
+
+2011-06-23 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* listbox.tcl, tree.tcl (_update_scrollregion) the linewise
+	scrolling did not always scroll up to the end on windows 7.
+	Report and patch by Wojciech Kocjan, review and modification
+	by Koen Danckaert [Bug 3317772]
+
+2011-05-25 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	*mainframe.tcl: Add a boolean readonly option -sizegrip
+	to show a sizegrip widget in themed mode.
+
+2011-05-24 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	*lang/pl.rc updated by Wojciech Kocjan.
+
+2011-04-26 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	*notebook.tcl The user frame of the notebook is now a themed
+	frame in themed mode. The set background color does not apply
+	to the user frame in this case.
+
+2011-04-26 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	label.tcl configuring foreground color caused error when
+	themed [Bug 3292977]
+
+2011-04-20 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	lang/hu.rc by Rezso updated
+
+2011-04-20 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* font.tcl, lang/*.rc: Add translation possibility
+	for color picker button of font dialog.
+	Used google translater to translate "Color" to all languages.
+	Please check if this is correct. [Bug 3289573] reported by Rezso
+
+2011-04-19 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* lang/*.rc [Bug 3289573] : Add translation (templates) for the
+	Color picker widget text "Base colors" and "User colors".
+	Only german and english locals are provided so far.
+
+2011-02-14 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* combobox.tcl: [Bug 3182287] : ComboBox failes in themed mode
+	due to the use of the themed entry widget. The following options
+	are not supported (and thus called) any more: -relief
+	-highlightbackground -highlightforeground
+
+2011-02-14 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* entry.tcl, labelentry.tcl, labelframe.tcl, mainframe.tcl,
+	pagesmgr.tcl, scrollw.tcl: [Bug 3168761]:
+	entry failes when themed support activated with:
+	unknown option "-highlightthickness" (reported by George
+	on clt 27 Jan., 16:55).
+	The patch by Wojciech Kocjan fixes this and enhances
+	labelentry, labelframe and pagesmgr to also use themed frames.
+	Within scrollw.tcl, a bug for empty background handling is fixed.
+	The scrollbar background is not set any more for not-themed widget.
+
+2011-01-17 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* pkgIndex.tcl: corrected package version in package provide
+
+2010-12-14 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	**** BWidget 1.9.4 tagged ****
+
+2010-12-14  Andreas Kupries  <andreask@activestate.com>
+
+	* tree.tcl [Bug 3106208]: Followup. Moved the fixed code of the
+	last entry I did (2010-11-09) into a new command Tree::MergeFlag
+	and call this from both Tree::itemconfigure and Tree::insert.
+	Missing the place in Tree::insert caused another problem, found by
+	Dustin Littau.
+
+2010-11-05 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	**** BWidget 1.9.3 tagged ****
+
+2010-11-23 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* scrollw.tcl Add theming support for ScrolledWindow widget.
+	* ScrolledWindow.html Themed mode documented.
+
+2010-11-21 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* label.tcl Add theming support for Label widget.
+	* label.html Themed mode documented.
+
+2010-11-16 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* button.tcl Add theming support for Button widget.
+	Option "-relief link" is mapped to "Toolbutton style.
+	Option -height is not available when themed.
+	Thanks to Kevin Walzer for the test on MacOS.
+	* buttonbox.tcl When themed, only set themed button options.
+	The widget itself is not jet themed.
+	* Dialog.html Removed documentation of unavailable option -buttonwidth.
+
+2010-11-09  Andreas Kupries  <andreask@activestate.com>
+
+	* tree.tcl (Tree::itemconfigure): Fix intermingling of node names
+	and flag values which can cause an lsearch to fail, by mistaking a
+	flag value as the node searched for, and then treating a node name
+	as flags. As the upd,nodes value is a dictionary it should not be
+	search as a list. Now using a temporary array for quicker check
+	and append/replace [Bug 3106208].
+
+2010-11-09 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* mainframe.tcl Menu text shows white on white on Mac aqua
+	[Bug 3105665] reported by Scott Smedley fixed by Kevin Walzer.
+
+2010-10-15 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* label.tcl The frame surround the label gets under
+	unknown conditions a -padx 5. A pad of 0 is now
+	hard coded (Bug 3087955)
+
+2010-08-04 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* dialog.tcl Changed behaviour of window close button.
+	If -cancel is given, this button is invoked.
+	The cancel option may now be changed using the configure
+	method.
+
+	* init.tcl If msgcat is available use its locale to load
+	a lang/*.rc file instead always using en.rc.
+
+2010-06-09 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* Included lang/pl.rc from HEAD.
+
+2010-06-07 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	**** BWidget 1.9.2 tagged ****
+	Version 1.9.1 was skipped.
+	This was released in ActiveTCL and thus may exist on many
+	installations.
+
+2010-05-31 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* listbox.html Reflected patch 2010-05-12 in documentation.
+	The selection may not be disabled any more by binding button 1.
+
+2010-05-12 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* listbox.tcl(ListBox::bindText and ListBox::bindImage)
+	Method bindText and bindImage overwrote internal selection
+	bindings [Bug 3000293] reported by Robert Karen.
+
+2010-05-11 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* listbox.tcl(ListBox::see) Method see shifts image out of
+	view. Showed up, by a selection click on a long item with icon
+	[Bug 2999764] reported by Robert Karen.
+
+2010-05-05 Harald Oehlmann <oehhar@users.sourceforge.net>
+
+	* listbox.tcl(ListBox::_configureSelectmode) Drag modifies
+	multiple selection [Bug 2995969] reported by Robert Karen.
+	Bound events on ButtonRelease-1 instead Button-1 for multiple
+	selections to avoid bug.
+	* listbox.tcl(ListBox::_drag_and_drop) The default drag and drop
+	routine only handled single drag and drop.
+	It was extended to handle also drag and drop of multiple entries.
+
+2009-09-03 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* util.tcl(BWidget::place), BWidget.html Widget placed incorrectly,
+	when bigger than current screen [Bug 2850031] by Thomas Grausgruber
+	Possible incompatibility: BWidget::place w h -> w,h are reduced to
+	screen width.
+
+2009-08-12 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* dynhelp.tcl Use balloon help font TkTooltipFont if tk <= 8.5.
+	Otherwise use helvetica 11 on Aqua [Patch 2835180] for Kevin Walzer
+	* dynhelp.tcl(DynamicHelp::_show_help)Replaced aqua conditional code
+	check by $Widget::_aqua
+
+2009-08-10 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* notebook.tcl (NoteBook::delete) Method delete destroyframe=1 and
+	reinsertion -> raise failed - state variables were deleted.
+	[Bug 2831785] by kjnash
+	* tree.tcl (Tree::_keynav) Fire virtual event <<TreeSelect>> also on
+	keyboard navigation [Patch 2828086] by Kevin Walzer
+	* combobox.tcl Replaced aqua conditional code check by $Widget::_aqua
+
+2009-08-10 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	**** Branched to bwidget ****
+
+	This is the bwidget branch of module bwidget of tcllib
+	Use "-r bwidget" for all cvs operations
+	Scope: Package BWidget compatible to tcl/tk 8.1 and tk
+	(e.g. no tile/ttk).
+
+2009-07-24 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	**** BWidget 1.9.0 tagged ****
+
+	* pkgIndex.tcl, README.txt: updated to BWidget 1.9
+
+2009-07-23 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* tree.tcl (Tree::_set_help), Tree.html DynamicHelp -helpcmd added to
+	tree node help
+	* tree.tcl (Tree::_draw_subnodes) a vertical line to a virtual root node
+	above the widget is only drawn when there are multiple child nodes.
+	This reverts the modification dated 2004-04-21 for this case.
+	[Patch 2825354] by Koen Danckaert
+
+2009-07-17 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* scrollframe.tcl (ScrollableFrame::create et al) ScrollableFrame.html
+	Background color of canvas takes the color of the scrolled frame.
+	If themed, canvas takes the themed color of the scrolled themed frame.
+	If themed, parameters -background and -bg are not available(doc + code).
+	[Patch 2822970] by Koen Danckaert
+
+2009-07-15 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* dynhelp.tcl (DynamicHelp) Typo from yesterday corrected
+	[Patch 2820851] by Koen Danckaert
+
+2009-07-14 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* dynhelp.tcl (DynamicHelp::_leave_info et al) issues:
+	- menu help sometimes not cleared when clicking off-window (unix)
+	- "-helpcmd" available also when dynamichelp is included in another
+	  widget.
+	- given "-helpcmd" always called at global scope.
+	- Protect against multiple calls of <Leave> event.
+	[Patch 2820851] by Koen Danckaert
+
+2009-07-07 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* combobox.tcl (ComboBox::_select) Do not export selection if
+	-exportselection 0 [Patch 981545] by Jeffrey Hobbs
+
+2009-07-02 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* widget.tcl (Widget::configure) Bug: ProgressDlg option -geometry
+	not setable. The former patch was improved.
+	Koen Danckaert and myself argued, that we modify symptoms without
+	basic understandings. Anyway, better now than before.
+
+2009-07-01 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* mainframe.tcl, MainFrame.html (MainFrame::getmenustate)
+	Added method getmenustate to return menu tag state
+	[Bug 948063] reported by Rolf Ade
+
+	* combobox.tcl (ComboBox::configure) Bug fixed: Widget did not take
+	focus, when -editable false and "configure -state normal" called.
+	[Bug 756334] reported by Rolf Ade
+	
+	* widget.tcl (Widget::configure) Bug: ProgressDlg option -bg not
+	setable. The special handling of subwidgets with special class or
+	path ":cmd" was improved. [Bug 611477]
+	
+	* notebook.tcl (NoteBook::_itemconfigure) Not honored option:
+	itemconfigure ... -helptext [Patch 2814050] by Koen Danckaert
+	
+2009-06-30 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* buttonbox.tcl (ButtonBox::_redraw) Bug corrected:
+	-uniform gridding option is used if tcl version >= 8.4 (not 8.3).
+	[Patch 2807147] by Koen Danckaert
+
+	* tree.tcl (Tree::_drop_cmd) If there is no node, drop didn't work.
+	[Bug 1042613] reported by Rolf Ade
+	
+	* Tree.html Bind commands: removed promise that %W would work in future.
+	The underlying widgets should only be manipulated using the node id.
+	[Bug 1224203] by Jasper Taylor, remarks by J. Tang 
+
+	* Tree.html Bind commands: with -selectfill, the given command is
+	overwritten for the background box. [Bug 1003962] by Torsten Berg
+	
+	* dropsite.tcl (DropSite::register) Bug fixed: fails on multiple drop
+	targets [Bug 1213123] by T.Neil
+
+	* combobox.tcl (ComboBox::_create_popup) Bug fixed: Return key in drop
+	down list when -bwlistbox true [Bug 1205536] patch by Steve Landers
+	
+	* combobox.tcl (ComboBox::_create_popup, ComboBox::_unmapliste)
+	Mac aqua and x11 fixes, multi screen issue still open.
+	[Bug 1451784] report by Jasper Taylor, fix by Kevin Walzer
+
+	* listbox.tcl (ListBox::_multiple_select) Selected item not deselected
+	on control-click [Bug 1029144] reported by Konrad Rosenbaum
+	
+
+2009-06-29 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* ScrolledWindow.html ScrolledWindow documentation changed:
+	Documented options: -ipad, -sides, -size, -managed
+	[Patch 2807160] Text by Koen Danckaert
+	Removed (read only) remark of option -scrollbar.
+	
+	* scrollframe.tcl (ScrollableFrame::create) changed bindings
+	[Patch 2807227] by Koen Danckaert (comment)
+	
+	* scrollw.tcl (ScrolledWindow::_set_hscroll, ScrolledWindow::_set_vscroll)
+	Bug corrected: enless loop when both scrollbars where automatically
+	mapped and the window size was changed by this action (on linux).
+	Scrollbar unmapping and mapping secured by a locked update [Bug 2783019]
+
+	* widget.tcl (Widget::tkinclude) : option data base entry name keeps the
+	original name and not the renamed name.
+	The only resulting modification is to rename the option key for
+	"MessageDlg -text" from "*MessageDlg.frame.msg.message" to
+	"*MessageDlg.frame.msg.text". [Bug 1266792]
+	
+	* widget.tcl (Widget::init) : fixed a memory leak on wrong option value.
+	[Bug 1230737] 
+	
+2009-06-26 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* listbox.tcl (ListBox::create et al) new feature: listbox option
+	-listbox now read/write [Bug 1501874] reported by Stephen Huntley
+	
+	* dynhelp.tcl (DynamicHelp::_show_help) fixed issue (as far as possible):
+	Dynamic help baloon was on the main screen, if it touched the border on
+	a windows multi screen configuration.
+	The fix assumes, that all screens have same dimensions and no gaps in-
+	between. This is necessary, because multi-screen configuration paramters
+	may not be interrogated by tk (despite of coordinates out of the screen)
+	[Bug 1499135] reported by Gregor
+
+	* notebook.tcl (NoteBook::delete) Deleted also state variables
+	[Bug 1445219] reported by Eric Kemp-Benedict
+
+2009-06-25 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* combobox.tcl (ComboBox::getvalue et al) fixed bug: getvalue returned
+	first apearence of current data instead of clicked index, which may not
+	be the same if values is not unique. Additional variable _index(path)
+	added to hold click index [Bug 1610965] reported by Martin Lemburg
+
+2009-06-24 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* scrollframe.tcl (ScrollableFrame::create, ScrollableFrame::_resize,
+	ScrollableFrame::_frameConfigure) fixed two issues:
+	- Scrollbar activated even if not necessary
+	  Fix: update scrolling reagion on configure event of the frame
+	- Disfunction if the frame got to small to be on the current view
+	  Fix: update scrolling reagion on map or unmap events
+	[Patch 2807227] by Koen Danckaert
+	
+	* buttonbox.tcl (ButtonBox::_redraw) Bug: homogeneous button width
+	not honored if button size changes after creation.
+	-uniform gridding option is used if tcl version >= 8.3.
+	[Patch 2807147] by Koen Danckaert
+	
+2009-06-16 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* combobox.tcl (ComboBox::_create_popup) In dropdown list,
+	a vertical scrollbar was always shown if horizantal is used.
+	ScrolledWindow is now called with "-managed 1".
+	[Patch 2807160] by Koen Danckaert
+
+2009-06-11 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* combobox.tcl removed \ before empty line (potential
+	trap) [Bug 2804961] Andreas Kupries
+	
+	* dialog.html Documented -geometry option.
+	[Bug 1634416] Erik Leunissen
+
+2009-06-10 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* no.rc added norwegian translation file
+	[Feature Request 2797153] provided by Lars Martin Hambro
+	
+	* passwddlg.tcl (PasswdDlg::_verifonpasswd) check for
+	disabled password field and confirm directly.
+	[Bug 1642050] (Calvin Bascom) Enter key did not confirm
+	dialog when -passwdstate disabled.
+	
+	* combobox.tcl (ComboBox::_select) included [Patch 981545],
+	but commented out - it works for me without it.
+
+2009-06-10 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* dialog.html Added documentation for option -buttonwidth
+	of Dialog
+	[Bug 1668587] (Eric Leunissen)
+
+2009-06-10 Harald Oehlmann  <oehhar@users.sourceforge.net>
+
+	* arrow.tcl initialised set _grab(oldstate) to "normal" to avoid
+	error when there is a ArrowButton::_leave without corresponding
+	ArrowButton::_enter [Bug 2762361]
+	
+	* entry.tcl (Entry::_path_command) Add "invoke" to the list of
+	internally handled commands
+	[Bug 2340320] (patch by relaxmike@users.sourceforge.net)
+	
+	* uitils.tcl (BWidget::place) BWidget::place used screen width
+	instead window width.
+	[Bug 1842346] (patch by Niels Gollesch ngoelles@users.sourceforge.net)
+	
+	* listbox.tcl (ListBox::_redraw_selection) Added check if redrawn
+	item is on the to-delete list and thus does not exist any more as
+	BWidget. [Bug 1752755] (legolas_a20@users.sourceforge.net]
+
+2008-10-30  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* tree.tcl (Tree::_node_name_rev): Return node names as they are
+	input, and properly handle :: in node names.  This changes
+	internal node name reps, but should be transparent to the user,
+	except for the result of [insert].
+
+2008-05-26  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* tree.tcl (Tree::_redraw_selection):       do not allow empty
+	* listbox.tcl (ListBox::_redraw_selection): fill color as that
+	creates a transparent item that doesn't return a bbox.  This
+	showed up on OS X/Aqua, where the listbox selectforeground
+	defaults to empty. [AS Bug 77186 74923]
+
+2007-10-31  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* lang/nl.rc (new): Dutch translation [Bug 1804469]
+
+	* lang/hu.rc (new): Hungarian translation [Bug 1821842]
+
+	* tree.tcl (Tree::insert): do node_name on parent arg [Bug 1046955]
+
+	* listbox.tcl: speed up ListBox insertion significantly. [Bug 1472443]
+
+2007-05-11  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* widget.tcl (Widget::theme): make sure Tk 8.5a6 is recognized as
+	having the themed widgets
+
+2006-12-20  J. Tang  <tang@jtang.org>
+
+	* util.tcl: fixed BWidget::write for widgets that require
+	DynamicHelp.  [bug 1518803]
+
+2006-12-05  Andreas Kupries <andreask@activestate.com>
+
+	* demo/demo.tcl (Demo::main): Removed the 'inscope' qualifier from
+	  the 'package require Bwidget'. The package system already forces
+	  loading and sourcing of package code in the global namespace, so
+	  this is bogus.
+
+2006-11-13  J. Tang  <tang@jtang.org>
+
+	* panedw.tcl: if activator is set to line then its width is set to
+	3.  --activator was an undocumented option; updated man page to
+	make it documented.  Thanks to Jos Decoster for pointing this out.
+
+2006-11-10  J. Tang  <tang@jtang.org>
+
+	* widget.tcl: remove relative namespace resolution of variables,
+	in anticipation of TIP 278.  Widget should have been doing this
+	anyways.  [bug 1579744]
+
+	* DragSite.html: noted that -draginitcmd can return an empty
+	string to prevent a drag [bug 740499]
+	
+	* DropSite.html: fixed documentation with DropSite::register
+	command [bug 740474]
+
+	* combobox.tcl: allow autocomplete and autopost be
+	enabled/disabled after the widget was created [bug 1588808]; fixed
+	keysym in autopost binding [bug 1589111]
+
+	* tree.tcl: fixed error with drag & drop's autoscroll [bug
+	1408494]
+	
+	* listbox.tcl: fixed error with drag & drop's autoscroll; fixed
+	error when dropping at the end of the list
+
+	* Added dynamic help to text tags (man page updated); fixed resize
+	bug with scrollframes.  Thanks to Jos Decoster for these patches.
+
+2006-10-20  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* utils.tcl (BWidget::bindMouseWheel): do not make special
+	mousewheel bindings if global ones exist (like from style::as)
+
 2006-09-28  J. Tang  <tang@jtang.org>
 
 	**** BWIDGET 1.8.0 TAGGED ****

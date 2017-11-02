@@ -23,4 +23,4 @@ This file documents software changes since the third edition.
 - multinom() and nnet(softmax=TRUE) give an explicit error message for
   one-category responses.
 - the loglik() method for multinom() returns an "nobs" attribute. 
-
+- vcov() on a "multinom" object works for fits with na.action = "na.exclude".

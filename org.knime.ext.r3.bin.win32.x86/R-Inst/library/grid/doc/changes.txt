@@ -1,4 +1,130 @@
 
+Changes from grid_3.4.* to grid_3.5.0:
+-------------------------------------
+
+1.  Fix for current.vpTree() so that it puts you back in the right
+    place in the viewport tree if there are nested viewports with
+    the same name (e.g., pushViewport(vp, vp)).
+
+    Reported by Prem Thomas.
+
+
+Changes from grid_3.3.* to grid_3.4.0:
+-------------------------------------
+
+1.  Added format() method for units, so, for example, the number of 
+    digits printed for numeric values can be controlled.
+
+    grid.show.layout() now uses format() for annotating layout
+    widths and heights.
+
+2.  More robust handling of NA values in graphical parameter settings
+    that affect text.  NA values for fontsize, lineheight, cex, and
+    fontfamily are ignored, i.e., inherited from parent drawing context.
+    A mixture of NA and non-NA generates an error.
+
+3.  Improved support for calcStringMetric() function (and
+    stringAscent() and stringDescent() and grobAscent() and
+    grobDescent()) so that text encoding is now handled.
+
+    Reported by Hakon Malmedal and Hadley Wickham.
+
+
+Changes from grid_3.2.* to grid_3.3.0:
+-------------------------------------
+
+1.  Added "pseudonym" units to check made in absolute.size() so that,
+    for example, absolute.size(unit(1, "in")) works properly
+    (reported by Baptiste Auguie).
+
+2.  Registered absolute.units() methods in NAMESPACE, so that, for
+    example, a call to absolute.size(unit(1,"npc") + unit(2,"mm"))
+    works outside of 'grid' (reported by Baptiste Auguie).
+
+3.  Refactored grid.draw() so that grid.draw(NULL) now works 
+    (by doing nothing).  Reported by Hadley Wickham.
+
+4.  Modified grid.ls() so that it returns nothing if there are no
+    active devices (rather than opening a new device).
+  
+5.  Modified grid.grep() so that it returns an empty list (rather than
+    throwing an error) when the 'grid' display list is empty.
+
+6.  Added subassignment methods for unit objects
+    (e.g., x <- unit(1:3, "cm"); x[2] <- unit(.5, "npc"))
+
+    Thanks to Baptiste Auguie for code suggestions.
+
+
+Changes from grid_3.1.* to grid_3.2.0:
+-------------------------------------
+
+1.  Fixed evaluation of "pure null" units (by making evaluation recursive).
+    Previously, for example, a unit list with a unit list as its first
+    component would evaluate to NA.  This typically only affects layouts 
+    in grid.
+
+    Problem reported by Baptiste Auguie.
+
+2.  Fixed problem in validDetails.beziergrob(), which used to fail if
+    you tried to specify 'id.lengths'
+
+3.  Fixed bug in downViewport() when descending more than one
+    viewport.  It was possible for this to end up with the wrong
+    clipping region (because if you ended up in a viewport that
+    inherited its clipping region from a parent, that clipping region
+    was not enforced).
+
+
+Changes from grid_3.0.* to grid_3.1.0:
+-------------------------------------
+
+1.  New current.rotation() function.
+
+2.  vpPath() and gPath() now automatically expand any embedded path 
+    separators in their input.
+
+3.  New functions depth(), for determining the depth of a viewport 
+    hierarchy or path, and explode(), for expanding a path into
+    its components.
+
+4.  New function grid.grep()
+    (based on ideas and code from Simon Potter).
+
+5.  The grid.force() function now accepts an explicit grob to (draw 
+    and) force or a gPath to force a specific already-drawn grob.
+    Ditto the grid.revert() function.
+
+6.  New current.parent() function to return parent of current viewport.
+
+7.  New resolveRasterSize() function.
+
+8.  Made 'vp' argument of current.viewport() defunct.
+
+9.  Deprecated functions made defunct: 
+    grid.grob, grid.arrows, arrowsGrob, grid.convert, grid.convertX,
+    grid.convertY, grid.convertWidth, grid.convertHeight,
+    grid.collection, push.viewport, pop.viewport, viewport.transform,
+    draw.details, convertNative.
+
+10. Down viewports are now recorded on the display list as full-depth
+    strict vpPaths even when downViewport() is called with non-strict
+    vpPath (which can produce a down viewport of greater depth than
+    the depth of the vpPath).
+
+11. Exported generic forceGrob().
+
+12. Bug fix for recording viewport pushes on the graphics engine display
+    list (reported by the friendly folks from RStudio).
+
+    The bug could be tickled by copying a grid scene from one graphics
+    device to another and then attempting to navigate within 
+    viewports on the original graphics device.
+
+13. Better defenses against division-by-zero in unit resolution/conversion
+    (see ./DivByZero.txt).
+
+
 Changes from grid_3.0.0 to grid_3.0.1:
 -------------------------------------
 

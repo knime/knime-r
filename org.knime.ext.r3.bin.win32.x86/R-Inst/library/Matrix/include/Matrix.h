@@ -1,8 +1,5 @@
 #ifndef MATRIX_H
 #define MATRIX_H
-#include <Rdefines.h>
-#include <Rconfig.h>
-#include "cholmod.h" //--->  M_cholmod_*() declarations
 
 #ifdef	__cplusplus
 extern "C" {
@@ -11,6 +8,22 @@ extern "C" {
 # define bool Rboolean
 #endif
 
+// From ../../src/Mutils.h :
+#ifdef __GNUC__
+# undef alloca
+# define alloca(x) __builtin_alloca((x))
+#elif defined(__sun) || defined(_AIX)
+/* this is necessary (and sufficient) for Solaris 10 and AIX 6: */
+# include <alloca.h>
+#endif
+/* For R >= 3.2.2, the 'elif' above shall be replaced by
+#elif defined(HAVE_ALLOCA_H)
+*/
+
+#include <Rdefines.h>
+#include <Rconfig.h>
+#include "cholmod.h" //--->  M_cholmod_*() declarations
+
 #ifdef HAVE_VISIBILITY_ATTRIBUTE
 # define attribute_hidden __attribute__ ((visibility ("hidden")))
 #else
@@ -18,16 +31,40 @@ extern "C" {
 #endif
 
 // Copied from ../../src/Mutils.h ----------------------------------------
-#define MATRIX_VALID_dense			\
+#define MATRIX_VALID_ge_dense			\
         "dmatrix", "dgeMatrix",			\
 	"lmatrix", "lgeMatrix",			\
 	"nmatrix", "ngeMatrix",			\
 	"zmatrix", "zgeMatrix"
 
+#define MATRIX_VALID_ddense					\
+		    "dgeMatrix", "dtrMatrix",			\
+		    "dsyMatrix", "dpoMatrix", "ddiMatrix",	\
+		    "dtpMatrix", "dspMatrix", "dppMatrix",	\
+		    /* sub classes of those above:*/		\
+		    /* dtr */ "Cholesky", "LDL", "BunchKaufman",\
+		    /* dtp */ "pCholesky", "pBunchKaufman",	\
+		    /* dpo */ "corMatrix"
+
+#define MATRIX_VALID_ldense			\
+		    "lgeMatrix", "ltrMatrix",	\
+		    "lsyMatrix", "ldiMatrix",	\
+		    "ltpMatrix", "lspMatrix"
+
+#define MATRIX_VALID_ndense			\
+		    "ngeMatrix", "ntrMatrix",	\
+		    "nsyMatrix",		\
+		    "ntpMatrix", "nspMatrix"
+
+#define MATRIX_VALID_dCsparse			\
+ "dgCMatrix", "dsCMatrix", "dtCMatrix"
+#define MATRIX_VALID_nCsparse			\
+ "ngCMatrix", "nsCMatrix", "ntCMatrix"
+
 #define MATRIX_VALID_Csparse			\
- "dgCMatrix", "dsCMatrix", "dtCMatrix",		\
+    MATRIX_VALID_dCsparse,			\
  "lgCMatrix", "lsCMatrix", "ltCMatrix",		\
- "ngCMatrix", "nsCMatrix", "ntCMatrix",		\
+    MATRIX_VALID_nCsparse,			\
  "zgCMatrix", "zsCMatrix", "ztCMatrix"
 
 #define MATRIX_VALID_Tsparse			\
@@ -41,6 +78,9 @@ extern "C" {
  "lgRMatrix", "lsRMatrix", "ltRMatrix",		\
  "ngRMatrix", "nsRMatrix", "ntRMatrix",		\
  "zgRMatrix", "zsRMatrix", "ztRMatrix"
+
+#define MATRIX_VALID_tri_Csparse		\
+   "dtCMatrix", "ltCMatrix", "ntCMatrix", "ztCMatrix"
 
 #define MATRIX_VALID_CHMfactor "dCHMsuper", "dCHMsimpl", "nCHMsuper", "nCHMsimpl"
 
@@ -77,6 +117,10 @@ int M_Matrix_check_class_etc(SEXP x, const char **valid);
 // ./Matrix_stubs.c   "illustrative example code" (of the above):
 bool Matrix_isclass_Csparse(SEXP x);
 bool Matrix_isclass_triplet(SEXP x);
+bool Matrix_isclass_ge_dense(SEXP x);
+bool Matrix_isclass_ddense(SEXP x);
+bool Matrix_isclass_ldense(SEXP x);
+bool Matrix_isclass_ndense(SEXP x);
 bool Matrix_isclass_dense(SEXP x);
 bool Matrix_isclass_CHMfactor(SEXP x);
 

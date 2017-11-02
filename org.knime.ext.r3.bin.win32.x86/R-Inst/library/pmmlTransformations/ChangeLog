@@ -1,7 +1,0 @@
-pmmlTransformation 1.2.1
-   - improve code structures
-   - bug fixes: defaultValue should only be used for MapValues and DiscretizeBin expressions
-   - new more informative error messages in MinMaxXform and ZScoreXform
-
-pmmlTransformation 1.2.0.1
-   - patch to optimize row data calculations

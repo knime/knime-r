@@ -6,9 +6,11 @@ export(abc.ci, boot, boot.array, boot.ci, censboot, control, corr,
        nested.corr, norm.ci, saddle, saddle.distn, simplex,
        smooth.f, tilt.boot, tsboot, var.linear)
 
-# documented but not exported
+# documented, registered but not exported
 # export(lines.saddle.distn, plot.boot, print.boot, print.bootci, print.simplex)
-importFrom(graphics, lines, plot)
+
+importFrom(graphics, abline, hist, identify, layout, lines, par, plot, text)
+import(stats)
 
 S3method(c, boot)
 S3method(lines, saddle.distn)

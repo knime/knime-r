@@ -131,7 +131,7 @@ factor.scope            Compute Allowed Changes in Adding to or
 family                  Family Objects for Models
 family.glm              Accessing Generalized Linear Model Fits
 family.lm               Accessing Linear Model Fits
-fft                     Fast Discrete Fourier Transform
+fft                     Fast Discrete Fourier Transform (FFT)
 filter                  Linear Filtering on a Time Series
 fisher.test             Fisher's Exact Test for Count Data
 fitted                  Extract Model Fitted Values
@@ -163,6 +163,7 @@ ksmooth                 Kernel Regression Smoother
 lag                     Lag a Time Series
 lag.plot                Time Series Lag Plots
 line                    Robust Line Fitting
+listof                  A Class for Lists of (Parts of) Model Fits
 lm                      Fitting Linear Models
 lm.fit                  Fitter Functions for Linear Models
 lm.influence            Regression Diagnostics
@@ -186,7 +187,8 @@ mantelhaen.test         Cochran-Mantel-Haenszel Chi-Squared Test for
 mauchly.test            Mauchly's Test of Sphericity
 mcnemar.test            McNemar's Chi-squared Test for Count Data
 median                  Median Value
-medpolish               Median Polish of a Matrix
+medpolish               Median Polish (Robust Twoway Decomposition) of
+                        a Matrix
 model.extract           Extract Components from a Model Frame
 model.frame             Extracting the Model Frame from a Formula or
                         Fit
@@ -254,8 +256,9 @@ predict.nls             Predicting from Nonlinear Least Squares Fits
 predict.smooth.spline   Predict from Smoothing Spline Fit
 preplot                 Pre-computations for a Plotting Object
 princomp                Principal Components Analysis
-print.power.htest       Print method for power calculation object
-print.ts                Printing Time-Series Objects
+print.power.htest       Print Methods for Hypothesis Tests and Power
+                        Calculation Objects
+print.ts                Printing and Formatting of Time-Series Objects
 printCoefmat            Print Coefficient Matrices
 profile                 Generic Function for Profiling Models
 profile.nls             Method for Profiling nls Objects
@@ -284,6 +287,7 @@ se.contrast             Standard Errors for Contrasts in Model Terms
 selfStart               Construct Self-starting Nonlinear Models
 setNames                Set the Names in an Object
 shapiro.test            Shapiro-Wilk Normality Test
+sigma                   Extract Residual Standard Deviation 'Sigma'
 simulate                Simulate Responses
 smooth                  Tukey's (Running Median) Smoothing
 smooth.spline           Fit a Smoothing Spline
@@ -301,7 +305,7 @@ stat.anova              GLM Anova Statistics
 stats-deprecated        Deprecated Functions in Package 'stats'
 stats-package           The R Stats Package
 step                    Choose a model by AIC in a Stepwise Algorithm
-stepfun                 Step Function Class
+stepfun                 Step Functions - Creation and Class
 stl                     Seasonal Decomposition of Time Series by Loess
 summary.aov             Summarize an Analysis of Variance Model
 summary.glm             Summarizing Generalized Linear Model Fits

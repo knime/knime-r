@@ -1,10 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>R: Windows-specific changes to R</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" type="text/css" href="R.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Windows-specific changes to R</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
 </head><body>
 
-<table width="100%" summary="page for CHANGES"><tr><td>CHANGES</td><td align="right">R Documentation</td></tr></table>
+<table width="100%" summary="page for CHANGES"><tr><td>CHANGES</td><td style="text-align: right;">R Documentation</td></tr></table>
 
 <h2>Windows-specific changes to R</h2>
 
@@ -31,12 +30,12 @@ common NEWS file.
 is anticipated that 64-bit R will soon be (if not already) the
 more commonly used.  This entails:
 </p>
-<p>The <CODE>Rterm</CODE> or <CODE>Rgui</CODE> title mentions 32-bit as
+<p>The <code>Rterm</code> or <code>Rgui</code> title mentions 32-bit as
 well as 64-bit.
 </p>
 <p>The desktop icons are labelled <code>R i386</code> and <code>R x64</code>.
 </p>
-<p><CODE>R CMD INSTALL</CODE> for a package with compiled code will fail
+<p><code>R CMD INSTALL</code> for a package with compiled code will fail
 if compilation fails for any of the installed sub-architectures:
 use <span class="option">--no-multiarch</span> to override this.
 </p>
@@ -86,8 +85,8 @@ from the standard installer even on a 32-bit version of Windows.
 <ul>
 <li><p> As the current toolchain uses only 32-bit executables, it is
 possible to compile a package for both architectures on 32-bit
-Windows provided both architectures of <font face="Courier New,Courier" color="#666666"><b>R</b></font> have been installed: use
-<CODE>Rcmd INSTALL --compile-both</CODE>.
+Windows provided both architectures of <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> have been installed: use
+<code>Rcmd INSTALL --compile-both</code>.
 </p>
 </li>
 <li> <p><code>Rcmd INSTALL --merge-multiarch</code> will work (but do a
@@ -120,8 +119,8 @@ nearly the same time.  (Reported by Michael Sumner.)
 
 <ul>
 <li> <p><code>bitmap()</code> and <code>dev2bitmap()</code> look for
-<CODE>gswin64c.exe</CODE> (as used by 64-bit GhostScript), in
-preference to <CODE>gswin32c.exe</CODE>.
+<code>gswin64c.exe</code> (as used by 64-bit GhostScript), in
+preference to <code>gswin32c.exe</code>.
 </p>
 </li></ul>
 
@@ -133,7 +132,7 @@ preference to <CODE>gswin32c.exe</CODE>.
 
 <ul>
 <li><p> The sources (and packages) can now be compiled using the
-multilib toolchain developed for <font face="Courier New,Courier" color="#666666"><b>R</b></font> 2.15.x: see the
+multilib toolchain developed for <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> 2.15.x: see the
 <span class="samp">MULTI</span> macro in &lsquo;<span class="file">MkRules.dist</span>&rsquo;.  This toolchain is used
 for the CRAN binary distribution.
 </p>
@@ -147,10 +146,10 @@ for the CRAN binary distribution.
 
 <ul>
 <li><p> The preferred toolchain has changed since the one used for
-<font face="Courier New,Courier" color="#666666"><b>R</b></font> 2.12.0 to 2.14.1: see the&lsquo;R Installation and
+<span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> 2.12.0 to 2.14.1: see the&lsquo;R Installation and
 Administration manual&rsquo;.  Compiled code (except DLLs) may be
 incompatible with previous toolchains (and compiled C++ code
-almost certainly will be: users of <a href="http://CRAN.R-project.org/package=Rcpp"><span class="pkg">Rcpp</span></a> take care).
+almost certainly will be: users of <a href="https://CRAN.R-project.org/package=Rcpp"><span class="pkg">Rcpp</span></a> take care).
 </p>
 <p>Ensure that the settings in &lsquo;<span class="file">MkRules.local</span>&rsquo; are appropriate
 to the toolchain you use.
@@ -224,7 +223,7 @@ architecture-specific sub-directories &lsquo;<span class="file">lib/i386</span>&
 
 <ul>
 <li><p> The fix for <a href="https://bugs.R-project.org/bugzilla3/show_bug.cgi?id=14543">PR#14543</a> caused stack problems with outputting
-large <font face="Courier New,Courier" color="#666666"><b>R</b></font> objects (e.g. data frames of 25,000 items).  (<a href="https://bugs.R-project.org/bugzilla3/show_bug.cgi?id=14698">PR#14698</a>)
+large <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> objects (e.g., data frames of 25,000 items).  (<a href="https://bugs.R-project.org/bugzilla3/show_bug.cgi?id=14698">PR#14698</a>)
 </p>
 </li>
 <li><p> In a double-byte locale (Chinese, Japanese, Korean),
@@ -252,7 +251,7 @@ parameter.  This was done for consistency with other devices
 such as <code>pdf()</code>.
 </p>
 </li>
-<li> <p><CODE>R CMD build</CODE> once again attempts to preserve file
+<li> <p><code>R CMD build</code> once again attempts to preserve file
 permissions on Windows.
 </p>
 </li>
@@ -314,7 +313,7 @@ have been added to those which default to binary transfer for
 <code>download.file()</code>.
 </p>
 </li>
-<li> <p><code>install.packages()</code> and <CODE>R CMD check</CODE> have a
+<li> <p><code>install.packages()</code> and <code>R CMD check</code> have a
 small delay after removing a directory to counteract some
 interference from anti-virus software.
 </p>
@@ -361,7 +360,7 @@ mature enough.
 
 
 <ul>
-<li> <p>&lsquo;<span class="file">Rzlib.dll</span>&rsquo; (sometimes used in packages <EM>via</EM>
+<li> <p>&lsquo;<span class="file">Rzlib.dll</span>&rsquo; (sometimes used in packages <em>via</em>
 <span class="samp">$(ZLIB_LIBS)</span>) does not include the buggy gzio   
 interface from zlib 1.2.5.
 </p>
@@ -374,7 +373,7 @@ interface from zlib 1.2.5.
 
 
 <ul>
-<li><p>zip.unpack() (deprecated in <font face="Courier New,Courier" color="#666666"><b>R</b></font> 2.13.0) is defunct:
+<li><p>zip.unpack() (deprecated in <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> 2.13.0) is defunct:
 use <code>unzip()</code> instead.
 </p>
 </li></ul>
@@ -424,7 +423,7 @@ could cause some of them to fail to redraw (<a href="https://bugs.R-project.org/
 
 
 <ul>
-<li> <p><CODE>R CMD build</CODE> no longer attempts to preserve file
+<li> <p><code>R CMD build</code> no longer attempts to preserve file
 permissions on Windows, because Windows (unlike POSIX-compliant
 OSes) stops read-only files being deleted in version-control
 directories.
@@ -469,10 +468,10 @@ used defaults for <code>family</code>, <code>fg</code> and <code>bg</code> from
 the factory-fresh defaults were the same).
 </p>
 </li>
-<li><p> Shutting down the <font face="Courier New,Courier" color="#666666"><b>R</b></font> session cleaned up the temporary
+<li><p> Shutting down the <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session cleaned up the temporary
 directory before closing all graphics devices.  On Windows this
 necessitated changing the working directory, so some devices
-(e.g. <code>tiff()</code>) could write files in the wrong directory if
+(e.g., <code>tiff()</code>) could write files in the wrong directory if
 closed during shutdown.  The order has been reversed.      
 </p>
 </li></ul>
@@ -508,14 +507,14 @@ consistent with Microsoft applications, but Unix versions of
 </p>
 </li>
 <li><p> Support for repository type <span class="samp">win64.binary</span> (used for
-64-bit Windows binaries for <font face="Courier New,Courier" color="#666666"><b>R</b></font> 2.11.x only) has been removed.
+64-bit Windows binaries for <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> 2.11.x only) has been removed.
 </p>
 </li>
 <li><p> The installers no longer put an &lsquo;Uninstall&rsquo; item on
 the start menu (to conform to current Microsoft UI guidelines).
 </p>
 </li>
-<li><p> Running <font face="Courier New,Courier" color="#666666"><b>R</b></font> always sets the environment variable <span class="env">R_ARCH</span>
+<li><p> Running <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> always sets the environment variable <span class="env">R_ARCH</span>
 (as it does on a Unix-alike from the shell-script front-end).
 </p>
 </li>
@@ -523,7 +522,7 @@ the start menu (to conform to current Microsoft UI guidelines).
 <code>options("pdfviewer")</code> are now set from environment variables
 <span class="env">R_BROWSER</span> and <span class="env">R_PDFVIEWER</span> respectively (as on a
 Unix-alike).  A value of <code>"false"</code> suppresses display (even
-if there is no <CODE>false.exe</CODE> present on the path).
+if there is no <code>false.exe</code> present on the path).
 </p>
 </li>
 <li><p> If <code>options("install.lock")</code> is set to <code>TRUE</code>,
@@ -535,21 +534,21 @@ the way source package installs are protected.
 for files &gt; 2GB.
 </p>
 </li>
-<li><p> The versions of <CODE>R.exe</CODE> in
+<li><p> The versions of <code>R.exe</code> in
 &lsquo;<span class="file">R_HOME/bin/i386,x64/bin</span>&rsquo; now support options such as
-<CODE>R --vanilla CMD</CODE>: there is no comparable interface for
+<code>R --vanilla CMD</code>: there is no comparable interface for
 &lsquo;<span class="file">Rcmd.exe</span>&rsquo;.
 </p>
 </li>
 <li><p> A few more file operations will now work with &gt;2GB files.
 </p>
 </li>
-<li><p> The environment variable <span class="env">R_HOME</span> in an <font face="Courier New,Courier" color="#666666"><b>R</b></font> session now
+<li><p> The environment variable <span class="env">R_HOME</span> in an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session now
 uses slash as the path separator (as it always has when set by
-<CODE>Rcmd.exe</CODE>).
+<code>Rcmd.exe</code>).
 </p>
 </li>
-<li> <p><CODE>Rgui</CODE> has a new menu item for the PDF
+<li> <p><code>Rgui</code> has a new menu item for the PDF
 &lsquo;Sweave User Manual&rsquo;.
 </p>
 </li></ul>
@@ -572,7 +571,7 @@ uses slash as the path separator (as it always has when set by
 
 
 <ul>
-<li><p> There is support for <span class="samp">libjpeg-turbo</span> <EM>via</EM>
+<li><p> There is support for <span class="samp">libjpeg-turbo</span> <em>via</em>
 setting <code>JPEGDIR</code> to that value in &lsquo;<span class="file">MkRules.local</span>&rsquo;.
 </p>
 <p>Support for <span class="samp">jpeg-6b</span> has been removed.
@@ -641,7 +640,7 @@ incorrectly. (<a href="https://bugs.R-project.org/bugzilla3/show_bug.cgi?id=1446
 message was sometimes shown.
 </p>
 </li>
-<li><p> In <font face="Courier New,Courier" color="#666666"><b>R</b></font> 2.12.1, <code>system()</code> sometimes passed an empty
+<li><p> In <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> 2.12.1, <code>system()</code> sometimes passed an empty
 input stream to the new process rather than allowing user input.
 </p>
 </li>
@@ -669,7 +668,7 @@ between the calls.
 <ul>
 <li> <p><code>system()</code> and <code>system2()</code> with output redirected
 to a character vector now give a warning if the command returns a
-non-zero error code.  (This is what a Unix-alike does as from <font face="Courier New,Courier" color="#666666"><b>R</b></font>
+non-zero error code.  (This is what a Unix-alike does as from <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>
 2.12.0.)
 </p>
 </li>
@@ -693,12 +692,12 @@ to, and more cases of <code>system2()</code> are implemented.
 
 
 <ul>
-<li><p> The MSI installer is now made by an <font face="Courier New,Courier" color="#666666"><b>R</b></font> script, and there is
+<li><p> The MSI installer is now made by an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> script, and there is
 now support for 64-bit builds.  (Unlike the Inno Setup installer,
 there are separate MSI installers for 32- and 64-bit Windows.)
 </p>
-<p>It is now built using <CODE>WiX 3.x</CODE> rather than <CODE>WiX
-	2.0</CODE>.  (As a result it is about 25% smaller.)
+<p>It is now built using <code>WiX 3.x</code> rather than <code>WiX
+	2.0</code>.  (As a result it is about 25% smaller.)
 </p>
 </li></ul>
 
@@ -710,8 +709,8 @@ there are separate MSI installers for 32- and 64-bit Windows.)
 
 <ul>
 <li><p> Some warning/error messages from <code>dyn.load()</code> could be
-masked in <CODE>Rgui</CODE> on Windows 7, as that OS can return
-messages containing carriage returns and <CODE>Rgui</CODE> does not
+masked in <code>Rgui</code> on Windows 7, as that OS can return
+messages containing carriage returns and <code>Rgui</code> does not
 support overwriting.
 </p>
 </li>
@@ -719,16 +718,16 @@ support overwriting.
 <code>Sweave()</code>.
 </p>
 </li>
-<li><p> In <font face="Courier New,Courier" color="#666666"><b>R</b></font> 2.12.0, <code>system(intern = TRUE)</code> captured
-&lsquo;<span class="file">stderr</span>&rsquo; on <CODE>Rterm</CODE> when it was documented to only do
-so on <CODE>Rgui</CODE>.
+<li><p> In <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> 2.12.0, <code>system(intern = TRUE)</code> captured
+&lsquo;<span class="file">stderr</span>&rsquo; on <code>Rterm</code> when it was documented to only do
+so on <code>Rgui</code>.
 </p>
 </li>
-<li> <p><CODE>Rgui</CODE> in <font face="Courier New,Courier" color="#666666"><b>R</b></font> 2.12.0 (only) did not always handle lines
+<li> <p><code>Rgui</code> in <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> 2.12.0 (only) did not always handle lines
 containing carriage returns (<span class="samp">\r</span>) correctly: sometimes
 random characters where shown.
 </p>
-<p>Since carriage returns have been supported in <CODE>Rgui</CODE>,
+<p>Since carriage returns have been supported in <code>Rgui</code>,
 the cursor positioning after outputting a line containing a
 carriage return had been unreliable.
 </p>
@@ -763,7 +762,7 @@ launches either &lsquo;<span class="file">R_HOME/bin/i386/R.exe</span>&rsquo; or
 <span class="env">R_ARCH</span> for the architecture to use.
 </p>
 </li>
-<li><p> The <CODE>Rgui</CODE> console now has an optional blinking
+<li><p> The <code>Rgui</code> console now has an optional blinking
 caret (cursor) to assist screen readers for the visually
 impaired.
 </p>
@@ -773,11 +772,11 @@ error when the input path does not exist.  It attempts partial
 normalization, or if that fails, returns the original input.
 </p>
 </li>
-<li><p> All the <CODE>Rcmd</CODE> sub-commands except <code>config</code> and
+<li><p> All the <code>Rcmd</code> sub-commands except <code>config</code> and
 <code>Sd2d</code> are now handled internally rather by shell scripts.
 </p>
 </li>
-<li> <p><CODE>Rcmd</CODE> has a new sub-command <CODE>texify</CODE> to run
+<li> <p><code>Rcmd</code> has a new sub-command <code>texify</code> to run
 MiKTeX's &lsquo;<span class="file">texify.exe</span>&rsquo; with arguments to find files such as
 &lsquo;<span class="file">Sweave.sty</span>&rsquo;.  See the examples in <code>?Sweave</code>.
 </p>
@@ -787,9 +786,9 @@ same as Unix-alikes) rather than <code>-1</code> if the command cannot
 be run, and (like Unix-alikes) no longer gives a warning.
 </p>
 </li>
-<li> <p><CODE>Rscript -e</CODE> and similar use a temporary file, and
+<li> <p><code>Rscript -e</code> and similar use a temporary file, and
 now work harder to ensure that filename is not the same as some
-other simultaneous <font face="Courier New,Courier" color="#666666"><b>R</b></font> process.
+other simultaneous <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> process.
 </p>
 </li></ul>
 
@@ -801,11 +800,11 @@ other simultaneous <font face="Courier New,Courier" color="#666666"><b>R</b></fo
 
 <ul>
 <li><p> The preferred toolchain for 32-bit builds (including
-packages) is now based on <CODE>gcc 4.5.0</CODE>: see the &lsquo;R
+packages) is now based on <code>gcc 4.5.0</code>: see the &lsquo;R
 Installation and Administration Manual&rsquo;.
 </p>
 </li>
-<li><p> It is now possible to build <font face="Courier New,Courier" color="#666666"><b>R</b></font> and the standard installer
+<li><p> It is now possible to build <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> and the standard installer
 without Perl: only maintainer-mode tasks now need Perl.
 </p>
 </li></ul>
@@ -821,21 +820,21 @@ without Perl: only maintainer-mode tasks now need Perl.
 </p>
 <p>There is a combined installer (called
 &lsquo;<span class="file">R-&lt;version&gt;-win.exe</span>&rsquo;).  When used under 32-bit Windows
-this works as before and installs 32-bit <font face="Courier New,Courier" color="#666666"><b>R</b></font>.  When used under
+this works as before and installs 32-bit <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>.  When used under
 64-bit Windows there are options to install either or both of
-32- and 64-bit <font face="Courier New,Courier" color="#666666"><b>R</b></font>: the default is to install both.
+32- and 64-bit <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>: the default is to install both.
 </p>
 <p>The default package type is <code>"win.binary"</code> on both 32- and
 64-bit builds: a single repository contains binary packages for
 both architectures.  This is in place for CRAN, CRAN extras and
 BioC: <code>type = "win64.binary"</code> can still be used for any
-repositories which follow the <font face="Courier New,Courier" color="#666666"><b>R</b></font> 2.11.x convention.  With the
+repositories which follow the <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> 2.11.x convention.  With the
 default filters (see <code>?available.packages</code>) packages will
 only be offered if they are available for the current
 architecture.
 </p>
 <p>The default personal library, e.g. &lsquo;<span class="file">~/R/win-library/2.12</span>&rsquo;
-is now the same for both 32- and 64-bit <font face="Courier New,Courier" color="#666666"><b>R</b></font>.
+is now the same for both 32- and 64-bit <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>.
 </p>
 </li>
 <li><p> The recommended 64-bit toolchain has been changed to one
@@ -847,7 +846,7 @@ need to be re-compiled for this toolchain, but the use of DLLs is
 unaffected.
 </p>
 </li>
-<li><p> For those building <font face="Courier New,Courier" color="#666666"><b>R</b></font> from the sources, the 64-bit
+<li><p> For those building <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> from the sources, the 64-bit
 <code>Tcl</code> binary distribution for 2.12.x is in file
 &lsquo;<span class="file">R64a_Tcl_8-5-8.zip</span>&rsquo; and contains e.g. directory
 &lsquo;<span class="file">Tcl/bin64</span>&rsquo; and not &lsquo;<span class="file">Tcl/bin</span>&rsquo;.
@@ -879,9 +878,9 @@ portable way to find the binaries such as &lsquo;<span class="file">Rscript.exe<
 
 
 <ul>
-<li> <p><CODE>R.exe</CODE> when used in place of <CODE>Rterm.exe</CODE>
-set the environment variables set by <CODE>R CMD</CODE>.  Conversely,
-<CODE>R CMD BATCH</CODE> did not.
+<li> <p><code>R.exe</code> when used in place of <code>Rterm.exe</code>
+set the environment variables set by <code>R CMD</code>.  Conversely,
+<code>R CMD BATCH</code> did not.
 </p>
 </li></ul>
 
@@ -942,12 +941,12 @@ run from <code>Rterm</code> or from <code>Rgui</code> with
 
 
 <ul>
-<li><p> The <CODE>Rgui</CODE> console, pagers and editor on the 64-bit
+<li><p> The <code>Rgui</code> console, pagers and editor on the 64-bit
 build now have a title bar icon.
 </p>
 </li>
-<li><p> The outer frame/console for <CODE>Rgui/Rterm</CODE> mentions
-'(64-bit)' to make it easier to distinguish running copies of <font face="Courier New,Courier" color="#666666"><b>R</b></font>.
+<li><p> The outer frame/console for <code>Rgui/Rterm</code> mentions
+'(64-bit)' to make it easier to distinguish running copies of <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>.
 </p>
 </li>
 <li><p> The package entries in listbox shown by the <code>Install
@@ -956,7 +955,7 @@ locale (as they were in most previous releases, but not in
 2.11.0).
 </p>
 </li>
-<li> <p><CODE>R CMD INSTALL</CODE> can install zipfiles as binary
+<li> <p><code>R CMD INSTALL</code> can install zipfiles as binary
 packages.
 </p>
 </li>
@@ -982,7 +981,7 @@ and binaries of packages available on CRAN.  See the 'R
 Administration and Installation Manual' and the 'R for Windows FAQ'.
 </p>
 </li>
-<li> <p><CODE>Rcmd cmd</CODE> (or <CODE>R CMD cmd</CODE>) now runs an
+<li> <p><code>Rcmd cmd</code> (or <code>R CMD cmd</code>) now runs an
 arbitrary '<span class="option">cmd</span>' if '<span class="option">cmd</span>' is not one of the
 builtin commands, and does not have extension '&lsquo;<span class="file">.sh</span>&rsquo;' or
 '&lsquo;<span class="file">.pl</span>&rsquo;' (when it is run as a shell or Perl script
@@ -1026,7 +1025,7 @@ of the Registry on 64-bit Windows.
 <ul>
 <li><p> The <code>Tcl</code> timezone files (3Mb on disc) are now an
 optional part of the installation: they would be very rarely used
-with <font face="Courier New,Courier" color="#666666"><b>R</b></font>.
+with <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>.
 </p>
 </li>
 <li> <p>&lsquo;<span class="file">RSetReg.exe</span>&rsquo; has been updated to (un)set the
@@ -1036,7 +1035,7 @@ per-user rather than the per-machine keys (which need
 administrative access).
 </p>
 </li>
-<li><p> When building <font face="Courier New,Courier" color="#666666"><b>R</b></font>, the recommended way is now to supply a file
+<li><p> When building <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>, the recommended way is now to supply a file
 &lsquo;<span class="file">R_HOME/src/gnuwin32/MkRules.local</span>&rsquo; instead of editing
 &lsquo;<span class="file">MkRules</span>&rsquo;: there is now no &lsquo;<span class="file">MkRules</span>&rsquo; file in the
 distribution, but one is generated during the build process.
@@ -1060,7 +1059,7 @@ user-mode install (see &lsquo;<span class="file">MkRules.dist</span>&rsquo;).
 
 <ul>
 <li><p> Using <code>ESC</code> to interrupt a <code>system()</code> call could
-cause <font face="Courier New,Courier" color="#666666"><b>R</b></font> to become unstable.
+cause <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> to become unstable.
 </p>
 </li>
 <li> <p><code>0^1i</code> (which should be complex <code>NAN</code>) was
@@ -1079,7 +1078,7 @@ incorrect.
 
 
 <ul>
-<li><p> Some of the MDI toolbar buttons (e.g. <code>"Open Script"</code>)
+<li><p> Some of the MDI toolbar buttons (e.g., <code>"Open Script"</code>)
 did not return the focus to the console if the user cancelled the
 action.
 </p>
@@ -1111,9 +1110,9 @@ report by Greg Snow.
 &lsquo;<span class="file">R_HOME/etc/Rprofile.site</span>&rsquo;.
 </p>
 </li>
-<li> <p><CODE>Rcmd INSTALL</CODE> once again uses
+<li> <p><code>Rcmd INSTALL</code> once again uses
 <span class="option">--no-restore</span>, for consistency with the Unix version and
-<font face="Courier New,Courier" color="#666666"><b>R</b></font> 2.9.2.
+<span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> 2.9.2.
 </p>
 </li>
 <li><p> The HTML package index was not constructed properly when the
@@ -1145,7 +1144,7 @@ session.
 </p>
 </li>
 <li><p> A &lsquo;Windows&rsquo; menu has been added to the SDI version of
-the <font face="Courier New,Courier" color="#666666"><b>R</b></font> GUI, and the corresponding menu in the MDI version has
+the <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> GUI, and the corresponding menu in the MDI version has
 been expanded slightly.
 </p>
 </li>
@@ -1170,8 +1169,8 @@ and &lsquo;<span class="file">.pl</span>&rsquo; (Perl) scripts anywhere on the p
 
 
 <ul>
-<li> <p><CODE>Rcmd SHLIB</CODE> (which is used by <CODE>Rcmd
-       INSTALL</CODE>) now calls <code>make</code> without a target, rather than
+<li> <p><code>Rcmd SHLIB</code> (which is used by <code>Rcmd
+       INSTALL</code>) now calls <code>make</code> without a target, rather than
 target <code>'all'</code>.  This is now the same as on Unix, and was
 announced in the &lsquo;<span class="file">NEWS</span>&rsquo; file for 2.9.0.
 </p>
@@ -1180,7 +1179,7 @@ announced in the &lsquo;<span class="file">NEWS</span>&rsquo; file for 2.9.0.
 latex or examples is now done when needed.
 </p>
 <p>Options <span class="option">--use-zip</span> and <span class="option">--use-zip-help</span> in
-<CODE>R CMD INSTALL</CODE> are no longer available and
+<code>R CMD INSTALL</code> are no longer available and
 <span class="option">--auto-zip</span> only zips data (or not).
 </p>
 <p>Help in packages installed under 2.9.x may not work correctly,
@@ -1230,11 +1229,11 @@ categories 'chtml', 'html/help', 'latex' and 'Rd'.
 
 
 <ul>
-<li> <p><CODE>Rcmd open</CODE> now works as documented: previously
-<CODE>Rcmd open.exe</CODE> was required.
+<li> <p><code>Rcmd open</code> now works as documented: previously
+<code>Rcmd open.exe</code> was required.
 </p>
 </li>
-<li> <p><code>cat(x, file=)</code> in <CODE>Rgui</CODE> tried to interpret
+<li> <p><code>cat(x, file=)</code> in <code>Rgui</code> tried to interpret
 UTF-8-encoded strings for the console rather than converting them
 to the native encoding.
 </p>

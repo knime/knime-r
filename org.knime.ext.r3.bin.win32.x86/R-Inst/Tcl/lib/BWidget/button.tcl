@@ -42,8 +42,6 @@ namespace eval Button {
 
     DynamicHelp::include Button balloon
 
-    Widget::syncoptions Button "" :cmd {-text {} -underline {}}
-
     variable _current ""
     variable _pressed ""
 
@@ -53,6 +51,7 @@ namespace eval Button {
     bind BwButton <ButtonRelease-1> {Button::_release %W}
     bind BwButton <Key-space>       {Button::invoke %W; break}
     bind BwButton <Return>          {Button::invoke %W; break}
+    bind BwButton <<Invoke>> 	    {Button::invoke %W; break}
     bind BwButton <Destroy>         {Widget::destroy %W}
 }
 
@@ -63,14 +62,14 @@ namespace eval Button {
 proc Button::create { path args } {
     array set maps [list Button {} :cmd {}]
     array set maps [Widget::parseArgs Button $args]
-    eval [concat [list button $path] $maps(:cmd)]
+    if {$::Widget::_theme} {
+        eval [concat [list ttk::button $path] $maps(:cmd)]
+    } else {
+        eval [concat [list button $path] $maps(:cmd)]
+    }
     Widget::initFromODB Button $path $maps(Button)
 
     # Do some extra configuration on the button
-    set relief [Widget::getMegawidgetOption $path -relief]
-    if { [string equal $relief "link"] } {
-        set relief "flat"
-    }
     set var [Widget::getMegawidgetOption $path -textvariable]
     set st [Widget::getMegawidgetOption $path -state]
     if {  ![string length $var] } {
@@ -90,8 +89,20 @@ proc Button::create { path args } {
         Widget::configure $path [list -underline $under]
     }
 
-    $path configure -relief $relief -text $text -underline $under \
-	    -textvariable $var -state $st
+    $path configure -text $text -underline $under \
+        -textvariable $var -state $st
+    # Map relief flat on Toolbutton for ttk
+    set relief [Widget::getMegawidgetOption $path -relief]
+    if {$::Widget::_theme} {
+        if { [string equal $relief "link"] } {
+            $path configure -style Toolbutton
+        }
+    } else {
+        if { [string equal $relief "link"] } {
+            set relief "flat"
+        }
+        $path configure -relief $relief
+    }
     bindtags $path [list $path BwButton [winfo toplevel $path] all]
 
     set accel1 [string tolower [string index $text $under]]
@@ -123,24 +134,33 @@ proc Button::configure { path args } {
 
     # Extract all the modified bits we're interested in
     foreach {cr cs cv cn ct cu} [Widget::hasChangedX $path \
-	    -relief -state -textvariable -name -text -underline] break
+        -relief -state -textvariable -name -text -underline] break
     if { $cr || $cs } {
-	set relief [Widget::cget $path -relief]
-	set state  [Widget::cget $path -state]
-        if { [string equal $relief "link"] } {
-            if { [string equal $state "active"] } {
-                set relief "raised"
-            } else {
-                set relief "flat"
-            }
-        }
-        $path:cmd configure -relief $relief -state $state
+        set relief [Widget::cget $path -relief]
+        set state  [Widget::cget $path -state]
+        if { $::Widget::_theme} {
+			if { [string equal $relief "link"] } {
+				$path:cmd configure -style Toolbutton
+			} else {
+				$path:cmd configure -style ""
+			}
+		} else {
+			if { [string equal $relief "link"] } {
+				if { [string equal $state "active"] } {
+					set relief "raised"
+				} else {
+					set relief "flat"
+				}
+			}
+			$path:cmd configure -relief $relief
+		}
+		$path:cmd configure -state $state
     }
 
     if { $cv || $cn || $ct || $cu } {
-	set var		[Widget::cget $path -textvariable]
-	set text	[Widget::cget $path -text]
-	set under	[Widget::cget $path -underline]
+        set var		[Widget::cget $path -textvariable]
+        set text	[Widget::cget $path -text]
+        set under	[Widget::cget $path -underline]
         if {  ![string length $var] } {
             set desc [BWidget::getname [Widget::cget $path -name]]
             if { [llength $desc] } {
@@ -179,35 +199,66 @@ proc Button::cget { path option } {
 
 
 # ----------------------------------------------------------------------------
+#  Command Button::identify
+# ----------------------------------------------------------------------------
+proc Button::identify { path args } {
+    eval $path:cmd identify $args
+}
+
+
+# ----------------------------------------------------------------------------
+#  Command Button::instate
+# ----------------------------------------------------------------------------
+proc Button::instate { path args } {
+    eval $path:cmd instate $args
+}
+
+
+# ----------------------------------------------------------------------------
+#  Command Button::state
+# ----------------------------------------------------------------------------
+proc Button::state { path args } {
+    eval $path:cmd state $args
+}
+
+
+# ----------------------------------------------------------------------------
 #  Command Button::invoke
 # ----------------------------------------------------------------------------
 proc Button::invoke { path } {
     if { ![string equal [$path:cmd cget -state] "disabled"] } {
-	$path:cmd configure -state active -relief sunken
-	update idletasks
-	set cmd [Widget::getMegawidgetOption $path -armcommand]
+        if { $::Widget::_theme} {
+            $path:cmd configure -state active
+			$path:cmd state pressed
+        } else {
+            $path:cmd configure -state active -relief sunken
+        }
+        update idletasks
+        set cmd [Widget::getMegawidgetOption $path -armcommand]
         if { $cmd != "" } {
             uplevel \#0 $cmd
         }
-	after 100
-        set relief [Widget::getMegawidgetOption $path -relief]
-        if { [string equal $relief "link"] } {
-            set relief flat
+        after 100
+        $path:cmd configure -state [Widget::getMegawidgetOption $path -state]
+        if { $::Widget::_theme} {
+            $path:cmd state !pressed
+        } else {
+            set relief [Widget::getMegawidgetOption $path -relief]
+            if { [string equal $relief "link"] } {
+                set relief flat
+            }
+            $path:cmd configure -relief $relief
         }
-	$path:cmd configure \
-            -state  [Widget::getMegawidgetOption $path -state] \
-            -relief $relief
-	set cmd [Widget::getMegawidgetOption $path -disarmcommand]
+        set cmd [Widget::getMegawidgetOption $path -disarmcommand]
         if { $cmd != "" } {
             uplevel \#0 $cmd
         }
-	set cmd [Widget::getMegawidgetOption $path -command]
+        set cmd [Widget::getMegawidgetOption $path -command]
         if { $cmd != "" } {
             uplevel \#0 $cmd
         }
     }
 }
-
 
 # ----------------------------------------------------------------------------
 #  Command Button::_enter
@@ -219,10 +270,14 @@ proc Button::_enter { path } {
     set _current $path
     if { ![string equal [$path:cmd cget -state] "disabled"] } {
         $path:cmd configure -state active
-        if { $_pressed == $path } {
-            $path:cmd configure -relief sunken
-        } elseif { [string equal [Widget::cget $path -relief] "link"] } {
-            $path:cmd configure -relief raised
+        if { $::Widget::_theme } {
+            # $path:cmd state active
+        } else {
+            if { $_pressed == $path } {
+                $path:cmd configure -relief sunken
+            } elseif { [string equal [Widget::cget $path -relief] "link"] } {
+                $path:cmd configure -relief raised
+            }
         }
     }
 }
@@ -238,14 +293,17 @@ proc Button::_leave { path } {
     set _current ""
     if { ![string equal [$path:cmd cget -state] "disabled"] } {
         $path:cmd configure -state [Widget::cget $path -state]
-        set relief [Widget::cget $path -relief]
-        if { $_pressed == $path } {
-            if { [string equal $relief "link"] } {
-                set relief raised
+        if { $::Widget::_theme } {
+        } else {
+            set relief [Widget::cget $path -relief]
+            if { $_pressed == $path } {
+                if { [string equal $relief "link"] } {
+                    set relief raised
+                }
+                $path:cmd configure -relief $relief
+            } elseif { [string equal $relief "link"] } {
+                $path:cmd configure -relief flat
             }
-            $path:cmd configure -relief $relief
-        } elseif { [string equal $relief "link"] } {
-            $path:cmd configure -relief flat
         }
     }
 }
@@ -259,8 +317,13 @@ proc Button::_press { path } {
 
     if { ![string equal [$path:cmd cget -state] "disabled"] } {
         set _pressed $path
-	$path:cmd configure -relief sunken
-	set cmd [Widget::getMegawidgetOption $path -armcommand]
+        if { $::Widget::_theme} {
+            ttk::clickToFocus $path
+            $path state pressed
+        } else {
+            $path:cmd configure -relief sunken
+        }
+        set cmd [Widget::getMegawidgetOption $path -armcommand]
         if { $cmd != "" } {
             uplevel \#0 $cmd
 	    set repeatdelay [Widget::getMegawidgetOption $path -repeatdelay]
@@ -284,12 +347,16 @@ proc Button::_release { path } {
 
     if { $_pressed == $path } {
         set _pressed ""
-        set relief [Widget::getMegawidgetOption $path -relief]
 	after cancel "Button::_repeat $path"
-        if { [string equal $relief "link"] } {
-            set relief raised
+        if { $::Widget::_theme} {
+            $path state !pressed
+        } else {
+            set relief [Widget::getMegawidgetOption $path -relief]
+            if { [string equal $relief "link"] } {
+                set relief raised
+            }
+            $path:cmd configure -relief $relief
         }
-        $path:cmd configure -relief $relief
 	set cmd [Widget::getMegawidgetOption $path -disarmcommand]
         if { $cmd != "" } {
             uplevel \#0 $cmd

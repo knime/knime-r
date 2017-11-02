@@ -1,4 +1,5 @@
 ### R code from vignette source 'Design-issues.Rnw'
+### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: preliminaries

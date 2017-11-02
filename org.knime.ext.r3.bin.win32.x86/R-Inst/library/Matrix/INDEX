@@ -1,3 +1,5 @@
+%&%-methods             Boolean Arithmetic Matrix Products: '%&%' and
+                        Methods
 %*%-methods             Matrix (Cross) Products (of Transpose)
 BunchKaufman-methods    Bunch-Kaufman Decomposition Methods
 CAex                    Albers' example Matrix with "Difficult" Eigen
@@ -15,6 +17,7 @@ KhatriRao               Khatri-Rao Matrix Product
 LU-class                LU (dense) Matrix Decompositions
 Matrix                  Construct a Classed Matrix
 Matrix-class            Virtual Class "Matrix" Class of Matrices
+MatrixClass             The Matrix (Super-) Class of a Class
 MatrixFactorization-class
                         Class "MatrixFactorization" of Matrix
                         Factorizations
@@ -24,7 +27,7 @@ Schur                   Schur Decomposition of a Matrix
 Schur-class             Class "Schur" of Schur Matrix Factorizations
 SparseM-coerce-methods
                         Sparse Matrix Coercion from and to those from
-                        package "SparseM"
+                        package 'SparseM'
 TsparseMatrix-class     Class "TsparseMatrix" of Sparse Matrices in
                         Triplet Form
 USCounties              USCounties Contiguity Matrix
@@ -67,7 +70,7 @@ dgTMatrix-class         Sparse matrices in triplet form
 dgeMatrix-class         Class "dgeMatrix" of Dense Numeric (S4 Class)
                         Matrices
 diagU2N                 Transform Triangular Matrices from Unit
-                        Triangular to General and back
+                        Triangular to General Triangular and Back
 diagonalMatrix-class    Class "diagonalMatrix" of Diagonal Matrices
 dpoMatrix-class         Positive Semi-definite Dense Numeric Matrices
 drop0                   Drop "Explicit Zeroes" from a Sparse Matrix
@@ -92,7 +95,7 @@ graph2T                 Conversions "graph" <-> (sparse) Matrix
 iMatrix-class           Virtual Classes Not Yet Really Implemented and
                         Used
 image-methods           Methods for image() in Package 'Matrix'
-indMatrix-class         Index matrices
+indMatrix-class         Index Matrices
 index-class             Virtual Class "index" - Simple Class for Matrix
                         Indices
 invPerm                 Inverse Permutation Vector
@@ -136,6 +139,7 @@ rep2abI                 Replicate Vectors into 'abIndex' Result
 replValue-class         Virtual Class "replValue" - Simple Class for
                         subassignment Values
 rleDiff-class           Class "rleDiff" of rle(diff(.)) Stored Vectors
+rsparsematrix           Random Sparse Matrix
 solve-methods           Methods in Package Matrix for Function
                         'solve()'
 spMatrix                Sparse Matrix Constructor From Triplet
@@ -149,13 +153,14 @@ sparseMatrix-class      Virtual Class "sparseMatrix" - Mother of Sparse
 sparseQR-class          Sparse QR decomposition of a sparse matrix
 sparseVector            Sparse Vector Construction from Nonzero Entries
 sparseVector-class      Sparse Vector Classes
-symmetricMatrix-class   Virtual Class of Symmetric Matrices in
-                        package:Matrix
+symmetricMatrix-class   Virtual Class of Symmetric Matrices in Package
+                        Matrix
 symmpart                Symmetric Part and Skew(symmetric) Part of a
                         Matrix
 triangularMatrix-class
-                        Virtual Class of Triangular Matrices in
-                        package:Matrix
+                        Virtual Class of Triangular Matrices in Package
+                        Matrix
+uniqTsparse             Unique (Sorted) TsparseMatrix Representations
 unpack                  Representation of Packed and Unpacked (Dense)
                         Matrices
 updown                  Up- and Down-Dating a Cholesky Decomposition

@@ -4,6 +4,8 @@ $.person	person
 .DollarNames.default	rcompgen
 .DollarNames.environment	rcompgen
 .DollarNames.list	rcompgen
+.romans	roman
+.S3methods	methods
 ?	Question
 ??	help.search
 adist	adist
@@ -39,6 +41,7 @@ bug.report	bug.report
 build	PkgUtils
 c.person	person
 capture.output	capture.output
+changedFiles	changedFiles
 check	PkgUtils
 checkCRAN	mirrorAdmin
 choose.dir	choose.dir
@@ -70,6 +73,7 @@ de	dataentry
 de.ncols	dataentry
 de.restore	dataentry
 de.setup	dataentry
+debugcall	debugcall
 debugger	debugger
 demo	demo
 DLL.version	DLL.version
@@ -84,6 +88,7 @@ edit.vignette	vignette
 emacs	edit
 example	example
 file.edit	file.edit
+fileSnapshot	changedFiles
 file_test	filetest
 Filters	choose.files
 find	apropos
@@ -91,6 +96,9 @@ findLineNum	findLineNum
 fix	fix
 fixInNamespace	getFromNamespace
 flush.console	flush.console
+format.bibentry	bibentry
+format.citation	bibentry
+format.object_size	object.size
 format.person	person
 formatOL	format
 formatUL	format
@@ -114,6 +122,7 @@ getWindowTitle	setWindowTitle
 getWinProgressBar	winProgressBar
 glob2rx	glob2rx
 globalVariables	globalVariables
+hasName	hasName
 head	head
 head.data.frame	head
 head.default	head
@@ -126,10 +135,15 @@ help.request	help.request
 help.search	help.search
 help.start	help.start
 history	savehistory
+hsearch_db	hsearch-utils
+hsearch_db_concepts	hsearch-utils
+hsearch_db_keywords	hsearch-utils
 INSTALL	INSTALL
 install.packages	install.packages
 installed.packages	installed.packages
 is.relistable	relist
+isS3method	isS3method
+isS3stdGeneric	isS3stdGen
 limitedLabels	recover
 loadhistory	savehistory
 loadRconsole	Rconsole
@@ -164,11 +178,15 @@ pico	edit
 print.bibentry	bibentry
 print.Bibtex	toLatex
 print.browseVignettes	browseVignettes
+print.changedFiles	changedFiles
+print.citation	bibentry
+print.fileSnapshot	changedFiles
 print.getAnywhere	getAnywhere
 print.hsearch	help.search
 print.Latex	toLatex
 print.ls_str	ls_str
 print.MethodsFunction	methods
+print.news_db	news
 print.object_size	object.size
 print.packageDescription	packageDescription
 print.packageIQR	data
@@ -182,6 +200,7 @@ prompt	prompt
 prompt.data.frame	prompt
 prompt.default	prompt
 promptData	promptData
+promptImport	prompt
 promptPackage	promptPackage
 Question	Question
 rc.getOption	rcompgen
@@ -230,11 +249,12 @@ RweaveLatexOptions	SweaveUtils
 RweaveLatexSetup	RweaveLatex
 RweaveLatexWritedoc	SweaveUtils
 RweaveTryStop	SweaveUtils
+R_INSTALL_TAR	INSTALL
 savehistory	savehistory
 select.list	select.list
 sessionInfo	sessionInfo
 setBreakpoint	findLineNum
-setInternet2	setInternet2
+setInternet2	utils-defunct
 setRepositories	setRepositories
 setStatusBar	setWindowTitle
 setTxtProgressBar	txtProgressBar
@@ -242,6 +262,7 @@ setWindowTitle	setWindowTitle
 setWinProgressBar	winProgressBar
 SHLIB	SHLIB
 shortPathName	shortPathName
+sort.bibentry	bibentry
 stack	stack
 stack.data.frame	stack
 stack.default	stack
@@ -249,9 +270,11 @@ Stangle	Sweave
 str	str
 str.data.frame	str
 str.default	str
+strcapture	strcapture
 strOptions	str
 summary.packageStatus	packageStatus
 summaryRprof	summaryRprof
+suppressForeignCheck	globalVariables
 Sweave	Sweave
 SweaveHooks	SweaveUtils
 SweaveSyntaxLatex	Sweave
@@ -273,6 +296,7 @@ toLatex	toLatex
 toLatex.sessionInfo	sessionInfo
 txtProgressBar	txtProgressBar
 type.convert	type.convert
+undebugcall	debugcall
 unlist.relistable	relist
 unstack	stack
 unstack.data.frame	stack

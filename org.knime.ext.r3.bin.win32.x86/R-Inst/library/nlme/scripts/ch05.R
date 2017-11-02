@@ -190,4 +190,4 @@ anova(fm3Wheat2, L = c(-1, 0, 1))
 # cleanup
 
 proc.time()
-q("no")
+

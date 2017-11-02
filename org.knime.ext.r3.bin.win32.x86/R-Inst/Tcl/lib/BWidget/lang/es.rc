@@ -18,13 +18,14 @@
 
 ! --- symbolic names of label of SelectFont dialog ----------------------------
 
-*boldName:       &Negrita
-*italicName:     &Cursiva
-*underlineName:  &Subrayado
-*overstrikeName: &Tachado
-*fontName:       &Fuente
-*sizeName:       &Tamaño
-*styleName:      &Estilo
+*boldName:          &Negrita
+*italicName:        &Cursiva
+*underlineName:     &Subrayado
+*overstrikeName:    &Tachado
+*fontName:          &Fuente
+*sizeName:          &Tamaño
+*styleName:         &Estilo
+*colorPickerName:   &Color...
 
 
 ! --- symbolic names of label of PasswdDlg dialog -----------------------------
@@ -50,4 +51,9 @@
 ! --- resource for PasswdDlg dialog -------------------------------------------
 
 *PasswdDlg.title:  Introduzca su nombre de usuario y contraseña
+
+! --- symbolic names of label of SelectColor dialog ----------------------------
+
+*baseColorsName: Base colors
+*userColorsName: User colors
 

@@ -36,6 +36,7 @@ getGraphicsEvent        Wait for a mouse or keyboard event from a
                         graphics window
 grDevices-package       The R Graphics Devices and Support for Colours
                         and Fonts
+grSoftVersion           Report Versions of Graphics Software
 gray                    Gray Level Specification
 gray.colors             Gray Color Palette
 hcl                     HCL Color Specification
@@ -62,8 +63,8 @@ recordPlot              Record and Replay Plots
 rgb                     RGB Color Specification
 rgb2hsv                 RGB to HSV Conversion
 savePlot                Save Windows Plot to a File
-svg                     Cairo-based SVG, PDF and PostScript Graphics
-                        Devices
+svg                     Cairographics-based SVG, PDF and PostScript
+                        Graphics Devices
 trans3d                 3D to 2D Transformation for Perspective Plots
 windows                 Windows Graphics Devices
 windows.options         Auxiliary Function to Set/View Defaults for

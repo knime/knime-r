@@ -32,8 +32,12 @@
 <TD>&nbsp;&nbsp;<A HREF="#-bitmap">-bitmap</A></TR>
 </TR>
 <TR>
-<TD>&nbsp;&nbsp;<A HREF="#-cancel">-cancel</A></TR>
+
+<TD>&nbsp;&nbsp;<A HREF="#-cancel">-cancel</A></TD>
+</TR>
+<TR>
 <TD>&nbsp;&nbsp;<A HREF="#-default">-default</A></TR>
+<TD>&nbsp;&nbsp;<A HREF="#-geometry">-geometry</A></TR>
 </TR>
 <TR>
 <TD>&nbsp;&nbsp;<A HREF="#-image">-image</A></TR>
@@ -137,8 +141,10 @@ Specifies a bitmap to display at the left of the user frame.
 <DL><DT><A NAME="-cancel"><B>-cancel</B></A></DT>
 <DD>
 
-Specifies the number of the cancel button of the Dialog. When user press Esc in the Dialog,
-this button is invoked.
+Specifies the number of the cancel button of the Dialog. When user presses Esc or the windows close button,
+this button is invoked.<BR>
+If set to <B>-1</B>, Esc does not invoke anything.
+The window close button <I>destroys</I> the dialog in this case and returns <B>-1</B>.
 </DD>
 </DL>
 <DL><DT><A NAME="-default"><B>-default</B></A></DT>
@@ -146,6 +152,14 @@ this button is invoked.
 
 Specifies the number of the default button of the Dialog.
 When user press Return in the Dialog, this button is invoked.
+</DD>
+</DL>
+</DL>
+<DL><DT><A NAME="-geometry"><B>-geometry</B></A></DT>
+<DD>
+
+Set the <B>geometry</B> used when method <B>draw</B> is called.
+See <B>wm geometry</B> for a parameter description.
 </DD>
 </DL>
 <DL><DT><A NAME="-image"><B>-image (read-only)</B></A></DT>

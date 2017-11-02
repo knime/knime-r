@@ -10,4 +10,4 @@ bibentry(bibtype = "Manual",
                     person("R Core Team")),
          year = year,
          note = note,
-         url = "http://CRAN.R-project.org/package=nlme")
+         url = "https://CRAN.R-project.org/package=nlme")

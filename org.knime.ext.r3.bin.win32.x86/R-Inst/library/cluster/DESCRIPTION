@@ -1,11 +1,12 @@
 Package: cluster
-Version: 1.15.2
-Date: 2014-03-26
+Version: 2.0.6
+Date: 2017-03-10
 Priority: recommended
-Title: Cluster Analysis Extended Rousseeuw et al.
-Description: Cluster Analysis Methods.  Much extended the original from
-	Peter Rousseeuw, Anja Struyf and Mia Hubert, 
-	based on Kaufman and Rousseeuw (1990)
+Title: "Finding Groups in Data": Cluster Analysis Extended Rousseeuw et
+        al.
+Description: Methods for Cluster analysis.  Much extended the original from
+	Peter Rousseeuw, Anja Struyf and Mia Hubert,
+	based on Kaufman and Rousseeuw (1990) "Finding Groups in Data".
 Maintainer: Martin Maechler <maechler@stat.math.ethz.ch>
 Authors@R: c(person("Martin","Maechler", role=c("aut","cre"), email="maechler@stat.math.ethz.ch")
  ,person("Peter", "Rousseeuw", role="aut", email="rousse@uia.ua.ac.be",
@@ -15,10 +16,11 @@ Authors@R: c(person("Martin","Maechler", role=c("aut","cre"), email="maechler@st
  ,person("Kurt", "Hornik", role=c("trl", "ctb"),
  	email="Kurt.Hornik@R-project.org", comment="port to R; maintenance(1999-2000)")
  ,person("Matthias", "Studer", role="ctb")
- ,person("Pierre", "Roudier", role="ctb")
+ ,person("Pierre",  "Roudier", role="ctb")
+ ,person("Juan",   "Gonzalez", role="ctb")
  )
-Depends: R (>= 2.12.0), stats, utils
-Imports: graphics, grDevices
+Depends: R (>= 3.0.1)
+Imports: graphics, grDevices, stats, utils
 Suggests: MASS
 SuggestsNote: two small examples using MASS' cov.rob() and mvrnorm()
 LazyLoad: yes
@@ -26,16 +28,17 @@ LazyData: yes
 ByteCompile: yes
 BuildResaveData: no
 License: GPL (>= 2)
-Packaged: 2014-03-30 16:33:00 UTC; maechler
+NeedsCompilation: yes
+Packaged: 2017-03-10 09:25:12 UTC; maechler
 Author: Martin Maechler [aut, cre],
   Peter Rousseeuw [aut] (Fortran original),
   Anja Struyf [aut] (S original),
   Mia Hubert [aut] (S original),
   Kurt Hornik [trl, ctb] (port to R; maintenance(1999-2000)),
   Matthias Studer [ctb],
-  Pierre Roudier [ctb]
-NeedsCompilation: yes
+  Pierre Roudier [ctb],
+  Juan Gonzalez [ctb]
 Repository: CRAN
-Date/Publication: 2014-03-31 10:17:32
-Built: R 3.0.3; i386-w64-mingw32; 2014-06-12 05:33:41 UTC; windows
+Date/Publication: 2017-03-10 14:49:21
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-09-28 09:56:22 UTC; windows
 Archs: i386, x64

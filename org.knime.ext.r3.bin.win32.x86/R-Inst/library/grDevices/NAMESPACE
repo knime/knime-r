@@ -1,18 +1,18 @@
 useDynLib(grDevices, .registration = TRUE, .fixes = "C_")
 
-export(Hershey, adjustcolor, as.graphicsAnnot, as.raster, axisTicks, blues9,
-       boxplot.stats, check.options, chull, CIDFont, col2rgb, colors,
-       colours, cm, colorRamp, colorRampPalette, contourLines,
+export(Hershey, adjustcolor, as.graphicsAnnot, as.raster, axisTicks,
+       blues9, boxplot.stats, check.options, chull, CIDFont, col2rgb,
+       colors, colours, cm, colorRamp, colorRampPalette, contourLines,
        convertColor, colorConverter, colorspaces, cm.colors, densCols,
-       devAskNewPage, dev.capabilities, dev.capture, dev.control, dev.copy,
-       dev.copy2eps, dev.copy2pdf, dev.cur, dev.hold, dev.flush,
-       dev.interactive, dev.list, dev.new, dev.next, dev.off,
-       dev.prev, dev.print, dev.set, dev.size, dev2bitmap,
+       devAskNewPage, dev.capabilities, dev.capture, dev.control,
+       dev.copy, dev.copy2eps, dev.copy2pdf, dev.cur, dev.hold,
+       dev.flush, dev.interactive, dev.list, dev.new, dev.next,
+       dev.off, dev.prev, dev.print, dev.set, dev.size, dev2bitmap,
        deviceIsInteractive, embedFonts, extendrange, getGraphicsEvent,
        getGraphicsEventEnv, graphics.off, gray, grey, gray.colors,
-       grey.colors, heat.colors, hsv, hcl, is.raster, make.rgb,
-       n2mfrow, nclass.Sturges, nclass.FD, nclass.scott, palette, pdf,
-       pdf.options, pdfFonts, pictex, postscript,
+       grSoftVersion, grey.colors, heat.colors, hsv, hcl, is.raster,
+       make.rgb, n2mfrow, nclass.Sturges, nclass.FD, nclass.scott,
+       palette, pdf, pdf.options, pdfFonts, pictex, postscript,
        postscriptFonts, ps.options, rainbow, recordGraphics,
        recordPlot, replayPlot, rgb, rgb2hsv, savePlot, setEPS,
        setGraphicsEventEnv, setGraphicsEventHandlers, setPS,
@@ -41,14 +41,15 @@ S3method("as.raster", "array")
 
 S3method("as.matrix", "raster")
 S3method("is.na", "raster")
+S3method("anyNA", "raster")
 S3method("[", "raster")
 S3method("[<-", "raster")
 S3method("Ops", "raster")
 
 S3method("print", "raster")
 
-S3method(pretty, Date)
-S3method(pretty, POSIXt)
+S3method(pretty, Date,   prettyDate)
+S3method(pretty, POSIXt, prettyDate)
 
 
 if(tools:::.OStype() == "windows") {
@@ -57,6 +58,7 @@ if(tools:::.OStype() == "windows") {
 
     S3method("[", SavedPlots)
     S3method(print, SavedPlots)
+    importFrom("utils", "shortPathName")
 } else {
     export(X11.options, X11Font, X11Fonts,
            quartz, quartz.options, quartz.save, quartzFont, quartzFonts)

@@ -70,7 +70,7 @@ namespace eval ArrowButton {
     variable _grab
     variable _moved
 
-    array set _grab {current "" pressed "" oldstate "" oldrelief ""}
+    array set _grab {current "" pressed "" oldstate "normal" oldrelief ""}
 }
 
 

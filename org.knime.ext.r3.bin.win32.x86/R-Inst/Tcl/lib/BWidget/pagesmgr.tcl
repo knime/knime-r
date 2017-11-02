@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------
 #  pagesmgr.tcl
 #  This file is part of Unifix BWidget Toolkit
-#  $Id: pagesmgr.tcl,v 1.6 2003/10/20 21:23:52 damonc Exp $
+#  $Id: pagesmgr.tcl,v 1.6.2.1 2011/02/14 16:56:09 oehhar Exp $
 # ------------------------------------------------------------------------------
 #  Index of commands:
 #     - PagesManager::create
@@ -110,8 +110,12 @@ proc PagesManager::add { path page } {
 
     lappend data(pages) $page
 
-    frame $path.f$page -relief flat \
-	    -background [Widget::cget $path -background] -borderwidth 0
+    if {[Widget::theme]} {
+        ttk::frame $path.f$page
+    }  else  {
+        frame $path.f$page -relief flat \
+            -background [Widget::cget $path -background] -borderwidth 0
+    }
 
     return $path.f$page
 }

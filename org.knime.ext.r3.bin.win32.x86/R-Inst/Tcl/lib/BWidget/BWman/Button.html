@@ -11,6 +11,7 @@
 </DL>
 <DL>
 <DT><I>STANDARD OPTIONS</I></DT>
+<DT><I>Not themed</I></DT>
 <DD><TABLE CELLSPACING=0 CELLSPACING=0 BORDER=0>
 <TR>
 <TD>&nbsp;&nbsp;<A HREF="options.htm#M-activebackground">-activebackground</A></TD>
@@ -58,6 +59,27 @@
 </TR>
 <TR>
 <TD>&nbsp;&nbsp;<A HREF="options.htm#M-wraplength">-wraplength</A></TD>
+</TABLE></DD>
+<DT><I>Themed</I></DT>
+<DD><TABLE CELLSPACING=0 CELLSPACING=0 BORDER=0>
+<TR>
+<TD>&nbsp;&nbsp;<A HREF="options.htm#M-compound">-compound</A></TD>
+<TD>&nbsp;&nbsp;<A HREF="options.htm#M-cursor">-cursor</A></TD>
+</TR>
+<TR>
+<TD>&nbsp;&nbsp;<A HREF="options.htm#M-image">-image</A></TD>
+<TD>&nbsp;&nbsp;<A HREF="options.htm#M-style">-style</A></TD>
+</TR>
+<TR>
+<TD>&nbsp;&nbsp;<A HREF="options.htm#M-repeatdelay">-repeatdelay</A></TD>
+<TD>&nbsp;&nbsp;<A HREF="options.htm#M-repeatinterval">-repeatinterval</A></TD>
+</TR>
+<TR>
+<TD>&nbsp;&nbsp;<A HREF="options.htm#M-takefocus">-takefocus</A></TD>
+<TD>&nbsp;&nbsp;<A HREF="options.htm#M-text">-text</A></TD>
+</TR>
+<TR>
+<TD>&nbsp;&nbsp;<A HREF="options.htm#M-textvariable">-textvariable</A></TD>
 </TABLE></DD>
 </DL>
 <DL>
@@ -161,7 +183,8 @@ If an image or bitmap is being displayed in the Button then the value is in
 screen units;
 for text it is in lines of text.
 If this option isn't specified, the Button's desired height is computed
-from the size of the image or bitmap or text being displayed in it.
+from the size of the image or bitmap or text being displayed in it.<BR>
+Option not available when widget is <I>themed</I>.
 </DD>
 </DL>
 <DL><DT><A NAME="-helptext"><B>-helptext</B></A></DT>
@@ -197,7 +220,9 @@ are extracted from its value.
 
 Specifies the 3-D effect desired for the widget. Acceptable values are standard values for
 button relief (<B>raised</B>, <B>sunken</B>, <B>flat</B>, <B>ridge</B>, <B>solid</B>, and <B>groove</B>) and <B>link</B>, which specifies that button relief is <B>flat</B> when pointer
-is outside the button and <B>raised</B> when pointer is inside.
+is outside the button and <B>raised</B> when pointer is inside.<BR>
+This option has only the following effect if the widget is <I>themed</I>:
+The value <B>link</B> used a style <B>Toolbutton</B> while any other value uses the standard effect.
 </DD>
 </DL>
 <DL><DT><A NAME="-state"><B>-state</B></A></DT>
@@ -269,5 +294,14 @@ Button is redisplayed with active color and sunken relief, and
 normal color and its defined relief, and <B>disarmcommand</B> then <B>command</B>
 are called.
 <P><B>invoke</B> is called when Button has input focus and user press the space bar.
+
 </DD></DL>
+<HR WIDTH="50%"><BR>
+<B><A NAME="wc">BINDINGS</A></B><BR>
+<DL><DT><A NAME="Invoke"><I>&lt;&lt;Invoke&gt;&gt;</I></A>
+</DT><DD>
+
+Invoke the <B>invoke</B> widget command.
+</DD></DL>
+<HR WIDTH="50%"><BR>
 </BODY></HTML>

@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------
 #  tree.tcl
 #  This file is part of Unifix BWidget Toolkit
-#  $Id: tree.tcl,v 1.54 2006/09/28 15:46:06 dev_null42a Exp $
+#  $Id: tree.tcl,v 1.60.2.4 2011/06/23 08:28:04 oehhar Exp $
 # ----------------------------------------------------------------------------
 #  Index of commands:
 #     - Tree::create
@@ -327,6 +327,7 @@ proc Tree::insert { path index parent node args } {
     if { [info exists data($node)] } {
         return -code error "node \"$node\" already exists"
     }
+    set parent [_node_name $path $parent]
     if { ![info exists data($parent)] } {
         return -code error "node \"$parent\" does not exist"
     }
@@ -349,7 +350,7 @@ proc Tree::insert { path index parent node args } {
             _redraw_idle $path 3
         } else {
             # ...and closed -> redraw cross
-            lappend data(upd,nodes) $parent 8
+            MergeFlag $path $parent 8
             _redraw_idle $path 2
         }
     }
@@ -399,19 +400,27 @@ proc Tree::itemconfigure { path node args } {
 	}
 
 	if { $data(upd,level) < 3 && $flag } {
-            if { [set idx [lsearch -exact $data(upd,nodes) $node]] == -1 } {
-                lappend data(upd,nodes) $node $flag
-            } else {
-                incr idx
-                set flag [expr {[lindex $data(upd,nodes) $idx] | $flag}]
-                set data(upd,nodes) [lreplace $data(upd,nodes) $idx $idx $flag]
-            }
+	    MergeFlag $path $node $flag
             _redraw_idle $path 2
         }
     }
     return $result
 }
 
+proc Tree::MergeFlag { path node flag } {
+    variable $path
+    upvar 0  $path data
+
+    # data(upd,nodes) is a key-val list: emulate a dict by an array
+    array set n $data(upd,nodes)
+    if {![info exists n($node)]} {
+	lappend data(upd,nodes) $node $flag
+    } else {
+	set n($node) [expr {$n($node) | $flag}]
+	set data(upd,nodes) [array get n]
+    }
+    return
+}
 
 # ----------------------------------------------------------------------------
 #  Command Tree::itemcget
@@ -440,7 +449,7 @@ proc Tree::bindArea { path event script } {
 # ----------------------------------------------------------------------------
 proc Tree::bindText { path event script } {
     if {[string length $script]} {
-	append script " \[Tree::_get_node_name [list $path] current 2\]"
+	append script " \[Tree::_get_node_name [list $path] current 2 1\]"
     }
     $path.c bind "node" $event $script
     if {[Widget::getoption $path -selectfill]} {
@@ -456,7 +465,7 @@ proc Tree::bindText { path event script } {
 # ----------------------------------------------------------------------------
 proc Tree::bindImage { path event script } {
     if {[string length $script]} {
-	append script " \[Tree::_get_node_name [list $path] current 2\]"
+	append script " \[Tree::_get_node_name [list $path] current 2 1\]"
     }
     $path.c bind "img" $event $script
     if {[Widget::getoption $path -selectfill]} {
@@ -704,7 +713,11 @@ proc Tree::selection { path cmd args } {
 		return -code error \
 			"wrong#args: Expected $path selection get"
 	    }
-            return $data(selnodes)
+            set nodes [list]
+	    foreach node $data(selnodes) {
+		lappend nodes [_node_name_rev $path $node]
+	    }
+	    return $nodes
         }
         includes {
 	    if {[llength $args] != 1} {
@@ -838,10 +851,10 @@ proc Tree::find {path findInfo {confine ""}} {
             set xi [expr {[lindex [$path.c coords n:$node] 0] - $padx}]
             set xs [lindex [$path.c bbox n:$node] 2]
             if {$x >= $xi && $x <= $xs} {
-                return $node
+                return [_node_name_rev $path $node]
             }
         } else {
-            return $node
+            return [_node_name_rev $path $node]
         }
     }
     return ""
@@ -1216,16 +1229,10 @@ proc Tree::_update_scrollregion { path } {
         set ys [lindex $bbox 3]
 
         if { $w < $xs } {
-            set w [expr {int($xs)}]
-            if { [set r [expr {$w % $xinc}]] } {
-                set w [expr {$w+$xinc-$r}]
-            }
+            set w [expr {$xs + $w % $xinc}]
         }
         if { $h < $ys } {
-            set h [expr {int($ys)}]
-            if { [set r [expr {$h % $yinc}]] } {
-                set h [expr {$h+$yinc-$r}]
-            }
+            set h [expr {$ys + $h % $yinc}]
         }
     }
 
@@ -1364,12 +1371,10 @@ proc Tree::_draw_subnodes { path nodes x0 y0 deltax deltay padx showlines } {
         set yp $y1
         set y1 [_draw_node $path $node $x0 [expr {$y1+$deltay}] $deltax $deltay $padx $showlines]
     }
-    if { $showlines && [llength $nodes] } {
-	if {$y0 < 0} {
-	    # Adjust the drawing of the line to the first root node
-	    # to start at the vertical point (not go up).
-	    incr y0 $deltay
-	}
+    # Only draw a line to the invisible root node above the tree widget when
+    # there are multiple top nodes.
+    set len [llength $nodes]
+    if { $showlines && $len && !($y0 < 0 && $len < 2) } {
         set id [$path.c create line $x0 $y0 $x0 [expr {$yp+$deltay}] \
                     -fill    [Widget::getoption $path -linesfill]   \
                     -stipple [Widget::getoption $path -linestipple] \
@@ -1528,7 +1533,10 @@ proc Tree::_redraw_selection { path } {
             }
             set id [$path.c create rectangle $bbox -tags [list sel s:$node] \
 			-fill $selbg -outline $selbg]
-            $path.c itemconfigure "n:$node" -fill $selfg
+	    if {$selfg != ""} {
+		# Don't allow an empty fill - that would be transparent
+		$path.c itemconfigure "n:$node" -fill $selfg
+	    }
             $path.c lower $id
         }
     }
@@ -1592,8 +1600,7 @@ proc Tree::_drop_cmd { path source X Y op type dnddata } {
         set data(dnd,afterid) ""
     }
     set data(dnd,scroll) ""
-    if {[llength $data(dnd,node)]
-	&& [llength [set cmd [Widget::getoption $path -dropcmd]]]} {
+    if {[llength [set cmd [Widget::getoption $path -dropcmd]]]} {
 	return [uplevel \#0 $cmd \
 		    [list $path $source $data(dnd,node) $op $type $dnddata]]
     }
@@ -1849,14 +1856,15 @@ proc Tree::_auto_scroll { path x y } {
 # ----------------------------------------------------------------------------
 #  Command Tree::_scroll
 # ----------------------------------------------------------------------------
-proc Tree::_scroll { path cmd dir } {
+proc Tree::_scroll { path scroll } {
     variable $path
     upvar 0  $path data
-
+    set cmd [lindex $scroll 0]
+    set dir [lindex $scroll 1]
     if { ($dir == -1 && [lindex [$path.c $cmd] 0] > 0) ||
          ($dir == 1  && [lindex [$path.c $cmd] 1] < 1) } {
         $path.c $cmd scroll $dir units
-        set data(dnd,afterid) [after 100 [list Tree::_scroll $path $cmd $dir]]
+        set data(dnd,afterid) [after 50 [list Tree::_scroll $path $scroll]]
     } else {
         set data(dnd,afterid) ""
         DropSite::setcursor dot
@@ -1917,6 +1925,7 @@ proc Tree::_keynav {which win} {
 		$win selection set [lindex $nodes $index]
 		_set_current_node $win [lindex $nodes $index]
 		$win see [lindex $nodes $index]
+		event generate $win <<TreeSelect>>
 		return
 	    }
 	}
@@ -1926,6 +1935,7 @@ proc Tree::_keynav {which win} {
 		$win selection set [lindex $nodes 0]
 		_set_current_node $win [lindex $nodes 0]
 		$win see [lindex $nodes 0]
+		event generate $win <<TreeSelect>>
 		return
 	    }
 
@@ -1935,6 +1945,7 @@ proc Tree::_keynav {which win} {
 		$win selection set [lindex $nodes $index]
 		_set_current_node $win [lindex $nodes $index]
 		$win see [lindex $nodes $index]
+		event generate $win <<TreeSelect>>
 		return
 	    }
 	}
@@ -1953,6 +1964,7 @@ proc Tree::_keynav {which win} {
 			$win selection set [lindex $nodes $index]
 			_set_current_node $win [lindex $nodes $index]
 			$win see [lindex $nodes $index]
+			event generate $win <<TreeSelect>>
 			return
 		    }
                 }
@@ -1993,6 +2005,7 @@ proc Tree::_keynav {which win} {
 		$win selection set $parent
 		_set_current_node $win $parent
 		$win see $parent
+		event generate $win <<TreeSelect>>
 		return
 	    }
 	}
@@ -2086,8 +2099,12 @@ proc Tree::_set_current_node {win node} {
 # Results:
 #	node	name of the tree node.
 
-proc Tree::_get_node_name {path {item current} {tagindex end-1}} {
-    return [string range [lindex [$path.c gettags $item] $tagindex] 2 end]
+proc Tree::_get_node_name {path {item current} {tagindex end-1} {truename 0}} {
+    set node [string range [lindex [$path.c gettags $item] $tagindex] 2 end]
+    if {$truename} {
+	return [_node_name_rev $path $node]
+    }
+    return $node
 }
 
 # Tree::_get_node_padx --
@@ -2139,7 +2156,8 @@ proc Tree::_get_node_deltax {path node} {
 #	list		The list of tags to apply to the canvas item
 proc Tree::_get_node_tags {path node {tags ""}} {
     eval [linsert $tags 0 lappend list TreeItemSentinal]
-    if {[Widget::getoption $path.$node -helptext] == ""} { return $list }
+    if {[Widget::getoption $path.$node -helptext] == "" &&
+        [Widget::getoption $path.$node -helpcmd]  == ""} { return $list }
 
     switch -- [Widget::getoption $path.$node -helptype] {
 	balloon {
@@ -2167,29 +2185,22 @@ proc Tree::_set_help { path node } {
     Widget::getVariable $path help
 
     set item $path.$node
-    set opts [list -helptype -helptext -helpvar]
-    foreach {cty ctx cv} [eval [linsert $opts 0 Widget::hasChangedX $item]] break
+    set opts [list -helptype -helptext -helpvar -helpcmd]
+    foreach {cty ctx cv cc} [eval [linsert $opts 0 Widget::hasChangedX $item]] break
     set text [Widget::getoption $item -helptext]
+    set cmd  [Widget::getoption $item -helpcmd]
 
-    ## If we've never set help for this item before, and text is not blank,
-    ## we need to setup help.  We also need to reset help if any of the
+    ## If we've never set help for this item before, and text or cmd is not
+    ## blank, we need to setup help. We also need to reset help if any of the
     ## options have changed.
-    if { (![info exists help($node)] && $text != "") || $cty || $ctx || $cv } {
+    if { (![info exists help($node)] && ($text != "" || $cmd != ""))
+         || $cty || $ctx || $cv } {
 	set help($node) 1
 	set type [Widget::getoption $item -helptype]
-        switch $type {
-            balloon {
-		DynamicHelp::register $path.c balloon n:$node $text
-		DynamicHelp::register $path.c balloon i:$node $text
-		DynamicHelp::register $path.c balloon b:$node $text
-            }
-            variable {
-		set var [Widget::getoption $item -helpvar]
-		DynamicHelp::register $path.c variable n:$node $var $text
-		DynamicHelp::register $path.c variable i:$node $var $text
-		DynamicHelp::register $path.c variable b:$node $var $text
-            }
-        }
+        set var [Widget::getoption $item -helpvar]
+        DynamicHelp::add $path.c -item n:$node -type $type -text $text -variable $var -command $cmd
+        DynamicHelp::add $path.c -item i:$node -type $type -text $text -variable $var -command $cmd
+        DynamicHelp::add $path.c -item b:$node -type $type -text $text -variable $var -command $cmd
     }
 }
 
@@ -2202,9 +2213,15 @@ proc Tree::_mouse_select { path cmd args } {
     }
 }
 
-
 proc Tree::_node_name { path node } {
-    set map [list & _ | _ ^ _ ! _]
+    # Make sure node names are safe as tags and variable names
+    set map [list & \1 | \2 ^ \3 ! \4 :: \5]
+    return  [string map $map $node]
+}
+
+proc Tree::_node_name_rev { path node } {
+    # Allow reverse interpretation of node names
+    set map [list \1 & \2 | \3 ^ \4 ! \5 ::]
     return  [string map $map $node]
 }
 

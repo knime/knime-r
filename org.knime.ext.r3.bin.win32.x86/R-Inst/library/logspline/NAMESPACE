@@ -1,7 +1,0 @@
-# Remove the previous line if you edit this file
-
-useDynLib(logspline)
-
-# Export all names
-exportPattern(".")
-

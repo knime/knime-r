@@ -98,15 +98,17 @@ Command called when drag initiates. When the event of option <B>dragevent</B> oc
 <LI>a toplevel created to represent dragged data. When returning, if it
 has no children, a bitmap is automatically displayed.
 </UL>
-The command must return a list containing three elements:
+If the command returns an empty string, then the drag will be
+suppressed.  Otherwise the command must return a list containing three
+elements:
 <UL>
 <LI>the type of the data,
 <LI>the list of acceptable basic operations (<B>copy</B>, <B>move</B> and <B>link</B>)
 <LI>and the data.
 </UL>
-Note that even if <B>copy</B> does not appear in the list of basic operation,
-it is considered as an acceptable operation, since <B>copy</B> semantic does not modify
-the drag source.
+Note that even if <B>copy</B> does not appear in the list of basic
+operation, it is considered as an acceptable operation, since
+<B>copy</B> semantic does not modify the drag source.
 
 </DD>
 </DL>

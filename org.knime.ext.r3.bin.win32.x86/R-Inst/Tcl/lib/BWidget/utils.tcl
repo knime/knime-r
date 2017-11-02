@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------
 #  utils.tcl
 #  This file is part of Unifix BWidget Toolkit
-#  $Id: utils.tcl,v 1.12 2004/09/24 23:57:13 hobbs Exp $
+#  $Id: utils.tcl,v 1.15.2.1 2009/09/03 17:29:03 oehhar Exp $
 # ----------------------------------------------------------------------------
 #  Index of commands:
 #     - GlobalVar::exists
@@ -246,10 +246,30 @@ proc BWidget::place { path w h args } {
     variable _top
 
     update idletasks
-    set reqw [winfo reqwidth  $path]
-    set reqh [winfo reqheight $path]
-    if { $w == 0 } {set w $reqw}
-    if { $h == 0 } {set h $reqh}
+
+    # If the window is not mapped, it may have any current size.
+    # Then use required size, but bound it to the screen width.
+    # This is mostly inexact, because any toolbars will still be removed
+    # which may reduce size.
+    if { $w == 0 && [winfo ismapped $path] } {
+        set w [winfo width $path]
+    } else {
+        if { $w == 0 } {
+            set w [winfo reqwidth $path]
+        }
+        set vsw [winfo vrootwidth  $path]
+        if { $w > $vsw } { set w $vsw }
+    }
+
+    if { $h == 0 && [winfo ismapped $path] } {
+        set h [winfo height $path]
+    } else {
+        if { $h == 0 } {
+            set h [winfo reqheight $path]
+        }
+        set vsh [winfo vrootheight $path]
+        if { $h > $vsh } { set h $vsh }
+    }
 
     set arglen [llength $args]
     if { $arglen > 3 } {
@@ -306,8 +326,8 @@ proc BWidget::place { path w h args } {
                     set y0 [expr {[winfo rooty $widget] + ([winfo height $widget] - $h)/2}]
                 } else {
                     # center to screen
-                    set x0 [expr {([winfo screenwidth  $path] - $w)/2 - [winfo vrootx $path]}]
-                    set y0 [expr {([winfo screenheight $path] - $h)/2 - [winfo vrooty $path]}]
+                    set x0 [expr {($sw - $w)/2 - [winfo vrootx $path]}]
+                    set y0 [expr {($sh - $h)/2 - [winfo vrooty $path]}]
                 }
                 set x "+$x0"
                 set y "+$y0"
@@ -331,7 +351,7 @@ proc BWidget::place { path w h args } {
                     if { $idx == 2 } {
                         # try left, then right if out, then 0 if out
                         if { $x0 >= $w } {
-                            set x [expr {$x0-$sw}]
+                            set x [expr {$x0-$w}]
                         } elseif { $x1+$w <= $sw } {
                             set x "+$x1"
                         } else {
@@ -342,7 +362,7 @@ proc BWidget::place { path w h args } {
                         if { $x1+$w <= $sw } {
                             set x "+$x1"
                         } elseif { $x0 >= $w } {
-                            set x [expr {$x0-$sw}]
+                            set x [expr {$x0-$w}]
                         } else {
                             set x "-0"
                         }
@@ -356,7 +376,7 @@ proc BWidget::place { path w h args } {
                     if { $idx == 4 } {
                         # try top, then bottom, then 0
                         if { $h <= $y0 } {
-                            set y [expr {$y0-$sh}]
+                            set y [expr {$y0-$h}]
                         } elseif { $y1+$h <= $sh } {
                             set y "+$y1"
                         } else {
@@ -367,7 +387,7 @@ proc BWidget::place { path w h args } {
                         if { $y1+$h <= $sh } {
                             set y "+$y1"
                         } elseif { $h <= $y0 } {
-                            set y [expr {$y0-$sh}]
+                            set y [expr {$y0-$h}]
                         } else {
                             set y "-0"
                         }
@@ -567,7 +587,9 @@ proc BWidget::classes { class } {
     set classes [list $class]
     if {![info exists use($class)]} { return }
     foreach class $use($class) {
-	eval lappend classes [classes $class]
+        if {![string equal $class "-classonly"]} {
+            eval lappend classes [classes $class]
+        }
     }
     return [lsort -unique $classes]
 }
@@ -636,10 +658,23 @@ proc BWidget::write { filename {mode w} } {
 # Results:
 #	None.
 proc BWidget::bindMouseWheel { widget } {
-    bind $widget <MouseWheel>         {%W yview scroll [expr {-%D/24}]  units}
-    bind $widget <Shift-MouseWheel>   {%W yview scroll [expr {-%D/120}] pages}
-    bind $widget <Control-MouseWheel> {%W yview scroll [expr {-%D/120}] units}
+    if {[bind all <MouseWheel>] eq ""} {
+	# style::as and Tk 8.5 have global bindings
+	# Only enable these if no global binding for MouseWheel exists
+	bind $widget <MouseWheel> \
+	    {%W yview scroll [expr {-%D/24}]  units}
+	bind $widget <Shift-MouseWheel> \
+	    {%W yview scroll [expr {-%D/120}] pages}
+	bind $widget <Control-MouseWheel> \
+	    {%W yview scroll [expr {-%D/120}] units}
+    }
 
-    bind $widget <Button-4> {event generate %W <MouseWheel> -delta  120}
-    bind $widget <Button-5> {event generate %W <MouseWheel> -delta -120}
+    if {[bind all <Button-4>] eq ""} {
+	# style::as and Tk 8.5 have global bindings
+	# Only enable these if no global binding for them exists
+	bind $widget <Button-4> {event generate %W <MouseWheel> -delta  120}
+	bind $widget <Button-5> {event generate %W <MouseWheel> -delta -120}
+    }
 }
+
+ 	  	 

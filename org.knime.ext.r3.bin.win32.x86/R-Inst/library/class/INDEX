@@ -4,7 +4,7 @@ condense                Condense training set for k-NN classifier
 knn                     k-Nearest Neighbour Classification
 knn.cv                  k-Nearest Neighbour Cross-Validatory
                         Classification
-knn1                    1-nearest neighbour classification
+knn1                    1-Nearest Neighbour Classification
 lvq1                    Learning Vector Quantization 1
 lvq2                    Learning Vector Quantization 2.1
 lvq3                    Learning Vector Quantization 3
