@@ -4,7 +4,7 @@ Bundle-Name: R Binaries
 Bundle-SymbolicName: org.knime.ext.r.bin;singleton:=true
 Bundle-Version: 3.5.0.qualifier
 Bundle-Activator: org.knime.ext.r.bin.Activator
-Bundle-Vendor: KNIME GmbH, Konstanz, Germany
+Bundle-Vendor: KNIME AG, Zurich, Switzerland
 Export-Package: org.knime.ext.r.bin,
  org.knime.ext.r.bin.preferences
 Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",

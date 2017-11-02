@@ -3,7 +3,7 @@
       id="org.knime.features.ext.r.bin"
       label="KNIME R Statistics Integration (Windows Binaries)"
       version="3.0.3.qualifier"
-      provider-name="KNIME GmbH, Konstanz, Germany"
+      provider-name="KNIME AG, Zurich, Switzerland"
       plugin="org.knime.ext.r">
 
    <description url="http://www.knime.org/downloads/extensions">
@@ -13,7 +13,7 @@ Miner.
    </description>
 
    <copyright>
-      Copyright by KNIME GmbH, Konstanz, Germany
+      Copyright by KNIME AG, Zurich, Switzerland
    </copyright>
 
    <license>

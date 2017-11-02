@@ -7,7 +7,7 @@ Bundle-ClassPath: org-knime-r.jar,
  lib/rengine-1.8.4.jar,
  lib/rserve-engine-1.8.4.jar
 Bundle-Activator: org.knime.r.Activator
-Bundle-Vendor: KNIME GmbH, Konstanz, Germany
+Bundle-Vendor: KNIME AG, Zurich, Switzerland
 Export-Package: org.knime.r,
  org.knime.r.controller,
  org.knime.r.ionodes,

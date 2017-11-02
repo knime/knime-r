@@ -1,6 +1,6 @@
 /*
  * ------------------------------------------------------------------------
- *  Copyright by KNIME GmbH, Konstanz, Germany
+ *  Copyright by KNIME AG, Zurich, Switzerland
  *  Website: http://www.knime.com; Email: contact@knime.com
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -67,7 +67,7 @@ import org.knime.ext.r.preferences.RPreferenceProvider;
 /**
  * This is the model implementation of RLocalSource node. A general data reader node for R.
  *
- * @author Thomas Gabriel, KNIME.com AG, Zurich, Switzerland
+ * @author Thomas Gabriel, KNIME AG, Zurich, Switzerland
  * @since 2.8
  */
 public class RLocalSourceNodeModel extends RAbstractLocalNodeModel {
