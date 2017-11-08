@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: R3 Binaries Windows
 Bundle-SymbolicName: org.knime.ext.r3.bin.win32.x86
-Bundle-Version: 3.0.3.qualifier
+Bundle-Version: 3.4.2.qualifier
 Bundle-Vendor: KNIME AG, Zurich, Switzerland
-Fragment-Host: org.knime.ext.r.bin;bundle-version="2.10.0"
+Fragment-Host: org.knime.ext.r.bin;bundle-version="3.5.0"
 Eclipse-PlatformFilter: (osgi.os=win32)
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
