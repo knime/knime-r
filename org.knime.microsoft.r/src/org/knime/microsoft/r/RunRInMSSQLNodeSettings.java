@@ -48,6 +48,7 @@ package org.knime.microsoft.r;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
 
 /**
@@ -61,8 +62,13 @@ final class RunRInMSSQLNodeSettings {
     /** Settings key used to store the output table name under. */
     public static final String KEY_OUTPUT_TABLE_NAME = "OutputTableName";
 
+    public static final String KEY_OVERWRITE_OUTPUT_TABLE = "OverwriteOutputTable";
+
     private final SettingsModelString m_outputTableNameModel =
         new SettingsModelString(KEY_OUTPUT_TABLE_NAME, "OutputTable");
+
+    private final SettingsModelBoolean m_overwriteOutputTableModel =
+        new SettingsModelBoolean(KEY_OVERWRITE_OUTPUT_TABLE, false);
 
     /**
      * Get name of the output sql table
@@ -92,12 +98,40 @@ final class RunRInMSSQLNodeSettings {
     }
 
     /**
+     * Set whether to overwrite the output sql table if it already exists.
+     *
+     * @return Whether to overwrite the output sql table if it already exists.
+     */
+    public boolean getOverwriteOutputTable() {
+        return m_overwriteOutputTableModel.getBooleanValue();
+    }
+
+    /**
+     * Set whether to overwrite the output sql table if it already exists.
+     *
+     * @param b Whether to overwrite the output sql table if it already exists.
+     */
+    public void setOverwriteOutputTable(final boolean b) {
+        m_overwriteOutputTableModel.setBooleanValue(b);
+    }
+
+    /**
+     * Settings model for whether to overwrite the output sql table
+     *
+     * @return the settings model
+     */
+    public SettingsModelBoolean overwriteOutputTableModel() {
+        return m_overwriteOutputTableModel;
+    }
+
+    /**
      * Save settings
      *
      * @param settings Settings to save to
      */
     public void saveSettingsTo(final NodeSettingsWO settings) {
         m_outputTableNameModel.saveSettingsTo(settings);
+        m_overwriteOutputTableModel.saveSettingsTo(settings);
     }
 
     /**
@@ -108,6 +142,7 @@ final class RunRInMSSQLNodeSettings {
      */
     public void loadSettingsFrom(final NodeSettingsRO settings) throws InvalidSettingsException {
         m_outputTableNameModel.loadSettingsFrom(settings);
+        m_overwriteOutputTableModel.loadSettingsFrom(settings);
     }
 
     /**
@@ -116,7 +151,9 @@ final class RunRInMSSQLNodeSettings {
     public void loadSettingsForDialog(final NodeSettingsRO settings) {
         try {
             m_outputTableNameModel.loadSettingsFrom(settings);
+            m_overwriteOutputTableModel.loadSettingsFrom(settings);
         } catch (final InvalidSettingsException e) {
         }
     }
+
 }

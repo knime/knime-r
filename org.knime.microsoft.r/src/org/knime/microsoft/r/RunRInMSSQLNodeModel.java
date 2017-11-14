@@ -67,6 +67,7 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.port.database.DatabasePortObject;
 import org.knime.core.node.port.database.DatabasePortObjectSpec;
 import org.knime.core.node.port.database.DatabaseQueryConnectionSettings;
+import org.knime.core.node.port.database.DatabaseUtility;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.knime.r.FlowVariableRepository;
@@ -175,6 +176,14 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         getRSnippet().getSettings().loadSettings(settings);
 
         final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
+
+        if (!m_settings.getOverwriteOutputTable()) {
+            /* Check if output table already exists */
+            final DatabaseUtility utility = DatabaseUtility.getUtility(connectionSettings.getDatabaseIdentifier());
+            if(utility.tableExists(connection, m_settings.getOutputTableName())) {
+                throw new RuntimeException("Output table already exists.");
+            }
+        }
 
         final RController controller = new RController();
         controller.setUseNodeContext(true);

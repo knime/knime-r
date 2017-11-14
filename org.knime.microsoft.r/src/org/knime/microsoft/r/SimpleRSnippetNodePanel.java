@@ -57,6 +57,7 @@ import java.util.UUID;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -133,6 +134,8 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
 
     private final JTextField m_sqlOutTableNameTextField = new JTextField();
 
+    private JCheckBox m_overwriteCheckBox = new JCheckBox("Overwrite");
+
     /**
      * @param templateMetaCategory the meta category used in the templates tab or to create templates
      * @param config
@@ -177,6 +180,10 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
             private void setSettings() {
                 settings.setOutputTableName(m_sqlOutTableNameTextField.getText());
             }
+        });
+
+        m_overwriteCheckBox.addChangeListener(e -> {
+            settings.setOverwriteOutputTable(m_overwriteCheckBox.isSelected());
         });
 
         m_dbColumnsList.install(m_snippetTextArea);
@@ -285,6 +292,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
             tableNamePanel.add(new JLabel("SQL Output Table Name: "));
             tableNamePanel.add(m_sqlOutTableNameTextField);
             tableNamePanel.add(new JLabel("(knime.out)"));
+            tableNamePanel.add(m_overwriteCheckBox);
 
             final Dimension d = m_sqlOutTableNameTextField.getPreferredSize();
             d.width = 150;
