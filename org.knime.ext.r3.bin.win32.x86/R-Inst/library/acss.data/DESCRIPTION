@@ -1,0 +1,27 @@
+Package: acss.data
+Type: Package
+Title: Data Only: Algorithmic Complexity of Short Strings (Computed via
+        Coding Theorem Method)
+Version: 1.0
+Date: 2014-04-02
+Authors@R: c( 
+    person("Fernando", "Soler Toscano", role = "aut"),
+    person("Nicolas", "Gauvrit", role = "aut"),
+    person("Hector", "Zenil", role = "aut"),
+    person("Henrik", "Singmann",
+    email = "singmann@gmail.com", role =
+    c("aut", "cre")))
+Depends: R (>= 2.10)
+Description: Data only package providing the algorithmic complexity of short strings, computed using the coding theorem method. For a given set of symbols in a string, all possible or a large number of random samples of Turing machines (TM) with a given number of states (e.g., 5) and number of symbols corresponding to the number of symbols in the strings were simulated until they reached a halting state or failed to end. This package contains data on 4.5 million strings from length 1 to 12 simulated on TMs with 2, 4, 5, 6, and 9 symbols. The complexity of the string corresponds to the distribution of the halting states of the TMs.
+URL: http://complexitycalculator.com/methodology.html
+License: GPL (>= 2)
+Packaged: 2014-04-05 09:16:08 UTC; Henrik
+Author: Fernando Soler Toscano [aut],
+  Nicolas Gauvrit [aut],
+  Hector Zenil [aut],
+  Henrik Singmann [aut, cre]
+Maintainer: Henrik Singmann <singmann@gmail.com>
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2014-04-05 18:54:45
+Built: R 3.4.1; ; 2017-08-16 01:10:31 UTC; windows

@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: General Purpose R Interface to 'Solr'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> General Purpose R Interface to 'Solr'
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;solrium&rsquo; version 1.0.0</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="solrium-package.html">solrium-package</a></td>
+<td>General purpose R interface to Solr.</td></tr>
+<tr><td style="width: 25%;"><a href="add.html">add</a></td>
+<td>Add documents from R objects</td></tr>
+<tr><td style="width: 25%;"><a href="collections.html">collections</a></td>
+<td>List collections or cores</td></tr>
+<tr><td style="width: 25%;"><a href="collection_addreplica.html">collection_addreplica</a></td>
+<td>Add a replica</td></tr>
+<tr><td style="width: 25%;"><a href="collection_addreplicaprop.html">collection_addreplicaprop</a></td>
+<td>Add a replica property</td></tr>
+<tr><td style="width: 25%;"><a href="collection_addrole.html">collection_addrole</a></td>
+<td>Add a role to a node</td></tr>
+<tr><td style="width: 25%;"><a href="collection_balanceshardunique.html">collection_balanceshardunique</a></td>
+<td>Balance a property</td></tr>
+<tr><td style="width: 25%;"><a href="collection_clusterprop.html">collection_clusterprop</a></td>
+<td>Add, edit, delete a cluster-wide property</td></tr>
+<tr><td style="width: 25%;"><a href="collection_clusterstatus.html">collection_clusterstatus</a></td>
+<td>Get cluster status</td></tr>
+<tr><td style="width: 25%;"><a href="collection_create.html">collection_create</a></td>
+<td>Add a collection</td></tr>
+<tr><td style="width: 25%;"><a href="collection_createalias.html">collection_createalias</a></td>
+<td>Create an alias for a collection</td></tr>
+<tr><td style="width: 25%;"><a href="collection_createshard.html">collection_createshard</a></td>
+<td>Create a shard</td></tr>
+<tr><td style="width: 25%;"><a href="collection_delete.html">collection_delete</a></td>
+<td>Add a collection</td></tr>
+<tr><td style="width: 25%;"><a href="collection_deletealias.html">collection_deletealias</a></td>
+<td>Delete a collection alias</td></tr>
+<tr><td style="width: 25%;"><a href="collection_deletereplica.html">collection_deletereplica</a></td>
+<td>Delete a replica</td></tr>
+<tr><td style="width: 25%;"><a href="collection_deletereplicaprop.html">collection_deletereplicaprop</a></td>
+<td>Delete a replica property</td></tr>
+<tr><td style="width: 25%;"><a href="collection_deleteshard.html">collection_deleteshard</a></td>
+<td>Delete a shard</td></tr>
+<tr><td style="width: 25%;"><a href="collection_exists.html">collection_exists</a></td>
+<td>Check if a collection exists</td></tr>
+<tr><td style="width: 25%;"><a href="collection_list.html">collection_list</a></td>
+<td>List collections</td></tr>
+<tr><td style="width: 25%;"><a href="collection_migrate.html">collection_migrate</a></td>
+<td>Migrate documents to another collection</td></tr>
+<tr><td style="width: 25%;"><a href="collection_overseerstatus.html">collection_overseerstatus</a></td>
+<td>Get overseer status</td></tr>
+<tr><td style="width: 25%;"><a href="collection_rebalanceleaders.html">collection_rebalanceleaders</a></td>
+<td>Rebalance leaders</td></tr>
+<tr><td style="width: 25%;"><a href="collection_reload.html">collection_reload</a></td>
+<td>Reload a collection</td></tr>
+<tr><td style="width: 25%;"><a href="collection_removerole.html">collection_removerole</a></td>
+<td>Remove a role from a node</td></tr>
+<tr><td style="width: 25%;"><a href="collection_requeststatus.html">collection_requeststatus</a></td>
+<td>Get request status</td></tr>
+<tr><td style="width: 25%;"><a href="collection_splitshard.html">collection_splitshard</a></td>
+<td>Create a shard</td></tr>
+<tr><td style="width: 25%;"><a href="commit.html">commit</a></td>
+<td>Commit</td></tr>
+<tr><td style="width: 25%;"><a href="config_get.html">config_get</a></td>
+<td>Get Solr configuration details</td></tr>
+<tr><td style="width: 25%;"><a href="config_overlay.html">config_overlay</a></td>
+<td>Get Solr configuration overlay</td></tr>
+<tr><td style="width: 25%;"><a href="config_params.html">config_params</a></td>
+<td>Set Solr configuration params</td></tr>
+<tr><td style="width: 25%;"><a href="config_set.html">config_set</a></td>
+<td>Set Solr configuration details</td></tr>
+<tr><td style="width: 25%;"><a href="collections.html">cores</a></td>
+<td>List collections or cores</td></tr>
+<tr><td style="width: 25%;"><a href="core_create.html">core_create</a></td>
+<td>Create a core</td></tr>
+<tr><td style="width: 25%;"><a href="core_exists.html">core_exists</a></td>
+<td>Check if a core exists</td></tr>
+<tr><td style="width: 25%;"><a href="core_mergeindexes.html">core_mergeindexes</a></td>
+<td>Merge indexes (cores)</td></tr>
+<tr><td style="width: 25%;"><a href="core_reload.html">core_reload</a></td>
+<td>Reload a core</td></tr>
+<tr><td style="width: 25%;"><a href="core_rename.html">core_rename</a></td>
+<td>Rename a core</td></tr>
+<tr><td style="width: 25%;"><a href="core_requeststatus.html">core_requeststatus</a></td>
+<td>Request status of asynchronous CoreAdmin API call</td></tr>
+<tr><td style="width: 25%;"><a href="core_split.html">core_split</a></td>
+<td>Split a core</td></tr>
+<tr><td style="width: 25%;"><a href="core_status.html">core_status</a></td>
+<td>Get core status</td></tr>
+<tr><td style="width: 25%;"><a href="core_swap.html">core_swap</a></td>
+<td>Swap a core</td></tr>
+<tr><td style="width: 25%;"><a href="core_unload.html">core_unload</a></td>
+<td>Unload (delete) a core</td></tr>
+<tr><td style="width: 25%;"><a href="delete.html">delete</a></td>
+<td>Delete documents by ID or query</td></tr>
+<tr><td style="width: 25%;"><a href="delete.html">delete_by_id</a></td>
+<td>Delete documents by ID or query</td></tr>
+<tr><td style="width: 25%;"><a href="delete.html">delete_by_query</a></td>
+<td>Delete documents by ID or query</td></tr>
+<tr><td style="width: 25%;"><a href="is-sr.html">is.sr_facet</a></td>
+<td>Test for sr_facet class</td></tr>
+<tr><td style="width: 25%;"><a href="is-sr.html">is.sr_high</a></td>
+<td>Test for sr_facet class</td></tr>
+<tr><td style="width: 25%;"><a href="is-sr.html">is.sr_search</a></td>
+<td>Test for sr_facet class</td></tr>
+<tr><td style="width: 25%;"><a href="makemultiargs.html">makemultiargs</a></td>
+<td>Function to make make multiple args of the same name from a single input with length &gt; 1</td></tr>
+<tr><td style="width: 25%;"><a href="ping.html">ping</a></td>
+<td>Ping a Solr instance</td></tr>
+<tr><td style="width: 25%;"><a href="schema.html">schema</a></td>
+<td>Get the schema for a collection or core</td></tr>
+<tr><td style="width: 25%;"><a href="SolrClient.html">SolrClient</a></td>
+<td>Solr connection client</td></tr>
+<tr><td style="width: 25%;"><a href="solrium-package.html">solrium</a></td>
+<td>General purpose R interface to Solr.</td></tr>
+<tr><td style="width: 25%;"><a href="solr_all.html">solr_all</a></td>
+<td>All purpose search</td></tr>
+<tr><td style="width: 25%;"><a href="solr_facet.html">solr_facet</a></td>
+<td>Faceted search</td></tr>
+<tr><td style="width: 25%;"><a href="solr_get.html">solr_get</a></td>
+<td>Real time get</td></tr>
+<tr><td style="width: 25%;"><a href="solr_group.html">solr_group</a></td>
+<td>Grouped search</td></tr>
+<tr><td style="width: 25%;"><a href="solr_highlight.html">solr_highlight</a></td>
+<td>Highlighting search</td></tr>
+<tr><td style="width: 25%;"><a href="solr_mlt.html">solr_mlt</a></td>
+<td>"more like this" search</td></tr>
+<tr><td style="width: 25%;"><a href="solr_optimize.html">solr_optimize</a></td>
+<td>Optimize</td></tr>
+<tr><td style="width: 25%;"><a href="solr_parse.html">solr_parse</a></td>
+<td>Parse raw data from solr_search, solr_facet, or solr_highlight.</td></tr>
+<tr><td style="width: 25%;"><a href="solr_parse.html">solr_parse.sr_all</a></td>
+<td>Parse raw data from solr_search, solr_facet, or solr_highlight.</td></tr>
+<tr><td style="width: 25%;"><a href="solr_parse.html">solr_parse.sr_group</a></td>
+<td>Parse raw data from solr_search, solr_facet, or solr_highlight.</td></tr>
+<tr><td style="width: 25%;"><a href="solr_parse.html">solr_parse.sr_high</a></td>
+<td>Parse raw data from solr_search, solr_facet, or solr_highlight.</td></tr>
+<tr><td style="width: 25%;"><a href="solr_parse.html">solr_parse.sr_mlt</a></td>
+<td>Parse raw data from solr_search, solr_facet, or solr_highlight.</td></tr>
+<tr><td style="width: 25%;"><a href="solr_parse.html">solr_parse.sr_search</a></td>
+<td>Parse raw data from solr_search, solr_facet, or solr_highlight.</td></tr>
+<tr><td style="width: 25%;"><a href="solr_parse.html">solr_parse.sr_stats</a></td>
+<td>Parse raw data from solr_search, solr_facet, or solr_highlight.</td></tr>
+<tr><td style="width: 25%;"><a href="solr_search.html">solr_search</a></td>
+<td>Solr search</td></tr>
+<tr><td style="width: 25%;"><a href="solr_stats.html">solr_stats</a></td>
+<td>Solr stats</td></tr>
+<tr><td style="width: 25%;"><a href="update_atomic_json.html">update_atomic_json</a></td>
+<td>Atomic updates with JSON data</td></tr>
+<tr><td style="width: 25%;"><a href="update_atomic_xml.html">update_atomic_xml</a></td>
+<td>Atomic updates with XML data</td></tr>
+<tr><td style="width: 25%;"><a href="update_csv.html">update_csv</a></td>
+<td>Update documents with CSV data</td></tr>
+<tr><td style="width: 25%;"><a href="update_json.html">update_json</a></td>
+<td>Update documents with JSON data</td></tr>
+<tr><td style="width: 25%;"><a href="update_xml.html">update_xml</a></td>
+<td>Update documents with XML data</td></tr>
+</table>
+</body></html>

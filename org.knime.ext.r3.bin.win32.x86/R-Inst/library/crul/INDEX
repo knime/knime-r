@@ -1,0 +1,19 @@
+Async                   Simple async client
+AsyncVaried             Async client for different request types
+HttpClient              HTTP client
+HttpRequest             HTTP request object
+HttpResponse            Base response object
+HttpStubbedResponse     stubbed response object
+auth                    Authentication
+cookies                 Working with cookies
+crul-package            *HTTP R client*
+curl-options            curl options
+delete-requests         HTTP DELETE requests
+handle                  Make a handle
+http-headers            Working with HTTP headers
+mock                    Mocking HTTP requests
+post-requests           HTTP POST/PUT/PATCH requests
+proxies                 proxy options
+upload                  upload file
+url_build               Build and parse URLs
+writing-options         Writing data options

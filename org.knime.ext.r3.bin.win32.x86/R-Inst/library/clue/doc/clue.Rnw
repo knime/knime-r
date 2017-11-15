@@ -1,0 +1,1219 @@
+\documentclass[fleqn]{article}
+\usepackage[round,longnamesfirst]{natbib}
+\usepackage{graphicx,keyval,hyperref,doi}
+
+\newcommand\argmin{\mathop{\mathrm{arg min}}}
+\newcommand\trace{\mathop{\mathrm{tr}}}
+\newcommand\R{{\mathbb{R}}}
+\newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\newcommand{\sQuote}[1]{`{#1}'}
+\newcommand{\dQuote}[1]{``{#1}''}
+\let\code=\texttt
+\newcommand{\file}[1]{\sQuote{\textsf{#1}}}
+\newcommand{\class}[1]{\code{"#1"}}
+
+\SweaveOpts{strip.white=true}
+
+\AtBeginDocument{\setkeys{Gin}{width=0.6\textwidth}}
+
+\date{2007-06-28}
+\title{A CLUE for CLUster Ensembles}
+\author{Kurt Hornik}
+%% \VignetteIndexEntry{CLUster Ensembles}
+
+\sloppy{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  Cluster ensembles are collections of individual solutions to a given
+  clustering problem which are useful or necessary to consider in a wide
+  range of applications.  The R package~\pkg{clue} provides an
+  extensible computational environment for creating and analyzing
+  cluster ensembles, with basic data structures for representing
+  partitions and hierarchies, and facilities for computing on these,
+  including methods for measuring proximity and obtaining consensus and
+  ``secondary'' clusterings.
+\end{abstract}
+
+<<echo=FALSE>>=
+options(width = 60)
+library("clue")
+@ %
+
+\section{Introduction}
+\label{sec:introduction}
+
+\emph{Cluster ensembles} are collections of clusterings, which are all
+of the same ``kind'' (e.g., collections of partitions, or collections of
+hierarchies), of a set of objects.  Such ensembles can be obtained, for
+example, by varying the (hyper)parameters of a ``base'' clustering
+algorithm, by resampling or reweighting the set of objects, or by
+employing several different base clusterers.
+
+Questions of ``agreement'' in cluster ensembles, and obtaining
+``consensus'' clusterings from it, have been studied in several
+scientific communities for quite some time now.  A special issue of the
+Journal of Classification was devoted to ``Comparison and Consensus of
+Classifications'' \citep{cluster:Day:1986} almost two decades ago.  The
+recent popularization of ensemble methods such as Bayesian model
+averaging \citep{cluster:Hoeting+Madigan+Raftery:1999}, bagging
+\citep{cluster:Breiman:1996} and boosting
+\citep{cluster:Friedman+Hastie+Tibshirani:2000}, typically in a
+supervised leaning context, has also furthered the research interest in
+using ensemble methods to improve the quality and robustness of cluster
+solutions.  Cluster ensembles can also be utilized to aggregate base
+results over conditioning or grouping variables in multi-way data, to
+reuse existing knowledge, and to accommodate the needs of distributed
+computing, see e.g.\ \cite{cluster:Hornik:2005a} and
+\cite{cluster:Strehl+Ghosh:2003a} for more information.
+
+Package~\pkg{clue} is an extension package for R~\citep{cluster:R:2005}
+providing a computational environment for creating and analyzing cluster
+ensembles.  In Section~\ref{sec:structures+algorithms}, we describe the
+underlying data structures, and the functionality for measuring
+proximity, obtaining consensus clusterings, and ``secondary''
+clusterings.  Four examples are discussed in Section~\ref{sec:examples}.
+Section~\ref{sec:outlook} concludes the paper.
+
+A previous version of this manuscript was published in the \emph{Journal
+  of Statistical Software} \citep{cluster:Hornik:2005b}.
+
+
+\section{Data structures and algorithms}
+\label{sec:structures+algorithms}
+
+\subsection{Partitions and hierarchies}
+
+Representations of clusterings of objects greatly vary across the
+multitude of methods available in R packages.  For example, the class
+ids (``cluster labels'') for the results of \code{kmeans()} in base
+package~\pkg{stats}, \code{pam()} in recommended
+package~\pkg{cluster}~\citep{cluster:Rousseeuw+Struyf+Hubert:2005,
+  cluster:Struyf+Hubert+Rousseeuw:1996}, and \code{Mclust()} in
+package~\pkg{mclust}~\citep{cluster:Fraley+Raftery+Wehrens:2005,
+  cluster:Fraley+Raftery:2003}, are available as components named
+\code{cluster}, \code{clustering}, and \code{classification},
+respectively, of the R objects returned by these functions.  In many
+cases, the representations inherit from suitable classes.  (We note that
+for versions of R prior to 2.1.0, \code{kmeans()} only returned a
+``raw'' (unclassed) result, which was changed alongside the development
+of \pkg{clue}.)
+
+We deal with this heterogeneity of representations by providing getters
+for the key underlying data, such as the number of objects from which a
+clustering was obtained, and predicates, e.g.\ for determining whether
+an R object represents a partition of objects or not.  These getters,
+such as \code{n\_of\_objects()}, and predicates are implemented as S3
+generics, so that there is a \emph{conceptual}, but no formal class
+system underlying the predicates.  Support for classed representations
+can easily be added by providing S3 methods.
+
+\subsubsection{Partitions}
+
+The partitions considered in \pkg{clue} are possibly soft (``fuzzy'')
+partitions, where for each object~$i$ and class~$j$ there is a
+non-negative number~$\mu_{ij}$ quantifying the ``belongingness'' or
+\emph{membership} of object~$i$ to class~$j$, with $\sum_j \mu_{ij} =
+1$.  For hard (``crisp'') partitions, all $\mu_{ij}$ are in $\{0, 1\}$.
+We can gather the $\mu_{ij}$ into the \emph{membership matrix} $M =
+[\mu_{ij}]$, where rows correspond to objects and columns to classes.
+The \emph{number of classes} of a partition, computed by function
+\code{n\_of\_classes()}, is the number of $j$ for which $\mu_{ij} > 0$
+for at least one object~$i$.  This may be less than the number of
+``available'' classes, corresponding to the number of columns in a
+membership matrix representing the partition.
+
+The predicate functions \code{is.cl\_partition()},
+\code{is.cl\_hard\_partition()}, and \code{is.cl\_soft\_partition()} are
+used to indicate whether R objects represent partitions of objects of
+the respective kind, with hard partitions as characterized above (all
+memberships in $\{0, 1\}$).  (Hence, ``fuzzy clustering'' algorithms can
+in principle also give a hard partition.)  \code{is.cl\_partition()} and
+\code{is.cl\_hard\_partition()} are generic functions;
+\code{is.cl\_soft\_partition()} gives true iff \code{is.cl\_partition()}
+is true and \code{is.cl\_hard\_partition()} is false.
+
+For R objects representing partitions, function \code{cl\_membership()}
+computes an R object with the membership values, currently always as a
+dense membership matrix with additional attributes.  This is obviously
+rather inefficient for computations on hard partitions; we are planning
+to add ``canned'' sparse representations (using the vector of class ids)
+in future versions.  Function \code{as.cl\_membership()} can be used for
+coercing \dQuote{raw} class ids (given as atomic vectors) or membership
+values (given as numeric matrices) to membership objects.
+
+Function \code{cl\_class\_ids()} determines the class ids of a
+partition.  For soft partitions, the class ids returned are those of the
+\dQuote{nearest} hard partition obtained by taking the class ids of the
+(first) maximal membership values.  Note that the cardinality of the set
+of the class ids may be less than the number of classes in the (soft)
+partition.
+
+Many partitioning methods are based on \emph{prototypes} (``centers'').
+In typical cases, these are points~$p_j$ in the same feature space the
+measurements~$x_i$ on the objects~$i$ to be partitioned are in, so that
+one can measure distance between objects and prototypes, and e.g.\
+classify objects to their closest prototype.  Such partitioning methods
+can also induce partitions of the entire feature space (rather than
+``just'' the set of objects to be partitioned).  Currently, package
+\pkg{clue} has only minimal support for this ``additional'' structure,
+providing a \code{cl\_prototypes()} generic for extracting the
+prototypes, and is mostly focused on computations on partitions which
+are based on their memberships.
+
+Many algorithms resulting in partitions of a given set of objects can be
+taken to induce a partition of the underlying feature space for the
+measurements on the objects, so that class memberships for ``new''
+objects can be obtained from the induced partition.  Examples include
+partitions based on assigning objects to their ``closest'' prototypes,
+or providing mixture models for the distribution of objects in feature
+space.  Package~\pkg{clue} provides a \code{cl\_predict()} generic for
+predicting the class memberships of new objects (if possible).
+
+Function \code{cl\_fuzziness()} computes softness (fuzziness) measures
+for (ensembles) of partitions.  Built-in measures are the partition
+coefficient
+\label{PC}
+and partition entropy \citep[e.g.,][]{cluster:Bezdek:1981}, with an
+option to normalize in a way that hard partitions and the ``fuzziest''
+possible partition (where all memberships are the same) get fuzziness
+values of zero and one, respectively.  Note that this normalization
+differs from ``standard'' ones in the literature.
+
+In the sequel, we shall also use the concept of the \emph{co-membership
+  matrix} $C(M) = M M'$, where $'$ denotes matrix transposition, of a
+partition.  For hard partitions, an entry $c_{ij}$ of $C(M)$ is 1 iff
+the corresponding objects $i$ and $j$ are in the same class, and 0
+otherwise.
+
+\subsubsection{Hierarchies}
+
+The hierarchies considered in \pkg{clue} are \emph{total indexed
+  hierarchies}, also known as \emph{$n$-valued trees}, and hence
+correspond in a one-to-one manner to \emph{ultrametrics} (distances
+$u_{ij}$ between pairs of objects $i$ and $j$ which satisfy the
+ultrametric constraint $u_{ij} = \max(u_{ik}, u_{jk})$ for all triples
+$i$, $j$, and $k$).  See e.g.~\citet[Page~69--71]{cluster:Gordon:1999}.
+
+Function \code{cl\_ultrametric(x)} computes the associated ultrametric
+from an R object \code{x} representing a hierarchy of objects.  If
+\code{x} is not an ultrametric, function \code{cophenetic()} in base
+package~\pkg{stats} is used to obtain the ultrametric (also known as
+cophenetic) distances from the hierarchy, which in turn by default calls
+the S3 generic \code{as.hclust()} (also in \pkg{stats}) on the
+hierarchy.  Support for classes which represent hierarchies can thus be
+added by providing \code{as.hclust()} methods for this class.  In
+R~2.1.0 or better (again as part of the work on \pkg{clue}),
+\code{cophenetic} is an S3 generic as well, and one can also more
+directly provide methods for this if necessary.
+
+In addition, there is a generic function \code{as.cl\_ultrametric()}
+which can be used for coercing \emph{raw} (non-classed) ultrametrics,
+represented as numeric vectors (of the lower-half entries) or numeric
+matrices, to ultrametric objects.  Finally, the generic predicate
+function \code{is.cl\_hierarchy()} is used to determine whether an R
+object represents a hierarchy or not.
+
+Ultrametric objects can also be coerced to classes~\class{dendrogram}
+and \class{hclust} (from base package~\pkg{stats}), and hence in
+particular use the \code{plot()} methods for these classes.  By default,
+plotting an ultrametric object uses the plot method for dendrograms.
+
+Obtaining a hierarchy on a given set of objects can be thought of as
+transforming the pairwise dissimilarities between the objects (which
+typically do not yet satisfy the ultrametric constraints) into an
+ultrametric.  Ideally, this ultrametric should be as close as possible
+to the dissimilarities.  In some important cases, explicit solutions are
+possible (e.g., ``standard'' hierarchical clustering with single or
+complete linkage gives the optimal ultrametric dominated by or
+dominating the dissimilarities, respectively).  On the other hand, the
+problem of finding the closest ultrametric in the least squares sense is
+known to be NP-hard
+\citep{cluster:Krivanek+Moravek:1986,cluster:Krivanek:1986}.  One
+important class of heuristics for finding least squares fits is based on
+iterative projection on convex sets of constraints
+\citep{cluster:Hubert+Arabie:1995}.
+
+\label{SUMT}
+Function \code{ls\_fit\_ultrametric()} follows
+\cite{cluster:DeSoete:1986} to use an SUMT \citep[Sequential
+Unconstrained Minimization Technique;][]{cluster:Fiacco+McCormick:1968}
+approach in turn simplifying the suggestions in
+\cite{cluster:Carroll+Pruzansky:1980}.  Let $L(u)$ be the function to be
+minimized over all $u$ in some constrained set $\mathcal{U}$---in our
+case, $L(u) = \sum (d_{ij}-u_{ij})^2$ is the least squares criterion,
+and $\mathcal{U}$ is the set of all ultrametrics $u$.  One iteratively
+minimizes $L(u) + \rho_k P(u)$, where $P(u)$ is a non-negative function
+penalizing violations of the constraints such that $P(u)$ is zero iff $u
+\in \mathcal{U}$.  The $\rho$ values are increased according to the rule
+$\rho_{k+1} = q \rho_k$ for some constant $q > 1$, until convergence is
+obtained in the sense that e.g.\ the Euclidean distance between
+successive solutions $u_k$ and $u_{k+1}$ is small enough.  Optionally,
+the final $u_k$ is then suitably projected onto $\mathcal{U}$.
+
+For \code{ls\_fit\_ultrametric()}, we obtain the starting value $u_0$ by
+\dQuote{random shaking} of the given dissimilarity object, and use the
+penalty function $P(u) = \sum_{\Omega} (u_{ij} - u_{jk}) ^ 2$, were
+$\Omega$ contains all triples $i, j, k$ for which $u_{ij} \le
+\min(u_{ik}, u_{jk})$ and $u_{ik} \ne u_{jk}$, i.e., for which $u$
+violates the ultrametric constraints.  The unconstrained minimizations
+are carried out using either \code{optim()} or \code{nlm()} in base
+package~\pkg{stats}, with analytic gradients given in
+\cite{cluster:Carroll+Pruzansky:1980}.  This ``works'', even though we
+note however that $P$ is not even a continuous function, which seems to
+have gone unnoticed in the literature!  (Consider an ultrametric $u$ for
+which $u_{ij} = u_{ik} < u_{jk}$ for some $i, j, k$ and define
+$u(\delta)$ by changing the $u_{ij}$ to $u_{ij} + \delta$.  For $u$,
+both $(i,j,k)$ and $(j,i,k)$ are in the violation set $\Omega$, whereas
+for all $\delta$ sufficiently small, only $(j,i,k)$ is the violation set
+for $u(\delta)$.  Hence, $\lim_{\delta\to 0} P(u(\delta)) = P(u) +
+(u_{ij} - u_{ik})^2$.  This shows that $P$ is discontinuous at all
+non-constant $u$ with duplicated entries.  On the other hand, it is
+continuously differentiable at all $u$ with unique entries.)  Hence, we
+need to turn off checking analytical gradients when using \code{nlm()}
+for minimization.
+
+The default optimization using conjugate gradients should work
+reasonably well for medium to large size problems.  For \dQuote{small}
+ones, using \code{nlm()} is usually faster.  Note that the number of
+ultrametric constraints is of the order $n^3$, suggesting to use the
+SUMT approach in favor of \code{constrOptim()} in \pkg{stats}.  It
+should be noted that the SUMT approach is a heuristic which can not be
+guaranteed to find the global minimum.  Standard practice would
+recommend to use the best solution found in \dQuote{sufficiently many}
+replications of the base algorithm.
+
+\subsubsection{Extensibility}
+
+The methods provided in package~\pkg{clue} handle the partitions and
+hierarchies obtained from clustering functions in the base R
+distribution, as well as packages
+\pkg{RWeka}~\citep{cluster:Hornik+Hothorn+Karatzoglou:2006},
+\pkg{cba}~\citep{cluster:Buchta+Hahsler:2005},
+\pkg{cclust}~\citep{cluster:Dimitriadou:2005}, \pkg{cluster},
+\pkg{e1071}~\citep{cluster:Dimitriadou+Hornik+Leisch:2005},
+\pkg{flexclust}~\citep{cluster:Leisch:2006a},
+\pkg{flexmix}~\citep{cluster:Leisch:2004},
+\pkg{kernlab}~\citep{cluster:Karatzoglou+Smola+Hornik:2004},
+and \pkg{mclust} (and of course, \pkg{clue} itself).
+
+Extending support to other packages is straightforward, provided that
+clusterings are instances of classes.  Suppose e.g.\ that a package has
+a function \code{glvq()} for ``generalized'' (i.e., non-Euclidean)
+Learning Vector Quantization which returns an object of
+class~\class{glvq}, in turn being a list with component
+\code{class\_ids} containing the class ids.  To integrate this into the
+\pkg{clue} framework, all that is necessary is to provide the following
+methods.
+<<>>=
+cl_class_ids.glvq <-
+function(x)
+    as.cl_class_ids(x$class_ids)
+is.cl_partition.glvq <-
+function(x)
+    TRUE
+is.cl_hard_partition.glvq <-
+function(x)
+    TRUE
+@ % $
+
+\subsection{Cluster ensembles}
+
+Cluster ensembles are realized as lists of clusterings with additional
+class information.  All clusterings in an ensemble must be of the same
+``kind'' (i.e., either all partitions as known to
+\code{is.cl\_partition()}, or all hierarchies as known to
+\code{is.cl\_hierarchy()}, respectively), and have the same number of
+objects.  If all clusterings are partitions, the list realizing the
+ensemble has class~\class{cl\_partition\_ensemble} and inherits from
+\class{cl\_ensemble}; if all clusterings are hierarchies, it has
+class~\class{cl\_hierarchy\_ensemble} and inherits from
+\class{cl\_ensemble}.  Empty ensembles cannot be categorized according
+to the kind of clusterings they contain, and hence only have
+class~\class{cl\_ensemble}.
+
+Function \code{cl\_ensemble()} creates a cluster ensemble object from
+clusterings given either one-by-one, or as a list passed to the
+\code{list} argument.  As unclassed lists could be used to represent
+single clusterings (in particular for results from \code{kmeans()} in
+versions of R prior to 2.1.0), we prefer not to assume that an unnamed
+given list is a list of clusterings.  \code{cl\_ensemble()} verifies
+that all given clusterings are of the same kind, and all have the same
+number of objects.  (By the notion of cluster ensembles, we should in
+principle verify that the clusterings come from the \emph{same} objects,
+which of course is not always possible.)
+
+The list representation makes it possible to use \code{lapply()} for
+computations on the individual clusterings in (i.e., the components of)
+a cluster ensemble.
+
+Available methods for cluster ensembles include those for subscripting,
+\code{c()}, \code{rep()}, \code{print()}, and \code{unique()}, where the
+last is based on a \code{unique()} method for lists added in R~2.1.1,
+and makes it possible to find unique and duplicated elements in cluster
+ensembles.  The elements of the ensemble can be tabulated using
+\code{cl\_tabulate()}.
+
+Function \code{cl\_boot()} generates cluster ensembles with bootstrap
+replicates of the results of applying a \dQuote{base} clustering
+algorithm to a given data set.  Currently, this is a rather
+simple-minded function with limited applicability, and mostly useful for
+studying the effect of (uncontrolled) random initializations of
+fixed-point partitioning algorithms such as \code{kmeans()} or
+\code{cmeans()} in package~\pkg{e1071}.  To study the effect of varying
+control parameters or explicitly providing random starting values, the
+respective cluster ensemble has to be generated explicitly (most
+conveniently by using \code{replicate()} to create a list \code{lst} of
+suitable instances of clusterings obtained by the base algorithm, and
+using \code{cl\_ensemble(list = lst)} to create the ensemble).
+Resampling the training data is possible for base algorithms which can
+predict the class memberships of new data using \code{cl\_predict}
+(e.g., by classifying the out-of-bag data to their closest prototype).
+In fact, we believe that for unsupervised learning methods such as
+clustering, \emph{reweighting} is conceptually superior to resampling,
+and have therefore recently enhanced package~\pkg{e1071} to provide an
+implementation of weighted fuzzy $c$-means, and package~\pkg{flexclust}
+contains an implementation of weighted $k$-means.  We are currently
+experimenting with interfaces for providing ``direct'' support for
+reweighting via \code{cl\_boot()}.
+
+\subsection{Cluster proximities}
+
+\subsubsection{Principles}
+
+Computing dissimilarities and similarities (``agreements'') between
+clusterings of the same objects is a key ingredient in the analysis of
+cluster ensembles.  The ``standard'' data structures available for such
+proximity data (measures of similarity or dissimilarity) are
+classes~\class{dist} and \class{dissimilarity} in package~\pkg{cluster}
+(which basically, but not strictly, extends \class{dist}), and are both
+not entirely suited to our needs.  First, they are confined to
+\emph{symmetric} dissimilarity data.  Second, they do not provide enough
+reflectance.  We also note that the Bioconductor
+package~\pkg{graph}~\citep{cluster:Gentleman+Whalen:2005} contains an
+efficient subscript method for objects of class~\class{dist}, but
+returns a ``raw'' matrix for row/column subscripting.
+
+For package~\pkg{clue}, we use the following approach.  There are
+classes for symmetric and (possibly) non-symmetric proximity data
+(\class{cl\_proximity} and \class{cl\_cross\_proximity}), which, in
+addition to holding the numeric data, also contain a description
+``slot'' (attribute), currently a character string, as a first
+approximation to providing more reflectance.  Internally, symmetric
+proximity data are store the lower diagonal proximity values in a
+numeric vector (in row-major order), i.e., the same way as objects of
+class~\class{dist}; a \code{self} attribute can be used for diagonal
+values (in case some of these are non-zero).  Symmetric proximity
+objects can be coerced to dense matrices using \code{as.matrix()}.  It
+is possible to use 2-index matrix-style subscripting for symmetric
+proximity objects; unless this uses identical row and column indices, it
+results in a non-symmetric proximity object.
+
+This approach ``propagates'' to classes for symmetric and (possibly)
+non-symmetric cluster dissimilarity and agreement data (e.g.,
+\class{cl\_dissimilarity} and \class{cl\_cross\_dissimilarity} for
+dissimilarity data), which extend the respective proximity classes.
+
+Ultrametric objects are implemented as symmetric proximity objects with
+a dissimilarity interpretation so that self-proximities are zero, and
+inherit from classes~\class{cl\_dissimilarity} and
+\class{cl\_proximity}.
+
+Providing reflectance is far from optimal.  For example, if \code{s} is
+a similarity object (with cluster agreements), \code{1 - s} is a
+dissimilarity one, but the description is preserved unchanged.  This
+issue could be addressed by providing high-level functions for
+transforming proximities.
+
+\label{synopsis}
+Cluster dissimilarities are computed via \code{cl\_dissimilarity()} with
+synopsis \code{cl\_dissimilarity(x, y = NULL, method = "euclidean")},
+where \code{x} and \code{y} are cluster ensemble objects or coercible to
+such, or \code{NULL} (\code{y} only).  If \code{y} is \code{NULL}, the
+return value is an object of class~\class{cl\_dissimilarity} which
+contains the dissimilarities between all pairs of clusterings in
+\code{x}.  Otherwise, it is an object of
+class~\class{cl\_cross\_dissimilarity} with the dissimilarities between
+the clusterings in \code{x} and the clusterings in \code{y}.  Formal
+argument \code{method} is either a character string specifying one of
+the built-in methods for computing dissimilarity, or a function to be
+taken as a user-defined method, making it reasonably straightforward to
+add methods.
+
+Function \code{cl\_agreement()} has the same interface as
+\code{cl\_dissimilarity()}, returning cluster similarity objects with
+respective classes~\class{cl\_agreement} and
+\class{cl\_cross\_agreement}.  Built-in methods for computing
+dissimilarities may coincide (in which case they are transforms of each
+other), but do not necessarily do so, as there typically are no
+canonical transformations.  E.g., according to needs and scientific
+community, agreements might be transformed to dissimilarities via $d = -
+\log(s)$ or the square root thereof
+\citep[e.g.,][]{cluster:Strehl+Ghosh:2003b}, or via $d = 1 - s$.
+
+\subsubsection{Partition proximities}
+
+When assessing agreement or dissimilarity of partitions, one needs to
+consider that the class ids may be permuted arbitrarily without changing
+the underlying partitions.  For membership matrices~$M$, permuting class
+ids amounts to replacing $M$ by $M \Pi$, where $\Pi$ is a suitable
+permutation matrix.  We note that the co-membership matrix $C(M) = MM'$
+is unchanged by these transformations; hence, proximity measures based
+on co-occurrences, such as the Katz-Powell
+\citep{cluster:Katz+Powell:1953} or Rand \citep{cluster:Rand:1971}
+indices, do not explicitly need to adjust for possible re-labeling.  The
+same is true for measures based on the ``confusion matrix'' $M'
+\tilde{M}$ of two membership matrices $M$ and $\tilde{M}$ which are
+invariant under permutations of rows and columns, such as the Normalized
+Mutual Information (NMI) measure introduced in
+\cite{cluster:Strehl+Ghosh:2003a}.  Other proximity measures need to
+find permutations so that the classes are optimally matched, which of
+course in general requires exhaustive search through all $k!$ possible
+permutations, where $k$ is the (common) number of classes in the
+partitions, and thus will typically be prohibitively expensive.
+Fortunately, in some important cases, optimal matchings can be
+determined very efficiently.  We explain this in detail for
+``Euclidean'' partition dissimilarity and agreement (which in fact is
+the default measure used by \code{cl\_dissimilarity()} and
+\code{cl\_agreement()}).
+
+Euclidean partition dissimilarity
+\citep{cluster:Dimitriadou+Weingessel+Hornik:2002} is defined as
+\begin{displaymath}
+  d(M, \tilde{M}) = \min\nolimits_\Pi \| M - \tilde{M} \Pi \|
+\end{displaymath}
+where the minimum is taken over all permutation matrices~$\Pi$,
+$\|\cdot\|$ is the Frobenius norm (so that $\|Y\|^2 = \trace(Y'Y)$), and
+$n$ is the (common) number of objects in the partitions.  As $\| M -
+\tilde{M} \Pi \|^2 = \trace(M'M) - 2 \trace(M'\tilde{M}\Pi) +
+\trace(\Pi'\tilde{M}'\tilde{M}\Pi) = \trace(M'M) - 2
+\trace(M'\tilde{M}\Pi) + \trace(\tilde{M}'\tilde{M})$, we see that
+minimizing $\| M - \tilde{M} \Pi \|^2$ is equivalent to maximizing
+$\trace(M'\tilde{M}\Pi) = \sum_{i,k}{\mu_{ik}\tilde{\mu}}_{i,\pi(k)}$,
+which for hard partitions is the number of objects with the same label
+in the partitions given by $M$ and $\tilde{M}\Pi$.  Finding the optimal
+$\Pi$ is thus recognized as an instance of the \emph{linear sum
+  assignment problem} (LSAP, also known as the weighted bipartite graph
+matching problem).  The LSAP can be solved by linear programming, e.g.,
+using Simplex-style primal algorithms as done by
+function~\code{lp.assign()} in
+package~\pkg{lpSolve}~\citep{cluster:Buttrey:2005}, but primal-dual
+algorithms such as the so-called Hungarian method can be shown to find
+the optimum in time $O(k^3)$
+\citep[e.g.,][]{cluster:Papadimitriou+Steiglitz:1982}.  Available
+published implementations include TOMS 548
+\citep{cluster:Carpaneto+Toth:1980}, which however is restricted to
+integer weights and $k < 131$.  One can also transform the LSAP into a
+network flow problem, and use e.g.~RELAX-IV
+\citep{cluster:Bertsekas+Tseng:1994} for solving this, as is done in
+package~\pkg{optmatch}~\citep{cluster:Hansen:2005}.  In
+package~\pkg{clue}, we use an efficient C implementation of the
+Hungarian algorithm kindly provided to us by Walter B\"ohm, which has
+been found to perform very well across a wide range of problem sizes.
+
+\cite{cluster:Gordon+Vichi:2001} use a variant of Euclidean
+dissimilarity (``GV1 dissimilarity'') which is based on the sum of the
+squared difference of the memberships of matched (non-empty) classes
+only, discarding the unmatched ones (see their Example~2).  This results
+in a measure which is discontinuous over the space of soft partitions
+with arbitrary numbers of classes.
+
+The partition agreement measures ``angle'' and ``diag'' (maximal cosine
+of angle between the memberships, and maximal co-classification rate,
+where both maxima are taken over all column permutations of the
+membership matrices) are based on solving the same LSAP as for Euclidean
+dissimilarity.
+
+Finally, Manhattan partition dissimilarity is defined as the minimal sum
+of the absolute differences of $M$ and all column permutations of
+$\tilde{M}$, and can again be computed efficiently by solving an LSAP.
+
+For hard partitions, both Manhattan and squared Euclidean dissimilarity
+give twice the \emph{transfer distance}
+\citep{cluster:Charon+Denoeud+Guenoche:2006}, which is the minimum
+number of objects that must be removed so that the implied partitions
+(restrictions to the remaining objects) are identical.  This is also
+known as the \emph{$R$-metric} in \cite{cluster:Day:1981}, i.e., the
+number of augmentations and removals of single objects needed to
+transform one partition into the other, and the
+\emph{partition-distance} in \cite{cluster:Gusfield:2002}.
+
+Note when assessing proximity that agreements for soft partitions are
+always (and quite often considerably) lower than the agreements for the
+corresponding nearest hard partitions, unless the agreement measures are
+based on the latter anyways (as currently done for Rand, Katz-Powell,
+and NMI).
+
+Package~\pkg{clue} provides additional agreement measures, such as the
+Jaccard and Fowles-Mallows \citep[quite often incorrectly attributed to
+\cite{cluster:Wallace:1983}]{cluster:Fowlkes+Mallows:1983a} indices, and
+dissimilarity measures such as the ``symdiff'' and Rand distances (the
+latter is proportional to the metric of \cite{cluster:Mirkin:1996}) and
+the metrics discussed in \cite{cluster:Boorman+Arabie:1972}.  One could
+easily add more proximity measures, such as the ``Variation of
+Information'' \citep{cluster:Meila:2003}.  However, all these measures
+are rigorously defined for hard partitions only.  To see why extensions
+to soft partitions are far from straightforward, consider e.g.\ measures
+based on the confusion matrix.  Its entries count the cardinality of
+certain intersections of sets.
+\label{fuzzy} In a fuzzy context for soft partitions, a natural
+generalization would be using fuzzy cardinalities (i.e., sums of
+memberships values) of fuzzy intersections instead.  There are many
+possible choices for the latter, with the product of the membership
+values (corresponding to employing the confusion matrix also in the
+fuzzy case) one of them, but the minimum instead of the product being
+the ``usual'' choice.  A similar point can be made for co-occurrences of
+soft memberships.  We are not aware of systematic investigations of
+these extension issues.
+
+\subsubsection{Hierarchy proximities}
+
+Available built-in dissimilarity measures for hierarchies include
+\emph{Euclidean} (again, the default measure used by
+\code{cl\_dissimilarity()}) and Manhattan dissimilarity, which are
+simply the Euclidean (square root of the sum of squared differences) and
+Manhattan (sum of the absolute differences) dissimilarities between the
+associated ultrametrics.  Cophenetic dissimilarity is defined as $1 -
+c^2$, where $c$ is the cophenetic correlation coefficient
+\citep{cluster:Sokal+Rohlf:1962}, i.e., the Pearson product-moment
+correlation between the ultrametrics.  Gamma dissimilarity is the rate
+of inversions between the associated ultrametrics $u$ and $v$ (i.e., the
+rate of pairs $(i,j)$ and $(k,l)$ for which $u_{ij} < u_{kl}$ and
+$v_{ij} > v_{kl}$).  This measure is a linear transformation of
+Kruskal's~$\gamma$.  Finally, symdiff dissimilarity is the cardinality
+of the symmetric set difference of the sets of classes (hierarchies in
+the strict sense) induced by the dendrograms.
+
+Associated agreement measures are obtained by suitable transformations
+of the dissimilarities~$d$; for Euclidean proximities, we prefer to use
+$1 / (1 + d)$ rather than e.g.\ $\exp(-d)$.
+
+One should note that whereas cophenetic and gamma dissimilarities are
+invariant to linear transformations, Euclidean and Manhattan ones are
+not.  Hence, if only the relative ``structure'' of the dendrograms is of
+interest, these dissimilarities should only be used after transforming
+the ultrametrics to a common range of values (e.g., to $[0,1]$).
+
+\subsection{Consensus clusterings}
+
+Consensus clusterings ``synthesize'' the information in the elements of
+a cluster ensemble into a single clustering.  There are three main
+approaches to obtaining consensus clusterings
+\citep{cluster:Hornik:2005a,cluster:Gordon+Vichi:2001}: in the
+\emph{constructive} approach, one specifies a way to construct a
+consensus clustering.  In the \emph{axiomatic} approach, emphasis is on
+the investigation of existence and uniqueness of consensus clusterings
+characterized axiomatically.  The \emph{optimization} approach
+formalizes the natural idea of describing consensus clusterings as the
+ones which ``optimally represent the ensemble'' by providing a criterion
+to be optimized over a suitable set $\mathcal{C}$ of possible consensus
+clusterings.  If $d$ is a dissimilarity measure and $C_1, \ldots, C_B$
+are the elements of the ensemble, one can e.g.\ look for solutions of
+the problem
+\begin{displaymath}
+  \sum\nolimits_{b=1}^B w_b d(C, C_b) ^ p
+  \Rightarrow \min\nolimits_{C \in \mathcal{C}},
+\end{displaymath}
+for some $p \ge 0$, i.e., as clusterings~$C^*$ minimizing weighted
+average dissimilarity powers of order~$p$.  Analogously, if a similarity
+measure is given, one can look for clusterings maximizing weighted
+average similarity powers.  Following \cite{cluster:Gordon+Vichi:1998},
+an above $C^*$ is referred to as (weighted) \emph{median} or
+\emph{medoid} clustering if $p = 1$ and the optimum is sought over the
+set of all possible base clusterings, or the set $\{ C_1, \ldots, C_B
+\}$ of the base clusterings, respectively.  For $p = 2$, we have
+\emph{least squares} consensus clusterings (generalized means).
+
+For computing consensus clusterings, package~\pkg{clue} provides
+function \code{cl\_consensus()} with synopsis \code{cl\_consensus(x,
+  method = NULL, weights = 1, control = list())}.  This allows (similar
+to the functions for computing cluster proximities, see
+Section~\ref{synopsis} on Page~\pageref{synopsis}) argument
+\code{method} to be a character string specifying one of the built-in
+methods discussed below, or a function to be taken as a user-defined
+method (taking an ensemble, the case weights, and a list of control
+parameters as its arguments), again making it reasonably straightforward
+to add methods.  In addition, function~\code{cl\_medoid()} can be used
+for obtaining medoid partitions (using, in principle, arbitrary
+dissimilarities).  Modulo possible differences in the case of ties, this
+gives the same results as (the medoid obtained by) \code{pam()} in
+package~\pkg{cluster}.
+
+If all elements of the ensemble are partitions, package~\pkg{clue}
+provides algorithms for computing soft least squares consensus
+partitions for weighted Euclidean, GV1 and co-membership
+dissimilarities.  Let $M_1, \ldots, M_B$ and $M$ denote the membership
+matrices of the elements of the ensemble and their sought least squares
+consensus partition, respectively.  For Euclidean dissimilarity, we need
+to find
+\begin{displaymath}
+  \sum_b w_b \min\nolimits_{\Pi_b} \| M - M_b \Pi_b \|^2
+  \Rightarrow \min\nolimits_M
+\end{displaymath}
+over all membership matrices (i.e., stochastic matrices) $M$, or
+equivalently,
+\begin{displaymath}
+  \sum_b w_b \| M - M_b \Pi_b \|^2 
+  \Rightarrow \min\nolimits_{M, \Pi_1, \ldots, \Pi_B}
+\end{displaymath}
+over all $M$ and permutation matrices $\Pi_1, \ldots, \Pi_B$.  Now fix
+the $\Pi_b$ and let $\bar{M} = s^{-1} \sum_b w_b M_b \Pi_b$ be the
+weighted average of the $M_b \Pi_b$, where $s = \sum_b w_b$.  Then
+\begin{eqnarray*}
+  \lefteqn{\sum_b w_b \| M - M_b \Pi_b \|^2} \\
+  &=& \sum_b w_b (\|M\|^2 - 2 \trace(M' M_b \Pi_b) + \|M_b\Pi_b\|^2) \\
+  &=& s \|M\|^2 - 2 s \trace(M' \bar{M}) + \sum_b w_b \|M_b\|^2 \\
+  &=& s (\|M - \bar{M}\|^2) + \sum_b w_b \|M_b\|^2 - s \|\bar{M}\|^2
+\end{eqnarray*}
+Thus, as already observed in
+\cite{cluster:Dimitriadou+Weingessel+Hornik:2002} and
+\cite{cluster:Gordon+Vichi:2001}, 
+for fixed permutations $\Pi_b$ the optimal soft $M$ is given by
+$\bar{M}$.  The optimal permutations can be found by minimizing $- s
+\|\bar{M}\|^2$, or equivalently, by maximizing
+\begin{displaymath}
+  s^2 \|\bar{M}\|^2
+  = \sum_{\beta, b} w_\beta w_b \trace(\Pi_\beta'M_\beta'M_b\Pi_b).
+\end{displaymath}
+With $U_{\beta,b} = w_\beta w_b M_\beta' M_b$ we can rewrite the above
+as
+\begin{displaymath}
+  \sum_{\beta, b} w_\beta w_b \trace(\Pi_\beta'M_\beta'M_b\Pi_b) 
+  = \sum_{\beta,b} \sum_{j=1}^k [U_{\beta,b}]_{\pi_\beta(j), \pi_b(j)}
+  =: \sum_{j=1}^k c_{\pi_1(j), \ldots, \pi_B(j)}
+\end{displaymath}
+This is an instance of the \emph{multi-dimensional assignment problem}
+(MAP), which, contrary to the LSAP, is known to be NP-hard \citep[e.g.,
+via reduction to 3-DIMENSIONAL MATCHING,][]{cluster:Garey+Johnson:1979},
+and can e.g.\ be approached using randomized parallel algorithms
+\citep{cluster:Oliveira+Pardalos:2004}.  Branch-and-bound approaches
+suggested in the literature
+\citep[e.g.,][]{cluster:Grundel+Oliveira+Pardalos:2005} are
+unfortunately computationally infeasible for ``typical'' sizes of
+cluster ensembles ($B \ge 20$, maybe even in the hundreds).
+
+Package~\pkg{clue} provides two heuristics for (approximately) finding
+the soft least squares consensus partition for Euclidean dissimilarity.
+Method \code{"DWH"} of function \code{cl\_consensus()} is an extension
+of the greedy algorithm in
+\cite{cluster:Dimitriadou+Weingessel+Hornik:2002} which is based on a
+single forward pass through the ensemble which in each step chooses the
+``locally'' optimal $\Pi$.  Starting with $\tilde{M}_1 = M_1$,
+$\tilde{M}_b$ is obtained from $\tilde{M}_{b-1}$ by optimally matching
+$M_b \Pi_b$ to this, and taking a weighted average of $\tilde{M}_{b-1}$
+and $M_b \Pi_b$ in a way that $\tilde{M}_b$ is the weighted average of
+the first~$b$ $M_\beta \Pi_\beta$.  This simple approach could be
+further enhanced via back-fitting or several passes, in essence
+resulting in an ``on-line'' version of method \code{"SE"}.  This, in
+turn, is a fixed-point algorithm, which iterates between updating $M$ as
+the weighted average of the current $M_b \Pi_b$, and determining the
+$\Pi_b$ by optimally matching the current $M$ to the individual $M_b$.
+Finally, method \code{"GV1"} implements the fixed-point algorithm for
+the ``first model'' in \cite{cluster:Gordon+Vichi:2001}, which gives
+least squares consensus partitions for GV1 dissimilarity.
+
+In the above, we implicitly assumed that all partitions in the ensemble
+as well as the sought consensus partition have the same number of
+classes.  The more general case can be dealt with through suitable
+``projection'' devices.
+
+When using co-membership dissimilarity, the least squares consensus
+partition is determined by minimizing
+\begin{eqnarray*}
+  \lefteqn{\sum_b w_b \|MM' - M_bM_b'\|^2} \\
+  &=& s \|MM' - \bar{C}\|^2 + \sum_b w_b \|M_bM_b'\|^2 - s \|\bar{C}\|^2
+\end{eqnarray*}
+over all membership matrices~$M$, where now $\bar{C} = s^{-1} \sum_b
+C(M_b) = s^{-1} \sum_b M_bM_b'$ is the weighted average co-membership
+matrix of the ensemble.  This corresponds to the ``third model'' in
+\cite{cluster:Gordon+Vichi:2001}.  Method \code{"GV3"} of function
+\code{cl\_consensus()} provides a SUMT approach (see Section~\ref{SUMT}
+on Page~\pageref{SUMT}) for finding the minimum.  We note that this
+strategy could more generally be applied to consensus problems of the
+form
+\begin{displaymath}
+  \sum_b w_b \|\Phi(M) - \Phi(M_b)\|^2 \Rightarrow \min\nolimits_M,
+\end{displaymath}
+which are equivalent to minimizing $\|\Phi(B) - \bar{\Phi}\|^2$, with
+$\bar{\Phi}$ the weighted average of the $\Phi(M_b)$.  This includes
+e.g.\ the case where generalized co-memberships are defined by taking
+the ``standard'' fuzzy intersection of co-incidences, as discussed in
+Section~\ref{fuzzy} on Page~\pageref{fuzzy}.
+
+Package~\pkg{clue} currently does not provide algorithms for obtaining
+\emph{hard} consensus partitions, as e.g.\ done in
+\cite{cluster:Krieger+Green:1999} using Rand proximity.  It seems
+``natural'' to extend the methods discussed above to include a
+constraint on softness, e.g., on the partition coefficient PC (see
+Section~\ref{PC} on Page~\pageref{PC}).  For Euclidean dissimilarity,
+straightforward Lagrangian computations show that the constrained minima
+are of the form $\bar{M}(\alpha) = \alpha \bar{M} + (1 - \alpha) E$,
+where $E$ is the ``maximally soft'' membership with all entries equal to
+$1/k$, $\bar{M}$ is again the weighted average of the $M_b\Pi_b$ with
+the $\Pi_b$ solving the underlying MAP, and $\alpha$ is chosen such that
+$PC(\bar{M}(\alpha))$ equals a prescribed value.  As $\alpha$ increases
+(even beyond one), softness of the $\bar{M}(\alpha)$ decreases.
+However, for $\alpha^* > 1 / (1 - k\mu^*)$, where $\mu^*$ is the minimum
+of the entries of $\bar{M}$, the $\bar{M}(\alpha)$ have negative
+entries, and are no longer feasible membership matrices.  Obviously, the
+non-negativity constraints for the $\bar{M}(\alpha)$ eventually put
+restrictions on the admissible $\Pi_b$ in the underlying MAP.  Thus,
+such a simple relaxation approach to obtaining optimal hard partitions
+is not feasible.
+
+For ensembles of hierarchies, \code{cl\_consensus()} provides a built-in
+method (\code{"cophenetic"}) for approximately minimizing average
+weighted squared Euclidean dissimilarity
+\begin{displaymath}
+  \sum_b w_b \| U - U_b \|^2 \Rightarrow \min\nolimits_U
+\end{displaymath}
+over all ultrametrics~$U$, where $U_1, \ldots, U_B$ are the ultrametrics
+corresponding to the elements of the ensemble.  This is of course
+equivalent to minimizing $\| U - \bar{U} \|^2$, where $\bar{U} = s^{-1}
+\sum_b w_b U_b$ is the weighted average of the $U_b$.  The SUMT approach
+provided by function \code{ls\_fit\_ultrametric()} (see
+Section~\ref{SUMT} on Page~\pageref{SUMT}) is employed for finding the
+sought weighted least squares consensus hierarchy.  
+
+In addition, method \code{"majority"} obtains a consensus hierarchy from
+an extension of the majority consensus tree of
+\cite{cluster:Margush+McMorris:1981}, which minimizes $L(U) = \sum_b w_b
+d(U_b, U)$ over all ultrametrics~$U$, where $d$ is the symmetric
+difference dissimilarity.
+
+Clearly, the available methods use heuristics for solving hard
+optimization problems, and cannot be guaranteed to find a global
+optimum.  Standard practice would recommend to use the best solution
+found in ``sufficiently many'' replications of the methods.
+
+Alternative recent approaches to obtaining consensus partitions include
+``Bagged Clustering'' \citep[provided by \code{bclust()} in
+package~\pkg{e1071}]{cluster:Leisch:1999}, the ``evidence accumulation''
+framework of \cite{cluster:Fred+Jain:2002}, the NMI optimization and
+graph-partitioning methods in \cite{cluster:Strehl+Ghosh:2003a},
+``Bagged Clustering'' as in \cite{cluster:Dudoit+Fridlyand:2003}, and
+the hybrid bipartite graph formulation of
+\cite{cluster:Fern+Brodley:2004}.  Typically, these approaches are
+constructive, and can easily be implemented based on the infrastructure
+provided by package~\pkg{clue}.  Evidence accumulation amounts to
+standard hierarchical clustering of the average co-membership matrix.
+Procedure~BagClust1 of \cite{cluster:Dudoit+Fridlyand:2003} amounts to
+computing $B^{-1} \sum_b M_b\Pi_b$, where each $\Pi_b$ is determined by
+optimal Euclidean matching of $M_b$ to a fixed reference membership
+$M_0$.  In the corresponding ``Bagged Clustering'' framework, $M_0$ and
+the $M_b$ are obtained by applying the base clusterer to the original
+data set and bootstrap samples from it, respectively.  This is
+implemented as method \code{"DFBC1"} of \code{cl\_bag()} in
+package~\pkg{clue}.  Finally, the approach of
+\cite{cluster:Fern+Brodley:2004} solves an LSAP for an asymmetric cost
+matrix based on object-by-all-classes incidences.
+
+\subsection{Cluster partitions}
+
+To investigate the ``structure'' in a cluster ensemble, an obvious idea
+is to start clustering the clusterings in the ensemble, resulting in
+``secondary'' clusterings \citep{cluster:Gordon+Vichi:1998,
+  cluster:Gordon:1999}.  This can e.g.\ be performed by using
+\code{cl\_dissimilarity()} (or \code{cl\_agreement()}) to compute a
+dissimilarity matrix for the ensemble, and feed this into a
+dissimilarity-based clustering algorithm (such as \code{pam()} in
+package~\pkg{cluster} or \code{hclust()} in package~\pkg{stats}).  (One
+can even use \code{cutree()} to obtain hard partitions from hierarchies
+thus obtained.)  If prototypes (``typical clusterings'') are desired for
+partitions of clusterings, they can be determined post-hoc by finding
+suitable consensus clusterings in the classes of the partition, e.g.,
+using \code{cl\_consensus()} or \code{cl\_medoid()}.
+
+Package~\pkg{clue} additionally provides \code{cl\_pclust()} for direct
+prototype-based partitioning based on minimizing criterion functions of
+the form $\sum w_b u_{bj}^m d(x_b, p_j)^e$, the sum of the case-weighted
+membership-weighted $e$-th powers of the dissimilarities between the
+elements~$x_b$ of the ensemble and the prototypes~$p_j$, for suitable
+dissimilarities~$d$ and exponents~$e$.  (The underlying feature spaces
+are that of membership matrices and ultrametrics, respectively, for
+partitions and hierarchies.)
+
+Parameter~$m$ must not be less than one and controls the softness of the
+obtained partitions, corresponding to the \dQuote{fuzzification
+  parameter} of the fuzzy $c$-means algorithm.  For $m = 1$, a
+generalization of the Lloyd-Forgy variant \citep{cluster:Lloyd:1957,
+  cluster:Forgy:1965, cluster:Lloyd:1982} of the $k$-means algorithm is
+used, which iterates between reclassifying objects to their closest
+prototypes, and computing new prototypes as consensus clusterings for
+the classes.  \citet{cluster:Gaul+Schader:1988} introduced this
+procedure for \dQuote{Clusterwise Aggregation of Relations} (with the
+same domains), containing equivalence relations, i.e., hard partitions,
+as a special case.  For $m > 1$, a generalization of the fuzzy $c$-means
+recipe \citep[e.g.,][]{cluster:Bezdek:1981} is used, which alternates
+between computing optimal memberships for fixed prototypes, and
+computing new prototypes as the suitably weighted consensus clusterings
+for the classes.
+
+This procedure is repeated until convergence occurs, or the maximal
+number of iterations is reached.  Consensus clusterings are computed
+using (one of the methods provided by) \code{cl\_consensus}, with
+dissimilarities~$d$ and exponent~$e$ implied by method employed, and
+obtained via a registration mechanism.  The default methods compute
+Least Squares Euclidean consensus clusterings, i.e., use Euclidean
+dissimilarity~$d$ and $e = 2$.
+
+\section{Examples}
+\label{sec:examples}
+
+\subsection{Cassini data}
+
+\cite{cluster:Dimitriadou+Weingessel+Hornik:2002} and
+\cite{cluster:Leisch:1999} use Cassini data sets to illustrate how e.g.\
+suitable aggregation of base $k$-means results can reveal underlying
+non-convex structure which cannot be found by the base algorithm.  Such
+data sets contain points in 2-dimensional space drawn from the uniform
+distribution on 3 structures, with the two ``outer'' ones banana-shaped
+and the ``middle'' one a circle, and can be obtained by
+function~\code{mlbench.cassini()} in
+package~\pkg{mlbench}~\citep{cluster:Leisch+Dimitriadou:2005}.
+Package~\pkg{clue} contains the data sets \code{Cassini} and
+\code{CKME}, which are an instance of a 1000-point Cassini data set, and
+a cluster ensemble of 50 $k$-means partitions of the data set into three
+classes, respectively.
+
+The data set is shown in Figure~\ref{fig:Cassini}.
+<<Cassini-data,eval=FALSE>>=
+data("Cassini")
+plot(Cassini$x, col = as.integer(Cassini$classes),
+     xlab = "", ylab = "")
+@ % $
+\begin{figure}
+  \centering
+<<fig=TRUE,echo=FALSE>>=
+<<Cassini-data>>
+@ %
+  \caption{The Cassini data set.}
+  \label{fig:Cassini}
+\end{figure}
+Figure~\ref{fig:CKME} gives a dendrogram of the Euclidean
+dissimilarities of the elements of the $k$-means ensemble.
+<<CKME,eval=FALSE>>=
+data("CKME")
+plot(hclust(cl_dissimilarity(CKME)), labels = FALSE)
+@ %
+\begin{figure}
+  \centering
+<<fig=TRUE,echo=FALSE>>=
+<<CKME>>
+@ %
+  \caption{A dendrogram of the Euclidean dissimilarities of 50 $k$-means
+    partitions of the Cassini data into 3 classes.}
+  \label{fig:CKME}
+\end{figure}
+We can see that there are large groups of essentially identical
+$k$-means solutions.  We can gain more insight by inspecting
+representatives of these three groups, or by computing the medoid of the
+ensemble
+<<>>=
+m1 <- cl_medoid(CKME)
+table(Medoid = cl_class_ids(m1), "True Classes" = Cassini$classes)
+@ % $
+and inspecting it (Figure~\ref{fig:Cassini-medoid}):
+<<Cassini-medoid,eval=FALSE>>=
+plot(Cassini$x, col = cl_class_ids(m1), xlab = "", ylab = "")
+@ % $
+\begin{figure}
+  \centering
+<<fig=TRUE,echo=FALSE>>=
+<<Cassini-medoid>>
+@ %
+  \caption{Medoid of the Cassini $k$-means ensemble.}
+  \label{fig:Cassini-medoid}
+\end{figure}
+Flipping this solution top-down gives a second ``typical'' partition.
+We see that the $k$-means base clusterers cannot resolve the underlying
+non-convex structure.  For the least squares consensus of the ensemble,
+we obtain
+<<>>=
+set.seed(1234)
+m2 <- cl_consensus(CKME)
+@ %
+where here and below we set the random seed for reproducibility, noting
+that one should really use several replicates of the consensus
+heuristic.  This consensus partition has confusion matrix
+<<>>=
+table(Consensus = cl_class_ids(m2), "True Classes" = Cassini$classes)
+@ % $
+and class details as displayed in Figure~\ref{fig:Cassini-mean}:
+<<Cassini-mean,eval=FALSE>>=
+plot(Cassini$x, col = cl_class_ids(m2), xlab = "", ylab = "")
+@ % $
+\begin{figure}
+  \centering
+<<fig=TRUE,echo=FALSE>>=
+<<Cassini-mean>>
+@ %
+  \caption{Least Squares Consensus of the Cassini $k$-means ensemble.}
+  \label{fig:Cassini-mean}
+\end{figure}
+This has drastically improved performance, and almost perfect recovery
+of the two outer shapes.  In fact,
+\cite{cluster:Dimitriadou+Weingessel+Hornik:2002} show that almost
+perfect classification can be obtained by suitable combinations of
+different base clusterers ($k$-means, fuzzy $c$-means, and unsupervised
+fuzzy competitive learning).
+
+\subsection{Gordon-Vichi macroeconomic data}
+
+\citet[Table~1]{cluster:Gordon+Vichi:2001} provide soft partitions of 21
+countries based on macroeconomic data for the years 1975, 1980, 1985,
+1990, and 1995.  These partitions were obtained using fuzzy $c$-means on
+measurements of the following variables: the annual per capita gross
+domestic product (GDP) in USD (converted to 1987 prices); the percentage
+of GDP provided by agriculture; the percentage of employees who worked
+in agriculture; and gross domestic investment, expressed as a percentage
+of the GDP.
+
+Table~5 in \cite{cluster:Gordon+Vichi:2001} gives 3-class consensus
+partitions obtained by applying their models 1, 2, and 3 and the
+approach in \cite{cluster:Sato+Sato:1994}.
+
+The partitions and consensus partitions are available in data sets
+\code{GVME} and \code{GVME\_Consensus}, respectively.  We compare the
+results of \cite{cluster:Gordon+Vichi:2001} using GV1 dissimilarities
+(model 1) to ours as obtained by \code{cl\_consensus()} with method
+\code{"GV1"}.
+
+<<>>=
+data("GVME")
+GVME
+set.seed(1)
+m1 <- cl_consensus(GVME, method = "GV1",
+                   control = list(k = 3, verbose = TRUE))
+@ %
+This results in a soft partition with average squared GV1 dissimilarity
+(the criterion function to be optimized by the consensus partition) of
+<<>>=
+mean(cl_dissimilarity(GVME, m1, "GV1") ^ 2)
+@ %
+We compare this to the consensus solution given in
+\cite{cluster:Gordon+Vichi:2001}:
+<<>>=
+data("GVME_Consensus")
+m2 <- GVME_Consensus[["MF1/3"]]
+mean(cl_dissimilarity(GVME, m2, "GV1") ^ 2)
+table(CLUE = cl_class_ids(m1), GV2001 = cl_class_ids(m2))
+@ %
+Interestingly, we are able to obtain a ``better'' solution, which
+however agrees with the one reported on the literature with respect to
+their nearest hard partitions.
+
+For the 2-class consensus partition, we obtain
+<<>>=
+set.seed(1)
+m1 <- cl_consensus(GVME, method = "GV1",
+                   control = list(k = 2, verbose = TRUE))
+@ 
+which is slightly better than the solution reported in
+\cite{cluster:Gordon+Vichi:2001}
+<<>>=
+mean(cl_dissimilarity(GVME, m1, "GV1") ^ 2)
+m2 <- GVME_Consensus[["MF1/2"]]
+mean(cl_dissimilarity(GVME, m2, "GV1") ^ 2)
+@ 
+but in fact agrees with it apart from rounding errors:
+<<>>=
+max(abs(cl_membership(m1) - cl_membership(m2)))
+@ 
+It is interesting to compare these solutions to the Euclidean 2-class
+consensus partition for the GVME ensemble:
+<<>>=
+m3 <- cl_consensus(GVME, method = "GV1",
+                   control = list(k = 2, verbose = TRUE))
+@ 
+This is markedly different from the GV1 consensus partition
+<<>>=
+table(GV1 = cl_class_ids(m1), Euclidean = cl_class_ids(m3))
+@ 
+with countries
+<<>>=
+rownames(m1)[cl_class_ids(m1) != cl_class_ids(m3)]
+@ %
+classified differently, being with the ``richer'' class for the GV1 and
+the ``poorer'' for the Euclidean consensus partition.  (In fact, all
+these countries end up in the ``middle'' class for the 3-class GV1
+consensus partition.)
+
+\subsection{Rosenberg-Kim kinship terms data}
+
+\cite{cluster:Rosenberg+Kim:1975} describe an experiment where perceived
+similarities of the kinship terms were obtained from six different
+``sorting'' experiments.  In one of these, 85 female undergraduates at
+Rutgers University were asked to sort 15 English terms into classes ``on
+the basis of some aspect of meaning''.  These partitions were printed in
+\citet[Table~7.1]{cluster:Rosenberg:1982}.  Comparison with the original
+data indicates that the partition data have the ``nephew'' and ``niece''
+columns interchanged, which is corrected in data set \code{Kinship82}.
+
+\citet[Table~6]{cluster:Gordon+Vichi:2001} provide consensus partitions
+for these data based on their models 1--3 (available in data set
+\code{Kinship82\_Consensus}).  We compare their results using
+co-membership dissimilarities (model 3) to ours as obtained by
+\code{cl\_consensus()} with method \code{"GV3"}.
+
+<<>>=
+data("Kinship82")
+Kinship82
+set.seed(1)
+m1 <- cl_consensus(Kinship82, method = "GV3",
+                   control = list(k = 3, verbose = TRUE))
+@ %
+This results in a soft partition with average co-membership
+dissimilarity (the criterion function to be optimized by the consensus
+partition) of
+<<>>=
+mean(cl_dissimilarity(Kinship82, m1, "comem") ^ 2)
+@ %
+Again, we compare this to the corresponding consensus solution given in
+\cite{cluster:Gordon+Vichi:2001}:
+<<>>=
+data("Kinship82_Consensus")
+m2 <- Kinship82_Consensus[["JMF"]]
+mean(cl_dissimilarity(Kinship82, m2, "comem") ^ 2)
+@ %
+Interestingly, again we obtain a (this time only ``slightly'') better
+solution, with
+<<>>=
+cl_dissimilarity(m1, m2, "comem")
+table(CLUE = cl_class_ids(m1), GV2001 = cl_class_ids(m2))
+@ %
+indicating that the two solutions are reasonably close, even though
+<<>>=
+cl_fuzziness(cl_ensemble(m1, m2))
+@ %
+shows that the solution found by \pkg{clue} is ``softer''.
+
+\subsection{Miller-Nicely consonant phoneme confusion data}
+
+\cite{cluster:Miller+Nicely:1955} obtained the data on the auditory
+confusions of 16 English consonant phonemes by exposing female subjects
+to a series of syllables consisting of one of the consonants followed by
+the vowel `a' under 17 different experimental conditions.  Data set
+\code{Phonemes} provides consonant misclassification probabilities
+(i.e., similarities) obtained from aggregating the six so-called
+flat-noise conditions in which only the speech-to-noise ratio was varied
+into a single matrix of misclassification frequencies.
+
+These data are used in \cite{cluster:DeSoete:1986} as an illustration of
+the SUMT approach for finding least squares optimal fits to
+dissimilarities by ultrametrics.  We can reproduce this analysis as
+follows.
+
+<<>>=
+data("Phonemes")
+d <- as.dist(1 - Phonemes)
+@ %
+(Note that the data set has the consonant misclassification
+probabilities, i.e., the similarities between the phonemes.)
+<<>>=
+u <- ls_fit_ultrametric(d, control = list(verbose = TRUE))
+@ %
+This gives an ultrametric~$u$ for which Figure~\ref{fig:Phonemes} plots
+the corresponding dendrogram, ``basically'' reproducing Figure~1
+in \cite{cluster:DeSoete:1986}.
+<<Phonemes,eval=FALSE>>=
+plot(u)
+@ %
+\begin{figure}
+  \centering
+<<fig=TRUE,echo=FALSE>>=
+<<Phonemes>>
+@ %
+  \caption{Dendrogram for least squares fit to the Miller-Nicely 
+    consonant phoneme confusion data.}
+  \label{fig:Phonemes}
+\end{figure}
+
+We can also compare the least squares fit obtained to that of other
+hierarchical clusterings of $d$, e.g.\ those obtained by
+\code{hclust()}.  The ``optimal''~$u$ has Euclidean dissimilarity
+<<>>=
+round(cl_dissimilarity(d, u), 4)
+@ %
+to $d$.  For the \code{hclust()} results, we get
+<<>>=
+hclust_methods <- c("ward", "single", "complete", "average", "mcquitty")
+hens <- cl_ensemble(list = lapply(hclust_methods,
+                                  function(m) hclust(d, m)))
+names(hens) <- hclust_methods
+round(sapply(hens, cl_dissimilarity, d), 4)
+@ %
+which all exhibit greater Euclidean dissimilarity to $d$ than $u$.  (We
+exclude methods \code{"median"} and \code{"centroid"} as these do not
+yield valid hierarchies.)  We can also compare the ``structure'' of the
+different hierarchies, e.g.\ by looking at the rate of inversions
+between them:
+<<>>=
+ahens <- c(L2opt = cl_ensemble(u), hens)
+round(cl_dissimilarity(ahens, method = "gamma"), 2)
+@ %
+
+\section{Outlook}
+\label{sec:outlook}
+
+Package~\pkg{clue} was designed as an \emph{extensible} environment for
+computing on cluster ensembles.  It currently provides basic data
+structures for representing partitions and hierarchies, and facilities
+for computing on these, including methods for measuring proximity and
+obtaining consensus and ``secondary'' clusterings.
+
+Many extensions to the available functionality are possible and in fact
+planned (some of these enhancements were already discussed in more
+detail in the course of this paper).
+\begin{itemize}
+ \item Provide mechanisms to generate cluster ensembles based on
+  reweighting (assuming base clusterers allowing for case weights) the
+  data set.
+ \item Explore recent advances (e.g., parallelized random search) in
+  heuristics for solving the multi-dimensional assignment problem.
+ \item Add support for \emph{additive trees}
+  \citep[e.g.,][]{cluster:Barthelemy+Guenoche:1991}.
+ \item Add heuristics for finding least squares fits based on iterative
+  projection on convex sets of constraints, see e.g.\
+  \cite{cluster:Hubert+Arabie+Meulman:2006} and the accompanying MATLAB
+  code available at \url{http://cda.psych.uiuc.edu/srpm_mfiles} for
+  using these methods (instead of SUMT approaches) to fit ultrametrics
+  and additive trees to proximity data.
+ \item Add an ``$L_1$ View''.  Emphasis in \pkg{clue}, in particular for
+  obtaining consensus clusterings, is on using Euclidean dissimilarities
+  (based on suitable least squares distances); arguably, more ``robust''
+  consensus solutions should result from using Manhattan dissimilarities
+  (based on absolute distances).  Adding such functionality necessitates
+  developing the corresponding structure theory for soft Manhattan
+  median partitions.  Minimizing average Manhattan dissimilarity between
+  co-memberships and ultrametrics results in constrained $L_1$
+  approximation problems for the weighted medians of the co-memberships
+  and ultrametrics, respectively, and could be approached by employing
+  SUMTs analogous to the ones used for the $L_2$ approximations.
+ \item Provide heuristics for obtaining \emph{hard} consensus
+  partitions.
+ \item Add facilities for tuning hyper-parameters (most prominently, the
+  number of classes employed) and ``cluster validation'' of partitioning
+  algorithms, as recently proposed by
+  \cite{cluster:Roth+Lange+Braun:2002},
+  \cite{cluster:Lange+Roth+Braun:2004},
+  \cite{cluster:Dudoit+Fridlyand:2002},
+  and \cite{cluster:Tibshirani+Walther:2005}.
+\end{itemize}
+We are hoping to be able to provide many of these extensions in the near
+future.
+
+\subsubsection*{Acknowledgments}
+
+We are grateful to Walter B\"ohm for providing efficient C code for
+solving assignment problems.
+
+
+{\small
+  \bibliographystyle{abbrvnat}
+  \bibliography{cluster}
+}
+
+\end{document}

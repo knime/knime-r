@@ -1,0 +1,413 @@
+#NEXUS
+[written Tue May 29 18:24:39 PDT 2007 by Mesquite  version 1.06 (build g97) at cnidaria-1347.ucdavis.edu/169.237.66.185]
+
+BEGIN TAXA;
+	DIMENSIONS NTAX=18;
+	TAXLABELS
+		Myrmecocystuscfnavajo Myrmecocystuscreightoni Myrmecocystusdepilis Myrmecocystuskathjuli Myrmecocystuskennedyi Myrmecocystusmendax Myrmecocystusmexicanus Myrmecocystusmimicus Myrmecocystusnavajo Myrmecocystusnequazcatl Myrmecocystusplacodops Myrmecocystusromainei Myrmecocystussemirufus Myrmecocystussnellingi Myrmecocystustenuinodis Myrmecocystustestaceus Myrmecocystuswheeleri Myrmecocystusyuma 
+	;
+
+END;
+
+
+BEGIN CHARACTERS;
+	TITLE Morphology;
+	DIMENSIONS NCHAR=32;
+	FORMAT DATATYPE = CONTINUOUS;
+CHARSTATELABELS 
+		1 eyewidth,
+		2 eyelength,
+		3 headlength,
+		4 headwidth,
+		5 mesosomaprofilehaircount,
+		6 FLfemurlength,
+		7 FLtibialength,
+		8 MLfemurlength,
+		9 MLtibialength,
+		10 HLfemurlength,
+		11 HLtibialength,
+		12 mesosomalength,
+		13 scapelength,
+		14 funiculuslength,
+		15 mesosomamaxwidth,
+		16 mesosomaminwidth,
+		17 lneyewidth,
+		18 lneyelength,
+		19 lnheadlength,
+		20 lnheadwidth,
+		21 lnmesosomaprofilehaircount,
+		22 lnFLfemurlength,
+		23 lnFLtibialength,
+		24 lnMLfemurlength,
+		25 lnMLtibialength,
+		26 lnHLfemurlength,
+		27 lnHLtibialength,
+		28 lnmesosomalength,
+		29 lnscapelength,
+		30 lnfuniculuslength,
+		31 lnmesosomamaxwidth,
+		32 lnmesosomaminwidth ; 
+	MATRIX
+	Myrmecocystuscfnavajo    0.347 0.433 1.338 1.052 39.0 1.434 1.246 1.515 1.409 2.007 2.126 1.962 1.63 2.464 0.836 0.417 -1.058430499 -0.837017551 0.291175962 0.050693114 3.663561646 0.360467742 0.21993842 0.415415439 0.342880233 0.69664107 0.75424228 0.673964361 0.488580015 0.901786046 -0.179126666 -0.874669057
+	Myrmecocystuscreightoni   0.1622 0.20655 0.82985 0.71865 0.0 0.8226 0.68895 0.7854 0.7704 1.0457 1.05835 1.11875 0.89955 1.4073 0.4955 0.28995 -1.819995314 -1.577954034 -0.187439126 -0.332990376 1.098612289 -0.198226599 -0.374805986 -0.242539085 -0.261554411 0.041684897 0.053820826 0.109048315 -0.106449058 0.340231802 -0.70254289 -1.243482504
+	Myrmecocystusdepilis      0.2345 0.279 1.2125 1.0218 24.0 1.25183 1.0856245 1.31244 1.278025 1.70082 1.77591 1.774585 1.335 2.049 0.7741235 0.438396 -1.453769132 -1.2784033 0.185730051 0.015758636 3.163968392 0.217906079 0.073480925 0.262244849 0.23828925 0.523667061 0.565922636 0.566419189 0.284385731 0.712661014 -0.266387722 -0.827757638
+	Myrmecocystuskathjuli     0.206 0.247 1.1235 0.951 19.5 1.35352 1.101125 1.39927 1.29104 1.708335 1.794895 1.70561 1.379 2.04 0.7319725 0.4122135 -1.579985164 -1.398768684 0.115861323 -0.05067484 2.890371758 0.299777539 0.092762585 0.334283576 0.252849066 0.529578184 0.581198779 0.53251657 0.319877422 0.710946449 -0.315164554 -0.88802496
+	Myrmecocystuskennedyi     0.219 0.277 1.2115 1.075 27.5 1.405 1.176 1.4625 1.456 1.8545 1.9205 1.8345 1.4375 2.1 0.7655 0.455 -1.518693975 -1.283737773 0.191857133 0.072285615 3.314020688 0.339154824 0.16141842 0.379143386 0.373863136 0.615804395 0.650805137 0.606659596 0.362132481 0.741737305 -0.267251876 -0.788424862
+	Myrmecocystusmendax       0.2721 0.3336 1.558 1.4531 85.0 1.8742 1.6042 1.994 1.935 2.6013 2.6829 2.5963 1.9381 2.9722 1.0311 0.5232 -1.301585633 -1.097812608 0.443402947 0.373699205 4.442651256 0.628181902 0.47262519 0.690142672 0.660107326 0.95601132 0.986898299 0.954087355 0.661708112 1.089302419 0.030626194 -0.647791479
+	Myrmecocystusmexicanus    0.4335 0.5285 1.602 1.2705 26.5 2.242 1.8555 2.4795 2.2075 3.0705 3.089 2.597 2.211 3.239 0.916 0.394 -0.837335004 -0.642862653 0.466427394 0.227429133 3.275540168 0.796749683 0.612629812 0.902886082 0.785535617 1.116397202 1.124535193 0.952838633 0.792756695 1.172973609 -0.096394475 -0.93952217
+	Myrmecocystusmimicus      0.2197 0.2733 1.141 1.036 30.0 1.23793 1.027 1.26786 1.1749 1.56482 1.63226 1.67201 1.264 1.881 0.708 0.384 -1.5154923 -1.297185186 0.131905071 0.035367144 3.401197382 0.21344063 0.026641931 0.23733044 0.161183038 0.447770801 0.489965558 0.514026496 0.234281296 0.63180355 -0.345311185 -0.957112726
+	Myrmecocystusnavajo       0.2805 0.3755 1.0525 0.795 18.5 1.168535 1.0180075 1.16102 1.12958 1.634705 1.65155 1.546225 1.3485 1.954 0.6263965 0.314671 -1.272519447 -0.980051192 0.050015872 -0.230223916 2.90855558 0.153682711 0.016748671 0.148877742 0.121090106 0.491448376 0.501633856 0.434955774 0.298626416 0.669236464 -0.468766381 -1.171358882
+	Myrmecocystusnequazcatl   0.238 0.295 1.058 1.118 49.0 1.51118 1.1793 1.60672 1.41636 1.95228 1.96042 2.01975 1.477 2.228 0.84806 0.486044 -1.435484605 -1.220779923 0.056380333 0.111541375 3.891820298 0.412890803 0.164921042 0.474194834 0.3480902 0.66899792 0.673158736 0.702973741 0.390013004 0.801104322 -0.164803891 -0.721456124
+	Myrmecocystusplacodops    0.2805 0.347 1.5425 1.4355 39.5 1.6688 1.474045 1.838315 1.761365 2.349265 2.418685 2.28195 1.8045 2.7645 0.955494 0.484641 -1.271539142 -1.058496944 0.433360292 0.360682154 3.675579114 0.512103438 0.387068202 0.606349823 0.563245783 0.852964487 0.881290662 0.824898518 0.589936973 1.015395403 -0.047278511 -0.724537171
+	Myrmecocystusromainei     0.229 0.271 1.164 1.067 27.0 1.31488 1.06962 1.369 1.278 1.74 1.78517 1.72 1.346 2.081 0.797 0.421 -1.474033275 -1.305636458 0.151862349 0.064850972 3.295836866 0.273745407 0.067303445 0.314080546 0.245296356 0.553885113 0.579513649 0.542324291 0.297137231 0.732848547 -0.2269006 -0.865122445
+	Myrmecocystussemirufus    0.2393 0.295 1.3424 1.2826 69.0 1.548 1.3236 1.626 1.611 2.074 2.272 2.0392 1.572 2.3424 0.8935 0.4917 -1.430037284 -1.220779923 0.294459057 0.248889268 4.234106505 0.436963775 0.280355297 0.486123011 0.476855104 0.72947911 0.820660501 0.712557574 0.452348694 0.851176045 -0.112608944 -0.709886505
+	Myrmecocystussnellingi    0.1626 0.2052 0.786 0.69185 17.0 0.7471 0.5778 0.71195 0.68865 0.95225 0.93645 1.02635 0.83555 1.3684 0.47505 0.2805 -1.819869438 -1.586743338 -0.244666624 -0.374320538 2.83148024 -0.296208766 -0.554168612 -0.349125994 -0.38004857 -0.051854551 -0.071457181 0.020580617 -0.182376816 0.309479365 -0.750825896 -1.272022688
+	Myrmecocystustenuinodis   0.16695 0.2165 0.80965 0.69565 15.5 0.82035 0.79215 0.82915 0.7881 1.02385 1.0765 1.0843 0.89445 1.37155 0.5079 0.2895 -1.794140731 -1.531128383 -0.212724354 -0.364765146 2.714672815 -0.201043311 -0.233005565 -0.188002646 -0.240303423 0.023136261 0.071803358 0.077801384 -0.1121299 0.313462769 -0.679348936 -1.244818912
+	Myrmecocystustestaceus    0.271 0.3475 1.0435 0.8825 23.5 1.11074 0.981997 1.145875 1.10783 1.527625 1.55838 1.505275 1.329 2.018 0.6360145 0.288181 -1.305643267 -1.057223576 0.041499168 -0.125900131 3.14578457 0.102786566 -0.021927567 0.135585284 0.099368885 0.423310977 0.441300868 0.408161226 0.283878423 0.701812041 -0.453369253 -1.244254341
+	Myrmecocystuswheeleri     0.197 0.259 1.153 0.981 32.0 1.34961 1.11238 1.43273 1.26582 1.62673 1.75947 1.77914 1.427 2.058 0.732 0.394545 -1.62455155 -1.350927217 0.142367241 -0.019182819 3.465735903 0.299815662 0.106501864 0.359581715 0.235720134 0.486571865 0.565012627 0.576130101 0.355574338 0.721734637 -0.311974765 -0.930022077
+	Myrmecocystusyuma         0.189 0.237 0.864 0.809 10.0 0.867184 0.783 0.878905 0.757646 1.0528 1.15593 1.14947 0.932 1.437 0.549142 0.319 -1.666008264 -1.439695138 -0.14618251 -0.211956362 2.302585093 -0.142504099 -0.244622583 -0.129078464 -0.277539021 0.051453282 0.144905215 0.139300967 -0.070422464 0.362557607 -0.599398219 -1.142564176
+
+;
+
+END;
+
+
+BEGIN CHARACTERS;
+	TITLE  Foraging;
+	DIMENSIONS  NCHAR=2;
+	FORMAT DATATYPE = STANDARD GAP = - MISSING = ? SYMBOLS = "  0 1 2";
+	CHARSTATELABELS 
+		1 time /  diurnal crepuscular nocturnal, 2 subgenus /  Endiodioctes Eremnocystus Myrmecocystus ; 
+	MATRIX
+	Myrmecocystuscfnavajo   22
+
+	Myrmecocystuscreightoni  11
+
+	Myrmecocystusdepilis     00
+
+	Myrmecocystuskathjuli    00
+
+	Myrmecocystuskennedyi    00
+
+	Myrmecocystusmendax      00
+
+	Myrmecocystusmexicanus   22
+
+	Myrmecocystusmimicus     00
+
+	Myrmecocystusnavajo      22
+
+	Myrmecocystusnequazcatl  00
+
+	Myrmecocystusplacodops   00
+
+	Myrmecocystusromainei    00
+
+	Myrmecocystussemirufus   00
+
+	Myrmecocystussnellingi   11
+
+	Myrmecocystustenuinodis  11
+
+	Myrmecocystustestaceus   12
+
+	Myrmecocystuswheeleri    00
+
+	Myrmecocystusyuma        11
+
+
+;
+
+END;
+
+
+BEGIN TREES;
+	TRANSLATE
+		1 Myrmecocystuscfnavajo,
+		2 Myrmecocystuscreightoni,
+		3 Myrmecocystusdepilis,
+		4 Myrmecocystuskathjuli,
+		5 Myrmecocystuskennedyi,
+		6 Myrmecocystusmendax,
+		7 Myrmecocystusmexicanus,
+		8 Myrmecocystusmimicus,
+		9 Myrmecocystusnavajo,
+		10 Myrmecocystusnequazcatl,
+		11 Myrmecocystusplacodops,
+		12 Myrmecocystusromainei,
+		13 Myrmecocystussemirufus,
+		14 Myrmecocystussnellingi,
+		15 Myrmecocystustenuinodis,
+		16 Myrmecocystustestaceus,
+		17 Myrmecocystuswheeleri,
+		18 Myrmecocystusyuma;
+	TREE bestML = (((((((((13:1.724765,11:1.724765):2.926053,6:4.650818):0.689044,(4:1.08387,17:1.08387):4.255993):0.198842,((8:2.708942,3:2.708942):2.027251,((12:2.193845,10:2.193845):2.257581,18:4.451425):0.284767):0.802512):0.506099,5:6.044804):4.524387,2:10.569191):0.836689,(14:2.770378,15:2.770378):8.635503):0.89482,16:12.300701):1.699299,(7:5.724923,(1:2.869547,9:2.869547):2.855375):8.275077);
+
+END;
+
+BEGIN ASSUMPTIONS;
+	TYPESET * UNTITLED  (CHARACTERS = 'Morphology')  =  Squared:  1 -  32;
+END;
+
+
+
+Begin MESQUITE;
+		MESQUITESCRIPTVERSION 2;
+		TITLE AUTO;
+		tell ProjectCoordinator;
+		getEmployee #mesquite.minimal.ManageTaxa.ManageTaxa;
+		tell It;
+			setID 0 9015005506118934442;
+		endTell;
+		getEmployee #mesquite.charMatrices.ManageCharacters.ManageCharacters;
+		tell It;
+			setID 0 2565950173085067248;
+			checksum 0 389122022;
+			setID 1 1161953040649633474;
+			checksum 1 3582198254;
+		endTell;
+		getEmployee  #mesquite.charMatrices.BasicDataWindowCoord.BasicDataWindowCoord;
+		tell It;
+			showDataWindow #2565950173085067248 #mesquite.charMatrices.BasicDataWindowMaker.BasicDataWindowMaker;
+			tell It;
+				getWindow;
+				tell It;
+					setSize 420 280;
+					setLocation 400 156;
+					setFont SanSerif;
+					setFontSize 10;
+					onInfoBar;
+					setExplanationSize 30;
+					setAnnotationSize 20;
+					setFontIncAnnot 0;
+					setFontIncExp 0;
+					getToolPalette;
+					tell It;
+					endTell;
+					setTool mesquite.charMatrices.BasicDataWindowMaker.BasicDataWindow.arrow;
+					colorCells  #mesquite.charMatrices.NoColor.NoColor;
+					setBackground White;
+					toggleShowNames on;
+					toggleTight off;
+					toggleShowChanges on;
+					toggleSeparateLines off;
+					toggleShowStates on;
+					toggleAutoWithCharNames on;
+					toggleShowDefaultCharNames off;
+					toggleConstrainCW on;
+					toggleBirdsEye off;
+					toggleColorsPanel off;
+					birdsEyeWidth 2;
+					toggleLinkedScrolling on;
+					toggleScrollLinkedTables off;
+				endTell;
+				showWindow;
+				getWindow;
+				tell It;
+					forceAutosize;
+				endTell;
+				getEmployee #mesquite.charMatrices.AnnotPanel.AnnotPanel;
+				tell It;
+					togglePanel off;
+				endTell;
+				getEmployee #mesquite.charMatrices.ColorCells.ColorCells;
+				tell It;
+					setColor Red;
+					removeColor off;
+				endTell;
+			endTell;
+			showDataWindow #1161953040649633474 #mesquite.charMatrices.BasicDataWindowMaker.BasicDataWindowMaker;
+			tell It;
+				getWindow;
+				tell It;
+					getTable;
+					tell It;
+						rowNamesWidth 232;
+					endTell;
+					setSize 798 748;
+					setLocation 348 22;
+					setFont SanSerif;
+					setFontSize 10;
+					onInfoBar;
+					setExplanationSize 30;
+					setAnnotationSize 20;
+					setFontIncAnnot 0;
+					setFontIncExp 0;
+					getToolPalette;
+					tell It;
+						setTool mesquite.charMatrices.BasicDataWindowMaker.BasicDataWindow.ibeam;
+					endTell;
+					setTool mesquite.charMatrices.BasicDataWindowMaker.BasicDataWindow.ibeam;
+					colorCells  #mesquite.charMatrices.NoColor.NoColor;
+					setBackground White;
+					toggleShowNames on;
+					toggleTight off;
+					toggleShowChanges on;
+					toggleSeparateLines off;
+					toggleShowStates on;
+					toggleAutoWithCharNames on;
+					toggleShowDefaultCharNames off;
+					toggleConstrainCW on;
+					toggleBirdsEye off;
+					toggleColorsPanel off;
+					birdsEyeWidth 2;
+					toggleLinkedScrolling on;
+					toggleScrollLinkedTables off;
+				endTell;
+				showWindow;
+				getWindow;
+				tell It;
+					forceAutosize;
+				endTell;
+				getEmployee #mesquite.categ.StateNamesEditor.StateNamesEditor;
+				tell It;
+					makeWindow;
+					tell It;
+						setSize 314 400;
+						setLocation 60 10;
+						setFont SanSerif;
+						setFontSize 10;
+						onInfoBar;
+						setExplanationSize 30;
+						setAnnotationSize 20;
+						setFontIncAnnot 0;
+						setFontIncExp 0;
+						getToolPalette;
+						tell It;
+							setTool mesquite.categ.StateNamesEditor.StateNamesWindow.ibeam;
+						endTell;
+						rowsAreCharacters on;
+						toggleConstrainChar on;
+						toggleConstrainCharNum 3;
+						togglePanel off;
+					endTell;
+					showWindow;
+				endTell;
+				getEmployee #mesquite.categ.StateNamesStrip.StateNamesStrip;
+				tell It;
+					showStrip off;
+				endTell;
+				getEmployee #mesquite.charMatrices.AnnotPanel.AnnotPanel;
+				tell It;
+					togglePanel off;
+				endTell;
+				getEmployee #mesquite.charMatrices.ColorCells.ColorCells;
+				tell It;
+					setColor Red;
+					removeColor off;
+				endTell;
+				getEmployee #mesquite.charMatrices.QuickKeySelector.QuickKeySelector;
+				tell It;
+					autotabOff;
+				endTell;
+			endTell;
+		endTell;
+		getEmployee  #mesquite.trees.BasicTreeWindowCoord.BasicTreeWindowCoord;
+		tell It;
+			makeTreeWindow #9015005506118934442  #mesquite.trees.BasicTreeWindowMaker.BasicTreeWindowMaker;
+			tell It;
+				setTreeSource  #mesquite.trees.StoredTrees.StoredTrees;
+				tell It;
+					setTreeBlock 1;
+					toggleUseWeights off;
+				endTell;
+				setAssignedID 630.1180487973731.4514395117633566598;
+				getTreeWindow;
+				tell It;
+					setSize 520 400;
+					setLocation 60 10;
+					setFont SanSerif;
+					setFontSize 10;
+					onInfoBar;
+					setExplanationSize 30;
+					setAnnotationSize 20;
+					setFontIncAnnot 0;
+					setFontIncExp 0;
+					getToolPalette;
+					tell It;
+					endTell;
+					setActive;
+					getTreeDrawCoordinator #mesquite.trees.BasicTreeDrawCoordinator.BasicTreeDrawCoordinator;
+				tell It;
+					suppress;
+					setTreeDrawer  #mesquite.trees.DiagonalDrawTree.DiagonalDrawTree;
+					tell It;
+						setEdgeWidth 12;
+						orientUp;
+						getEmployee #mesquite.trees.NodeLocsStandard.NodeLocsStandard;
+						tell It;
+							stretchToggle off;
+							branchLengthsToggle off;
+							toggleScale on;
+							toggleCenter off;
+							toggleEven off;
+							namesAngle ?;
+						endTell;
+					endTell;
+					setBackground White;
+					setBranchColor Black;
+					showNodeNumbers off;
+					labelBranchLengths off;
+					desuppress;
+					getEmployee #mesquite.trees.BasicDrawTaxonNames.BasicDrawTaxonNames;
+					tell It;
+						setColor Black;
+						toggleColorPartition on;
+						toggleShadePartition off;
+						toggleNodeLabels on;
+						toggleShowNames on;
+					endTell;
+				endTell;
+					setTreeNumber 1;
+					useSuggestedSize on;
+					toggleTextOnTree off;
+					newAssistant  #mesquite.ancstates.TraceCharacterHistory.TraceCharacterHistory;
+				tell It;
+					suspend ;
+					setDisplayMode  #mesquite.ancstates.ShadeStatesOnTree.ShadeStatesOnTree;
+					tell It;
+						toggleLabels off;
+					endTell;
+					setHistorySource  #mesquite.ancstates.RecAncestralStates.RecAncestralStates;
+					tell It;
+						getCharacterSource  #mesquite.charMatrices.CharSrcCoordObed.CharSrcCoordObed;
+						tell It;
+							setCharacterSource #mesquite.charMatrices.StoredCharacters.StoredCharacters;
+							tell It;
+								setDataSet #1161953040649633474;
+							endTell;
+						endTell;
+						setMethod  #mesquite.parsimony.ParsAncestralStates.ParsAncestralStates;
+						tell It;
+							setModelSource  #mesquite.parsimony.CurrentParsModels.CurrentParsModels;
+						endTell;
+					endTell;
+					setCharacter 1;
+					toggleShowLegend on;
+					toggleGray off;
+					toggleWeights on;
+					setInitialOffsetX -162;
+					setInitialOffsetY -177;
+					setLegendWidth 142;
+					setLegendHeight 177;
+					resume ;
+				endTell;
+				endTell;
+				showWindow;
+				getEmployee #mesquite.ornamental.BranchNotes.BranchNotes;
+				tell It;
+					setAlwaysOn off;
+				endTell;
+				getEmployee #mesquite.trees.ColorBranches.ColorBranches;
+				tell It;
+					setColor Red;
+					removeColor off;
+				endTell;
+			endTell;
+		endTell;
+		endTell;
+end;
+
+begin brownie;
+taxset all=1-18;
+end;

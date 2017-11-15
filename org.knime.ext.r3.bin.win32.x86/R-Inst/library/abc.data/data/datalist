@@ -1,0 +1,3 @@
+human: models par.italy.sim stat.3pops.sim stat.voight
+musigma2: par.sim post.mu post.sigma2 stat.obs stat.sim
+ppc: post.bott

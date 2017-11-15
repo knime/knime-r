@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Some key functions in taxize, what they do, and their data sources.</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Key functions}
+%\VignetteEncoding{UTF-8}
+-->
+
+<h1>Some key functions in taxize, what they do, and their data sources.</h1>
+
+<table><thead>
+<tr>
+<th>Function name</th>
+<th>What it does</th>
+<th>Source</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>children</code></td>
+<td>Get direct children</td>
+<td>COL, NCBI, ITIS</td>
+</tr>
+<tr>
+<td><code>classification</code></td>
+<td>Upstream classification</td>
+<td>COL, NCBI, ITIS, Tropicos, EOL, GBIF, NBN</td>
+</tr>
+<tr>
+<td><code>comm2sci</code></td>
+<td>Get scientific from common names</td>
+<td>EOL, NCBI, ITIS, Tropicos</td>
+</tr>
+<tr>
+<td><code>downstream</code></td>
+<td>Downstream taxa to specified rank</td>
+<td>COL, ITIS, GBIF</td>
+</tr>
+<tr>
+<td><code>get_ids</code></td>
+<td>Get taxonomic identifiers</td>
+<td>COL, NCBI, ITIS, Tropicos, EOL, GBIF, NBN</td>
+</tr>
+<tr>
+<td><code>resolve</code></td>
+<td>Resolve names using many resolvers</td>
+<td>GNR, TNRS, iPlant</td>
+</tr>
+<tr>
+<td><code>gnr_resolve</code></td>
+<td>Resolve names using Global Names Resolver</td>
+<td>GNR</td>
+</tr>
+<tr>
+<td><code>tnrs</code></td>
+<td>Phylotastic Taxonomic Name Resolution Service</td>
+<td>NCBI, iPlant, MSW3</td>
+</tr>
+<tr>
+<td><code>tol_resolve</code></td>
+<td>Resolve names using any resolver</td>
+<td>TOL</td>
+</tr>
+<tr>
+<td><code>iplant_resolve</code></td>
+<td>iPlant name resolution</td>
+<td>iPlant</td>
+</tr>
+<tr>
+<td><code>sci2comm</code></td>
+<td>Get common from scientific names</td>
+<td>EOL, NCBI, ITIS</td>
+</tr>
+<tr>
+<td><code>synonyms</code></td>
+<td>Retrieve synonyms given input names/identifiers</td>
+<td>COL, NCBI, ITIS, Tropicos</td>
+</tr>
+<tr>
+<td><code>upstream</code></td>
+<td>Retrieve upstream taxa given names/identifiers</td>
+<td>COL, ITIS</td>
+</tr>
+<tr>
+<td><code>lowest_common</code></td>
+<td>Retrieve the lowest common taxon and rank for a given taxon name or ID</td>
+<td>COL, ITIS, GBIF, TOL, NCBI</td>
+</tr>
+<tr>
+<td><code>genbank2uid</code></td>
+<td>Get NCBI taxonomy UID from GenBankID</td>
+<td>NCBI</td>
+</tr>
+<tr>
+<td><code>tax_name</code></td>
+<td>Get taxonomic names for a given rank</td>
+<td>NCBI, ITIS</td>
+</tr>
+<tr>
+<td><code>tax_rank</code></td>
+<td>Get rank for a given taxonomic name</td>
+<td>BOLD, COL, EOL, GBIF, NATSERV, NBN, TOL, TROPICOS, ITIS, NCBI, WORMS</td>
+</tr>
+<tr>
+<td><code>tpl_get</code></td>
+<td>Get The Plant List csv files</td>
+<td>TPL</td>
+</tr>
+</tbody></table>
+
+<h3>Acronyms</h3>
+
+<ul>
+<li>COL: Catalogue of Life</li>
+<li>NCBI: National Center for Biotechnology Information</li>
+<li>ITIS: Integrated Taxonomic Information Service</li>
+<li>EOL: Encylopedia of Life</li>
+<li>GBIF: Global Biodiversity Information Facility</li>
+<li>NBN: National Biodiversity Network (UK)</li>
+<li>iPlant: iPlant Name Resolution Service</li>
+<li>GNR: Global Names Resolver</li>
+<li>TNRS: Taxonomic Name Resolution Service</li>
+<li>TOL: Open Tree of Life</li>
+<li>MSW3: Mammal Species of the World, 3rd Edition</li>
+<li>TPL: The Plant List</li>
+<li>BOLD: Barcode of Life</li>
+<li>NATSERV: Natureserve</li>
+<li>TROPICOS: Tropicos plant database</li>
+<li>WORMS: World Register of Marine Species</li>
+</ul>
+
+</body>
+
+</html>

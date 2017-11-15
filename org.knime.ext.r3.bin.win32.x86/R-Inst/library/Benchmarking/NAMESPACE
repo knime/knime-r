@@ -1,0 +1,76 @@
+# $Id: NAMESPACE 153 2015-07-07 14:01:23Z b002961 $
+export(dea, sdea,   # efficiency, eff,
+excess, eladder, eladder.plot,
+dea.dual,
+dea.direct, dea.boot, boot.fear, 
+#  dea.mat, dea.dual.mat,
+dea.add,
+# print.Farrell, summary.Farrell,
+slack, # print.slack, summary.slack,
+lambda,
+peers, get.number.peers, get.which.peers,
+# print.peers, 
+lambda.print, 
+dea.plot, dea.plot.frontier, dea.plot.isoquant, dea.plot.transform,
+cost.opt, print.cost.opt, summary.cost.opt,
+revenue.opt, print.revenue.opt, summary.revenue.opt,
+profit.opt, print.profit.opt, summary.profit.opt,
+dea.merge, make.merge,
+sfa,  # print.sfa, summary.sfa, residuals.sfa, logLik.sfa, coef.sfa, 
+te.sfa, 
+# te1.sfa, te2.sfa, 
+te.add.sfa, sigma2u.sfa, sigma2v.sfa, sigma2.sfa,
+teJ.sfa, teBC.sfa, teMode.sfa,
+lambda.sfa,
+critValue, typeIerror,
+outlier.ap, outlier.ap.plot,
+eff.dens, eff.dens.plot,
+mea, mea.lines
+)
+
+S3method("print", "Farrell")
+S3method("summary", "Farrell")
+
+S3method("print", "slack")
+S3method("summary", "slack")
+
+S3method("print", "cost.opt")
+S3method("summary", "cost.opt")
+S3method("print", "profit.opt")
+S3method("summary", "profit.opt")
+S3method("print", "revenue.opt")
+S3method("summary", "revenue.opt")
+
+
+S3method("print", "sfa")
+S3method("summary", "sfa")
+S3method("residuals", "sfa")
+S3method("logLik", "sfa")
+S3method("coef", "sfa")
+
+export( "eff" )
+export( "efficiencies" )
+S3method( "efficiencies", "default" )
+S3method( "eff", "Farrell" )
+S3method( "eff", "sfa" )
+S3method( "eff.add", "sfa" )
+S3method( "efficiencies", "Farrell" )
+S3method( "efficiencies", "sfa" )
+
+S3method( "coef", "sfa" )
+S3method( "logLik", "sfa" )
+S3method( "print", "sfa" )
+S3method( "residuals", "sfa" )
+S3method( "fitted", "sfa" )
+S3method( "summary", "sfa" )
+# S3method( "print", "summary.sfa" )
+S3method( "vcov", "sfa" )
+
+
+# importFrom(FEAR,boot.sw98)
+import(lpSolveAPI)
+importFrom(ucminf, ucminf)
+importFrom(stats, IQR, coef, complete.cases, density, dnorm, lm, na.omit, pnorm, pt, quantile, residuals, rnorm, sd, uniroot, var) 
+importFrom(graphics, abline, arrows, axis, box, grid, hist, lines, mtext, par, plot, points, segments, text)
+importFrom(grDevices, chull)
+importFrom(methods, is)

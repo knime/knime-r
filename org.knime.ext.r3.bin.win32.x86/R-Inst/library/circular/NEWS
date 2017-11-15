@@ -1,0 +1,117 @@
+Library circular
+=================
+Version 0.4-91
+Fixed a bug in heatmap.circular
+
+Version 0.4-8 2014/08/08
+minusPiPlusPi now accepts missing values
+Added the start.sep argument to plot.circular and points.circular. Also the internal function PointsCircularRad has changed the API.
+
+Version 0.4-6 2013/10/30
+Added function dasytriangular for the density of asymmetric triangular distribution as described in Mardia (1972)
+In this version two functions are available for evaluating the median (medianCircular which allows for the dispersion parameter and median.circular with only the median reported), however medianCircular is deprecated and it will be removed in the next releases. 
+Added mean.circular.c to calculate the circular mean in C language.
+New algorithm for circular median. The implementation is in C language.
+Added function for Hodges Lehmann estimate of the median for circular and non circular data.
+Several bugs fixed.
+
+Version 0.4-3 2011/07/18
+Fixed a bug in c.circular function.
+New functions: watson.williams.test, wallraff.test.
+Add a summary introduction to the package.
+Add citation information.
+Fixed the behaviour of axis.circular for template 'clock12' and 'clock24'.
+Fixed windrose and plot.density.circular for template 'clock12' and 'clock24'.
+Function range.circular use lgamma(x) instead of log(gamma(x)).
+Fixed a bug in density.circular. Now the arguments K and min.k are passed to the internal function.
+Added functions bw.cv.mse.circular and bw.cv.ml.circular for bandwidth selection using crossvalidation and mse or ml.
+Added functions sd.default, sd.data.frame, sd.circular (with sd method), angular.variance and angular.deviation. 
+Added pmixedvonmises function. Now *mixedvonmises functions use argument prop instead of p.
+Added function quantile.circular
+
+Version 0.4-2 2011/03/15
+Fixed a bug in rose.diag function. Now the rose.diag function has two new parameters: sub and control.circle
+
+Version 0.4-1 2011/02/02
+New functions:
+dgenvonmises, Density for the Generalized von Mises circular distribution. 
+djonespewsey, Density for the Jones and Pewsey circular distribution.
+dkatojones, Density for the Kato and Jones distribution
+dcarthwrite, Density for the Carthwrite's power-of-cosine distribution
+Fixed a bug in density.circular
+rose.diag function has new parameters and better control of the colors. Now it use polygon instead of lines.default and it draws edges of sectors as arcs. 
+Fixed bug on qvonmises and its documentation
+Fixed bug on qwrappednormal
+Fixed bug on arrows.circular
+Now range.circular do not retain the rotation attributes. Always return a counter rotation angle.
+
+Version 0.4, 2010/08/01
+Refixed range.circular
+
+Version 0.3-9, 2010/07/31
+Fixed bug #729 on watson.two.test function.
+Fixed bug #69 small bug in rose.diag of R package "circular", 0.3-8 and the same problem in the points.circular and plot.circular
+Fixed bug #104	bug in rvonmises, 0.3-8. Now, when kappa is zero, random deviates are generated according to the Circular Uniform Distribution
+Use patches #193 to fix for plotting many arrows with one call to arrows.circular()
+Add the argument control.circle to pass parameters to the internal function that draws the circle in plot.circular, curve.circular, plot.circular.function, plot.density.circular. A function, circle.control, is introduced to set those parameters. This is used instead of the proposed patches #194	The CirclePlotRad() function can accept "..." but it isn't currently passed.
+Add the argument sub, and change the default of main to NULL in the above functions.
+Internal functions PointsCircularRad and RosediagRad use the hist function to construct intervals in stack=TRUE.
+Add units "hours" for data expressed in hours (minutes and seconds must be expressed in decimals).
+Add template "clock12" and "clock24" to plot data which are time. 
+Add dist.circular function.
+Add heatmap.circular function.
+Add medianCircular function.
+Add offset argument to the lines.circular, lines.density.circular, plot.density.circular functions.
+Add shrink argument to the lines.circular function.
+Function lines.circular return x and y in the invisible object.
+Fixed the name of the help page for the circular function.
+
+
+Version 0.3-8, 2007/08/15
+Now unique.circular calls unique.default instead of the internal function. print.rao.spacing.test loads locally the dataset rao.table
+
+Version 0.3-7, 2007/08/13
+Fix a problem in the api of unique.circular function, fix the documentation of summary.circular and [.circular.
+
+Version 0.3-6, 2006/08/28
+Changed long declaration into int in circular/src/rvonmises.c file
+
+Version 0.3-5, 2006/08/10
+Rewrite most of the functions. Add functions c.circular, unique.circular, curve.circular, plot.function.circular, lines.circular. Add arguments to conversion.circular and change its behavior. Add pwrappednormal, qwrappednormal (experimental versions). Add new features to r,d,p,q functions (now mu must be specifies using a circular object)
+Almost all the functions use control.circular argument in order to specify the attribute of the resulting object. The rvonmises function uses a C code from Harry Southworth.
+
+Version 0.3-4, 2006/02/13
+Add an argument to windrose, rewrite small part of it. Fix typos in kuiper.test.Rd, extract.Rd and lm.circular.Rd. Now, var.default definition in var.circular.R point to stats::var and not to base::var 
+
+Version 0.3-3, 2005/12/06
+Add NAMESPACE file. Functions now use atan2 instead of atan when two arguments. summary.circular is fixed.
+
+Version 0.3-2, 2005/05/05
+Remove direct call to x11() in man pages.
+
+Version 0.3-1, 2005/05/05
+Remove the alias density and density.default and the corresponding documentation. Fix a problem in the documentation of lsfit.circle. Change MSE and SSE to MS and SS in aov.circular
+
+Version 0.3, 2005/04/27
+All the functions handle NA values. Most of them by removing NA (without ask). When more than one variable is needed only complete cases are considered.
+
+Added functions: aov.circular, equal.kappa.test, lsfit.circle
+
+Modified the function lm.circular so that now circular-circular and circular-linear regression are available
+
+Version 0.2, 2004/12/25 Added function windrose
+
+Version 0.1, 2004/05/24 Released the version
+
+Version 0.1, 2003/12/23 Pre-released version of the circular package
+Fixed a consistency for range.circular function
+
+Version 0.1, 2003/12/03
+Pre-released version of the circular package build on the R port of CircStats.
+
+Claudio Agostinelli
+Department of Statistics
+University Ca' Foscari of Venice
+Italy
+http://www.dst.unive.it/~claudio
+<claudio@unive.it>

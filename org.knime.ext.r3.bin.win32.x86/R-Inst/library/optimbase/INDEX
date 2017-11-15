@@ -1,0 +1,30 @@
+assert.classboolean     Check of Variable Class
+ones                    Matrix of zeros or ones.
+optimbase               S3 optimbase classes
+optimbase-package       R port of the Scilab optimbase module
+optimbase.checkbounds   Check bounds.
+optimbase.checkcostfun
+                        Check Cost Function
+optimbase.checkshape    Check the Dimensions of the Cost Function
+                        Output
+optimbase.checkx0       Check Consistency of Initial Guesses
+optimbase.destroy       Erase an optimization history.
+optimbase.function      Call Cost Function
+optimbase.get           Get the value for the given element
+optimbase.gridsearch    Grid evaluation of a constrained or
+                        unconstrained cost function
+optimbase.hasbounds     Query for Bounds and Constraints
+optimbase.incriter      Iteration Log Incrementation
+optimbase.isfeasible    Check Point Estimate
+optimbase.isinbounds    Point Estimate Comparison with Bounds and
+                        Constraints
+optimbase.logstartup    Optimbase Log functions
+optimbase.outputcmd     Call user-defined output function
+optimbase.outstruct     Create Basic Optimization Data Object
+optimbase.proj2bnds     Projection of Point Estimate to Bounds
+optimbase.set           Optimization Object Configuration
+optimbase.terminate     Evaluation of Termation Status
+size                    Vector, Matrix or Data.Frame Size
+strvec                  Auto-collapse of Vectors
+transpose               Vector and Matrix Transpose
+vec2matrix              Vector to Matrix Conversion

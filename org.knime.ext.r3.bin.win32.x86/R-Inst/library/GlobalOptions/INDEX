@@ -1,0 +1,4 @@
+$.GlobalOptionsFun      Get option value by dollar symbol
+$<-.GlobalOptionsFun    Set option value by dollar symbol
+setGlobalOptions        Produce a function which can get or set global
+                        options

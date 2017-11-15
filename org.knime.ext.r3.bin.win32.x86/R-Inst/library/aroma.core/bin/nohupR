@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+######################################################################
+# Created by: Henrik Bengtsson
+# Last updated: 2010-05-26
+######################################################################
+
+pathname=$1
+args="$2 $3 $4 $5 $6 $7 $8 $9"
+
+if test "$2" == "" -o "$2" == "--help" -o "$2" == "-h"; then
+  grep "^## " ${pathname} | sed 's/^## //g'
+else
+tags=""
+
+Rver=R
+
+filename=${pathname/*\//}
+fullname=${filename/.Rex/}
+fullname=${fullname/.R/}
+hostTag=${HOSTNAME/.*/}
+dateTag=`date +%Y%m%d-%H%M%S`
+echo fullname=${fullname}
+if test "${tags}" == ""; then
+  tags="${hostTag},${dateTag}"
+fi
+logfile=${fullname},${tags}.log
+
+echo "R       : ${Rver}"
+echo "R script: ${filename}"
+echo "Fullname: ${fullname}"
+echo "Tags    : ${tags}"
+echo "Args    : ${args}"
+echo "Host    : ${hostTag}"
+echo "Date    : ${dateTag}"
+echo "Log file: ${logfile}"
+echo "Command : nohup ${Rver} --no-save --args ${args} < ${pathname} > ${logfile}"
+
+echo "R version: "
+${Rver} --version
+
+nohup ${Rver} --no-save --args ${args} < ${pathname} > ${logfile}
+fi

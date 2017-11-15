@@ -1,0 +1,209 @@
+AAstat                  To Get Some Protein Statistics
+AnoukResult             Expected numeric results for Ka and Ks
+                        computation
+ECH                     Forensic Genetic Profile Allelic Ladder Raw
+                        Data
+EXP                     Vectors of coefficients to compute linear
+                        forms.
+GC                      Calculates the fractional G+C content of
+                        nucleic acid sequences.
+JLO                     Forensic Genetic Profile Raw Data
+SEQINR.UTIL             utility data for seqinr
+SeqAcnucWeb             Sequence coming from a remote ACNUC data base
+SeqFastaAA              AA sequence in Fasta Format
+SeqFastadna             Class for DNA sequence in Fasta Format
+SeqFrag                 Class for sub-sequences
+a                       Converts amino-acid three-letter code into the
+                        one-letter one
+aaa                     Converts amino-acid one-letter code into the
+                        three-letter one
+aacost                  Aerobic cost of amino-acids in Escherichia coli
+                        and G+C classes
+aaindex                 List of 544 physicochemical and biological
+                        properties for the 20 amino-acids
+acnucopen               open and close a remote access to an ACNUC
+                        database
+al2bp                   To Convert a forensic microsatellite allele
+                        name into its length in base pairs
+alllistranks            To get the count of existing lists and all
+                        their ranks on server
+amb                     Expansion of IUPAC nucleotide symbols
+as.alignment            Constructor for class alignment
+as.matrix.alignment     as.matrix.alignment
+autosocket              Returns a socket to the last opened database
+baselineabif            Estimation of baseline value
+bma                     Computing an IUPAC nucleotide symbol
+c2s                     conversion of a vector of chars into a string
+cai                     Codon Adaptation Index
+caitab                  Codon Adaptation Index (CAI) w tables
+chargaff                Base composition in ssDNA for 7 bacterial DNA
+choosebank              To select a database structured under ACNUC and
+                        located on the web
+circle                  Draws a circle
+closebank               To close a remote ACNUC database
+clustal                 Example of results obtained after a call to
+                        read.alignment
+col2alpha               To use a standard color with an alpha
+                        transparency chanel
+comp                    complements a nucleic acid sequence
+computePI               To Compute the Theoretical Isoelectric Point
+consensus               Consensus and profiles for sequence alignments
+count                   Composition of dimer/trimer/etc oligomers
+countfreelists          The number of free lists available and
+                        annotation lines in an ACNUC server
+countsubseqs            Number of subsequences in an ACNUC list
+crelistfromclientdata   To create on server an ACNUC list from data
+                        lines sent by client
+dia.bactgensize         Distribution of bacterial genome size from GOLD
+dinucl                  Mean zscore on 242 complete bacterial
+                        chromosomes
+dist.alignment          Pairwise Distances from Aligned Protein or
+                        DNA/RNA Sequences
+dotPlot                 Dot Plot Comparison of two sequences
+dotchart.uco            Cleveland plot for codon usage tables
+draw.oriloc             Graphical representation for nucleotide skews
+                        in prokaryotic chromosomes.
+draw.rearranged.oriloc
+                        Graphical representation for rearranged
+                        nucleotide skews in prokaryotic chromosomes.
+draw.recstat            Graphical representation of a recstat analysis.
+ec999                   999 coding sequences from E. coli
+extract.breakpoints     Extraction of breakpoint positions on the
+                        rearranged nucleotide skews.
+extractseqs             To extract the sequences information of a
+                        sequence or a list of sequence in different
+                        formats
+fasta                   Example of results obtained after a call to
+                        read.alignment
+fastacc                 Fast Allele in Common Count
+gb2fasta                Conversion of GenBank file into fasta file
+gbk2g2                  Conversion of a GenBank format file into a
+                        glimmer-like one
+gbk2g2.euk              Conversion of a GenBank format file into a
+                        glimmer-like one. Eukaryotic version.
+gcO2                    GC content and aerobiosis in bacteria
+gcT                     GC content and temperature in bacteria
+get.db.growth           Get the exponential growth of nucleic acid
+                        database content
+get.ncbi                Bacterial complete genome data from ncbi ftp
+                        site
+getAnnot                Generic Function to get sequence annotations
+getFrag                 Generic function to extract sequence fragments
+getKeyword              Generic function to get keywords associated to
+                        sequences
+getLength               Generic function to get the length of sequences
+getLocation             Generic function to get the location of
+                        subsequences on the parent sequence
+getName                 Generic function to get the names of sequences
+getSequence             Generic function to get sequence data
+getTrans                Generic function to translate coding sequences
+                        into proteins
+getType                 To get available subsequence types in an opened
+                        ACNUC database
+getlistrank             To get the rank of a list from its name
+getliststate            Asks for information about an ACNUC list of
+                        specified rank
+gfrag                   Extract sequence identified by name or by
+                        number from an ACNUC server
+ghelp                   Get help from an ACNUC server
+gs500liz                GS500LIZ size standards
+identifiler             Identifiler allele names
+isenum                  Get the ACNUC number of a sequence from its
+                        name or accession number
+kaks                    Ka and Ks, also known as dn and ds, computation
+kaksTorture             Expected numeric results for Ka and Ks in
+                        extreme cases
+knowndbs                Description of databases known by an ACNUC
+                        server
+lseqinr                 To see what's inside the package seqinr
+m16j                    Fragment of the E. coli chromosome
+mase                    Example of results obtained after a call to
+                        read.alignment
+modifylist              Modification of an ACNUC list
+move                    Rename an R object
+msf                     Example of results obtained after a call to
+                        read.alignment
+n2s                     function to convert the numeric encoding of a
+                        DNA sequence into a vector of characters
+oriloc                  Prediction of origin and terminus of
+                        replication in bacteria.
+pK                      pK values for the side chain of charged amino
+                        acids from various sources
+parser.socket           Utility function to parse answers from an ACNUC
+                        server
+peakabif                Extraction of Peak locations, Heights and
+                        Surfaces from ABIF data
+permutation             Sequence permutation according to several
+                        different models
+phylip                  Example of results obtained after a call to
+                        read.alignment
+plot.SeqAcnucWeb        To Plot Subsequences on the Parent Sequence
+plotPanels              Representation of Amplicon Size Ranges of a STR
+                        kit.
+plotabif                Electrophoregram plot for ABIF data
+plotladder              Simple plot of an allelic ladder from ABIF data
+pmw                     Protein Molecular Weight
+prepgetannots           Select annotation lines in an ACNUC database
+prettyseq               Text representation of a sequence from an ACNUC
+                        server
+print.SeqAcnucWeb       Print method for objects from class SeqAcnucWeb
+print.qaw               Print method for objects from class qaw
+prochlo                 Zscore on three strains of Prochlorococcus
+                        marinus
+query                   To get a list of sequence names from an ACNUC
+                        data base located on the web
+read.abif               Read ABIF formatted files
+read.alignment          Read aligned sequence files in mase, clustal,
+                        phylip, fasta or msf format
+read.fasta              read FASTA formatted files
+readBins                Import GenMapper Bins configuration file
+readPanels              Import GenMapper Panels configuration file
+readfirstrec            Low level function to get the record count of
+                        the specified ACNUC index file
+readsmj                 Low level function to read ACNUC SMJYT index
+                        files
+rearranged.oriloc       Detection of replication-associated effects on
+                        base composition asymmetry in prokaryotic
+                        chromosomes.
+recstat                 Prediction of Coding DNA Sequences.
+residuecount            Total number of residues in an ACNUC list
+revaligntest            Three aligned nucleic acid sequences
+reverse.align           Reverse alignment - from protein sequence
+                        alignment to nucleic sequence alignment
+rho                     Statistical over- and under- representation of
+                        dinucleotides in a sequence
+rot13                   Ergheaf gur EBG-13 pvcurevat bs n fgevat
+s2c                     conversion of a string into a vector of chars
+s2n                     simple numerical encoding of a DNA sequence.
+savelist                Save sequence names or accession numbers into a
+                        file
+seqinr-package          Biological Sequences Retrieval and Analysis
+setlistname             Sets the name of an ACNUC list identified by
+                        its rank
+splitseq                split a sequence into sub-sequences
+stresc                  Utility function to escape LaTeX special
+                        characters present in a string
+stutterabif             Stutter ratio estimation
+swap                    Exchange two R objects
+syncodons               Synonymous codons
+synsequence             Random synonymous coding sequence generation
+tablecode               to plot genetic code as in textbooks
+test.co.recstat         Tests if regions located between Stop codons
+                        contain putative CDSs.
+test.li.recstat         Tests if regions located between Stop codons
+                        contain putative CDSs.
+toyaa                   A toy example of amino-acid counts in three
+                        proteins
+toycodon                A toy example of codon counts in three coding
+                        sequences
+translate               Translate nucleic acid sequences into proteins
+trimSpace               Trim leading and/or trailing spaces in strings
+uco                     Codon usage indices
+ucoweight               Weight of each synonymous codon
+waterabs                Light absorption by the water column
+where.is.this.acc       Scans databases for a given sequence accession
+                        number
+words                   To get all words from an alphabet.
+words.pos               Positions of possibly degenerated motifs within
+                        sequences
+write.fasta             Write sequence(s) into a file in fasta format

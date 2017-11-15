@@ -1,0 +1,39 @@
+Planned changes in next versions:
+
+* combine function that allows parallel computation
+* more refactoring to reduce the memory footprint (store indices instead subsets)
+* stratified sampling when creating row partitions to avoid problems when too many row partitions
+* check for constants in subsets
+
+---------------------------------------------------------------
+Change log:
+* Version 0.3.0: Sep 2015
+-added predict.all parameter
+-fixed a bug related to the filter parameter
+
+* Version 0.2.2: May 2015
+-improved oversampling in balanced cases
+-automatically remove constants and/ or near constants (filter parameter)
+
+* Version 0.2.1: May 2015
+-stratified sampling when making training and test set
+-parameter for oversampling to avoid problems related to subsetting
+-added oversampling
+
+* Version 0.2.0: March 2014
+-fix print when loading package
+-allow parameters for genetic algorithm and random forest
+-Refactoring: improved code readability and reduced complexity to improve maintainability
+-switched to roxygen for documentation
+-replaced package ROCR with AUC for faster evaluation of objective function
+-updated reference
+
+* Version 0.1.2: May 2013
+-Fixed a bug that could occur in very rare cases
+
+* Version 0.1.1: February 2013
+-Fixed a bug that occured for data frames with only numeric features
+
+* Version 0.1.0: November 2012
+-Package submitted to CRAN with two functions: kernelFactory and predict.kernelFactory
+

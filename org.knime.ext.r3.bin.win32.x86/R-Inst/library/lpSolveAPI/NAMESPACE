@@ -1,0 +1,79 @@
+useDynLib(lpSolveAPI, .registration = TRUE)
+
+importFrom("grDevices", "chull")
+
+importFrom("graphics", "arrows",
+                       "par",
+                       "plot",
+                       "polygon",
+                       "segments",
+                       "text")
+
+export(
+  "add.column",
+  "add.constraint",
+  "add.SOS",
+  "delete.column",
+  "delete.constraint",
+  "delete.lp",
+  "dim.lpExtPtr",
+  "dim<-.lpExtPtr",
+  "dimnames.lpExtPtr",
+  "dimnames<-.lpExtPtr",
+  "get.basis",
+  "get.bounds",
+  "get.branch.mode",
+  "get.column",
+  "get.constr.type",
+  "get.constr.value",
+  "get.constraints",
+  "get.dual.solution",
+  "get.kind",
+  "get.mat",
+  "get.objective",
+  "get.primal.solution",
+  "get.rhs",
+  "get.sensitivity.obj",
+  "get.sensitivity.objex",
+  "get.sensitivity.rhs",
+  "get.solutioncount",
+  "get.total.iter",
+  "get.total.nodes",
+  "get.type",
+  "get.variables",
+  "guess.basis",
+  "lp.control",
+  "make.lp",
+  "name.lp",
+  "plot.lpExtPtr",
+  "print.lpExtPtr",
+  "read.lp",
+  "resize.lp",
+  "row.add.mode",
+  "select.solution",
+  "set.basis",
+  "set.bounds",
+  "set.branch.mode",
+  "set.branch.weights",
+  "set.column",
+  "set.constr.type",
+  "set.constr.value",
+  "set.mat",
+  "set.objfn",
+  "set.rhs",
+  "set.row",
+  "set.semicont",
+  "set.type",
+  "solve.lpExtPtr",
+  "write.lp"
+)
+
+S3method("print", "lpExtPtr")
+S3method("plot", "lpExtPtr")
+S3method("dim", "lpExtPtr")
+S3method("dim<-", "lpExtPtr")
+S3method("dimnames", "lpExtPtr")
+S3method("dimnames<-", "lpExtPtr")
+S3method("solve", "lpExtPtr")
+
+

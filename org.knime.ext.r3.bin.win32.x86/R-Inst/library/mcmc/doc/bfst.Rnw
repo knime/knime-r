@@ -1,0 +1,804 @@
+
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{indentfirst}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+
+\newcommand{\real}{\mathbb{R}}
+
+\DeclareMathOperator{\prior}{pri}
+\DeclareMathOperator{\posterior}{post}
+\DeclareMathOperator{\indicator}{ind}
+
+\newcommand{\fatdot}{\,\cdot\,}
+
+% \VignetteIndexEntry{Bayes Factors via Serial Tempering}
+
+\begin{document}
+
+\title{Bayes Factors via Serial Tempering}
+\author{Charles J. Geyer}
+\maketitle
+
+<<foo,include=FALSE,echo=FALSE>>=
+options(keep.source = TRUE, width = 65)
+@
+
+\section{Introduction}
+
+\subsection{Bayes Factors} \label{sec:bayes-factors}
+
+Let $\mathcal{M}$ be a finite or countable set of models (here we only
+deal with finite $\mathcal{M}$ but Bayes factors make sense for countable
+$\mathcal{M}$).  For each model
+$m \in \mathcal{M}$ we have the prior probability of the model $\prior(m)$.
+It does not matter if this prior on models is unnormalized.
+
+Each model $m$ has a parameter space $\Theta_m$ and a prior
+$$
+   g(\theta \mid m), \qquad \theta \in \Theta_m
+$$
+The spaces $\Theta_m$ can and usually do have different dimensions.  That's
+the point.  These within model priors must be normalized proper priors.
+The calculations to follow make no sense if these priors are unnormalized
+or improper.
+
+Each model $m$ has a data distribution
+$$
+   f(y \mid \theta, m)
+$$
+and the observed data $y$ may be either discrete or continuous
+(it makes no difference to
+the Bayesian who treats $y$ as fixed after it is observed and treats
+only $\theta$ and $m$ as random).
+
+The unnormalized posterior for everything
+(for models and parameters within models)
+is
+$$
+   f(y \mid \theta, m) g(\theta \mid m) \prior(m)
+$$
+To obtain the conditional distribution of $y$ given $m$, we must integrate
+out the nuisance parameter $\theta$
+\begin{align*}
+   q(y \mid m)
+   & =
+   \int_{\Theta_m} f(y \mid \theta, m) g(\theta \mid m) \prior(m) \, d \theta
+   \\
+   & =
+   \prior(m) \int_{\Theta_m} f(y \mid \theta, m) g(\theta \mid m) \, d \theta
+\end{align*}
+These are the unnormalized posterior probabilities of the models.  The
+normalized posterior probabilities are
+$$
+   \posterior(m \mid y)
+   =
+   \frac{ q(y \mid m) }{ \sum_{m \in \mathcal{M}} q(y \mid m) }
+$$
+
+It is considered useful to define
+$$
+   b(y \mid m)
+   =
+   \int_{\Theta_m} f(y \mid \theta, m) g(\theta \mid m) \, d \theta
+$$
+so
+$$
+   q(y \mid m) = b(y \mid m) \prior(m)
+$$
+Then the ratio of posterior probabilities of models $m_1$ and $m_2$ is
+$$
+   \frac{\posterior(m_1 \mid y)}{\posterior(m_2 \mid y)}
+   =
+   \frac{q(y \mid m_1)}{q(y \mid m_2)}
+   =
+   \frac{b(y \mid m_1)}{b(y \mid m_2)}
+   \cdot
+   \frac{\prior(m_1)}{\prior(m_2)}
+$$
+This ratio is called the \emph{posterior odds} of the models (a ratio of
+probabilities is called an \emph{odds}) of these models.
+
+The \emph{prior odds} is
+$$
+   \frac{\prior(m_1)}{\prior(m_2)}
+$$
+
+The term we have not yet named in
+$$
+   \frac{\posterior(m_1 \mid y)}{\posterior(m_2 \mid y)}
+   =
+   \frac{b(y \mid m_1)}{b(y \mid m_2)}
+   \cdot
+   \frac{\prior(m_1)}{\prior(m_2)}
+$$
+is called the \emph{Bayes factor}
+\begin{equation} \label{eq:factor}
+   \frac{b(y \mid m_1)}{b(y \mid m_2)}
+\end{equation}
+the ratio of posterior odds to prior odds.
+
+The prior odds tells how the prior compares the probability of the models.
+The Bayes factor tells us how the data shifts that comparison going from
+prior to posterior via Bayes rule.
+Bayes factors are the primary tool Bayesians use for model comparison,
+the competitor for frequentist $P$-values in frequentist hypothesis
+tests of model comparison.
+
+Note that our clumsy multiple letter notation for priors and posteriors
+$\prior(m)$ and $\posterior(m \mid y)$ does not matter because neither
+is involved in the actual calculation of Bayes factors \eqref{eq:factor}.
+Priors and posteriors are involved in motivating Bayes factors but not in
+calculating them.
+
+\subsection{Tempering} \label{sec:temper}
+
+Simulated tempering \citep{marinari-parisi,geyer-thompson} is a method of
+Markov chain Monte Carlo (MCMC) simulation of many distributions at once.
+It was originally invented with the primary aim of speeding up MCMC
+convergence, but was also recognized to be useful for sampling multiple
+distributions \citep{geyer-thompson}.  In the latter role it is sometimes
+referred to as ``umbrella sampling'' which is a term coined
+by \citet{torrie-valleau} for sampling multiple distributions via MCMC.
+
+We have a finite set of unnormalized distributions we want to sample,
+all related in some way.  The R function \texttt{temper}
+in the CRAN package \texttt{mcmc}
+requires all to have continuous distributions for random vectors of the same
+dimension (all distributions have the same domain $\real^p$).
+Let $h_i$, $i \in \mathcal{I}$ denote the unnormalized densities of
+these distributions.  Simulated tempering (called ``serial tempering'' by
+the \texttt{temper} function to distinguish from a related scheme not used
+in this document called ``parallel tempering'' and in either case abbreviated
+ST) runs a Markov chain whose
+state is a pair $(i, x)$ where $i \in \mathcal{I}$ and $x \in \real^p$.
+
+The unnormalized density of stationary distribution of the ST chain is
+\begin{equation} \label{eq:st-joint}
+   h(i, x) = h_i(x) c_i
+\end{equation}
+where the $c_i$ are arbitrary constants chosen by the user (more on this later).
+
+The equilibrium distribution of the ST state $(I, X)$ --- both bits random ---
+is such that conditional distribution of $X$ given $I = i$ is the distribution
+with unnormalized density $h_i$.  This is obvious from $h(i, x)$ being the
+unnormalized conditional density --- the same function thought of as
+a function of both variables is the unnormalized joint density and thought
+of as a function of just one of the variables is an unnormalized conditional
+density --- and $h(i, x)$ thought of as a function of $x$ for fixed $i$ being
+proportional to $h_i$.  The equilibrium unnormalized marginal distribution
+of $I$ is
+\begin{equation} \label{eq:margin}
+   \int h(i, x) \, d x = c_i \int h_i(x) \, d x = c_i d_i
+\end{equation}
+where
+$$
+   d_i = \int h_i(x) \, d x
+$$
+is the normalizing constant for $h_i$, that is, $h_i / d_i$ is a normalized
+distribution.
+
+It is clear from \eqref{eq:margin} being the unnormalized marginal distribution
+that in order for the marginal distribution to be uniform we must choose the
+tuning constants $c_i$ to be proportional to $1 / d_i$.  It is not important
+that the marginal distribution be exactly uniform, but unless it is
+approximately uniform, the sampler will not visit each distribution frequently.
+Thus we do need to have the $c_i$ to be approximately proportional to $1 / d_i$.
+This is accomplished by trial and
+error (one example is done in this document) and is easy for easy problems
+and hard for hard problems \citep[have much to say about adjusting
+the $c_i$]{geyer-thompson}.  For the rest of this section we will assume
+the tuning constants $c_i$ have been so adjusted:
+we do not have the $c_i$ exactly proportional to $1 / d_i$ but do have
+them approximately proportional to $1 / d_i$.
+
+\subsection{Tempering and Bayes Factors}
+
+Bayes factors are very important in Bayesian inference and many methods have
+been invented to calculate them.  No method except the one described here
+using ST is anywhere near as accurate and straightforward.  Thus no competitors
+will be discussed.
+
+In using ST for Bayes factors we identify the index set $\mathcal{I}$ with
+the model set $\mathcal{M}$ and use the integers 1, $\ldots$, $k$ for both.
+We would like to identify the within model parameter vector $\theta$ with
+the vector $x$ that is the continuous part of the state of the ST Markov
+chain, but cannot because the dimension of $\theta$ depends on $m$ and this
+is not allowed.  Thus we have to do something a bit more complicated.  We
+``pad'' $\theta$ so that it always has the same dimension, doing so in
+a way that does not interfere with the Bayes factor calculation.  Write
+$\theta = (\theta_{\text{actual}}, \theta_{\text{pad}})$, the dimension
+of both parts depending on the model $m$.  Then we insist on the following
+conditions:
+$$
+   f(y \mid \theta, m) = f(y \mid \theta_{\text{actual}}, m)
+$$
+so the data distribution does not depend on the ``padding'' and
+$$
+   g(\theta \mid m) = g_{\text{actual}}(\theta_{\text{actual}} \mid m)
+   \cdot g_{\text{pad}}(\theta_{\text{pad}} \mid m)
+$$
+so the two parts are \emph{a priori} independent and both parts of the prior
+are normalized proper priors.  This assures that
+\begin{equation} \label{eq:unnormalized-bayes-factors}
+\begin{split}
+   b(y \mid m)
+   & =
+   \int_{\Theta_m} f(y \mid \theta, m) g(\theta \mid m) \, d \theta
+   \\
+   & =
+   \iint f(y \mid \theta_{\text{actual}}, m)
+   g_{\text{actual}}(\theta_{\text{actual}} \mid m)
+   g_{\text{pad}}(\theta_{\text{pad}} \mid m)
+   \, d \theta_{\text{actual}}
+   \, d \theta_{\text{pad}}
+   \\
+   & =
+   \int_{\Theta_m} f(y \mid \theta_{\text{actual}}, m)
+   g_{\text{actual}}(\theta_{\text{actual}} \mid m)
+   \, d \theta_{\text{actual}}
+\end{split}
+\end{equation}
+so the calculation of the unnormalized Bayes factors is the same whether
+or not we ``pad'' $\theta$, and we may then take
+\begin{align*}
+   h_m(\theta)
+   & = 
+   f(y \mid \theta, m) g(\theta \mid m)
+   \\
+   & =
+   f(y \mid \theta_{\text{actual}}, m)
+   g_{\text{actual}}(\theta_{\text{actual}} \mid m)
+   g_{\text{pad}}(\theta_{\text{pad}} \mid m)
+\end{align*}
+to be the unnormalized densities for the component distributions of the ST
+chain, in which case the unnormalized Bayes factors are proportional to the
+normalizing constants $d_i$ in Section~\ref{sec:temper}.
+
+\subsection{Tempering and Normalizing Constants}
+
+Let $d$ be the normalizing constant for the joint equilibrium distribution
+of the ST chain \eqref{eq:st-joint}.  When we are running the ST chain we know
+neither $d$ nor the $d_i$ but we do know the $c_i$, which are constants we
+have chosen based on the results of previous runs but are fixed known numbers
+for the current run.  Let $(I_t, X_t)$, $t = 1$, 2, $\ldots$ be the sample
+path of the ST chain.  Recall that (somewhat annoyingly) we are using the
+notation $(i, x)$ for the state vector of a general ST chain and the notation
+$(m, \theta)$ for ST chains used to calculate Bayes factors, identifying
+$i = m$ and $x = \theta$.
+
+Let $\indicator(\fatdot)$ denote the function that maps logical values to
+numerical values, false to zero and true to one.  Normalizing constants are
+estimated by averaging the time spent in each model
+\begin{equation} \label{eq:st-estimates}
+   \hat{\delta}_n(m) = \frac{1}{n} \sum_{t = 1}^n \indicator(I_t = m)
+\end{equation}
+For the purposes of approximating Bayes factors the $X_t$ are ignored.
+The $X_t$ may be useful for other purposes, such as
+Bayesian model averaging \citep*{bma}, but this is not discussed here.
+
+The Monte Carlo approximations \eqref{eq:st-estimates} converge
+to their expected values under the equilibrium distribution
+\begin{equation} \label{eq:st-expectations}
+   E\{ \indicator(I_t = m) \}
+   =
+   \int \frac{h(m, x)}{d} \, d x
+   =
+   \frac{c_m d_m}{d}
+   =
+   \delta(m)
+\end{equation}
+We want to estimate the unnormalized Bayes factors
+\eqref{eq:unnormalized-bayes-factors}, which are in this context proportional
+to the $d_m$.  The $c_m$ are known, $d$ is unknown but does not matter since
+we only need to estimate the $d_m = b(m \mid y)$ up to an overall unknown
+constant of proportionality, which cancels out of Bayes factors
+\eqref{eq:factor}.
+
+Note that our discussion here applies unchanged to the general problem of
+estimating normalizing constants up to an unknown constant of proportionality,
+which has applications other than Bayes factors, for example, missing data
+maximum likelihood \citep{thompson-guo,geyer,sung-geyer}.
+The ST method approximates normalizing constants up to an overall constant of
+proportionality with high accuracy regardless of how large or small they are
+(whether they are $10^{100}$ or $10^{-100}$), and no other method that does
+not use essentially the same idea can do this.
+
+The key is what seems at first sight to be a weakness of ST, the need to
+adjust the tuning constants $c_i$ by trial and error.  In this context the
+weakness is actually a strength: the adjusted $c_i$ contain most of the
+information about the size of the normalizing constants $d_i$ and the
+Monte Carlo averages \eqref{eq:st-estimates} add only the finishing touch.
+Thus multiple runs of the ST chain with different choices of the $c_i$ used
+in each run are needed (the ``trial and error''), but the information from
+all are incorporated in the final run used for final approximation of the
+normalizing constants (Bayes factors).  It is perhaps surprising that the
+Monte Carlo error approximation is trivial.  In the context of the last run
+of the ST chain the $c_i$ are known constants and contribute no error.
+The Monte Carlo error of the averages \eqref{eq:st-estimates} is
+straightforwardly estimated by batch means or competing methods.
+
+\citet{geyer-thompson} note that the $c_i$ enter formally like a prior:
+one can think of $h_i(x) c_i$ as likelihood times prior.  But one should
+not think of the $c_i$ as representing prior information, informative,
+non-informative, or in between.  The $c_i$ are adjusted to make the ST
+distribution sample all the models $h_i$, and that is the only criterion
+for the adjustment.  For this reason \citet{geyer-thompson} call the
+$c_i$ the \emph{pseudoprior}.  This is a special case of a general principle
+of MCMC.  When doing MCMC one should forget the statistical motivation
+(in this case Bayes factors).  One should set up a Markov chain that does
+a good job of simulating the required equilibrium distribution, whatever
+it is.  Thinking about the statistical motivation of the equilibrium does
+not help and can hurt (if one thinks of the pseudoprior as an actual prior,
+one may be tempted to adjust it to represent prior information).
+
+\section{R Package MCMC}
+
+We use the R statistical computing environment \citep{rcore} in our analysis.
+It is free software and can be obtained from
+\url{http://cran.r-project.org}.  Precompiled binaries
+are available for Windows, Macintosh, and popular Linux distributions.
+We use the contributed package \verb@mcmc@ \citep{mcmc-R-package}
+If R has been installed, but this package has
+not yet been installed, do
+\begin{verbatim}
+install.packages("mcmc")
+\end{verbatim}
+from the R command line
+(or do the equivalent using the GUI menus if on Apple Macintosh
+or Microsoft Windows).  This may require root or administrator privileges.
+
+Assuming the \verb@mcmc@ package has been installed, we load it
+<<library>>=
+library(mcmc)
+@
+<<baz,include=FALSE,echo=FALSE>>=
+baz <- library(help = "mcmc")
+baz <- baz$info[[1]]
+baz <- baz[grep("Version", baz)]
+baz <- sub("^Version: *", "", baz)
+bazzer <- paste(R.version$major, R.version$minor, sep = ".")
+@
+The version of the package used to make this document
+is \Sexpr{baz} (which is available on CRAN).
+The version of R used to make this document is \Sexpr{bazzer}.
+
+We also set the random number generator seed so that the results are
+reproducible.
+<<set-seed>>=
+set.seed(42)
+@
+To get different results, change the setting or don't set the seed at all.
+
+\section{Logistic Regression Example}
+
+We use the same logistic regression example used in the \texttt{mcmc}
+package vignette for the \texttt{metrop} function (file \texttt{demo.pdf}.
+Simulated data for the problem are in the data set \verb@logit@.
+There are five variables in the data set, the response \verb@y@
+and four predictors, \verb@x1@, \verb@x2@, \verb@x3@, and \verb@x4@.
+
+A frequentist analysis for the problem is done by the following R statements
+<<frequentist>>=
+data(logit)
+out <- glm(y ~ x1 + x2 + x3 + x4, data = logit,
+    family = binomial, x = TRUE)
+summary(out)
+@
+
+But this example isn't about frequentist analysis, we want a Bayesian
+analysis.  For our Bayesian analysis we assume the same data model as the
+frequentist, and we assume the prior distribution of the five parameters
+(the regression coefficients) makes them independent and identically
+normally distributed with mean 0 and standard deviation 2.
+
+Moreover, we wish to calculate Bayes factors for the $16 = 2^4$ possible
+submodels that include or exclude each of the
+predictors, \verb@x1@, \verb@x2@, \verb@x3@, and \verb@x4@.
+
+\subsection{Setup}
+
+We set up a matrix that indicates these models.
+<<models>>=
+varnam <- names(coefficients(out))
+varnam <- varnam[varnam != "(Intercept)"]
+nvar <- length(varnam)
+
+models <- NULL
+foo <- seq(0, 2^nvar - 1) 
+for (i in 1:nvar) {
+    bar <- foo %/% 2^(i - 1)
+    bar <- bar %% 2
+    models <- cbind(bar, models, deparse.level = 0)
+}
+colnames(models) <- varnam
+models
+@
+In each row, 1 indicates the predictor is in the model and 0 indicates it is
+out.
+
+The function \texttt{temper} in the \text{mcmc} package that does tempering
+requires a notion of neighbors among models.  It attempts jumps only between
+neighboring models.  Here we choose models to be neighbors if they differ
+only by one predictor.
+<<neighbor>>=
+neighbors <- matrix(FALSE, nrow(models), nrow(models))
+for (i in 1:nrow(neighbors)) {
+    for (j in 1:ncol(neighbors)) {
+        foo <- models[i, ]
+        bar <- models[j, ]
+        if (sum(foo != bar) == 1) neighbors[i, j] <- TRUE
+    }
+}
+@
+
+Now we specify the equilibrium distribution of the ST chain.  Its state vector
+is $(i, x)$ or $(m, \theta)$ in our alternative notations, where $i$ is an
+integer between $1$ and \verb@nrow(models)@ = \Sexpr{nrow(models)} and
+$\theta$ is the parameter vector ``padded'' to always be the same length,
+so we take it to be the length of the parameter vector of the full model
+which is \verb@length(out$coefficients)@ or \verb@ncol(models) + 1@ which makes
+the length of the state of the ST chain \verb@ncol(models) + 2@.
+We take the within model priors for the ``padded'' components of the parameter
+vector to be the same as those for the ``actual'' components, normal with
+mean 0 and standard deviation 2 for all cases.
+As is seen in \eqref{eq:unnormalized-bayes-factors} the priors for the
+``padded'' components (parameters not in the model for the current state)
+do not matter because they drop out of the Bayes factor calculation.
+The choice does not matter much for this toy example.
+See the discussion section for more on this issue.
+It is important that we use normalized log priors,
+the term \verb@dnorm(beta, 0, 2, log = TRUE)@ in the function, unlike
+when we are simulating only one model as in the \texttt{mcmc} package vignette
+where it would be o.~k.\ to use unnormalized log priors \verb@- beta^2 / 8@.
+The \texttt{temper} function wants the log unnormalized density of the
+equilibrium distribution.
+We include an additional argument \texttt{log.pseudo.prior},
+which is $\log(c_i)$ in our mathematical development, because this changes
+from run to run as we adjust it by trial and error.  Other ``arguments''
+are the model matrix of the full model \texttt{modmat}, the matrix
+\texttt{models} relating integer indices (the first component of the state
+vector of the ST chain) to which predictors are in or out of the model,
+and the data vector \texttt{y}, but these are not passed as arguments to our
+function and instead are found in the R global environment.
+<<ludfun>>=
+modmat <- out$x
+y <- logit$y
+
+ludfun <- function(state, log.pseudo.prior) {
+    stopifnot(is.numeric(state))
+    stopifnot(length(state) == ncol(models) + 2)
+    icomp <- state[1]
+    stopifnot(icomp == as.integer(icomp))
+    stopifnot(1 <= icomp && icomp <= nrow(models))
+    stopifnot(is.numeric(log.pseudo.prior))
+    stopifnot(length(log.pseudo.prior) == nrow(models))
+    beta <- state[-1]
+    inies <- c(TRUE, as.logical(models[icomp, ]))
+    beta.logl <- beta
+    beta.logl[! inies] <- 0
+    eta <- as.numeric(modmat %*% beta.logl)
+    logp <- ifelse(eta < 0, eta - log1p(exp(eta)), - log1p(exp(- eta)))
+    logq <- ifelse(eta < 0, - log1p(exp(eta)), - eta - log1p(exp(- eta)))
+    logl <- sum(logp[y == 1]) + sum(logq[y == 0])
+    logl + sum(dnorm(beta, 0, 2, log = TRUE)) + log.pseudo.prior[icomp]
+}
+@
+
+\subsection{Trial and Error}
+
+Now we are ready to try it out.  We start in the full model at its MLE,
+and we initialize \texttt{log.pseudo.prior} at all zeros, having no idea
+\emph{a priori} what it should be.
+<<try1>>=
+state.initial <- c(nrow(models), out$coefficients)
+
+qux <- rep(0, nrow(models))
+
+out <- temper(ludfun, initial = state.initial, neighbors = neighbors,
+    nbatch = 1000, blen = 100, log.pseudo.prior = qux)
+
+names(out)
+out$time
+@
+So what happened?
+<<what>>=
+ibar <- colMeans(out$ibatch)
+ibar
+@
+The ST chain did not mix well, several models not being visited even once.
+So we adjust the pseudo priors to get uniform distribution.
+<<adjust>>=
+qux <- qux + pmin(log(max(ibar) / ibar), 10)
+qux <- qux - min(qux)
+qux
+@
+The new pseudoprior should be proportional to \verb@1 / ibar@ if \texttt{ibar}
+is an accurate estimate of \eqref{eq:st-expectations}, but this makes no sense
+when the estimates are bad, in particular, when the are exactly zero.  Thus
+we put an upper bound, chosen arbitrarily (here 10) on the maximum increase
+of the log pseudoprior.  The statement
+\begin{verbatim}
+qux <- qux - min(qux)
+\end{verbatim}
+is unnecessary.  An overall arbitrary constant can be added to
+the log pseudoprior without changing the equilibrium distribution of the
+ST chain.
+We do this only to make \texttt{qux} more comparable from
+run to run.
+
+Now we repeat this until the log pseudoprior ``converges'' roughly.
+Because this loop takes longer than CRAN vingettes are supposed to
+take, we save the results to a file
+and load the results from this file if it already exists.
+<<iterate>>=
+lout <- suppressWarnings(try(load("bfst1.rda"), silent = TRUE))
+if (inherits(lout, "try-error")) {
+    qux.save <- qux
+    time.save <- out$time
+    repeat{
+        out <- temper(out, log.pseudo.prior = qux)
+        ibar <- colMeans(out$ibatch)
+        qux <- qux + pmin(log(max(ibar) / ibar), 10)
+        qux <- qux - min(qux)
+        qux.save <- rbind(qux.save, qux, deparse.level = 0)
+        time.save <- rbind(time.save, out$time, deparse.level = 0)
+        if (max(ibar) / min(ibar) < 2) break
+    }
+    save(out, qux, qux.save, time.save, file = "bfst1.rda")
+} else {
+    .Random.seed <- out$final.seed
+}
+print(qux.save, digits = 3)
+print(qux, digits = 3)
+apply(time.save, 2, sum)
+@
+
+Now that the pseudoprior is adjusted well enough, we need to perhaps
+make other adjustments to get acceptance rates near 20\%.
+<<accept-i-x>>=
+print(out$accepti, digits = 3)
+print(out$acceptx, digits = 3)
+@
+The acceptance rates for swaps seem o. k.
+<<accept-i-min>>=
+min(as.vector(out$accepti), na.rm = TRUE)
+@
+and there is nothing simple we can do to adjust them (adjustment is possible,
+see the discussion section for more on this issue).  We adjust the
+acceptance rates for within model moves by adjusting the scaling.
+<<scale>>=
+out <- temper(out, scale = 0.5, log.pseudo.prior = qux)
+time.save <- rbind(time.save, out$time, deparse.level = 0)
+print(out$acceptx, digits = 3)
+@
+Looks o.~k.\ now.
+
+Inspection of autocorrelation functions for components
+of \verb@out$ibatch@ (not shown) says batch length needs to be at least
+4 times longer.  We make it 10 times longer for safety.
+
+Because this run takes longer than CRAN vingettes are supposed to
+take, we save the results to a file
+and load the results from this file if it already exists.
+<<try6>>=
+lout <- suppressWarnings(try(load("bfst2.rda"), silent = TRUE))
+if (inherits(lout, "try-error")) {
+    out <- temper(out, blen = 10 * out$blen, log.pseudo.prior = qux)
+    save(out, file = "bfst2.rda")
+} else {
+    .Random.seed <- out$final.seed
+}
+time.save <- rbind(time.save, out$time, deparse.level = 0)
+foo <- apply(time.save, 2, sum)
+foo.min <- floor(foo[1] / 60)
+foo.sec <- foo[1] - 60 * foo.min
+c(foo.min, foo.sec)
+@
+The total time for all runs of the temper function was
+\Sexpr{foo.min} minutes and \Sexpr{round(foo.sec, 1)} seconds.
+
+\subsection{Bayes Factor Calculations}
+
+Now we calculate log 10 Bayes factors relative to the model with the highest
+unnormalized Bayes factor.
+<<doit>>=
+log.10.unnorm.bayes <- (qux - log(colMeans(out$ibatch))) / log(10)
+k <- seq(along = log.10.unnorm.bayes)[log.10.unnorm.bayes
+    == min(log.10.unnorm.bayes)]
+models[k, ]
+
+log.10.bayes <- log.10.unnorm.bayes - log.10.unnorm.bayes[k]
+log.10.bayes
+@
+These are base 10 logarithms of the Bayes factors against the $k$-th
+model where $k = \Sexpr{k}$.  For example, the Bayes factor for the $k$-th
+model divided by the Bayes factor for the first model is
+$10^{\Sexpr{round(log.10.bayes[1], 3)}}$.
+
+Now we calculate Monte Carlo standard errors two different ways.  One is
+the way the delta method is usually taught.  To simplify notation, denote
+the Bayes factors
+$$
+   b_m = b(y \mid m)
+$$
+and their Monte Carlo approximations $\hat{b}_m$.  Then the log Bayes factors
+are
+$$
+   g_i(b) = \log_{10} b_i - \log_{10} b_k
+$$
+hence we need to apply the delta method with the function $g_i$, which has
+derivatives
+\begin{align*}
+   \frac{\partial g_i(b)}{\partial b_i}
+   & =
+   \frac{1}{b_i \log_e(10)}
+   \\
+   \frac{\partial g_i(b)}{\partial b_k}
+   & =
+   - \frac{1}{b_k \log_e(10)}
+   \\
+   \frac{\partial g_i(b)}{\partial b_j}
+   & =
+   0, \qquad \text{$j \neq i$ and $j \neq k$}
+\end{align*}
+<<doit-se-one>>=
+fred <- var(out$ibatch) / out$nbatch
+sally <- colMeans(out$ibatch)
+mcse.log.10.bayes <- (1 / log(10)) * sqrt(diag(fred) / sally^2 -
+    2 * fred[ , k] / (sally * sally[k]) +
+    fred[k, k] / sally[k]^2)
+mcse.log.10.bayes
+
+foompter <- cbind(models, log.10.bayes, mcse.log.10.bayes)
+round(foompter, 5)
+@
+
+An alternative calculation of the MCSE replaces the actual function
+of the raw Bayes factors with its best linear approximation
+$$
+   \frac{1}{\log_e(10)} \left(\frac{\hat{b}_i - b_i}{b_i}
+   - \frac{\hat{b}_k - b_k}{b_k} \right)
+$$
+and calculates the standard deviation of this quantity by batch means
+<<doit-too>>=
+ibar <- colMeans(out$ibatch)
+herman <- sweep(out$ibatch, 2, ibar, "/")
+herman <- sweep(herman, 1, herman[ , k], "-")
+mcse.log.10.bayes.too <- (1 / log(10)) *
+    apply(herman, 2, sd) /sqrt(out$nbatch)
+all.equal(mcse.log.10.bayes, mcse.log.10.bayes.too)
+@
+
+\section{Discussion}
+
+We hope readers are impressed with the power of this method.  The key
+to the method is pseudopriors adjusted by trial and error.  The method
+could have been invented by any Bayesian who realized that the priors
+on models, $\prior(m)$ in our notation in Section~\ref{sec:bayes-factors},
+do not affect the Bayes factors and hence are irrelevant to calculating
+Bayes factors.  Thus the priors (or pseudopriors in our terminology) should
+be chosen for reasons of computational convenience, as we have done,
+rather than to incorporate prior information.
+
+The rest of the details of the method are unimportant.  The \texttt{temper}
+function in R is convenient to use for this purpose, but there is no reason
+to believe that it provides optimal sampling.  Samplers carefully designed
+for each particular application would undoubtedly do better.  Our notion
+of ``padding'' so that the within model parameters have the same dimension
+for all models follows \citet{carlin-chib} but ``reversible jump'' samplers
+\citep{green} would undoubtedly do better.  Unfortunately, there seems to
+be no way to code up a function like \texttt{temper} that uses ``reversible
+jump'' and requires no theoretical work from users that if messed up destroys
+the algorithm.  The \texttt{temper} function is foolproof in the sense that
+if the log unnormalized density function written by the user
+(like our \texttt{ludfun}) is correct, then the ST Markov chain has the
+equilibrium distribution is supposed to have.  There is nothing the
+user can mess up except this user written function.  No analog of this
+for ``reversible jump'' chains is apparent (to your humble author).
+
+Two issues remain where the text above said ``see the discussion section for
+more on this issue.''  The first was about within model priors for the
+``padding'' components of within model parameter vectors
+$g_{\text{pad}}(\theta_{\text{pad}} \mid m)$ in
+the notation in \eqref{eq:unnormalized-bayes-factors}.
+Rather than choose these so that they do not depend on the data (as we did),
+it would be better (if more trouble) to choose them differently for each
+``padding'' component, centering $g_{\text{pad}}(\theta_{\text{pad}} \mid m)$
+so the distribution of a component of $\theta_{\text{pad}}$ is near to the
+marginal distribution of the same component in neighboring models (according to
+the \texttt{neighbors} argument of the \texttt{temper} function).
+
+The other remaining issue is adjusting acceptance rates for jumps.  There
+is no way to adjust this other than by changing the number of models and
+their definitions.  But the models we have cannot be changed; if we are
+to calculate Bayes factors for them, then we must sample them as they are.
+But we can insert new models between old models.  For example,
+if the acceptance for swaps between model $i$ and model $j$ is too low, then
+we can insert distribution $k$ between them that has unnormalized density
+$$
+   h_k(x) = \sqrt{h_i(x) h_j(x)}.
+$$
+This idea is inherited from simulated tempering; \citep{geyer-thompson}
+have much
+discussion of how to insert additional distributions into a tempering network.
+It is another key issue in using tempering to speed up sampling.  It is
+less obvious in the Bayes factor context, but still an available technique
+if needed.
+
+
+\begin{thebibliography}{}
+
+\bibitem[Carlin and Chib(1995)]{carlin-chib}
+Carlin, B.~P. and Chib, S. (1995).
+\newblock Bayesian model choice via Markov chain Monte Carlo methods.
+\newblock \emph{Journal of the Royal Statistical Society, Series B},
+    \textbf{57}, 473--484.
+
+\bibitem[Geyer(1994)]{geyer}
+Geyer, C.~J. (1994).
+\newblock On the convergence of Monte Carlo maximum likelihood calculations.
+\newblock \emph{Journal of the Royal Statistical Society, Series B},
+    \textbf{56} 261--274.
+
+\bibitem[Geyer., 2009]{mcmc-R-package}
+Geyer., C.~J. (2009).
+\newblock \emph{mcmc: Markov Chain Monte Carlo}.
+\newblock R package version 0.7-2, available from CRAN.
+
+\bibitem[Geyer and Thompson(1995)]{geyer-thompson}
+Geyer, C.~J., and Thompson, E.~A. (1995).
+\newblock Annealing Markov chain Monte Carlo with applications to ancestral
+    inference.
+\newblock \emph{Journal of the American Statistical Association}, \textbf{90},
+    909--920.
+
+\bibitem[Green(1995)]{green}
+Green, P.~J. (1995).
+\newblock Reversible jump {M}arkov chain {M}onte {C}arlo computation and
+  {B}ayesian model determination.
+\newblock \emph{Biometrika}, \textbf{82}, 711--732.
+
+\bibitem[Hoeting et al.(1999)Hoeting, Madigan, Raftery, and Volinsky]{bma}
+Hoeting, J.~A., Madigan, D., Raftery, A.~E. and Volinsky, C.~T. (1999).
+\newblock Bayesian model averaging: A tutorial (with discussion).
+\newblock \emph{Statical Science}, \textbf{19}, 382--417.
+\newblock The version printed in the journal had the equations messed up in
+    the production process; a corrected version is available at
+    \url{http://www.stat.washington.edu/www/research/online/1999/hoeting.pdf}.
+
+\bibitem[Marinari and Parisi(1992)]{marinari-parisi}
+Marinari, E., and Parisi G. (1992).
+\newblock Simulated tempering: A new Monte Carlo Scheme.
+\newblock \emph{Europhysics Letters}, \textbf{19}, 451--458.
+
+\bibitem[R Development Core Team(2010)]{rcore}
+R Development Core Team (2010).
+\newblock R: A language and environment for statistical computing.
+\newblock R Foundation for Statistical Computing, Vienna, Austria.
+\newblock \url{http://www.R-project.org}.
+
+\bibitem[Sung and Geyer(2007)]{sung-geyer}
+Sung, Y.~J. and Geyer, C.~J. (2007).
+\newblock Monte Carlo likelihood inference for missing data models.
+\newblock \emph{Annals of Statistics}, \textbf{35}, 990--1011.
+
+\bibitem[Thompson and Guo(1991)]{thompson-guo}
+Thompson, E. A. and Guo, S. W. (1991).
+\newblock Evaluation of likelihood ratios for complex genetic models.
+\newblock \emph{IMA J. Math. Appl. Med. Biol.}, \textbf{8}, 149--169.
+
+\bibitem[Torrie and Valleau(1977)]{torrie-valleau}
+Torrie, G.~M., and Valleau, J.~P. (1977).
+\newblock Nonphysical sampling distributions in Monte Carlo free-energy
+  estimation: Umbrella sampling.
+\newblock \emph{Journal of Computational Physics}, \textbf{23}, 187--199.
+
+\end{thebibliography}
+
+\end{document}
+

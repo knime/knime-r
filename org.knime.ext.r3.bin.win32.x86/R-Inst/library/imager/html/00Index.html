@@ -1,0 +1,656 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Image Processing Library Based on 'CImg'</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Image Processing Library Based on 'CImg'
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;imager&rsquo; version 0.40.2</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="# "> </a>
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#H">H</a>
+<a href="#I">I</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#P">P</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#V">V</a>
+<a href="#W">W</a>
+<a href="#X">X</a>
+<a href="#Y">Y</a>
+<a href="#Z">Z</a>
+<a href="#misc">misc</a>
+</p>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="imager.html">imager-package</a></td>
+<td>imager: an R library for image processing, based on CImg</td></tr>
+</table>
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="imager.combine.html">add</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="add.colour.html">add.color</a></td>
+<td>Add colour channels to a grayscale image or pixel set</td></tr>
+<tr><td style="width: 25%;"><a href="add.colour.html">add.colour</a></td>
+<td>Add colour channels to a grayscale image or pixel set</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.html">as.cimg</a></td>
+<td>Convert to cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.array.html">as.cimg.array</a></td>
+<td>Turn an numeric array into a cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.html">as.cimg.cimg</a></td>
+<td>Convert to cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.data.frame.html">as.cimg.data.frame</a></td>
+<td>Create an image from a data.frame</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.html">as.cimg.double</a></td>
+<td>Convert to cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.function.html">as.cimg.function</a></td>
+<td>Create an image by sampling a function</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.html">as.cimg.logical</a></td>
+<td>Convert to cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.html">as.cimg.matrix</a></td>
+<td>Convert to cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.html">as.cimg.numeric</a></td>
+<td>Convert to cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="as.pixset.html">as.cimg.pixset</a></td>
+<td>Methods to convert various objects to pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.raster.html">as.cimg.raster</a></td>
+<td>Convert a raster object to a cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="RasterPackage.html">as.cimg.RasterLayer</a></td>
+<td>Convert a RasterLayer/RasterBrick to a cimg image/image list</td></tr>
+<tr><td style="width: 25%;"><a href="as.cimg.html">as.cimg.vector</a></td>
+<td>Convert to cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="as.data.frame.cimg.html">as.data.frame.cimg</a></td>
+<td>Convert a pixel image to a data.frame</td></tr>
+<tr><td style="width: 25%;"><a href="as.data.frame.imlist.html">as.data.frame.imlist</a></td>
+<td>Convert image list to data.frame</td></tr>
+<tr><td style="width: 25%;"><a href="as.data.frame.pixset.html">as.data.frame.pixset</a></td>
+<td>Methods to convert pixsets to various objects</td></tr>
+<tr><td style="width: 25%;"><a href="as.imlist.html">as.imlist</a></td>
+<td>Convert various objects to image lists</td></tr>
+<tr><td style="width: 25%;"><a href="as.imlist.html">as.imlist.cimg</a></td>
+<td>Convert various objects to image lists</td></tr>
+<tr><td style="width: 25%;"><a href="as.imlist.html">as.imlist.imlist</a></td>
+<td>Convert various objects to image lists</td></tr>
+<tr><td style="width: 25%;"><a href="as.imlist.html">as.imlist.list</a></td>
+<td>Convert various objects to image lists</td></tr>
+<tr><td style="width: 25%;"><a href="RasterPackage.html">as.imlist.RasterStackBrick</a></td>
+<td>Convert a RasterLayer/RasterBrick to a cimg image/image list</td></tr>
+<tr><td style="width: 25%;"><a href="as.pixset.html">as.pixset</a></td>
+<td>Methods to convert various objects to pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="as.pixset.html">as.pixset.cimg</a></td>
+<td>Methods to convert various objects to pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="as.raster.cimg.html">as.raster.cimg</a></td>
+<td>Convert a cimg object to a raster object for plotting</td></tr>
+<tr><td style="width: 25%;"><a href="at.html">at</a></td>
+<td>Return or set pixel value at coordinates</td></tr>
+<tr><td style="width: 25%;"><a href="at.html">at&lt;-</a></td>
+<td>Return or set pixel value at coordinates</td></tr>
+<tr><td style="width: 25%;"><a href="autocrop.html">autocrop</a></td>
+<td>Autocrop image region</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">average</a></td>
+<td>Combining images</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="cimg.extract.html">B</a></td>
+<td>Various shortcuts for extracting colour channels, frames, etc</td></tr>
+<tr><td style="width: 25%;"><a href="imager.replace.html">B&lt;-</a></td>
+<td>Replace part of an image with another</td></tr>
+<tr><td style="width: 25%;"><a href="bbox.html">bbox</a></td>
+<td>Compute the bounding box of a pixset</td></tr>
+<tr><td style="width: 25%;"><a href="blur_anisotropic.html">blur_anisotropic</a></td>
+<td>Blur image anisotropically, in an edge-preserving way.</td></tr>
+<tr><td style="width: 25%;"><a href="boats.html">boats</a></td>
+<td>Photograph of sailing boats from Kodak set</td></tr>
+<tr><td style="width: 25%;"><a href="boundary.html">boundary</a></td>
+<td>Find the boundary of a shape in a pixel set</td></tr>
+<tr><td style="width: 25%;"><a href="boxblur.html">boxblur</a></td>
+<td>Blur image with a box filter (square window)</td></tr>
+<tr><td style="width: 25%;"><a href="boxblur_xy.html">boxblur_xy</a></td>
+<td>Blur image with a box filter.</td></tr>
+<tr><td style="width: 25%;"><a href="bucketfill.html">bucketfill</a></td>
+<td>Bucket fill</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="cannyEdges.html">cannyEdges</a></td>
+<td>Canny edge detector</td></tr>
+<tr><td style="width: 25%;"><a href="capture.plot.html">capture.plot</a></td>
+<td>Capture the current R plot device as a cimg image</td></tr>
+<tr><td style="width: 25%;"><a href="imcoord.html">Cc</a></td>
+<td>Coordinates as images</td></tr>
+<tr><td style="width: 25%;"><a href="center.stencil.html">center.stencil</a></td>
+<td>Center stencil at a location</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.extract.html">channel</a></td>
+<td>Various shortcuts for extracting colour channels, frames, etc</td></tr>
+<tr><td style="width: 25%;"><a href="imager.replace.html">channel&lt;-</a></td>
+<td>Replace part of an image with another</td></tr>
+<tr><td style="width: 25%;"><a href="channels.html">channels</a></td>
+<td>Split a colour image into a list of separate channels</td></tr>
+<tr><td style="width: 25%;"><a href="ci.html">ci</a></td>
+<td>Concatenation for image lists</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.html">cimg</a></td>
+<td>Create a cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.dimensions.html">cimg.dimensions</a></td>
+<td>Image dimensions</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.extract.html">cimg.extract</a></td>
+<td>Various shortcuts for extracting colour channels, frames, etc</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.use.openmp.html">cimg.use.openmp</a></td>
+<td>Control CImg's parallelisation</td></tr>
+<tr><td style="width: 25%;"><a href="cimg2im.html">cimg2im</a></td>
+<td>Convert cimg to spatstat im object</td></tr>
+<tr><td style="width: 25%;"><a href="clean.html">clean</a></td>
+<td>Clean up and fill in pixel sets (morphological opening and closing)</td></tr>
+<tr><td style="width: 25%;"><a href="at.html">color.at</a></td>
+<td>Return or set pixel value at coordinates</td></tr>
+<tr><td style="width: 25%;"><a href="at.html">color.at&lt;-</a></td>
+<td>Return or set pixel value at coordinates</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">common_pixsets</a></td>
+<td>Various useful pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="contours.html">contours</a></td>
+<td>Return contours of image/pixset</td></tr>
+<tr><td style="width: 25%;"><a href="as.data.frame.pixset.html">convert_pixset</a></td>
+<td>Methods to convert pixsets to various objects</td></tr>
+<tr><td style="width: 25%;"><a href="convolve.html">convolve</a></td>
+<td>Convolve image by filter.</td></tr>
+<tr><td style="width: 25%;"><a href="coord.index.html">coord.index</a></td>
+<td>Coordinates from pixel index</td></tr>
+<tr><td style="width: 25%;"><a href="correlate.html">correlate</a></td>
+<td>Correlation of image by filter</td></tr>
+<tr><td style="width: 25%;"><a href="bbox.html">crop.bbox</a></td>
+<td>Compute the bounding box of a pixset</td></tr>
+<tr><td style="width: 25%;"><a href="crop.borders.html">crop.borders</a></td>
+<td>Crop the outer margins of an image</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="cimg.dimensions.html">depth</a></td>
+<td>Image dimensions</td></tr>
+<tr><td style="width: 25%;"><a href="deriche.html">deriche</a></td>
+<td>Apply recursive Deriche filter.</td></tr>
+<tr><td style="width: 25%;"><a href="diffusion_tensors.html">diffusion_tensors</a></td>
+<td>Compute field of diffusion tensors for edge-preserving smoothing.</td></tr>
+<tr><td style="width: 25%;"><a href="erode.html">dilate</a></td>
+<td>Erode/dilate image by a structuring element.</td></tr>
+<tr><td style="width: 25%;"><a href="erode.html">dilate_rect</a></td>
+<td>Erode/dilate image by a structuring element.</td></tr>
+<tr><td style="width: 25%;"><a href="erode.html">dilate_square</a></td>
+<td>Erode/dilate image by a structuring element.</td></tr>
+<tr><td style="width: 25%;"><a href="displacement.html">displacement</a></td>
+<td>Estimate displacement field between two images.</td></tr>
+<tr><td style="width: 25%;"><a href="display.html">display</a></td>
+<td>Display object using CImg library</td></tr>
+<tr><td style="width: 25%;"><a href="display.cimg.html">display.cimg</a></td>
+<td>Display image using CImg library</td></tr>
+<tr><td style="width: 25%;"><a href="display.list.html">display.list</a></td>
+<td>Display image list using CImg library</td></tr>
+<tr><td style="width: 25%;"><a href="distance_transform.html">distance_transform</a></td>
+<td>Compute Euclidean distance function to a specified value.</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="imager.combine.html">enorm</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">equal</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="erode.html">erode</a></td>
+<td>Erode/dilate image by a structuring element.</td></tr>
+<tr><td style="width: 25%;"><a href="erode.html">erode_rect</a></td>
+<td>Erode/dilate image by a structuring element.</td></tr>
+<tr><td style="width: 25%;"><a href="erode.html">erode_square</a></td>
+<td>Erode/dilate image by a structuring element.</td></tr>
+<tr><td style="width: 25%;"><a href="extract_patches.html">extract_patches</a></td>
+<td>Extract image patches and return a list</td></tr>
+<tr><td style="width: 25%;"><a href="extract_patches.html">extract_patches3D</a></td>
+<td>Extract image patches and return a list</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="FFT.html">FFT</a></td>
+<td>Compute the Discrete Fourier Transform of an image</td></tr>
+<tr><td style="width: 25%;"><a href="clean.html">fill</a></td>
+<td>Clean up and fill in pixel sets (morphological opening and closing)</td></tr>
+<tr><td style="width: 25%;"><a href="flatten.alpha.html">flatten.alpha</a></td>
+<td>Flatten alpha channel</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.extract.html">frame</a></td>
+<td>Various shortcuts for extracting colour channels, frames, etc</td></tr>
+<tr><td style="width: 25%;"><a href="imager.replace.html">frame&lt;-</a></td>
+<td>Replace part of an image with another</td></tr>
+<tr><td style="width: 25%;"><a href="frames.html">frames</a></td>
+<td>Split a video into separate frames</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="cimg.extract.html">G</a></td>
+<td>Various shortcuts for extracting colour channels, frames, etc</td></tr>
+<tr><td style="width: 25%;"><a href="imager.replace.html">G&lt;-</a></td>
+<td>Replace part of an image with another</td></tr>
+<tr><td style="width: 25%;"><a href="get.locations.html">get.locations</a></td>
+<td>Return coordinates of subset of pixels</td></tr>
+<tr><td style="width: 25%;"><a href="get.stencil.html">get.stencil</a></td>
+<td>Return pixel values in a neighbourhood defined by a stencil</td></tr>
+<tr><td style="width: 25%;"><a href="get_gradient.html">get_gradient</a></td>
+<td>Compute image gradient.</td></tr>
+<tr><td style="width: 25%;"><a href="get_hessian.html">get_hessian</a></td>
+<td>Return image hessian.</td></tr>
+<tr><td style="width: 25%;"><a href="grab.html">grab</a></td>
+<td>Select image regions interactively</td></tr>
+<tr><td style="width: 25%;"><a href="grab.html">grabLine</a></td>
+<td>Select image regions interactively</td></tr>
+<tr><td style="width: 25%;"><a href="grab.html">grabPoint</a></td>
+<td>Select image regions interactively</td></tr>
+<tr><td style="width: 25%;"><a href="grab.html">grabRect</a></td>
+<td>Select image regions interactively</td></tr>
+<tr><td style="width: 25%;"><a href="grayscale.html">grayscale</a></td>
+<td>Convert an RGB image to grayscale</td></tr>
+<tr><td style="width: 25%;"><a href="grow.html">grow</a></td>
+<td>Grow/shrink a pixel set</td></tr>
+</table>
+
+<h2><a name="H">-- H --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="haar.html">haar</a></td>
+<td>Compute Haar multiscale wavelet transform.</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.dimensions.html">height</a></td>
+<td>Image dimensions</td></tr>
+<tr><td style="width: 25%;"><a href="highlight.html">highlight</a></td>
+<td>Highlight pixel set on image</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">HSItoRGB</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">HSLtoRGB</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">HSVtoRGB</a></td>
+<td>Colour space conversions in imager</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="idply.html">idply</a></td>
+<td>Split an image along axis, apply function, return a data.frame</td></tr>
+<tr><td style="width: 25%;"><a href="iiply.html">iiply</a></td>
+<td>Split an image, apply function, recombine the results as an image</td></tr>
+<tr><td style="width: 25%;"><a href="ilply.html">ilply</a></td>
+<td>Split an image along axis, apply function, return a list</td></tr>
+<tr><td style="width: 25%;"><a href="im2cimg.html">im2cimg</a></td>
+<td>Convert an image in spatstat format to an image in cimg format</td></tr>
+<tr><td style="width: 25%;"><a href="imager.html">imager</a></td>
+<td>imager: an R library for image processing, based on CImg</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">imager.colourspaces</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">imager.combine</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.replace.html">imager.replace</a></td>
+<td>Replace part of an image with another</td></tr>
+<tr><td style="width: 25%;"><a href="imager.subset.html">imager.subset</a></td>
+<td>Array subset operator for cimg objects</td></tr>
+<tr><td style="width: 25%;"><a href="imappend.html">imappend</a></td>
+<td>Combine a list of images into a single image</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.extract.html">imcol</a></td>
+<td>Various shortcuts for extracting colour channels, frames, etc</td></tr>
+<tr><td style="width: 25%;"><a href="imcoord.html">imcoord</a></td>
+<td>Coordinates as images</td></tr>
+<tr><td style="width: 25%;"><a href="imdirac.html">imdirac</a></td>
+<td>Generates a "dirac" image, i.e. with all values set to 0 except one.</td></tr>
+<tr><td style="width: 25%;"><a href="imdraw.html">imdraw</a></td>
+<td>Draw image on another image</td></tr>
+<tr><td style="width: 25%;"><a href="imeval.html">imeval</a></td>
+<td>Pixel-wise evaluation of a CImg expression</td></tr>
+<tr><td style="width: 25%;"><a href="imfill.html">imfill</a></td>
+<td>Create an image of custom size by filling in repeated values</td></tr>
+<tr><td style="width: 25%;"><a href="imgradient.html">imgradient</a></td>
+<td>Compute image gradient</td></tr>
+<tr><td style="width: 25%;"><a href="imhessian.html">imhessian</a></td>
+<td>Compute image hessian.</td></tr>
+<tr><td style="width: 25%;"><a href="iminfo.html">iminfo</a></td>
+<td>Return information on image file</td></tr>
+<tr><td style="width: 25%;"><a href="imlap.html">imlap</a></td>
+<td>Compute image Laplacian</td></tr>
+<tr><td style="width: 25%;"><a href="imlist.html">imlist</a></td>
+<td>Image list</td></tr>
+<tr><td style="width: 25%;"><a href="imnoise.html">imnoise</a></td>
+<td>Generate (Gaussian) white-noise image</td></tr>
+<tr><td style="width: 25%;"><a href="implot.html">implot</a></td>
+<td>Plot objects on image using base graphics</td></tr>
+<tr><td style="width: 25%;"><a href="imrep.html">imrep</a></td>
+<td>Replicate images</td></tr>
+<tr><td style="width: 25%;"><a href="resize_uniform.html">imresize</a></td>
+<td>Resize image uniformly</td></tr>
+<tr><td style="width: 25%;"><a href="imrotate.html">imrotate</a></td>
+<td>Rotate an image along the XY plane.</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.extract.html">imrow</a></td>
+<td>Various shortcuts for extracting colour channels, frames, etc</td></tr>
+<tr><td style="width: 25%;"><a href="imsharpen.html">imsharpen</a></td>
+<td>Sharpen image.</td></tr>
+<tr><td style="width: 25%;"><a href="imshift.html">imshift</a></td>
+<td>Shift image content.</td></tr>
+<tr><td style="width: 25%;"><a href="imsplit.html">imsplit</a></td>
+<td>Split an image along a certain axis (producing a list)</td></tr>
+<tr><td style="width: 25%;"><a href="imsub.html">imsub</a></td>
+<td>Select part of an image</td></tr>
+<tr><td style="width: 25%;"><a href="imwarp.html">imwarp</a></td>
+<td>Image warping</td></tr>
+<tr><td style="width: 25%;"><a href="im_split.html">im_split</a></td>
+<td>Split an image along a certain axis (producing a list)</td></tr>
+<tr><td style="width: 25%;"><a href="index.coord.html">index.coord</a></td>
+<td>Linear index in internal vector from pixel coordinates</td></tr>
+<tr><td style="width: 25%;"><a href="interp.html">interp</a></td>
+<td>Interpolate image values</td></tr>
+<tr><td style="width: 25%;"><a href="is.cimg.html">is.cimg</a></td>
+<td>Checks that an object is a cimg object</td></tr>
+<tr><td style="width: 25%;"><a href="is.imlist.html">is.imlist</a></td>
+<td>Check that an object is an imlist object</td></tr>
+<tr><td style="width: 25%;"><a href="is.pixset.html">is.pixset</a></td>
+<td>Check that an object is a pixset object</td></tr>
+<tr><td style="width: 25%;"><a href="isoblur.html">isoblur</a></td>
+<td>Blur image isotropically.</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="label.html">label</a></td>
+<td>Label connected components.</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">LabtoRGB</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">LabtosRGB</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">LabtoXYZ</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="liply.html">liply</a></td>
+<td>Apply function to each element of a list, then combine the result as an image by appending along specified axis</td></tr>
+<tr><td style="width: 25%;"><a href="load.example.html">load.example</a></td>
+<td>Load example image</td></tr>
+<tr><td style="width: 25%;"><a href="load.image.html">load.image</a></td>
+<td>Load image from file or URL</td></tr>
+<tr><td style="width: 25%;"><a href="load.video.html">load.video</a></td>
+<td>Load a video using ffmpeg</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="magick.html">magick</a></td>
+<td>Convert a magick image to a cimg image or image list</td></tr>
+<tr><td style="width: 25%;"><a href="magick.html">magick2cimg</a></td>
+<td>Convert a magick image to a cimg image or image list</td></tr>
+<tr><td style="width: 25%;"><a href="magick.html">magick2imlist</a></td>
+<td>Convert a magick image to a cimg image or image list</td></tr>
+<tr><td style="width: 25%;"><a href="make.video.html">make.video</a></td>
+<td>Make/save a video using ffmpeg</td></tr>
+<tr><td style="width: 25%;"><a href="map_il.html">map_il</a></td>
+<td>Type-stable map for use with the purrr package</td></tr>
+<tr><td style="width: 25%;"><a href="erode.html">mclosing</a></td>
+<td>Erode/dilate image by a structuring element.</td></tr>
+<tr><td style="width: 25%;"><a href="erode.html">mclosing_square</a></td>
+<td>Erode/dilate image by a structuring element.</td></tr>
+<tr><td style="width: 25%;"><a href="medianblur.html">medianblur</a></td>
+<td>Blur image with the median filter. In a window of size n x n centered at pixel (x,y), compute median pixel value over the window. Optionally, ignore values that are too far from the value at current pixel.</td></tr>
+<tr><td style="width: 25%;"><a href="mirror.html">mirror</a></td>
+<td>Mirror image content along specified axis</td></tr>
+<tr><td style="width: 25%;"><a href="erode.html">mopening</a></td>
+<td>Erode/dilate image by a structuring element.</td></tr>
+<tr><td style="width: 25%;"><a href="erode.html">mopening_square</a></td>
+<td>Erode/dilate image by a structuring element.</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">mult</a></td>
+<td>Combining images</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="cimg.dimensions.html">nPix</a></td>
+<td>Image dimensions</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="pad.html">pad</a></td>
+<td>Pad image with n pixels along specified axis</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parall</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parany</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parmax</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parmax.abs</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parmed</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parmin</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parmin.abs</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parorder</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parrank</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parsd</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parsort</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">parvar</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="patchstat.html">patchstat</a></td>
+<td>Return image patch summary</td></tr>
+<tr><td style="width: 25%;"><a href="patch_summary_cimg.html">patch_summary_cimg</a></td>
+<td>Extract a numerical summary from image patches, using CImg's mini-language Experimental feature.</td></tr>
+<tr><td style="width: 25%;"><a href="periodic.part.html">periodic.part</a></td>
+<td>Compute the periodic part of an image, using the periodic/smooth decomposition of Moisan (2011)</td></tr>
+<tr><td style="width: 25%;"><a href="permute_axes.html">permute_axes</a></td>
+<td>Permute image axes</td></tr>
+<tr><td style="width: 25%;"><a href="pixel.grid.html">pixel.grid</a></td>
+<td>Return the pixel grid for an image</td></tr>
+<tr><td style="width: 25%;"><a href="pixset.html">pixset</a></td>
+<td>Pixel sets (pixsets)</td></tr>
+<tr><td style="width: 25%;"><a href="play.html">play</a></td>
+<td>Play a video</td></tr>
+<tr><td style="width: 25%;"><a href="plot.cimg.html">plot.cimg</a></td>
+<td>Display an image using base graphics</td></tr>
+<tr><td style="width: 25%;"><a href="plot.imlist.html">plot.imlist</a></td>
+<td>Plot an image list</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">px.all</a></td>
+<td>Various useful pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">px.borders</a></td>
+<td>Various useful pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">px.bottom</a></td>
+<td>Various useful pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">px.circle</a></td>
+<td>Various useful pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">px.diamond</a></td>
+<td>Various useful pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="px.flood.html">px.flood</a></td>
+<td>Select a region of homogeneous colour</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">px.left</a></td>
+<td>Various useful pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="px.na.html">px.na</a></td>
+<td>A pixset for NA values</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">px.none</a></td>
+<td>Various useful pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">px.right</a></td>
+<td>Various useful pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">px.square</a></td>
+<td>Various useful pixsets</td></tr>
+<tr><td style="width: 25%;"><a href="common_pixsets.html">px.top</a></td>
+<td>Various useful pixsets</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="cimg.extract.html">R</a></td>
+<td>Various shortcuts for extracting colour channels, frames, etc</td></tr>
+<tr><td style="width: 25%;"><a href="imager.replace.html">R&lt;-</a></td>
+<td>Replace part of an image with another</td></tr>
+<tr><td style="width: 25%;"><a href="RasterPackage.html">RasterPackage</a></td>
+<td>Convert a RasterLayer/RasterBrick to a cimg image/image list</td></tr>
+<tr><td style="width: 25%;"><a href="renorm.html">renorm</a></td>
+<td>Renormalise image</td></tr>
+<tr><td style="width: 25%;"><a href="resize.html">resize</a></td>
+<td>Resize image to new dimensions. If pd[x,y,z,v]&lt;0, it corresponds to a percentage of the original size (the default value is -100).</td></tr>
+<tr><td style="width: 25%;"><a href="resize_uniform.html">resize_doubleXY</a></td>
+<td>Resize image uniformly</td></tr>
+<tr><td style="width: 25%;"><a href="resize_uniform.html">resize_halfXY</a></td>
+<td>Resize image uniformly</td></tr>
+<tr><td style="width: 25%;"><a href="resize_uniform.html">resize_tripleXY</a></td>
+<td>Resize image uniformly</td></tr>
+<tr><td style="width: 25%;"><a href="resize_uniform.html">resize_uniform</a></td>
+<td>Resize image uniformly</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">RGBtoHSI</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">RGBtoHSL</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">RGBtoHSV</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">RGBtoLab</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">RGBtosRGB</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">RGBtoXYZ</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">RGBtoYCbCr</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">RGBtoYUV</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="rm.alpha.html">rm.alpha</a></td>
+<td>Remove alpha channel and store as attribute</td></tr>
+<tr><td style="width: 25%;"><a href="rotate_xy.html">rotate_xy</a></td>
+<td>Rotate image by an arbitrary angle, around a center point.</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="save.image.html">save.image</a></td>
+<td>Save image</td></tr>
+<tr><td style="width: 25%;"><a href="make.video.html">save.video</a></td>
+<td>Make/save a video using ffmpeg</td></tr>
+<tr><td style="width: 25%;"><a href="grow.html">shrink</a></td>
+<td>Grow/shrink a pixel set</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.dimensions.html">spectrum</a></td>
+<td>Image dimensions</td></tr>
+<tr><td style="width: 25%;"><a href="split_connected.html">split_connected</a></td>
+<td>Split pixset into connected components</td></tr>
+<tr><td style="width: 25%;"><a href="squeeze.html">squeeze</a></td>
+<td>Remove empty dimensions from an array</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">sRGBtoLab</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">sRGBtoRGB</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="stencil.cross.html">stencil.cross</a></td>
+<td>A cross-shaped stencil</td></tr>
+<tr><td style="width: 25%;"><a href="imsub.html">subim</a></td>
+<td>Select part of an image</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="threshold.html">threshold</a></td>
+<td>Threshold grayscale image</td></tr>
+</table>
+
+<h2><a name="V">-- V --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="vanvliet.html">vanvliet</a></td>
+<td>Young-Van Vliet recursive Gaussian filter.</td></tr>
+</table>
+
+<h2><a name="W">-- W --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="warp.html">warp</a></td>
+<td>Warp image</td></tr>
+<tr><td style="width: 25%;"><a href="watershed.html">watershed</a></td>
+<td>Compute watershed transform.</td></tr>
+<tr><td style="width: 25%;"><a href="where.html">where</a></td>
+<td>Return locations in pixel set</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">which.parmax</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">which.parmin</a></td>
+<td>Combining images</td></tr>
+<tr><td style="width: 25%;"><a href="cimg.dimensions.html">width</a></td>
+<td>Image dimensions</td></tr>
+<tr><td style="width: 25%;"><a href="imager.combine.html">wsum</a></td>
+<td>Combining images</td></tr>
+</table>
+
+<h2><a name="X">-- X --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="imcoord.html">Xc</a></td>
+<td>Coordinates as images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">XYZtoLab</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">XYZtoRGB</a></td>
+<td>Colour space conversions in imager</td></tr>
+</table>
+
+<h2><a name="Y">-- Y --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="imcoord.html">Yc</a></td>
+<td>Coordinates as images</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">YCbCrtoRGB</a></td>
+<td>Colour space conversions in imager</td></tr>
+<tr><td style="width: 25%;"><a href="imager.colourspaces.html">YUVtoRGB</a></td>
+<td>Colour space conversions in imager</td></tr>
+</table>
+
+<h2><a name="Z">-- Z --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="imcoord.html">Zc</a></td>
+<td>Coordinates as images</td></tr>
+</table>
+
+<h2><a name="misc">-- misc --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="grapes-inr-grapes.html">%inr%</a></td>
+<td>Check that value is in a range</td></tr>
+</table>
+</body></html>

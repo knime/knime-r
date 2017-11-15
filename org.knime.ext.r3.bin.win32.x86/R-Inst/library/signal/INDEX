@@ -1,0 +1,52 @@
+Arma                    Create an autoregressive moving average (ARMA)
+                        model.
+FilterOfOrder           Filter of given order and specifications.
+Ma                      Create a moving average (MA) model
+Zpg                     Zero-pole-gain model
+an                      Complex unit phasor of the given angle in
+                        degrees.
+bartlett                Windowing functions
+bilinear                Bilinear transformation
+butter                  Generate a Butterworth filter.
+buttord                 Butterworth filter order and cutoff
+cheb1ord                Chebyshev type-I filter order and cutoff
+chebwin                 Dolph-Chebyshev window coefficients
+cheby1                  Generate a Chebyshev filter.
+chirp                   A chirp signal
+conv                    Convolution
+decimate                Decimate or downsample a signal
+ellip                   Elliptic or Cauer filter
+ellipke                 Internal or uncommented functions
+ellipord                Elliptic filter order and cutoff
+fftfilt                 Filters with an FIR filter using the FFT
+filter                  Filter a signal
+filtfilt                Forward and reverse filter a signal
+fir1                    FIR filter generation
+fir2                    FIR filter generation
+freqs                   s-plane frequency response
+freqz                   z-plane frequency response
+grpdelay                Group delay of a filter or model
+ifft                    Inverse FFT
+impz                    Impulse-response characteristics
+interp                  Interpolate / Increase the sample rate
+interp1                 Interpolation
+kaiser                  Kaiser window
+kaiserord               Parameters for an FIR filter from a Kaiser
+                        window
+levinson                Durbin-Levinson Recursion
+medfilt1                Median filter
+pchip                   Piecewise cubic hermite interpolation
+poly                    Polynomial given roots
+polyval                 Evaluate a polynomial
+remez                   Parks-McClellan optimal FIR filter design
+resample                Change the sampling rate of a signal
+roots                   Roots of a polynomial
+sftrans                 Transform filter band edges
+sgolay                  Savitzky-Golay smoothing filters
+sgolayfilt              Apply a Savitzky-Golay smoothing filter
+signal-package          Signal processing
+specgram                Spectrogram plot
+spencer                 Spencer filter
+unwrap                  Unwrap radian phases
+wav                     Example wav file
+zplane                  Pole-zero plot

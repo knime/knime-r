@@ -1,0 +1,13 @@
+human	human
+models	human
+musigma2	musigma2
+par.italy.sim	human
+par.sim	musigma2
+post.bott	ppc
+post.mu	musigma2
+post.sigma2	musigma2
+ppc	ppc
+stat.3pops.sim	human
+stat.obs	musigma2
+stat.sim	musigma2
+stat.voight	human

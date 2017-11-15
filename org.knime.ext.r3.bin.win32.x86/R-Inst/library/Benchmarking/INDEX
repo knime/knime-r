@@ -1,0 +1,34 @@
+Benchmarking-package    Data Envelopment Analyses (DEA) and Stochastic
+                        Frontier Analyses (SFA) - Model Estimations and
+                        Efficiency Measuring
+charnes1981             Data: Charnes et al. (1981): Program follow
+                        through
+cost.opt                DEA optimal cost, revenue, and profit
+critValue               Critical values from bootstrapped DEA models
+dea                     DEA efficiency
+dea.add                 Additive DEA model
+dea.boot                Bootstrap DEA models
+dea.direct              Directional efficiency
+dea.dual                Dual DEA models and assurance regions
+dea.merge               Estimate potential merger gains and their
+                        decompositions
+dea.plot                Plot of DEA technologies
+eff                     Calculate efficiencies for Farrell and sfa
+                        object
+eff.dens                Estimate and plot density of efficiencies
+eladder                 Efficiency ladder for a single firm
+excess                  Excess input compared over frontier input
+lambda                  Lambdas or the weight of the peers
+make.merge              Make an aggregation matrix to perform mergers
+mea                     MEA multi-directional efficiency analysis
+milkProd                Data: Milk producers
+norWood2004             Data: Forestry in Norway
+outlier.ap              Detection of outliers in benchmark models
+peers                   Find peer firms and units
+pigdata                 Data: Multi-output pig producers
+projekt                 Data: Milk producers
+sdea                    Super efficiency
+sfa                     Stochastic frontier estimation
+slack                   Calculate slack in an efficiency analysis
+typeIerror              Probability of type I error for test in a
+                        bootstrap DEA model

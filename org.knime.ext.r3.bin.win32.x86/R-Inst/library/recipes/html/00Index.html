@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Preprocessing Tools to Create Design Matrices</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Preprocessing Tools to Create Design Matrices
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;recipes&rsquo; version 0.1.0</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="recipes.html">recipes-package</a></td>
+<td>recipes: A package for computing and preprocessing design matrices.</td></tr>
+<tr><td style="width: 25%;"><a href="add_role.html">add_role</a></td>
+<td>Manually Add Roles</td></tr>
+<tr><td style="width: 25%;"><a href="add_step.html">add_step</a></td>
+<td>Add a New Step to Current Recipe</td></tr>
+<tr><td style="width: 25%;"><a href="has_role.html">all_nominal</a></td>
+<td>Role Selection</td></tr>
+<tr><td style="width: 25%;"><a href="has_role.html">all_numeric</a></td>
+<td>Role Selection</td></tr>
+<tr><td style="width: 25%;"><a href="has_role.html">all_outcomes</a></td>
+<td>Role Selection</td></tr>
+<tr><td style="width: 25%;"><a href="has_role.html">all_predictors</a></td>
+<td>Role Selection</td></tr>
+<tr><td style="width: 25%;"><a href="bake.html">bake</a></td>
+<td>Apply a Trained Data Recipe</td></tr>
+<tr><td style="width: 25%;"><a href="bake.html">bake.recipe</a></td>
+<td>Apply a Trained Data Recipe</td></tr>
+<tr><td style="width: 25%;"><a href="biomass.html">biomass</a></td>
+<td>Biomass Data</td></tr>
+<tr><td style="width: 25%;"><a href="covers.html">covers</a></td>
+<td>Raw Cover Type Data</td></tr>
+<tr><td style="width: 25%;"><a href="credit_data.html">credit_data</a></td>
+<td>Credit Data</td></tr>
+<tr><td style="width: 25%;"><a href="has_role.html">current_info</a></td>
+<td>Role Selection</td></tr>
+<tr><td style="width: 25%;"><a href="step_ratio.html">denom_vars</a></td>
+<td>Ratio Variable Creation</td></tr>
+<tr><td style="width: 25%;"><a href="discretize.html">discretize</a></td>
+<td>Discretize Numeric Variables</td></tr>
+<tr><td style="width: 25%;"><a href="discretize.html">discretize.default</a></td>
+<td>Discretize Numeric Variables</td></tr>
+<tr><td style="width: 25%;"><a href="discretize.html">discretize.numeric</a></td>
+<td>Discretize Numeric Variables</td></tr>
+<tr><td style="width: 25%;"><a href="has_role.html">has_role</a></td>
+<td>Role Selection</td></tr>
+<tr><td style="width: 25%;"><a href="has_role.html">has_type</a></td>
+<td>Role Selection</td></tr>
+<tr><td style="width: 25%;"><a href="step_bagimpute.html">imp_vars</a></td>
+<td>Imputation via Bagged Trees</td></tr>
+<tr><td style="width: 25%;"><a href="juice.html">juice</a></td>
+<td>Extract Finalized Training Set</td></tr>
+<tr><td style="width: 25%;"><a href="names0.html">names0</a></td>
+<td>Sequences of Names with Padded Zeros</td></tr>
+<tr><td style="width: 25%;"><a href="okc.html">okc</a></td>
+<td>OkCupid Data</td></tr>
+<tr><td style="width: 25%;"><a href="discretize.html">predict.discretize</a></td>
+<td>Discretize Numeric Variables</td></tr>
+<tr><td style="width: 25%;"><a href="prep.html">prep</a></td>
+<td>Train a Data Recipe</td></tr>
+<tr><td style="width: 25%;"><a href="prep.html">prep.recipe</a></td>
+<td>Train a Data Recipe</td></tr>
+<tr><td style="width: 25%;"><a href="print.recipe.html">print.recipe</a></td>
+<td>Print a Recipe</td></tr>
+<tr><td style="width: 25%;"><a href="recipe.html">recipe</a></td>
+<td>Create a Recipe for Preprocessing Data</td></tr>
+<tr><td style="width: 25%;"><a href="recipe.html">recipe.data.frame</a></td>
+<td>Create a Recipe for Preprocessing Data</td></tr>
+<tr><td style="width: 25%;"><a href="recipe.html">recipe.default</a></td>
+<td>Create a Recipe for Preprocessing Data</td></tr>
+<tr><td style="width: 25%;"><a href="recipe.html">recipe.formula</a></td>
+<td>Create a Recipe for Preprocessing Data</td></tr>
+<tr><td style="width: 25%;"><a href="recipe.html">recipe.matrix</a></td>
+<td>Create a Recipe for Preprocessing Data</td></tr>
+<tr><td style="width: 25%;"><a href="recipes.html">recipes</a></td>
+<td>recipes: A package for computing and preprocessing design matrices.</td></tr>
+<tr><td style="width: 25%;"><a href="selections.html">selections</a></td>
+<td>Methods for Select Variables in Step Functions</td></tr>
+<tr><td style="width: 25%;"><a href="step.html">step</a></td>
+<td>A General Step Wrapper</td></tr>
+<tr><td style="width: 25%;"><a href="step_bagimpute.html">step_bagimpute</a></td>
+<td>Imputation via Bagged Trees</td></tr>
+<tr><td style="width: 25%;"><a href="step_bin2factor.html">step_bin2factor</a></td>
+<td>Create a Factors from A Dummy Variable</td></tr>
+<tr><td style="width: 25%;"><a href="step_BoxCox.html">step_BoxCox</a></td>
+<td>Box-Cox Transformation for Non-Negative Data</td></tr>
+<tr><td style="width: 25%;"><a href="step_center.html">step_center</a></td>
+<td>Centering Numeric Data</td></tr>
+<tr><td style="width: 25%;"><a href="step_classdist.html">step_classdist</a></td>
+<td>Distances to Class Centroids</td></tr>
+<tr><td style="width: 25%;"><a href="step_corr.html">step_corr</a></td>
+<td>High Correlation Filter</td></tr>
+<tr><td style="width: 25%;"><a href="step_date.html">step_date</a></td>
+<td>Date Feature Generator</td></tr>
+<tr><td style="width: 25%;"><a href="step_depth.html">step_depth</a></td>
+<td>Data Depths</td></tr>
+<tr><td style="width: 25%;"><a href="discretize.html">step_discretize</a></td>
+<td>Discretize Numeric Variables</td></tr>
+<tr><td style="width: 25%;"><a href="step_dummy.html">step_dummy</a></td>
+<td>Dummy Variables Creation</td></tr>
+<tr><td style="width: 25%;"><a href="step_holiday.html">step_holiday</a></td>
+<td>Holiday Feature Generator</td></tr>
+<tr><td style="width: 25%;"><a href="step_hyperbolic.html">step_hyperbolic</a></td>
+<td>Hyperbolic Transformations</td></tr>
+<tr><td style="width: 25%;"><a href="step_ica.html">step_ica</a></td>
+<td>ICA Signal Extraction</td></tr>
+<tr><td style="width: 25%;"><a href="step_interact.html">step_interact</a></td>
+<td>Create Interaction Variables</td></tr>
+<tr><td style="width: 25%;"><a href="step_intercept.html">step_intercept</a></td>
+<td>Add intercept (or constant) column</td></tr>
+<tr><td style="width: 25%;"><a href="step_invlogit.html">step_invlogit</a></td>
+<td>Inverse Logit Transformation</td></tr>
+<tr><td style="width: 25%;"><a href="step_isomap.html">step_isomap</a></td>
+<td>Isomap Embedding</td></tr>
+<tr><td style="width: 25%;"><a href="step_knnimpute.html">step_knnimpute</a></td>
+<td>Imputation via K-Nearest Neighbors</td></tr>
+<tr><td style="width: 25%;"><a href="step_kpca.html">step_kpca</a></td>
+<td>Kernel PCA Signal Extraction</td></tr>
+<tr><td style="width: 25%;"><a href="step_lincomb.html">step_lincomb</a></td>
+<td>Linear Combination Filter</td></tr>
+<tr><td style="width: 25%;"><a href="step_log.html">step_log</a></td>
+<td>Logarithmic Transformation</td></tr>
+<tr><td style="width: 25%;"><a href="step_logit.html">step_logit</a></td>
+<td>Logit Transformation</td></tr>
+<tr><td style="width: 25%;"><a href="step_meanimpute.html">step_meanimpute</a></td>
+<td>Impute Numeric Data Using the Mean</td></tr>
+<tr><td style="width: 25%;"><a href="step_modeimpute.html">step_modeimpute</a></td>
+<td>Impute Nominal Data Using the Most Common Value</td></tr>
+<tr><td style="width: 25%;"><a href="step_ns.html">step_ns</a></td>
+<td>Nature Spline Basis Functions</td></tr>
+<tr><td style="width: 25%;"><a href="step_nzv.html">step_nzv</a></td>
+<td>Near-Zero Variance Filter</td></tr>
+<tr><td style="width: 25%;"><a href="step_ordinalscore.html">step_ordinalscore</a></td>
+<td>Convert Ordinal Factors to Numeric Scores</td></tr>
+<tr><td style="width: 25%;"><a href="step_other.html">step_other</a></td>
+<td>Collapse Some Categorical Levels</td></tr>
+<tr><td style="width: 25%;"><a href="step_pca.html">step_pca</a></td>
+<td>PCA Signal Extraction</td></tr>
+<tr><td style="width: 25%;"><a href="step_poly.html">step_poly</a></td>
+<td>Orthogonal Polynomial Basis Functions</td></tr>
+<tr><td style="width: 25%;"><a href="step_range.html">step_range</a></td>
+<td>Scaling Numeric Data to a Specific Range</td></tr>
+<tr><td style="width: 25%;"><a href="step_ratio.html">step_ratio</a></td>
+<td>Ratio Variable Creation</td></tr>
+<tr><td style="width: 25%;"><a href="step_regex.html">step_regex</a></td>
+<td>Create Dummy Variables using Regular Expressions</td></tr>
+<tr><td style="width: 25%;"><a href="step_rm.html">step_rm</a></td>
+<td>General Variable Filter</td></tr>
+<tr><td style="width: 25%;"><a href="step_scale.html">step_scale</a></td>
+<td>Scaling Numeric Data</td></tr>
+<tr><td style="width: 25%;"><a href="step_shuffle.html">step_shuffle</a></td>
+<td>Shuffle Variables</td></tr>
+<tr><td style="width: 25%;"><a href="step_spatialsign.html">step_spatialsign</a></td>
+<td>Spatial Sign Preprocessing</td></tr>
+<tr><td style="width: 25%;"><a href="step_sqrt.html">step_sqrt</a></td>
+<td>Square Root Transformation</td></tr>
+<tr><td style="width: 25%;"><a href="step_window.html">step_window</a></td>
+<td>Moving Window Functions</td></tr>
+<tr><td style="width: 25%;"><a href="step_YeoJohnson.html">step_YeoJohnson</a></td>
+<td>Yeo-Johnson Transformation</td></tr>
+<tr><td style="width: 25%;"><a href="summary.recipe.html">summary.recipe</a></td>
+<td>Summarize a Recipe</td></tr>
+<tr><td style="width: 25%;"><a href="terms_select.html">terms_select</a></td>
+<td>Select Terms in a Step Function.</td></tr>
+</table>
+</body></html>

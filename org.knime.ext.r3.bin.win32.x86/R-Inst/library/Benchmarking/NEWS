@@ -1,0 +1,207 @@
+$Id: NEWS 152 2015-07-07 10:02:02Z b002961 $
+
+Upcoming
+
+* Implementing Malmquist index
+
+* Directional distance efficiency for parametric function
+
+* A fast version of dea.boot
+
+
+Changes to Benchmarking version 0.26
+
+
+Changes to Benchmarking version 0.25
+
+* Corrected a feature/bug in dea.boot that could lead to negative bias corrected efficiencies (reported by sevaral). Implemented option SHEPHARD.INPUT to avoid negative bias corrected efficiencies if this is wanted.
+
+* Corrected bug in summary percentages for direction out (reported by Dana Pancurova)
+
+* Corrected a bug in the sfa function that could leed to wrong results and missing standard errors if the function was called two or more times.
+
+* Direction graph does not work for the method mea; the function now stops with an error message and does no longer return ordinary dea efficiencies
+
+
+Changes to Benchmarking version 0.24
+
+* Corrected dea.plot.transform that in certain cases missed a segment on the frontier
+
+* Corrected several manual pages
+
+* Use of FEAR has been droped as FEAR is hard to install and is not free.
+
+* The method mea can now be used for directions in, out, and in-out.
+
+
+Changes to Benchmarking version 0.23
+
+* Corrected setting of options CONTROL (suggested by Arne Henningsen).
+
+* Changed from using the deprecated function is.real to use of
+  is.numeric.
+
+
+Changes to Benchmarking version 0.22
+
+* Corrected bug in dea.direct when the option DIRECTION was given by a
+  number (reported by Tomas Balezentis).
+
+
+Changes to Benchmarking version 0.21
+
+ * Corrected bug in dea.plot(.transform) when y1 contains a 0 (bug
+   reported by John P Burkett) and also corrected a few other odd
+   problems in the method.
+
+ * data.frames now possible instead of matrices in dea.dual as it have
+   been for long in dea (bug reported by Marco Giuliano)
+
+ * Better formatting af lambda in several output functions. 
+
+
+Changes to Benchmarking version 0.20
+
+ * Changed email for the author/maintainer
+
+ * The arguments RTS=fdh+ and param now also works for eladder and mea.
+
+ * Solved a bug in cost.opt when number of firms defining the
+   technology differ from the number of firms for for which optimal
+   input is to be calculated. This makes it possible to calculate cost
+   efficiency for a group of firms that differ for the group that
+   defines the technology.
+
+
+
+Changes to Benchmarking version 0.19
+
+ * Speed of dea with ORIENTATION="graph" has been almost doubled do to
+   splicing in the bisection algorithmen; and now it gives the right
+   efficiency for firms outside the technology set (before the highest
+   possible value was 2)
+
+ * The function eladder now accepts the arguments XREF and YREF as
+   well as RTS="fdh" anf RTS="fdh+"
+
+ * The function dea with DIRECT and dea.direct now accepts RTS="fdh+"
+
+ * Corrected bug for missing names of peers when using NAMES=TRUE in
+   peers for RTS="fdh".
+
+ * Slack is now ok for directinal efficiency
+
+
+Changes to Benchmarking version 0.18
+
+ * The function eladder now also accept the argument DIRECT for for
+   use with directional efficiency; a case of a forgotten argument.
+ 
+ * The function peers now just return NA when there are no peers at all.
+
+ * A new function dea.boot to bootstrap without the FEAR
+   package. Changed the name of the wrapper boot.fear for bootstrap
+   using the FEAR package (a wrap of FEAR::boot.sw98).
+
+ * Corrected bug in dea.dual and dea for output directional efficiency.
+
+ * The basis is reset to default basis for each firm in mea efficiency
+   to avoid numerical failures (status code 5).
+
+ * In the function dea RTS=irs2 now bounds the individual lambdas to 0
+   or greater than or equal 1 and not just that their sum is greater
+   than or equal 1 as for RTS=irs.
+
+ * On request, numerical data frames are now accepted as arguments for
+   X and Y. And as a byproduct vectors or arrays are condisered to be
+   1 good (input og output) for many firms.
+
+ * Firms with missing values are removed in the function sfa.
+
+
+
+Changes to Benchmarking version 0.17
+
+ * The function dea now accepts the argument RTS="fdh+", a technology
+   the combines free disposability and restricted or local constant
+   return to scale.
+
+ * Changed internal use of matrices such that the corresponds to
+   standard R use, and, therefore, are not transposed in the start of
+   many functions. For normal use this speeds up the functions
+   marginally, but the internal structure of the functions are nicer.
+
+ * Directional efficiency now works for RTS="fdh", but still waiting
+   for RTS="fdh+".
+
+ * Every group of functions are now documented in a separate file
+
+ * Efficiencies with no solutions returns -Inf or Inf depending on the
+   orientation. This is in agreement with the use in super efficiency.
+
+ * Better summaries for Farrell and slack objects
+
+ * Fixed bug in slack when either input and/or outputs have big values
+
+
+
+Changes to Benchmarking version 0.16
+
+ * eff() now returns efficiencies as array and not as matrix; makes it
+   easier with further calculations with eff as dimensions are now a
+   lesser problem.   
+
+ * Use of S3 method for efficiencies, compatible with the package
+   frontier.
+
+ * New function excess returns excess input and/or output for Farrell
+   objects.
+
+ * The function dea checks if X and Y are matrices and aborts if not.
+
+ * make.merge can now use a named list to define mergers.
+
+ * New function eladder and eladder.plot.
+
+ * New function dea.direct for simplified directional efficiency with
+   an interpretation a la Farrell.
+
+ * The function slack works for directional efficiency
+
+ * sdea (super-efficiency)  works with directional efficiency
+
+ * A wrapper around FEAR::boot.sw89 such that it can be called and
+   deliver results as other functions in Benchmarking.
+
+ * A new value for RTS in dea.plot: "fdh+". At the moment, however, it
+   only works for in-out direction.
+
+ * The documentation has been corrected and somewhat expanded.
+
+ 
+
+Changes to Benchmarking version 0.15
+
+  * The methods now stops if there is an unknown value for RTS
+    or ORIENTATION
+
+  * dea.dual now has argument DIRECT same way as dea
+ 
+  * new function mea calculates multi-directional efficiencies
+
+  * new function mea.lines draw lines in connection with mea
+
+  * minor clarifications in the manual for dea.dual
+
+  bug fixes
+
+  * dea argument DIRECT fixed for DIRECTION="out"; only worked
+    when number of inputs and outputs was equal
+
+
+
+Changes to Benchmarking version 0.14
+  * make.merge can now use a factor to define mergers
+  * data sets included
+  * dea new argument DIRECT for directional efficiency
+  * opdated all manuals

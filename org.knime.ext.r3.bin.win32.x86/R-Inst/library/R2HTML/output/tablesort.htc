@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+	This work is licensed under a Creative Commons License.
+
+	You are free:
+
+	to copy, distribute, display, and perform the work
+	to make derivative works
+	to make commercial use of the work
+
+	Under the following conditions:
+
+	Attribution. You must give the original author credit
+
+	Author:  DR. Detlef Groth 2004
+	Web:     http://www.dgroth.de/
+
+	License: http://creativecommons.org/licenses/by/1.0/
+        Revision      : $Revision: 1.1.1.1 $
+        Date          : $Date: 2004/01/23 11:18:11 $
+        Author        : $Author: dgroth $
+        Created By    : Dr. Detlef Groth
+        Created       : Mon Mar 10 16:41:10 2003
+        Last Modified : <040209.1432>
+        ID            : $Id: Blast-amphioxus.cgi,v 1.1.1.1 2004/01/23 11:18:11 dgroth Exp $
+        Source        : $Source: /cygdrive/d/cvs/cgi-bin/Blast-amphioxus.cgi,v $
+        Description	
+        Notes
+        $Log: Blast-amphioxus.cgi,v $
+
+   -->
+<public:component xmlns:public="urn:HTMLComponent" lightweight="true">
+  <public:attach event="onclick" onevent="sortTable()" />
+  <public:attach event="onload" for="window" handler="init"/> 
+  <script type="text/javascript">
+    //<![CDATA[
+    
+    
+    // adapted from http://www.tek-tips.com/gfaqs.cfm/pid/216/fid/3599
+    var allNums = false;        // boolean variable to see if whole column is numeric
+    var allDates = false;        // boolean variable to see if column vals are all dates
+    var lastSort = -1;                // variable to hold last column number sorted
+    var absOrder = true;        // boolean to sort in reverse if on same column
+    var ie = (navigator.appName == "Microsoft Internet Explorer");
+    //-----------------------------------------------------------------------
+function setDataType(inValue) {
+    // This function checks data type of a value
+    //         - sets allNums to false if a non-number is found
+    //        - sets allDates to false if a non-date is found
+    var isDate = new Date(inValue); // this returns a date object for Mozilla
+    var regDate = /^[0-9:, ]+blah$/ ; // does not work properly
+    var regNumber = /^[0-9\.]+$/ ;
+    if (regNumber.test(inValue)) {
+        // Value is a number, make sure it is not treated as a string
+        allDates = false
+        return parseFloat(1*inValue);
+        
+    } else if (regDate.test(inValue)) {
+        allNums = false
+        return inValue ;
+    } else {
+        // The value is a string, make all characters in
+        // String upper case to assure proper a-z sort
+        inValue =  inValue.toUpperCase();
+        allNums = false
+        allDates = false
+        return inValue;
+    }
+}
+function init() {
+}
+/* Node.prototype.swapNode = function (node) {
+  
+  var nextSibling = this.nextSibling;
+  while (nextSibling.nodeName == "#text") {
+      nextSibling = nextSibling.nextSibling ;
+  }
+  var parentNode = this.parentNode;
+  if (nextSibling != null) {
+      node.parentNode.replaceChild(this, node);
+      
+      parentNode.insertBefore(node, nextSibling);  
+  }
+}*/
+function sortTable(){
+    var node = element ;
+    // get the th walking up the tree
+    // that's why we can't bind to th, td, tr, table in mozilla
+    while (node.nodeName != "TH") {
+        node = node.parentNode;
+    }
+    
+    var ix = 1 ;
+    if (ie) {
+        ix = 0 ;
+    }
+    var col = node.cellIndex ;
+    if (lastSort == col){
+        // sorting on same column twice = reverse sort order
+        absOrder ? absOrder = false : absOrder = true
+    } else{
+        absOrder = true
+    }
+    lastSort = col ;
+    // changes make it indenpendent of id
+    allTR = node.parentNode.parentNode.parentNode.childNodes[ix].getElementsByTagName("TR") ; //childNodes
+    // allTR now holds all the rows in the dataTable
+    totalRows = allTR.length ;
+    colToSort = new Array()        //holds all the cells in the column to sort
+    colArr = new Array()                //holds all the rows that correspond to the sort cell
+    copyArr = new Array()            //holds an original copy of the sort data  to match to colArr
+    resultArr = new Array()            //holds the output
+   
+ 
+    allNums = true
+    allDates = true
+    
+    //store the original data
+    //remember that the first row - [0] -  has column headings
+    //so start with the second row - [1]
+    //and load the contents of the cell into the array that will be sorted
+    for (x=1; x < totalRows; x++){
+        colToSort[x-1] = setDataType(allTR[x].childNodes[col].innerHTML);
+        colArr[x-1] = allTR[x]
+    }
+    //make a copy of the original
+    for (x=0; x<colToSort.length; x++){
+        copyArr[x] = colToSort[x]
+    }
+    
+    //sort the original data based on data type
+    if (allNums){
+        colToSort.sort(numberOrder)
+    } else if (allDates){
+        colToSort.sort(dateOrder)
+    } else {
+        colToSort.sort(textOrder)
+    }
+    //match copy to sorted
+    for(x=0; x<colToSort.length; x++){
+        for(y=0; y<copyArr.length; y++){
+            if (colToSort[x] == copyArr[y]){
+                boolListed = false
+                //search the ouput array to make sure not to use duplicate rows
+                for(z=0; z<resultArr.length; z++){
+                    if (resultArr[z]==y){
+                        boolListed = true
+                        break;
+                    }
+                }
+                if (!boolListed){
+                    resultArr[x] = y
+                    break;
+                }
+            }
+        }
+    }
+    
+    //now display the results - it is as simple as swapping rows
+    for (x=0; x<resultArr.length; x++){
+        allTR[0].parentNode.appendChild(colArr[resultArr[x]]);
+        // swapNodes does not work in mozilla
+    }
+    alternateColors(node.parentNode.parentNode.parentNode, col);    
+}
+function alternateColors(tablenode, col) {
+    var y ;
+    var td = new Array();
+    ie ? y = 0 : y = 1;
+    try {
+        allTR = tablenode.getElementsByTagName("TR") ; //childNodes[y].childNodes
+        
+        for (x=1; x<allTR.length; x++){
+            td = allTR[x].getElementsByTagName("TD") ;
+            for (var z = 0 ; z < td.length ; z++) {
+                (x % 2 == 0) ?  td[z].className = "row2"  :  td[z].className = "row1" ; 
+            }
+            td[col].className = "row2" ;
+        }
+    } catch (event) {}
+}
+//-----------------------------------------------------------------------
+function numberOrder(a,b){
+    absOrder ? rVal = b - a : rVal = a - b
+    return rVal
+}
+//-----------------------------------------------------------------------
+function dateOrder(a,b){
+
+    absOrder ? rVal = Date.parse(a) - Date.parse(b) : rVal = Date.parse(b) - Date.parse(a)
+    return rVal
+}
+//-----------------------------------------------------------------------
+function textOrder(a,b) {
+    if (a.toString() < b.toString()){
+        absOrder ? rVal = -1 : rVal = 1
+    }else{
+        absOrder ? rVal = 1 : rVal = -1
+    }
+    return rVal ;
+}
+
+
+//]]>
+</script>
+</public:component>

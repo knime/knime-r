@@ -1,0 +1,126 @@
+Changes to mclistbox.tcl and related files:
+
+## version 1.02:
+
+* fixed bugs in how yview was computed. yview should now return
+  the proper value even when the window is resized, and scrolling
+  the listbox after resizing should properly scroll all the way
+  up and down.
+
+* fixed some bugs when a column id has spaces in it
+
+* fixed a bug in the label bind command, where curly braces were
+  improperly being added around the %W substitution.
+
+* added additional tests to the test suite, and improved the format
+  of tests to be a bit more readable
+
+* added the file "defs" to the distribution, so that the test
+  script (mclistbox.test) would work. This is a modified version
+  of the "defs" file that comes with the tcl source. The modifications
+  allow for a more human-friendly format of the test data
+
+
+## version 1.01:
+
+* fixed bug where the fill column wasn't filling properly
+
+* fixed bug when trying to canonize a column name.
+
+
+## version 1.00 (final):
+
+* fixed the -width option for columns; a width of zero should now 
+  do what the documentation says it will do (e.g. set the column
+  to be just wide enough to show the longest item)
+ 
+* fixed the bug where we were trying to update the scrollbars even
+  after the widget has been destroyed
+
+* "column nearest" should now work
+
+* a few other small bugs have been fixed
+
+
+
+## version 1.00b3:
+
+* =INCOMPATIBILITY= added the column option "-visible"; removed 
+  the column commands "show" and "hide". This seems to be more
+  "standard", and allows a way for the application programmer
+  to query whether a column is visible or not.
+
+* added the following widget commands: 'bbox', 'column nearest',
+  'column cget'
+
+* options and commands may now be specified with the shortest
+  unique string (eg: -labela will be translated to -labelanchor,
+  but -label will return an error since it matches several 
+  options)
+
+* documented the -font, -foreground and -background column
+  options (oops!)
+
+* column identifiers with embedded whitespace seem to work now.
+
+* scanning in the x direction works now
+
+* added support for -exportselection (hope I got it right!)
+
+* resizable columns may be turned off on the widget as a 
+  whole, and by column name (ie: you can mix and match
+  columns which are resizable and those which aren't)
+
+* example shows how to provide column-specific popup menus
+  (press the right mouse button to see)
+
+* fixed case where new columns weren't properly inheiriting
+  the background color of the widget.
+
+* update the documentation for the 'get' and 'column names' 
+  commands to reflect the fact that 'column names' reports
+  the order in which data is returned by 'get'.
+
+* the fillcolumn now will not shrink below it's original size.
+  If the user resizes the column interactively, the new
+  size will become the new minimum size for filling.
+
+* pkg_mkIndex should now properly index mclistbox.tcl without
+  any extra effort
+
+* lots of internal comments, and a slightly better conformance
+  to the scriptics tcl style guide (though I'm still not perfect)
+
+* the beginnings of a complete automated test suite based on the
+  same code used by the tcl distribution
+
+* other random bug fixes
+
+
+### version 1.00b2:
+
+* added -fillcolumn option. With this you can designate a column
+  that will grow or shrink so that the widget is completely filled
+
+* the command "label bind" has been added
+
+* scanning in the Y direction has been fixed. The x direction is
+  still busted.
+
+* added the option -resizablecolumns; if set the columns can be
+  resized interactively with the mouse.
+
+* removed the option -labelimage. It was in by accident and 
+  never had any effect.
+
+* added -image and -bitmap options to "column configure"
+
+* the example shows how to bind ButtonPress-1 to a label in order
+  to sort the column.
+
+* various bug fixes
+
+
+### version 1.00b1:
+
+* first public release

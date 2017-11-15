@@ -1,0 +1,13 @@
+citHeader("To cite the adephylo package:")
+
+citEntry(
+entry="Article",
+title = "adephylo: exploratory analyses for the phylogenetic comparative method.",
+journal= "Bioinformatics",
+year = "2010",
+author = "T. Jombart, S. Dray",
+volume = "26",
+pages = "1907-1909",
+doi = "10.1093/bioinformatics/btq292",
+textVersion = "Jombart T., Dray S. (2008) adephylo: exploratory analyses for the phylogenetic comparative method."
+)

@@ -1,0 +1,99 @@
+---
+title: "Filematrix vs. bigmemory (packages)"
+author: "Andrey A Shabalin"
+date: "`r doc_date()`"
+package: "`r pkg_ver('filematrix')`"
+output: 
+  BiocStyle::html_document:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{3 Filematrix vs. bigmemory (packages)}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+# Motivation for creation of `filematrix` package
+
+The `filematrix` package was originally conceived as an alternative to `bigmemory` package for two reasons.
+First, matrices created with `bigmemory` on NFS (network file system) have often been **corrupted** (contained all zeros). This is most likely a fault of memory-mapped files on NFS. Second, `bigmemory` was **not available for Windows** initially. It is now fully cross platform.
+
+
+## Differences between `filematrix` and `bigmemory` packages
+
+The packages use different libraries to read from and write to their big files. 
+`filematrix` uses `readBin` and `writeBin` R functions. `bigmemory` uses memory-mapped file access via `BH` R package (Boost C++).
+
+Also, `filematrix` can store real values in `short` 4 byte format. This feature is not available in `bigmemory`.
+
+## Differences in tests
+
+Due to different file access approach:
+
+- `bigmemory` accumulates changes to the matrix in memory and writes them to the file upon call of `flush` or file closure.
+- `filematrix` writes the changes to the file upon the request without delay.
+
+Consequently:
+
+- `bigmemory` works well for matrices smaller than the system memory. Writing to larger matrices is much slower due to system trying to keep as much of the matrix in the system memory (cache) as possible.
+- `filematrix`'s performance does not deteriorate on matrices many times larger than the system memory.
+
+- `bigmemory` is better for random access of the file matrices.
+- `filematrix` is equally good or better for block and column-wise access of the file matrices.
+
+## Example when `filematrix` is much more efficient than `bigmemory`
+
+```{r setup, echo=FALSE}
+  library(knitr)
+  opts_knit$set(root.dir=tempdir())
+```
+
+Let us consider a simple task of filling in a large matrix (twice memory size).
+Below is the code using `filematrix`. It finishes in 10 minutes and does not interfere with other programs.
+
+```{r eval=FALSE}
+library(filematrix)
+fm = fm.create('E:/big_fm', nrow = 1e5, ncol = 1e5)
+
+tic = proc.time()
+for( i in seq_len(ncol(fm)) ) {
+	cat(i, "of", ncol(fm), "\n")
+	fm[,i] = i + 1:nrow(fm)
+}
+toc = proc.time()
+show(toc-tic)
+
+# Cleanup
+
+closeAndDeleteFiles(fm)
+```
+
+Filling the same sized big matrix with `bigmemory` can be very slow (**2.5 times** slow in this experiment).
+The `bigmemory` package uses memory mapped file technique to access the file.
+When the matrix is written to, the memory mapped file occupies all available RAM and the computer **slows to a halt**.
+![Task Manager shows the memory mapped file occupy all available RAM when filling a large matrix with `bigmemory` package.](figures/out_of_memory.png)
+
+Please excercise caution when running the code below.
+
+```{r eval=FALSE}
+library(bigmemory)
+fm = filebacked.big.matrix(nrow = 1e5, ncol = 1e5, 
+								  type = 'double', backingfile = 'big_bm.bmat',
+								  backingpath = 'E:/', descriptorfile = 'big_bm.desc.txt')
+
+tic = proc.time()
+for( i in seq_len(ncol(fm)) ) {
+	cat(i, "of", ncol(fm), "\n")
+	fm[,i] = i + 1:nrow(fm)
+}
+flush(fm)
+toc = proc.time()
+show(toc-tic)
+
+# Cleanup
+
+rm(fm)
+gc()
+unlink('E:/big_bm.bmat')
+unlink('E:/big_bm.desc.txt')
+
+```
+

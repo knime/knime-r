@@ -1,0 +1,33 @@
+gradient                Estimates the gradient matrix for a simple
+                        function
+hessian                 Estimates the hessian matrix
+jacobian.band           Banded jacobian matrix for a system of ODEs
+                        (ordinary differential equations)
+jacobian.full           Full square jacobian matrix for a system of
+                        ODEs (ordinary differential equations)
+multiroot               Solves for n roots of n (nonlinear) equations.
+multiroot.1D            Solves for n roots of n (nonlinear) equations,
+                        created by discretizing ordinary differential
+                        equations.
+plot.steady1D           Plot and Summary Method for steady1D, steady2D
+                        and steady3D Objects
+rootSolve-package       Roots and steady-states
+runsteady               Dynamically runs a system of ordinary
+                        differential equations (ODE) to steady-state
+steady                  General steady-state solver for a set of
+                        ordinary differential equations.
+steady.1D               Steady-state solver for multicomponent 1-D
+                        ordinary differential equations
+steady.2D               Steady-state solver for 2-Dimensional ordinary
+                        differential equations
+steady.3D               Steady-state solver for 3-Dimensional ordinary
+                        differential equations
+steady.band             Steady-state solver for ordinary differential
+                        equations; assumes a banded jacobian
+stode                   Iterative steady-state solver for ordinary
+                        differential equations (ODE) and a full or
+                        banded Jacobian.
+stodes                  Steady-state solver for ordinary differential
+                        equations (ODE) with a sparse jacobian.
+uniroot.all             Finds many (all) roots of one equation within
+                        an interval

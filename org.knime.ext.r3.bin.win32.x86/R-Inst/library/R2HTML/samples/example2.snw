@@ -1,0 +1,52 @@
+<!--
+Use the following R command to sweave this file:
+Sweave("example2.snw",driver=RweaveHTML())
+!-->
+
+
+<html>
+<body>
+
+<h1>Sweave Example 2 using a HTML file</h1>
+<p align=center>
+	<font size=+1>
+	Eric Lecoute<br>
+	<Sexpr format(Sys.time(), "%b %d, %Y")>
+	</font>
+</p>
+
+<p>HTML Sweaving relies on <font class='Rcmd'><b>R2HTML</b></font> package, which uses CSS styles. Thus, you can change the whole aspect of your output, simply by changing the CSS file. Simply call:</p> 
+
+<<echo=TRUE,eval=FALSE>>=
+Sweave("example2.snw", driver=RweaveHTML(), cssfile="pastel.css")
+@
+
+
+<p>You can insert scalars in text by using expressions <font class='Rcmd'>&lt;Sexpr expr&gt;</font>. If the result is a vector, only the first element is returned: see the call <font class='Rcmd'>&lt;Sexpr round(rnorm(10),2)&gt;</font> transformed to: <Sexpr round(rnorm(10),2)>. Also any HTML tag can be used to format this output: see this colored actual year computed by <font class='Rcmd'>date()</font>:
+<font color="darkred"><b><Sexpr format(Sys.time(), "%Y")></b></font>.
+
+<p>As we use HTML() functions, some formatting is already applied on most R objects. This this regression result:</p>
+
+<<echo=FALSE>>=
+x=1:10
+y=3*x+2+3*rnorm(10)
+reg1=lm(y~x)
+summary(reg1)
+@
+
+<p>By default, the last manipulated object in a code chunk is evaluated and a call to HTML is done to catch it's HTML representation, which is inserted in the output file. You can override this behaviour by explicitely return a string containing HTML codes as output. This allows to have more controls on output, as you can do exactly what you want from R. To specify that output are already HTML, add the option <code>results=html</code> to your code chunk.</p>
+
+<<echo=TRUE,results=html>>=
+HTML(data.frame(x,y),digits=2,Border=2)
+@
+
+<p>Finally, some more options are added to handle graphs, such as <code>width</code>, <code>height</code>, <code>border</code>, <code>align</code> and <code>caption</code></p>
+
+<<echo=FALSE,fig=TRUE,caption=Boxplot - x,border=1,width=600,height=300,HTMLwidth=600,HTMLheight=300>>=
+boxplot(x,main="")
+@
+
+</body>
+
+</html>
+

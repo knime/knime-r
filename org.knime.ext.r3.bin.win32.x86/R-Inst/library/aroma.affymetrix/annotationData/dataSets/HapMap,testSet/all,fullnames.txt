@@ -1,0 +1,4 @@
+pattern	replacement	comments
+_	,	# Comma-separated tags, e.g. CEU_NA06991_XBA => CEU,NA06991,XBA
+(HIND|XBA)		# Drops all HIND & XBA tags, e.g. CEU,NA06991,XBA => CEU,NA06991
+([^,]*),([^,]*)(.*)	\2,\1\3	# CEU,NA06991 => NA06991,CEU

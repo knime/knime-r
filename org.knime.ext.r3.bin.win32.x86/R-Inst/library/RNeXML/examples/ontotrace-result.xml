@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nexml xmlns="http://www.nexml.org/2009" xmlns:dc="http://purl.org/dc/terms/" xmlns:dwc="http://rs.tdwg.org/dwc/terms/" xmlns:obo="http://purl.obolibrary.org/obo/" xmlns:ps="http://vocab.phenoscape.org/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.9" xsi:schemaLocation="http://www.nexml.org/2009 http://www.nexml.org/2009/nexml.xsd http://www.bioontologies.org/obd/schema/pheno http://purl.org/phenoscape/phenoxml.xsd">
+  <meta xsi:type="LiteralMeta" property="dc:creator" />
+  <meta xsi:type="LiteralMeta" property="dc:description">Generated from the Phenoscape Knowledgebase on 2015-10-21 by Ontotrace query:
+* taxa: &lt;http://purl.obolibrary.org/obo/VTO_0036217&gt;
+* entities: &lt;http://purl.obolibrary.org/obo/BFO_0000050&gt; some &lt;http://purl.obolibrary.org/obo/UBERON_0008897&gt;</meta>
+  <otus id="t0d4df580-2d92-4166-8518-a76116df5295">
+    <otu id="VTO_0036225" label="Ictalurus punctatus" about="#VTO_0036225">
+      <meta xsi:type="ResourceMeta" rel="dwc:taxonID" href="http://purl.obolibrary.org/obo/VTO_0036225" />
+      <meta xsi:type="ResourceMeta" rel="rdfs:subClassOf" href="http://purl.obolibrary.org/obo/VTO_0036217" />
+    </otu>
+    <otu id="VTO_0061498" label="Ictalurus mexicanus" about="#VTO_0061498">
+      <meta xsi:type="ResourceMeta" rel="dwc:taxonID" href="http://purl.obolibrary.org/obo/VTO_0061498" />
+    </otu>
+    <otu id="VTO_0061495" label="Ictalurus australis" about="#VTO_0061495">
+      <meta xsi:type="ResourceMeta" rel="dwc:taxonID" href="http://purl.obolibrary.org/obo/VTO_0061495" />
+    </otu>
+    <otu id="VTO_0036221" label="Ictalurus balsanus" about="#VTO_0036221">
+      <meta xsi:type="ResourceMeta" rel="dwc:taxonID" href="http://purl.obolibrary.org/obo/VTO_0036221" />
+    </otu>
+    <otu id="VTO_0036218" label="Ictalurus pricei" about="#VTO_0036218">
+      <meta xsi:type="ResourceMeta" rel="dwc:taxonID" href="http://purl.obolibrary.org/obo/VTO_0036218" />
+    </otu>
+    <otu id="VTO_0036223" label="Ictalurus furcatus" about="#VTO_0036223">
+      <meta xsi:type="ResourceMeta" rel="dwc:taxonID" href="http://purl.obolibrary.org/obo/VTO_0036223" />
+    </otu>
+    <otu id="VTO_0036220" label="Ictalurus lupus" about="#VTO_0036220">
+      <meta xsi:type="ResourceMeta" rel="dwc:taxonID" href="http://purl.obolibrary.org/obo/VTO_0036220" />
+    </otu>
+    <otu id="VTO_0061497" label="Ictalurus dugesii" about="#VTO_0061497">
+      <meta xsi:type="ResourceMeta" rel="dwc:taxonID" href="http://purl.obolibrary.org/obo/VTO_0061497" />
+    </otu>
+    <otu id="VTO_0061496" label="Ictalurus sp. (Mo 1991)" about="#VTO_0061496">
+      <meta xsi:type="ResourceMeta" rel="dwc:taxonID" href="http://purl.obolibrary.org/obo/VTO_0061496" />
+    </otu>
+  </otus>
+  <characters id="78a03b88-2c5b-4cb2-aa4a-0f3b2fecd690" xsi:type="StandardCells" otus="t0d4df580-2d92-4166-8518-a76116df5295">
+    <format>
+      <states id="sa75ef9ac-e74e-4015-846d-27d793868951">
+        <state id="UBERON_2002002_1" label="present" symbol="1" />
+        <state id="UBERON_2002002_0" label="absent" symbol="0" />
+        <polymorphic_state_set id="sb2d18260-c1f3-4bfe-bfa5-c3d7fb69c9ce" symbol="1 and 0">
+          <member state="UBERON_2002002_1" />
+          <member state="UBERON_2002002_0" />
+        </polymorphic_state_set>
+      </states>
+      <states id="s99d94a8b-9bab-4b56-990a-a3fcc85900f4">
+        <state id="UBERON_2001788_1" label="present" symbol="1" />
+        <state id="UBERON_2001788_0" label="absent" symbol="0" />
+        <polymorphic_state_set id="s46f96668-07c6-4332-9851-cbfcca97dd66" symbol="1 and 0">
+          <member state="UBERON_2001788_1" />
+          <member state="UBERON_2001788_0" />
+        </polymorphic_state_set>
+      </states>
+      <states id="sb29f0f18-addb-4e9b-bcef-833065cba124">
+        <state id="UBERON_2002001_1" label="present" symbol="1" />
+        <state id="UBERON_2002001_0" label="absent" symbol="0" />
+      </states>
+      <char id="UBERON_2002002" label="anterior distal serration of pectoral fin spine" about="#UBERON_2002002" states="sa75ef9ac-e74e-4015-846d-27d793868951">
+        <meta xsi:type="ResourceMeta" rel="obo:IAO_0000219" href="http://purl.obolibrary.org/obo/UBERON_2002002" />
+      </char>
+      <char id="UBERON_2001788" label="pelvic splint" about="#UBERON_2001788" states="s99d94a8b-9bab-4b56-990a-a3fcc85900f4">
+        <meta xsi:type="ResourceMeta" rel="obo:IAO_0000219" href="http://purl.obolibrary.org/obo/UBERON_2001788" />
+      </char>
+      <char id="UBERON_2002001" label="anterior dentation of pectoral fin spine" about="#UBERON_2002001" states="sb29f0f18-addb-4e9b-bcef-833065cba124">
+        <meta xsi:type="ResourceMeta" rel="obo:IAO_0000219" href="http://purl.obolibrary.org/obo/UBERON_2002001" />
+      </char>
+    </format>
+    <matrix>
+      <row id="rfca07b63-5447-4122-9e68-0084603e2faf" otu="VTO_0036225">
+        <cell char="UBERON_2002002" state="UBERON_2002002_1" />
+        <cell char="UBERON_2001788" state="s46f96668-07c6-4332-9851-cbfcca97dd66" />
+        <cell char="UBERON_2002001" state="UBERON_2002001_1" />
+      </row>
+      <row id="refddffcd-73f6-472b-bc8b-a31425f57ad2" otu="VTO_0061498">
+        <cell char="UBERON_2002002" state="UBERON_2002002_1" />
+        <cell char="UBERON_2001788" state="UBERON_2001788_1" />
+      </row>
+      <row id="rc286caf2-a45a-4ca8-99fd-d936e5f346a1" otu="VTO_0061495">
+        <cell char="UBERON_2002002" state="UBERON_2002002_1" />
+        <cell char="UBERON_2001788" state="UBERON_2001788_1" />
+        <cell char="UBERON_2002001" state="UBERON_2002001_1" />
+      </row>
+      <row id="r06111202-cde9-409a-b6dc-4c7ed51c295a" otu="VTO_0036221">
+        <cell char="UBERON_2002002" state="sb2d18260-c1f3-4bfe-bfa5-c3d7fb69c9ce" />
+        <cell char="UBERON_2001788" state="UBERON_2001788_1" />
+        <cell char="UBERON_2002001" state="UBERON_2002001_0" />
+      </row>
+      <row id="r7cd59da8-c80b-483c-bb97-f1c7ef527227" otu="VTO_0036218">
+        <cell char="UBERON_2002002" state="UBERON_2002002_1" />
+        <cell char="UBERON_2001788" state="UBERON_2001788_1" />
+        <cell char="UBERON_2002001" state="UBERON_2002001_1" />
+      </row>
+      <row id="r9b639c72-1ac5-473d-a823-842ebf70a80b" otu="VTO_0036223">
+        <cell char="UBERON_2002002" state="UBERON_2002002_1" />
+        <cell char="UBERON_2001788" state="UBERON_2001788_1" />
+        <cell char="UBERON_2002001" state="UBERON_2002001_0" />
+      </row>
+      <row id="rb8fb59b0-4df7-461b-a5db-afb197b7275e" otu="VTO_0036220">
+        <cell char="UBERON_2002002" state="UBERON_2002002_1" />
+        <cell char="UBERON_2001788" state="UBERON_2001788_1" />
+        <cell char="UBERON_2002001" state="UBERON_2002001_1" />
+      </row>
+      <row id="r585a108b-58af-44a5-bb5f-6802f90807b2" otu="VTO_0061497">
+        <cell char="UBERON_2002002" state="UBERON_2002002_1" />
+        <cell char="UBERON_2001788" state="UBERON_2001788_1" />
+      </row>
+      <row id="r5404145e-fe06-4fcd-9739-dea9ccdb4c83" otu="VTO_0061496">
+        <cell char="UBERON_2001788" state="UBERON_2001788_0" />
+      </row>
+    </matrix>
+  </characters>
+  <trees id="t31ddcf42-3357-4a74-b123-d57a6e51e7e9" otus="t0d4df580-2d92-4166-8518-a76116df5295" />
+</nexml>

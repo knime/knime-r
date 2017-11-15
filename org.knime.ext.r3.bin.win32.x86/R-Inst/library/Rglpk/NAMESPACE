@@ -1,0 +1,7 @@
+useDynLib("Rglpk", .registration = TRUE)
+import("slam")
+
+export("Rglpk_solve_LP")
+export("Rglpk_read_file")
+S3method("print", "MP_data_from_file")
+

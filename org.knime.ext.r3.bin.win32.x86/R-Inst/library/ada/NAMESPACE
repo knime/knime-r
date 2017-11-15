@@ -1,0 +1,19 @@
+##useDynLib(ada)
+import(rpart)
+export(ada,varplot,addtest)
+
+importFrom("grDevices", "rainbow")
+importFrom("graphics", "axis", "dotchart", "legend", "matlines",
+           "pairs", "par", "plot", "points", "title")
+importFrom("stats", "model.extract", "predict")
+
+S3method(summary,ada)
+S3method(print,ada)
+S3method(pairs,ada)
+S3method(plot,ada)
+S3method(predict,ada)
+S3method(update,ada)
+
+S3method(ada,formula)
+S3method(ada,default)
+

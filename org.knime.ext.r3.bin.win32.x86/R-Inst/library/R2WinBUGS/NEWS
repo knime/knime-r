@@ -1,0 +1,303 @@
+Changes to R2WinBUGS:
+=====================
+
+Update 2.1-20/21
+- various URL fixes, DESCRIPTION file updates
+- import from base packages
+
+Update 2.1-19
+- fix outdated usage: .path.package -> system.file
+- move vignette files around
+
+Update 2.1-18
+- import logit from boot nowadays (seems nobody uses that anyway)
+
+Update 2.1-17
+- fix as.bugs.array as reported by S. McKay Curtis
+
+Update 2.1-16
+- fix write.model() again by going throught parse tree now
+
+Update 2.1-15
+- added seed argument to openbugs()
+- fix write.model() to work for separatly specified function body
+- fix write.model() to make larger numeric (particularly integer) values
+  in scientific notation work
+- fix bugs.update.settings() for R>=2.10.0 compatibility
+
+Update 2.1-14
+- new argument over.relax=FALSE
+
+Update 2.1-13
+- hack: adding group write permission for a temporary working directory in order to
+  avoid problems with WINE emulator on Mac OS X
+- bugfix: properly using chain parameters in as.mcmc.list.bugs
+- documentation fix
+
+Update 2.1-12
+- new method as.mcmc.list.bugs contributed by Mike Meredith
+- bugfix: plot.bugs() did not reset par(mfrow)
+- bugfix: adaptive phase stuff cannot read from files anymore by openbugs(),
+          feature has been removed
+- openbugs now displays messages before starting the sampling
+  (essentially using flush.console())
+
+
+Update 2.1-11
+- bugfix: if working.directory was unset and files are assumed to be in R's
+  former wd, these are copied to the tempdir that is set as new working
+  directory now.
+
+Update 2.1-10
+- bugfix: working.directory was not always reset when function terminated.
+
+Update 2.1-9
+- R2WinBUGS now works on OS X and Solaris (with suitable versions of wine)
+- findUnixBinary now fails (with a meaningfull error message) always if the
+  binary file does not exist.
+- If working.directory=NULL (the default setting), then a temporary
+  directory is used as a working directory to prevent overwriting/removing
+  the existing files.
+- File script.txt is also removed when clearWD=TRUE.
+- If model.file does not have a "txt" extension, then it is temporarily
+  copied to a file with "txt" extension in the working directory and
+  removed at the end of WinBUGS run.
+
+Update 2.1-7
+- this file is now available as NEWS file in top folder of installed package
+
+Update 2.1-6 (23 August 2007):
+- reverting back to use thin.updater since it is faster, however CODA files
+  have "wrong" indexes - this needs to be fixed in BUGS program
+- WINE arguments are now set in such a way that defaults work on Windows
+  and Linux
+- minor formatting in the code and help files
+- added R2WinBUGS-package help page
+
+Update 2.1-5 (12 June 2007):
+- proper indexing of CODA files also in R version
+- fixed useWINE documentation in bugs help page
+- note on supported BUGS versions
+- as.bugs.array now returns info on used rule for pD i.e. var(deviance)/2
+    or Dbar-Dhat
+- some internal fixes related to handling of DIC
+- merging and reversing ChangeLog files
+
+Update 2.1-4 (20 May 2007):
+- Depending on coda now (Namespace issues)
+- some more fixes for codetools checks
+- Vignette has been updated
+
+Update 2.1-3 (13 May 2007):
+- Ported to S-PLUS by Insightful Corp.
+- some fixes for codetools checks
+
+Update 2.0-4 (01 November 2006):
+- print.bugs / plot.bugs documentation fixes
+- write.model() fix
+
+Update 2.0-3 (06 October 2006):
+- \\. -> [.] in regular expressions
+
+Update 2.0-2 (26 July 2006):
+- changes for DIC, making use of BUGS internal calculations
+- some doc fixes
+
+Update 2.0-1 (26 May 2006):
+- some wine patches for 2.2-0 by Gregor Gorjanc
+
+Update 2.0-0 (08 May 2006):
+- bugs() doc fix/updates on scrambling
+- bugs.run() has new arg useWINE (by Gregor Gorjanc)
+- bugs() and bugs.script() patched for WINEPATH issue
+- bugs.script() changed to save log file in ASCII
+- new function bugs.log() by Gregor Gorjanc
+- new functions as.bugs.array, openbugs and sort.name by
+  Jouni Kerman and Andrew Gelman
+- new function write.model() based on ideas from Jouni Kerman
+
+Update 1.1-1 (17 Feb 2006):
+- WINE tweaks (mainly by Gregor Gorjanc)
+
+Update 1.1-0 (14 Dec 2005):
+- Contribution by Ben Bolker and Yun Yan's rbugs package:
+  make R2WinBUGS work under WINE
+
+Update 1.0-1 (14 Nov 2005):
+- make inits=NULL work (again ?)
+
+Update 1.0-0 (05 Aug 2005):
+- attach.all(), detach.all(), attach.bugs() and detach.bugs() added/changed
+  more or less according to Andrew Gelman's current bugs.R
+
+Update 0.2-9 (26 July 2005):
+- bugs has new argument clearWD
+
+Update 0.2-8 (30 May 2005):
+- bugs passed DIC to bugs.script in order to be able to disable it
+
+Update 0.2-6 (18 May 2005):
+- bugs() changes in order to return a file names of coda output files
+- new read.bugs() returns a coda mcmc.list object, if codaPkg=TRUE.
+
+Update 0.2-5 (20 Oct 2004):
+- bugs() and bugs.script() have a new argument bin that allows to specify
+  a number of iterations. After each "bin" iterations the coda files are saved.
+
+Update 0.2-4 (05 Oct 2004):
+- bugs.script() did not work for large n.iter values in update step
+  (no scientific notation allowed)
+
+Update 0.2-3 (10 Sept 2004):
+- bugs.data.inits split to bugs.inits and bugs.data, the latter exported
+  from the Namespace.
+  Now we can use already written data files in bugs().
+
+Update 0.2-2 (28 Apr 2004):
+- schools data: original (see references) instead of the rounded data
+
+During the process of packaging R2WinBUGS_0.1 - R2WinBUGS_0.2-1,
+quite a lot of changes had been made. Those changes are not
+documented anywhere ...
+
+During the process of packaging R2WinBUGS_0.1, quite a lot of changes had
+been made. Those changes are not documented anywhere ...
+
+Changes prior to R2WinBUGS_0.1:
+===============================
+
+Update 30 Oct 2003:
+  1.  Minor change to a return() statement to be compatible with R 1.8
+  2.  Just a warning (from Ben Goodrich):  if you are running Bugs.R inside
+      a loop, you have to be careful with the data() and the inits()
+      functions since they will not necessarily recognize locally-defined
+      variables.  One workaround is to define the variables used in data()
+      and inits() using global assignments (<<-), but this can sometimes
+      make the program run slower.
+Update 29 Aug 2003:
+  1.  Fixed "bugs.data.inits" function so you can use data that have the
+      same names as R functions.
+  2.  Changed T and F to TRUE and FALSE everywhere in case the variables
+      T and F are used as data in the main program
+  3.  Caution:  if you are entering the data as a list of variable names
+      (see 10 Apr 2003 update, item 1), the data to be input into must
+      be global variables.  This can be relevant if you are running bugs()
+      inside an R function.
+  4.  Caution:  bugs() has difficulty processing ragged arrays.  It is
+      better to save a whole matrix (e.g., "theta") rather than parts
+      (e.g., "theta[1:10,1]", "theta[1:5,2]").  If you want to save
+      part of a vector, you should do it as "theta[1:2]", not "theta[1]",
+      "theta[2]".
+Update 30 Apr 2003:  added time monitoring
+Update 29 Apr 2003:
+  1.  The "attach.all" function (no longer called "attach2") overwrites
+      so that all components of a list or data frame get attached.
+  2.  Program now looks in the directory /winbug~1/ rather than /winbug~2/
+  3.  Graphics parameters for margins are returned to their original state
+      at the end of the program.
+  4.  Added "digits.summary" option to the numerical display.
+  5.  Added "last.values" output:  a list that can be input as "inits"
+      if you want to run the simulations longer.
+Update 13 Apr 2003:  fixed new bug in round.bugs().  Now all numbers are
+  saved in scientific notation.
+Update 10 Apr 2003:
+  1.  It is now possible to enter the data as a list of variable names.
+      For example, before you had to enter data as,
+        data <- list (n=8, y=c(28,8,-3,7,-1,1,18,12))
+      or
+        n <- 8
+        y <- c(28,8,-3,7,-1,1,18,12)
+        data <- list (n=n, y=y)
+      Now you can enter the data as,
+        n <- 8
+        y <- c(28,8,-3,7,-1,1,18,12)
+        data <- list ("n", "y")
+      The bugs() function will figure out which method you are using (based
+      on whether "data" is a list of numbers or a vector of character
+      strings).
+      This doesn't look like much, but it's convenient when you're entering
+      lots of data!
+  2.  It is now possible to enter the initial values as a function,
+      so as to automatically a random list of inits for each of the chains.
+      For example, in the 8-schools example below, we can do:
+        inits <- function()
+          list (theta=rnorm(J,0,1), mu.theta=rnorm(1,0,100), sigma.theta=runif(1,0,100))
+
+      to set up the inits as a function (rather than setting up n.chains
+      sets of specific initial values).  Then, the function call,
+        schools.sim <- bugs (data, inits, parameters, "schools.txt", n.chains=3, n.iter=1000)
+      automatically sets up 3 sets of initial values (each a list of
+      theta, mu.theta, sigma.theta).
+  3.  Bug in the initial rounding (the function round.bugs()) has been fixed.
+      Thanks for Mark Clements for finding the bug and fixing it!
+      Also, we have set the default rounding to 5 digits instead of 2.
+Update 01 Apr 2003:  use layout() rather than split.screen() for graphical
+  display
+Update 18 Mar 2003:
+  1.  Get the Bugs configuration information from the original file
+      (Registry_default.odc) rather than overwriting each time.  (Fixes a
+      bug that occurred when R was interrupted in the middle of a Bugs run.)
+  2.  Display different colored dots in the right panel of the graphical
+      display, to show the medians from each chain.
+Update 13 Mar 2003:  fix minor bug in monitor()
+Update 10 Mar 2003:  fix bug in pD and DIC calculations
+Update 7 Mar 2003:
+  1.  Fix display.parallel=T option by adding min.width so that very
+      intervals are still visible.
+  2.  Compute pD separately for each sequence (which gives much more
+      reasonable estimates before convergence).
+Update 8 Feb 2003:  minor fixes in graphical display
+Update 6 Feb 2003:
+  1.  Approximate "effective sample size" n.eff given for each parameter.
+  2.  More explanatory material displayed.
+  3.  Use bringToTop() to automatically bring up the graphics window.
+Update 4 Feb 2003:
+  1.  Automatically compute the deviance, DIC, and pD.  Bugs will not
+      always compute DIC and pD, so we do so using the definition,
+      DIC = E(deviance) + pD, using var(deviance)/2 as an estimate of pD.
+      (This is derived from the chi^2 distribution.  We can't use the
+      Spiegelhalter et al. definition of DIC because we don't have access
+      to the deviance function.)
+  2.  Set default for n.thin so that, after thinning, the total number
+      saved iterations, n.sims, is approximately 1000.
+Update 14 Jan 2003 to run with the new WinBugs1.4.  You may see an error
+  message and need to fix the dos.location assignment in bugs().
+Update 6 Jan 2003:
+  1.  Fix of bug that occurred with uppercase and lowercase variable names
+  2.  Set default for n.thin so that no more than about 500 iterations
+      will be saved from each sequence
+  3.  New option "display.parallel" added to show 80% inferences from
+      parallel sequences on the right panel of the graphical display.  This
+      can be useful to understand what is going on when there are
+      convergence problems.
+Update 26 Dec 2002:  fix of minwidth in bugs.plot.summary
+Update 11 Dec 2002:
+  1.  Automatic fixing of adaptive phases.  Now you no longer need to run
+      for thousands of iterations when slice or Metropolis sampling is used.
+  2.  Various minor fixes
+Update 10 Dec 2002:
+  1.  Cool graphical display of convergence and inferences!
+  2.  New "attach2" function that overwrites so that all components of
+      the list are attached
+Update 29 Nov 2002:
+  1.  Fix of bug in 24 Nov update.
+  2.  Fix of bug in 16 Nov update.
+  3.  Length of chains is now pecified in terms of "n.iter" rather than
+      "n.keep".
+Update 24 Nov 2002:  improved treatment of "parameters.to.save".  For
+  example, you can now use "alpha" to indicate an entire array of parameters,
+  whereas before you had to save "alpha[]" or "alpha[,]" or whatever.
+Update 16 Nov 2002:  mean, sd, median added to outputs
+Update 4 Nov 2002:  more error-flagging added
+Update 26 Oct 2002:
+  1.  Parameters saved in order of the "parameters.to.save" vector
+      (not alphabetical order).
+  2.  Output saved in both matrix and list form.
+  3.  With the attach.sims=T setting (which is the default), the simulations
+      for all the saved parameters are saved as R objects.  This is
+      convenient for later use of the simulations.
+Updates to 16 Oct 2002:  more error-flagging added, mean/sd added to summary,
+  fixing scientific notation so Bugs can always read data and inits
+Update 21 Sept 2002:  "quit=F" option changed to "debug=T"
+First version written 18 Sept 2002 by Andrew Gelman,
+  adapted from the EmBedBugs package by Kenneth Rice

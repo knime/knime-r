@@ -1,0 +1,135 @@
+<nex:nexml generator="Bio::Phylo::Project v.0.56" version="0.9" xmlns="http://www.nexml.org/2009" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:map="http://purl.org/phylo/phylomap/terms#" xmlns:nex="http://www.nexml.org/2009" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.nexml.org/2009 http://www.nexml.org/2009/nexml.xsd">
+  <meta content="rvosa" datatype="xsd:string" id="ma123" property="dc:creator" xsi:type="nex:LiteralMeta"/>
+  <meta content="2013-11-19T21:14:36" datatype="xsd:date" id="ma124" property="dc:date" xsi:type="nex:LiteralMeta"/>
+  <otus id="os2">
+    <otu id="ou3" label="taxon_1"/>
+    <otu id="ou4" label="taxon_2"/>
+    <otu id="ou5" label="taxon_3"/>
+    <otu id="ou6" label="taxon_4"/>
+    <otu id="ou7" label="taxon_5"/>
+    <otu id="ou8" label="taxon_6"/>
+    <otu id="ou9" label="taxon_7"/>
+    <otu id="ou10" label="taxon_8"/>
+    <otu id="ou11" label="taxon_9"/>
+    <otu id="ou12" label="taxon_10"/>
+ </otus>
+  <trees id="ts45" otus="os2">
+    <tree id="te3" xsi:type="nex:FloatTree">
+      <node id="ne4" root="true"/>
+      <node id="ne5"/>
+      <node id="ne18"/>
+      <node id="ne6"/>
+      <node id="ne15"/>
+      <node id="ne19" label="taxon_4" otu="ou6"/>
+      <node id="ne20"/>
+      <node id="ne7"/>
+      <node id="ne10"/>
+      <node id="ne16" label="taxon_1" otu="ou3"/>
+      <node id="ne17" label="taxon_6" otu="ou8"/>
+      <node id="ne21" label="taxon_8" otu="ou10"/>
+      <node id="ne22" label="taxon_2" otu="ou4"/>
+      <node id="ne8" label="taxon_10" otu="ou12"/>
+      <node id="ne9" label="taxon_3" otu="ou5"/>
+      <node id="ne11" label="taxon_9" otu="ou11"/>
+      <node id="ne12"/>
+      <node id="ne13" label="taxon_5" otu="ou7"/>
+      <node id="ne14" label="taxon_7" otu="ou9"/>
+      <edge id="edge5" length="3.696881159256865" source="ne4" target="ne5"/>
+      <edge id="edge18" length="6.52286144622459" source="ne4" target="ne18"/>
+      <edge id="edge6" length="1.969189306433843" source="ne5" target="ne6"/>
+      <edge id="edge15" length="6.014597540831531" source="ne5" target="ne15"/>
+      <edge id="edge19" length="3.4771385537754096" source="ne18" target="ne19"/>
+      <edge id="edge20" length="0.5636952545807309" source="ne18" target="ne20"/>
+      <edge id="edge7" length="3.4347773909168033" source="ne6" target="ne7"/>
+      <edge id="edge10" length="1.1914228015063353" source="ne6" target="ne10"/>
+      <edge id="edge16" length="0.2885212999116033" source="ne15" target="ne16"/>
+      <edge id="edge17" length="0.2885212999116033" source="ne15" target="ne17"/>
+      <edge id="edge21" length="2.9134432991946784" source="ne20" target="ne21"/>
+      <edge id="edge22" length="2.9134432991946784" source="ne20" target="ne22"/>
+      <edge id="edge8" length="0.8991521433924884" source="ne7" target="ne8"/>
+      <edge id="edge9" length="0.8991521433924884" source="ne7" target="ne9"/>
+      <edge id="edge11" length="3.142506732802957" source="ne10" target="ne11"/>
+      <edge id="edge12" length="3.090282850558667" source="ne10" target="ne12"/>
+      <edge id="edge13" length="0.05222388224429004" source="ne12" target="ne13"/>
+      <edge id="edge14" length="0.05222388224429004" source="ne12" target="ne14"/>
+    </tree>
+  </trees>
+  <characters id="cs15" otus="os2" xsi:type="nex:ContinuousCells">
+    <format>
+      <char id="cr19" label="log snout-vent length"/>
+    </format>
+    <matrix>
+      <row id="rw18" label="taxon_1" otu="ou3">
+        <cell char="cr19" state="4.753282394110277"/>
+      </row>
+      <row id="rw20" label="taxon_2" otu="ou4">
+        <cell char="cr19" state="-2.762414626244099"/>
+      </row>
+      <row id="rw21" label="taxon_3" otu="ou5">
+        <cell char="cr19" state="2.1049413318540546"/>
+      </row>
+      <row id="rw22" label="taxon_4" otu="ou6">
+        <cell char="cr19" state="-4.950476985900421"/>
+      </row>
+      <row id="rw23" label="taxon_5" otu="ou7">
+        <cell char="cr19" state="1.2714718119132646"/>
+      </row>
+      <row id="rw24" label="taxon_6" otu="ou8">
+        <cell char="cr19" state="6.259396617506572"/>
+      </row>
+      <row id="rw25" label="taxon_7" otu="ou9">
+        <cell char="cr19" state="0.9099634402363945"/>
+      </row>
+      <row id="rw26" label="taxon_8" otu="ou10">
+        <cell char="cr19" state="-3.27777989906524"/>
+      </row>
+      <row id="rw27" label="taxon_9" otu="ou11">
+        <cell char="cr19" state="2.095943286820963"/>
+      </row>
+      <row id="rw28" label="taxon_10" otu="ou12">
+        <cell char="cr19" state="3.1373971053009555"/>
+      </row>
+    </matrix>
+  </characters>
+  <characters id="cs31" otus="os2" xsi:type="nex:StandardCells">
+    <format>
+      <states id="ss33">
+        <state id="s1" symbol="0"/>
+        <state id="s2" symbol="1"/>
+      </states>
+      <char id="cr35" states="ss33" label="reef-dwelling"/>
+    </format>
+    <matrix>
+      <row id="rw34" label="taxon_1" otu="ou3">
+        <cell char="cr35" state="s2"/>
+      </row>
+      <row id="rw36" label="taxon_2" otu="ou4">
+        <cell char="cr35" state="s1"/>
+      </row>
+      <row id="rw37" label="taxon_3" otu="ou5">
+        <cell char="cr35" state="s1"/>
+      </row>
+      <row id="rw38" label="taxon_4" otu="ou6">
+        <cell char="cr35" state="s1"/>
+      </row>
+      <row id="rw39" label="taxon_5" otu="ou7">
+        <cell char="cr35" state="s2"/>
+      </row>
+      <row id="rw40" label="taxon_6" otu="ou8">
+        <cell char="cr35" state="s2"/>
+      </row>
+      <row id="rw41" label="taxon_7" otu="ou9">
+        <cell char="cr35" state="s2"/>
+      </row>
+      <row id="rw42" label="taxon_8" otu="ou10">
+        <cell char="cr35" state="s1"/>
+      </row>
+      <row id="rw43" label="taxon_9" otu="ou11">
+        <cell char="cr35" state="s2"/>
+      </row>
+      <row id="rw44" label="taxon_10" otu="ou12">
+        <cell char="cr35" state="s1"/>
+      </row>
+    </matrix>
+  </characters>
+</nex:nexml>

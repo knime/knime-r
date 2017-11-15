@@ -1,0 +1,81 @@
+<%--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
+  REPORT HEADER                                                     
+==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--%>
+
+<%---------------------------------------------------------------------
+  Usage: Add reportHeaderSetup(fit) to the LaTeX preamble
+---------------------------------------------------------------------%>
+<% reportHeaderSetup <- function(fit, sampleName=sampleName(fit), studyName, dataSet, ...) { %>
+<%
+getChecksum <- R.cache::getChecksum;
+fitClass <- class(fit)[1L];
+sampleName <- Arguments$getCharacter(sampleName);
+sampleNameEscDots <- gsub(".", "_", sampleName, fixed=TRUE);
+%>
+% Header contain project and sample metadata
+\usepackage{fancyhdr}
+\setlength{\headheight}{40pt}
+\pagestyle{fancy}{\fancyhf{}} % Custom header (specified below)
+\renewcommand{\headrulewidth}{0pt} % Drop horizontal ruler
+\fancyfoot{} % clear all footer fields
+\newcommand{\chrLabel}[1]{WG\xspace}
+
+\fancyhead[C]{%
+ \small
+ \raggedright
+%% \textbf{Study:Dataset:Sample}:
+  <%=toLatex(studyName)%>:<%=toLatex(dataSet)%>:<%=toLatex(sampleName)%>:\chrLabel
+ \hfill
+ \thepage/\pageref{LastPage}\\
+%%  \textbf{Compiled} & <%=Sys.Date()%>
+ \centering
+ \resizebox{\headwidth}{!}{\includegraphics{<%=
+   tags <- c("wg", fitClass, "tcn,c1,c2", getChecksum(fit));
+   toPNG(name=sampleNameEscDots, tags=tags, width=1024, aspectRatio=0.07, {
+     par(oma=c(0,0,0,0), mar=c(0,0,0,0));
+     plotTracks(fit, tracks="tcn,c1,c2", scatter=NULL, calls=NULL, callTresholds=FALSE, lwd=5, Clim=c(0,4), xlab="", ylab="", subplots=FALSE);
+   })%>}}%
+%% \vspace{0.2ex}
+%% \hline
+}
+<% } # reportHeaderSetup() %>
+
+
+<%---------------------------------------------------------------------
+  Usage: Add reportHeaderUpdate(fit) whenever subsetting 'fit'
+---------------------------------------------------------------------%>
+<% reportHeaderUpdate <- function(fit, ...) { %>
+<%
+chromosomes <- getChromosomes(fit);
+nbrOfChromosomes <- length(chromosomes);
+chrsTags <- if (nbrOfChromosomes == 1) {
+  sprintf("chr%02d", chromosomes[1]);
+} else {
+  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
+}
+%>
+\renewcommand{\chrLabel}{<%=chrsTags%>}
+<% } # reportHeaderUpdate() %>
+
+
+<%--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
+  HISTORY:
+  2012-11-03
+  o Replaced deprecated ggplot2 functions.
+  2012-09-16
+  o Added easy report configuration at the very top.
+  2012-05-30
+  o Removed ggplot2 warnings on missing values.
+  2012-02-28
+  o Now it is possible to turn off usage of the alpha channel in
+    plots, e.g. setOption("PSCBS::report/useAlphaChannel", FALSE).
+    This is useful for if the alpha channel is not supported.
+  2012-02-27
+  o First successful run with real data.
+  o Now all of the report uses a PairedPSCBS object.
+  o Now making more use of templates.
+  o Now passing a data frame to segmentByPairedCBS().
+  2011-09-30
+  o Created.
+==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--%>
+

@@ -1,0 +1,78 @@
+SolrClient              Solr connection client
+add                     Add documents from R objects
+collection_addreplica   Add a replica
+collection_addreplicaprop
+                        Add a replica property
+collection_addrole      Add a role to a node
+collection_balanceshardunique
+                        Balance a property
+collection_clusterprop
+                        Add, edit, delete a cluster-wide property
+collection_clusterstatus
+                        Get cluster status
+collection_create       Add a collection
+collection_createalias
+                        Create an alias for a collection
+collection_createshard
+                        Create a shard
+collection_delete       Add a collection
+collection_deletealias
+                        Delete a collection alias
+collection_deletereplica
+                        Delete a replica
+collection_deletereplicaprop
+                        Delete a replica property
+collection_deleteshard
+                        Delete a shard
+collection_exists       Check if a collection exists
+collection_list         List collections
+collection_migrate      Migrate documents to another collection
+collection_overseerstatus
+                        Get overseer status
+collection_rebalanceleaders
+                        Rebalance leaders
+collection_reload       Reload a collection
+collection_removerole   Remove a role from a node
+collection_requeststatus
+                        Get request status
+collection_splitshard   Create a shard
+collections             List collections or cores
+commit                  Commit
+config_get              Get Solr configuration details
+config_overlay          Get Solr configuration overlay
+config_params           Set Solr configuration params
+config_set              Set Solr configuration details
+core_create             Create a core
+core_exists             Check if a core exists
+core_mergeindexes       Merge indexes (cores)
+core_reload             Reload a core
+core_rename             Rename a core
+core_requeststatus      Request status of asynchronous CoreAdmin API
+                        call
+core_split              Split a core
+core_status             Get core status
+core_swap               Swap a core
+core_unload             Unload (delete) a core
+delete                  Delete documents by ID or query
+is.sr_facet             Test for sr_facet class
+makemultiargs           Function to make make multiple args of the same
+                        name from a single input with length > 1
+ping                    Ping a Solr instance
+schema                  Get the schema for a collection or core
+solr_all                All purpose search
+solr_facet              Faceted search
+solr_get                Real time get
+solr_group              Grouped search
+solr_highlight          Highlighting search
+solr_mlt                "more like this" search
+solr_optimize           Optimize
+solr_parse              Parse raw data from solr_search, solr_facet, or
+                        solr_highlight.
+solr_search             Solr search
+solr_stats              Solr stats
+solrium-package         General purpose R interface to Solr.
+update_atomic_json      Atomic updates with JSON data
+update_atomic_xml       Atomic updates with XML data
+update_csv              Update documents with CSV data
+update_json             Update documents with JSON data
+update_xml              Update documents with XML data

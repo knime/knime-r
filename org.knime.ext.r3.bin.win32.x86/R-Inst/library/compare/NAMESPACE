@@ -1,0 +1,95 @@
+
+export(transforms,
+
+       compareIdentical,
+       compareEqual,
+       compareCoerce,
+       compareShorten,
+       compareIgnoreOrder,
+       compareIgnoreNameCase,
+       compareIgnoreNames,
+       compareIgnoreAttrs,
+       
+       compare,
+       compareName,
+       sourceFile,
+       compareFile, 
+       compareFiles,
+
+       questionMarks,
+       rule,
+       transformRule,
+       markQuestions,
+
+       questionComments,
+       comments,
+       transformComment,
+       commentQuestions,
+       
+       isTRUE)
+
+S3method(compareIdentical, default)
+
+S3method(compareEqual, default)
+S3method(compareEqual, language)
+S3method(compareEqual, logical)
+S3method(compareEqual, numeric)
+S3method(compareEqual, character)
+S3method(compareEqual, factor)
+S3method(compareEqual, Date)
+S3method(compareEqual, array)
+S3method(compareEqual, matrix)
+S3method(compareEqual, table)
+S3method(compareEqual, data.frame)
+S3method(compareEqual, list)
+
+S3method(compareCoerce, default)
+S3method(compareCoerce, language)
+S3method(compareCoerce, logical)
+S3method(compareCoerce, integer)
+S3method(compareCoerce, numeric)
+S3method(compareCoerce, character)
+S3method(compareCoerce, factor)
+S3method(compareCoerce, Date)
+S3method(compareCoerce, array)
+S3method(compareCoerce, matrix)
+S3method(compareCoerce, table)
+S3method(compareCoerce, data.frame)
+S3method(compareCoerce, list)
+
+S3method(compareShorten, default)
+S3method(compareShorten, array)
+S3method(compareShorten, matrix)
+S3method(compareShorten, table)
+S3method(compareShorten, data.frame)
+S3method(compareShorten, list)
+
+S3method(compareIgnoreOrder, default)
+S3method(compareIgnoreOrder, language)
+S3method(compareIgnoreOrder, array)
+S3method(compareIgnoreOrder, data.frame)
+S3method(compareIgnoreOrder, list)
+
+S3method(compareIgnoreNameCase, default)
+# S3method(compareIgnoreNameCase, array)
+S3method(compareIgnoreNameCase, data.frame)
+S3method(compareIgnoreNameCase, list)
+
+S3method(compareIgnoreNames, default)
+# S3method(compareIgnoreNames, array)
+S3method(compareIgnoreNames, data.frame)
+S3method(compareIgnoreNames, list)
+
+S3method(compareIgnoreAttrs, default)
+
+S3method(print, comparison)
+S3method(print, multipleComparison)
+S3method(print, comparisonList)
+S3method(print, comparisonListList)
+S3method(print, transformComment)
+S3method(print, markingComment)
+S3method(print, transformRule)
+S3method(print, markingRule)
+
+S3method(isTRUE, default)
+S3method(isTRUE, comparison)

@@ -1,0 +1,25 @@
+HTML                    Outputs an object to a HTML file
+HTML.cormat             Write a correlation matrix with HTML formatting
+HTML.data.frame         Write a data.frame (or matrix) to a HTML output
+HTML.function           Writes the code of a function to a target HTML
+                        file
+HTML.latex              Insert a piece of LaTeX into a HTML file
+HTML.title              Writes a title in a target HTML output
+HTML2clip               Wrapper around HTML() to save output to the
+                        clipboard
+HTMLCSS                 Insert HTML code to refer to an external CSS
+                        file
+HTMLChangeCSS           Change the current CSS file for dynamic use of
+                        package
+HTMLInitFile            Begins / Ends a new HTML report output
+HTMLInsertGraph         Insert a graph in a HTML report
+HTMLReplaceNA           Internal R2HTML functions
+HTMLStart               Start / Stop the automatic redirection of
+                        output to HTML files
+HTMLbr                  Facility functions to write HTML code
+HTMLgrid                Creates a HTML grid using ActiveWidget grid -
+                        www.activewidgets.com
+HTMLplot                Insert a graphic into an HTML output
+HTMLstem                Insert a stem-and-leaf plot in the HTML output
+RweaveHTML              A driver to parse HTML noweb files with Sweave
+                        tool

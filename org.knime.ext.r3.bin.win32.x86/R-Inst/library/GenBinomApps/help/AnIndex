@@ -1,0 +1,11 @@
+GenbinomApps-package	GenBinom-package
+clopper.pearson.ci	clopper.pearson.ci
+cm.clopper.pearson.ci	cm.clopper.pearson.ci
+cm.n.clopper.pearson	cm.n.clopper.pearson
+dgbinom	dgbinom
+GenBinomApps	GenBinom-package
+Generalized Binomial	dgbinom
+n.clopper.pearson	n.clopper.pearson
+pgbinom	dgbinom
+qgbinom	dgbinom
+rgbinom	dgbinom

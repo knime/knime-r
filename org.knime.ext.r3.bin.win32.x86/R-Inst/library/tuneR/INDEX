@@ -1,0 +1,68 @@
+Arith,Wave,missing-method
+                        Arithmetics on Waves
+FF                      Estimation of Fundamental Frequencies from a
+                        Wspec object
+MCnames                 Default channel ordering for multi channel wave
+                        files
+MFCC                    DEFUNCT: Mel Frequency Cepstral Coefficients
+Wave                    Constructors and coercion for class Wave
+                        objects
+Wave-class              Class Wave
+WaveMC                  Constructors and coercion for class WaveMC
+                        objects
+WaveMC-class            Class WaveMC
+Waveforms               Create Wave Objects of Special Waveforms
+Wspec-class             Class Wspec
+WspecMat-class          Class WspecMat
+[,ANY-method            Extract or Replace Parts of an Object
+audspec                 Frequency band conversion
+bark2hz                 Frequency scale conversion
+bind                    Concatenating Wave objects
+channel                 Channel conversion for Wave objects
+deltas                  Calculate delta features
+dolpc                   (Perceptive) Linear Prediction
+downsample              Downsampling a Wave or WaveMC object
+equalWave               Checking Wave objects
+extractWave             Extractor for Wave and WaveMC objects
+getMidiNotes            Extract note events from objects returned by
+                        readMidi
+length,Wave-method      S4 generic for length
+lifter                  Liftering of cepstra
+lilyinput               Providing LilyPond compatible input
+lpc2cep                 LPC to cepstra conversion
+melfcc                  MFCC Calculation
+melodyplot              Plotting a melody
+mono                    Converting (extracting, joining) stereo to mono
+                        and vice versa
+nchannel                Number of channels
+noSilence               Cut off silence from a Wave or WaveMC object
+normalize               Rescale the range of values
+noteFromFF              Deriving notes from frequencies
+notenames               Generating note names from numbers
+panorama                Narrow the Panorama of a Stereo Sample
+periodogram             Periodogram (Spectral Density) Estimation on
+                        Wave objects
+play                    Playing Waves
+plot,Wave,missing-method
+                        Plotting Wave objects
+plot-Wspec              Plotting Wspec objects
+plot-WspecMat           Plotting WspecMat objects
+postaud                 Equal loudness compression
+powspec                 Powerspectrum
+prepComb                Preparing the combination/concatenation of Wave
+                        or WaveMC objects
+quantize                Functions for the quantization of notes
+quantplot               Plotting the quantization of a melody
+readMP3                 Read an MPEG-2 layer 3 file into a Wave object
+readMidi                Read a MIDI file
+readWave                Reading Wave files
+setWavPlayer            Getting and setting the default player for Wave
+                        files
+show,Wave-method        Showing objects
+smoother                Meta Function for Smoothers
+spec2cep                Spectra to Cepstra Conversion
+summary,ANY-method      Object Summaries
+tuneR                   tuneR
+updateWave              Update old Wave objects for use with new
+                        versions of tuneR
+writeWave               Writing Wave files

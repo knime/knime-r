@@ -1,0 +1,31 @@
+age.income              Age/income data
+bpd                     Bronchopulmonary dysplasia data
+calif.air.poll          California air polution data
+copper                  Copper data
+elec.temp               Electricity usage and temperature data
+ethanol                 Ethanol data
+fitted.spm              Fitted values for semiparametric regression.
+fossil                  Fossil data
+fuel.frame              Automobile data from consumer reports
+janka                   Janka hardness data
+lidar                   LIDAR data
+lines.spm               Add a curves to an existing plot.
+milan.mort              Milan mortality data
+monitor.mercury         Mercury biomonintoring data
+onions                  Onions data
+pig.weights             Pig weight data
+plot.spm                Semiparametric regression plotting
+predict.spm             Semiparametric regression prediction.
+print.spm               Prints semiparametric regression fit object.
+ragweed                 Ragweed data
+residuals.spm           Residuals for semiparametric regression.
+retire.plan             Retirement plan data
+salinity                Salinity data
+sausage                 Sausage data
+scallop                 Scallop abundance data
+sitka                   Sitka spruce data
+spm                     Fit a SemiParametric regression Model
+summary.spm             Semiparametric regression summary
+term.structure          Term structure data
+trade.union             Trade union data
+ustemp                  U.S. temperature data

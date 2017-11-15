@@ -1,0 +1,12 @@
+BCI                     Bayesian Credible Interval
+MHadaptive-package      General Markov Chain Monte Carlo for Bayesian
+                        Inference using adaptive Metropolis-Hastings
+                        sampling
+Metro_Hastings          Markov Chain Monte Carlo for Bayesian Inference
+                        using adaptive Metropolis-Hastings
+mcmc_r                  A sample object created by running
+                        Metro_Hastings().
+mcmc_thin               Thin an MCMC object to reduce autocorrelation.
+plotMH                  Plot MCMC results of a call to
+                        Metro_Hastings().
+positiveDefinite        Positive Definite Matrixes

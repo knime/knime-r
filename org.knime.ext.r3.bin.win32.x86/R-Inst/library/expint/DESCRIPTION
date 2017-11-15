@@ -1,0 +1,51 @@
+Package: expint
+Type: Package
+Title: Exponential Integral and Incomplete Gamma Function
+Version: 0.1-4
+Date: 2017-05-05
+Authors@R: c(person("Vincent", "Goulet", role = c("cre", "aut"),
+ 	            email = "vincent.goulet@act.ulaval.ca"),
+	     person("Gerard", "Jungman", role = "aut",
+	            email = "jungman@lanl.gov",
+		    comment = "Original GSL code"),
+	     person("Brian", "Gough", role = "aut",
+	            email = "jungman@lanl.gov",
+		    comment = "Original GSL code"),
+	     person("Jeffrey A.", "Ryan", role = "aut",
+	            email = "jeff.a.ryan@gmail.com",
+		    comment = "Package API"),
+	     person("Robert", "Gentleman", role = "aut",
+	            comment = "Parts of the R to C interface"),
+	     person("Ross", "Ihaka", role = "aut",
+	            comment = "Parts of the R to C interface"),
+	     person(family = "R Core Team", role = "aut",
+	            comment = "Parts of the R to C interface"),
+	     person(family = "R Foundation", role = "aut",
+	            comment = "Parts of the R to C interface"))
+Description: The exponential integrals E_1(x), E_2(x), E_n(x) and
+  Ei(x), and the incomplete gamma function G(a, x) defined for
+  negative values of its first argument. The package also gives easy
+  access to the underlying C routines through an API; see the package
+  vignette for details. A test package included in sub-directory
+  example_API provides an implementation. C routines derived from the
+  GNU Scientific Library <https://www.gnu.org/software/gsl/>.
+Depends: R (>= 3.3.0)
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyLoad: yes
+LazyData: yes
+NeedsCompilation: yes
+Packaged: 2017-05-05 18:53:07 UTC; vincent
+Author: Vincent Goulet [cre, aut],
+  Gerard Jungman [aut] (Original GSL code),
+  Brian Gough [aut] (Original GSL code),
+  Jeffrey A. Ryan [aut] (Package API),
+  Robert Gentleman [aut] (Parts of the R to C interface),
+  Ross Ihaka [aut] (Parts of the R to C interface),
+  R Core Team [aut] (Parts of the R to C interface),
+  R Foundation [aut] (Parts of the R to C interface)
+Maintainer: Vincent Goulet <vincent.goulet@act.ulaval.ca>
+Repository: CRAN
+Date/Publication: 2017-05-05 22:02:08 UTC
+Built: R 3.4.1; x86_64-w64-mingw32; 2017-08-16 00:43:39 UTC; windows
+Archs: i386, x64

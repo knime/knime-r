@@ -1,0 +1,8 @@
+dummies-package         Create and manipulate dummy variables flexibly
+                        and efficiently
+dummy                   Flexible, efficient creation of dummy
+                        variables.
+get.dummy               Get the dummy variable columns from a data
+                        frame.
+which.dummy             Identify which columns are dummy variables on a
+                        data frame.

@@ -1,0 +1,67 @@
+<!--
+Use the following R command to sweave this file:
+Sweave("example2.snw",driver=RweaveHTML())
+!-->
+
+
+<html>
+
+<link rel=stylesheet type=text/css href=pastel.css><body>
+
+<h1>Sweave Example 2 using a HTML file</h1>
+<p align=center>
+	<font size=+1>
+	Eric Lecoute<br>
+	avr. 02, 2004
+	</font>
+</p>
+
+<p>HTML Sweaving relies on <font class='Rcmd'><b>R2HTML</b></font> package, which uses CSS styles. Thus, you can change the whole aspect of your output, simply by changing the CSS file. Simply call:</p> 
+
+<!-- begin{Schunk} !-->
+<!-- begin{Sinput} !-->
+<p><xmp class=command>> Sweave("example2.snw", driver = RweaveHTML(), cssfile = "pastel.css")</xmp></p>
+
+<!--end{Sinput}!-->
+
+<!--end{Schunk}!-->
+
+
+<p>You can insert scalars in text by using expressions <font class='Rcmd'>&lt;Sexpr expr&gt;</font>. If the result is a vector, only the first element is returned: see the call <font class='Rcmd'>&lt;Sexpr round(rnorm(10),2)&gt;</font> transformed to: 0.55. Also any HTML tag can be used to format this output: see this colored actual year computed by <font class='Rcmd'>date()</font>:
+<font color="darkred"><b>2004</b></font>.
+
+<p>As we use HTML() functions, some formatting is already applied on most R objects. This this regression result:</p>
+
+<!-- begin{Schunk} !--> 
+<p class='character'>
+</p><br><li>Call:<font class='call'> lm(formula = y ~ x)</font>
+<br><li>  Residuals<br>
+<p class='numeric'>-2.84356544970632&nbsp; -1.83325602423836&nbsp; -0.772809629352725&nbsp; 2.07696588557758&nbsp; 3.50616693306879</p><br><li>Coefficients
+
+
+<p align= center ><table cellspacing=0 border=1><caption align=bottom class=captiondataframe></caption><td><table class=dataframe> <tr class= firstline > <th></th><th>Estimate</th><th>Std. Error</th><th>t value</th><th>Pr(>|t|)</th><th></th> </tr> <tr><td class=firstcolumn>(Intercept)</td><td class=cellinside>1.3586</td><td class=cellinside>1.6792</td><td class=cellinside> 0.809</td><td class=cellinside>0.442</td><td class=cellinside>   </td></tr> <tr><td class=firstcolumn>x</td><td class=cellinside>3.1321</TD><td class=cellinside>0.2706</TD><td class=cellinside>11.573</TD><td class=cellinside>2.82e-06</TD><td class=cellinside>***</td></tr> </table> </td></table> </p><br>
+<p class='character'>
+<p>--- Signif. codes: 0 `***' 0.001 `**' 0.01 `*' 0.05 `.' 0.1 ` ' 1</p>
+</p><br><li>Residuals standard error: 2.4581 on 8 degrees of freedom
+<br><li>Multiple R-Squared:<b>0.9436</b><br><li>Adjusted R-Squared:<b>0.9366</b><br><li>F-statistics: <b>133.9432</b> on 1 and 8 DF. P-value:<b>0</b>.
+<!--end{Schunk}!-->
+
+<p>By default, the last manipulated object in a code chunk is evaluated and a call to HTML is done to catch it's HTML representation, which is inserted in the output file. You can override this behaviour by explicitely return a string containing HTML codes as output. This allows to have more controls on output, as you can do exactly what you want from R. To specify that output are already HTML, add the option <code>results=html</code> to your code chunk.</p>
+
+<!-- begin{Schunk} !-->
+<!-- begin{Sinput} !-->
+<p><xmp class=command>> HTML(data.frame(x, y), digits = 2, Border = 2)</xmp></p>
+
+<p align= center ><table cellspacing=0 border=2><caption align=bottom class=captiondataframe></caption><td><table class=dataframe> <tr class= firstline > <th></th><th>x</th><th>y</th> </tr> <tr><td class=firstcolumn>1</td><td class=cellinside>1</td><td class=cellinside>4.4</td></tr> <tr><td class=firstcolumn>2</td><td class=cellinside>2</TD><td class=cellinside>9.96</td></tr> <tr><td class=firstcolumn>3</td><td class=cellinside>3</TD><td class=cellinside>7.91</td></tr> <tr><td class=firstcolumn>4</td><td class=cellinside>4</TD><td class=cellinside>16.74</td></tr> <tr><td class=firstcolumn>5</td><td class=cellinside>5</TD><td class=cellinside>14.92</td></tr> <tr><td class=firstcolumn>6</td><td class=cellinside>6</TD><td class=cellinside>18.58</td></tr> <tr><td class=firstcolumn>7</td><td class=cellinside>7</TD><td class=cellinside>21.83</td></tr> <tr><td class=firstcolumn>8</td><td class=cellinside>8</TD><td class=cellinside>27.7</td></tr> <tr><td class=firstcolumn>9</td><td class=cellinside>9</TD><td class=cellinside>33.05</td></tr> <tr><td class=firstcolumn>10</td><td class=cellinside>10</TD><td class=cellinside>30.76</td></tr> </table> </td></table> </p><br>
+
+<!--end{Sinput}!-->
+
+<!--end{Schunk}!-->
+
+<p>Finally, some more options are added to handle graphs, such as <code>width</code>, <code>height</code>, <code>border</code>, <code>align</code> and <code>caption</code></p>
+
+<p align='center'><img height=300 width=600 src='example2-004.png'border=1><br><font class='caption='>Boxplot - x</font></p>
+</body>
+
+</html>
+

@@ -1,0 +1,47 @@
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% PARENT-SPECIFIC COPY-NUMBER SEGMENTATION TRACKS
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<% pscnSegmentationTracks <- function(fit, ...) { %>
+\clearpage
+\subsection{Parent-specific copy-number segmentation tracks}
+\label{sec:PSCNSegmentationTracks}
+<%
+chromosomes <- getChromosomes(fit);
+nbrOfChromosomes <- length(chromosomes);
+chromosomesH <- seqToHumanReadable(chromosomes);
+chromosomesH <- if (nbrOfChromosomes == 1) {
+  sprintf("Chr %s", chromosomesH);
+} else {
+  sprintf("Chrs %s", chromosomesH);
+}
+chrsTags <- if (nbrOfChromosomes == 1) {
+  sprintf("chr%02d", chromosomes[1]);
+} else {
+  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
+}
+%>
+\begin{figure}[htbp]
+ \begin{center}
+  <% for (track in c("tcn", "dh", "tcn,c1,c2")) { %>
+<%-- <% for (track in c("tcn*", "betaT", "betaTN*", "dh*", "tcn*,c1*,c2-*")) { %> --%>
+  \resizebox{\textwidth}{!}{%
+    \includegraphics{<%={
+      tags <- c(chrsTags, fitClass, gsub("[*-]", "", track), getChecksum(fit));
+      toPNG(name=sampleNameEscDots, tags=tags, width=1024, aspectRatio=0.25, {
+        par(mar=c(1.3,4,0.7,1.2)+0.1, cex=1.5);
+        plotTracksManyChromosomes(fit, tracks=track, knownSegment=TRUE, Clim=Clim);
+      });
+    }%>}%
+  }%
+  \\
+  <% } # for (track ...) %>
+ \end{center}
+ \caption{
+   Results of <%=fitClassLbl%> segmentation on <%=chromosomesH%> projected onto
+   TCN (top), DH (middle), as well as TCN, $C_1$ and $C_2$ (bottom).
+   PSCBS segmentation is always done on TCN and DH data.
+   There are in total $S=<%=nbrOfSegments(fit, splitters=FALSE)%>$ segments. 
+ }
+ \label{fig:PairedPSCBS}
+\end{figure}
+<% } # pscnSegmentationTracks() %>

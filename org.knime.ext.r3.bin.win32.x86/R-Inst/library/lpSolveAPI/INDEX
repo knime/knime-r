@@ -1,0 +1,55 @@
+add.SOS                 Add A Special Ordered Set Constraint
+add.column              Add Column
+add.constraint          Add Constraint
+delete.column           Delete Column
+delete.constraint       Delete Constraint
+delete.lp               Delete Linear Program Model
+dim.lpExtPtr            Dimension of an Object
+dimnames.lpExtPtr       Dimnames of an Object
+get.basis               Get Basis
+get.bounds              Get Bounds
+get.branch.mode         Get Branch Mode
+get.column              Get Column
+get.constr.type         Get Constraint Type
+get.constr.value        Get Constraint Value
+get.constraints         Get Constraints
+get.dual.solution       Get Dual Solution
+get.kind                Get Kind
+get.mat                 Get Matrix Element
+get.objective           Get Objective
+get.primal.solution     Get Primal Solution
+get.rhs                 Get Right-Hand-Side
+get.sensitivity.obj     Get Sensitivity: Objective
+get.sensitivity.objex   Get Sensitivity: Objective Extended
+get.sensitivity.rhs     Get Sensitivity: Right-Hand-Side
+get.solutioncount       Get Solution Count
+get.total.iter          Get Total Iterations
+get.total.nodes         Get Total Nodes
+get.type                Get Type
+get.variables           Get Variables
+guess.basis             Guess Basis
+lp.control              lpSolve Control Parameters
+lp.control.options      Solver Control Options
+make.lp                 Make LP
+name.lp                 Name LP
+plot.lpExtPtr           lpExtPtr Plot Method
+print.lpExtPtr          lpSolve Print Method
+read.lp                 Read LP
+resize.lp               Resize LP
+row.add.mode            Row Add Mode
+select.solution         Select Solution
+set.basis               Set Basis
+set.bounds              Set Bounds
+set.branch.mode         Set Branch Mode
+set.branch.weights      Set Branch Weights
+set.column              Set Column
+set.constr.type         Set Constraint Type
+set.constr.value        Set Constraint Value
+set.mat                 Set Matrix Element
+set.objfn               Set Objective Function
+set.rhs                 Set Right-Hand-Side
+set.row                 Set Row
+set.semicont            Set Semicontinuous
+set.type                Set Type
+solve.lpExtPtr          Solve a Linear Program
+write.lp                Write Linear Program

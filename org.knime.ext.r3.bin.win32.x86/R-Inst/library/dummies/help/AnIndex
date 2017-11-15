@@ -1,0 +1,6 @@
+dummies-package	dummies-package
+dummies	dummies-package
+dummy	dummy
+dummy.data.frame	dummy
+get.dummy	get.dummy
+which.dummy	which.dummy

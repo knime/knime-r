@@ -1,0 +1,45 @@
+#useDynLib(lmerTest, .registration=TRUE)
+import(lme4)
+#importFrom(numDeriv, hessian, grad)
+importFrom(plyr, llply, aaply)
+import(Matrix)
+import(methods)
+importFrom(MASS, ginv)
+import(Hmisc)
+import(ggplot2)
+importFrom("stats", "terms", "as.formula", "complete.cases", "delete.response", 
+           "drop1", "formula", "lm", "logLik", "model.frame", "model.matrix", 
+           "pchisq", "pf", "printCoefmat", "pt", "qt", "setNames", 
+           "update.formula", "vcov", "getCall")
+importFrom("utils", "as.roman", "combn", "data")
+
+
+if(getRversion() >= "3.3.0") {
+    importFrom("stats", sigma)
+}
+
+exportClasses(merModLmerTest)
+
+export(rand)
+export(lsmeans)
+export(lsmeansLT)
+export(difflsmeans)
+export(step)
+export(lmer)
+export(calcSatterth)
+
+exportMethods("anova", "summary")
+
+S3method(print, step)
+S3method(plot, step)
+S3method(print, rand)
+#S3method(print, lsmeans)
+S3method(print, lsmeansLT)
+#S3method(plot, lsmeans)
+S3method(plot, lsmeansLT)
+S3method(print, difflsmeans)
+S3method(plot, difflsmeans)
+
+
+
+

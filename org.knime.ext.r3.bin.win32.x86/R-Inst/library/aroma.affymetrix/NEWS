@@ -1,0 +1,4157 @@
+Package: aroma.affymetrix
+=========================
+
+Version: 3.1.0 [2017-03-23]
+
+NEW FEATURES:
+
+ o Now file and object sizes are reported using IEC binary prefixes,
+   i.e. bytes, KiB, MiB, GiB, TiB, ..., YiB.
+
+ o Now doNnn() methods can be called directly from the command line, e.g.
+   Rscript -e aroma.affymetrix::doCRMAv2 --dataSet=HapMap270
+   --chipType=GenomeWideSNP_6
+
+ o Objects no longer report on memory (RAM) usage.
+
+REFACTORIZATION:
+
+ o Used partial element name 'coef' instead of 'coefficients' for lm() fit.
+ 
+BUG FIXES:
+
+ o Package used %<=% internally with was deprecated in future (>= 1.4.0).
+ 
+ o ROBUSTNESS: Some regular expression patterns used for locating files
+   would match any symbol when it intended to match only a period.
+   
+ o The International HapMap Project (http://www.hapmap.org/) is being retired
+   and HTTP server http://hapmap.ncbi.nlm.nih.gov/downloads/raw_data/ is
+   decomissioned. System test scripts updated to download HapMap CEL files
+   from the FTP server ftp://ftp.ncbi.nlm.nih.gov/hapmap/raw_data/ instead.
+
+DEPRECATED AND DEFUNCT:
+
+ o Methods bgAdjustRma(), bgAdjustOptical() and bgAdjustGcrma() for
+   AffymetrixCelFile as well as bgAdjustGcrma() for AffymetrixCelSet
+   are now defunct.
+
+
+Version: 3.0.0 [2016-01-09]
+
+SIGNIFICANT CHANGES:
+
+ o Package requires R (>= 3.1.2) and BioC (>= 3.0) both released
+   in October 2014. 
+
+NEW FEATURES:
+
+ o REPRODUCIBILITY: GcRmaBackgroundCorrection(), LimmaBackgroundCorrection(),
+   and RmaBackgroundCorrection() gained argument 'seed'.
+  
+ o REPRODUCIBILITY: Several of the methods now generate *.md5 checksum 
+   files for the data files they output.
+  
+ o Now also convertToUnique() acknowledge asterisk tags.
+  
+PERFORMANCE:
+
+ o SPEED: Adding support for parallel/distributed processing via futures
+   to some of the methods for which it is possible to process each
+   sample independently, e.g. background and crosstalk correction methods.
+
+REFACTORIZATION:
+
+ o ROBUSTNESS: Using do.call(fcn) internally instead of do.call("fcn").
+  
+ o CLEANUP: Warnings on "is.na() applied to non-(list or vector) of 
+   type 'NULL'" are no longer generated.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: MatNormalization did not create CEL files atomically.
+
+BUG FIXES:
+
+ o LimmaBackgroundCorrection(..., addJitter=TRUE) gave an error.
+ 
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Formally defunct'ed bgAdjustRma(), bgAdjustGcrma(), 
+   bgAdjustOptical() for AffymetrixCelFile/AffymetrixCelSet since they
+   have effectively been defunct'ed in the public API for years.  These
+   are now all incorporated in corresponding BackgroundCorrection classes.
+  
+ 
+Version: 2.14.0-9000 [2015-12-23]
+  
+ o ROBUSTNESS: Using getPathname() instead of accessing private field.
+
+BUG FIXES:
+
+ o convertToUnique() for AffymetrixCelSet would give an error if there was
+   an error while checking if results already exist.
+ 
+ 
+Version: 2.14.0 [2015-10-24]
+  
+ o AvgPlm, used by for instance doCRMAv2(), would give harmless warning
+   "Argument 'centers' for matrixStats::rowMads() has been renamed to
+   'center'. Please update code accordingly."
+   
+ o ROBUSTNESS: fitCnProbes() for UnitModel could in rare cases give an
+   error on one of the internal sanity checks.
+
+SOFTWARE QUALITY:
+  
+ o ROBUSTNESS: Explicitly importing core R functions.
+    
+BUG FIXES:
+
+ o extractAlleleSet() for SnpChipEffectSet now needs to load namspace
+   'oligoClasses' explicitly.
+  
+ o writeCdf() for AffyGenePDInfo gave "Error in affxparser::writeCdf(...) :
+   unused argument (pathname = ..." due to a bug/typo introduced in 2.13.2.
+   Thanks to Guillaume Devailly for reporting on this.
+ 
+DEPRECATED AND DEFUNCT:
+
+ o Removed methods marked as defunct in v2.11.3 (Feb 2014).
+  
+ 
+Version: 2.13.2 [2015-05-26]
+
+SIGNIFICANT CHANGES:
+  
+ o Package now requires R (>= 3.1.1) released July 2014. This allows
+   us to use BioC (>= 3.0) (October 2014).
+
+SOFTWARE QUALITY:
+  
+ o ROBUSTNESS: Many functions now assert that they don't return file
+   data sets with duplicated entries.
+  
+ o ROBUSTNESS: Package now declares all S3 methods.
+ 
+ 
+Version: 2.13.1 [2015-01-23]
+  
+ o Now a pre-existing monocell CDF can be recreated and overwritten
+   using getMonocellCdf(cdf, force=TRUE).
+
+BUG FIXES:
+
+ o getMonocellCdf() for AffymetrixCdfFile would throw "Error in (...) : 
+   3 arguments passed to '(' which requires 1".  This was due to a typo
+   (erroneous newline) introduced in 2.13.0.  Add package tests for this.
+   Thanks to Qingzhou Zhang for reporting on this.
+ 
+ 
+Version: 2.13.0 [2015-01-17]
+  
+ o Bumped version for CRAN submission.
+  
+ o Updated package dependencies.
+  
+SOFTWARE QUALITY:
+  
+ o Package passes all redundancy tests.
+ 
+ 
+Version: 2.12.10 [2015-01-06]
+  
+ o CLEANUP: Major cleanup of namespace imports from suggested packages
+   such as affxparser and aroma.light.
+ 
+ 
+Version: 2.12.9 [2014-11-17]
+  
+ o Updated redundancy tests under testScripts/ to find rowMedians() of
+   the matrixStats package.  The matrixStats package used to be attached
+   whenever aroma.light (< 2.1.1) was attached, but no longer.
+ 
+ 
+Version: 2.12.8 [2014-09-04]
+
+BUG FIXES:
+
+ o ROBUSTNESS/BUG FIX: createFrom(..., mode="copy") for AffymetrixCelFile
+   would give an error on "No permission to modify existing file: ..."
+   iff the source file had read-only permission.  This bug was introduced
+   by changes to base::file.copy() in R (>= 2.13.0) [April 2011].
+   Thanks to Taylor Raborn at Indiana University for reporting on this.
+ 
+ 
+Version: 2.12.7 [2014-08-27]
+  
+BUG FIXES:
+
+ o Added forgotten NAMESPACE imports.
+ 
+ 
+Version: 2.12.6 [2014-06-29]
+  
+BUG FIXES:
+
+ o getAromaCellSequenceFile() for AffymetrixCdfFile used undefined variable
+   'nbrOfCells'.
+ 
+ 
+Version: 2.12.5 [2014-06-24]
+
+SOFTWARE QUALITY:
+
+ o Added package system tests utilizing example data of Bioconductor
+   package AffymetrixDataTestFiles, iff installed.
+ 
+ 
+Version: 2.12.4 [2014-06-09]
+
+SIGNIFICANT CHANGES:
+    
+ o Package now requires R (>= 3.0.0) and BioC (>= 2.13), which were
+   released April 2013 and are in fact old and it's recommended to
+   use a more recent version of R.
+  
+ o Added 'SuggestsNote' field to DESCRIPTION with list of packages
+   that are recommended for the most common use cases.
+  
+ o Bumped package dependencies.
+ 
+ 
+Version: 2.12.3 [2014-05-02]
+  
+ o CLEANUP: Now using ds[[idx]] instead of getFile(ds, idx) where possible.
+ 
+ 
+Version: 2.12.2 [2014-04-28]
+  
+ o Added justRMA() for AffymetrixCelSet, which with good precision
+   reproduces the results of the default setting of justRMA() in the
+   affy package.  It does so by still running with a constant memory
+   profile.  This means that a much larger number of samples can be
+   processed using this implementation.
+  
+ o doCRMAv2(..., drop=FALSE) and hence doASCRMAv2(..., drop=FALSE), did
+   not *return* the base-position normalization step, although it was
+   done and its outcome was part of all downstream steps.
+  
+ o extractExpressionSet() for ChipEffectSet gained argument 'orderUnitsBy'
+   and returns standard errors as well.
+ 
+ 
+Version: 2.12.1 [2014-04-26]
+  
+ o SPEEDUP: Minor speedup by replacing repetive <ns>::<fcn>() calls
+   with repetive <fcn>() calls; the '::' operator is fairly expensive.
+   You should expect a small speed improvement when using MatSmoothing(),
+   RmaPlm(..., flavor="oligo") and when calculating weights using
+   ExonRmaPlm and QualityAssessmentModel, to name a few examples.
+ 
+ 
+Version: 2.12.0 [2014-03-07]
+  
+ o Bumped version for CRAN submission.
+  
+ o Updated package dependencies.
+
+SOFTWARE QUALITY:
+
+ o Package passes all redundancy tests.
+ 
+ 
+Version: 2.11.3 [2014-02-28]
+  
+ o Now methods that supports searching sibling root directories do so by
+   default.  Previously this had to be explicitly enabled via an option.
+
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Removed defunct methods.  Made previously deprecated defunct.
+ 
+ 
+Version: 2.11.2 [2014-01-04]
+  
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Dropped defunct methods '[' and '[[' for AffymetrixCelSet
+   and CnagCfhSet (which have been defunct since 2013-04-29).
+ 
+ 
+Version: 2.11.1 [2013-10-17]
+  
+ o DOCUMENTATION: Minor tweaks to the help for the doNNN() methods.
+ 
+ 
+Version: 2.11.0 [2013-10-17]
+
+SIGNIFICANT CHANGES:
+
+ o Package now requires R (>= 2.15.0) [and Bioc (>= 2.10.0)].
+
+ o Updated package dependencies.
+ 
+ 
+Version: 2.10.3 [2013-10-07]
+  
+ o CLEANUP: No longer need to attach R.utils for backward compatibility.
+  
+ o CLEANUP: Package no longer apply downloaded package patches.
+  
+ o CLEANUP: Now explicitly importing only what is needed in NAMESPACE.
+  
+ o CLEANUP: No longer uses ':::' for accessing 'oligo' functions.
+  
+ o Updated package dependencies.
+ 
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Deprecated patch() for AromaAffymetrix.
+  
+ 
+Version: 2.10.2 [2013-09-28]
+  
+ o Now the 'aroma.affymetrix' Package object is also available when the
+   package is only loaded (but not attached).
+  
+ o Updated package dependencies.
+ 
+ 
+Version: 2.10.1 [2013-08-21]
+  
+ o Now explicitly importing R.filesets and aroma.core in NAMESPACE.
+ 
+ 
+Version: 2.10.0 [2013-08-04]
+  
+ o CLEANUP: The formal package dependency on Bioconductor packages
+   'aroma.light' and 'affxparser' has been relaxed so the package
+   can be installed without them.
+  
+ o CLEANUP: Package now only imports matrixStats, R.oo, R.filesets
+   and aroma.apd.
+  
+ o Bumped version for CRAN submission.
+  
+ o Updated package dependencies.
+
+SOFTWARE QUALITY:
+
+ o Package passes all redundancy tests.
+ 
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Removed since-long defunct methods.  Made deprecated
+   methods defunct.
+  
+ 
+Version: 2.9.7 [2013-07-28]
+  
+ o ROBUSTNESS: byPath() for DChipDcpSet was not declared static.
+  
+BUG FIXES:
+
+ o In certain cases, calls to static method byPath() would be affected by the
+   NextMethod() '...' bug reported in R-devel thread "Do *not* pass '...' to 
+   NextMethod() - it'll do it for you; missing documentation, a bug or just 
+   me?" on 2012-10-16.
+ 
+ 
+Version: 2.9.6 [2013-07-03]
+  
+ o Added argument 'flavor' or doRMA() making it easier to replicate the
+   results of other packages, e.g. doRMA(..., flavor="oligo").
+ 
+ 
+Version: 2.9.5 [2013-06-02]
+  
+ o ROBUSTNESS: Now more methods are creating/writing signals atomically.
+  
+BUG FIXES:
+
+ o Since v2.9.0, doFIRMA() would give "Exception: Unknown arguments: 
+   .onUnknownArgs" in the alternative splicing step.
+  
+ o calculateConfidenceScores() for CrlmmModel used defunct method
+   isHeterozygote() instead of isHeterozygous().
+  
+ o Certain methods could throw 'Error in UseMethod("getChecksum"): no
+   applicable method for 'getChecksum' applied to an object of class "list"'
+   if (and only if) R.cache package was not attached.  The same bug was
+   fixed on aroma.core v2.9.2 recently.
+ 
+ 
+Version: 2.9.4 [2013-05-30]
+  
+ o Now it's possible to call aroma.affymetrix::doRMA() without first
+   loading package.  Same for all other doNnn() methods, e.g. doCRMAv2(),
+   doFIRMA() and doGCRMA().
+ 
+ 
+Version: 2.9.3 [2013-05-25]
+  
+ o SPEEDUP: Replaced all rm() calls with NULL assignments.
+ 
+ 
+Version: 2.9.2 [2013-05-22]
+  
+ o CLEANUP: Now using getChecksum() instead of (internal)
+   R.filesets::digest2() with identical results.
+  
+ o CLEANUP: Now getIdentifier() for CnagCfhFile utilizes
+   getChecksum() for the GenericDataFile class.
+ 
+ 
+Version: 2.9.1 [2013-05-20]
+  
+SOFTWARE QUALITY:
+
+ o CRAN POLICY: Now all Rd \usage{} lines are at most 90 characters long.
+ 
+ 
+Version: 2.9.0 [2013-05-02]
+  
+ o Submitted to CRAN.
+  
+SOFTWARE QUALITY:
+
+ o The package passes all redundancy tests.
+ 
+ 
+Version: 2.8.4 [2013-05-02]
+  
+ o DOCUMENTATION: Now doRMA(), doGCRMA(), doFIRMA(),
+   doCRMAv1()/doASCRMAv1() and doCRMAv2()/doASCRMAv2() are
+   fully documented and listed in the help index.
+  
+ o Added argument 'annotationPkg' to extractExpressionSet() for
+   ChipEffectSet, which (indirectly) sets the 'annotation' slot
+   of the returned ExpressionSet.
+  
+ o Added extractFeatureSet() for AffymetrixCelSet.
+  
+ o SPEEDUP: Added ^Cyto.*Array$ to list of SNP chips that isSnpChip()
+   for AffymetrixCdfFile knows of without having to scan the CDF.
+  
+ o SPEEDUP: Just as doCRMAv2()/doASCRMAv2(), now also doRMA() and
+   doGCRMA() return much quicker if already processed.
+  
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Removed argument 'ram' from doNnn() methods in favor
+   setOption(aromaSettings, 'memory/ram', ram).
+
+ o CLEANUP: Made several deprecated methods defunct.
+ 
+ 
+Version: 2.8.3 [2013-04-01]
+  
+ o Force creation of a generic process(), because depending on the
+   version of R.rsp at the time of the build, process() may be missing
+   or not.
+  
+ o Bumped up package dependencies.
+ 
+ 
+Version: 2.8.2 [2013-03-22]
+  
+ o Obscufated the error message on ASCII CDFs on how to change settings
+   to allow the processing of such, because it shouldn't be easy to
+   do that.
+ 
+ 
+Version: 2.8.1 [2013-03-05]
+  
+ o DOCUMENTATION: Updated the help usage section for all static methods.
+  
+ o Bumped up package dependencies.
+ 
+ 
+Version: 2.8.0 [2012-12-21]
+  
+ o No updates.
+  
+ o Bumped version for CRAN submission.
+  
+SOFTWARE QUALITY:
+
+ o Package passes all redundancy tests.
+ 
+ 
+Version: 2.7.9 [2012-12-21]
+  
+ o Bumped package dependencies.
+  
+ o Utilizing new startupMessage() of R.oo.
+  
+ o ROBUSTNESS: Now all internal pathnames are shorter than 100
+   characters, which is the upper limit that 'tar' supports.
+ 
+DEPRECATED AND DEFUNCT:
+
+ o Now using argument 'colClasses' (was 'colClassPatterns')
+   for all readDataFrame():s and elsewhere.
+  
+ 
+Version: 2.7.8 [2012-12-18]
+  
+ o ROBUSTNESS: Added argument 'unitsBy' (and 'namesBy') to writeCdf()
+   for AffyGenePDInfo, where 'unitsBy' defaults to "transcript".  It
+   now also drops any duplicated probe entries.  Furthermore, calling
+   writeCdf() for other classes of DBPDInfo objects will now give a
+   more informative error message that those classes are yet not
+   supported.  Thanks Guido Hooiveld (Wageningen University, Netherlands)
+   for suggestions and tests.
+  
+ o Now validate() for AffymetrixCdfFile accepts empty unit names as
+   long as the unit is not empty.
+  
+BUG FIXES:
+
+ o writeCdf(..., useTranscriptCluster=FALSE) for AffyGenePDInfo could
+   generate empty unit names files for units with 'fsetid' <= 9999.
+ 
+ 
+Version: 2.7.7 [2012-12-10]
+  
+BUG FIXES:
+
+ o getTimestamp() for AffymetrixCelFile would throw an error if the CEL file
+   header did not have a timestamp.  Thanks Guido Hooiveld (Wageningen
+   University, Netherlands) for reporting this.
+ 
+ 
+Version: 2.7.6 [2012-12-06]
+  
+ o ROBUSTNESS: Utilizing new getOneFile() internally.
+ 
+ 
+Version: 2.7.5 [2012-12-01]
+    
+BUG FIXES:
+
+ o BUG FIX/ROBUSTNESS: convertToUnique() for AffymetrixCelSet would
+   return all CEL files found in the output directory, not just the ones
+   corresponding to the input set, and possibly in a different order.
+ 
+ 
+Version: 2.7.4 [2012-11-29]
+  
+ o DOCUMENTATION: Added help pages to more methods.
+  
+ o ROBUSTNESS: updateUnits() for ResidualSet did not update the files in
+   lexicographic order as previously claimed.
+ 
+ 
+Version: 2.7.3 [2012-11-28]
+  
+ o ROBUSTNESS: Added system test scripts for building UGP and UFL
+   file from Affymetrix CSF and NetAffx CSV files for GenomeWideSNP_6.
+  
+BUG FIXES:
+
+ o Static allocateFromCdf() for AromaUfcFile and AromaUflFile would throw
+   errors on "Cannot retrieve writable file/directory because it is NA.".
+   This turns out to be related to the trap reported in R-devel thread
+   'Do *not* pass '...' to NextMethod() - it'll do it for you; missing
+   documentation, a bug or just me?' on Oct 16, 2012.  Thanks Ioana
+   Cutcutache (Duke-NUS in Singapore) for reporting on this.
+ 
+ 
+Version: 2.7.2 [2012-11-28]
+  
+ o ROBUSTNESS: Added the FileCacheKeyInterface to all classes directly
+   extending GenericDataFile and TabularTextFile.
+  
+ o MEMORY: readUnits() for ChipEffectFile, FirmaFile, ParameterCelFile,
+   ResidualFile, and WeightsFile no longer cache results in memory
+   by default.
+ 
+ 
+Version: 2.7.1 [2012-11-26]
+  
+ o Lowered the package dependencies to aroma.light (>= 1.22.0)
+   and affxparser (>= 1.26.4) so that this package can be easily
+   installed on R (>= 2.14.0).
+ 
+ 
+Version: 2.7.0 [2012-11-24]
+  
+ o Bumped version for CRAN submission.
+  
+ o Bumped up package dependencies.
+  
+SOFTWARE QUALITY:
+
+ o Package passes all redundancy tests.
+ 
+ 
+Version: 2.6.16 [2012-11-21]
+  
+ o Updated verbose output of parameters.
+ 
+ 
+Version: 2.6.14 [2012-11-21]
+  
+ o DOCUMENTATION: Hiding more internal methods from the help indices.
+  
+ o CLEANUP: Now utilizing the new ParametersInterface.
+  
+ o CLEANUP: Replaced all getParameterSet() with getParameters().
+
+ o CLEANUP: bgAdjustGcrma() for AffymetrixCelSet no longer reads
+   and write probe affinity files in the deprecated APD format.
+  
+ o CLEANUP: Removed obsolete code from internal bgAdjustOptical() that
+   was never reached and that loaded affinities via obsolete APD files.
+  
+DEPRECATED AND DEFUNCT:
+  
+ o CLEANUP: bgAdjustOptical() and bgAdjustRma() for AffymetrixCelSet
+   are now defunct.  Instead, see OpticalBackgroundCorrection and
+   RmaBackgroundCorrection.
+  
+ o CLEANUP: Deprecated "[" and "[[" for AffymetrixCelFile,
+   AffymetrixCelSet, CnagCfhFile, and CnagCfhSet.
+ 
+ 
+Version: 2.6.13 [2012-11-18]
+  
+ o Now package explicitly imports R.cache, because aroma.core is no
+   longer loading it.
+ 
+ 
+Version: 2.6.12 [2012-11-14]
+  
+ o CLEANUP: getWeights() for QualityAssessmentModel no longer sets the
+   alias of the returned data set, because the use of aliases is deprecated.
+  
+ o CLEANUP: writeImage() for AffymetrixCelFile no longer supports
+   sample name aliases.
+ 
+ 
+Version: 2.6.11 [2012-11-13]
+  
+ o CLEANUP: Properly declared all cached fields, making it possible
+   to remove nearly all clearCache() implementations because the one
+   for Object takes does the job.
+ 
+ 
+Version: 2.6.10 [2012-11-12]
+  
+ o CLEANUP: Now seq_along(x) instead of seq(along=x) everywhere.
+   Similarly, seq(ds) where 'ds' is GenericDataFileSet is now
+   replaced by seq_along(ds).  Likewise, seq_len(x) replaces
+   seq(length=x), and length(ds) replaces nbrOfFiles(ds).
+ 
+ 
+Version: 2.6.9 [2012-11-08]
+  
+ o Renamed getColumnNames() to getDefaultColumnNames() for all
+   classes inheriting from GenericTabularFile, because of the
+   new ColumnNamesInterface interface.
+ 
+ 
+Version: 2.6.8 [2012-11-05]
+  
+ o CLEANUP: Replaced all whichVector() with which(), because the
+   latter is now the fastest again.
+ 
+ 
+Version: 2.6.7 [2012-10-29]
+  
+ o CLEANUP: Now using Arguments$get(Read|Writ)ablePath() instead of
+   filePath(..., expandLinks="any").
+ 
+ 
+Version: 2.6.6 [2012-10-21]
+  
+ o ROBUSTNESS: Now using Arguments$getWritablePath() everywhere instead
+   of mkdirs(), because the former will do a better job in creating
+   and asserting directories on slow shared file systems, and when it
+   fails it gives a more informative error message.
+ 
+ 
+Version: 2.6.5 [2012-10-18]
+  
+ o ROBUSTNESS: Now createMonocellCdf() for AffymetrixCdfFile validates
+   the CDF (via new validate()).  This will give more informative
+   error message in case the CDF is invalid, e.g. containing "empty"
+   units.
+  
+ o ROBUSTNESS: Added validate() for AffymetrixCdfFile, which validate
+   a CDF for the most "common" errors, to help troubleshooting.  Note
+   that the validation is not complete, i.e. rare/unknown errors are
+   not caught.
+  
+ o Now as.character() for all AromaChipTypeAnnotationFile classes,
+   and hence print(), reports the file size both as abbreviated as
+   well as in exact number of bytes, e.g. "24.66 MB (25853850 bytes)"
+   (used to only be "24.66 MB").
+ 
+ 
+Version: 2.6.4 [2012-10-16]
+
+BUG FIXES:
+
+ o ROBUSTNESS/BUG FIX: No longer passing '...' to NextMethod(), cf.
+   R-devel thread 'Do *not* pass '...' to NextMethod() - it'll do it
+   for you; missing documentation, a bug or just me?' on Oct 16, 2012.
+ 
+ 
+Version: 2.6.3 [2012-10-14]
+  
+ o CLEANUP: Moved AromaUnitGcContentFile to aroma.core.
+
+DEPRECATED AND DEFUNCT:
+  
+ o CLEANUP: Removed several defunct/obsolete methods and turned
+   deprecated methods into defunct/obsolete ones.
+  
+ o CLEANUP: findByChipType() for AffymetrixCdfFile no longer support
+   monocell CDF file named <chipType>-monocell.CDF, and gives an
+   informative error if that is still the case.  Since December 2007,
+   the filename should instead be <chipType>,monocell.CDF.
+  
+ o CLEANUP: createParamCdf() for ChipEffectFile and FirmaFile no longer
+   support '<chipType>-monocell' filenames.  If detected, an informative
+   error is thrown.
+ 
+ 
+Version: 2.6.2 [2012-09-15]
+  
+BUG FIXES:
+
+ o doCRMAv2() failed to quickly located already available results if the
+   chip type of the CDF had tags, e.g. 'GenomeWideSNP_6,Full'.
+ 
+ 
+Version: 2.6.1 [2012-09-14]
+  
+ o MEMORY: Now getUnitIntensities() and readUnits() for AffymetrixCelSet
+   no longer cache the results in memory if argument 'units' is NULL.
+  
+ o CLEANUP: Restructured part of the test scripts tree.  Added a new
+   batch launcher.
+  
+BUG FIXES:
+
+ o BUG FIX/ROBUSTNESS: Although getUnitIntensities() for AffymetrixCelSet
+   would retrieve the CDF tree structure and pass it to affxparser's
+   readCelIntensities(), it was done in such a way that the latter would
+   still need to find and read the CDF.  This meant that it would not
+   necessarily retrieve the same CDF as the AffymetrixCelSet used.
+  
+ o The utility function for downloading individual CEL files from GEO would
+   give an error that it could not gunzip the downloaded file, iff the
+   filename extension was lower case, e.g. *.cel.gz instead of *.CEL.gz.
+ 
+ 
+Version: 2.6.0 [2012-09-05]
+  
+ o Submitted to CRAN.
+
+SOFTWARE QUALITY:
+
+ o The package passes all redundancy tests.
+ 
+ 
+Version: 2.5.11 [2012-09-05]
+  
+ o ROBUSTNESS: Now doCRMAv1() adds also tag "v1" to the allele-specific
+   calibration step.  The reason for this is to differentiate it from
+   the output of doCRMAv2().  NOTE: This update means that any old CRMAv1
+   analyzes will not be detected by doCRMAv1(); to have doCRMAv1() detect
+   those add tag "v1" in that calibration step, e.g. "ACC,-XY,v1".
+  
+ o ROBUSTNESS: Now the CrlmmModel constructor asserts that the chip
+   effects were estimated without merging the strands (mergeStrands=FALSE).
+   If not, an informative exception is thrown.
+ 
+ 
+Version: 2.5.10 [2012-09-04]
+
+SOFTWARE QUALITY:
+
+ o CLEANUP/ROBUSTNESS: Updated test scripts by rewriting some tests
+   to be more clear/consistent on what they are testing and by
+   cleaning out tests that duplicates each other etc.
+
+ o Added system test scripts that automatically download the needed
+   test data sets and install some extra packages needed for some
+   of the tests.
+  
+BUG FIXES:
+
+ o BUG FIX/ROBUSTNESS: extractAlleleSet(), extractSnpCnvQSet() and
+   extractSnpQSet() for SnpChipEffectSet would throw an exception
+   iff the 'Biobase' package was not loaded.
+ 
+ 
+Version: 2.5.9 [2012-08-31]
+
+SOFTWARE QUALITY:
+
+ o Added system test scripts that automatically download the needed
+   annotation data files iff missing.  This simplifies running the
+   package's system tests on a new system.
+ 
+ 
+Version: 2.5.8 [2012-08-30]
+
+ o CLEANUP: Package no longer masks boxplot.stats(), getPackageName()
+   and write() from other packages.
+  
+ o CLEANUP: Dropped system tests that did not test what other
+   tests already test.
+ 
+DEPRECATED AND DEFUNCT:
+  
+ o CLEANUP: Dropped readCdfDataFrame(), which is identical to
+   the one in affxparser, which has remained the same since
+   affxparser v1.21.1 (Oct 2010).
+  
+ 
+Version: 2.5.7 [2012-08-28]
+  
+ o SPEED UP: Now doCRMAv2() returns even faster if already processed.
+
+SOFTWARE QUALITY:
+
+ o Added systems test for running doASCRMAv2() in parallel using parLapply().
+ 
+ 
+Version: 2.5.6 [2012-08-21]
+  
+ o CLEANUP: getRlmFitFunctions() no longer falls back to affyPLM, which
+   was really only needed back in 2007.
+  
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Dropped support for obsolete RmaPlm(..., flavor="affyPLMold").
+  
+ o CLEANUP: Now RmaPlm(..., flavor="oligo") no longer supports
+   oligo (< 1.7.19), which can be considered obsolete version by now.
+ 
+ 
+Version: 2.5.5 [2012-08-18]
+  
+ o Added argument 'useTranscriptCluster' to writeCdf() for AffyGenePDInfo.
+ 
+ 
+Version: 2.5.4 [2012-06-21]
+  
+ o CLARIFICATION: Restructured the bpmapCluster2Cdf() method such that
+   is more clear how BPMAP sequences are filtered out, i.e. keeping
+   sequencing with a matching group name and excluding those that
+   appears to be non-genomic control sequences.
+  
+ o ROBUSTNESS: Arguments 'rows' and 'cols' for bpmapCluster2Cdf() are
+   mandatory (again).  The reason for this is that the BPMAP file is only
+   useful to infer a lower bound for them, but not their exact values.
+  
+ o Added argument 'path' to bpmapCluster2Cdf(), which now defaults to
+   annotationData/chipTypes/<chipType>/.
+    
+BUG FIXES:
+
+ o bpmapCluster2Cdf() would exclude all units that had a probe starting at
+   the very first position of a BPMAP sequence, because it interpreted that
+   (incorrectly) as being a non-genomic control sequence.  This made no
+   difference on some tiling arrays, but for others it dropped almost
+   everything in the BPMAP file, e.g. Dm_tiling2_MR_v01.bpmap.  Thanks
+   Hanat T, Heidelberg for reporting.
+  
+ o bpmapCluster2Cdf(..., minNbrOfProbes=n) filtered out units with less than
+   (n+2L) probes, not n probes as documented.
+  
+ o bpmapCluster2Cdf() would write the incorrect 'unitnumber' in the CDF units
+   (it was using the BPMAP sequence index).  This bug should have no impact
+   on analysis in the Aroma framework, because that CDF field is ignored.
+ 
+ 
+Version: 2.5.3 [2012-06-18]
+
+ o FIX: Fixed a typo in an error message generated by byChipType()
+   for AromaChipTypeAnnotationFile.
+ 
+ 
+Version: 2.5.2 [2012-06-15]
+  
+ o Now writeCdf() for AffyGenePDInfo returns the pathname of the CDF.
+  
+ o Added trial version of class AffymetrixPgfFile.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Added a full system test for CalMaTe.
+ 
+ 
+Version: 2.5.1 [2012-03-28]
+  
+ o Now convertToUnique() for AffymetrixCelSet skips already processed
+   files in partially processed data sets.  Previously it would give
+   an error if only some output files existed.
+ 
+ 
+Version: 2.5.0 [2012-03-25]
+  
+ o Submitted to CRAN.
+
+SOFTWARE QUALITY:
+  
+ o The package passes all redundancy tests.
+ 
+ 
+Version: 2.4.3 [2012-03-23]
+  
+ o CRAN POLICY: Package no longer utilizes .Internal() calls.
+  
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Deprecated PdInfo2Cdf() in favor (identical) pdInfo2Cdf(),
+   because the former does not follow the Aroma naming conventions.
+ 
+ 
+Version: 2.4.2 [2012-03-06]
+  
+ o GENERALIZATION: The new ArrayExplorer v3.4 will work with most
+   commonly used web browsers including Mozilla Firefox, Google Chrome,
+   Microsoft Internet Explorer, Apple Safari, and Opera.
+  
+ o CRAN POLICY: Started to remove .Internal() calls.
+ 
+ 
+Version: 2.4.1 [2012-01-14]
+  
+ o ROBUSTNESS: Now the fit function of MbeiPlm gives an error
+   whenever one tries to use prior parameters, which are yet
+   not supported.
+  
+ o Updated getFitUnitGroupFunction() for RmaPlm to support prior
+   probe-affinity parameters.
+  
+ o Added argument 'listOfPriors' to MultiArrayUnitModel(). Such
+   priors are passed to the internal fitUnit() method.
+  
+ o Now validate() of MultiArrayUnitModel accepts single-array data
+   sets, iff priors are set.
+ 
+ 
+Version: 2.4.0 [2012-01-11]
+  
+ o ROBUSTNESS: Updated package dependencies.
+
+SOFTWARE QUALITY:
+
+ o Adapted a few redundancy tests for the most recent updates.
+  
+BUG FIXES:
+
+ o fit() for ProbeLevelModel would throw an error due to a sanity check on
+   unit dimensions that was only valid in certain cases.
+ 
+ 
+Version: 2.3.5 [2011-11-20]
+  
+ o SPEEDUP: Constructor for AllelicCrosstalkCalibration no longer calls
+   the very slow hasUnitTypes() for AffymetrixCdfFile, but instead only
+   the much faster getUnitTypes().
+  
+ o Now byChipType() for AromaChipTypeAnnotationFile gives an error
+   message with more information on which file it failed to locate,
+   e.g. by specifying filename extension it looked for.
+  
+ o Added abstract getDefaultExtension() for AromaChipTypeAnnotationFile.
+  
+BUG FIXES:
+
+ o Internally justSNPRMA() for AffymetrixCelSet would pass argument
+   'verbose=log' instead of 'verbose=verbose', which would throw an error
+   unless 'log' was assigned to be a logical value or a Verbose object.
+
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Deprecated doCRMA(). Use doCRMAv1() or doCRMAv2() instead.
+  
+ 
+Version: 2.3.4 [2011-11-18]
+  
+ o Now fit() for ProbeLevelModel fits one type of units at the time,
+   which in turn is fitted in chunks of units with equal number of
+   groups and cells per groups (very small chunks are merged together).
+   Doing so will eventually allow us to speed up the restructuring of
+   the data when reading signals and writing parameter estimates.
+  
+ o ROBUSTNESS: Added validation of argument 'fields' to readRawData()
+   of AffymetrixCelFile and more internal sanity checks in that method.
+ 
+ 
+Version: 2.3.3 [2011-11-11]
+  
+ o Now fit() for ProbeLevelModel fits one type of units at the time.
+   For each unit type, the fitting is done in chunks.  The timing
+   statistics presented in the verbose output is now per unit type.
+   The purpose of this is to move toward fitting in chunks of units
+   where the units are all of the same type and dimension (number
+   of groups and number of cells per group).
+
+SOFTWARE QUALITY:
+  
+ o Added more system tests.
+ 
+ 
+Version: 2.3.2 [2011-11-10]
+  
+ o Added doFIRMA().
+  
+ o ROBUSTIFICATION: Now FirmaModel(plm) asserts that 'plm' is an
+   ExonRmaPlm object (before any ProbeLevelModel would work), and
+   that the PLM is setup for transcripts (mergeGroups=TRUE), not exons.
+  
+ o SPEEDUP: Now the internal fit functions of FirmaModel utilizes
+   the 'matrixStats' package.  Also cleaned out some unnecessary calls.
+  
+ o ROBUSTNESS: doGCRMA() is now guaranteed to undo any changes of
+   the CDF of the data set, e.g. if there is a user interrupt.
+ 
+ 
+Version: 2.3.1 [2011-11-05]
+  
+ o FIX: The verbose enter/exit statements of fit() of CrlmmModel()
+   did not match up, resulting deeper and deeper indentations.
+ 
+ 
+Version: 2.3.0 [2011-10-28]
+  
+ o Added a namespace to the package, which will be more or less
+   a requirement starting with R v2.14.0.
+  
+ o Added Bioconductor package 'AffymetrixDataTestFiles' to the list
+   of suggested package, just to remove one R CMD check "NOTE".
+ 
+ 
+Version: 2.2.3 [2011-09-29]
+
+SOFTWARE QUALITY:
+  
+ o Added more system tests.
+ 
+ 
+Version: 2.2.2 [2011-09-17]
+  
+ o Added writeCdfByExcludingCells() for AffymetrixCdfFile.
+ 
+ 
+Version: 2.2.1 [2011-09-11]
+  
+ o Added createExonByTranscriptCdf() for creating exon-by-transcript CDFs.
+   This methods was adapted from the createTranscriptCDF(), which was
+   previously provided online.
+  
+ o Added a build script for createExonByTranscriptCdf() on HuEx-1_0-st-v2.
+  
+ o Added getHeaderAttributes() for AffymetrixNetAffxCsvFile which is
+   used by new getGenomeBuild(), getNetAffxBuild() and getNetAffxDate().
+ 
+ 
+Version: 2.2.0 [2011-09-01]
+  
+ o Submitted to CRAN.
+
+SOFTWARE QUALITY:
+
+ o The package passes all redundancy tests.
+ 
+ 
+Version: 2.1.9 [2011-08-31]
+  
+ o Added bpmapCluster2Cdf(), which is a pruned and robustified version
+   of ditto previously provided by Mark Robinson online.  This new
+   version includes more sanity checks and avoids overwriting existing
+   CDF files.
+  
+ o ROBUSTNESS: Now env2Cdf() writes the CDF file atomically by first
+   writing to a temporary file which is then renamed.  It now also
+   returns the pathname to the CDF written.
+  
+BUG FIXES:
+
+ o ROBUSTNESS: getTimestamp() for AffymetrixCelFile would throw "Error in if
+   (hasTimestamp) { : argument is of length zero" if the CEL file had a DAT
+   header with a non-standard chip type string, e.g. an early-access label or
+   no label at all.  Updated the local/inner  getTimestampFromDatHeader() of
+   getTimestamp() to also handle such CEL files.  Thanks Irina Ostrovnaya
+   at MSKCC for reporting on this.
+ 
+ 
+Version: 2.1.8 [2011-08-16]
+  
+ o ROBUSTNESS: If static byName() for AffymetrixCelSet fails to setup
+   a data set, it now reports the error message for each data set
+   directory it tried.
+ 
+ 
+Version: 2.1.7 [2011-08-08]
+  
+ o WORKAROUND: Added similar workarounds as in v2.1.6 for more methods
+   defined in aroma.core, apply(), rowSums() etc.
+ 
+ 
+Version: 2.1.6 [2011-07-27]
+  
+ o WORKAROUND: In order for the package to work with the most recent
+   version of R devel, which automatically add namespaces to packages
+   who do not have one, we explicitly have specify that this package
+   should get function such as cat() and getOption() from R.utils
+   (instead of 'base').
+ 
+ 
+Version: 2.1.5 [2011-07-24]
+  
+ o Bumped up the package dependencies, especially since R will
+   soon (in practice) require namespaces for all packages.
+ 
+ 
+Version: 2.1.4 [2011-07-14]
+  
+ o Added extractExpressionSet() for ChipEffectSet.
+  
+ o ROBUSTNESS: Added redundancy tests for doRMA() and
+   extractExpressionSet() for the HG-U133_Plus_2 chip type.
+ 
+ 
+Version: 2.1.3 [2011-06-07]
+  
+ o ROBUSTNESS: Now the search path is adjusted such that 'ggplot2' comes
+   after 'aroma.affymetrix', because the former overrides the generic
+   rescale() function of the latter with a non-generic function.
+ 
+ 
+Version: 2.1.2 [2011-05-26]
+  
+ o Added an archive of scripts used to build ACS, UGP and UFL annotation
+   files.  The archive is located under buildScripts/ of the package
+   installation directory and sorted by chip types.
+ 
+ 
+Version: 2.1.1 [2011-04-18]
+  
+ o DOCUMENTATION: Added more help to createUniqueCdf() for AffymetrixCdfFile.
+    
+ o More updates to readGeneAssignments() for AffymetrixNetAffxCsvFile.
+
+DEPRECATED AND DEFUNCT:
+
+ o DEPRECATED: getUnique() and createUnique() are deprecated.
+   Use getUniqueCdf() and createUniqueCdf() instead.
+
+ o CLEANUP: Dropped argument 'sep' of createMonocellCdf() and
+   createUniqueCdf() for AffymetrixCdfFile.
+ 
+ 
+Version: 2.1.0 [2011-04-08]
+  
+ o No updates.  Submitted to CRAN.
+ 
+ 
+Version: 2.0.10 [2011-04-07]
+  
+ o Added argument 'drop' to doRMA(), doGCRMA(), doCRMAv1(), and
+   doCRMAv2().  If FALSE, all intermediate data sets and models are
+   returned in a named list, otherwise only the final data set(s).
+  
+ o Added argument 'uniquePlm' to doRMA() and doGCRMA() for doing
+   probe-level summarization on unique probe sets only.
+  
+ o Added readGeneAssignments() for AffymetrixNetAffxCsvFile.
+  
+ o CLEANUP: Utilizing hpaste() internally wherever applicable.
+
+SOFTWARE QUALITY:
+  
+ o Package passes all system tests.
+ 
+ 
+Version: 2.0.9 [2011-03-26]
+  
+ o ROBUSTNESS: Now internal bgAdjustGcrma(..., type="affinities") for
+   AffymetrixCelFile gives a more informative error message when there
+   are too few negative controls.
+ 
+ 
+Version: 2.0.8 [2011-03-14]
+  
+ o doRMAv1() and doCRMAv2() gained argument 'lengthRange', which is
+   passed to the constructor of FragmentLengthNormalization.
+  
+ o SPEEDUP: Added MOUSEDIVm520650 to the set of predefined chip types
+   in AllelicCrosstalkCalibration.
+ 
+ 
+Version: 2.0.7 [2011-03-10]
+  
+BUG FIXES:
+
+ o append() for AffymetrixCelSet:s would throw 'Error in base::append(
+   this$files, files, ...) : unused argument(s) (other = NA)'.  Added a
+   redundancy test.  Thanks Ajanthah Sangaralingam at Queen Mary,
+   University of London, for reporting on this.
+ 
+ 
+Version: 2.0.6 [2011-03-04]
+  
+ o ROBUSTNESS: Now getCellIndices() for AffymetrixCdfFile asserts that
+   argument 'units' can be coerced to integer indices.  Also, after
+   correcting a bug in lapplyInChunks() of aroma.core, getCellIndices()
+   now correctly returns an empty set if argument 'units' is integer(0).
+ 
+ 
+Version: 2.0.5 [2011-03-03]
+  
+ o GENERALIZATION: Now AffymetrixCelSet and CnagCfhSet locates sample
+   annotation files and sets the attributes following the new aroma
+   search convention, i.e. by first loading *.saf files from
+   main root path annotationData/ and then from optional sibling root
+   paths annotationData,<tags>/.
+  
+ o ROBUSTNESS: QuantileNormalization now saves normalized data
+   atomically, which lowers the risk for generating incomplete/corrupt
+   data files.
+  
+ o ROBUSTNESS: Added a return contract/sanity check asserting that
+   getUnitsOnChromosomes() for GenomeInformation truly returns valid
+   'unit' indices.  Thanks to Emilie Sohier, France for reporting
+   on a problem related to this.
+ 
+ 
+Version: 2.0.4 [2011-03-01]
+  
+ o GENERALIZATION: Now getAverageFile() and getBaseline() first try to
+   locate an existing result file in one of the root paths.
+   If not found, a new one is created.
+  
+ o GENERALIZATION: Now byName() for AffymetrixCelSet tries to setup all
+   data set directories matching the query and not just the first one.
+   It also requires that the data sets found by byPath() are
+   non-empty, otherwise they are skipped.
+  
+ o STANDARDIZATION: Now the default output path for all allocateFromCdf()
+   is annotationData/chipTypes/<chipType>/.  Before it was the same
+   directory as the CDF, which may for instance have been in a deeper
+   subdirectory, or recently also in a sibling root path.
+  
+ o CLEAN UP: Harmonized all code for allocating/writing atomically,
+   where we first write to a temporary file which is then renamed.
+ 
+ 
+Version: 2.0.3 [2011-02-24]
+  
+ o GENERALIZATION: Starting to add support for locating data sets in
+   root paths that also have tags, e.g. rawData/ and rawData,shared/.
+   When this is in place, it will simplify sharing of data sets,
+   intermediate and final results, which in turn will help multiple
+   users avoiding reprocessing the same data sets.
+  
+ o Now getAverageFile() for AffymetrixCelSet and DChipDcpSet,
+   as well as getBaseline() for ChipEffectSet drop tags from the
+   output root path before creating the file.  Likewise, the target
+   distribution file generated by QuantileNormalization is created
+   in a root path without tags.
+   Currently, this requires that aroma setting 'devel/dropRootPathTags'
+   is TRUE.
+  
+ o Added findTargetDistributionFile() to QuantileNormalization for
+   locating an existing target-distribution file.  The previously used
+   getTargetDistributionPathname(), which returns a hardwired pathname,
+   is now only used for creating a target-distribution file (in a
+   root directory without tags).
+  
+ o Now convertToUnique() for AffymetrixCelSet searches for already
+   available data sets using the aroma-wide search rules.  Before it
+   assumed it would always be located in probeData/, but with the new
+   rules it can also be in probeData,<tags>/.
+  
+ o ROBUSTNESS: getTimestamp() for AffymetrixCelFile no longer assumes
+   that the file's DAT header contains a timestamp and tries to translate.
+   Instead it first tests for the timestamp pattern, and returns NA
+   if not found.
+ 
+ 
+Version: 2.0.1 [2011-02-20]
+
+ o KNOWN ISSUE: install.packages("aroma.affymetrix") does not work
+   because the package depends on the 'affxparser' package which has
+   to be installed from on Bioconductor.  For now, the DESCRIPTION
+   file has been updated with installation instructions.
+ 
+DEPRECATED AND DEFUNCT:
+
+ o CLEANUP: Replaced calls to deprecated getListOfChipEffectSets()
+   with getSets().
+  
+ 
+Version: 2.0.0 [2011-02-16]
+  
+ o No updates.  Submitted to CRAN.
+ 
+ 
+Version: 1.9.5 [2011-02-15]
+  
+ o CLEANUP/GENERALIZATION: Now all system tests for the
+   Hs_PromPR_v02 chip type use public data sets.
+   Before some of them used a private data set.
+   Remaining data sets that are non-public and used in system tests:
+   - GenomeWideSNP_6: TCGA,OV,testSet,pairs,Broad (1 test)
+  
+ o HARMONIZATION: Renamed argument 'numBins' of MatNormalization
+   to 'nbrOfBins'.
+  
+ o HARMONIZATION: Now MatNormalization utilized the aroma setting 'ram',
+   which replaced argument 'numChunks' which is now deprecated.
+ 
+ 
+Version: 1.9.4 [2011-02-08]
+  
+ o GENERALIZATION: Now it is possible to specify the range of fragment
+   lengths to be considered when normalizing for PCR fragment-length
+   effects.  Lengths outside the range ar treated as missing values.
+   See argument 'lengthRange' to FragmentLengthNormalization.
+ 
+ 
+Version: 1.9.3 [2011-02-04]
+  
+BUG FIXES:
+
+ o as.character() for an empty AffymetrixCelSet would throw exception
+   "Argument 'x' is of length 1 although the range ([0,0]) implies that is
+   should be empty.", while trying to infer the chip type.
+ 
+ 
+Version: 1.9.2 [2011-02-01]
+  
+ o CLEANUP/GENERALIZATION: Now all system tests for the Mapping10K_Xba142 chip
+   type use public data sets. Before some of them used a private data set.
+ 
+ 
+Version: 1.9.1 [2011-02-01]
+  
+ o GENERALIZATION: With aroma.core v1.9.3 it is now possible to
+   display spatial image and write them as PNG files if the 'png'
+   package is installed, alternatively to the EBImage package.
+  
+ o ROBUSTNESS: Removed some remaining partial argument calls.
+  
+ o CLEAN UP: Removed explicit dependencies on EBImage in the code.
+   The dependencies are still there, but via wrapper methods of
+   aroma.core.
+ 
+ 
+Version: 1.9.0 [2011-01-10]
+  
+ o No updates.  Submitted to CRAN.
+ 
+ 
+Version: 1.8.3 [2011-01-09]
+  
+ o Added writeCdf() for AffyGenePDInfo, which replaces pdInfo2Cdf().
+   An auxillary CEL file is no longer needed to create a CDF from
+   an PDInfo package.  Moreover, contrary pdInfo2Cdf(), the generated
+   CDF now gets a correct/formal Affymetrix chip type.
+
+BUG FIXES:
+
+ o createMonocellCdf(..., verbose=FALSE) for AffymetrixCdfFile would still
+   create verbose output.
+ 
+ 
+Version: 1.8.2 [2010-12-04]
+  
+BUG FIXES:
+
+ o Local variable 'pdName' of pdInfo2Cdf() was used before it was defined,
+   which gave an error.  Thanks to Guido Hooiveld at the Wageningen
+   University, Netherlands, for reporting this.
+ 
+ 
+Version: 1.8.1 [2010-11-22]
+  
+ o ROBUSTNESS: Now extractAffyBatch() for AffymetrixCelSet asserts that
+   the sample names are unique, which affy::ReadAffy() requires.
+   Moreover, the sample names are now the fullnames not just the names.
+ 
+ 
+Version: 1.8.0 [2010-11-07]
+  
+ o Committed to CRAN. No updates.
+ 
+ 
+Version: 1.7.4 [2010-11-04]
+  
+ o ROBUSTNESS: Bumping the required versions of the dependent package
+   in order to make sure we are not affected by old bugs.
+ 
+ 
+Version: 1.7.3 [2010-10-02]
+  
+ o Now doGCRMA() automagically makes sure that the default CDF is used
+   in the GcRmaBackgroundCorrection step, while use a custom CDF
+   everywhere else if set.  Added argument 'type' to doGCRMA() which
+   is passed to GcRmaBackgroundCorrection().
+  
+ o GENERALIZATION: Now GcRmaBackgroundCorrection(..., type="affinities")
+   can process also chip types for which there are no MMs and for
+   which non-specific probes are explicitly specified.
+  
+ o GENERALIZATION: Now GcRmaBackgroundCorrection calculates gcRMA probe
+   affinites based on Aroma Cell Sequence (ACS) annotation files.
+   For backward compatibility, it turns to Affymetrix probe-tab files
+   if an ACS file is not located.
+  
+ o ROBUSTNESS: Added more validation of the arguments passed to
+   the constructor of GcRmaBackgroundCorrection and its internal
+   functions.  Also added more verbose output during processing.
+  
+ o CORRECTION: The DESCRIPTION file suggested a package version that
+   did not exist.
+ 
+ 
+Version: 1.7.2 [2010-09-06]
+  
+ o ROBUSTNESS: Added extractAffyBatch() for ChipEffectSet that gives
+   an informative error message explaining why it doesn't make sense
+   to do so.
+ 
+ 
+Version: 1.7.1 [2010-08-14]
+  
+ o Added doGCRMA() for AffymetrixCelSet and data-set names.
+   doGCRMA() runs in bounded memory and replicates the results of
+   gcrma() in the gcrma package with great precision.
+ 
+ 
+Version: 1.7.0 [2010-07-26]
+  
+ o Committed to CRAN. No updates.
+ 
+ 
+Version: 1.6.8 [2010-07-21]
+  
+ o CLEAN UP: Now getAverageFile() for AffymetrixCelSet no longer writes
+   debug information to ${Rcache}/aroma.affymetrix/idChecks/.
+ 
+ 
+Version: 1.6.7 [2010-07-19]
+  
+ o Now byPath(..., cdf) for ChipEffectSet will silently try to retrieve
+   the the monocell CDF if argument 'cdf' is the main CDF.  If it fails
+   an error is thrown.  This makes it possible to specify the main/regular
+   CDF (or chip type), instead of the monocell CDF, when retrieve a
+   chip-effect data set.
+  
+BUG FIXES:
+
+ o The above byPath(..., cdf) updated was necessary in order to be able to
+   retrieve chip-effect data set byName() after the update of byName() for
+   AffymetrixCelSet in the previous version.
+ 
+ 
+Version: 1.6.6 [2010-07-02]
+  
+ o Now AffymetrixCelSet$byName(..., chipType="GenomeWideSNP_6,Full") will
+   work (before chiptypes with tags would give an error).  This is now
+   done by first locating the CDF for the chip type (with tags).
+  
+ o Added doASCRMAv1() and doASCRMAv2() for convenient allele-specific
+   doCRMAv1() and doCRMAv2() wrappers.
+
+DEPRECATED AND DEFUNCT:
+
+ o CLEAN UP: Dropped argument 'transforms' from getImage()
+   for AffymetrixCdfFile.
+ 
+ 
+ 
+Version: 1.6.5 [2010-06-16]
+  
+ o Added doRMA() for AffymetrixCelSet and data-set names. doRMA() runs in
+   bounded memory and replicates the results of fitPLM() in the affyPLM
+   package with great precision.
+ 
+ 
+Version: 1.6.4 [2010-06-07]
+  
+BUG FIXES:
+
+ o Added argument shift=+300 to doCRMAv1().
+ 
+ 
+Version: 1.6.3 [2010-05-30]
+  
+ o Now translateFullName() of AffymetrixProbeTabFile translates
+   'PROBE_STRAND' to 'targetStrandedness'.
+ 
+ 
+Version: 1.6.2 [2010-05-26]
+  
+ o Started to add scripts for downloading example data.
+ 
+ 
+Version: 1.6.1 [2010-05-19]
+  
+ o CORRECTION: doCRMAv1() did not shift +300 the signals before
+   doing the probe-level summarization.
+  
+BUG FIXES:
+
+ o Fixed a bug in PdInfo2Cdf().  Thanks Kasper Daniel Hansen for the report.
+ 
+ 
+Version: 1.6.0 [2010-05-14]
+  
+ o Package submitted to CRAN.
+  
+SOFTWARE QUALITY:
+
+ o Package pass system and redundancy tests.
+  
+ o Package pass R CMD check on R v2.11.0 and v2.12.0 devel.
+ 
+ 
+Version: 1.5.9 [2010-05-13]
+  
+ o SPEED UP: Now the constructor AllelicCrosstalkCalibration() is set to
+   recognize the Cytogenetics_Array chip type.  This avoids having to
+   scan the CDF for unit types and check for SNPs, which is slow and not
+   really wanted for a constructor function.
+  
+ o ROBUSTNESS: Now fromDataFile() of ChipEffectFile and FirmaFile, as
+   well as convertToUnique() of AffymetrixCelSet allocates/creates data
+   files atomically.  As elsewhere, this is done by first creating and
+   writing to a temporary file, which when complete is then renamed.
+   This lowers the risk of generating incomplete files.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Added a redundancy test of CRMA "v1.5" for the
+   Cytogenetics_Array chip type.
+    
+BUG FIXES:
+
+ o convertToUnique() for AffymetrixCelSet would not recognize Windows
+   Shortcut links.
+ 
+DEPRECATED AND DEFUNCT:
+
+ o CLEAN UP/DEPRECATED: AffymetrixCelSet$createBlankSet() was removed,
+   because it has not been used anywhere since 2007.
+
+
+Version: 1.5.8 [2010-05-09]
+  
+ o Made justSNPRMA(..., normalizeSNPsOnly="auto") for AffymetrixCelSet
+   the default.
+  
+ o Now all findUnitsTodo() for data sets checks the data file that
+   comes last in a lexicographic ordering.  This is now consistent
+   with how the summarization methods update the files.  Before it
+   used to be the one that is last in the data set.
+  
+ o Now all updateUnits() for data sets updates the data files in
+   lexicographic order.
+  
+ o Now CrlmmModel(..., recalibrate=TRUE) is the default.
+  
+ o Now justSNPRMA(..., returnESet=TRUE) for AffymetrixCelSet
+   returns an AlleleSet due to updates in oligo v1.12.0.
+  
+ o Added extractAlleleSet() to SnpChipEffectSet.  Replaces
+   extractSnpQSet(), because the SnpQSet class was dropped
+   in oligo v1.12.0 and replaced by the AlleleSet class.
+  
+BUG FIXES:
+
+ o fit() of CrlmmModel would not work with oligo v1.12.0 and newer.
+  
+ o getCallSet() and getCrlmmParametersSet() of CrlmmModel used non-existing
+   verbose object 'log' instead of 'verbose'.
+ 
+ 
+Version: 1.5.7 [2010-04-22]
+  
+ o Added groupUnitsByDimension() to AffymetrixCdfFile.
+  
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Added redundancy tests for doCRMAv2() and  writeDataFrame().
+  
+BUG FIXES:
+
+ o doCRMAv1() for AffymetrixCelSet used undefined 'csN' internally instead
+   of 'csC'.
+ 
+ 
+Version: 1.5.6 [2010-04-15]
+  
+BUG FIXES:
+
+ o computeAffinities(..., verbose=FALSE) of AffymetrixCdfFile would give
+   throw "Error in reset(pb) : object 'pb' not found".  Thanks Stephen ?
+   at Mnemosyne BioSciences, Finland, for this report.
+ 
+ 
+Version: 1.5.5 [2010-04-07]
+  
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Added a test script for gcRMA background correction
+   on the MoEx-1_0-st-v1 chip type.
+ 
+ 
+Version: 1.5.4 [2010-04-06]
+  
+ o Added an internal version of doCRMAv1().
+  
+ o Added argument 'plm' to existing doCRMAv2().
+ 
+ 
+Version: 1.5.3 [2010-03-31]
+  
+ o Updated getProbeSequenceData() for AffymetrixCdfFile to recognize
+   more NetAffx probe-tab files, e.g. MoEx-1_0-st-v1.probe.tab.
+  
+ o KNOWN ISSUES: getProbeSequenceData() for AffymetrixCdfFile requires
+   that the unit names in the probe-tab file match the ones in the
+   CDF.  This may cause issues if custom CDFs with custom unit names
+   are used.  This is another reason why we should move away from
+   probe-tab files and instead use aroma binary cell sequence files.
+ 
+ 
+Version: 1.5.2 [2010-03-26]
+  
+ o Added argument 'defValue' to createFrom() for AffymetrixCelFile
+   so that one can specify the default value for cleared elements.
+ 
+ 
+Version: 1.5.1 [2010-03-14]
+  
+BUG FIXES:
+
+ o allocateFromCdf() of AromaCellCpgFile, AromaCellPositionFile, and
+   AromaCellMatchScoreFile would drop all but the first tag.
+ 
+ 
+Version: 1.5.0 [2010-02-22]
+  
+ o Submitted to CRAN.  No changes since v1.4.9.
+  
+SOFTWARE QUALITY:
+
+ o Package passes all redundancy tests.
+ 
+ o Package passes R CMD check on R v2.10.1 patch and R v2.11.0 devel.
+  
+ 
+Version: 1.4.9 [2010-02-22]
+  
+ o Added AromaCellCpgFile.
+  
+SOFTWARE QUALITY:
+
+ o Added test script for AromaCellCpgFile and AromaCellPostionFile.
+  
+BUG FIXES:
+
+ o The settings in 'aromaSettings' loaded by aroma.core was overridden by
+   default settings of aroma.affymetrix, even if they already existed.
+ 
+ 
+Version: 1.4.8 [2010-02-21]
+  
+ o ROBUSTNESS: Now updateUnits() of ChipEffectSet updates the files in
+   lexicographic order.  Before there was a risk that this was not done
+   if fullname translators are changing the lexicographic ordering.
+  
+ o MEMORY OPTIMIZATION: Now updateUnits() of ChipEffectSet cleans out the
+   temporary data object extracted for each chip-effect file written.
+   It also calls the garbage collector after each file written.
+  
+ o Added verbose output to updateUnits() of ProbeAffinityFile.
+ 
+ 
+Version: 1.4.7 [2010-02-16]
+  
+ o MEMORY OPTIMIZATION: Now process() of AllelicCrosstalkCalibration
+   clears the in-memory cache when finished.
+  
+ o MEMORY OPTIMIZATION: Now AbstractProbeSequenceNormalization classes
+   cleans out more unneeded objects.
+  
+ o MEMORY OPTIMIZATION: Now doCRMAv2() removes as much as possible.
+  
+BUG FIXES:
+
+ o readDataUnitChromosomePosition() of AffymetrixNetAffxCsvFile failed to map
+   chromosome 'MT' to 25.  This bug was introduced in aroma.affymetrix v1.0.7.
+ 
+ 
+Version: 1.4.6 [2010-02-13]
+  
+ o Added an internal version of doCRMAv2().
+  
+BUG FIXES:
+
+ o exportTotalAndFracB() of SnpChipEffectSet returned all arrays in the output
+   data set directory and not only the ones part of the input data set.
+ 
+ 
+Version: 1.4.5 [2010-02-10]
+  
+SOFTWARE QUALITY:
+
+ o Added redundancy test for calculating bias-corrected sex-chromosome
+   copy numbers.
+ 
+ 
+Version: 1.4.4 [2010-02-08]
+  
+ o Added appendVarArgs(boxplot.stats) so that one can pass argument
+   'show.names' to bxp() via plotRle().
+ 
+ 
+Version: 1.4.3 [2010-02-03]
+  
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check and all redundancy tests.
+ 
+ 
+Version: 1.4.2 [2010-02-02]
+  
+ o Updated to work with R.filesets v0.7.4 and aroma.core v1.4.4.
+ 
+ 
+Version: 1.4.1 [2010-01-06]
+  
+ o Now all binary files allocated have default NA values.  This is done
+   by an update in aroma.core v1.4.1.
+ 
+ 
+Version: 1.4.0 [2010-01-04]
+  
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on R v2.10.1 and R v2.11.0 devel and
+   all of its redundancy tests.
+ 
+BUG FIXES:
+
+ o After loading aroma.affymetrix, findCdf() would give "Error in if
+   (regexpr(pattern, chipType) != -1) { : argument is of length zero",
+   because AffymetrixCdfFile$findByChipType(chipType=NULL) was not valid.
+   Now the latter returns NULL without complaining.
+  
+ 
+Version: 1.3.6 [2010-01-02]
+  
+ o Adopted to work with aroma.core v1.3.7 and R.filesets 0.7.0.
+  
+ o ROBUSTNESS: Using new Arguments$getInstanceOf() were possible.
+  
+ o ROBUSTNESS: Now all index arguments are validated correctly
+   using the new 'max' argument of Arguments$getIndices().  Before
+   the case where "max == 0" was not handled correctly.
+ 
+ 
+Version: 1.3.5 [2009-12-04]
+  
+BUG FIXES:
+
+ o The test for allowing ASCII CDFs or not in setCdf() of an AffymetrixCelSet
+   was only applied if getOption(aromaSettings, "rules/allowAsciiCdfs") was
+   TRUE (should be FALSE).
+ 
+ 
+Version: 1.3.4 [2009-11-24]
+  
+ o CLEAN UP: Removed packages GLAD, DNAcopy and HaarSeg from the
+   list of suggested packages in DESCRIPTION.
+  
+ o CLEAN UP: Move more method for 'profileCGH' objects to aroma.core.
+ 
+ 
+Version: 1.3.3 [2009-11-19]
+
+DEPRECATED AND DEFUNCT:
+
+ o CLEAN UP: Move all (generalized) ChromosomalModel,
+   CopyNumberChromosomalModel, and CopyNumberSegmentationModel
+   to aroma.core from here.
+ 
+ 
+Version: 1.3.2 [2009-11-18]
+  
+ o GENERALIZATION: Removed all dependencies on Affymetrix data types
+   for ChromosomalModel, CopyNumberChromosomalModel, and
+   CopyNumberSegmentationModel.
+  
+ o Added internal getNumberOfFilesAveraged() to CnChipEffectFile.
+  
+ o Added isAverageFile() for AffymetrixCelFile.
+  
+ o Added CnChipEffectSetTuple extending ChipEffectSetTuple.
+  
+ o Now getChromosomes() of ChromosomalModel utilized UGP files (only).
+   DChip GenomeInformation files are no longer supported.
+ 
+ 
+Version: 1.3.1 [2009-11-13]
+  
+ o ROBUSTNESS: Now arguments 'ces' and 'ref' and CopyNumberChromosomalModel
+   have to be CnChipEffectFile|Set, otherwise an exception is thrown.
+   Before it was possible to pass a SnpChipEffectSet unnoticed, although
+   only total CNs are modelled.  Added a test to testScripts/robustness/
+   asserting this.  Thanks Pierre Neuvial at UC Berkeley for this report.
+
+DEPRECATED AND DEFUNCT:
+
+ o CLEAN UP: Moved most of AromaUflFile to aroma.core (from aroma.affymetrix).
+ 
+ 
+Version: 1.3.0 [2009-11-01]
+  
+ o New public release.
+  
+ o More recent dependencies on Bioconductor packages.
+  
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on R v2.10.0 and all redundancy tests.
+ 
+ 
+Version: 1.2.3 [2009-10-26]
+  
+ o Added getExtensionPattern() to those GenericDataFile classes that
+   have "single" filename extension, e.g. *.cfh but not *.cdf.bin.
+   The other will be incorporated when we have thoroughly gone through
+   the impact of including those as well.
+
+BUG FIXES:
+
+ o Fitting RlmPlm() would give an error reporting on a call to an internal
+   preprocessCore function is incompatible.  This occured with
+   preprocessCore v1.7.1 or newer.
+
+ 
+Version: 1.2.2 [2009-10-16]
+  
+ o CLEAN UP: Cleaned up dependencies in DESCRIPTION.
+ 
+ 
+Version: 1.2.1 [2009-10-02]
+  
+ o Added argument 'onDuplicates' to importFromAffymetrixProbeTabFile() for
+   AromaCellSequenceFile.  If "error" ("warning"), an exception (warning)
+   is generated whenever duplicated cell indices are detected in the probe
+   tab file.  If "ignore", they are ignored, which means that the last
+   duplicated probe sequence will be what is finally imported.
+  
+ o Added argument 'keepSequenceLengths' to importFromAffymetrixProbeTabFile()
+   for AromaCellSequenceFile so that one can drop sequences of incorrect
+   lengths, cf. HuGene-1_0-st-v1.probe.tab.
+  
+ o Added getDefaultFullName() to AffymetrixFileSet and CnagCfhSet.
+  
+ o CLEAN UP: Updated to use byPath() instead fromFiles().
+  
+BUG FIXES:
+
+ o Now getCdf() for AffymetrixProbeTabFile first searches for a CDF with
+   filename <chipType>.cdf, then <chipType>,.*.cdf.
+ 
+DEPRECATED AND DEFUNCT:
+
+ o CLEAN UP: Removed all getFullName() for all GenericDatFileSet classes.
+
+
+Version: 1.2.0 [2009-09-09]
+  
+ o New public release.
+  
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on R v2.9.2 and all redundancy tests.
+
+BUG FIXES:
+
+ o Fixed broken/missing Rd links.
+  
+ 
+Version: 1.1.5 [2009-09-07]
+  
+DEPRECATED AND DEFUNCT:
+
+ o Renamed getUnitsOnChromosome() to getUnitsOnChromosomes() for the
+   GenomeInformation class.  The former now calls the latter for backward
+   compatibility.  This was done to make it more consistent with a
+   similar method in aroma.core.
+ 
+ 
+Version: 1.1.4 [2009-09-05]
+  
+ o CLEAN UP: Removed the geneplotter package from Suggests:.
+  
+BUG FIXES:
+
+ o A few plot functions would generate "Error: 'smoothScatter' is not an
+   exported object from 'namespace:geneplotter'".  This would occur with
+   geneplotter v1.21.5 or newer.  This is because we called
+   geneplotter::smoothScatter(), but that function was moved from
+   geneplotter v1.21.4 to the graphics package of R v2.9.0.  For backward
+   compatibility, we now provide a patch (in aroma.core).
+
+DEPRECATED AND DEFUNCT:
+
+ o CLEAN UP: Now static methods fromChipType() and fromName() of
+   AffymetrixCelSet and other classes are defunct.  Instead, use static
+   methods byChipType() and byName() instead.
+ 
+ 
+Version: 1.1.3 [2009-08-12]
+  
+ o Now findByName() of AffymetrixCnChpSet, CnagCfhSet, and DChipDcpSet also
+   utilize ditto of AffymetrixCelSet, because the code was identical to the
+   latter.
+  
+ o Now findByName() of AffymetrixCelSet calls ditto of GenericDataFileSet of
+   the R.filesets packages, which means that Windows Shortcut links also in
+   subdirectories are recognized.
+ 
+ 
+Version: 1.1.2 [2009-07-08]
+  
+ o Added getListOfUnitTypesFiles() to AffymetrixCelSetTuple,
+   ArrayExplorer, and ChromosomalModel.
+  
+ o Added getUnitTypesFile() for AffymetrixCdfFile, AffymetrixCel{File|Set},
+   AffymetrixCnChpFile, AffymetrixPlatform and TransformReport.
+  
+ o Now AffymetrixCdfFile implements also the UnitTypesFile interface.
+  
+ o ROBUSTNESS: Updated process() of AbstractProbeSequenceNormalization to
+   write to a temporary file which is the renamed.  This will lower the
+   risk for generating corrupt files in case of interrupts.
+ 
+ 
+Version: 1.1.1 [2009-06-30]
+  
+ o Moved packages 'gcrma' and 'gsmoothr' from "Imports:" to "Suggests:",
+   because the former class of packages is required by R CMD check,
+   whereas the latter is not (via an option).  This will allow the
+   package to build and pass the checks on the CRAN servers.
+
+BUG FIXES:
+
+ o Added missing getExpectedOutputFullnames() for MatSmoothing.
+
+ o ROBUSTNESS/BUG FIX: Now plot() of CopyNumberSegmentationModel asserts
+   that the RColorBrewer package is available at the very beginning.  This
+   will avoid generating image files where the data points are missing.
+  
+ 
+Version: 1.1.0 [2009-05-29]
+  
+ o New public release. No updates.
+  
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on R v2.9.0 and all redundancy tests.
+ 
+ 
+Version: 1.0.8 [2009-05-27]
+  
+ o SPEED UP: Now process() of MatSmoothing is several times faster
+   due to code optimization and utilizing of the new 'gsmoothr' package.
+  
+ o ROBUSTNESS: Updated process() of MatSmoothing to write first to
+   a temporary file which is then renamed.  This lower the risk for
+   corrupt output files due to processing interrupts.
+  
+ o ROBUSTNESS: Now the constructor of MatSmoothing does more tests
+   of the validity of the 'design' matrix argument.
+  
+ o Now the chip type validation of fromFiles() for AffymetrixCelSet
+   is aware of tags in the chip type of the CEL files. This may happen
+   if custom CDFs are used are their full chip types are stored in the
+   CEL files, e.g. Hs_PromPR_v02,Harvard,ROIs,unique.
+ 
+ 
+Version: 1.0.7 [2009-05-20]
+  
+ o Now readDataUnitChromosomePosition() for AffymetrixNetAffxCsvFile
+   also recognize 'M' for chromosome 25.
+  
+ o GENERALIZATION: Updated fitCnProbes() of UnitModel to identify
+   single-cell CN units, and ignore multi-cell CN units, which will
+   be process like the other units.  By not assuming single-cell CN
+   units, this methods should also apply to other CDFs, e.g. the
+   new Cytogenetics_Array.
+  
+ o CLEAN UP: Moved the Explorer class and its support files under
+   inst/ from aroma.affymetrixd to aroma.core.
+  
+ o CLEAN UP: Moved the AromaCellPositionFile class from
+   aroma.affymetrix to aroma.core.
+ o EXCEPTION HANDLING: Methods that creates/modifies files will give
+   a clear error message if the file permissions does not allow it.
+  
+ o ROBUSTNESS: Now all arguments that are expected to be exactly one
+   character string (not an empty vector or a vector of length two)
+   are asserted to be that too.  This closes some potential bugs.
+  
+ o Package passes R CMD check on R v2.9.0.
+
+BUG FIXES:
+
+ o getCdf() for AffymetrixProbeTabFile would fail if the CDF had no tags.
+  
+ o fit() for CrlmmModel was calling oligo::getM(), but that method was later
+   moved to oligoClasses.  Now we just do getM().
+
+DEPRECATED AND DEFUNCT:
+  
+ o Removed obsolete patch of affxparser cdfMergeStrands().
+  
+
+ 
+Version: 1.0.6 [2009-05-16]
+
+ o CLEAN UP: Generalized CopyNumberSegmentationModel such that
+   subclasses no longer have to implement fitOne(), but instead
+   only getFitFunction(), which should return a segmentByNnn()
+   function for the RawCopyNumbers class.
+  
+ o CLEAN UP: Moved all drawCnLevels(), extractCopyNumberRegions()
+   and extractRawCopyNumbers() [for DNAcopy, HaarSeg and profileCGH]
+   to aroma.core v1.0.6 (will eventually end up in aroma.cn).
+
+BUG FIXES:
+
+ o In the most recent version of oligo, its justSNPRMA() requires that oligo
+   is loaded, i.e. oligo::justSNPRMA() will not work.  Updated justSNPRMA()
+   for character to require oligo.
+  
+DEPRECATED AND DEFUNCT:
+  
+ o CLEAN UP: Removed obsolete fitGlad() for CnChipEffect{File|Set}.
+ 
+ 
+Version: 1.0.5 [2009-05-10]
+  
+ o BETA: Updated several methods of the package to handle the new
+   way getOutputDataSet() of AromaTransform scans and loads
+   data sets.  This new way is the first step towards supporting
+   output directories that contains more data files than the
+   input data set, which for instance can occur if the same
+   data set is split up and processed in subsets.  The new
+   approach will also try to order the output files accordingly
+   with the input files.
+  
+ o Added readSequenceDataFrame() for AffymetrixProbeTabFile.
+  
+ o Updated getFitUnitGroupFunction() of RmaPlm to work with the
+   new oligo v1.7.19 as well.
+  
+ o CLEAN UP: computeAffinities() of AffymetrixCdfFile loaded the
+   'matchprobes' package, but never used it.
+  
+ o CLEAN UP: Now computeAffinities() of AffymetrixCdfFile uses
+   the AffymetrixProbeTabFile class to read probe sequences.
+  
+ o CLEAN UP: Now findByChipType() of AffymetrixProbeTabFile only
+   search according to "modern" rules.  The by now really old
+   alternative search rules have been made deprecated, i.e. it
+   still uses those but, if a file is found, it gives an error
+   saying that the the method is outdated.  This should not
+   affect anyone these days, but just in case, it is included.
+  
+SOFTWARE QUALITY:
+
+ o Package passes redundancy tests.
+
+ o Package passes R CMD check on R v2.9.0.
+  
+
+ 
+Version: 1.0.4 [2009-04-16]
+  
+ o BETA: Added NormExpBackgroundCorrection which does background
+   correction according to the normal exponential model. It
+   utilizes the limma package for this. The default settings give
+   identical results as RmaBackgroundCorrection, which uses affy.
+  
+ o Made several modifications to computeAffinities() for
+   AffymetrixCdfFile which allows us to compute affinities also
+   for PM-only chip types, e.g. Gene 1.0 ST arrays: (i) added a
+   different stream for PM-only (with NCs), (ii) left the PM+MM
+   array code mostly untouched, and (iii) fixed some assumptions
+   about the columns of the probe_tab file.
+
+BUG FIXES:
+
+ o The GcRmaBackgroundCorrection method would mix up PMs and MMs in the model
+   estimation. This bug was introduced in aroma.affymetrix v0.3.4 (January 20,
+   2007). It was located to the internal bgAdjustGcrma() method.
+ 
+ 
+Version: 1.0.3 [2009-03-22]
+  
+ o BETA: Added GcContentNormalization2 which extends the generic
+   AdditiveCovariateNormalization class.
+  
+ o BETA: Added abstract AdditiveCovariateNormalization.
+  
+ o BETA: Added AromaUnitGcContentFile and AromaUgcFile to hold GC contents.
+ 
+ 
+Version: 1.0.2 [2009-02-22]
+  
+ o Added getCdfBin() and getChipType() to DChipDcpSet.
+  
+ o Added findByChipType() and byChipType() to DChipCdfBinFile.
+   Added argument fullname=TRUE to getChipType() of DChipCdfBinFile.
+  
+ o Added exportTotalCnRatioSet() to AffymetrixCnChpSet.
+  
+ o Wherever argument 'ram' exists, it defaults to the value of a
+   global settings.  To change the default, do for instance
+   setRam(aroma.affymetrix, 10).
+  
+ o CLEAN UP: Removed the implementation of byChipType() for the
+   AromaUnitTabularBinaryFile class that would scan annotationData/
+   for matching CDFs before deciding which file to use.  That class
+   should not depend on a specific platform.  Now the implementation
+   is solely in the aroma.core package.
+
+DEPRECATED AND DEFUNCT:
+  
+ o CLEAN UP: Removed deprecated argument 'moreUnits' of fit() of
+   ProbeLevelModel.  Use argument 'ram' instead.
+ 
+ 
+Version: 1.0.1 [2009-02-13]
+  
+ o Added getAromaUnit{Total|FracB}CnFileSet() to SnpChipEffectSet, which
+   uses protected exportTotalAndFracB() to SnpChipEffect{File|Set}.
+  
+ o ROBUSTNESS: Added support for optional validation/selection by the
+   number of units/cells to all static byChipType() methods.  This is
+   done by specifying argument nbrOfUnits/nbrOfCells.
+  
+ o CLEAN UP: Suppressing warnings about "truncating string with
+   embedded nul" in rawToChar() when using affxparser::readCcgHeader().
+  
+ o CLEAN UP: Cleaned up the MatSmoothing class.
+  
+ o CLEAN UP: Cleaned up the AffymetrixCelSetTuple class.
+
+SOFTWARE QUALITY:
+
+ o Package pass R CMD check and all redundancy tests.
+
+BUG FIXES:
+  
+ o setMergeStrands() of SnpPlm and setCombineAlleles() of CnPlm did not update
+   the setting of the PLM itself, only the settings of the underlying
+   parameter files.  SnpPlm itself, only only the underlying parameter files.
+   Added getMergeStrands() to SnpPlm and getCombineAlleles() to CnPlm.
+ 
+ 
+Version: 1.0.0 [2009-01-12]
+  
+ o Added alpha version of the CrlmmModel (currently only for 100K & 500K).
+  
+ o Added justSNPRMA() replicating ditto in the oligo package.
+  
+ o Added alpha version of the HaarSegModel.
+  
+ o Added plotAllelePairs() for AllelicCrosstalkCalibration.
+  
+ o Added argument 'zooms' to the constructor of ChromosomeExplorer.
+  
+ o Now process() of AlleleSummation returns immediately if already done.
+  
+ o Added more methods and classes which eventually will allow
+   analysis of Affymetrix tiling arrays.
+  
+ o Added trial version of AromaCellPositionFile.
+  
+ o Added extractCNT() and writeCNT() for SnpChipEffect{File|Set}, which
+   exports CNT data files that can be imported by Affymetrix GTC Browser.
+  
+ o Added argument 'units' to readDataFrame() to GenomeInformation.
+  
+ o ROBUSTNESS: Now MultiArrayUnitModel:s assert that there are at least
+   two arrays in the data set.
+  
+BUG FIXES:
+  
+ o CLEAN UP: createFrom() for AffymetrixCelFile had verbose=TRUE as default.
+  
+ o AlleleSummation would not work for chip types containing exclusively SNP
+   units.  It expected some non-SNP units.
+  
+ o There was no extractTotalAndFreqB() for CnChipEffectSet, but only for
+   CnChipEffecSet (misspelled). Thanks Pierre Neuvial for spotting this.
+  
+ o Now process() avoids sets of pairs with too few probe pairs. This could
+   happen because of the new getSetsOfProbes() working off the probe sequence
+   files.
+  
+ o getUnitIntensities() of AffymetrixCelSet would drop the array dimension if
+   only one array was read.  This caused for instance PLM fitting to given an
+   error when only one array was included.
+  
+ o Methods returning ChipEffectSet would not "update" the returned data set,
+   which for instance had the effect of not updating/setting attributes for
+   sample annotation files.
+  
+ o Lines of code (excluding comments) using grep -v "#" *.R | wc -l:
+   aroma.affymetrix + aroma.core: 43657+10510 = 54167.
+ 
+ 
+Version: 0.9.6 [2008-12-04]
+  
+ o Now CbsModel and GlabModel display any optional/additional
+   arguments passed to the internal segmentation method in
+   the verbose output.
+  
+ o Added argument 'model' for AllelicCrosstalkCalibration to quickly
+   specification of default parameter settings according to the CRMA and
+   CRMA v2 model.
+  
+ o Added argument 'pairBy' for AllelicCrosstalkCalibration to specify
+   how the allele probe pairs are identified.  Historically we inferred
+   this from the CDF, but it is safer and more generic to do this from
+   the probe sequences, which then requires an ACS annotation file.
+  
+ o Now argument 'targetFunctions' of FragmentLengthNormalization can also
+   be "zero", which then specifies a predefined constant target function.
+  
+ o Added support for importing probe sequences from Affymetrix BPMAP files
+   via the importFromBpMap() for AromaCellSequenceFile.
+  
+ o Added classes and methods in preparation for supporting analysis
+   of tiling arrays.
+  
+ o Now fitCnProbes() of UnitModel only fits non-fitted CN units.
+  
+ o SPEED UP: extractMatrix() of AffymetrixCel{File|Set} is now faster
+   when argument 'cells' is specified.
+  
+ o SPEED UP: Now BasePositionNormalization is 2-3 times faster
+   due to memoization and a more clever prediction algorithm.
+  
+ o MEMORY OPTIMIZATION: Added abstract normalization class
+   LinearModelProbeSequenceNormalization that fits linear models
+   based on probe sequences in bounded memory.  This is done by
+   building up the normal equations incrementally and then call
+   solve().  It is the generation of normal equations that otherwise
+   consume most of the memory.  The BasePositionNormalization
+   class now inherits from this memory-efficient class, which
+   means we can now do probe-position normalization on GenomeWideSNP_6
+   arrays using less than 1GB of RAM.
+  
+ o MEMORY OPTIMIZATION: Forgot to clean out weight estimates in
+   ProbeLevelModel objects when cleaning out the memory cache.
+
+BUG FIXES:
+  
+ o For allele-specific estimates, FragmentLengthNormalization would correctly
+   estimate normalization scale factors, but due to a typo, it effectively
+   only update the signals for allele A.  According to the source code
+   repository, this has been a bug from the very beginning
+   when allele-specific estimates was claimed to be supported.
+  
+ o RmaPlm(..., flavor="oligo") was broken, because oligo was updated.
+ 
+ 
+Version: 0.9.5 [2008-10-17]
+  
+ o Package pass R CMD check on R v2.7.2 and R v2.8.0rc.
+ 
+ 
+Version: 0.9.4.7 [2008-10-16]
+  
+ o Added nbrOfCellsPerUnitGroup() and nbrOfCellsPerUnit() for
+   AffymetrixCdfFile.
+
+DEPRECATED AND DEFUNCT:
+  
+ o Renamed getFitFunction() for all PLMs to getFitUnitGroupFunction(),
+   because the latter is much more explanatory.
+ 
+ 
+Version: 0.9.4.6 [2008-09-19]
+  
+BUG FIXES:
+  
+ o process() of FragmentLengthNormalization did not return a data set for
+   which the sample attributes has been updated according to optional sample
+   annotation files (SAFs).
+ 
+ 
+Version: 0.9.4.5 [2008-09-17]
+  
+ o Added argument 'onMissing' to FragmentLengthNormalization, which is
+   passed down to normalizeFragmentLength() [req aroma.light v1.9.2] to
+   make it possible to normalize also units for which fragment lenghts
+   are unknown.  Previously such units were not normalized - for
+   backward compatibility, onMissing="ignore" does exactly that.
+  
+ o Now it is possible to specify enzyme names in argument 'enzymes' to
+   readDataUnitFragmentLength() of AffymetrixNetAffxCsvFile.
+  
+ o Added argument 'enzymesToUpdate' to importFromAffymetrixNetAffxCsvFile()
+   of AromaUflFile in order to make it possible to specify both which
+   enzymes to read and to update.
+  
+ o ANNOTATION: Updated  annotationData/genomes/Human,chromosomes.txt
+   to contain data for the Mitochondrial genome ("chromosome") as well.
+  
+ o CONSISTENCY: Now argument 'subset' of plotDensity() of AffymetrixCelFile
+   and AffymetrixCelSet defaults to NULL (all probes).  Before it was
+   specifying the fraction 1/2 by default.
+  
+ o DEPENDENCIES: Now aroma.affymetrix requires affxparser 1.13.8,
+   because getUnitTypes() of AffymetrixCdfFile requires that version
+   in order to correctly identify copy-number units.
+  
+ o CLEANUP: Moved the handling of 'probeModel' and 'shift' to
+   UnitModel from ProbeLevelModel.
+  
+BUG FIXES:
+  
+ o TYPO: The error message for argument 'dataSet' in UnitModel() returned
+   multiple strings, one per class.
+ 
+ 
+Version: 0.9.4.3 [2008-08-30]
+  
+ o Added options 'mergeStrands' and 'B' to AllelicCrosstalkCalibration.
+  
+BUG FIXES:
+  
+ o Now the affy, affyPLM, and EBImage packages are forced to be after all of
+   aroma.affymetrix, aroma.light, and R.huge on the search() path.
+ 
+ 
+Version: 0.9.4.2 [2008-08-23]
+  
+ o Moved the functions for reading dChip files to the new dChipIO package.
+  
+ o Now readDataUnitChromosomePosition() of AffymetrixNetAffxCsvFile also
+   recognizes chromosome "MT" (mitochondrial).  It is encoded as Chr25.
+  
+ o BETA: Added class AffymetrixCnChpSet.
+ 
+ 
+Version: 0.9.4.1 [2008-08-19]
+  
+ o Added argument 'arrays' to process() of ArrayExplorer so that it is
+   possible to specify for which arrays images should be generated.
+  
+ o Added support for specifying the type of target effects for any
+   AbstractProbeSequenceNormalization method.
+  
+ o ALPHA: Added argument 'flavor' to AllelicCrosstalkCalibration. However,
+   fitGenotypeCone() of aroma.core has to be updated to recognize it.
+  
+ o ALPHA: Added ReseqCrosstalkCalibration.
+ 
+ 
+Version: 0.9.4 [2008-08-02]
+  
+ o Public release.
+
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on R v2.7.1 and R v2.8.0 devel on WinXP.
+ 
+ o Package passes all redundancy tests without errors.
+ 
+ 
+Version: 0.9.3.5 [2008-07-31]
+  
+ o UPDATE: Now computeAffinities() for AffymetrixCdfFile gives an error
+   if there are no MMs in the CDF.
+  
+BUG FIXES:
+  
+ o computeAffinities() for AffymetrixCdfFile searched for the probe-tab file
+   using the chip type given by the fullname of the CDF and not the basic
+   name.
+ 
+ 
+Version: 0.9.3.4 [2008-07-30]
+  
+ o Now getGenomeInformation() and getSnpInformation() reports the reason
+   for why it thinks the located object is incompatible with the CDF.
+  
+ o MEMORY OPTIMIZATION: Now argument 'ram' is passed down to
+   getChipEffectSet() which in turn pass it down to getMonocellCdf(),
+   which pass it to createMonocellCdf() in case the monocell CDF is
+   missing.  This increases the chances that fit(..., ram=<small value>)
+   will work with small amount of RAM.
+  
+ o MEMORY OPTIMIZATION: Now the validation part of createMonocellCdf()
+   for AffymetrixCdfFile is also sensitive to the 'ram' argument.
+ 
+ 
+Version: 0.9.3.3 [2008-07-22]
+  
+ o MEMORY OPTIMIZATION: Pre-allocation of matrixes that start off with
+   all NAs was always done by matrix(NA, ...), but since 'NA' has mode
+   "logical" this would mean that non-logical matrixes would be coerced
+   as soon as they were assigned as value.  Updated all pre-allocation
+   to be done as matrix(naValue, ...) where 'naValue' is of the correct
+   storage mode.
+  
+ o Now all findByName() assert that the data set name is not empty.
+
+ o CLEANUP: Removed allocateFromCdf() specific to AromaUgpFile since
+   that is now implemented in a super class.
+
+ o ALPHA: Added BasePositionNormalization.
+ 
+BUG FIXES:
+  
+ o getAromaCellSequenceFile() of BaseCountNormalization would search using the
+   full name of the chip type, e.g. GenomeWideSNP_6,Full.
+  
+ o byChipType() of AromaUnitTabularBinaryFile failed to locate a valid tabular
+   file if more than one was found and it was not the last one that was
+   matching.
+  
+ 
+Version: 0.9.3.2 [2008-07-16]
+  
+ o Now AffymetrixProbeTabFile inherits from TabularTextFile and
+   "implements" AromaPlatformInterface.  Previously it inherited
+   from the AffymetrixFile class.
+  
+ o Added extractMatrix() to AffymetrixCelFile for completeness.
+  
+ o Added argument 'drop=FALSE' to all extractMatrix(), extractTheta(),
+   and extractTotalAndFreqB().
+  
+ o Added support for specifying the reference of any
+   CopyNumberChromosomalModel as a single file (or a list of files
+   if more than one set is used).
+  
+ o MEMORY OPTIMIZATION: When calling extractRawCopyNumbers(obj) on an
+   CopyNumberChromosomalModel object, the result would be cached in memory
+   (in the object). This would result in an increasing memory usage when
+   data was extracted from more and more arrays. The cache could be cleared
+   by calling gc(obj), but avoid this problem by default, the method does
+   no longer cache results.  To cache, the method has to be called with
+   argument 'cache=TRUE'.  Thanks Jason Li for reporting this.
+ o BETA: Added BaseCountNormalization.
+  
+ o BETA: Updated FragmentLengthNormalization to handle allele-specific
+   chip effect estimates as well.
+  
+ o Lines of code (excluding comments) using grep -v "#" *.R | wc -l:
+   aroma.affymetrix + aroma.core: 24902+8638=33540.
+
+BUG FIXES:
+  
+ o extractMatrix() of AffymetrixCelSet returned cells in a different than
+   requested.  Thanks Mark Robinson for reporting this.
+  
+ o getChipType() of AffymetrixCelFile did not pass down '...' causing for
+   instance getChipType(..., fullname=FALSE) to still return tags for
+   ChipEffectFile:s.
+  
+ o plm$treatNAsAs == "NA" for RmaPlm:s returned an incorrect number of probe
+   affinities whenever missing values were exluded.
+  
+
+Version: 0.9.3 [2008-06-08]
+  
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on R v2.7.0 patched. There are some
+   warnings of broken links in the Rd pages though.
+  
+ o Package passes all redundancy tests (processing time 17h 30min).
+ 
+ 
+Version: 0.9.2.6 [2008-06-07]
+  
+ o Update filename pattern for getOutputFiles() of Transform.
+  
+ o Added missing getParameterSet() to ExonRmaPlm, so that 'mergeGroups'
+   is also returned.
+
+ o BETA: Added setParallelSafe() to Explorer classes to make them (somewhat)
+   resistant against race conditions occuring when you run them on the
+   same data set in parallel.
+
+BUG FIXES:
+  
+ o readUnits() would throw 'Error in readCelUnits(pathnames, cdf
+   = cdf, ...) : No CDF file for chip type found: GenomeWideSNP_6', if
+   the CDF was set to GenomeWideSNP_6,Full.CDF and no GenomeWideSNP_6.cdf
+   file was found.  This was because readUnits() retrieve (x,y) information
+   units, which requires affxparser::readCelUnits() to locate the CDF to
+   infer the number of probe column in order to map (x,y) to cell indices.
+   Now readUnits() get the cell indices directly using getCellIndices().
+   Thanks Yue Hu for noticing this problem.
+  
+ o The validation of arguments 'ceList' and 'refList' to internal
+   getRawCnData() of CopyNumberChromosomalModel was too conservative. This
+   caused it to throw 'Exception: Argument 'ceList' contains a non-
+   ChipEffectFile: NULL' whenever multiple ChipEffectSet:s were modelled
+   and one of them did not have data for one sample.  One of the redundancy
+   tests for the 100K platform was updated to test for this scenario.
+   Thanks to Lavinia Gordon for spotting this.
+  
+ o If no reference sets has been specified, then
+   getReferenceSetTuple() of CopyNumberChromosomalModel would
+   return too few reference files if some arrays were misssing for
+   certain chip types. Thanks to Lavinia Gordon for spotting this.
+  
+ o updateOnLoadJS() of ArrayExplorer did not use the fullname
+   chip type, cause an error in ArrayExplorer:s for tagged chip types.
+   Thanks to Maria Traka at BBSRC in UK for spotting this.
+
+ 
+Version: 0.9.2.5 [2008-05-28]
+  
+ o Cleaned up a bit.  Package now pass R CMD check.
+ 
+ 
+Version: 0.9.2.4 [2008-05-25]
+  
+ o All extracted RawCopyNumbers objects now also set the 'chromosome' field.
+  
+ o Now Transform inherits from new generic aroma.core::AromaTransform.
+ 
+ 
+Version: 0.9.2.3 [2008-05-21]
+  
+ o CLEAN UP: Moved more classes and methods from aroma.affymetrix to
+   aroma.core: RawCopyNumbers, CopyNumberRegions, CopyNumberOutliers.
+   Moved attribute methods from AffymetrixCel{File|Set} to
+   AromaMicroarrayDataSet.  Moved stextNnn() methods from AffymetrixFile
+   to AffymetrixMicroarrayDataSet.
+   Created superclass AromaMicroarrayDataSetTuple of AffymetrixCelSetTuple.
+   There is probably more that was moved to aroma.core that I forgot
+   to mention here.  Please see aroma.core NEWS as well.
+  
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on R v2.7.0 patched. There are some
+   warnings of broken links in the Rd pages though.
+  
+ o Package passes all redundancy tests.
+ 
+ 
+Version: 0.9.2.2 [2008-05-16]
+  
+ o Now NnnChipEffectSet parameters are by default set by the
+   parameters of the first file.
+  
+ o Added support for getFullNames(..., translate=TRUE)
+   of AffymetrixCelSetTuple.
+ 
+ 
+Version: 0.9.2.1 [2008-05-11]
+  
+ o Added allocate() to AromaUgpFile.
+ 
+ 
+Version: 0.9.2 [2008-05-10]
+  
+ o MAJOR: Moved all methods and classes that are independent of
+   platform (e.g. GenericDataFile) to a new package aroma.core.
+
+ o ALPHA: Inserted new classes AromaMicroarrayData{File|Set} and
+   AromaChipTypeAnnotationFile into the class hierarchy.
+
+SOFTWARE QUALITY:
+
+ o Package passes all redundancy tests (which takes approx 24
+   hours to run) on R v2.6.1 on Linux.
+ 
+ 
+Version: 0.9.1.4 [2008-05-09] (Never released)
+  
+ o Added byName() to AffymetrixCdfFile, which is identical to byChipType().
+  
+ o Added argument 'rows' to readDataFrame() for GenericTabularFile.
+  
+ o SPEEDUP: The internal getUnitGroupNamesFromUgcMap() for AffymetrixCdfFile
+   was painfully slow for large UGC maps. Instead of 10-15 days(!) for
+   for GenomeWideSNP_6, it now takes 50 seconds.  This speeds up
+   extractDataFrame(..., addNames=TRUE) for ChipEffectSet:s substantially.
+   Thanks Nicolas Stransky for reporting this.
+  
+ o UPDATE: Updated readDataUnitFragmentLength() of AffymetrixNetAffxCsvFile
+   to support the NetAffx r25 CSV files.
+  
+ o UPDATE: Now generic attributes are handled by GenericDataFile.
+  
+ o CONSISTENCY: Now the FirmaModel also has calculateResidualSet() just
+   as ProbeLevelModel got it.
+  
+ o CONSISTENCY: Renamed argument 'chromosome' of getUnitsAt() of
+   AromaUgpFile to 'chromosomes'.  This was done in order to make it
+   consistent with getUnitsOnChromosome() of GenomeInformation. Thanks
+   Tim Keighley at CSIRO for pointing this out.
+  
+ o CLEAN UP: Package R.native is no longer suggested.
+  
+ o CLEAN UP: Moved several methods to new package 'matrixStats' that is
+   specialized and optimized for matrix operations.
+  
+ o CLEAN UP: Moved normalizeQuantileSpline(), normalizeFragmentLength,
+   plotXYCurve, and predict() for lowess to aroma.light v1.7.2.
+  
+ o CLEAN UP: Removed "patches" for rowMedians() and as.<basic data type>()
+   since they are now available in all R v2.6.x installations.
+  
+ o CLEAN UP: Renamed all readData() methods that return a data.frame
+   to readDataFrame().
+  
+ o CLEAN UP: Now we're using construct foo(static, ...) instead of
+   static$foo(...) internally.
+  
+ o ALPHA: Added getImage() for AromaUnitTabularBinaryFile and
+   AffymetrixCdfFile.
+  
+ o ALPHA: Added writeColumnsToFiles() for GenericTabularFile.
+  
+ o ALPHA: By using process(..., aliased=TRUE) for ChromosomeExplorer
+   the names of generated PNG files are inferred from the aliased
+   full names.  This makes it possible to control the names of across
+   multiple chip types without having to rename the files.  Note,
+   aliased=TRUE is currently only working to alias the tags, whereas
+   any aliased name portions are still ignored.
+
+BUG FIXES:
+
+ o readRawData() for AffymetrixCelFile did not handle a zero-length 'indices'
+   argument; it was interpreted as NULL, i.e. read everything.  This is
+   actually a bug in affxparser.
+  
+ o getUnitGroupCellMap() for ChipEffectFile, ResidualFile, WeightsFile, and
+   FirmaFile, gave an error if argument 'units' had zero length (non-NULL).
+  
+ o Now it is possible to pass argument 'paths' to byName() of
+   AffymetrixCelSet, which in turn pass it to findByName().
+  
+ o getChipType(..., fullname=FALSE) of AffymetrixCdfFile would return the chip
+   type as the 'tags' attribute if there were no tags.
+  
+ o The default drawExtraAnnotations() returned error <simpleError in
+   UseMethod("estimateStandardDeviation"): no applicable method for
+   "estimateStandardDeviation"> causing the sigma estimate as well as the chip
+   type annotation for non-GladModels to be missing.
+  
+ o readDataFrame() of AffymetrixProbeTabFile did not return the correct number
+   of rows if there were missing cells, which there are.
+  
+ o applyRows() and lines() of CopyNumberRegions did not handle cases with zero
+   regions.
+ 
+DEPRECATED AND DEFUNCT:
+  
+ o CLEAN UP: Removed obsolete getDescription() from AffymetrixFileSet.
+  
+ o CLEAN UP: Removed obsolete getSibilings() from AffymetrixCelSet.
+  
+ o CLEAN UP: Removed obsolete gcrmaSummary() and rmaSummary().
+  
+ o DEFUNCT: All getCellMap() are now defunct; use getUnitGroupCellMap().
+  
+ 
+Version: 0.9.1 [2008-04-04]
+  
+ o Now setCdf() also reports on the two incompatible chip types involved
+   if trying to set a CDF that is not compatible with a CEL file.
+  
+ o Added getMainCdf() for AffymetrixCdfFile for retrieving the
+   "main" CDF given a monocell CDF.
+  
+ o Now the standard deviation across all CNs in a chromosome is calculated
+   using a robust first-order difference estimator, which will make the
+   estimate much less affected by copy-number changes.
+
+ o BETA: Added estimateSds() to CopyNumberChromosomalModel for estimating
+   the standard deviation of the raw CNs (log2-ratios) robustly and so
+   that change points have minimal impact. This is done by using a
+   first-order difference variance estimator.  The reading of the data
+   can definitely be made faster, but at least it works for now.  Added
+   redundancy tests for this based on the 10K and the 100K chip types.
+  
+ o BETA: Added static method allocateFromCdf() for AffymetrixCelFile.
+  
+ o BETA: Added readDataFrame() for AffymetrixCdfFile (SLOOOOW! but will
+   be faster when the underlying function in 'affxparser' is updated).
+  
+ o BETA: Added getUnitGroupCellChromosomePositionMap() to both
+   AffymetrixCdfFile and ChipEffectFile.
+  
+ o BETA: Added isUnitGroupCellMap().
+  
+ o BETA: Added matrixBlockPolish().
+ 
+BUG FIXES:
+
+ o BUG FIX: The ArrayExplorer would generate image files to a directory
+   under reports/<dataSet>/<tags>,<tags>/..., i.e. the tags where
+   replicated.  This is a bug introduced in the latest release.  Thanks
+   to
+  
+ o BUG FIX: getTableOfArrays() of AffymetrixCelSetTuple returned the
+   incorrect array indices for the 2nd chip type if different arrays
+   in the two sets.
+  
+ o BUG FIX: Regular expression pattern 'a-Z' is illegal on (at least)
+   some locale, e.g. 'C' (where 'A-z' works). The only way to specify
+   the ASCII alphabet is to list all characters explicitly, which we now
+   do in all methods of the package.  See the r-devel thread
+   "invalid regular expression '[a-Z]'" on 2008-03-05 for details.
+  
+ o BUG FIX: extractMatrix(..., cells=NULL), the default, would throw
+   'Error in order(cells) : argument 1 is not a vector'.
+  
+ o BUG FIX: getUnitIntensities() would not pass arguments '...', e.g.
+   'stratifyBy', to readUnits() for AffymetrixCdfFile.  Thanks to
+   Tim Keighley, CSIRO, Sydney, for reporting this.
+  
+ o BUG FIX: Calling readUnits() of an AffymetrixCdfFile without specifying
+   the 'units' argument gave an error.  Thanks again Tim Keighley.
+  
+ o BUG FIX: Calling readUnits(..., units=cdfUnits, stratifyBy=stratifyBy)
+   twice with different 'stratifyBy' arguments and with a 'cdfUnits' list
+   structure containing the identical set of unit names, would cause
+   readUnits() to incorrectly return cached results from the previous call.
+
+DEPRECATED AND DEFUNCT:
+  
+ o CLEAN UP: Removed the backward compatibility patch from 2007-01-10 that
+   made fromDataFile() of ChipEffectFile to add missing tags. If anyone
+   still has such old chip effect files lying around, they have to either
+   add the tags manually or reanalyze the data if they want the fullnames
+   of the chip effect files to match the fullnames raw data files.
+  
+ 
+Version: 0.9.0 [2008-02-29]
+  
+ o UPDATE/ROBUSTNESS: Now AromaUnitTabularBinaryFile:s stores the
+   chip type in the file footer.  This allows us to identify the
+   correct file gives a full chip type.  Because of this update,
+   old UFL and UGP files become incompatible with the class and new
+   version have to be downloaded.  The chip type can be queried by
+   getChipType().  It is now also asserted that the number of units
+   in the file match the number of units in the corresponding CDF.
+  
+ o TIME OPTIMIZATION: Now RmaPlm and ExonRmaPlm turn to median polish
+   if there are more than 500 cells *and* 6 arrays in the unit group.
+   Option: aroma.affymetrix.settings$models$RmaPlm$medianPolishThreshold.
+   Moreover, if the unit group is ridiculously large (5000 cells), the
+   unit group is skipped and all returned estimates are NAs.
+   Option: aroma.affymetrix.settings$models$RmaPlm$skipThreshold.
+  
+ o TIME OPTIMIZATION: Now as.character() for AffymetrixCelSet reports
+   time stamps only for data set with less than 500 arrays.
+   Option: aroma.affymetrix.settingsoutput$timestampsThreshold.
+  
+ o UPDATE: Annotation data directories starting with a period are no
+   longer searched when looking for annotation data files.
+  
+ o UPDATE: GcContentNormalization would only normalize SNP units but
+   now also CN probes are normalized.
+  
+ o UPDATE: Now a CnPlm with combineAlleles=TRUE also handles SNPs
+   with six groups; they occur at least once in a custom SNP CDF.
+  
+ o GENERALIZED: Now SNPs and CN probes are infered from the CDF unit
+   type and no longer from the unit names.
+  
+ o Added boxplotStats() to ChipEffectSet for calculating NUSE or RLE
+   boxplot statistics (also on a subset of arrays).
+  
+ o Added getUnitTypes() for AffymetrixCdfFile.
+  
+ o Added extractMatrix() and extractDataFrame() to Parameter{File|Set},
+   i.e. subclasses ChipEffect{File|Set} and Firma{File|Set} got it too.
+  
+ o Added published paper to citation("aroma.affymetrix").
+  
+ o CLEANUP: Now byName() can be used everywhere fromName() can be used.
+   Same for byChipType() and fromChipType().
+
+ o MEMORY OPTIMIZATION: Now importFromDChip() for CnChipEffectSet uses
+   much less memory when infering the cell indices.
+ o Updated importFromDChip() for CnChipEffectSet so that it imports data
+   exported by more recent versions of dChip.  In recent versions the
+   standard-error columns are named '*SE' whereas before it were '*SD'.
+   In either case, standard errors were exported (confirmed by author).
+   
+MAINLY FOR DEVELOPERS:
+  
+ o CLEANUP: Renamed getMonoCell() to getMonocellCdf() and
+   createMonoCell() to createMonocellCdf(), because the former had
+   strange names.
+  
+ o CLEANUP: Renamed usage of getCellMap() to getUnitGroupCellMap().
+   For backward compatibility, the old ones remain for a while.
+
+ o BETA: Added static importFromApt() for CnChipEffectSet.
+  
+ o BETA: Added classes AffymetrixAptSummaryFile and AffymetrixCnChpFile.
+  
+ o BETA: Added class AromaUfcFile.
+  
+ o BETA: Added classes DChipChpFile and DChipChpSet.
+  
+ o BETA: Added class AlleleSummation.
+
+BUG FIXES:
+
+ o BUG FIX: The methods for calculating boxplot statistics did not
+   handle "merged" CDF units correctly giving incorrect results.
+  
+ o BUG FIX/ROBUSTNESS: It was possible to set a non-compatible
+   CDF when using static fromFiles() of AffymetrixCelSet.
+  
+ 
+ o BUG FIX: getTimestamp() for AffymetrixCelFile would return NA for
+   Calvin files.  Now they are also supported.
+  
+ o BUG FIX: getCellIndices() of CnChipEffectFile would return an error
+   if 'units==NULL'.
+  
+ o BUG FIX: Since 'affy' defines standardGeneric("colnames") and
+   S3 methods are not found by such S4 generic functions, we avoid
+   that method name, and instead use getColumnNames().
+  
+ 
+Version: 0.8.3 [2007-12-18]
+  
+ o UPDATE: Package patches installed by downloadPackagePatch()
+   are now stored in ~/.Rpatches/ (previously in ./patches/).
+   Thus, patches will be applied regardless of working directory.
+  
+ o UPDATE: Changed fit() for FirmaModel to operate as fit() for
+   ProbeLevelModel, where the units are read in in chunks and
+   operated on over all chips, instead reading and operating
+   chip-by-chip.  Default summary is now the median residual
+   instead of 1-UQR of weights.  The added tags will reflect what
+   settings are used.
+  
+ o DEVEL: Added summaryOfUnits() for AromaUflFile.
+
+BUG FIXES:
+
+ o BUG FIX: extractMatrix() of ChipEffectSet was broken (due to an
+   internal bug in getCellMap() of ChipEffectFile).
+  
+ o BUG FIX: When calling fit() on a ProbeLevelModel for chip type
+   where no monocell CDF exists, an exception like "Could not create
+   AffymetrixCdfFile object. No CDF file with that chip type found:
+   GenomeWideSNP_6,Full,monocell" would be thrown.  This is due to
+   a bug introduced in previous version when trying to make sure
+   custom CDFs are carried down more consistently.  Now getMonoCell()
+   of AffymetrixCdfFile will create the monocell CDF, if missing.
+ 
+ 
+Version: 0.8.2 [2007-12-10]
+  
+ o Added argument 'cdf' to static fromName() of AffymetrixCelSet.
+   When using this argument, the 'chipType' argument is optional,
+   and the returned CEL set will be using the specified CDF.
+  
+ o In general, there is now better support for tagged CDFs.  For
+   instance, AffymetrixCdfFile$fromName("HuEx-1_0-st-v2", tags="core")
+   can be used to locate 'HuEx-1_0-st-v2,core.CDF'.
+  
+ o UPDATE: Now output sets of a FirmaModel are stored in firmaData/.
+   Previously they were stored under modelFirmaModel/.
+  
+ o UPDATE: Updated AffymetrixNetAffxCsvFile and AromaUflFile to
+   better import fragment-length information from NetAffx files.
+  
+ o ROBUSTNESS: Now getGenomeInformation() of AffymetrixCdfFile asserts
+   that the located GenomeInformation annotation file is compatible
+   with the CDF.  Same for getSnpInformation().  Currently this can
+   only be asserted for UGP & UFL annotation files.
+  
+ o CONSISTENCY: Now getChipEffectSet() of ProbeLevelModel infers the
+   monocell CDF from the CDF of the input data set and uses that when
+   retrieving the chip-effect CEL set, not only when creating the set
+   from scratch, but now also overriding the CDF according to the CEL
+   header of existing sets.  In other words, if the CDF is overridden
+   for the input data set, it will also be overridden (with the
+   corresponding monocell CDF) in the chip-effect set.
+  
+ o CLEAN UP: Went through all classes where applicable and updated
+   so that getTags() and getAsteriskTags() work properly.  The
+   latter was also renamed from getAsteriskTag() to getAsteriskTags()
+   to indicate that it can actually return a multiple tags.
+  
+ o CLEAN UP: Since much of the feature we used in 'affyPLM' moved to
+   'preprocessCore', packages 'affyPLM' (and 'affy') are no longer
+   required by default.  As with 'gcrma', the 'affy' package is only
+   "suggested" and will be requested if need, e.g. when doing using
+   one of background correction methods.
+  
+ o DEVEL: Renamed all getAsteriskTag() methods to getAsteriskTags().
+  
+SOFTWARE QUALITY:
+
+ o Package pass R CMD CHECK on R v2.6.1 patch (WinXP).
+
+ o All testScripts/system/ scripts pass as well. Total processing
+   time right of these scripts is ~18 hours.
+ 
+BUG FIXES:
+
+ o BUG FIX: Tags from the input data set of FirmaModel were lost.
+  
+ 
+Version: 0.8.1 [2007-12-01]
+  
+ o DEPENDENCIES: Package now requires R v2.6.0 or newer.  The main reason
+   for this is so we can move away from outdated package dependencies.
+  
+ o NOTE: For AllelicCrosstalkCalibration and FragmentLengthNormalization,
+   the default is now to exclude units/cells on sex chromosomes from
+   the model fitting (in order not shrink XX and XY samples towards
+   each other).  For instance, AllelicCrosstalkCalibration argument
+   'subsetToAvg' defaults to '-XY' which automatically look up all units
+   and then cells that are on ChrX and ChrY.  For this to work, there
+   must be a genome information file for the chip type. Note, '-XY' will
+   work also on chip types for which there is no ChrY, e.g. Mapping250K_Nsp.
+   The output data set will be get the extra tag '-XY' whenever this
+   type of subsetting is used.  To fit with all units, use 'subsetToAvg=NULL'.
+  
+ o MODEL UPDATE: The AllelicCrosstalkCalibration method would,
+   if 'targetAvg' was specified (default), rescale the probe signals
+   such that the average of *each* allele-pair group would equal
+   the target average (default =2200).  However, this approach would
+   make it hard to correct for other kinds of systematic effects,
+   e.g. varying mixing proportions of target DNA from different
+   enzymes.  For instance, on the GenomeWideSNP_6 chip type the
+   symptom could be that raw CN estimates for CN probes would be
+   biased compared with SNP units.  The default, for these SNP & CN
+   chip types ("5.0" & "6.0") is now to rescale all signals on the
+   array together, i.e. basically a median scale normalization.  For
+   the SNP only chip types ("10K", "100K" & "500K") the default is to
+   rescale by group.
+  
+ o UPDATE: Updated AffymetrixNetAffxCsvFile to recognize enzyme
+   fragment annotation data for the new GenomeWideSNP_6 CSV files.
+ 
+ o CLEAN UP: Moved the following methods to R.utils: copyFile(),
+   dataFrame(), isEof(), and reassignInPackage().
+  
+ o CLEAN UP: normalizeAverage.{matrix,list}() is now instead in
+   the aroma.light package.
+  
+SOFTWARE QUALITY:
+
+ o Package pass R CMD check on R v2.6.1 patched as well as all
+   redundancy tests in testScripts/.
+
+ o TESTS: Added test script for HuEx-1_0-st-v2 by Elizabeth Purdom.
+  
+BUG FIXES:
+  
+ o BUG FIX: The multi-enzyme model implemented was not the one in mind;
+   The correction for the multi-enzyme data points was not right.
+   The example(normalizeFragmentLength) has been updated to also display
+   the normalized log-ratios (as a function of fragment length as well
+   as they densities).  That revealed the bug.  The example also tests
+   the case for non-aliquot mixing proportions between enzymes. This
+   is indeed "automagically" corrected for by the model itself, i.e.
+   there is no need to estimate the mixing proportions explicitly.
+  
+ o BUG FIX: The AllelicCrosstalkCalibration introduced in previous
+   version was broken for 10K (and possibly also for 100K and 500K).
+  
+ 
+Version: 0.8.0 [2007-11-25]
+  
+ o Updated FragmentLengthNormalization to normalize data for which
+   more than one enzyme was used to digest the DNA. See class for
+   model constraints and assumptions. Tested on GenomeWideSNP_6 data.
+  
+ o Now argument 'chromosome' for getUnitsOnChromosome() needs to be
+   specified explictly. Before its default was '23'.
+  
+ o Now the asterisk tags ('*') of the ProbeLevelModels are no longer
+   interpreted in the constructor, but by getTags() in the Model class.
+  
+ o MEMORY OPTIMIZATION: getCellMap() and getCellIndices() for
+   ChipEffectFile et al. now extracts data in chunks.
+  
+ o BETA: Added low-level methods fitWHRCModel() and fitWHLAPLM().
+ 
+ 
+Version: 0.7.2 [2007-09-30]
+  
+ o Now the main HTML file for ChromosomeExplorer is ChromosomeExplorer.html,
+   which is in analogue to how the ArrayExplorer works.  This HTML now
+   loads to a different Javascript file with a different name so that
+   already existing index.html ChromosomeExplorer files will still work.
+  
+ o By default, all CopyNumberSegmentationModel plots do now display
+   non-robust and robust estimates of the standard deviation of the
+   raw CNs across the complete genome.  Note that this is not done
+   segment by segment, so if there are alot of aberrations then these
+   estimates will be biased.
+
+ o ROBUSTNESS: Now getAverageFile() of AffymetrixCelSet detects if an
+   average file has been deleted between calls and recalculates it,
+   if missing.
+  
+ o BETA: Did some "behind the scenes" restructuring of the
+   CopyNumberSegmentationModel by adding an even simpler superclass
+   ChromosomalModel, allowing for simpler types of modelling along
+   the chromosomes.
+
+SOFTWARE QUALITY:
+
+ o Package pass R CMD check on R v2.6.0 beta and all of the redundancy
+   tests.  The redundancy tests are now available under testScripts/
+   in the package directory.
+
+BUG FIXES:
+    
+ o BUG FIX: Forgot to update ExonRmaPlm to handle compatibility issues
+   with affyPLM/preprocessCore. See below.
+  
+ o BUG FIX: The CopyNumberSegmentationModel:s did not support paired
+   copy-number analysis by specifying references files explictly.
+   To do this, pass an additional list of CnChipEffectSet:s via
+   constructor argument 'refTuple'.  This list my contain the same
+   chip types, and each chip type must contain exactly the same number
+   of files.  Note, the hashcode-generated hexadecimal tag added to
+   the save CopyNumberSegmentationModel results, but also as part of
+   the ChromosomeExplorer image files, will be different in this new
+   version, meaning the package will not detect already existing
+   segmentation estimates.  You can always one run chromosome, check
+   the new hashcode, and rename existing files to have the same one.
+  
+ o BUG FIX: Before duplicated tags were removed using unique(), but that
+   would also remove duplicated tags that were not "neighbors", e.g.
+   the 2nd "-X" tags in "ACC,-X,RMA,A+B,FLN,-X" was removed.  Now
+   only duplicated neighboring tags are removed, e.g. "-X,-X,-X".
+   
+DEPRECATED AND DEFUNCT:
+  
+ o CLEAN UP: Moved several classes to aroma.affymetrix.extras that
+   are haven't been updated in a long time and are likely to be broken.
+   This was done in order make this package easier to maintain. If this
+   broke something for you, please contact me.
+  
+ 
+Version: 0.7.1 [2007-09-18]
+  
+ o Now fit() of CopyNumberSegmentationModel reports timing
+   information for each chromosome fitted when in verbose mode.
+  
+ o Now importFromAffymetrixNetAffxCsvFile() of AromaUgpFile averages
+   positions if multiple positions were available for a particular unit.
+  
+ o ROBUSTNESS: Made createFrom() of AffymetrixCelFile fail safe,
+   that is, the destination file will not be created unless it
+   is complete.  This is done by first create/writing to a temporary
+   file which is then renamed at the end. This should minimize the
+   risk of creating incomplete CEL files.
+  
+ o ROBUSTNESS: Added internal fileCopy() which copies a file via
+   a temporary file which is renamed.  All file copying in the
+   package is now done via this method.
+  
+ o BETA: Added trial version of ScaleNormalization.
+  
+ o BUG FIX: Due to a migration of code from affyPLM to preprocessCore,
+   the fit function returned by getFitFunction() would not work with
+   affyPLM >= 1.13.9.  Now getFitFunction() adopts to the version of
+   affyPLM/preprocessCore installed.  If preprocessCore v0.99.16 or
+   newer is available, that is used, otherwise affyPLM v1.13.8 or older
+   is used. This has been veried to work on i) R v2.5.1pat with
+   affyPLM v1.12.0, and R v2.6.0alpha with preprocessCode v0.99.16.
+   (affyPLM v1.13.6).
+
+BUG FIXES:
+    
+ o BUG FIX: The workaround storing single-probe sdTheta estimates
+   as a small value was set for single-*chip* not probe cases.
+  
+ o BUG FIX: getFragmentLengths() of UflSnpInformation would thrown
+   an error "Unknown fields: fragmentLength".  Now getDataColumns()
+   returns the correct names.
+ 
+DEPRECATED AND DEFUNCT:
+  
+ o CLEAN UP: Removed obsolete copyFile() from AffymetrixFile in
+   favor of copyTo() in GenericDataFile.
+  
+ 
+Version: 0.7.0 [2007-09-15]
+  
+ o Now it is possible to specify the genome used for segmentation and
+   plotting. This can be done either via argument 'genome' in the
+   constructor or by setGenome() of CopyNumberSegmentationModel.
+   A corresponding <genome>(,<tags>)*,chromosomes.txt file should be
+   put in annotationData/genomes/<genome>/. If not found there, the
+   file is searched for in the annotationData/ directory installed
+   with the package. If the file is not found, setGenome() will give
+   an error.  If not specified, the genome defaults to "Human".
+   The above file specifies the number of bases per chromosome,
+   which is used when plotting chromosomal data.  The previous file
+   'hgChromosomes.txt' is now deprecated and obsolete.
+  
+ o Now CopyNumberSegmentationModel only adds cytobands to genomes
+   for which cytoband information is available.  Currently this is
+   hardwired only the "Human" genome. For all other genomes, there
+   will be no cytoband.
+  
+ o Now AllelicCrosstalkCalibration corrects also non-SNP PM cells by
+   substracting a global offset and rescaling towards target average.
+   The global offset is calculated as the weighted average of all
+   allelic offsets. SNP probes are calibrated in the same way as before.
+  
+ o Updated all places with SNP regular expression "^SNP" to "SNP_" in
+   order to also match units named "AFFX-SNP_...".
+  
+ o SPEED UP: Now getCellMap() of ChipEffectFile caches (large) results
+   to file.
+  
+ o SPEED UP: Now getOutputDataSet() of FragmentLengthNormalization set
+   and pass down 'mergeStrands' and 'combineAlleles' to ditto of the
+   super class, if applicable.  This way we avoid having to infer those
+   arguments from the contents of the files.  This gives an significant
+   speed up for large chip types.
+  
+ o ROBUSTNESS: Now the RmaPlm fit function detects cases where a probe
+   get zero weight for all arrays. In such (rare) cases, parameter
+   estimates equals NAs. Before an LAPACK error was thrown.
+  
+ o ROBUSTNESS: Added validate that the 'name' of an AffymetrixCelSet
+   and AffymetrixCelFile is of at least length one.
+  
+ o ROBUSTNESS: Now isDone() of Transform throws an error if too many
+   output files are found. Before it used to return FALSE.
+  
+ o WORKAROUND: If there is only one probe, then fit function of AvgPlm
+   would return theta=y:s, and sdTheta=0:s.  However, when searching
+   for units to do, we test (sdTheta <= 0).  The workaround is to store
+   the smallest float available instead of zero.
+  
+ o BETA: Added GenericDataFile, GenericDataFileSet, and GenericTabularFile.
+  
+ o BETA: Added AffymetrixTabularFile, AffymetrixNetAffxCsvFile,
+   AromaUgpFile, and AromaUflFile.
+  
+ o BETA: Added UflSnpInformation and UgpGenomeInformation
+   interfacing to UGP and UFL files.
+  
+ o BETA: Added AvgPlm, AvgSnpPlm, AvgCnPlm.
+
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on R v2.5.1pat & R v2.6.0alpha on Windows XP.
+   It also passes all redundancy tests on Linux.
+
+BUG FIXES:
+
+ o BUG FIX: Now more effort is made to ensure that all CEL files are
+   generated with an upper-case filename extension (*.CEL) and not (*.cel).
+   Thanks Jeremy Silver for reporting problems on this.
+ 
+ 
+Version: 0.6.2 [2007-09-07]
+  
+ o Now setCdf() of AffymetrixCelSet throws an (informative) error message
+   whenever one tries to use an ASCII CDF file. This behavior can be
+   changed by setting rule 'aroma.affymetrix.settings$rules$allowAsciiCdfs'
+   to TRUE in the options. The reason is that working with ASCII CDF files
+   is extremely slow and memory inefficient. Use affxparser::convertCdf()
+   to convert a CDF into a binary format.
+  
+ o Updated AllelicCrosstalkCalibration internally.  It now also stores
+   the model parameter estimates to file (using a plain save() file format).
+  
+ o MEMORY OPTIMIZATION: Instead of doing unlist(getCellIndices(cdf, ...),
+   use.names=FALSE), we can now do getCellIndices(cdf, useNames=FALSE,
+   unlist=TRUE), which is much more memory efficient, e.g. for the
+   GenomeWideSNP_6 chip the former uses 25x more memory, which means
+   that instead of using 1.4GB we can get away with 60MB.
+  
+ o CLEAN UP: All calibrateAllelicCrosstalk() methods are now removed.
+   Use the AllelicCrosstalkCalibration class instead.
+  
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on R v2.5.1 and R v2.6.0 devel on Windows.
+   All redundancy tests works on Linux.
+ 
+ 
+Version: 0.6.1 [2007-09-05]
+  
+ o Added support for fitting copy-number regions using the (fast)
+   Circular Binary Segmentation (CBS) method of Venkatraman et al. (2007).
+   The method is implemented by the new CbsModel class.  Consider this
+   class to be very much in a beta version.
+  
+ o Added super class CopyNumberSegmentationModel, which provides most of
+   the framework to fit and plot segmentation models. By subclassing
+   this class, new segmentation methods can be added. Current subclasses
+   are GladModel and CbsModel.  ChromosomeExplorer was updated to handle
+   multiple segmentation methods.
+  
+ o Now the startup message when loading the package is generated with
+   packageStartupMessage() so that it can be suppressed.
+  
+ o Put more effort in generating more consistent hash codes that becomes
+   part of the filenames of the averaged files.  This modification is
+   likely to lead to new hashcodes, and there for new filenames such
+   that aroma.affymetrix will not detect existing "average" files.
+   In turn, this will mean that stored results from GladModel will
+   not be recognized (unless you rename files with the new hashcodes).
+  
+ o Added a "patch" to make sure that there is rowMedians() supporting
+   missing values by looking for the correct version of Biobase,
+   R.native or just an apply() notes.  This does unfortunately mean
+   that generated hashcodes my be different so certain average CEL
+   files will be recalculated, and in turn segmentation results will
+   be regenerated.
+  
+ o PACKAGE DEPENDENCIES: Made R.native an "Supports" package, since it
+   is only used for rowMedians() in case the right Biobase version is
+   not availble.  R.native is now optional.
+
+BUG FIXES:
+
+ o BUG FIX: getAverageFile() of AffymetrixCelSet had 'na.rm=FALSE'
+   by default, which caused a lot of missing values in the average.
+   In turn, this cause for instance raw CNs to become missing values.
+  
+ o BUG FIX: When calling process() on a GcRmaBackgroundCorrection,
+   an exception would be thrown with "bgAdjustGcrma() is deprecated.
+   Please use the GcRmaBackgroundCorrection class".  The same happend
+   with OpticalBackgroundCorrection.  This was due to a typo introduced
+   in v0.5.3 when making the underlying functions deprecated.  Thanks
+   Jeremy Silver for troubleshooting and reporting this.
+ 
+DEPRECATED AND DEFUNCT:
+  
+ o CLEAN UP: Deleted obsolete /inst/chromosomeExplorer/ from source.
+  
+ o CLEAN UP: Removed some obsolete affxparser patches.
+  
+ 
+Version: 0.6.0 [2007-08-17]
+  
+ o Steps have been taken to support working with Calvin CEL files.  This
+   is still in testing, but from first tests it looks like it is working.
+  
+ o Now calculateResidualSet() of ProbeLevelModel only loads probe-affinity
+   estimates if needed, i.e. if residuals are already calculated this
+   function will return faster now.
+  
+ o Now createFrom(..., methods="create", clear=FALSE) of AffymetrixCelFile
+   will first create an empty file, and then copy all CEL data to the
+   new file.  This way createFrom(..., methods="create", clear=FALSE)
+   and createFrom(..., methods="copy", clear=FALSE) should give CEL
+   files containing the same data.  createFrom() also accepts a vector
+   of options in 'methods' (renamed from 'method') which will be tried
+   in order until success.
+  
+ o Now getImage() of AffymetrixCelFile defaults to no interleaving,
+   i.e. argument defaults to interleaved="none".  The reason for this
+   is that the previous default "auto" did not work too well and
+   sometimes turned on interleaving although not needed.  So, now
+   one has to use interleaved="auto" ("v" or "h") when for instance
+   getting images for spatial PLM residuals where an PM-only fit was
+   done to a chip with MMs (otherwise every 2nd line will be blank).
+   This also affects the ArrayExplorer; you pass the 'interleaved'
+   argument via the process() call.
+  
+ o Added support for dChip's 'snp6.0 genome info hg18.txt' file.  Note,
+   this only contains informations for SNPs, not CN probes.
+  
+ o MEMORY OPTIMIZATION: calculateResidualSet() of ProbeLevelModel does
+   part of the work in chunks.
+  
+ o MEMORY OPTIMIZATION: Made getCellIndices() of AffymetrixCdfFile more
+   memory effiencent by reading and transforming data in chunks.
+  
+ o MEMORY OPTIMIZATION: Made findUnitsTodo() of ChipEffectFile scan
+   for units in chunks.  This would bring done memory usage to about
+   5% of what is used to consume.
+  
+ o MEMORY OPTIMIZATION: Now getAlleleProbePairs() of AffymetrixCdfFile
+   processes the CDF in chunks in order to save memory.  Before,
+   processing the GenomeWideSNP_6.CDF would consume 1.5-2.0GB RAM, but
+   now it is using less than 500MB.
+  
+ o MEMORY OPTIMIZATION: ArrayExplorer now garbage collects after each
+   image written.  That save a few hundred MB.
+   
+ o CLEAN UP: Removed findUnitsTodo() from ExonChipEffectFile, because it
+   gave the same result as the one in super class ChipEffectFile.
+  
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on R v2.5.1 and R v2.6.0 devel.
+  
+ o Package passes all redundancy tests.
+
+BUG FIXES:
+  
+ o BUG FIX: Removed internal trial encoding function added by mistake
+   to the previous version.  
+ 
+ 
+Version: 0.5.6 [2007-08-10]
+  
+ o Package passes R CMD check on R v2.5.1 and R v2.6.0 devel.
+  
+ o AffymetrixFileSet class defines lapply(), which causes lapply()
+   to redefined as a generic function, which in turn gives some
+   overhead to "standard" lapply() calls due to method dispatching.
+   All standard lapply() calls are now called as base::lapply().
+   Benchmarking: This changes makes fit() on SNP 10K roughly 10% faster.
+  
+ o Now all generated CEL files are written with upper-case filename
+   extension (*.CEL).  The main reason for this is that some other
+   software don't recognize CEL files with lower-case extension (*.cel).
+   Existing CEL files that are in lower case (*.cel) and that are
+   generated by the package are renamed to upper case (*.CEL).
+   Same thing for generated CDF files.
+
+BUG FIXES:
+  
+ o BUG FIX: ArrayExplorer assumed identical sample names and color maps
+   across chip types and plots.  Now the set of samples and color maps
+   displayed are unique for each chip type.
+ 
+ 
+Version: 0.5.5 [2007-08-03]
+  
+ o MISC: Keeping the normalizeAverage() that was moved to aroma.light,
+   so that the the package works with aroma.light v1.4.x that comes
+   with the BioC release.  This means that it is only 'aroma.affymetrix',
+   'aroma.apd', and (optional) 'R.native' that are not on CRAN/BioC.
+  
+ o This version was used at the BioC2007 practical.
+ 
+ 
+Version: 0.5.4 [2007-08-02]
+  
+ o Renamed static fromName() of AffymetrixCelSet to byName().
+  
+ o Renamed fromChipType() of AffymetrixCdfFile to byChipType().
+  
+ o Some of the dependencies were to weak in the DESCRIPTION file.
+   Added explicit version dependencies also for Suggests and Imports
+   packages.
+
+BUG FIXES:
+    
+ o BUG FIX: getCellMap() of ChipEffectFile would give an error if
+   verbose output was on.
+ 
+ 
+Version: 0.5.3 [2007-07-13]
+  
+ o Now more verbose output is generated when a monocell CDF is created
+   in the background.
+  
+ o Added getFileFormat() to AffymetrixCdfFile and AffymetrixCelFile.
+   These are also reported by the corresponding print() method.
+  
+ o Made bgAdjustOptical(), bgAdjustRma(), and bgAdjustGcRma() deprecated.
+   If used, an error will be thrown.  Use the Optical-, Rma-, and
+   GcRmaBackgroundCorrection classes instead.
+  
+ o MEMORY OPTIMIZATION:  Includes a patch to affxparser:::.initializeCdf()
+   to make it much more memory efficient, e.g. when writing the CDF
+   header unit names, it could consume >1.5GB RAM, whereas now it is
+   in the order of 100-200MB.  This patch will go away as soon as
+   the affxparser package incorporates it.
+  
+ o MEMORY OPTIMIZATION:  Includes a patch to base::matrix() that does not
+   create an extra copy when assigned a new value to a cell, e.g. the 2nd
+   statement in the following would force a new copy of the matrix:
+   x <- matrix(0, 5000,5000); x[1,1] <- 1;  Thanks to Luke Tierney for
+   troubleshooting and suggesting a patch; there are no immediate plans
+   to include this patch in 'base' though.
+
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on Rv2.5.1 (and R v2.6.0 devel).
+  
+ o Package passes all (#1 and #2) redundancy test sets available on
+   the group page.  This was confirmed on R v2.5.1 on WinXP (1.5GB RAM).
+  
+BUG FIXES:
+  
+ o BUG FIX: Now (private) createMonoCell() of AffymetrixCdfFile will
+   build the monocell CDF to a temporary filename, and only when it is
+   done, rename it to the final *,monocell.cdf filename.  This will
+   lower the risk for creating an invalid CDF, which for instance can
+   happen if we run out of memory.  Reading invalid CDFs will core
+   dump R due to the affxparser and the Fusion SDK package.
+  
+ o BUG FIX: The memory usage of fit() of the FirmaModel would increase
+   linearly with the number of arrays processed.  This was because
+   read results where cached for each of the FirmaFile:s.  Thanks Mark
+   Robinson for reporting on this.
+  
+ o BUG FIX: getOutputDataSet() of Transform would give "Error in
+   fromFiles.AffymetrixCelSet(static, path = path, pattern = pattern,:
+   formal argument "checkChipType" matched by multiple actual arguments".
+   This was due to the recent adding of 'checkChipType=FALSE'.  Fixed
+   by adding 'checkChipType=FALSE' to fromFiles() of ChipEffectSet.
+   Thanks Jeremy Silver at WEHI for report and troubleshooting this.
+ 
+ 
+Version: 0.5.2 [2007-06-25]
+
+BUG FIXES:
+
+ o BUG FIX: When getOutputDataSet() retrieved the output data set, the chip
+   type of the CEL files would be validated against the path name, also when
+   then CDF of the input set was overriden.  Now the output data set is
+   setup using 'checkChipType=FALSE'.  Thanks Mark Robinson for
+   troubleshooting this.
+ 
+ 
+Version: 0.5.1 [2007-06-12]
+  
+ o Moved normalizeAverage() to aroma.light.
+  
+ o Replaced all require(<pkgname>) with require("<pkgname>").
+
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on Rv2.6.0 devel.  This new version of
+   R CMD check does a lot more validation on the code and several
+   potential problems were found this way.
+ 
+BUG FIXES:
+  
+ o BUG FIX: When argument 'transforms' to getImage() of AffymetrixCelFile
+   wasn't a list, then "Error: argument "transform" is missing, with no
+   default" was thrown.  Thanks Karen Vranizan, UC Berkeley for reporting
+   this problem.
+  
+ o BUG FIX: If an Affymetrix probe tab file is not found for the chip type,
+   computeAffinitities() of AffymetrixCdfFile would throw "Error in
+   paste(..., sep = sep, collapse = collapse): object "pattern" not found"
+   instead of an intended and more information error.
+  
+ o BUG FIX: getSiblings() for AffymetrixCelSet was broken.
+  
+ o BUG FIX: Called getFile(ces, ...) instead of  getFile(this, ...) in
+   fitGlad() of CnChipEffectSet.  If the GladModel was used to fit the
+   GLAD model this bug has not affected the modelling.
+  
+ o BUG FIX: Used getFileName() instead of getFilename() in exportToAPT()
+   of SnpChipEffectSet.
+  
+ 
+Version: 0.5.0 [2007-05-10]
+
+ o getProbeAffinityFile() of ExonRmaPlm did not return the correct subclass.
+  
+ o Added default zoom levels to updateSamplesFile() for ChromosomeExplorer.
+   This is applies the first time process() is called.
+  
+ o Removed dependency of the R.image package by removing writeSpatial()
+   for the AffymetrixCelFile class.  Use writeImage() instead.
+  
+ o Now patchPackage(..., deleteOld=TRUE) removes not only old patches, but
+   also patches that are older than the package itself.  Thus, when loading
+   the package, all old patches are automatically removed.
+  
+ o Added argument 'apply=TRUE' to downloadPackagePatch() so that downloaded
+   patches are applied immediately after being downloaded.
+
+SOFTWARE QUALITY:
+
+ o Package passes R CMD check on Rv2.5.0 (and R v2.4.1).
+  
+ o Package pass redundancy tests on R v2.5.0 (and R v2.4.1). This was
+   confirmed to work on Windows XP.
+  
+BUG FIXES:
+  
+ o BUG FIX: calibrateAllelicCrosstalk() for AffymetrixCelFile would output
+   filenames containing only the name but not the tags.
+  
+ o BUG FIX: If no valid timestamp was identified in the CEL header by
+   getTimestamp() of AffymetrixCelFile, then as.character() would give
+   "Error in sprintf(fmt, ...) : zero-length argument".  Now it returns
+   NA instead as a fall back if no valid timestamp is found.  Thanks
+   Mark Robinson, WEHI, for reporting this.
+  
+ o BUG FIX: getRegions() and getLog2Ratios() of GladModel would give an
+   error if only a subset of the chromosomes where queried.
+ 
+ 
+Version: 0.4.9 [2007-04-22]
+  
+ o BUG FIX: Added missing getExclCells() to QuantileNormalization.
+   Thanks Elizabeth Purdom for the report.
+ 
+ 
+Version: 0.4.8 [2007-04-19]
+  
+ o Now non-positive signals are given weight zero when being fitted
+   in the IWLS algorithm for the log-additive model of RmaPlm.
+   This requires affyPLM v1.11.14.  Thanks Ben Bolstad for adding
+   support for weights.
+  
+ o BUG FIX: getChipEffectSet() and getProbeAffinityFile() of the
+   ExonRmaPlm class did not set the 'mergeStrands' parameter.
+   Thanks Elizabeth Purdom for the fix.
+ 
+ 
+Version: 0.4.7 [2007-04-12]
+  
+BUG FIXES:
+  
+ o BUG FIX: fromFiles() of AffymetrixCelSet would give error "Exception:
+   Pathname not found: annotationData/samples" if that directory was
+   missing.  Now it is instead created.
+  
+ o BUG FIX: readData() of SampleAnnotationFile would open a text
+   connection without closing it.  This would eventually given an
+   error about too many open connections.
+  
+ o BUG FIX: There was a if (TRUE) {} statement in calculateResidualSet()
+   that was supposed to be if (!fource) {} in the release version.
+  
+ o BUG FIX: fromDataFile() of ResidualFile returned an AffymetrixCelFile
+   but not a ResidualFile.  This caused getResidualSet() of ProbeLevelModel
+   to return a ResidualSet containing AffymetrixCelFile:s.  The same
+   bug was found for the WeightFile class.
+ 
+ 
+Version: 0.4.6 [2007-04-04]  
+  
+ o Now fromFiles() in AffymetrixCelSet verifies that the CDF being
+   assigned to the data set is compatible with the CEL files, i.e.
+   have the same number of cells.  The default is to infer the
+   chip type from the name of the parent directory of the CEL files,
+   but if that chip type is not compatible the chip type according
+   to the the first CEL file will be used for the set.
+   
+BUG FIXES:
+  
+ o BUG FIX: Loading aroma.affymetrix v0.4.5 (and v0.4.4?) on Windows
+   would give: "Error in digest::digest(..., skip = skip, ascii =
+   ascii) : unused argument(s) (skip = "auto", ascii = FALSE)".
+  
+ o BUG FIX: Static fromFiles() in ChipEffectSet did not call ditto in
+   super class AffymetrixCelSet but instead the one in grand-parent
+   super class AffymetrixFileSet.
+ 
+ 
+Version: 0.4.5 [2007-04-03]
+  
+ o Now AllelicCrosstalkCalibration rescales by default allele A and
+   allele B signals such  that the get the same averages.
+  
+ o Added ETA to verbose output of fit() for the ProbeLevelModel.
+   
+ WORK IN PROGRESS (no guarantees):
+  
+ o Now RmaPlm:s can handle non-positive signals either by setting the
+   to a small number or to ignore them when fitting the PLM.  See code
+   of fit function(s) for more details.
+  
+ o Added AffymetrixTsvFile to read the CNAT v4 "covariate" files.
+  
+ o Added GcContentNormalization.
+
+BUG FIXES:
+    
+ o BUG FIX: Probe-affinities were not save, resulting in all zeroes.
+   This was due to renaming getProbeAffinites() to getProbeAffinityFile().
+  
+ o BUG FIX: ChipEffectGroupMerge would catch warnings (like errors)
+   when create output CEL files, e.g. when getRelativePath() gave
+   an unimportant warning.
+  
+ o BUG FIX: getFitUnitFunction() for CnPlm was broken for PM-MM
+   probe models for single group units, e.g. AFFX units, resulting
+   in an error "Argument 'y' must have two dimensions: 3".
+  
+ o BUG FIX: getFitUnitFunction() of CnPlm did not handle probe
+   model "min1(pm-mm)".
+ 
+ 
+Version: 0.4.4 [2007-03-26]
+  
+ o Added BackgroundCorrection classes RmaBackgroundCorrection,
+   GcRmaBackgroundCorrection, and OpticalBackgroundCorrection.
+   These replaces methods bgAdjustRma(), bgAdjustRcRma(), and
+   bgAdjustOptical() which are now deprecated.
+  
+ o The ArrayExplorer class now handles multiple chip types.
+  
+ o Now inferParameters() of the ChipEffectSet classes is looking
+   at the 'intensity' (==theta) field instead of 'stdvs'.  The
+   reason for this is that 'stdvs' might be all zeros, e.g. after
+   a fragment-length normalization.  
+ 
+WORK IN PROGRESS (no guarantees):
+  
+ o Added AffymetrixCelSetTuple.
+  
+ o Added the SpatialReporter class.
+  
+ o Added the abstract Explorer class.
+  
+ o Added calculateBaseline() to ChipEffectSet.
+  
+ o Replaced all occurances of affxparser::copyCel() with createFrom()
+   in AffymetrixCelFile.
+  
+ o Lines of code (excluding comments): grep -v "#" *.R | wc -l => 24902
+ 
+BUG FIXES:
+    
+ o BUG FIX: clearCache() of AffymetrixCelSet did not clear the
+   .readUnitsCache field.
+
+
+Version: 0.4.3 [2007-03-15]
+  
+ o Updated the GladModel to only work with chromosome indices (integers).
+  
+ o Now the GladModel infers the set of possible chromosomes from the
+   GenomeInformation file.  This means it handles other genomes than
+   the human genome better.
+  
+ o Updated GenomeInformation to return chromosomes as indices and never
+   with 'X' and 'Y' regardless of source.  This is part of a moving the
+   package to handle chromosomes as indices so that it will work with
+   any genome not just the human.
+  
+ o Fixed fit() for FirmaModel so that it checks array-by-array
+   whether units have been fitted.
+  
+ o Names of cache files are now made more consistent between
+   R versions (and platforms) resulting in more cache hits
+   and therefore faster processing.
+  
+ o Now the package tries to keep the search path of packages in
+   such an order that any package known to cause problems to
+   aroma.affymetrix if loaded after aroma.affymetrix, will be
+   inserted behind aroma.affymetrix in the search path. For example,
+   loading the EBImage package after aroma.affymetrix used to cause
+   complaints when calling display() on an ArrayExplorer.
+   
+ o MEMORY OPTIMIZATION: Further optimized memory usage in:
+   calculateResiduals() of ProbeLevelModel.
+  
+ o Lines of code: grep -v "#" *.R | wc -l => 24106
+ 
+WORK IN PROGRESS (no guarantees):
+  
+ o Added getUnitGroupCellMap() to AffymetrixCdfFile.
+  
+ o Added code for in-memory attributes to AffymetrixFile object.
+   Certain filename tags are interpreted as attributes which are
+   set when the AffymetrixFile object is instantiated.
+   Note: Attributes are *not* carried over in transforms etc.
+  
+ o Added the AromaGenomePositionFile class and subclasses
+   AromaUgpFile and AromaCgpFile.
+  
+ o Added extractMatrix() for ChipEffectSet.
+
+BUG FIXES:   
+
+ o BUG FIX: getAverageFile() of AffymetrixCelSet would average the wrong
+   set of cells if argument 'indices' was different from NULL.
+  
+ o BUG FIX: Argument '...' to plotDensity() of AffymetrixCelFile and
+   AffymetrixCelSet are no longer passed to identifyCells().
+  
+ o BUG FIX: calculateResiduals() of ProbeLevelModel would give
+   non-zero residuals for cells not fitted by the PLM.
+  
+ o BUG FIX: plotNuse() and plotRle() did not handle outliers
+   correctly.
+
+ o BUG FIX: Changed default filenames for FIRMA scores to
+   "%s,FIRMAscores.CEL" rather than "%s,FIRMAresults.CEL" for
+   consistency with FirmaModel.
+  
+ o BUG FIX: extractSnpQSet() would give "Error: object "cleancdfname"
+   not found" if the 'affy' package was not loaded.
+  
+ o BUG FIX: getCellIndices() in CnChipEffectFile would give
+   "Error in fcn(.subset2(unit, "groups"), ...) : object "odds"
+   not found" for units with other than 1, 2, or 4 groups.
+  
+DEPRECATED AND DEFUNCT:
+  
+ o Replaced argument 'moreCells' with 'ram' and removed argument
+   'cellsPerChunk' in getAverageFile() of AffymetrixCelSet.
+  
+ 
+Version: 0.4.2 [2007-02-28]
+  
+ o Now patches in patches/aroma.affymetrix/<date>/ are sourced
+   when the package is loaded.  To download the latest patches,
+   see the package's group page.
+  
+ o Added argument 'region' to getUnitsOnChromosome() of the
+   GenomeInformation class.
+
+BUG FIXES:
+
+ o BUG FIX: setColorMaps() gave "Error in addColorMap.ArrayExplorer(
+   this, colorMap, ...) : object "nbrOfColors" not found".
+  
+ o BUG FIX: The output data set as returned by getOutputDataSet() or
+   process() of QuantileNormalization lost the any CDF overridden in
+   the input data set.  The only time it did pass down the CDF was
+   when process() was called the first time (so that it actually
+   normalized the arrays).  The fix was to make getOutputDataSet() in
+   Transform to pass down the CDF too.
+  
+ o BUG FIX: process() of ChromosomeExplorer would give an error saying
+   'Error in file(file, ifelse(append, "a", "w")) ... cannot open file
+    /*****************...'.
+ 
+ 
+Version: 0.4.1 [2007-02-22]
+  
+ o Fixed the warning about "'tzone' attributes are inconsistent". See
+   code of as.character() for explanation.
+  
+ o Now fromFiles() of AffymetrixCelSet accepts argument 'chipType' to
+   override any chip type specified in the CEL headers. This is useful
+   in case different CEL files refers to different chip types, which can
+   be the case for mixed generations of CEL files.  Also added a scan of
+   chip types.
+  
+ o Added support for using Windows shortcuts for CDF files, that is, you
+   can use a Windows Shortcut annotationData/chipTypes/Foo/Foo.cdf.lnk
+   to link to annotationData/chipTypes/Bar/Bar.cdf, and whenever using
+   AffymetrixCdfFile to locate the CDF for chip type 'Foo' you will get
+   the CDF for chip type 'Bar', e.g. AffymetrixCdfFile$fromChipType('Foo').
+
+ o The annotation labels at the right of all graphics in the
+   ChromosomeExplorer are now made slightly larger.
+  
+ o Now the table of CNRs generated by the GladModel give links
+   to 'hg17' instead of 'hg18' because 'hg17' is the version of
+   the dChip genome information files, which are the only one
+   currently supported.
+  
+ o Package passes R CMD check on R v2.4.1 (many empty help pages though).
+  
+ o Lines of code: grep -v ^# *.R | wc -l => 21772
+
+BUG FIXES:
+
+ o BUG FIX: calculateWeights() of ExonRmaPlm now makes sure residuals
+   are calculated first.
+  
+ o BUG FIX: When creating a monocell, the output did not strip of the tags
+   from the chip type, e.g. annotationData/Foo,core/For,core,monocell.cdf
+   instead of annotationData/Foo/For,core,monocell.cdf.
+  
+ o BUG FIX: An update to the GladModel class added to previous version
+   would not recognize CEL files with same sample name but different
+   tags to belong to the same sample.
+  
+ o BUG FIX: calculateResiduals() would erase previously calculated
+   residual files and not re-create them correctly.
+  
+
+Version: 0.4.0 [2007-02-16]
+  
+ o Package passes R CMD check on R v2.4.1 (many empty help pages though).
+  
+ o Verified that the current version works on total copy number analysis
+   for combined Nsp & Sty chips.  See the aroma.affymetrix group page
+   for the example.
+  
+ o Added trial version of ExonRmaPlm().
+  
+ o Added trial versions of ResidualSet() and WeightSet().
+  
+ o Added test for correct directory structure to fromFiles().  This will
+   enforce users to use the correct structure so that for instance the
+   name of the data set is correctly inferred.
+  
+ o Added calculateResiduals() to ProbeLevelModel and the ResidualSet
+   and ResidualFile classes.
+  
+ o Now monocell CDF are names <chipType>,monocell.cdf.  Before a dash
+   was used instead of a comma. This new style is more in line with
+   the <name>,<tags> naming convention used elsewhere in the package.
+   Note: Since there are parameter CEL files referring to the old
+   <chipType>-monocell, AffymetrixCdfFile$findByChipType() will detect
+   this and look for <chipType>,monocell instead. Thus, it should be
+   safe to rename the monocell CDF file.
+  
+ o Now any annotation file for chip type <chipType> may be located
+   under annotationData/chipTypes/<chipType>/. This directory
+   structure is preferred, because this will allow you to collect
+   all your annotation files specific to one particular chip type
+   in one place.  You may even put the in subdirectories, e.g.
+   Affymetrix/, dChip/ etc.
+  
+ o From now on all reporters and explorer utilizes the root path
+   reports/, and the path to an image file should be
+   reports/<dataSetName>/<tags>/<chipType>/<set>/.
+   The latter subdirectory was added to avoid potential naming
+   conflicts for different reporter or explorer classes.
+  
+ o Remove package dir doc/.  Not used.
+  
+ o Added writeChecksum() and validateChecksum() to AffymetrixFile
+   to write a checksum file, which later can be validated to the
+   content of the file.  This is useful to make sure that
+   transferred files have not been corrected (which happend to
+   HB while transferring via external HDD).
+
+
+Version: 0.3.6 [2007-02-05]
+  
+ o Added support to import dChip-exported CEL files.  See
+   importFromDChip() in AffymetrixCelSet.
+  
+ o Now QuantileNormalization() takes an AffymetrixCelFile as a
+   target distribution too, cf argument 'targetDistribution'.
+  
+ o Now the file cache is organized into subdirectories starting
+   with "aroma.affymetrix/".  This makes it easier clear the
+   cache.
+  
+ o Trial: Added SampleAnnotationFile class. File format is not
+   settled yet.
+  
+ o Trial: Removed the 4% left and right extension of xlim from the
+   plots and enforced 50px margins outside on both sides.  This
+   will make it easier to map the horizontal location in pixels
+   to megabases.
+
+
+Version: 0.3.5 [2007-01-22]
+  
+ o BUG FIX: Somehow hgChromosomes.txt disappeared from the last
+   versions of the package. Readded.
+  
+ o Now fromChipType() of DChipGenomeInformation recognized
+   the Mapping10K_Xba142 genotype information files too, meaning
+   getGenotypeInformation() of AffymetrixCdfFile will also
+   recognize it.  Same updates were done for dChip SNP
+   information files.
+  
+ o Now the default sample of the ChromosomeExplorer is the first
+   sample (and not the 8th, which was left in there while I was
+   debugging).  The default chromosome is 1 (not 21st).
+
+
+Version: 0.3.4 [2007-01-20]
+  
+ o Passes R CMD check on v2.4.1.
+  
+BUG FIXES:
+
+ o BUG FIX: When trying to load CDFs (and in some other cases
+   too), the GLAD package (and some other packages) wer loaded
+   although they are only "suggested" packages.  This was due
+   to how the constructor of some classes were implemented.
+
+
+Version: 0.3.3 [2007-01-17]
+  
+ o Passes R CMD check on v2.4.0.
+  
+ o Added classes QualityAssessmentModel, QualityAssessmentSet,
+   and QualityAssessmentFile.
+  
+ o Now createMonoCell() create the CDF in chunks, that is,
+   in constant memory.
+  
+ o Now plot() of GladModel gets the default 'hgChromosomes.txt'
+   of the package if it can't be found in annotations/.
+
+BUG FIXES:
+
+ o BUG FIX: For some reason does clearCache() of Object not
+   clear out all cached fields. Until I've figured out what
+   is wrong, I've added explicit clearCache() to classes using
+   cached fields.
+  
+ o The FragmentLengthNormalization class forgot to clear cache
+   after cloning input data set.  This caused the output data
+   set to get the same average file as the input data set.
+    
+ o BUG FIX: createMonoCell() of AffymetrixCdfFile would give
+   an errounous mono-cell CDF file due to a recent change.
+
+
+Version: 0.3.2 [2007-01-07]
+  
+ o Package pass R CMD check v2.4.0.
+  
+ o Tested the package from scratch analysis 19 Mapping250K_Nsp
+   and 16 Mapping250K_Sty (15 in common) for total copy-number
+   analysis. Steps involved: quantile normalization, RMA
+   probe-level modelling, PCR fragment-length normalization,
+   and combined GLAD modelling.  This was done in WinXP Pro
+   on an IBM X61 with 1.5GB RAM.  Memory usage peaked at
+   approximately 1GB.
+  
+ o Some optimization of what is cached in memory and what
+   is cached on file.  Only for some data classes for now.
+  
+ o Replaced old GladModel with new MultiGladModel, which
+   is now named GladModel.
+  
+ o Added AffineCnPlm for completeness.
+  
+ o The ChromosomeExplorer class now generates a complete
+   working ChromosomeExplorer web page.
+  
+ o WORKAROUND: If 'affy' is loaded after aroma.affymetrix,
+   which happens when loading 'affyPLM', affy will overload
+   the generic function plotDensity() with a regular function
+   breaking that method in aroma.affymetrix. The solution
+   is to make sure 'affy' is always loaded before, which was done
+   by adding 'affy' to 'Depends:' in DESCRIPTION.  We have the
+   same problem with the 'oligo' package, which is required by
+   the CrlmmModel class.  However, for now, we leave that package
+   under 'Suggests:'.
+
+
+Version: 0.3.2 [2007-01-06]
+  
+ o Major changes.
+  
+ o Renamed all Preprocessing classes to Transform classes.
+  
+ o Introduced trial version of a top-level Model class in
+   order to minimize repeated code.
+
+DEPRECATED AND DEFUNCT:
+  
+ o Made several methods "private" in order to hide them
+   form the HTML help tables.  Developers should rely on
+   source code and Rdoc comments for now.
+
+
+Version: 0.3.1 [2007-01-05]
+  
+ o Package pass R CMD check v2.4.0 (with one warning I suspect
+   is a bug in R CMD check).
+  
+ o Some code was moved to 'affxparser' (v1.7.3) so it is
+   recommended to update to that as soon as it is available
+   on the Bioconductor servers.
+  
+ o Added initial code for PLASQ, but more is still needed.
+  
+ o In addition to default "PM only" model, ProbeLevelModel:s now
+   also handles "PM-MM" models.  Note that PM-MM might give a
+   non-positive value.  The multiplicate MbeiPlm handles this,
+   but also the log-additive RmaPlm where such values become NAs.
+ 
+ 
+Version: 0.3.0 [2006-12-20]
+  
+ o Made fitGlad() for classes CnChipEffectFile and CnChipEffectSet
+   deprecated.  Use the GladModel class instead.
+ 
+ 
+Version: 0.3.0 [2006-12-08]
+  
+ o Major updates. See below.
+  
+ o Change in directory structures.  Now all probe-level data
+   is outputted to probeData/, and all PLM data to plmData/.
+   Data from the GladModel is stored to gladData/.  Data sets
+   with the same name processed in different ways will be
+   distinguishable by their tags.
+  
+ o Pre-processing methods have now been split up in two major
+   classes, the ProbePreprocessing and ChipEffectPreprocessing
+   (both inheriting from the Preprocessing class) to indicate
+   that they operate on probe-level and chip-effect data,
+   respectively. All ProbePreprocessing classes output data
+   to the probeData/ directory, and the ChipEffectPreprocessing
+   class to the plmData/ directory.
+  
+ o ProbePreprocessing classes:
+   QuantileNormalization replaces QuantileNormalizer.
+   AlleleCrosstalkCalibration replaces AlleleCrosstalkCalibrator.
+   PcrProbeCalibration corrects for PCR effects due to oligo
+   sequence and SNP fragment lengths, cf. CRLMM.
+   Adapted from oligo.
+  
+ o ChipEffectPreprocessing classes:
+   FragmentLengthNormalization to normalize for PCR fragment-
+   length effects after PLM, cf. CNAG.
+  
+ o Added the PlatformDesign class which provides an interface to
+   a platform-design package without loading the package.  This
+   is used for instance by the PcrProbeCalibration class.
+ 
+ 
+Version: 0.2.6 [2006-12-07]
+  
+ o The recently added methods below makes it possible to store
+   FeatureSet data to CEL files, which will further simplify
+   bridging the aroma.affymetrix and the oligo package.
+  
+ o Added protected importFeatureSet() to import probe signals
+   from a single-sample oligo::FeatureSet object.
+  
+ o Added static method createBlankSet() to AffymetrixCelSet
+   to create a set of blank CEL files.
+  
+ o Added trial version of writeWig() to CnChipEffectSet to export
+   log2 copy numbers to the UCSC Genome Browser.
+
+BUG FIXES:
+  
+ o BUG FIX: The internal cache for readUnits() of ChipEffectFile
+   classes was not sensitive to neither class nor parameters
+   specific to subclasses.
+
+ 
+Version: 0.2.5 [2006-11-22]
+  
+ o Package pass R CMD check.
+  
+ o Added GladModel.  Now it is fairly simple to estimate total
+   copy numbers from Affymetrix 10K, 100K and 500K data sets.
+  
+ o Added support for tags to most classes.
+  
+ o Made encode() and decode() of ParameterCelFile approx 2-3 times
+   faster by skipping the encode-/decodeUnit() step and instead
+   call the encode and decode functions directly.  This will
+   speed up the updating of chip-effect files about two times.
+  
+ o Added R.native to the list of suggested packages. The reason
+   for this is that getAverageFile() of AffymetrixCelSet is
+   using rowMedians(x, na.rm) of R.native.  The version in Biobase
+   does not handle missing values.  In case R.native is not
+   installed, apply() and median() are used.
+  
+ o Added SE estimates in RmaPlm from new affyPLM.
+ 
+ 
+Version: 0.2.4 [2006-10-28]
+  
+ o Added more Rdoc comments.
+ 
+ 
+Version: 0.2.3 [2006-10-23]
+  
+ o Added gcrma background correction.  Contributed by Ken Simpson,
+   WEHI, Melbourne.
+  
+ o Added extractAffyBatch() to AffymetrixCelSet extracting data
+   applicable to methods in the affy package.
+  
+ o Added extractSnpFeatureSet() to AffymetrixCelSet and
+   extractSnpQSet() to SnpChipEffectSet extracting data applicable
+   to methods in the oligo package.
+  
+ o Added trial versions of AffymetrixSnpCdfFile, GenotypeCallFile,
+   GenotypeCallSet etc.
+ 
+ 
+Version: 0.2.2 [2006-09-16]
+  
+ o Added basic support for dChip genome information.  It is good
+   enough though to work with the 100K and 500K SNP chips.
+  
+ o Package now passes R CMD check.  Some cheating were done though,
+   because methods with missing Rdoc where put as \alias{}:es in
+   one place.
+ 
+ 
+Version: 0.2.1 [2006-09-07]
+  
+ o Another big change in how classes are named.
+ 
+ 
+Version: 0.2.0 [2006-08-25]
+  
+ o Have done a big redesign of the package. There are now also
+   some basic model fitting algorithm available.  Probe-affinity
+   estimates are stored in CEL files. Soon chip effects will also
+   be stored in CEL files using customized CDF files that we very
+   can write using the affxparser package.
+ 
+ 
+Version: 0.1.5 [2006-07-2x]
+  
+ o BUG FIX: The 'outPath' argument of normalizeQuantile() in the
+   AffymetrixDataset class was not recognized.
+ 
+ 
+Version: 0.1.4 [2006-07-24]
+  
+ o Important breakthrough: We've update affxparser v1.5.3 with a working
+   updateCel() function to update CEL v4 files.  This makes it possible
+   to write normalized probe-level data as CEL files, e.g. now you can
+   use normalizeQuantile(..., format="cel") to generate CEL files.  Note
+   that this only works with binary CEL files (v4); ASCII CEL files (v3)
+   and Calvin CEL files (upcoming binary format) is not supported.
+  
+ o Now findCdf() throws an exception if CDF file is not found.
+ 
+ 
+Version: 0.1.3 [2006-07-05]
+  
+BUG FIXES:
+  
+ o BUG FIX/WORKAROUND: Currently the affxparser code crash R if the file
+   is not a valid CEL file.  The best we can do now is to test that the
+   filename has suffix *.CEL.  Thanks Ken Simpson, WEHI, Melbourne for
+   pointing this out.
+ 
+ 
+Version: 0.1.2 [2006-06-13]
+  
+ o Made the static fromFile() and fromFiles() methods more  generic such that
+   it is easier to subset the different classes, e.g. for SNP chip classes.
+ 
+ 
+Version: 0.1.1 [2006-05-30]
+  
+ o Cleaned up the API and the Rd help.
+  
+ o "Finalized" the quantile normalization.
+ 
+ 
+Version: 0.1.0 [2006-01-11]
+  
+ o Created.

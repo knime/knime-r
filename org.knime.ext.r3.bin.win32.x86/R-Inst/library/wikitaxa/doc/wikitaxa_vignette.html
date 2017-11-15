@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Scott Chamberlain" />
+
+<meta name="date" content="2017-05-05" />
+
+<title>Introduction to the wikitaxa package</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to the wikitaxa package</h1>
+<h4 class="author"><em>Scott Chamberlain</em></h4>
+<h4 class="date"><em>2017-05-05</em></h4>
+
+
+
+<p><code>wikitaxa</code> - Taxonomy data from Wikipedia</p>
+<p>The goal of <code>wikitaxa</code> is to allow search and taxonomic data retrieval from across many Wikimedia sites, including: Wikipedia, Wikicommons, and Wikispecies.</p>
+<p>There are lower level and higher level parts to the package API:</p>
+<div id="low-level-api" class="section level3">
+<h3>Low level API</h3>
+<p>The low level API is meant for power users and gives you more control, but requires more knowledge.</p>
+<ul>
+<li><code>wt_wiki_page()</code></li>
+<li><code>wt_wiki_page_parse()</code></li>
+<li><code>wt_wiki_url_build()</code></li>
+<li><code>wt_wiki_url_parse()</code></li>
+<li><code>wt_wikispecies_parse()</code></li>
+<li><code>wt_wikicommons_parse()</code></li>
+<li><code>wt_wikipedia_parse()</code></li>
+</ul>
+</div>
+<div id="high-level-api" class="section level3">
+<h3>High level API</h3>
+<p>The high level API is meant to be easier and faster to use.</p>
+<ul>
+<li><code>wt_data()</code></li>
+<li><code>wt_data_id()</code></li>
+<li><code>wt_wikispecies()</code></li>
+<li><code>wt_wikicommons()</code></li>
+<li><code>wt_wikipedia()</code></li>
+</ul>
+<p>Search functions:</p>
+<ul>
+<li><code>wt_wikicommons_search()</code></li>
+<li><code>wt_wikispecies_search()</code></li>
+<li><code>wt_wikipedia_search()</code></li>
+</ul>
+</div>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>CRAN version</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;wikitaxa&quot;</span>)</code></pre></div>
+<p>Dev version</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;ropensci/wikitaxa&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;wikitaxa&quot;</span>)</code></pre></div>
+</div>
+<div id="wiki-data" class="section level2">
+<h2>wiki data</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">wt_data</span>(<span class="st">&quot;Poa annua&quot;</span>)</code></pre></div>
+<p>Get a Wikidata ID</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">wt_data_id</span>(<span class="st">&quot;Mimulus foliatus&quot;</span>)
+<span class="co">#&gt; [1] &quot;Q6495130&quot;</span>
+<span class="co">#&gt; attr(,&quot;class&quot;)</span>
+<span class="co">#&gt; [1] &quot;wiki_id&quot;</span></code></pre></div>
+</div>
+<div id="wikipedia" class="section level2">
+<h2>wikipedia</h2>
+<p>lower level</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pg &lt;-<span class="st"> </span><span class="kw">wt_wiki_page</span>(<span class="st">&quot;https://en.wikipedia.org/wiki/Malus_domestica&quot;</span>)
+res &lt;-<span class="st"> </span><span class="kw">wt_wiki_page_parse</span>(pg)
+res<span class="op">$</span>iwlinks
+<span class="co">#&gt; [1] &quot;https://en.wiktionary.org/wiki/apple&quot;                                  </span>
+<span class="co">#&gt; [2] &quot;https://commons.wikimedia.org/wiki/Special:Search/Apple&quot;               </span>
+<span class="co">#&gt; [3] &quot;https://en.wikiquote.org/wiki/Apples&quot;                                  </span>
+<span class="co">#&gt; [4] &quot;https://en.wikisource.org/wiki/1911_Encyclop%C3%A6dia_Britannica/Apple&quot;</span>
+<span class="co">#&gt; [5] &quot;https://en.wikibooks.org/wiki/Apples&quot;                                  </span>
+<span class="co">#&gt; [6] &quot;https://species.wikimedia.org/wiki/Malus_domestica&quot;                    </span>
+<span class="co">#&gt; [7] &quot;https://commons.wikimedia.org/wiki/Category:Apple_cultivars&quot;</span></code></pre></div>
+<p>higher level</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="kw">wt_wikipedia</span>(<span class="st">&quot;Malus domestica&quot;</span>)
+res<span class="op">$</span>common_names
+<span class="co">#&gt; # A tibble: 3 × 2</span>
+<span class="co">#&gt;         name language</span>
+<span class="co">#&gt;        &lt;chr&gt;    &lt;chr&gt;</span>
+<span class="co">#&gt; 1 apple tree       en</span>
+<span class="co">#&gt; 2      apple       en</span>
+<span class="co">#&gt; 3      Apple       en</span>
+res<span class="op">$</span>classification
+<span class="co">#&gt; # A tibble: 9 × 2</span>
+<span class="co">#&gt;       rank         name</span>
+<span class="co">#&gt;      &lt;chr&gt;        &lt;chr&gt;</span>
+<span class="co">#&gt; 1  kingdom      Plantae</span>
+<span class="co">#&gt; 2 unranked  Angiosperms</span>
+<span class="co">#&gt; 3 unranked     Eudicots</span>
+<span class="co">#&gt; 4 unranked       Rosids</span>
+<span class="co">#&gt; 5    order      Rosales</span>
+<span class="co">#&gt; 6   family     Rosaceae</span>
+<span class="co">#&gt; 7    genus        Malus</span>
+<span class="co">#&gt; 8  species    M. pumila</span>
+<span class="co">#&gt; 9 binomial Malus pumila</span></code></pre></div>
+<p>choose a wikipedia language</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># French</span>
+<span class="kw">wt_wikipedia</span>(<span class="dt">name =</span> <span class="st">&quot;Malus domestica&quot;</span>, <span class="dt">wiki =</span> <span class="st">&quot;fr&quot;</span>)
+<span class="co"># Slovak</span>
+<span class="kw">wt_wikipedia</span>(<span class="dt">name =</span> <span class="st">&quot;Malus domestica&quot;</span>, <span class="dt">wiki =</span> <span class="st">&quot;sk&quot;</span>)
+<span class="co"># Vietnamese</span>
+<span class="kw">wt_wikipedia</span>(<span class="dt">name =</span> <span class="st">&quot;Malus domestica&quot;</span>, <span class="dt">wiki =</span> <span class="st">&quot;vi&quot;</span>)</code></pre></div>
+<p>search</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">wt_wikipedia_search</span>(<span class="dt">query =</span> <span class="st">&quot;Pinus&quot;</span>)
+<span class="co">#&gt; $batchcomplete</span>
+<span class="co">#&gt; [1] &quot;&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $continue</span>
+<span class="co">#&gt; $continue$sroffset</span>
+<span class="co">#&gt; [1] 10</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $continue$continue</span>
+<span class="co">#&gt; [1] &quot;-||&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $query</span>
+<span class="co">#&gt; $query$searchinfo</span>
+<span class="co">#&gt; $query$searchinfo$totalhits</span>
+<span class="co">#&gt; [1] 2804</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $query$search</span>
+<span class="co">#&gt; # A tibble: 10 × 6</span>
+<span class="co">#&gt;       ns                 title  size wordcount</span>
+<span class="co">#&gt; *  &lt;int&gt;                 &lt;chr&gt; &lt;int&gt;     &lt;int&gt;</span>
+<span class="co">#&gt; 1      0                  Pine 19915      2372</span>
+<span class="co">#&gt; 2      0 List of Pinus species 13999       995</span>
+<span class="co">#&gt; 3      0      Pinus luchuensis  2903       166</span>
+<span class="co">#&gt; 4      0     Pinus wallichiana  4295       433</span>
+<span class="co">#&gt; 5      0           Pinus nigra 11468      1352</span>
+<span class="co">#&gt; 6      0          Pinus kesiya  5281       512</span>
+<span class="co">#&gt; 7      0       Pinus devoniana  3801       397</span>
+<span class="co">#&gt; 8      0  Pinus × sondereggeri  3485       347</span>
+<span class="co">#&gt; 9      0            Pinus mugo 10884       795</span>
+<span class="co">#&gt; 10     0     Pinus heldreichii  6482       707</span>
+<span class="co">#&gt; # ... with 2 more variables: snippet &lt;chr&gt;, timestamp &lt;chr&gt;</span></code></pre></div>
+<p>search supports languages</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">wt_wikipedia_search</span>(<span class="dt">query =</span> <span class="st">&quot;Pinus&quot;</span>, <span class="dt">wiki =</span> <span class="st">&quot;fr&quot;</span>)</code></pre></div>
+</div>
+<div id="wikicommons" class="section level2">
+<h2>wikicommons</h2>
+<p>lower level</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pg &lt;-<span class="st"> </span><span class="kw">wt_wiki_page</span>(<span class="st">&quot;https://commons.wikimedia.org/wiki/Abelmoschus&quot;</span>)
+res &lt;-<span class="st"> </span><span class="kw">wt_wikicommons_parse</span>(pg)
+res<span class="op">$</span>common_names[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; [[1]]$name</span>
+<span class="co">#&gt; [1] &quot;okra&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[1]]$language</span>
+<span class="co">#&gt; [1] &quot;en&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; [[2]]$name</span>
+<span class="co">#&gt; [1] &quot;مسكي&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]$language</span>
+<span class="co">#&gt; [1] &quot;ar&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; [[3]]$name</span>
+<span class="co">#&gt; [1] &quot;Abelmoş&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]$language</span>
+<span class="co">#&gt; [1] &quot;az&quot;</span></code></pre></div>
+<p>higher level</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="kw">wt_wikicommons</span>(<span class="st">&quot;Abelmoschus&quot;</span>)
+res<span class="op">$</span>classification
+<span class="co">#&gt; # A tibble: 15 × 2</span>
+<span class="co">#&gt;            rank           name</span>
+<span class="co">#&gt;           &lt;chr&gt;          &lt;chr&gt;</span>
+<span class="co">#&gt; 1        Domain      Eukaryota</span>
+<span class="co">#&gt; 2    • unranked Archaeplastida</span>
+<span class="co">#&gt; 3      • Regnum        Plantae</span>
+<span class="co">#&gt; 4      • Cladus    angiosperms</span>
+<span class="co">#&gt; 5      • Cladus       eudicots</span>
+<span class="co">#&gt; 6      • Cladus  core eudicots</span>
+<span class="co">#&gt; 7      • Cladus    superrosids</span>
+<span class="co">#&gt; 8      • Cladus         rosids</span>
+<span class="co">#&gt; 9      • Cladus    eurosids II</span>
+<span class="co">#&gt; 10       • Ordo       Malvales</span>
+<span class="co">#&gt; 11    • Familia      Malvaceae</span>
+<span class="co">#&gt; 12 • Subfamilia     Malvoideae</span>
+<span class="co">#&gt; 13     • Tribus      Hibisceae</span>
+<span class="co">#&gt; 14            •    Abelmoschus</span>
+<span class="co">#&gt; 15               Medik. (1787)</span>
+res<span class="op">$</span>common_names
+<span class="co">#&gt; # A tibble: 18 × 2</span>
+<span class="co">#&gt;             name language</span>
+<span class="co">#&gt;            &lt;chr&gt;    &lt;chr&gt;</span>
+<span class="co">#&gt; 1           okra       en</span>
+<span class="co">#&gt; 2           مسكي       ar</span>
+<span class="co">#&gt; 3        Abelmoş       az</span>
+<span class="co">#&gt; 4      Ibiškovec       cs</span>
+<span class="co">#&gt; 5   Bisameibisch       de</span>
+<span class="co">#&gt; 6          Okrat       fi</span>
+<span class="co">#&gt; 7      Abelmosco       gl</span>
+<span class="co">#&gt; 8      Abelmošus       hr</span>
+<span class="co">#&gt; 9         Ybiškė       lt</span>
+<span class="co">#&gt; 10  അബെ\u0d7dമോസ്കസ്       ml</span>
+<span class="co">#&gt; 11      Абельмош      mrj</span>
+<span class="co">#&gt; 12       Piżmian       pl</span>
+<span class="co">#&gt; 13      Абельмош       ru</span>
+<span class="co">#&gt; 14          موري       sd</span>
+<span class="co">#&gt; 15   Okrasläktet       sv</span>
+<span class="co">#&gt; 16      Абельмош      udm</span>
+<span class="co">#&gt; 17 Chi Vông vang       vi</span>
+<span class="co">#&gt; 18        黄葵属       zh</span></code></pre></div>
+<p>search</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">wt_wikicommons_search</span>(<span class="dt">query =</span> <span class="st">&quot;Pinus&quot;</span>)
+<span class="co">#&gt; $batchcomplete</span>
+<span class="co">#&gt; [1] &quot;&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $continue</span>
+<span class="co">#&gt; $continue$sroffset</span>
+<span class="co">#&gt; [1] 10</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $continue$continue</span>
+<span class="co">#&gt; [1] &quot;-||&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $query</span>
+<span class="co">#&gt; $query$searchinfo</span>
+<span class="co">#&gt; $query$searchinfo$totalhits</span>
+<span class="co">#&gt; [1] 257</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $query$search</span>
+<span class="co">#&gt; # A tibble: 10 × 6</span>
+<span class="co">#&gt;       ns                                    title  size wordcount</span>
+<span class="co">#&gt; *  &lt;int&gt;                                    &lt;chr&gt; &lt;int&gt;     &lt;int&gt;</span>
+<span class="co">#&gt; 1      0                                    Pinus  4160       303</span>
+<span class="co">#&gt; 2      0                              Pinus nigra  7449       486</span>
+<span class="co">#&gt; 3      0                       Pinus × schwerinii   634        67</span>
+<span class="co">#&gt; 4      0                               Pinus mugo  7157       573</span>
+<span class="co">#&gt; 5      0                             Spinus pinus  1563       242</span>
+<span class="co">#&gt; 6      0                       Pinus tabuliformis  1739       136</span>
+<span class="co">#&gt; 7      0                          Setophaga pinus  1735       198</span>
+<span class="co">#&gt; 8      0                          Pinus sabiniana  2799       217</span>
+<span class="co">#&gt; 9      0 Pinus distribution maps of North America 25971        92</span>
+<span class="co">#&gt; 10     0                            Pinus cooperi   564        64</span>
+<span class="co">#&gt; # ... with 2 more variables: snippet &lt;chr&gt;, timestamp &lt;chr&gt;</span></code></pre></div>
+</div>
+<div id="wikispecies" class="section level2">
+<h2>wikispecies</h2>
+<p>lower level</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pg &lt;-<span class="st"> </span><span class="kw">wt_wiki_page</span>(<span class="st">&quot;https://species.wikimedia.org/wiki/Malus_domestica&quot;</span>)
+res &lt;-<span class="st"> </span><span class="kw">wt_wikispecies_parse</span>(pg, <span class="dt">types =</span> <span class="st">&quot;common_names&quot;</span>)
+res<span class="op">$</span>common_names[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; [[1]]$name</span>
+<span class="co">#&gt; [1] &quot;Ябълка&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[1]]$language</span>
+<span class="co">#&gt; [1] &quot;български&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; [[2]]$name</span>
+<span class="co">#&gt; [1] &quot;Poma, pomera&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]$language</span>
+<span class="co">#&gt; [1] &quot;català&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; [[3]]$name</span>
+<span class="co">#&gt; [1] &quot;Apfel&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]$language</span>
+<span class="co">#&gt; [1] &quot;Deutsch&quot;</span></code></pre></div>
+<p>higher level</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="kw">wt_wikispecies</span>(<span class="st">&quot;Malus domestica&quot;</span>)
+res<span class="op">$</span>classification
+<span class="co">#&gt; # A tibble: 8 × 2</span>
+<span class="co">#&gt;          rank          name</span>
+<span class="co">#&gt;         &lt;chr&gt;         &lt;chr&gt;</span>
+<span class="co">#&gt; 1 Superregnum     Eukaryota</span>
+<span class="co">#&gt; 2      Regnum       Plantae</span>
+<span class="co">#&gt; 3      Cladus   Angiosperms</span>
+<span class="co">#&gt; 4      Cladus      Eudicots</span>
+<span class="co">#&gt; 5      Cladus Core eudicots</span>
+<span class="co">#&gt; 6      Cladus        Rosids</span>
+<span class="co">#&gt; 7      Cladus    Eurosids I</span>
+<span class="co">#&gt; 8        Ordo       Rosales</span>
+res<span class="op">$</span>common_names
+<span class="co">#&gt; # A tibble: 19 × 2</span>
+<span class="co">#&gt;               name   language</span>
+<span class="co">#&gt;              &lt;chr&gt;      &lt;chr&gt;</span>
+<span class="co">#&gt; 1           Ябълка  български</span>
+<span class="co">#&gt; 2     Poma, pomera     català</span>
+<span class="co">#&gt; 3            Apfel    Deutsch</span>
+<span class="co">#&gt; 4      Aed-õunapuu      eesti</span>
+<span class="co">#&gt; 5            Μηλιά   Ελληνικά</span>
+<span class="co">#&gt; 6            Apple    English</span>
+<span class="co">#&gt; 7          Manzano    español</span>
+<span class="co">#&gt; 8            Pomme   français</span>
+<span class="co">#&gt; 9            Melâr     furlan</span>
+<span class="co">#&gt; 10        사과나무     한국어</span>
+<span class="co">#&gt; 11          ‘Āpala    Hawaiʻi</span>
+<span class="co">#&gt; 12            Melo   italiano</span>
+<span class="co">#&gt; 13           Aapel Nordfriisk</span>
+<span class="co">#&gt; 14  Maçã, Macieira  português</span>
+<span class="co">#&gt; 15 Яблоня домашняя    русский</span>
+<span class="co">#&gt; 16   Tarhaomenapuu      suomi</span>
+<span class="co">#&gt; 17            Elma     Türkçe</span>
+<span class="co">#&gt; 18  Яблуня домашня українська</span>
+<span class="co">#&gt; 19          Pomaro     vèneto</span></code></pre></div>
+<p>search</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">wt_wikispecies_search</span>(<span class="dt">query =</span> <span class="st">&quot;Pinus&quot;</span>)
+<span class="co">#&gt; $batchcomplete</span>
+<span class="co">#&gt; [1] &quot;&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $continue</span>
+<span class="co">#&gt; $continue$sroffset</span>
+<span class="co">#&gt; [1] 10</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $continue$continue</span>
+<span class="co">#&gt; [1] &quot;-||&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $query</span>
+<span class="co">#&gt; $query$searchinfo</span>
+<span class="co">#&gt; $query$searchinfo$totalhits</span>
+<span class="co">#&gt; [1] 396</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $query$search</span>
+<span class="co">#&gt; # A tibble: 10 × 6</span>
+<span class="co">#&gt;       ns                    title  size wordcount</span>
+<span class="co">#&gt; *  &lt;int&gt;                    &lt;chr&gt; &lt;int&gt;     &lt;int&gt;</span>
+<span class="co">#&gt; 1      0                    Pinus  1570       282</span>
+<span class="co">#&gt; 2      0        Pinus subg. Pinus   318        27</span>
+<span class="co">#&gt; 3      0             Pinus clausa  1183       211</span>
+<span class="co">#&gt; 4      0        Pinus sect. Pinus   623        68</span>
+<span class="co">#&gt; 5      0           Pinus resinosa  1195       166</span>
+<span class="co">#&gt; 6      0 Pinus nigra subsp. nigra  1412       127</span>
+<span class="co">#&gt; 7      0            Pinus cooperi   680        89</span>
+<span class="co">#&gt; 8      0         Pinus thunbergii   873       122</span>
+<span class="co">#&gt; 9      0         Pinus gordoniana   594        61</span>
+<span class="co">#&gt; 10     0     Pinus subsect. Pinus   718        94</span>
+<span class="co">#&gt; # ... with 2 more variables: snippet &lt;chr&gt;, timestamp &lt;chr&gt;</span></code></pre></div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+citHeader("To cite expint in publications use:")
+
+citEntry(entry="Manual",
+         title = "expint: Exponential Integral and Incomplete Gamma Function",
+         author = person("Vincent", "Goulet",
+                         email = "vincent.goulet@act.ulaval.ca"),
+	 year = 2016,
+         note = "R package",
+	 url = "https://cran.r-project.org/package=expint",
+
+         textVersion =
+	 paste("V. Goulet (2016).",
+	       "expint: Exponential Integral and Incomplete Gamma Function",
+               "R package",
+	       "URL https://cran.r-project.org/package=expint")
+)
+
+citFooter("We have invested a lot of time and effort in creating expint,",
+          "please cite both the package and R when using them for data analysis.",
+	  "See also", sQuote("citation()"),
+	  "for citing R.")

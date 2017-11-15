@@ -1,0 +1,6 @@
+nat_states              A data.frame with 49 rows and 2 columns
+natserv-package         natserv
+ns_data                 NatureServe data
+ns_images               NatureServe image metadata
+ns_map                  Map NatureServe data
+ns_search               NatureServe taxonomic name search

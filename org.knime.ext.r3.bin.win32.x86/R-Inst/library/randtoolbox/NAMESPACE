@@ -1,0 +1,29 @@
+### Exports
+export(torus, runif.halton, halton, runif.sobol, sobol)
+
+export(setSeed, congruRand, SFMT, WELL, knuthTAOCP)
+
+#export(trueRNG) future features
+
+export(set.generator, put.description, get.description)
+
+export(rngWELLScriptR, getWELLState)
+
+export(gap.test, freq.test, serial.test, poker.test, order.test, coll.test, coll.test.sparse)
+
+export(stirling, permut, get.primes)
+
+### Debugging
+# export(version.randtoolbox)
+
+
+### use dynamic library for C code
+useDynLib(randtoolbox, .registration = TRUE)
+
+### Import of rngWELL package for R code
+importFrom(rngWELL, doinitMT2002, doputRngWELL, dogetRngWELL, setSeed4WELL, WELL2test)
+
+### Other imports
+importFrom("graphics", hist)
+importFrom("stats", dpois, pchisq, qnorm, runif)
+importFrom("utils", packageDescription)

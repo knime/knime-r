@@ -1,0 +1,24 @@
+Package: mosaicCore
+Type: Package
+Title: Common Utilities for Other MOSAIC-Family Packages
+Version: 0.4.0
+Date: 2017-08-25
+Depends: R (>= 3.0.0),
+Imports: stats, dplyr, lazyeval, rlang, tidyr
+Suggests: mosaicData, mosaic, ggformula, testthat
+Author: Randall Pruim <rpruim@calvin.edu>, Daniel T. Kaplan
+    <kaplan@macalester.edu>, Nicholas J. Horton <nhorton@amherst.edu>
+Maintainer: Randall Pruim <rpruim@calvin.edu>
+Description: Common utilities used in other MOSAIC-family packages are 
+    collected here.
+License: GPL (>= 2)
+LazyLoad: yes
+LazyData: yes
+URL: https://github.com/ProjectMOSAIC/mosaicCore
+BugReports: https://github.com/ProjectMOSAIC/mosaicCore/issues
+RoxygenNote: 6.0.1.9000
+NeedsCompilation: no
+Packaged: 2017-08-25 20:48:54 UTC; rpruim
+Repository: CRAN
+Date/Publication: 2017-08-26 06:10:36 UTC
+Built: R 3.4.2; ; 2017-11-10 18:22:08 UTC; windows

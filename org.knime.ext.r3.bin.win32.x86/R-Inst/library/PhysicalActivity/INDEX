@@ -1,0 +1,13 @@
+PhysicalActivity-package
+                        Process Physical Activity Accelerometer Data
+dataCollapser           Collapse Accelerometer Data to a Dataset with a
+                        Longer Epoch
+dataSec                 Accelerometer Data Example
+markingTime             Mark Days
+plotData                Plot Accelerometer Data over Time
+readCountsData          Convert Accelerometer Output Data to Correct
+                        Data Format
+sumVct                  Summarize Wearing or Nonwearing Time Interval
+summaryData             Summarize Classified Wear Time by Daily Basis
+wearingMarking          Classify Wear and Nonwear Time for
+                        Accelerometer Data

@@ -1,0 +1,26 @@
+NEWS for audio package
+
+0.1-5	2013-12-23
+    o	minor documentation cleanups
+
+    o	update AudioUnit API so it works on more recent OS X versions
+
+0.1-4	2011-01-14
+    o	WMM: fix format issue which causes play/record to fail on Windows7
+
+    o	WMM: ensure 64-bit compatibility
+
+0.1-3	2008-09-30
+    o	fix a Windows incompatibility introduced by wait()
+
+0.1-2	2008-09-29
+    o	pass check even if no drivers are available
+
+0.1-1	2008-09-28
+    o	remove spurious debugging output from macosx driver
+
+    o	fix configuration issue on systems without ObjC
+
+0.1-0	2008-09-23
+    o	first public release
+

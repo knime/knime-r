@@ -1,0 +1,33 @@
+Package: gamlss
+Description: Functions for fitting the Generalized Additive Models for Location Scale and Shape introduced by Rigby and Stasinopoulos (2005), <doi:10.1111/j.1467-9876.2005.00510.x>. The models use a distributional regression approach where all the parameters of the conditional distribution of the response variable are modelled using explanatory variables.
+Version: 5.0-5
+Date: 2017-11-12
+Authors@R: c(person("Mikis", "Stasinopoulos", role = c("aut", "cre", "cph"), 
+             email = "mikis.stasinopoulos@gamlss.org"),
+           person("Bob", "Rigby", role = c("aut")), 
+           person("Vlasios", "Voudouris", role = "ctb",  
+           email= "vlasios.voudouris@abm-analytics.com"),
+           person("Calliope", "Akantziliotou", role = "ctb"),
+           person("Marco", "Enea", role = "ctb"),
+           person("Daniil", "Kiose", role = "ctb") 
+           )
+Title: Generalised Additive Models for Location Scale and Shape
+Maintainer: Mikis Stasinopoulos <mikis.stasinopoulos@gamlss.org>
+Depends: R (>= 3.3.0), graphics, stats, splines, utils, grDevices,
+        gamlss.data (>= 5.0-0), gamlss.dist (>= 4.3.1), nlme, parallel
+LazyLoad: yes
+Imports: MASS, survival, methods
+License: GPL-2 | GPL-3
+URL: http://www.gamlss.org/
+NeedsCompilation: yes
+Packaged: 2017-11-12 11:29:20 UTC; MikisStasinopoulos
+Author: Mikis Stasinopoulos [aut, cre, cph],
+  Bob Rigby [aut],
+  Vlasios Voudouris [ctb],
+  Calliope Akantziliotou [ctb],
+  Marco Enea [ctb],
+  Daniil Kiose [ctb]
+Repository: CRAN
+Date/Publication: 2017-11-12 15:17:17 UTC
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-13 23:27:45 UTC; windows
+Archs: i386, x64

@@ -1,0 +1,3 @@
+$.GlobalOptionsFun	Subset.GlobalOptionsFun
+$<-.GlobalOptionsFun	Assign.GlobalOptionsFun
+setGlobalOptions	setGlobalOptions

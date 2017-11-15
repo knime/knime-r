@@ -1,0 +1,53 @@
+StatAsh                 ggproto classes for ggplot2
+gf_abline               Reference lines - horizontal, vertical, and
+                        diagonal.
+gf_area                 Formula interface to geom_area()
+gf_ash                  Average Shifted Histograms
+gf_bar                  Formula interface to geom_bar()
+gf_boxplot              Formula interface to geom_boxplot()
+gf_col                  Formula interface to geom_col()
+gf_contour              Formula interface to geom_contour()
+gf_count                Formula interface to geom_count()
+gf_crossbar             Formula interface to geom_crossbar()
+gf_curve                Formula interface to geom_curve()
+gf_dens                 Formula interface to geom_line() and
+                        stat_density()
+gf_density              Formula interface to geom_density()
+gf_density2d            Formula interface to geom_density2d()
+gf_density_2d           Formula interface to geom_density_2d()
+gf_dist                 Plot distributions
+gf_dotplot              Formula interface to geom_dotplot()
+gf_errorbar             Formula interface to geom_errorbar()
+gf_errorbarh            Formula interface to geom_errorbarh()
+gf_frame                Formula interface to geom_blank()
+gf_freqpoly             Formula interface to geom_freqpoly()
+gf_function             Layers displaying graphs of functions
+gf_hex                  Formula interface to geom_hex()
+gf_histogram            Formula interface to geom_histogram()
+gf_jitter               Formula interface to geom_jitter()
+gf_label                Formula interface to geom_label()
+gf_labs                 Non-layer functions for gf plots
+gf_line                 Formula interface to geom_line()
+gf_linerange            Formula interface to geom_linerange()
+gf_path                 Formula interface to geom_path()
+gf_point                Formula interface to geom_point()
+gf_pointrange           Formula interface to geom_pointrange()
+gf_qq                   Formula interface to geom_qq()
+gf_quantile             Formula interface to geom_quantile()
+gf_raster               Formula interface to geom_raster()
+gf_rect                 Formula interface to geom_rect()
+gf_ribbon               Formula interface to geom_ribbon()
+gf_rug                  Formula interface to geom_rug()
+gf_segment              Formula interface to geom_segment()
+gf_smooth               Formula interface to geom_smooth()
+gf_spline               Formula interface to geom_spline()
+gf_spoke                Formula interface to geom_spoke()
+gf_step                 Formula interface to geom_step()
+gf_text                 Formula interface to geom_text()
+gf_theme                Themes for ggformula
+gf_tile                 Formula interface to geom_tile()
+gf_violin               Formula interface to geom_violin()
+ggformula               Formula interface to ggplot2
+stat_lm                 Linear Model Displays
+stat_qqline             A Stat for Adding Reference Lines to QQ-Plots
+stat_spline             Geoms and stats for spline smoothing

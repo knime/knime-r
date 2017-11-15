@@ -1,0 +1,3 @@
+S3method(as.matrix,pdist)
+export(pdist)
+useDynLib(pdist)

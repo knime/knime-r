@@ -1,0 +1,104 @@
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% LEVEL DENSITIES
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<% levelDensities <- function(fit,  fields=c("tcn", "dh", "c1", "c2"), ...) { %>
+<%
+# Argument 'fields':
+fields <- match.arg(fields, several.ok=TRUE);
+%>
+
+\clearpage
+\section{Level densities}
+\label{sec:LevelDensities}
+<%
+require("ggplot2") || throw("Package not loaded: ggplot2");
+data <- getSegments(fit);
+unknown <- setdiff(fields, gsub("Mean$", "", names(data)));
+if (length(unknown) > 0L) {
+  throw("Unknown locus data fields: ", paste(sQuote(unknown), collapse=", "));
+}
+w <- sqrt(data$dhNbrOfLoci)
+w <- w / sum(w, na.rm=TRUE);
+data <- cbind(data, weight=w);
+params <- fit$params;
+
+chromosomes <- getChromosomes(fit);
+nbrOfChromosomes <- length(chromosomes);
+chromosomesH <- seqToHumanReadable(chromosomes);
+chromosomesH <- if (nbrOfChromosomes == 1) {
+  sprintf("Chr %s", chromosomesH);
+} else {
+  sprintf("Chrs %s", chromosomesH);
+}
+chrsTags <- if (nbrOfChromosomes == 1) {
+  sprintf("chr%02d", chromosomes[1]);
+} else {
+  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
+}
+%>
+\begin{figure}[htbp]
+ \begin{center}
+<% for (ff in fields) { %>
+<%
+  symbol <- symbolList[[ff]];
+  panelTitle <- switch(ff, tcn="\\TCN", "NNN");
+  lim <- switch(ff, tcn=ClimX, CT=ClimX, c1=ClimX, c2=ClimX, c1N=ClimX, c2N=ClimX, BlimX);
+  column <- sprintf("%sMean", ff);
+%>
+\raisebox{4ex}{<%=symbol%>}
+<%
+  tags <- c(chrsTags, "segments", ff);
+%>
+    \resizebox{0.33\textwidth}{!}{%
+      \includegraphics{<%={
+        toPNG(name=sampleNameEscDots, tags=tags, width=640, aspectRatio=0.3, {
+####          gg <- ggplot(dataT, aes_string(x=column, weights="weight", y="..count.."));
+          gg <- ggplot(data, aes_string(x=column, weight="weight", y="..count.."));
+
+          h <- NULL;
+          if (ff == "tcn") {
+            h <- params$ntcnRange;
+##            label <- expression(%+-%*Delta[CN]);
+            col <- "purple";
+          } else if (ff == "dh") {
+            h <- params$deltaAB;
+            label <- expression(Delta[AB]);
+            col <- "orange";
+          } else if (ff == "c1") {
+            h <- params$deltaLowC1;
+            label <- expression(Delta[LOH]);
+            col <- "blue";
+          }
+
+          if (!is.null(h)) {
+            gg <- gg + geom_vline(xintercept=h, colour=col, size=1.5);
+          }
+ 
+          # See https://github.com/hadley/ggplot2/wiki/Legend-Attributes
+          gg <- gg + theme(legend.position=c(0.97, 0.75),
+                          legend.justification = 1,
+                          legend.direction="vertical",
+                          legend.title=element_text(size=0),
+                          legend.text=element_text(size=16));
+ 
+          gg <- gg + geom_density(size=2, na.rm=TRUE);
+          gg <- gg + xlab(NULL);
+          gg <- gg + ylab(NULL);
+          gg <- gg + xlim(lim);
+          gg <- gg + theme(axis.text.x=xnbrOpts, axis.text.y=ynbrOpts);
+          gg <- gg + theme(axis.title.x=xlabOpts, axis.title.y=ylabOpts);
+          suppressWarnings({
+            print(gg);
+          });
+        }) # toPNG()
+      }%>}%
+    }%
+\\ %
+<% } # for (ff ...) %>
+ \end{center}
+ \caption{
+   Density estimates of (weighted) \emph{segment-level} signals on <%=chromosomesH%> where weights are proportional to the square-root of the number of heterozygous SNPs in each segment.
+ }
+ \label{fig:LevelDensity}
+\end{figure}
+<% } # levelDensities() %>

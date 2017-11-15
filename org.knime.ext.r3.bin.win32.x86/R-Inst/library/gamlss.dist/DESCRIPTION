@@ -1,0 +1,32 @@
+Package: gamlss.dist
+Title: Distributions for Generalized Additive Models for Location Scale
+        and Shape
+Version: 5.0-3
+Date: 2017-10-24
+Author: c(person("Mikis", "Stasinopoulos", role = c("aut", "cre", "cph"), 
+           email = "mikis.stasinopoulos@gamlss.org"),
+           person("Bob", "Rigby", role = c("aut")), 
+           person("Calliope", "Akantziliotou", role = "ctb"),
+           person("Vlasios", "Voudouris", role = "ctb",  
+           email= "vlasios.voudouris@abm-analytics.com"),
+           person("Gillian", "Heller", role = "ctb"),
+           person("Raydonal", "Ospina", role = "ctb",  
+           email= "rospina@ime.usp.br"),
+           person("Nicoletta", "Motpan", role = "ctb"),
+           person("Fiona", "McElduff", role = "ctb"),
+           person("Majid", "Djennad", role = "ctb"),
+           person("Marco", "Enea", role = "ctb"),
+           person("Alexios", "Ghalanos", role = "ctb"),
+           person("Christos", "Argyropoulos", role = "ctb") 
+           )
+Maintainer: Mikis Stasinopoulos <mikis.stasinopoulos@gamlss.org>
+Depends: R (>= 2.15.0), MASS, graphics, stats, methods
+Description: A set of distributions  which can be used  for modelling the response variables in Generalized Additive Models for Location Scale and Shape, Rigby and Stasinopoulos (2005), <doi:10.1111/j.1467-9876.2005.00510.x>.  The distributions can be continuous, discrete or mixed  distributions. Extra distributions can be created, by transforming, any continuous distribution defined on the real line,  to  a distribution defined on ranges 0 to infinity  or  0 to 1, by using a "log" or a "logit" transformation respectively. 
+License: GPL-2 | GPL-3
+URL: http://www.gamlss.org/
+NeedsCompilation: yes
+Packaged: 2017-10-24 08:35:18 UTC; MikisStasinopoulos
+Repository: CRAN
+Date/Publication: 2017-10-24 13:13:17 UTC
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-10 14:08:44 UTC; windows
+Archs: i386, x64

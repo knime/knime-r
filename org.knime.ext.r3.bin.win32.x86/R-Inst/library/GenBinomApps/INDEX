@@ -1,0 +1,8 @@
+GenbinomApps-package    Clopper-Pearson Confidence Interval and
+                        Generalized Binomial Distribution
+Generalized Binomial    The Generalized Binomial Distribution
+clopper.pearson.ci      Clopper-Pearson Confidence Interval
+cm.clopper.pearson.ci   Clopper-Pearson Confidence Interval for
+                        Failures Which are Tackled by Countermeasures
+cm.n.clopper.pearson    Required Sample Size - Countermeasure Model
+n.clopper.pearson       Required Sample Size

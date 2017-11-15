@@ -1,0 +1,16 @@
+FileExists              Files
+Print                   Print method returning also the names
+                        automatically
+RFoptions               Setting control arguments
+Struve                  Modified Struve functions and related functions
+cholesky                Cholesky Decomposition of Positive Definite
+                        Matrices
+gauss                   Gaussian Covariance Model
+hostname                System calls
+matern                  Whittle-Matern Model
+nonstwm                 nonstwm
+orderx                  Ordering Permutation
+sleep.milli             Sleep
+solve                   Solve a System of Equations for Positive
+                        Definite Matrices
+sortx                   Sorting Vectors

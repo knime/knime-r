@@ -1,0 +1,39 @@
+AdmixDataSim1           Admixed Population Genotype Data from
+                        Simulation 1
+AdmixDataSim2           Admixed Population Genotype Data from
+                        Simulation 2
+AdmixDom                Admixed Population Dominant Genotype Data from
+                        Simulation 1
+LociD                   Dominant Marker Information for Simulation 1
+LociDataSim1            Marker Information for Simulation 1
+LociDataSim2            Marker Information for Simulation 2
+calc.intersp.het        Calculate Interspecific Heterozygosity
+clines.plot             Clines Plot
+compare.clines          Compare Clines
+composite.clines        Composite Clines Plot
+delta                   Delta
+est.h                   Estimate Hybrid Index
+fit.c.clines            Fit Co-dominant Clines
+fit.invariant.clines    Fit Invariant Clines
+fixup.combos.touse      Fix Combos To Use
+genomic.clines          Genomic Clines
+h.func                  Hybrid Index Function
+introgress-package      introgress
+like.h                  Likelihood Hybrid Index
+mk.image                Make Image
+p1D                     Parental Population 1 Dominant Genotype Data
+                        from Simulation 1
+p1DataSim2              Parental Population 1 Dominant Genotype Data
+                        from Simulation 2
+p2D                     Parental Population 2 Dominant Genotype Data
+                        from Simulation 1
+p2DataSim2              Parental Population 2 Genotype Data from
+                        Simulation 2
+per.locus.like          Per Locus Likelihood
+prepare.data            Prepare Data
+s.wrapper               Sign Wrapper
+support.limit           Support Limit
+test.combinations       Test Combinations
+test.data.objects       Test Data Objects
+test.genotypes          Test Genotypes
+triangle.plot           Triangle Plot

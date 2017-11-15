@@ -1,0 +1,11 @@
+fd.estim.method         Estimation of Fractal Dimension via Specific
+                        Methods
+fd.estimate             Estimating Fractal Dimensions of Time Series
+                        and Two-dimensional Data
+fd.get                  Access Method for Objects of Class FractalDim
+fd.get.available.methods
+                        Available Estimation Methods
+fractaldim-package      Estimating Fractal Dimensions
+get.rawFD.from.regression
+                        Obtaining Regression Object
+summary.FractalDim      Summary for an Object of Class FractalDim

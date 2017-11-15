@@ -1,0 +1,2435 @@
+######################################################################
+# SAF records for the 270 HapMap samples
+# Created by: Henrik Bengtsson
+# Created on: 2007-03-13
+# Last updated: 2008-09-19
+######################################################################
+name: NA12003
+familyID: 1420
+individualID: 9
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12004
+familyID: 1420
+individualID: 10
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10838
+familyID: 1420
+individualID: 1
+fatherID: 9
+motherID: 10
+gender: male
+population: CEU
+tags: XY
+
+name: NA12005
+familyID: 1420
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12006
+familyID: 1420
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10839
+familyID: 1420
+individualID: 2
+fatherID: 11
+motherID: 12
+gender: female
+population: CEU
+tags: XX
+
+name: NA12056
+familyID: 1344
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12057
+familyID: 1344
+individualID: 13
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10851
+familyID: 1344
+individualID: 1
+fatherID: 12
+motherID: 13
+gender: male
+population: CEU
+tags: XY
+
+name: NA11829
+familyID: 1350
+individualID: 10
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA11830
+familyID: 1350
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10856
+familyID: 1350
+individualID: 1
+fatherID: 10
+motherID: 11
+gender: male
+population: CEU
+tags: XY
+
+name: NA11831
+familyID: 1350
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA11832
+familyID: 1350
+individualID: 13
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10855
+familyID: 1350
+individualID: 2
+fatherID: 12
+motherID: 13
+gender: female
+population: CEU
+tags: XX
+
+name: NA11992
+familyID: 1362
+individualID: 13
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA11993
+familyID: 1362
+individualID: 14
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10860
+familyID: 1362
+individualID: 1
+fatherID: 13
+motherID: 14
+gender: male
+population: CEU
+tags: XY
+
+name: NA11994
+familyID: 1362
+individualID: 15
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA11995
+familyID: 1362
+individualID: 16
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10861
+familyID: 1362
+individualID: 2
+fatherID: 15
+motherID: 16
+gender: female
+population: CEU
+tags: XX
+
+name: NA12154
+familyID: 1408
+individualID: 10
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12236
+familyID: 1408
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10830
+familyID: 1408
+individualID: 1
+fatherID: 10
+motherID: 11
+gender: male
+population: CEU
+tags: XY
+
+name: NA12155
+familyID: 1408
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12156
+familyID: 1408
+individualID: 13
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10831
+familyID: 1408
+individualID: 2
+fatherID: 12
+motherID: 13
+gender: female
+population: CEU
+tags: XX
+
+name: NA07357
+familyID: 1345
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA07345
+familyID: 1345
+individualID: 13
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA07348
+familyID: 1345
+individualID: 2
+fatherID: 12
+motherID: 13
+gender: female
+population: CEU
+tags: XX
+
+name: NA06994
+familyID: 1340
+individualID: 9
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA07000
+familyID: 1340
+individualID: 10
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA07029
+familyID: 1340
+individualID: 1
+fatherID: 9
+motherID: 10
+gender: male
+population: CEU
+tags: XY
+
+name: NA07022
+familyID: 1340
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA07056
+familyID: 1340
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA07019
+familyID: 1340
+individualID: 2
+fatherID: 11
+motherID: 12
+gender: female
+population: CEU
+tags: XX
+
+name: NA11839
+familyID: 1349
+individualID: 13
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA11840
+familyID: 1349
+individualID: 14
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10854
+familyID: 1349
+individualID: 2
+fatherID: 13
+motherID: 14
+gender: female
+population: CEU
+tags: XX
+
+name: NA12043
+familyID: 1346
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12044
+familyID: 1346
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10857
+familyID: 1346
+individualID: 1
+fatherID: 11
+motherID: 12
+gender: male
+population: CEU
+tags: XY
+
+name: NA12144
+familyID: 1334
+individualID: 10
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12145
+familyID: 1334
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10846
+familyID: 1334
+individualID: 1
+fatherID: 10
+motherID: 11
+gender: male
+population: CEU
+tags: XY
+
+name: NA12146
+familyID: 1334
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12239
+familyID: 1334
+individualID: 13
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10847
+familyID: 1334
+individualID: 2
+fatherID: 12
+motherID: 13
+gender: female
+population: CEU
+tags: XX
+
+name: NA12264
+familyID: 1375
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12234
+familyID: 1375
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10863
+familyID: 1375
+individualID: 2
+fatherID: 11
+motherID: 12
+gender: female
+population: CEU
+tags: XX
+
+name: NA12716
+familyID: 1358
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12717
+familyID: 1358
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA12707
+familyID: 1358
+individualID: 1
+fatherID: 11
+motherID: 12
+gender: male
+population: CEU
+tags: XY
+
+name: NA12891
+familyID: 1463
+individualID: 15
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12892
+familyID: 1463
+individualID: 16
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA12878
+familyID: 1463
+individualID: 2
+fatherID: 15
+motherID: 16
+gender: female
+population: CEU
+tags: XX
+
+name: NA12812
+familyID: 1454
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12813
+familyID: 1454
+individualID: 13
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA12801
+familyID: 1454
+individualID: 1
+fatherID: 12
+motherID: 13
+gender: male
+population: CEU
+tags: XY
+
+name: NA12814
+familyID: 1454
+individualID: 14
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12815
+familyID: 1454
+individualID: 15
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA12802
+familyID: 1454
+individualID: 2
+fatherID: 14
+motherID: 15
+gender: female
+population: CEU
+tags: XX
+
+name: NA12872
+familyID: 1459
+individualID: 9
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12873
+familyID: 1459
+individualID: 10
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA12864
+familyID: 1459
+individualID: 1
+fatherID: 9
+motherID: 10
+gender: male
+population: CEU
+tags: XY
+
+name: NA12874
+familyID: 1459
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12875
+familyID: 1459
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA12865
+familyID: 1459
+individualID: 2
+fatherID: 11
+motherID: 12
+gender: female
+population: CEU
+tags: XX
+
+name: NA12760
+familyID: 1447
+individualID: 9
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12761
+familyID: 1447
+individualID: 10
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA12752
+familyID: 1447
+individualID: 1
+fatherID: 9
+motherID: 10
+gender: male
+population: CEU
+tags: XY
+
+name: NA12762
+familyID: 1447
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12763
+familyID: 1447
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA12753
+familyID: 1447
+individualID: 2
+fatherID: 11
+motherID: 12
+gender: female
+population: CEU
+tags: XX
+
+name: NA07034
+familyID: 1341
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA07055
+familyID: 1341
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA07048
+familyID: 1341
+individualID: 1
+fatherID: 11
+motherID: 12
+gender: male
+population: CEU
+tags: XY
+
+name: NA06993
+familyID: 1341
+individualID: 13
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA06985
+familyID: 1341
+individualID: 14
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA06991
+familyID: 1341
+individualID: 2
+fatherID: 13
+motherID: 14
+gender: female
+population: CEU
+tags: XX
+
+name: NA12750
+familyID: 1444
+individualID: 13
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12751
+familyID: 1444
+individualID: 14
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA12740
+familyID: 1444
+individualID: 2
+fatherID: 13
+motherID: 14
+gender: female
+population: CEU
+tags: XX
+
+name: NA11881
+familyID: 1347
+individualID: 14
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA11882
+familyID: 1347
+individualID: 15
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10859
+familyID: 1347
+individualID: 2
+fatherID: 14
+motherID: 15
+gender: female
+population: CEU
+tags: XX
+
+name: NA12248
+familyID: 1416
+individualID: 11
+fatherID: NA
+motherID: NA
+gender: male
+population: CEU
+tags: XY
+
+name: NA12249
+familyID: 1416
+individualID: 12
+fatherID: NA
+motherID: NA
+gender: female
+population: CEU
+tags: XX
+
+name: NA10835
+familyID: 1416
+individualID: 1
+fatherID: 11
+motherID: 12
+gender: male
+population: CEU
+tags: XY
+
+name: NA18526
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18524
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18529
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18558
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18532
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18561
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18562
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18537
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18603
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18540
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18605
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18542
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18545
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18572
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18547
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18609
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18550
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18608
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18552
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18611
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18555
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18564
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18566
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18563
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18570
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18612
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18571
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18620
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18621
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18594
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18622
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18573
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18623
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18576
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18577
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18624
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18579
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18632
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18582
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18633
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18635
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18592
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18636
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18593
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: CHB
+tags: XX
+
+name: NA18637
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: CHB
+tags: XY
+
+name: NA18942
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18940
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18951
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18943
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18947
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18944
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18945
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18949
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18948
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18952
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18956
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18964
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18953
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18968
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18959
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18969
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18960
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18961
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18972
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18965
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18973
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18966
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18975
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18967
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18976
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18978
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18970
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18980
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18995
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18981
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18971
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18974
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18987
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18990
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18991
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18994
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18992
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18997
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA18998
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA19000
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA19005
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18999
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA19007
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA19003
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: female
+population: JPT
+tags: XX
+
+name: NA19012
+familyID: NA
+individualID: 1
+fatherID: NA
+motherID: NA
+gender: male
+population: JPT
+tags: XY
+
+name: NA18500
+familyID: 4
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18502
+familyID: 4
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18501
+familyID: 4
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA18503
+familyID: 5
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18505
+familyID: 5
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18504
+familyID: 5
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA18506
+familyID: 9
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18508
+familyID: 9
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18507
+familyID: 9
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA18860
+familyID: 12
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18858
+familyID: 12
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18859
+familyID: 12
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA18515
+familyID: 13
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18517
+familyID: 13
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18516
+familyID: 13
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA18521
+familyID: 16
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18523
+familyID: 16
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18522
+familyID: 16
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA18872
+familyID: 17
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18870
+familyID: 17
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18871
+familyID: 17
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA18854
+familyID: 18
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18852
+familyID: 18
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18853
+familyID: 18
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA18857
+familyID: 23
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18855
+familyID: 23
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18856
+familyID: 23
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA18863
+familyID: 24
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18861
+familyID: 24
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18862
+familyID: 24
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA18914
+familyID: 28
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA18912
+familyID: 28
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA18913
+familyID: 28
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19094
+familyID: 40
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: female
+population: YRI
+tags: XX
+
+name: NA19093
+familyID: 40
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19092
+familyID: 40
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19103
+familyID: 42
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19102
+familyID: 42
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19101
+familyID: 42
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19139
+familyID: 43
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19137
+familyID: 43
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19138
+familyID: 43
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19202
+familyID: 45
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: female
+population: YRI
+tags: XX
+
+name: NA19201
+familyID: 45
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19200
+familyID: 45
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19173
+familyID: 47
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19172
+familyID: 47
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19171
+familyID: 47
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19205
+familyID: 48
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19204
+familyID: 48
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19203
+familyID: 48
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19211
+familyID: 50
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19209
+familyID: 50
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19210
+familyID: 50
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19208
+familyID: 51
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19206
+familyID: 51
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19207
+familyID: 51
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19161
+familyID: 56
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19159
+familyID: 56
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19160
+familyID: 56
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19221
+familyID: 58
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: female
+population: YRI
+tags: XX
+
+name: NA19222
+familyID: 58
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19223
+familyID: 58
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19120
+familyID: 60
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19116
+familyID: 60
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19119
+familyID: 60
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19142
+familyID: 71
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19140
+familyID: 71
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19141
+familyID: 71
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19154
+familyID: 72
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19152
+familyID: 72
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19153
+familyID: 72
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19145
+familyID: 74
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19143
+familyID: 74
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19144
+familyID: 74
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19129
+familyID: 77
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: female
+population: YRI
+tags: XX
+
+name: NA19127
+familyID: 77
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19128
+familyID: 77
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19132
+familyID: 101
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: female
+population: YRI
+tags: XX
+
+name: NA19131
+familyID: 101
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19130
+familyID: 101
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19100
+familyID: 105
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: female
+population: YRI
+tags: XX
+
+name: NA19099
+familyID: 105
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19098
+familyID: 105
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19194
+familyID: 112
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: male
+population: YRI
+tags: XY
+
+name: NA19193
+familyID: 112
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19192
+familyID: 112
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY
+
+name: NA19240
+familyID: 117
+individualID: 1
+fatherID: 3
+motherID: 2
+gender: female
+population: YRI
+tags: XX
+
+name: NA19238
+familyID: 117
+individualID: 2
+fatherID: NA
+motherID: NA
+gender: female
+population: YRI
+tags: XX
+
+name: NA19239
+familyID: 117
+individualID: 3
+fatherID: NA
+motherID: NA
+gender: male
+population: YRI
+tags: XY

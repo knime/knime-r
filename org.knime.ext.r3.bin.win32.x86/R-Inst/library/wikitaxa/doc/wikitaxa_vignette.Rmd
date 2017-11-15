@@ -1,0 +1,177 @@
+---
+title: "Introduction to the wikitaxa package"
+author: "Scott Chamberlain"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to the wikitaxa package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+`wikitaxa` - Taxonomy data from Wikipedia
+
+The goal of `wikitaxa` is to allow search and taxonomic data retrieval from
+across many Wikimedia sites, including: Wikipedia, Wikicommons, and
+Wikispecies.
+
+There are lower level and higher level parts to the package API:
+
+### Low level API
+
+The low level API is meant for power users and gives you more control,
+but requires more knowledge.
+
+* `wt_wiki_page()`
+* `wt_wiki_page_parse()`
+* `wt_wiki_url_build()`
+* `wt_wiki_url_parse()`
+* `wt_wikispecies_parse()`
+* `wt_wikicommons_parse()`
+* `wt_wikipedia_parse()`
+
+### High level API
+
+The high level API is meant to be easier and faster to use.
+
+* `wt_data()`
+* `wt_data_id()`
+* `wt_wikispecies()`
+* `wt_wikicommons()`
+* `wt_wikipedia()`
+
+Search functions:
+
+* `wt_wikicommons_search()`
+* `wt_wikispecies_search()`
+* `wt_wikipedia_search()`
+
+## Installation
+
+CRAN version
+
+```{r eval=FALSE}  
+install.packages("wikitaxa")
+```
+
+Dev version
+
+```{r eval=FALSE}
+devtools::install_github("ropensci/wikitaxa")
+```
+
+```{r}
+library("wikitaxa")
+```
+
+## wiki data
+
+```{r eval=FALSE}
+wt_data("Poa annua")
+```
+
+Get a Wikidata ID
+
+```{r}
+wt_data_id("Mimulus foliatus")
+```
+
+## wikipedia
+
+lower level
+
+```{r}
+pg <- wt_wiki_page("https://en.wikipedia.org/wiki/Malus_domestica")
+res <- wt_wiki_page_parse(pg)
+res$iwlinks
+```
+
+higher level
+
+```{r}
+res <- wt_wikipedia("Malus domestica")
+res$common_names
+res$classification
+```
+
+choose a wikipedia language
+
+```{r eval=FALSE}
+# French
+wt_wikipedia(name = "Malus domestica", wiki = "fr")
+# Slovak
+wt_wikipedia(name = "Malus domestica", wiki = "sk")
+# Vietnamese
+wt_wikipedia(name = "Malus domestica", wiki = "vi")
+```
+
+search
+
+```{r}
+wt_wikipedia_search(query = "Pinus")
+```
+
+search supports languages
+
+```{r eval=FALSE}
+wt_wikipedia_search(query = "Pinus", wiki = "fr")
+```
+
+
+## wikicommons
+
+lower level
+
+```{r}
+pg <- wt_wiki_page("https://commons.wikimedia.org/wiki/Abelmoschus")
+res <- wt_wikicommons_parse(pg)
+res$common_names[1:3]
+```
+
+higher level
+
+```{r}
+res <- wt_wikicommons("Abelmoschus")
+res$classification
+res$common_names
+```
+
+search
+
+```{r}
+wt_wikicommons_search(query = "Pinus")
+```
+
+
+## wikispecies
+
+lower level
+
+```{r}
+pg <- wt_wiki_page("https://species.wikimedia.org/wiki/Malus_domestica")
+res <- wt_wikispecies_parse(pg, types = "common_names")
+res$common_names[1:3]
+```
+
+higher level
+
+```{r}
+res <- wt_wikispecies("Malus domestica")
+res$classification
+res$common_names
+```
+
+search
+
+```{r}
+wt_wikispecies_search(query = "Pinus")
+```

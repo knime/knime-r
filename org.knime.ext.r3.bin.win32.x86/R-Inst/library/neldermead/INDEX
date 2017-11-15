@@ -1,0 +1,25 @@
+costf.transposex        Cost Function Call
+fmin.gridsearch         Grid evaluation of an unconstrained cost
+                        function
+fminbnd                 Computation of the constrained minimimum of
+                        given function with the Nelder-Mead algorithm.
+fminbnd.function        fminbnd Cost Function Call
+fminbnd.outputfun       fminbnd Output Function Call
+fminsearch              Computation of the unconstrained minimum of
+                        given function with the Nelder-Mead algorithm.
+fminsearch.function     fminsearch Cost Function Call
+fminsearch.outputfun    fminsearch Output Function Call
+neldermead              S3 neldermead object
+neldermead-package      R port of the Scilab neldermead module
+neldermead.algo         Nelder-Mead Algorithm
+neldermead.destroy      Erase a neldermead object.
+neldermead.function     Call Cost Function.
+neldermead.get          Get the value for the given element
+neldermead.restart      Restart neldermead search.
+neldermead.search       Starts the optimization
+neldermead.set          Neldermead Object Configuration
+neldermead.startup      Secondary functions for neldermead.search
+optimget                Queries an optimization option list
+optimset                Configures and returns an optimization data
+                        structure.
+optimset.method         Default set of optimization options

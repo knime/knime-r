@@ -1,0 +1,29 @@
+abortion                Pregnancies exposed to coumarin derivatives
+clos                    Change in Length of Stay
+closPseudo              Pseudo Value Regression for the Extra
+                        Length-of-Stay
+etm                     Computation of the empirical transition matrix
+etmCIF                  Cumulative incidence functions of competing
+                        risks
+etmprep                 Data transformation function for using etm
+fourD                   Placebo data from the 4D study
+ggtransfo.etm           Prepare etm output for plotting with ggplot2
+lines.etm               Lines method for 'etm' objects
+los.data                Length of hospital stay
+phiPseudo               Pseudo Value Regression for the Expected Excess
+                        Length of Stay
+plot.clos.etm           Plot method for 'clos.etm' objects
+plot.etm                Plot method for an etm object
+plot.etmCIF             Plot cumulative incidence functions
+prepare.los.data        Prepare the data for clos
+print.clos.etm          Print function for 'clos.etm' objects
+print.etm               Print method for object of class 'etm'
+print.etmCIF            Print function for cifETM objects
+sir.cont                Ventilation status in intensive care unit
+                        patients
+summary.etm             Summary methods for an 'etm' object
+summary.etmCIF          Summary function for cifETM
+tra                     Matrix of possible transitions
+trprob.etm              Function to extract transition probabilities
+                        and (co)variance
+xyplot.etm              xyplot method for object of class 'etm'

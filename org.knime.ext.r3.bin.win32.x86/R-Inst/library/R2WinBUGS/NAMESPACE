@@ -1,0 +1,23 @@
+importFrom(coda, mcmc, mcmc.list, as.mcmc.list, read.coda)
+importFrom(boot, logit)
+
+importFrom("graphics", "layout", "lines", "mtext", "par", "plot", "points", "strheight", "strwidth", "text")
+importFrom("stats", "median", "qf", "quantile", "sd", "var")
+importFrom("utils", "flush.console", "menu", "read.table")
+
+export(bugs,
+       attach.all,
+       detach.all,
+       attach.bugs,
+       detach.bugs,
+       bugs.data,
+       read.bugs,
+       bugs.log,
+       monitor,
+       openbugs,
+       as.bugs.array,
+       write.model)
+
+S3method(print, bugs)
+S3method(plot, bugs)
+S3method(as.mcmc.list, bugs)

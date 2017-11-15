@@ -1,0 +1,37 @@
+Package: future
+Version: 1.6.2
+Title: Unified Parallel and Distributed Processing in R for Everyone
+Imports: digest, globals (>= 0.10.3), listenv (>= 0.6.0), parallel,
+        utils
+Suggests: R.rsp, markdown
+VignetteBuilder: R.rsp
+Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
+                                          email = "henrikb@braju.com"))
+Description: The purpose of this package is to provide a lightweight and
+    unified Future API for sequential and parallel processing of R
+    expression via futures.  The simplest way to evaluate an expression
+    in parallel is to use `x %<-% { expression }` with `plan(multiprocess)`.
+    This package implements sequential, multicore, multisession, and
+    cluster futures.  With these, R expressions can be evaluated on the
+    local machine, on in parallel a set of local machines, or distributed
+    on a mix of local and remote machines.
+    Extensions to this package implements additional backends for
+    processing futures via compute cluster schedulers etc.
+    Because of its unified API, there is no need to modify code in order
+    switch from sequential on the local machine to, say, distributed
+    processing on a remote compute cluster.
+    Another strength of this package is that global variables and functions
+    are automatically identified and exported as needed, making it
+    straightforward to tweak existing code to make use of futures.
+License: LGPL (>= 2.1)
+LazyLoad: TRUE
+URL: https://github.com/HenrikBengtsson/future
+BugReports: https://github.com/HenrikBengtsson/future/issues
+RoxygenNote: 6.0.1
+NeedsCompilation: no
+Packaged: 2017-10-16 21:58:40 UTC; hb
+Author: Henrik Bengtsson [aut, cre, cph]
+Maintainer: Henrik Bengtsson <henrikb@braju.com>
+Repository: CRAN
+Date/Publication: 2017-10-16 22:57:04 UTC
+Built: R 3.4.2; ; 2017-11-10 15:29:38 UTC; windows

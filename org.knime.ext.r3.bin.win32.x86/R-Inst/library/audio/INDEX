@@ -1,0 +1,9 @@
+$.audioInstance         Audio instance class methods
+$.audioSample           Audio sample class methods
+audio.drivers           Audio Drivers
+audioSample             Audio sample class and constructor
+load.wave               WAVE file manipulations
+pause                   Control audio instance
+play                    Play audio
+record                  Record audio
+wait                    Wait for an event

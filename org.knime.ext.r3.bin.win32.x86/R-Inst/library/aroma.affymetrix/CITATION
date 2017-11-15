@@ -1,0 +1,77 @@
+citHeader("Please cite aroma.affymetrix as");
+
+
+citEntry(
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # BibTeX entry:
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  entry = "TechReport",
+  author = "H. Bengtsson and K. Simpson and J. Bullard and K. Hansen",
+  title = "{aroma.affymetrix}: A generic framework in {R} for analyzing small
+	to very large {Affymetrix} data sets in bounded memory",
+  institution = "Department of Statistics, University of California, Berkeley",
+  year = "2008",
+  month = "February",
+  number = "745",
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Plain-text citation:
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  textVersion = paste(sep="",
+    "H. Bengtsson, K. Simpson, J. Bullard & K. Hansen. ",
+    "aroma.affymetrix: A generic framework in R for analyzing small to very large Affymetrix data sets in bounded memory, ",
+    "Tech Report #745, ",
+    "Department of Statistics, University of California, Berkeley, ",
+    "February 2008"
+  )
+);
+
+
+citEntry(
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # BibTeX entry:
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  entry = "Article",
+  author = "H. Bengtsson and R. Irizarry and B. Carvalho and T.P. Speed",
+  title = "Estimation and assessment of raw copy numbers at the single locus level",
+  journal = "Bioinformatics",
+  year = "2008",
+  volume = "24",
+  pages = "759--767",
+  url = "http://dx.doi.org/10.1093/bioinformatics/btn016",
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Plain-text citation:
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  textVersion = paste(sep="",
+    "H. Bengtsson, R. Irizarry, B. Carvalho & T.P. Speed. ",
+    "Estimation and assessment of raw copy numbers at the single locus level, ",
+    "Bioinformatics, ", 
+    "2008"
+  )
+);
+
+
+citEntry(
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # BibTeX entry:
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  entry = "Article",
+  author = "H. Bengtsson and P. Wirapati and T.P. Speed",
+  title = "A single-array preprocessing method for estimating full-resolution raw copy numbers from all {Affymetrix} genotyping arrays including {GenomeWideSNP 5 \\& 6}",
+  journal = "Bioinformatics",
+  year = "2009",
+  volume = "25",
+  pages = "2149--2156",
+  url = "http://dx.doi.org/10.1093/bioinformatics/btp371",
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Plain-text citation:
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  textVersion = paste(sep="",
+    "H. Bengtsson, P. Wirapati & T.P. Speed. ",
+    "A single-array preprocessing method for estimating full-resolution raw copy numbers from all Affymetrix genotyping arrays including GenomeWideSNP 5 & 6, ",
+    "Bioinformatics, ", 
+    "2009"
+  )
+);

@@ -1,0 +1,88 @@
+AbstractCNData          The AbstractCNData class
+AbstractPSCNData        The AbstractPSCNData class
+AromaCellCpgFile        A binary file holding local CpG density for
+                        each cell (probe/feature)
+AromaCellPositionFile   A binary file holding chromosome/position for
+                        each cell
+AromaCellTabularBinaryFile
+                        The AromaCellTabularBinaryFile class
+AromaGenomeTextFile     The AromaGenomeTextFile class
+AromaMicroarrayDataFile
+                        The abstract AromaMicroarrayDataFile class
+AromaMicroarrayDataSet
+                        The AromaMicroarrayDataSet class
+AromaMicroarrayDataSetTuple
+                        The AromaMicroarrayDataSetTuple class
+AromaMicroarrayTabularBinaryFile
+                        The AromaMicroarrayTabularBinaryFile class
+AromaPlatform           The AromaPlatform class
+AromaPlatformInterface
+                        The AromaPlatformInterface class
+AromaRepository         The AromaRepository class
+AromaTabularBinaryFile
+                        The AromaTabularBinaryFile class
+AromaTabularBinarySet   The AromaTabularBinarySet class
+AromaTransform          The AromaTransform class
+AromaUnitCallFile       The AromaUnitCallFile class
+AromaUnitCallSet        The AromaUnitCallSet class
+AromaUnitFracBCnBinaryFile
+                        The AromaUnitFracBCnBinaryFile class
+AromaUnitFracBCnBinarySet
+                        The AromaUnitFracBCnBinarySet class
+AromaUnitGenotypeCallFile
+                        The AromaUnitGenotypeCallFile class
+AromaUnitGenotypeCallSet
+                        The AromaUnitGenotypeCallSet class
+AromaUnitPscnBinaryFile
+                        The AromaUnitPscnBinaryFile class
+AromaUnitPscnBinarySet
+                        The AromaUnitPscnBinarySet class
+AromaUnitSignalBinaryFile
+                        The AromaUnitSignalBinaryFile class
+AromaUnitSignalBinarySet
+                        The AromaUnitSignalBinarySet class
+AromaUnitTabularBinaryFile
+                        The AromaUnitTabularBinaryFile class
+AromaUnitTotalCnBinaryFile
+                        The AromaUnitTotalCnBinaryFile class
+AromaUnitTotalCnBinarySet
+                        The AromaUnitTotalCnBinarySet class
+AromaUnitTypesFile      The AromaUnitTypesFile class
+BinnedScatter           The BinnedScatter class
+CbsModel                The CbsModel class
+ChromosomalModel        The ChromosomalModel class
+ChromosomeExplorer      The ChromosomeExplorer class
+CopyNumberChromosomalModel
+                        The CopyNumberChromosomalModel class
+CopyNumberSegmentationModel
+                        The CopyNumberSegmentationModel class
+Explorer                The Explorer class
+GladModel               The GladModel class
+HaarSegModel            The HaarSegModel class
+NonPairedPSCNData       The NonPairedPSCNData class
+PairedPSCNData          The PairedPSCNData class
+ParametersInterface     The ParametersInterface class interface
+RawAlleleBFractions     The RawAlleleBFractions class
+RawCopyNumberModel      The RawCopyNumberModel class
+RawCopyNumbers          The RawCopyNumbers class
+RawGenomicSignals       The RawGenomicSignals class
+RawMirroredAlleleBFractions
+                        The RawMirroredAlleleBFractions class
+RawSequenceReads        The RawSequenceReads class
+SegmentedAlleleBFractions
+                        The SegmentedAlleleBFractions class
+SegmentedCopyNumbers    The SegmentedCopyNumbers class
+SegmentedGenomicSignalsInterface
+                        The SegmentedGenomicSignalsInterface class
+                        interface
+UnitAnnotationDataFile
+                        The UnitAnnotationDataFile interface class
+UnitNamesFile           The UnitNamesFile interface class
+UnitTypesFile           The UnitTypesFile interface class
+aroma.core-package      Package aroma.core
+colBinnedSmoothing.matrix
+                        Binned smoothing of a matrix column by column
+colKernelSmoothing.matrix
+                        Kernel smoothing of a matrix column by column
+doCBS                   Performs Circular Binary Segmentation (CBS) on
+                        a data set

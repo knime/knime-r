@@ -1,0 +1,138 @@
+ACI                     Acoustic Complexity Index
+AR                      Acoustic Richness index
+H                       Total entropy
+M                       Median of the amplitude envelope
+NDSI                    Normalized Difference Soundscape Index
+Q                       Resonance quality factor of a frequency
+                        spectrum
+SAX                     Symbolic Aggregate approXimation
+TKEO                    Teager-Kaiser energy tracking operator
+acoustat                Statistics on time and frequency STFT contours
+addsilw                 Add or insert a silence section
+afilter                 Amplitude filter
+akamatsu                Water tank minimum resonant and cutoff
+                        frequencies
+ama                     Amplitude modulation analysis of a time wave
+attenuation             Generate sound intensity attenuation data
+autoc                   Short-term autocorrelation of a time wave
+bwfilter                Butterworth frequency filter
+ccoh                    Continuous coherence function between two time
+                        waves
+ceps                    Cepstrum or real cepstrum
+cepstro                 2D-cepstrogram of a time wave
+coh                     Coherence between two time waves
+combfilter              Comb filter
+convSPL                 Convert sound pressure level in other units
+corenv                  Cross-correlation between two time wave
+                        envelopes
+corspec                 Cross-correlation between two frequency spectra
+covspectro              Covariance between two spectrograms
+crest                   Crest factor and visualization
+csh                     Continuous spectral entropy
+cutspec                 Cut a frequency spectrum
+cutw                    Cut a section of a time wave
+dBscale                 dB colour scale for a spectrogram display
+dBweight                dB weightings
+deletew                 Delete a section of a time wave
+dfreq                   Dominant frequency of a time wave
+diffcumspec             Difference between two cumulative frequency
+                        spectra
+diffenv                 Difference between two amplitude envelopes
+diffspec                Difference between two frequency spectra
+diffwave                Difference between two time waves
+discrets                Time series discretisation
+drawenv                 Draw the amplitude envelope of a time wave
+drawfilter              Draw the amplitude profile of a frequency
+                        filter
+duration                Duration of a time wave
+dynoscillo              Dynamic oscillogram
+dynspec                 Dynamic sliding spectrum
+echo                    Echo generator
+env                     Amplitude envelope of a time wave
+export                  Export sound data
+fadew                   Fade in and fade out of a time wave
+fbands                  Frequency bands plot
+fdoppler                Doppler effect
+ffilter                 Frequency filter
+field                   Near field and far field limits
+fir                     Finite Impulse Response filter
+fma                     Frequency modulation analysis
+fpeaks                  Frequency peak detection
+ftwindow                Fourier transform windows
+fund                    Fundamental frequency track
+ggspectro               2D-spectrogram of a time wave using ggplot2
+hilbert                 Hilbert transform and analytic signal
+ifreq                   Instantaneous frequency
+istft                   Inverse of the short-term Fourier transform
+itakura.dist            Itakuro-Saito distance
+kl.dist                 Kullback-Leibler distance
+ks.dist                 Kolmogorov-Smirnov distance
+lfs                     Linear Frequency Shift
+listen                  Play a sound wave
+localpeaks              Local maximum frequency peak detection
+logspec.dist            Log-spectral distance
+meandB                  Mean of dB values
+meanspec                Mean frequency spectrum of a time wave
+mel                     Hertz / Mel conversion
+melfilterbank           Mel-filter bank for MFCC computation
+micsens                 Microphone sensitivity and conversion
+moredB                  Addition of dB values
+mutew                   Replace time wave data by 0 values
+noisew                  Generate noise
+notefreq                Frequency of a muscical note
+octaves                 Octave values
+orni                    Song of the cicada Cicada orni
+oscillo                 Show a time wave as an oscillogram
+oscilloST               Show a stereo time wave as oscillograms
+pastew                  Paste a time wave to another one
+peewit                  Song of the bird Vanellus vanellus
+pellucens               Calling song of the tree cricket Oecanthus
+                        pellucens
+phaseplot               Phase-phase 2D or 3D plot of a time wave
+phaseplot2              Phase-phase 2D plot of a time wave
+playlist                Play a list of sound files
+preemphasis             Pre-emphasis speech filter
+pulsew                  Generate rectangle pulse
+repw                    Repeat a time wave
+resamp                  Resample a time wave
+revw                    Time reverse of a time wave
+rmam                    Remove the amplitude modulations of a time wave
+rmnoise                 Remove noise
+rmoffset                Remove the offset of a time wave
+rms                     Root Mean Square
+roughness               Roughness or total curvature
+rugo                    Rugosity of a time wave
+savewav                 Save a .wav file
+sddB                    Standard deviation of dB values
+seedata                 A quick look at quantitative data
+seewave                 Sound analysis and synthesis
+setenv                  Set the amplitude envelope of a time wave to
+                        another one
+sfm                     Spectral Flatness Measure
+sh                      Shannon and Renyi spectral entropy
+sheep                   Sheep bleat
+simspec                 Similarity between two frequency spectra
+smoothw                 A function to tentativily smooth a time wave
+songmeter               Reading and interpreting SongMeter file name
+soundscapespec          Soundscape frequency spectrum of a time wave
+sox                     Calls SoX
+spec                    Frequency spectrum of a time wave
+specprop                Spectral properties
+spectro                 2D-spectrogram of a time wave
+spectro3D               3D-spectrogram of a time wave
+squarefilter            Frequency square filter
+stft.ext                Short-term Fourier transform using fftw and
+                        libsndfile C libraries
+symba                   Symbol analysis of a numeric (time) series
+synth                   Synthesis of time wave (additive model)
+synth2                  Synthesis of time wave (tonal model)
+th                      Temporal entropy
+tico                    Song of the bird Zonotrichia capensis
+timer                   Time measurements of a time wave
+wasp                    WAve length and SPeed of sound
+wav2flac                wav-flac file conversion
+wf                      Waterfall display
+zapsilw                 Zap silence periods of a time wave
+zc                      Instantaneous frequency of a time wave by
+                        zero-crossing
+zcr                     Zero-crossing rate

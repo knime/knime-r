@@ -1,0 +1,19 @@
+as_featurecollection    As featurecollection
+as_json                 Convert geojson R list to JSON
+circularstring          Make WKT circularstring objects
+geojson2wkt             Convert GeoJSON-like objects to WKT.
+geometrycollection      Make WKT geometrycollection objects
+linestring              Make WKT linestring objects
+lint                    Validate WKT strings
+multilinestring         Make WKT multilinestring objects
+multipoint              Make WKT multipoint objects
+multipolygon            Make WKT multipolygon objects
+point                   Make WKT point objects
+polygon                 Make WKT polygon objects
+properties              Add properties to a geojson object
+us_cities               This is the same data set from the maps
+                        library, named differently
+wellknown-package       WKT to GeoJSON and vice versa
+wkt2geojson             Convert WKT to GeoJSON-like objects.
+wktview                 Visualize geojson from a character string or
+                        list

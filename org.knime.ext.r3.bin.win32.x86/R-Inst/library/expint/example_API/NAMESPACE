@@ -1,0 +1,6 @@
+### C code
+useDynLib(pkg, .registration = TRUE)
+import(expint)
+
+### Exports
+export(foo,bar)

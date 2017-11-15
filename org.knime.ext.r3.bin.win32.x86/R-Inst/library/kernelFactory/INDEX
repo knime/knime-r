@@ -1,0 +1,4 @@
+Credit                  Credit approval (Frank and Asuncion, 2010)
+kFNews                  Display the NEWS file
+kernelFactory           Binary classification with Kernel Factory
+predict.kernelFactory   Predict method for kernelFactory objects

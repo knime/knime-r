@@ -1,0 +1,32 @@
+Package: unmarked
+Version: 0.12-2
+Date: 2017-05-14
+Type: Package
+Title: Models for Data from Unmarked Animals
+Author: Ian Fiske, Richard Chandler, David Miller, Andy Royle, Marc Kery, Jeff Hostetler, Rebecca Hutchinson 
+Maintainer: Andy Royle <aroyle@usgs.gov>
+Depends: R (>= 2.12.0), methods, reshape, lattice, parallel, Rcpp (>=
+        0.8.0)
+Imports: graphics, stats, utils, plyr, raster
+Description: Fits hierarchical models of animal abundance and occurrence to data collected using survey methods such as point counts, site occupancy sampling, distance sampling, removal sampling, and double observer sampling. Parameters governing the state and observation processes can be modeled as functions of covariates.
+License: GPL (>= 3)
+LazyLoad: yes
+LazyData: yes
+Collate: 'classes.R' 'unmarkedEstimate.R' 'mapInfo.R' 'unmarkedFrame.R'
+        'unmarkedFit.R' 'utils.R' 'getDesign.R' 'colext.R' 'distsamp.R'
+        'multinomPois.R' 'occu.R' 'occuRN.R' 'pcount.R' 'gmultmix.R'
+        'pcountOpen.R' 'gdistsamp.R' 'unmarkedFitList.R'
+        'unmarkedLinComb.R' 'ranef.R' 'boot.R' 'occuFP.R' 'gpcount.R'
+        'occuPEN.R' 'pcount.spHDS.R'
+LinkingTo: Rcpp, RcppArmadillo
+SystemRequirements: GNU make
+URL: http://groups.google.com/group/unmarked,
+        https://sites.google.com/site/unmarkedinfo/home,
+        http://github.com/ianfiske/unmarked,
+        http://github.com/rbchan/unmarked
+NeedsCompilation: yes
+Packaged: 2017-05-15 02:21:09 UTC; Aroyle-pr
+Repository: CRAN
+Date/Publication: 2017-05-15 05:27:34 UTC
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-10 16:23:23 UTC; windows
+Archs: i386, x64

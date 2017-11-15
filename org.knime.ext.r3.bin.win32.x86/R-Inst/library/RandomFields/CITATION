@@ -1,0 +1,58 @@
+citHeader("To cite RandomFields in publications use:")
+
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype="Manual",
+         header="For general purposes please refer to",
+         footer="",
+         title = "{RandomFields}: Simulation and Analysis of Random Fields",
+         author = c(person("Martin", "Schlather", role=c("cre", "aut")),
+             person("Alexander", "Malinowski", role="aut"),
+             person("Marco", "Oesting", role="aut"),
+             person("Daphne", "Boecker", role="aut"),
+             person("Kirstin", "Strokorb", role="aut"),
+             person("Sebastian", "Engelke", role="aut"),
+             person("Johannes", "Martini", role="aut"),
+             person("Felix", "Ballani", role="aut"),
+             person("Olga", "Moreva", role="aut"),
+             person("Jonas", "Auel", role="ctr"),
+             person(given=c("Peter", "J"), family="Menck",  role="ctr"),
+             person("Sebastian", "Gross", role="ctb"),
+             person("Ulrike", "Ober", role="ctb"),
+             person("Christoph Berreth",  role="ctr"),
+             person("Katharina", "Burmeister", role="ctb"),
+             person("Juliane", "Manitz", role="ctb"),
+             person("Paulo", "Ribeiro", role="ctb"),
+             person("Richard", "Singleton", role="ctb"),
+             person("Ben", "Pfaff", role="ctb"),
+             person("R Core Team", role="ctb")
+             ),             
+         year = year,
+         note = note,
+         url = "https://cran.r-project.org/package=RandomFields"
+         )
+
+
+
+citEntry(entry = "Article",
+  title        = "Analysis, Simulation and Prediction of Multivariate Random Fields with Package {RandomFields}",
+  author       = personList(as.person("Martin Schlather"),
+                   as.person("Alexander Malinowski"),
+                   as.person("Peter J. Menck"),
+                   as.person("Marco Oesting"),
+                   as.person("Kirstin Strokorb")),
+  journal      = "Journal of Statistical Software",
+  year         = "2015",
+  volume       = "63",
+  number       = "8",
+  pages        = "1--25",
+  url          = "http://www.jstatsoft.org/v63/i08/",
+
+  textVersion  =
+  paste("Martin Schlather, Alexander Malinowski, Peter J. Menck, Marco Oesting, Kirstin Strokorb (2015).",
+        "Analysis, Simulation and Prediction of Multivariate Random Fields with Package RandomFields.",
+        "Journal of Statistical Software, 63(8), 1-25.",
+        "URL http://www.jstatsoft.org/v63/i08/.")
+)
+

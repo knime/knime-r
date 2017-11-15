@@ -1,0 +1,62 @@
+useDynLib(filehash, .registration = TRUE, .fixes = "C_")
+import(methods)
+
+## Classes
+exportClasses(
+              "filehash",
+              "filehashRDS",
+              "filehashDB1"
+              )
+
+
+## Primary interface
+exportMethods(
+              "dbInsert",
+              "dbFetch",
+              "dbExists",
+              "dbList",
+              "dbDelete",
+              "dbReorganize",
+              "dbUnlink",
+              "dbMultiFetch",
+              "dbCreate",
+              "dbInit",
+              "dbLoad",
+              "dbLazyLoad"
+              )
+
+exportMethods("[[", "[", "[[<-", "$<-", "$")
+
+export(
+       "filehashOption",
+       "registerFormatDB",
+       "filehashFormats"
+       )
+
+
+## Miscellaneous functions
+exportMethods(
+              "show",
+              "with",
+              "coerce",
+              "lapply",
+              "names",
+              "length"
+              )
+
+export(
+       "dumpDF",
+       "dumpObjects",
+       "db2env",
+       "dumpImage",
+       "dumpList",
+       "dumpEnv"
+       )
+
+## Stack and Queue stuff
+exportClasses("stack", "queue")
+exportMethods("isEmpty", "top", "push", "pop")
+exportMethods("mpush")
+
+export("createQ", "initQ")
+export("createS", "initS")

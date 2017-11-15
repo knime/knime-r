@@ -1,0 +1,1832 @@
+#==============================================================================
+# Contains procedures that create various bitmap and photo images.  The
+# argument w specifies a canvas displaying a sort arrow, while the argument win
+# stands for a tablelist widget.
+#
+# Copyright (c) 2006-2011  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+#==============================================================================
+
+#------------------------------------------------------------------------------
+# tablelist::flat6x4Arrows
+#------------------------------------------------------------------------------
+proc tablelist::flat6x4Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp6x4_width 6
+#define triangleUp6x4_height 4
+static unsigned char triangleUp6x4_bits[] = {
+   0x0c, 0x1e, 0x3f, 0x3f};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn6x4_width 6
+#define triangleDn6x4_height 4
+static unsigned char triangleDn7x4_bits[] = {
+   0x3f, 0x3f, 0x1e, 0x0c};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::flat7x4Arrows
+#------------------------------------------------------------------------------
+proc tablelist::flat7x4Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp7x4_width 7
+#define triangleUp7x4_height 4
+static unsigned char triangleUp7x4_bits[] = {
+   0x08, 0x1c, 0x3e, 0x7f};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn7x4_width 7
+#define triangleDn7x4_height 4
+static unsigned char triangleDn7x4_bits[] = {
+   0x7f, 0x3e, 0x1c, 0x08};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::flat7x5Arrows
+#------------------------------------------------------------------------------
+proc tablelist::flat7x5Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp7x5_width 7
+#define triangleUp7x5_height 5
+static unsigned char triangleUp7x5_bits[] = {
+   0x08, 0x1c, 0x3e, 0x77, 0x63};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn7x5_width 7
+#define triangleDn7x5_height 5
+static unsigned char triangleDn7x5_bits[] = {
+   0x63, 0x77, 0x3e, 0x1c, 0x08};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::flat7x7Arrows
+#------------------------------------------------------------------------------
+proc tablelist::flat7x7Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp7x7_width 7
+#define triangleUp7x7_height 7
+static unsigned char triangleUp7x7_bits[] = {
+   0x08, 0x1c, 0x1c, 0x3e, 0x3e, 0x7f, 0x7f};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn7x7_width 7
+#define triangleDn7x7_height 7
+static unsigned char triangleDn7x7_bits[] = {
+   0x7f, 0x7f, 0x3e, 0x3e, 0x1c, 0x1c, 0x08};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::flat8x5Arrows
+#------------------------------------------------------------------------------
+proc tablelist::flat8x5Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp8x5_width 8
+#define triangleUp8x5_height 5
+static unsigned char triangleUp8x5_bits[] = {
+   0x18, 0x3c, 0x7e, 0xff, 0xff};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn8x5_width 8
+#define triangleDn8x5_height 5
+static unsigned char triangleDn8x5_bits[] = {
+   0xff, 0xff, 0x7e, 0x3c, 0x18};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::flat9x5Arrows
+#------------------------------------------------------------------------------
+proc tablelist::flat9x5Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp9x5_width 9
+#define triangleUp9x5_height 5
+static unsigned char triangleUp9x5_bits[] = {
+   0x10, 0x00, 0x38, 0x00, 0x7c, 0x00, 0xfe, 0x00, 0xff, 0x01};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn9x5_width 9
+#define triangleDn9x5_height 5
+static unsigned char triangleDn9x5_bits[] = {
+   0xff, 0x01, 0xfe, 0x00, 0x7c, 0x00, 0x38, 0x00, 0x10, 0x00};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::flat9x6Arrows
+#------------------------------------------------------------------------------
+proc tablelist::flat9x6Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp9x6_width 9
+#define triangleUp9x6_height 6
+static unsigned char triangleUp9x6_bits[] = {
+   0x10, 0x00, 0x38, 0x00, 0x7c, 0x00, 0xee, 0x00, 0xc7, 0x01, 0x83, 0x01};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn9x6_width 9
+#define triangleDn9x6_height 6
+static unsigned char triangleDn9x6_bits[] = {
+   0x83, 0x01, 0xc7, 0x01, 0xee, 0x00, 0x7c, 0x00, 0x38, 0x00, 0x10, 0x00};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::flat9x7Arrows
+#------------------------------------------------------------------------------
+proc tablelist::flat9x7Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp9x7_width 9
+#define triangleUp9x7_height 7
+static unsigned char triangleUp9x7_bits[] = {
+   0x10, 0x00, 0x38, 0x00, 0x7c, 0x00, 0xfe, 0x00, 0xef, 0x01, 0xc7, 0x01,
+   0x83, 0x01};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn9x7_width 9
+#define triangleDn9x7_height 7
+static unsigned char triangleDn9x7_bits[] = {
+   0x83, 0x01, 0xc7, 0x01, 0xef, 0x01, 0xfe, 0x00, 0x7c, 0x00, 0x38, 0x00,
+   0x10, 0x00};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::flat10x6Arrows
+#------------------------------------------------------------------------------
+proc tablelist::flat10x6Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp10x6_width 10
+#define triangleUp10x6_height 6
+static unsigned char triangleUp10x6_bits[] = {
+   0x30, 0x00, 0x78, 0x00, 0xfc, 0x00, 0xce, 0x01, 0x87, 0x03, 0x03, 0x03};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn10x6_width 10
+#define triangleDn10x6_height 6
+static unsigned char triangleDn10x6_bits[] = {
+   0x03, 0x03, 0x87, 0x03, 0xce, 0x01, 0xfc, 0x00, 0x78, 0x00, 0x30, 0x00};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::photo7x7Arrows
+#------------------------------------------------------------------------------
+proc tablelist::photo7x7Arrows w {
+    variable winSys
+    scan $::tcl_platform(osVersion) "%d" majorOSVersion
+    if {[string compare $winSys "aqua"] == 0 && $majorOSVersion >= 11} {
+	image create photo triangleUp$w -data "
+iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAABGdBTUEAALGPC/xhBQAAABp0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAAR0lEQVQYV2NgQAXuaHw4Vw7ISgBiEI0C
+mIC8DKgkiAbx4UAXKgHSCcIgPhiwAXERmiSIDxJnsEeTgOm2Z/j//78vEOdhwb4AF2kfq0RukjYA
+AAAASUVORK5CYII=
+"
+	image create photo triangleDn$w -data "
+iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAABGdBTUEAALGPC/xhBQAAABp0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAAOklEQVQYV2P8//8/Az5gD5QswIJB4gxs
+QJyABYPEwUAXTRLEhwMmICsCqgBEg/goQA4qCaKxAndkUQD3PQsKFZt/JgAAAABJRU5ErkJggg==
+"
+    } else {
+	image create photo triangleUp$w -data "
+iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAAA4SURBVBhXY2BABdpofDgXJNEIxBgK+ICC
+4VBJEA3iY+gC6UTRjawLJgnXDbMLJoGiOwxqFLpkGABJaAyABECXFAAAAABJRU5ErkJggg==
+"
+	image create photo triangleDn$w -data "
+iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAAA4SURBVBhXY2RgYAgDYm0gRgdXQQIgiUYs
+GKyBD4jD0SRBfJA4GKDrRrEGWTeKLnTd2BwHNx7uagAdFAqmyM4oZAAAAABJRU5ErkJggg==
+"
+    }
+}
+
+#------------------------------------------------------------------------------
+# tablelist::sunken8x7Arrows
+#------------------------------------------------------------------------------
+proc tablelist::sunken8x7Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp8x7_width 8
+#define triangleUp8x7_height 7
+static unsigned char triangleUp8x7_bits[] = {
+   0x18, 0x3c, 0x3c, 0x7e, 0x7e, 0xff, 0xff};
+"
+    image create bitmap darkLineUp$w -data "
+#define darkLineUp8x7_width 8
+#define darkLineUp8x7_height 7
+static unsigned char darkLineUp8x7_bits[] = {
+   0x08, 0x0c, 0x04, 0x06, 0x02, 0x03, 0x00};
+"
+    image create bitmap lightLineUp$w -data "
+#define lightLineUp8x7_width 8
+#define lightLineUp8x7_height 7
+static unsigned char lightLineUp8x7_bits[] = {
+   0x10, 0x30, 0x20, 0x60, 0x40, 0xc0, 0xff};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn8x7_width 8
+#define triangleDn8x7_height 7
+static unsigned char triangleDn8x7_bits[] = {
+   0xff, 0xff, 0x7e, 0x7e, 0x3c, 0x3c, 0x18};
+"
+    image create bitmap darkLineDn$w -data "
+#define darkLineDn8x7_width 8
+#define darkLineDn8x7_height 7
+static unsigned char darkLineDn8x7_bits[] = {
+   0xff, 0x03, 0x02, 0x06, 0x04, 0x0c, 0x08};
+"
+    image create bitmap lightLineDn$w -data "
+#define lightLineDn8x7_width 8
+#define lightLineDn8x7_height 7
+static unsigned char lightLineDn8x7_bits[] = {
+   0x00, 0xc0, 0x40, 0x60, 0x20, 0x30, 0x10};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::sunken10x9Arrows
+#------------------------------------------------------------------------------
+proc tablelist::sunken10x9Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp10x9_width 10
+#define triangleUp10x9_height 9
+static unsigned char triangleUp10x9_bits[] = {
+   0x30, 0x00, 0x78, 0x00, 0x78, 0x00, 0xfc, 0x00, 0xfc, 0x00, 0xfe, 0x01,
+   0xfe, 0x01, 0xff, 0x03, 0xff, 0x03};
+"
+    image create bitmap darkLineUp$w -data "
+#define darkLineUp10x9_width 10
+#define darkLineUp10x9_height 9
+static unsigned char darkLineUp10x9_bits[] = {
+   0x10, 0x00, 0x18, 0x00, 0x08, 0x00, 0x0c, 0x00, 0x04, 0x00, 0x06, 0x00,
+   0x02, 0x00, 0x03, 0x00, 0x00, 0x00};
+"
+    image create bitmap lightLineUp$w -data "
+#define lightLineUp10x9_width 10
+#define lightLineUp10x9_height 9
+static unsigned char lightLineUp10x9_bits[] = {
+   0x20, 0x00, 0x60, 0x00, 0x40, 0x00, 0xc0, 0x00, 0x80, 0x00, 0x80, 0x01,
+   0x00, 0x01, 0x00, 0x03, 0xff, 0x03};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn10x9_width 10
+#define triangleDn10x9_height 9
+static unsigned char triangleDn10x9_bits[] = {
+   0xff, 0x03, 0xff, 0x03, 0xfe, 0x01, 0xfe, 0x01, 0xfc, 0x00, 0xfc, 0x00,
+   0x78, 0x00, 0x78, 0x00, 0x30, 0x00};
+"
+    image create bitmap darkLineDn$w -data "
+#define darkLineDn10x9_width 10
+#define darkLineDn10x9_height 9
+static unsigned char darkLineDn10x9_bits[] = {
+   0xff, 0x03, 0x03, 0x00, 0x02, 0x00, 0x06, 0x00, 0x04, 0x00, 0x0c, 0x00,
+   0x08, 0x00, 0x18, 0x00, 0x10, 0x00};
+"
+    image create bitmap lightLineDn$w -data "
+#define lightLineDn10x9_width 10
+#define lightLineDn10x9_height 9
+static unsigned char lightLineDn10x9_bits[] = {
+   0x00, 0x00, 0x00, 0x03, 0x00, 0x01, 0x80, 0x01, 0x80, 0x00, 0xc0, 0x00,
+   0x40, 0x00, 0x60, 0x00, 0x20, 0x00};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::sunken12x11Arrows
+#------------------------------------------------------------------------------
+proc tablelist::sunken12x11Arrows w {
+    image create bitmap triangleUp$w -data "
+#define triangleUp12x11_width 12
+#define triangleUp12x11_height 11
+static unsigned char triangleUp12x11_bits[] = {
+   0x60, 0x00, 0xf0, 0x00, 0xf0, 0x00, 0xf8, 0x01, 0xf8, 0x01, 0xfc, 0x03,
+   0xfc, 0x03, 0xfe, 0x07, 0xfe, 0x07, 0xff, 0x0f, 0xff, 0x0f};
+"
+    image create bitmap darkLineUp$w -data "
+#define darkLineUp12x11_width 12
+#define darkLineUp12x11_height 11
+static unsigned char darkLineUp12x11_bits[] = {
+   0x20, 0x00, 0x30, 0x00, 0x10, 0x00, 0x18, 0x00, 0x08, 0x00, 0x0c, 0x00,
+   0x04, 0x00, 0x06, 0x00, 0x02, 0x00, 0x03, 0x00, 0x00, 0x00};
+"
+    image create bitmap lightLineUp$w -data "
+#define lightLineUp12x11_width 12
+#define lightLineUp12x11_height 11
+static unsigned char lightLineUp12x11_bits[] = {
+   0x40, 0x00, 0xc0, 0x00, 0x80, 0x00, 0x80, 0x01, 0x00, 0x01, 0x00, 0x03,
+   0x00, 0x02, 0x00, 0x06, 0x00, 0x04, 0x00, 0x0c, 0xff, 0x0f};
+"
+    image create bitmap triangleDn$w -data "
+#define triangleDn12x11_width 12
+#define triangleDn12x11_height 11
+static unsigned char triangleDn12x11_bits[] = {
+   0xff, 0x0f, 0xff, 0x0f, 0xfe, 0x07, 0xfe, 0x07, 0xfc, 0x03, 0xfc, 0x03,
+   0xf8, 0x01, 0xf8, 0x01, 0xf0, 0x00, 0xf0, 0x00, 0x60, 0x00};
+"
+    image create bitmap darkLineDn$w -data "
+#define darkLineDn12x11_width 12
+#define darkLineDn12x11_height 11
+static unsigned char darkLineDn12x11_bits[] = {
+   0xff, 0x0f, 0x03, 0x00, 0x02, 0x00, 0x06, 0x00, 0x04, 0x00, 0x0c, 0x00,
+   0x08, 0x00, 0x18, 0x00, 0x10, 0x00, 0x30, 0x00, 0x20, 0x00};
+"
+    image create bitmap lightLineDn$w -data "
+#define lightLineDn12x11_width 12
+#define lightLineDn12x11_height 11
+static unsigned char lightLineDn12x11_bits[] = {
+   0x00, 0x00, 0x00, 0x0c, 0x00, 0x04, 0x00, 0x06, 0x00, 0x02, 0x00, 0x03,
+   0x00, 0x01, 0x80, 0x01, 0x80, 0x00, 0xc0, 0x00, 0x40, 0x00};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::createSortRankImgs
+#------------------------------------------------------------------------------
+proc tablelist::createSortRankImgs win {
+    image create bitmap sortRank1$win -data "
+#define sortRank1_width 4
+#define sortRank1_height 6
+static unsigned char sortRank1_bits[] = {
+   0x04, 0x06, 0x04, 0x04, 0x04, 0x04};
+"
+    image create bitmap sortRank2$win -data "
+#define sortRank2_width 4
+#define sortRank2_height 6
+static unsigned char sortRank2_bits[] = {
+   0x06, 0x09, 0x08, 0x04, 0x02, 0x0f};
+"
+    image create bitmap sortRank3$win -data "
+#define sortRank3_width 4
+#define sortRank3_height 6
+static unsigned char sortRank3_bits[] = {
+   0x0f, 0x08, 0x06, 0x08, 0x09, 0x06};
+"
+    image create bitmap sortRank4$win -data "
+#define sortRank4_width 4
+#define sortRank4_height 6
+static unsigned char sortRank4_bits[] = {
+   0x04, 0x06, 0x05, 0x0f, 0x04, 0x04};
+"
+    image create bitmap sortRank5$win -data "
+#define sortRank5_width 4
+#define sortRank5_height 6
+static unsigned char sortRank5_bits[] = {
+   0x0f, 0x01, 0x07, 0x08, 0x09, 0x06};
+"
+    image create bitmap sortRank6$win -data "
+#define sortRank6_width 4
+#define sortRank6_height 6
+static unsigned char sortRank6_bits[] = {
+   0x06, 0x01, 0x07, 0x09, 0x09, 0x06};
+"
+    image create bitmap sortRank7$win -data "
+#define sortRank7_width 4
+#define sortRank7_height 6
+static unsigned char sortRank7_bits[] = {
+   0x0f, 0x08, 0x04, 0x04, 0x02, 0x02};
+"
+    image create bitmap sortRank8$win -data "
+#define sortRank8_width 4
+#define sortRank8_height 6
+static unsigned char sortRank8_bits[] = {
+   0x06, 0x09, 0x06, 0x09, 0x09, 0x06};
+"
+    image create bitmap sortRank9$win -data "
+#define sortRank9_width 4
+#define sortRank9_height 6
+static unsigned char sortRank9_bits[] = {
+   0x06, 0x09, 0x09, 0x0e, 0x08, 0x06};
+"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::createCheckbuttonImgs
+#------------------------------------------------------------------------------
+proc tablelist::createCheckbuttonImgs {} {
+    variable checkedImg
+    set checkedImg [image create bitmap tablelist_checkedImg -data "
+#define checked_width 9
+#define checked_height 9
+static unsigned char checked_bits[] = {
+   0x00, 0x00, 0x80, 0x00, 0xc0, 0x00, 0xe2, 0x00, 0x76, 0x00, 0x3e, 0x00,
+   0x1c, 0x00, 0x08, 0x00, 0x00, 0x00};
+"]
+
+    variable uncheckedImg
+    set uncheckedImg [image create bitmap tablelist_uncheckedImg -data "
+#define unchecked_width 9
+#define unchecked_height 9
+static unsigned char unchecked_bits[] = {
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::ambianceTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::ambianceTreeImgs {} {
+    variable ambiance_collapsedImg
+    set ambiance_collapsedImg \
+	[image create photo tablelist_ambiance_collapsedImg -data "
+R0lGODlhEwAPAPcAAAAAADw7N9/Wxd/Wxt/WyODYyeLZyuHazeTdz+Pd0eTd0uXf0+Xf1efg1OXg
+1ujh0+jg1Onj1+nj2Ork2O3m3Ozm3e7p4e/q4e7s5u/s6PHs5PHs5fHs5vHu6fPw6vTw6vTw6/bz
+7vbz7/b07vb07/b08Pb08fj28/n49Pr59fr59vv5+Pv6+Pr6+vz6+fz7+v39/QAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAATAA8A
+AAjAAP/9OyCgoEGDBwQqFFigQwsYECPCaJGhwMKBGVawcOHihUeOLFZgSKhQgIkTKFCkSKFiZcoT
+JQQsFBBCBIkSJkwEyFmCxAgSMkt+8NDBAwgQAY568PDhQ1CBAjhI5aBhQ4ANG6ZyePpPwIULFgKI
+HRvg6wWuAipUoKC2QoC2bdFOiCChroQAdiNMmID2AYS/fwMAhtDgAVoFCBIrXoxgAdcDDAxInkzZ
+gAOSCgskIDCgs+cBBBJYvDjwoGnMCgMCADs=
+"]
+
+    variable ambiance_expandedImg
+    set ambiance_expandedImg \
+	[image create photo tablelist_ambiance_expandedImg -data "
+R0lGODlhEwAPAPcAAAAAADw7N9/Wxd/Wxt/WyODYyeLZyuHazeTdz+Pd0eTd0uXf0+Xf1efg1OXg
+1ujh0+jg1Onj1+nj2Ork2O3m3Ozm3e7p4e/q4e7s5u/s6PHs5PHs5fHs5vHu6fPw6vTw6vTw6/bz
+7vbz7/b07vb07/b08Pb08fj18fj28/n49Pr59fr59vv5+Pv6+Pr6+vz6+fz7+v39/QAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAATAA8A
+AAi5AP/9OyCgoEGDBwQqFFigg4sYECPGcJGhwMKBGVi0ePEChkeOLVhgSKhQgAkUKVKoULFiZUoU
+JQQsFBBCBIkSJkycyFmCxAgSMkt+8NDBA4ijRz14+PAhqEABHKJy0LCBw4aqUp3+E3DhgoUAYMMG
+6HpBq4AKFSigXcu2gtkJESTInSs3woQJZh9A2Mu3b4MHZhUgGEy4MIIFWg8wMMC4sWMDDkgqLJCA
+wIDLmAcQSGDx4sCDoCUrDAgAOw==
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::aquaTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::aquaTreeImgs {} {
+    variable pngSupported
+
+    variable aqua_collapsedImg
+    variable aqua_collapsedSelImg
+    if {$pngSupported} {
+	set aqua_collapsedImg \
+	    [image create photo tablelist_aqua_collapsedImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABUAAAAOCAYAAADABlfOAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAABRSURBVDhPY2AYBegh0NbW9hCI/agaMkAD
+/0PxViCtRBXDkQwFGf4TiKsoNhjNUJirrwLF7ck2HIehMMMDyDKYHi6lephSNfapn07JighaawIA
+90BpaKOy7x4AAAAASUVORK5CYII=
+"]
+	set aqua_collapsedSelImg \
+	    [image create photo tablelist_aqua_collapsedSelImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABUAAAAOCAYAAADABlfOAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAABPSURBVDhPY2AYBegh8P///5tA7EjVkAEa
+CANLgAwJqhiOZCiI+QmIsyg2GM1QGPc0kGFKtuE4DIUJO5NlMD1cSvUwpWrsUz+dkhURtNYEAK4n
+pwn73o/GAAAAAElFTkSuQmCC
+"]
+    } else {
+	set aqua_collapsedImg \
+	    [image create photo tablelist_aqua_collapsedImg -data "
+R0lGODlhFQAOAPcAAAAAAIaGhgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAVAA4A
+AAgxAP8JHEiwoMGDCBMqXCgwAEOEASI+LBix4sSGFS0+zJhxI0eHHjVOFHkR5MWTKA8GBAA7
+"]
+	set aqua_collapsedSelImg \
+	    [image create photo tablelist_aqua_collapsedSelImg -data "
+R0lGODlhFQAOAPcAAAAAAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAVAA4A
+AAgxAP8JHEiwoMGDCBMqXCgwAEOEASI+LBix4sSGFS0+zJhxI0eHHjVOFHkR5MWTKA8GBAA7
+"]
+    }
+
+    variable aqua_expandedImg
+    variable aqua_expandedSelImg
+    if {$pngSupported} {
+	set aqua_expandedImg \
+	    [image create photo tablelist_aqua_expandedImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABUAAAAOCAYAAADABlfOAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAABiSURBVDhPY2AYBTQPgba2todA/B8Pfkiy
+I4CG+REw1I9kQ0EagIZuxWHwVrIMhBqqBDT0J5rBIL4S2YZCDa5CM7SKIgNhmoGGXoUafJUqBkJd
+aw811J5qhkINDqCqgYPKMABA1WloyP5ImAAAAABJRU5ErkJggg==
+"]
+	set aqua_expandedSelImg \
+	    [image create photo tablelist_aqua_expandedSelImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABUAAAAOCAYAAADABlfOAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAABhSURBVDhPY2AYBTQPgf///98EYnzgJsmO
+AJrmSMBQR5INBWkAGroEh8FLyDIQaqgE0NBPaAaD+BJkGwo1OAvN0CyKDIRpBhp6GmrwaaoYCHWt
+KdRQU6oZCjXYmaoGDirDAJg2pwmQhGAjAAAAAElFTkSuQmCC
+"]
+    } else {
+	set aqua_expandedImg \
+	    [image create photo tablelist_aqua_expandedImg -data "
+R0lGODlhFQAOAPcAAAAAAIaGhgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAVAA4A
+AAgwAP8JHEiwoMGDCBMqXMhQYYCHECE2jChxIsUADQVSzKgxIseOGD/+qygypMiTIgMCADs=
+"]
+	set aqua_expandedSelImg \
+	    [image create photo tablelist_aqua_expandedSelImg -data "
+R0lGODlhFQAOAPcAAAAAAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAVAA4A
+AAgwAP8JHEiwoMGDCBMqXMhQYYCHECE2jChxIsUADQVSzKgxIseOGD/+qygypMiTIgMCADs=
+"]
+    }
+}
+
+#------------------------------------------------------------------------------
+# tablelist::baghiraTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::baghiraTreeImgs {} {
+    variable baghira_collapsedImg
+    set baghira_collapsedImg \
+	[image create photo tablelist_baghira_collapsedImg -data "
+R0lGODlhEAAOAPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgoAP8JHEiwoMGDCBMqXCgQAMOBABw+jChxIcWKCSlOxKiQ48OPIBkGBAA7
+"]
+
+    variable baghira_expandedImg
+    set baghira_expandedImg \
+	[image create photo tablelist_baghira_expandedImg -data "
+R0lGODlhEAAOAPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgkAP8JHEiwoMGDCBMqXMiw4UEAECMCUChx4sKIDi063Mixo8KAADs=
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::dustTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::dustTreeImgs {} {
+    variable dust_collapsedImg
+    set dust_collapsedImg \
+	[image create photo tablelist_dust_collapsedImg -data "
+R0lGODlhEwAPAPcAAAAAADIyMrConLGpncC6scC7ssG8s8K8tMK9tdDMxtDMx9LOyNrVztvVz9vW
+ztvWz9vX0NzW0N3Y0d/a0uDd1uHe1+Lf2OPg2uTh2+Xj3efk3+jl4Ojm4enm4unn4+nn5Orn5evo
+5Ovo5evq5ezp5e3q5u3q5+7s6O/t6e7t6vDu6/Hv7PHv7fLw7PLw7vT08vf39fj39fn49vn49wAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAATAA8A
+AAjCAP8RGCCgoEGDAwj8W7jQwIIXMGLImEFRRgwYLxQcYPhvAIsSJ1CoWNFihQoUJ0a4GMBRAIsO
+IUiUMEGzBIkQHVgIaJkCQwYNGzgE4LBBQwYMKXYyFGCCQgULFy4EiGqhAgUTShcKECGhq4QJASZ4
+lSAi6z8BHRhECMC2bYAHDzqYRQv3gYMHARrUjTvXw168fz30/ft2r+CWISIoXsw4QgizAzxAaMwY
+ggeWDA8oACGis2fPHxIg4CiQ4MGDAwqQDggAOw==
+"]
+
+    variable dust_expandedImg
+    set dust_expandedImg \
+	[image create photo tablelist_dust_expandedImg -data "
+R0lGODlhEwAPAPcAAAAAADIyMrConLGpncS+tcS/tsbBuMfBucfCucfCutfTzdjUztnUz9vWztvW
+z9vX0NzW0N3Y0d/a0t/a0+Dd1uHe1+Lf2OPg2uTh2+Xj3efk3+jl4Ojm4enm4unn4+vo5Ovo5evp
+5uvq5ezp5e3q5u3q5+7s6O/t6e7t6vDu6/Hv7PLv7fLw7PHw7fLx7vX08vf39fj39fn49vn49wAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAATAA8A
+AAi9AP8RGCCgoEGDAwj8W7jQwIIXMGLImEFRRgwYLxQgYPhvQAsSJk6kUMFCRYoTJkS4GMBRwIoO
+H0aQKEGTxIgPHVYIaIkCQwYNGzgI3aAhAwYUOxkKKEGhgoULFzBAtVCBQomkCwWAiMA1goQJErpG
+AIH1n4AOCyAEWMs2gAMHHcqefeugwVsGdOHK9ZC371sPe/32BdzyA4TDiBND+FB2wIcHihM/+MCS
+4QEGIUBo3sx5QQKOAgkePDigAOiAADs=
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::dustSandTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::dustSandTreeImgs {} {
+    variable dustSand_collapsedImg
+    set dustSand_collapsedImg \
+	[image create photo tablelist_dustSand_collapsedImg -data "
+R0lGODlhEwAPAPcAAAAAADIyMpuWjJyXjrSxqbWxqre0rbi1rrm2r8K+tsO+t8TAuMXBusbCu8nF
+vcnGvsrHv8vHwMnGwcrIwczIwMzIwc3Jw87LxMzKxc/MxdDMxdDMx9HOx9HOyNLPydPPytPQydPQ
+y9TRy9TRzNXTzNXSzdfTztbUzNbUzdfVz9nV0NjW0NnW0drY097c2eDe2eXi3uXj3+jm4+nn5Oro
+5QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAATAA8A
+AAjCAP8RGCCgoEGDAwj8W7jQwAQYMmTMmEFjYsQYEg4w/DfgRYkSJlSsYLFChYkSI14M2CjAxYYO
+H0SMmCniQ4cNLgSwbFHBwoUMGgJoyHDBQoUWOhkKSOHgAYQIFAJQiADhgYMUSRcKCMGgK4MGARp4
+ZRAi6z8BHBIoCMC2bQAFCjiYRQsXboIAauvKZcmhLty3fvcq7eB3beEOcz0sWMy48QIPZgeUcEyZ
+xEqGBzCgAMG5c+cTGBBs/FeA4MGDAwqMDggAOw==
+"]
+
+    variable dustSand_expandedImg
+    set dustSand_expandedImg \
+	[image create photo tablelist_dustSand_expandedImg -data "
+R0lGODlhEwAPAPcAAAAAADIyMpuWjJyXjrSxqbWxqre0rbi1rrm2r8K+tsO+t8TAuMXBusbCu8bC
+vMnFvcnGvsrHv8vHwMnGwcrIwczIwMzIwc3Jw87LxMzKxc/Mxc/MxtDMxdDMx9HOx9HOyNLPydPP
+ytPQydPQy9TRy9TRzNXTzNXSzdfTztbUzNbUzdfVz9nV0NjW0NnW0drY097c2eDe2eXi3uXj3+jm
+4+nn5Oro5QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAATAA8A
+AAi/AP8RGCCgoEGDAwj8W7jQAAUZNGjUqGFjYsQZEw4w/DcgxokTKFi0cNGCBYoTJWIM2CgARocP
+IUiUmEkixIcOMASwfGHhAgYNHDZw0IDhgoUXOhkKWPEAQgQJFSxUkBABwoMVSRcKGMGgK4MGDhp4
+ZTAi6z8BHhIoCMC2bQAFCjyYRQsXboK7dePO9ZC3L1y5LD/47fthLogFiBMrXgDC7IATiyObWMnw
+QAYVIjJr1pwiA4KN/woQPHhwQAHQAQEAOw==
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::gtkTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::gtkTreeImgs {} {
+    variable pngSupported
+
+    variable gtk_collapsedImg
+    variable gtk_collapsedActImg
+    if {$pngSupported} {
+	set gtk_collapsedImg \
+	    [image create photo tablelist_gtk_collapsedImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMtfuaUMAAABTSURBVDhPtdLBDQAgCANA376YgTmcj8UY
+TG2iiV9t7QAX0lLKxzSJbWZ9QjwGyN15DFBm8hgghMY2RGMnBCwi+hqgXq0pv0jSEY2gA+kfST77
+FRmz+lZUJ0vkXgAAAABJRU5ErkJggg==
+"]
+	set gtk_collapsedActImg \
+	    [image create photo tablelist_gtk_collapsedActImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuND6NzHYAAABLSURBVDhPY2CgIbChitkCAgL/gQZRbhjI
+IAkJCcoNAxlEFcNgBlFsGLJBFBmGbhCMD4wALpJikyYuoij2qBprFLkEFpBUS9nkZg8AkLUuN8tq
+YDwAAAAASUVORK5CYII=
+"]
+    } else {
+	set gtk_collapsedImg \
+	    [image create photo tablelist_gtk_collapsedImg -data "
+R0lGODlhEgAOAPcAAAAAABAQECIiIoaGhsPDw////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAASAA4A
+AAg5AP8JHEiwoMGDCAkGSIgwgACGBgMQeAhxYIACEysKvIiRIkSOBQYs/Figo8aLGU+mPOnxpMaX
+BAMCADs=
+"]
+	set gtk_collapsedActImg \
+	    [image create photo tablelist_gtk_collapsedActImg -data "
+R0lGODlhEgAOAPcAAAAAABAQEBgYGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAASAA4A
+AAg0AP8JHEiwoMGDCAkGSIgwgACGBgM4hKhQ4kOK/yRaxKhRI8WOFyFqDClyIsaMJD+eXCkwIAA7
+"]
+    }
+
+    variable gtk_expandedImg
+    variable gtk_expandedActImg
+    if {$pngSupported} {
+	set gtk_expandedImg \
+	    [image create photo tablelist_gtk_expandedImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMtfuaUMAAABRSURBVDhPY2AYBXQNARsBAYH/xGKgy2zw
+uc5GSUnp/+HDh/9jAyBxkDwhQ2AWYDWMVEOwGkauISiGtbW1keQdXOEGjgBiw4RQ0uAipGBwywMA
+wOZWVA37acsAAAAASUVORK5CYII=
+"]
+	set gtk_expandedActImg \
+	    [image create photo tablelist_gtk_expandedActImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuND6NzHYAAABCSURBVDhPY2AYBXQNgUwBAYH/xGKgyzLx
+uY4owwgZArMAr2HEGoLXMFINwTBMSUnpP7mGoBhGqSEww0TomnaobhkAI24v01R6oWMAAAAASUVO
+RK5CYII=
+"]
+    } else {
+	set gtk_expandedImg \
+	    [image create photo tablelist_gtk_expandedImg -data "
+R0lGODlhEgAOAPcAAAAAABAQECIiIoaGhsPDw////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAASAA4A
+AAg1AP8JHEiwoMGDCBMqXMiwYYCHECMGQCiAQIGLFwkIUFgRo0aGHT82FDBgY0OBE0+qXMlSYEAA
+Ow==
+"]
+	set gtk_expandedActImg \
+	    [image create photo tablelist_gtk_expandedActImg -data "
+R0lGODlhEgAOAPcAAAAAABAQECIiIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAASAA4A
+AAgsAP8JHEiwoMGDCBMqXMiwYYCHECMGQCgxosKKExdKbPjvoQCOAjOCHEkSZEAAOw==
+"]
+    }
+}
+
+#------------------------------------------------------------------------------
+# tablelist::klearlooksTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::klearlooksTreeImgs {} {
+    variable klearlooks_collapsedImg
+    set klearlooks_collapsedImg \
+	[image create photo tablelist_klearlooks_collapsedImg -data "
+R0lGODlhEAAOAPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgoAP8JHEiwoMGDCBMqXPgPAACGAh0+hCgRYkOHDCsu1LhxosWPIBkGBAA7
+"]
+
+    variable klearlooks_expandedImg
+    set klearlooks_expandedImg \
+	[image create photo tablelist_klearlooks_expandedImg -data "
+R0lGODlhEAAOAPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgoAP8JHEiwoMGDCBMqXMiQIAAAAx8mfAiRokKKEhdabAixocePID8GBAA7
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::newWaveTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::newWaveTreeImgs {} {
+    variable pngSupported
+
+    variable newWave_collapsedImg
+    variable newWave_collapsedActImg
+    if {$pngSupported} {
+	set newWave_collapsedImg \
+	    [image create photo tablelist_newWave_collapsedImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuNUmK/OAAAADDSURBVDhPY2AYtMDHx4cPiGf4+vqKUuRI
+oCECHh4eH9zd3e8D2YVAzEqWgSCDnJ2db7GxseWbmZlt8vb2vggU8yLZMJBBLi4uV4EaI0BYVFQ0
+y9HR8RBQfCsQaxBtIMggNze3i0ANbshYQ0MjH+jdy0D5fpAaggaCFAE1nAEqNEHGOjo6KcCwA3mT
+eIM8PT1PAA1RAmFVVVVroAs3k+U1Ly+vw7KyspJAAzqABpwjO7CBGh8DMcgbFEU/dRIkwdiglwIA
+fVBDhQiKWqEAAAAASUVORK5CYII=
+"]
+	set newWave_collapsedActImg \
+	    [image create photo tablelist_newWave_collapsedActImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuNUmK/OAAAADOSURBVDhPY2AYtMDExITP2Nh4BhCLUuRI
+oEECdqbGf+xNjd8ADSsE8lnJMhBkkI+F8Y9ZHoZP0u2MPlqYGF8HGuhFsmFggyyNvy/yNXoAwlO8
+jB6H2xh/ARq2DYg1iDYQZJCvlfG3pYHGd5Fxp5fxEw9L489Aw/qBWICggWCDrI2/rgg1uYmMu3xM
+HgEN+kSSQX7WJl/XRJpdA+E5Iaa3Iu1NPpLlNT8bky+rYswv57iZvrAwNb5GdmDbmxv/crQweUVp
+9FMnQRKMDXopAACu/llcB/jCVQAAAABJRU5ErkJggg==
+
+"]
+    } else {
+	set newWave_collapsedImg \
+	    [image create photo tablelist_newWave_collapsedImg -data "
+R0lGODlhEgAOAPcAAAAAAFJSUl5eXl9fX2JiYmZmZmdnZ2lpaWtra2xsbG5ubnBwcHJycnR0dH19
+fX9/f5KSkpSUlJqampycnJ2dnaGhoaenp6ysrLm5ucvLy8zMzN3d3ejo6AAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAASAA4A
+AAhNAP8JHEiwoMGDCAdGSIgwgACGBgVAYIAA4kACFixQUPDAogEMIDFUKCCBIYIMKDNcOFAy4YIN
+GzQ46AixAYcJCiwKHJBAp0KfQIMWDAgAOw==
+"]
+	set newWave_collapsedActImg \
+	    [image create photo tablelist_newWave_collapsedActImg -data "
+R0lGODlhEgAOAPcAAAAAAEA3NUI6N1A9OFE/OVNAOlNCO1BCPFFDPVRCO1VEPF5EO2JJP29IPU1E
+QlBIRFdTU1dVU3lWR21tbZVdSJ9dSJdgS6RbRq1iSqpsUrFoTrRuUrlzVrh4WYWFhYyMjAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAASAA4A
+AAhNAP8JHEiwoMGDCAd6SIgwgAOGBgdcaAAB4kACGDBUWDDBYgENIDVQOPCBoYENKDdYQFAyYQIO
+HDIw6AhRQQcJESwKFPBAp0KfQIMWDAgAOw==
+"]
+    }
+
+    variable newWave_expandedImg
+    variable newWave_expandedActImg
+    if {$pngSupported} {
+	set newWave_expandedImg \
+	    [image create photo tablelist_newWave_expandedImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuNUmK/OAAAACySURBVDhPY2AY3sDHx4cPiAUIYD6CoQA0
+YIaHh8cHJyenu9gwSA6khqBBvr6+okDF99jY2PKBirOQMUgMJAdSQ9AgkAKgjYUWFhargcwIZAwS
+A8kRZQjUIFZvb+8LEhIS0UC+GwiD2CAxoEGsRBsENczLxcVlB5BtCsIgNtAQL5IMgSkGatxqYmIS
+BsIgNlmGQF2lAfTOKRAGGqRBtkFQw/qBhvRTZAjUIHDipNggcgwAAMDwRMOkXl9fAAAAAElFTkSu
+QmCC
+"]
+	set newWave_expandedActImg \
+	    [image create photo tablelist_newWave_expandedActImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABIAAAAOCAYAAAAi2ky3AAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuNUmK/OAAAAC7SURBVDhPY2AY3sDExIQPiAUIYD6CoWBs
+bDzD1tT4j7e50U9sGCQHUkOMQaL2psZvZrgaPJvjhopBYiA5oEGiBA0CKQAqLEy3N/qw0MfoITIG
+iYHkiDIEpAgYPqwWJsbXpvsaP1gaaHwXhEFskBhIjmiDoK7yirAz+bgq3PQGCIPYQNd4kWQITDFQ
+47a+QNO7IGwCZJNlCNRVGp7WJh9AGGioBtkGQQ3rBxrST5EhUIMEgAYJUGwQOQYAAONtWMaau7wh
+AAAAAElFTkSuQmCC
+"]
+    } else {
+	set newWave_expandedImg \
+	    [image create photo tablelist_newWave_expandedImg -data "
+R0lGODlhEgAOAPcAAAAAAFJSUltbW19fX2xsbHBwcHh4eHl5eX9/f5KSkpSUlJWVlZqamqenp6ys
+rLm5ubq6usrKygAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAASAA4A
+AAhKAP8JHEiwoMGDCBMqXHhQQQABECMGUJBwQIIFGBckGLDwQIOPDQ4wJODgwQMHBBj+MxAhggGV
+/xBAgIAA5r8CBWz+Y8BAp0+YAQEAOw==
+"]
+	set newWave_expandedActImg \
+	    [image create photo tablelist_newWave_expandedActImg -data "
+R0lGODlhEgAOAPcAAAAAAD83NU87NlNGP2FIP29KPk1EQldUU21tbZ1oT6JXRKVYRKNiS6xhSrFo
+TrdwU4WFhYyMjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAASAA4A
+AAhKAP8JHEiwoMGDCBMqXHgQQgABECMGgJDQgIIFGBcoMLCwQIOPDQowPMDAgQMGBxj+I/DgAQGV
+/xAkSIAA5r8BA2z+ixBBp0+YAQEAOw==
+"]
+    }
+}
+
+#------------------------------------------------------------------------------
+# tablelist::oxygen1TreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::oxygen1TreeImgs {} {
+    variable oxygen1_collapsedImg
+    set oxygen1_collapsedImg \
+	[image create photo tablelist_oxygen1_collapsedImg -data "
+R0lGODlhEAAOAPcAAAAAABQTEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgjAP8JHEiwoMGDCBMqXMjQYICGAh8yDECRYkOJFyFq3MixYUAAOw==
+"]
+
+    variable oxygen1_expandedImg
+    set oxygen1_expandedImg \
+	[image create photo tablelist_oxygen1_expandedImg -data "
+R0lGODlhEAAOAPcAAAAAABQTEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgeAP8JHEiwoMGDCBMqXMiwocOEASJGfEixosWLGAMCADs=
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::oxygen2TreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::oxygen2TreeImgs {} {
+    variable pngSupported
+
+    variable oxygen2_collapsedImg
+    variable oxygen2_collapsedActImg
+    if {$pngSupported} {
+	set oxygen2_collapsedImg \
+	    [image create photo tablelist_oxygen2_collapsedImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAYAAAAmL5yKAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAABOSURBVDhPY2AYBegh4AIU8KMkWDyBmh8C
+cTUlhpgANV8B4gVAzE2uQdZAjc+BuJQcA6yAmq4B8Swg5iDVAG+ghkfk2gyyzBGIQQE5kgAA2mMJ
+YLECIngAAAAASUVORK5CYII=
+"]
+	set oxygen2_collapsedActImg \
+	    [image create photo tablelist_oxygen2_collapsedActImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAYAAAAmL5yKAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAABbSURBVDhPY2AYBSghkHDhvwsQ+5EdLEDN
+nkD8EIirKTHEBGjAFSBeAMTcZBkE1GgNxM+BuJRkA4CarID4GhDPAmIOkgwAavAG4kdk2QyyCajR
+ERSQJNk69BUDAI0BNzsiLc7tAAAAAElFTkSuQmCC
+"]
+    } else {
+	set oxygen2_collapsedImg \
+	    [image create photo tablelist_oxygen2_collapsedImg -data "
+R0lGODlhEAAOAPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgoAP8JHEiwoMGDCBMqXPgPAACGAh0+hCgRYkOHDCsu1LhxosWPIBkGBAA7
+"]
+	set oxygen2_collapsedActImg \
+	    [image create photo tablelist_oxygen2_collapsedActImg -data "
+R0lGODlhEAAOAPcAAAAAAGDQ/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgoAP8JHEiwoMGDCBMqXPgvQACGAh0+hCgRYkOHDCsu1LhxosWPIBkGBAA7
+"]
+    }
+
+    variable oxygen2_expandedImg
+    variable oxygen2_expandedActImg
+    if {$pngSupported} {
+	set oxygen2_expandedImg \
+	    [image create photo tablelist_oxygen2_expandedImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAYAAAAmL5yKAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAABRSURBVDhPY2AYBVQNAUegad5oJnoC+S7E
+2gJS/AiIraAaTID0QyD2I9YAkLpSIL4GxNZAfAWIq0nRDFM7C8h4DsQLyNEM0sMBdQk3uQaMNH0A
+PvwJYFasmD4AAAAASUVORK5CYII=
+"]
+	set oxygen2_expandedActImg \
+	    [image create photo tablelist_oxygen2_expandedActImg -data "
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAYAAAAmL5yKAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuODc7gF0AAABcSURBVDhPY2AYBdQLgYQL/x2B2BvZRCDf
+E4hdiLIFqvgRkLYCaQDSJkD8EIj9iDIAqqkUqOEaEFsD8RUgriZaM0whUNMsIH4OxAtI1gx1BQdQ
+M8gl3GQZMAI1AQCLtzc7P7D1iQAAAABJRU5ErkJggg==
+"]
+    } else {
+	set oxygen2_expandedImg \
+	    [image create photo tablelist_oxygen2_expandedImg -data "
+R0lGODlhEAAOAPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgoAP8JHEiwoMGDCBMqXMiQIAAAAx8mfAiRokKKEhdabAixocePID8GBAA7
+"]
+	set oxygen2_expandedActImg \
+	    [image create photo tablelist_oxygen2_expandedActImg -data "
+R0lGODlhEAAOAPcAAAAAAGDQ/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgoAP8JHEiwoMGDCBMqXMiQYIAAAx8mfAiRokKKEhdabAixocePID8GBAA7
+"]
+    }
+}
+
+#------------------------------------------------------------------------------
+# tablelist::phaseTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::phaseTreeImgs {} {
+    variable phase_collapsedImg
+    set phase_collapsedImg \
+	[image create photo tablelist_phase_collapsedImg -data "
+R0lGODlhEAAOAPcAAAAAAMfHxwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgsAP8JHEiwoMGDCBMaDKCwYACGDQU+hNhwIsWEFi8etBhxYsR/Dz+CFEmSZEAAOw==
+"]
+
+    variable phase_expandedImg
+    set phase_expandedImg \
+	[image create photo tablelist_phase_expandedImg -data "
+R0lGODlhEAAOAPcAAAAAAMfHxwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAgkAP8JHEiwoMGDCBMqXMhwYICHECEijCgxIUWGFTE23MixY8eAADs=
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::plastikTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::plastikTreeImgs {} {
+    variable plastik_collapsedImg
+    set plastik_collapsedImg \
+	[image create photo tablelist_plastik_collapsedImg -data "
+R0lGODlhDwAOAPcAAAAAAHZ2drW1tf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAPAA4A
+AAhEAP8JHEiwoMGDCBP+ExCgYUMBBxkOmDgxAMSCASgCoBjAYMaJGyt6HACgZMkBHTFq5DgSJMuC
+EimivAjT4UOFOHMSDAgAOw==
+"]
+
+    variable plastik_expandedImg
+    set plastik_expandedImg \
+	[image create photo tablelist_plastik_expandedImg -data "
+R0lGODlhDwAOAPcAAAAAAHZ2drW1tf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAPAA4A
+AAhCAP8JHEiwoMGDCBP+ExCgYUMBBxkOmDgxAMSCAShqDGAwo8aKHQcAGDlyAEeMH0GiTHmSoMSN
+FwsydGhRoc2bBAMCADs=
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::plastiqueTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::plastiqueTreeImgs {} {
+    variable plastique_collapsedImg
+    set plastique_collapsedImg \
+	[image create photo tablelist_plastique_collapsedImg -data "
+R0lGODlhEAAOAPcAAAAAAHp4eH59fa+trfHx8fPz8/X19ff39/n5+fv7+/39/QAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAhaAP8JHEiwoMGDCBMOHCCgoUMBAw4KUECxogIBEhNoDKAxAUaDAhCIDCASwceCAg4EWLnywEmC
+AgzIDCDTwMuBAgroDKCzwE2BAggIHUrg5z+GDxtGVMi0acGAADs=
+"]
+
+    variable plastique_expandedImg
+    set plastique_expandedImg \
+	[image create photo tablelist_plastique_expandedImg -data "
+R0lGODlhEAAOAPcAAAAAAHp4eH59fa+trfHx8fPz8/X19ff39/n5+fv7+/39/QAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQAA4A
+AAhWAP8JHEiwoMGDCBMOHCCgoUMBAw4KUECxogIBEhNo3JgAo0EBCEKKROCxoIADAVKmPFCSoAAD
+MGMaaDlQQIGbOAvQFCiAgM+fBHb+Y/iwYUSFSJMWDAgAOw==
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::radianceTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::radianceTreeImgs {} {
+    variable radiance_collapsedImg
+    set radiance_collapsedImg \
+	[image create photo tablelist_radiance_collapsedImg -data "
+R0lGODlhEwAPAPcAAAAAAEBAQOTe1eTe1uTf1+bh2ejj2ujk3erl3uvn4Ozo4u3p4+7q5O/r5u/s
+5+/t6PDt6PPw7PLw7fXz8Pb08ff18vb18/f28vj28fj28vj28/j39Pj39fj49fn49/n5+Pr6+Pv7
++fz8+fz8+vz8+/39/P39/f7+/QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAATAA8A
+AAi3AP/9OyCgoEGDBwQqFFgAwwgTJyJGNDGCQoGFAy2QIFGio8cSGy0kVCgABIgQIkaoVCkihEkB
+CwV4mPmhZoCaH2Z6gEmSA4cNGzh0CNDhp08OPAUK0KAhgwYKFQJUqHCBqYak/wRQoDAhgNevAbZS
+wCpAQgQJaCUESJuWLIQHcOEGiAsXAtkFePMGyIuXAdkECAILHoxAAdYDDQwoXszYgIORCgsoIDCg
+suUBBBRcxDjwoGfICgMCADs=
+"]
+
+    variable radiance_expandedImg
+    set radiance_expandedImg \
+	[image create photo tablelist_radiance_expandedImg -data "
+R0lGODlhEwAPAPcAAAAAAEBAQOTe1eTe1uTf1+bh2ejj2ujk3erl3uvn4Ozo4u3p4+7q5O/r5u/s
+5+/t6PDt6PPw7PLw7fXz8Pb08ff18vb18/f28vj28fj28vj28/j39Pj39fj49fn49/n5+Pr6+Pv7
++fz8+fz8+vz8+/39/P39/f7+/QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAATAA8A
+AAiwAP/9OyCgoEGDBwQqFFgAwwgTJyJGNDGCQoGFAy2QIFGio8cSGy0kVCgABIgQIkaoVCkihEkB
+CwV4mPmhps0PMz3AJMmBw4YNHDoI9dmTw06BAjRoyKCBQoULFZ4q1XD0nwAKFCYE2Mo1AFYKVQVI
+iCChrNmzEsJCeMC2rdsHEMIumEu37lwGYRMg2Mu3LwIFVQ80MEC4sGEDDkYqLKCAwIDHkAcQUHAR
+48CDmBUrDAgAOw==
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::vistaAeroTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::vistaAeroTreeImgs {{treeStyle "vistaAero"}} {
+    variable pngSupported
+
+    variable ${treeStyle}_collapsedImg
+    variable ${treeStyle}_collapsedActImg
+    if {$pngSupported} {
+	set ${treeStyle}_collapsedImg \
+	    [image create photo tablelist_${treeStyle}_collapsedImg -data "
+iVBORw0KGgoAAAANSUhEUgAAAAoAAAAOCAYAAAAWo42rAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMtfuaUMAAABXSURBVChTY2AYcGAOdIEAMa6IAiqKAGIF
+QoqjXr169R+oKAGIlfEpjvrz58//ly9fghRnArEILsVghSD87NkzkOJqIBbFpph4E4l2I7G+Jjoc
+CQUf8fIA2yAo8LH45OMAAAAASUVORK5CYII=
+"]
+	set ${treeStyle}_collapsedActImg \
+	    [image create photo tablelist_${treeStyle}_collapsedActImg -data "
+iVBORw0KGgoAAAANSUhEUgAAAAoAAAAOCAYAAAAWo42rAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuND6NzHYAAABZSURBVChTY2AYWCBz5Ls5ELsQdAVQUR0Q
+1wBxAF7FIIXrnv38D6TXAnEQTsUghWfe/vq/FqK4E4jdsSqGKQQp3vTiF0jxdKyKSTKRaDcS62vi
+wpFgQJOiAABE8FkFIoNbxwAAAABJRU5ErkJggg==
+dd
+"]
+    } else {
+	set ${treeStyle}_collapsedImg \
+	    [image create photo tablelist_${treeStyle}_collapsedImg -data "
+R0lGODlhCgAOAPcAAAAAAISEhJaWlp+fn6Wlpaenp+bm5unp6erq6vz8/AAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAKAA4A
+AAgtAP8JHEiwoMGDAwkg/EegAEICCAYcJJDggACDFBMYCFCQokWMESc6nLiw5MKAADs=
+"]
+	set ${treeStyle}_collapsedActImg \
+	    [image create photo tablelist_${treeStyle}_collapsedActImg -data "
+R0lGODlhCgAOAPcAAAAAABzE9y3I963m+a/n+rLn+rLo+szt+s/u+gAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAKAA4A
+AAgwAP8JHEiwoMGDAwMg/BdAAMIAAxwaDHAg4sQDCAwoJBgAAQGJHAuA5DiS48KTCwMCADs=
+"]
+    }
+
+    variable ${treeStyle}_expandedImg
+    variable ${treeStyle}_expandedActImg
+    if {$pngSupported} {
+	set ${treeStyle}_expandedImg \
+	    [image create photo tablelist_${treeStyle}_expandedImg -data "
+iVBORw0KGgoAAAANSUhEUgAAAAoAAAAOCAYAAAAWo42rAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMtfuaUMAAAA4SURBVChTY2AYmsAV6OxyQk4HKboJxTjV
+ghVFRkb+x6cQrgifQhRF+BSCHA5zF4wm6BlCnh0IeQCHFRknat3YpwAAAABJRU5ErkJggg==
+"]
+	set ${treeStyle}_expandedActImg \
+	    [image create photo tablelist_${treeStyle}_expandedActImg -data "
+iVBORw0KGgoAAAANSUhEUgAAAAoAAAAOCAYAAAAWo42rAAAABGdBTUEAALGPC/xhBQAAABl0RVh0
+U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuND6NzHYAAAA5SURBVChTY2AYgkDmyHdXIC7H63SooptA
++iZOhTBFTfd//8epEFkRToXoivApLAdZhYbxe2aQRhIAqTxF2Z07dnMAAAAASUVORK5CYII=
+"]
+    } else {
+	set ${treeStyle}_expandedImg \
+	    [image create photo tablelist_${treeStyle}_expandedImg -data "
+R0lGODlhCgAOAPcAAAAAACYmJllZWQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAKAA4A
+AAgmAP8JHEiwoMGDCBMGQBhgocEAAhwShBixIMWKAxtqlJiwo0ePAQEAOw==
+"]
+	set ${treeStyle}_expandedActImg \
+	    [image create photo tablelist_${treeStyle}_expandedActImg -data "
+R0lGODlhCgAOAPcAAAAAABzE94Lf+wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAKAA4A
+AAgmAP8JHEiwoMGDCBMGQBhgocEAAhwShBixIMWKAxtqlJiwo0ePAQEAOw==
+"]
+    }
+}
+
+#------------------------------------------------------------------------------
+# tablelist::vistaClassicTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::vistaClassicTreeImgs {{treeStyle "vistaClassic"}} {
+    variable ${treeStyle}_collapsedImg
+    set ${treeStyle}_collapsedImg \
+	[image create photo tablelist_${treeStyle}_collapsedImg -data "
+R0lGODlhDAAOAPcAAAAAAICAgP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAMAA4A
+AAg9AP8JHEiwoMGDCAMoXLhwYAABECMKCOAwIoCIFAU+hHgRYsZ/DwGIFDmxIkeMJgV0LKlRIkqN
+DBkinEkzIAA7
+"]
+
+    variable ${treeStyle}_expandedImg
+    set ${treeStyle}_expandedImg \
+	[image create photo tablelist_${treeStyle}_expandedImg -data "
+R0lGODlhDAAOAPcAAAAAAICAgP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAMAA4A
+AAg4AP8JHEiwoMGDCAMoXLhwYAABECMKCOBQYkSKAh9anFgRgEePHDNuDPlPo0WMJUeiZMgSocuX
+AQEAOw==
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::winnativeTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::winnativeTreeImgs {} {
+    variable winnative_collapsedImg
+    set winnative_collapsedImg \
+	[image create photo tablelist_winnative_collapsedImg -data "
+R0lGODlhDwAOAPcAAAAAAICAgP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAPAA4A
+AAg/AP8JHEiwoMGDCBMGWMiQocEAAiJKFBDgoUQAEisWhBgRY0SNBCECGDmSosWOGU8K8Ghy48SU
+Gxs2TEizpsGAADs=
+"]
+
+    variable winnative_expandedImg
+    set winnative_expandedImg \
+	[image create photo tablelist_winnative_expandedImg -data "
+R0lGODlhDwAOAPcAAAAAAICAgP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAPAA4A
+AAg7AP8JHEiwoMGDCBMGWMiQocEAAiJKFBDg4USJFQtCvEjRIoCPHztq5CiS4MaLGU2STDmwocuE
+MGMaDAgAOw==
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::win7AeroTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::win7AeroTreeImgs {} {
+    vistaAeroTreeImgs "win7Aero"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::win7ClassicTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::win7ClassicTreeImgs {} {
+    vistaClassicTreeImgs "win7Classic"
+}
+
+#------------------------------------------------------------------------------
+# tablelist::winxpBlueTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::winxpBlueTreeImgs {} {
+    variable winxpBlue_collapsedImg
+    set winxpBlue_collapsedImg \
+	[image create photo tablelist_winxpBlue_collapsedImg -data "
+R0lGODlhDwAOAPcAAAAAAHiYtbDC08C3psG4p8K4qMO6qsa+rs/Iu9LMv9LMwNbRxtjTydvWzNzY
+z9/b0uPg2eTh2eXh2urp4+3t5/Hw6/Dw7PLy7vX18ff28/b29Pf39fz8+vz8+////wAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAPAA4A
+AAhjAP8JHEiwoMGDCBMKCMCwYQABBgN4mEjRQ4CIHTIC6MAhw8WCATZs0ABAQwUJHwkGwACgZcsH
+KQcGuGCBAoAJEBrEFBggggMGABYoQLDzX4AEBwoQIDDAQNGFDhlCTEi1asGAADs=
+"]
+
+    variable winxpBlue_expandedImg
+    set winxpBlue_expandedImg \
+	[image create photo tablelist_winxpBlue_expandedImg -data "
+R0lGODlhDwAOAPcAAAAAAHiYtbDC08C3psG4p8K4qMO6qsa+rs/Iu9LMv9LMwNbRxtfSx9jTydvW
+zNzYz9/b0uPg2eTh2eXh2urp4+zr5u3t5/Hw6/Dw7PLy7vX18ff28/b29Pf39fz8+vz8+////wAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAPAA4A
+AAhhAP8JHEiwoMGDCBMKCMCwYQABBgOAmEgRRICIHzJm9LDhYsEAHTpwGHlhgkeCATQAWLkSwsmB
+ATJgsFCBQgQHLwUGkPCgAYMFChDk/BcgwYECBAgMMDB0oUOGEBNKnVowIAA7
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::winxpOliveTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::winxpOliveTreeImgs {} {
+    variable winxpOlive_collapsedImg
+    set winxpOlive_collapsedImg \
+	[image create photo tablelist_winxpOlive_collapsedImg -data "
+R0lGODlhDwAOAPcAAAAAAI6ZfcC3psG4p8K4qMO6qsa+rs/Iu9LMv9LMwNbRxtjTydvWzNzYz9/b
+0uPg2eTh2eXh2urp4+3t5/Hw6/Dw7PLy7vX18ff28/b29Pf39fz8+vz8+////wAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAPAA4A
+AAhgAP8JHEiwoMGDCBP+C8CwYYCDATpInNjhYcEAHDIC4LABg0WCATRoyAAgA4UIHwcGuACgZUsH
+KQUGsFBhAgAJDxjEXAihwQIAChIc2BkAgQECAwYIKLBzoUOGCqNKJRgQADs=
+"]
+
+    variable winxpOlive_expandedImg
+    set winxpOlive_expandedImg \
+	[image create photo tablelist_winxpOlive_expandedImg -data "
+R0lGODlhDwAOAPcAAAAAAI6ZfcC3psG4p8K4qMO6qsa+rs/Iu9LMv9LMwNbRxtfSx9jTydvWzNzY
+z9/b0uPg2eTh2eXh2urp4+zr5u3t5/Hw6/Dw7PLy7vX18ff28/b29Pf39fz8+vz8+////wAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAPAA4A
+AAheAP8JHEiwoMGDCBP+C8CwYYCDAT5InPjhYcEAHjJm7KDBIsEAHDhsGGlBgseBATIAWLnywUmB
+ATBcqEBhAoQGLxdGcMBggYIEB3IGQGCAwIABAgrkXOiQocKnUAkGBAA7
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::winxpSilverTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::winxpSilverTreeImgs {} {
+    variable winxpSilver_collapsedImg
+    set winxpSilver_collapsedImg \
+	[image create photo tablelist_winxpSilver_collapsedImg -data "
+R0lGODlhDwAOAPcAAAAAAJSVosTO2MXP2cbO2svT3NPZ4tXb5Nnf5trg593i6d/l6uDm6+bq7ufr
+7+zv8+/y9PLz9vT39/b3+ff4+vn6+v39/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAPAA4A
+AAheAP8JHEiwoMGDCBP+C8CwYYCDAS5InHjhYcEAFjICyEjBIsEAFSpQAEAhggOPAwNMAMCSJQOU
+AgNIiAABwIMGCmAubLAgAQAEBwzoDHCgwICjAgjoXOiQocKnUAkGBAA7
+"]
+
+    variable winxpSilver_expandedImg
+    set winxpSilver_expandedImg \
+	[image create photo tablelist_winxpSilver_expandedImg -data "
+R0lGODlhDwAOAPcAAAAAAJSVosTO2MXP2cbO2svT3NPZ4tXb5Nnf5trg593i6d/l6uDm6+bq7ufr
+7+zv8+/x8+/y9PLz9vT39/b3+ff4+vn6+v39/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAPAA4A
+AAhcAP8JHEiwoMGDCBP+C8CwYYCDATBInIjhYcEAFzJqrGCRYAALFiqIlOCg48AAFACoVMnApMAA
+EyREgPCggQKXCxssSJAAwQEDOAMcKDCgqAACOBc6ZKiwqVOCAQEAOw==
+"]
+}
+
+#------------------------------------------------------------------------------
+# tablelist::createTreeImgs
+#------------------------------------------------------------------------------
+proc tablelist::createTreeImgs {treeStyle depth} {
+    set baseWidth  [image width  tablelist_${treeStyle}_collapsedImg]
+    set baseHeight [image height tablelist_${treeStyle}_collapsedImg]
+
+    #
+    # Get the width of the images to create for the specified depth and
+    # the destination x coordinate for copying the base images into them
+    #
+    set width [expr {$depth * $baseWidth}]
+    set x [expr {($depth - 1) * $baseWidth}]
+    if {[regexp \
+	 {^(baghira|klearlooks|oxygen.?|phase|plasti.+|winnative|winxp.+)$} \
+	 $treeStyle]} {
+	set delta [expr {($depth - 1) * 4}]
+	incr width $delta
+	incr x $delta
+    } elseif {[regexp {^(vista|win7)Classic$} $treeStyle]} {
+	set delta [expr {($depth - 1) * 2}]
+	incr width -$delta
+	incr x -$delta
+    }
+
+    variable ${treeStyle}_indentedImg$depth
+    set imgName tablelist_${treeStyle}_indentedImg$depth
+    set ${treeStyle}_indentedImg$depth \
+	[image create photo $imgName -width $width -height $baseHeight]
+
+    variable ${treeStyle}_collapsedImg$depth
+    set imgName tablelist_${treeStyle}_collapsedImg$depth
+    set ${treeStyle}_collapsedImg$depth \
+	[image create photo $imgName -width $width -height $baseHeight]
+    $imgName copy tablelist_${treeStyle}_collapsedImg -to $x 0
+
+    foreach modif {Act Sel} {
+	variable ${treeStyle}_collapsed${modif}Img
+	if {[info exists ${treeStyle}_collapsed${modif}Img]} {
+	    set imgName tablelist_${treeStyle}_collapsed${modif}Img$depth
+	    set ${treeStyle}_collapsed${modif}Img$depth \
+		[image create photo $imgName -width $width -height $baseHeight]
+	    $imgName copy tablelist_${treeStyle}_collapsed${modif}Img -to $x 0
+	}
+    }
+
+    variable ${treeStyle}_expandedImg$depth
+    set imgName tablelist_${treeStyle}_expandedImg$depth
+    set ${treeStyle}_expandedImg$depth \
+	[image create photo $imgName -width $width -height $baseHeight]
+    $imgName copy tablelist_${treeStyle}_expandedImg -to $x 0
+
+    foreach modif {Act Sel} {
+	variable ${treeStyle}_expanded${modif}Img
+	if {[info exists ${treeStyle}_expanded${modif}Img]} {
+	    set imgName tablelist_${treeStyle}_expanded${modif}Img$depth
+	    set ${treeStyle}_expanded${modif}Img$depth \
+		[image create photo $imgName -width $width -height $baseHeight]
+	    $imgName copy tablelist_${treeStyle}_expanded${modif}Img -to $x 0
+	}
+    }
+}

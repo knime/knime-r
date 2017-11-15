@@ -1,0 +1,21 @@
+
+
+#exportPattern("^[^\\.]")
+
+export(cholx, cholPosDef, Print, solvex, solvePosDef,
+       sleep.milli, sleep.micro, hostname, pid, FileExists, LockRemove,
+       sortx, orderx,
+       gauss, I0L0, matern, nonstwm, struveH, struveL, whittle,
+       RFoptions)
+
+useDynLib(RandomFieldsUtils, .registration = TRUE, .fixes = "C_")
+#useDynLib(spam)
+
+importFrom("utils", "str")
+
+S3method(print, RFopt)
+S3method(summary, RFopt)
+S3method(print, summary.RFopt)
+S3method(print, RFoptElmnt)
+S3method(summary, RFoptElmnt)
+S3method(print, summary.RFoptElmnt)

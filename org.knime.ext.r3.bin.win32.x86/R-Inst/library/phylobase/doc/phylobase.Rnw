@@ -1,0 +1,674 @@
+\documentclass{article}
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{phylo4: classes and methods for phylogenetic trees and data}
+
+\usepackage[utf8]{inputenc} % for UTF-8/single quotes from sQuote()
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{url}
+
+
+%% Use a little bit more of the page
+%% borrowed from Rd.sty, of r-project.org
+\addtolength{\textheight}{12mm}
+\addtolength{\topmargin}{-9mm}   % still fits on US paper
+\addtolength{\textwidth}{24mm}   % still fits on US paper
+\setlength{\oddsidemargin}{10mm}
+\setlength{\evensidemargin}{\oddsidemargin}
+
+\newcommand{\code}[1]{{{\tt #1}}}
+
+\title{The \code{phylo4} S4 classes and methods}
+\author{Ben Bolker, Peter Cowan \& Fran\c{c}ois Michonneau}
+\date{\today}
+
+\begin{document}
+
+
+<<setup, include=FALSE>>=
+library(knitr)
+opts_chunk$set(
+    fig.keep='none', dev='pdf', fig.width=6, fig.height=6,
+    latex.options.color="usenames,dvipsnames"
+)
+@
+
+
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+
+This document describes the new \code{phylo4} S4 classes and methods, which are
+intended to provide a unifying standard for the representation of phylogenetic
+trees and comparative data in R.  The \code{phylobase} package was developed to
+help both end users and package developers by providing a common suite of tools
+likely to be shared by all packages designed for phylogenetic analysis,
+facilities for data and tree manipulation, and standardization of formats.
+
+This standardization will benefit \emph{end-users} by making it easier to move
+data and compare analyses across packages, and to keep comparative data
+synchronized with phylogenetic trees. Users will also benefit from a repository
+of functions for tree manipulation, for example tools for including or excluding
+subtrees (and associated phenotypic data) or improved tree and data plotting
+facilities. \code{phylobase} will benefit \emph{developers} by freeing them to
+put their programming effort into developing new methods rather than into
+re-coding base tools. We (the \code{phylobase} developers) hope \code{phylobase}
+will also facilitate code validation by providing a repository for benchmark
+tests, and more generally that it will help catalyze community development of
+comparative methods in R.
+
+A more abstract motivation for developing \code{phylobase} was to improve data
+checking and abstraction of the tree data formats. \code{phylobase} can check
+that data and trees are associated in the proper fashion, and protects users and
+developers from accidently reordering one, but not the other. It also seeks to
+abstract the data format so that commonly used information (for example, branch
+length information or the ancestor of a particular node) can be accessed without
+knowledge of the underlying data structure (i.e., whether the tree is stored as
+a matrix, or a list, or a parenthesis-based format). This is achieved through
+generic \code{phylobase} functions which which retrieve the relevant information
+from the data structures. The benefits of such abstraction are multiple: (1)
+\emph{easier access to the relevant information} via a simple function call
+(this frees both users and developers from learning details of complex data
+structures), (2) \emph{freedom to optimize data structures in the future without
+  breaking code.} Having the generic functions in place to ``translate'' between
+the data structures and the rest of the program code allows program and data
+structure development to proceed somewhat independently. The alternative is code
+written for specific data structures, in which modifications to the data
+structure requires rewriting the entire package code (often exacting too high a
+price, which results in the persistence of less-optimal data structures). (3)
+\emph{providing broader access to the range of tools in
+  \code{phylobase}}. Developers of specific packages can use these new tools
+based on S4 objects without knowing the details of S4 programming.
+
+The base \code{phylo4} class is modeled on the the \code{phylo} class in
+\code{ape}.  \code{phylo4d} and \code{multiphylo4} extend the \code{phylo4}
+class to include data or multiple trees respectively.  In addition to describing
+the classes and methods, this vignette gives examples of how they might be used.
+
+\section{Package overview}
+
+The phylobase package currently implements the following functions and data structures:
+
+\begin{itemize}
+\item Data structures for storing a single tree and multiple trees:
+  \code{phylo4} and \code{multiPhylo4}?
+\item A data structure for storing a tree with associated tip and node data:
+  \code{phylo4d}
+\item A data structure for storing multiple trees with one set of tip data:
+  \code{multiPhylo4d}
+\item Functions for reading nexus files into the above data structures
+\item Functions for converting between the above data structures and \code{ape
+    phylo} objects as well as \code{ade4} \code{phylog} objects (although the
+  latter are now deprecated \ldots)
+\item Functions for editing trees and data (i.e., subsetting and replacing)
+\item Functions for plotting trees and trees with data
+\end{itemize}
+
+\section{Using the S4 help system}
+
+The \code{S4} help system works similarly to the \code{S3} help system with some
+small differences relating to how \code{S4} methods are written.  The
+\code{plot()} function is a good example.  When we type \code{?plot} we are
+provided the help for the default plotting function which expects \code{x} and
+\code{y}.  \code{R} also provides a way to smartly dispatch the right type of
+plotting function.  In the case of an \code{ape phylo} object (a \code{S3} class
+object) \code{R} evaluates the class of the object and finds the correct
+functions, so the following works correctly.
+
+<<randtree1,fig.keep='none',tidy=FALSE>>=
+library(ape)
+set.seed(1)  ## set random-number seed
+rand_tree <- rcoal(10) ## Make a random tree with 10 tips
+plot(rand_tree)
+@
+
+However, typing \code{?plot} still takes us to the default \code{plot} help.  We
+have to type \code{?plot.phylo} to find what we are looking for.  This is
+because \code{S3} generics are simply functions with a dot and the class name
+added.
+
+The \code{S4} generic system is too complicated to describe here, but doesn't
+include the same dot notation.  As a result \code{?plot.phylo4} doesn't work,
+\code{R} still finds the right plotting function.
+
+<<convtree,fig.keep='none'>>=
+library(phylobase)
+# convert rand_tree to a phylo4 object
+rand_p4_tree <- as(rand_tree, "phylo4")
+plot(rand_p4_tree)
+@
+
+All fine and good, but how to we find out about all the great features of the
+\code{phylobase} plotting function?  \code{R} has two nifty ways to find it, the
+first is to simply put a question mark in front of the whole call:
+
+<<doc0, eval=FALSE, purl=FALSE>>=
+`?`(plot(rand_p4_tree))
+@
+
+\code{R} looks at the class of the \code{rand\_p4\_tree} object and takes us to
+the correct help file (note: this only works with \code{S4} objects).  The
+second ways is handy if you already know the class of your object, or want to
+compare to generics for different classes:
+
+<<doc1, eval=FALSE, purl=FALSE>>=
+`?`(method, plot("phylo4"))
+@
+
+More information about how \code{S4} documentation works can be found in the
+methods package, by running the following command.
+
+<<doc2,eval=FALSE, purl=FALSE>>=
+help('Documentation', package="methods")
+@
+
+\section{Trees without data}
+
+You can start with a tree --- an object of class \code{phylo} from the
+\code{ape} package (e.g., read in using the \code{read.tree()} or
+\code{read.nexus()} functions), and convert it to a \code{phylo4} object.
+
+For example, load the raw \emph{Geospiza} data:
+<<geodata,tidy=FALSE>>=
+library(phylobase)
+data(geospiza_raw)
+## what does it contain?
+names(geospiza_raw)
+@
+
+Convert the \code{S3} tree to a \code{S4 phylo4} object using the \code{as()}
+function:
+
+<<convgeodata>>=
+(g1 <- as(geospiza_raw$tree, "phylo4"))
+@
+
+The (internal) nodes appear with labels \verb+<NA>+ because
+they are not defined:
+
+<<nodelabelgeodata>>=
+nodeLabels(g1)
+@
+
+You can also retrieve the node labels with \code{labels(g1,"internal")}).
+
+A simple way to assign the node numbers as labels (useful for various checks) is
+
+<<>>=
+nodeLabels(g1) <- paste("N", nodeId(g1, "internal"), sep="")
+head(g1, 5)
+@
+
+The \code{summary} method gives a little extra information, including
+information on the distribution of branch lengths:
+
+<<sumgeodata>>=
+summary(g1)
+@
+
+Print tip labels:
+<<tiplabelgeodata>>=
+tipLabels(g1)
+@
+
+(\code{labels(g1,"tip")} would also work.)
+
+You can modify labels and other aspects of the tree --- for example, to convert
+all the labels to lower case:
+
+<<modlabelsgeodata>>=
+tipLabels(g1) <- tolower(tipLabels(g1))
+@
+
+You could also modify selected labels, e.g. to modify the labels in positions 11
+and 13 (which happen to be the only labels with uppercase letters):
+
+<<eval=FALSE, purl=FALSE>>=
+tipLabels(g1)[c(11, 13)] <- c("platyspiza", "pinaroloxias")
+@
+
+Note that for a given tree, \code{phylobase} always return the \code{tipLabels}
+in the same order.
+
+Print node numbers (in edge matrix order):
+<<nodenumbergeodata>>=
+nodeId(g1, type='all')
+@
+
+Does it have information on branch lengths?
+<<hasbrlengeodata>>=
+hasEdgeLength(g1)
+@
+
+It does! What do they look like?
+<<edgeLength-geodata>>=
+edgeLength(g1)
+@
+
+Note that the root has \verb+<NA>+ as its length.
+
+Print edge labels (also empty in this case --- therefore all \code{NA}):
+
+<<edgelabelgeodata>>=
+edgeLabels(g1)
+@
+
+You can also use this function to label specific edges:
+<<edgelabel-assign-geodata>>=
+edgeLabels(g1)["23-24"] <- "an edge"
+edgeLabels(g1)
+@
+
+The edge labels are named according to the nodes they connect
+(ancestor-descendant). You can get the edge(s) associated with a particular
+node:
+
+<<getEdge-geodata>>=
+getEdge(g1, 24) # default uses descendant node
+getEdge(g1, 24, type="ancestor") # edges using ancestor node
+@
+
+These results can in turn be passed to the function \code{edgeLength} to
+retrieve the length of a given set of edges:
+
+<<getEdge-edgeLength>>=
+edgeLength(g1)[getEdge(g1, 24)]
+edgeLength(g1)[getEdge(g1, 24, "ancestor")]
+@
+
+Is it rooted?
+
+<<rootedgeodata>>=
+isRooted(g1)
+@
+
+Which node is the root?
+<<rootnodegeodata>>=
+rootNode(g1)
+@
+
+Does it contain any polytomies?
+<<polygeodata>>=
+hasPoly(g1)
+@
+
+Is the tree ultrametric?
+<<ultrametric-geodata>>=
+isUltrametric(g1)
+@
+
+You can also get the depth (distance from the root) of any given node or the
+tips:
+<<nodeDepth-geodata>>=
+nodeDepth(g1, 23)
+depthTips(g1)
+@
+
+\section{Trees with data}
+
+The \code{phylo4d} class matches trees with data, or combines them with a data
+frame to make a \code{phylo4d} (tree-with-data) object.
+
+Now we'll take the \emph{Geospiza} data from \verb+geospiza_raw$data+ and merge
+it with the tree. First, let's prepare the data:
+
+<<dataprep>>=
+g1 <- as(geospiza_raw$tree, "phylo4")
+geodata <- geospiza_raw$data
+@
+
+
+However, since \emph{G. olivacea} is included in the tree but
+not in the data set, we will initially run into some trouble:
+
+<<geomergedata, error=TRUE, purl=FALSE>>=
+g2 <- phylo4d(g1, geodata)
+@
+
+<<echo=FALSE, results='hide'>>=
+geodata <- geospiza_raw$data
+@
+
+To deal with \emph{G. olivacea} missing from the data, we have a few
+choices. The easiest is to use \code{missing.data="warn"} to allow \code{R} to
+create the new object with a warning (you can also use \code{missing.data="OK"}
+to proceed without warnings):
+
+<<geomerge2, tidy=FALSE, warning=TRUE, purl=FALSE>>=
+g2 <- phylo4d(g1, geodata, missing.data="warn")
+@
+
+<<echo=FALSE, results='hide'>>=
+g2 <- phylo4d(g1, geodata, missing.data="OK", extra.data="OK")
+@
+
+Another way to deal with this would be to use \code{prune()} to drop the
+offending tip from the tree first:
+
+<<geomerge3, results='hide'>>=
+g1sub <- prune(g1, "olivacea")
+g1B <- phylo4d(g1sub, geodata)
+@
+
+The difference between the two objects is that the species \emph{G. olivacea} is
+still present in the tree but has no data (i.e., \verb+NA+) associated with
+it. In the other case, \textit{G. olivacea} is not included in the tree
+anymore. The approach you choose depends on the goal of your analysis.
+
+You can summarize the new object with the function \code{summary}. It breaks
+down the statistics about the traits based on whether it is associated with the
+tips for the internal nodes:
+<<geomergesum>>=
+summary(g2)
+@
+
+Or use \code{tdata()} to extract the data (i.e., \code{tdata(g2)}). By default,
+\code{tdata()} will retrieve tip data, but you can also get internal node data
+only (\code{tdata(tree, "internal")}) or --- if the tip and node data have the
+same format --- all the data combined (\code{tdata(tree, "allnode")}).
+
+If you want to plot the data (e.g. for checking the input),
+\code{plot(tdata(g2))} will create the default plot for the data --- in this
+case, since it is a data frame [\textbf{this may change in future versions but
+  should remain transparent}] this will be a \code{pairs} plot of the data.
+
+\section{Subsetting}
+
+The \code{subset} command offers a variety of ways of extracting portions of a
+\code{phylo4} or \code{phylo4d} tree, keeping any tip/node data consistent.
+
+\begin{description}
+\item[tips.include]{give a vector of tips (names or numbers) to retain}
+\item[tips.exclude]{give a vector of tips (names or numbers) to drop}
+\item[mrca]{give a vector of node or tip names or numbers; extract the clade
+    containing these taxa}
+\item[node.subtree]{give a node (name or number); extract the subtree starting
+    from this node}
+\end{description}
+
+Different ways to extract the \emph{fuliginosa}-\emph{scandens} clade:
+
+<<geoextract,results='hide'>>=
+subset(g2, tips.include=c("fuliginosa", "fortis", "magnirostris",
+            "conirostris", "scandens"))
+subset(g2, node.subtree=21)
+subset(g2, mrca=c("scandens", "fortis"))
+@
+
+One could drop the clade by doing
+
+<<geodrop, results='hide'>>=
+subset(g2, tips.exclude=c("fuliginosa", "fortis", "magnirostris",
+            "conirostris", "scandens"))
+subset(g2, tips.exclude=names(descendants(g2, MRCA(g2, c("difficilis",
+               "fortis")))))
+
+@
+
+% This isn't implemented yet
+
+% Another approach is to pick the subtree graphically, by plotting the tree and
+% using \code{identify}, which returns the identify of the node you click on
+% with the mouse.
+%
+% <<geoident,eval=FALSE>>=
+% plot(g1)
+% n1 <- identify(g1)
+% subset(g2,node.subtree=n1)
+% @
+
+\section{Tree-walking}
+
+\code{phylobase} provides many functions that allows users to explore
+relationships between nodes on a tree (tree-walking and tree traversal). Most
+functions work by specifying the \code{phylo4} (or \code{phylo4d}) object as the
+first argument, the node numbers/labels as the second argument (followed by some
+additional arguments).
+
+\code{getNode} allows you to find a node based on its node number or its
+label. It returns a vector with node numbers as values and labels as names:
+
+<<getnode>>=
+data(geospiza)
+getNode(geospiza, 10)
+getNode(geospiza, "pauper")
+@
+
+If no node is specified, they are all returned, and if a node can't be found
+it's returned as a \verb+NA+. It is possible to control what happens when a node
+can't be found:
+
+<<getnode2>>=
+getNode(geospiza)
+getNode(geospiza, 10:14)
+getNode(geospiza, "melanogaster", missing="OK") # no warning
+getNode(geospiza, "melanogaster", missing="warn") # warning!
+@
+
+\code{children} and \code{ancestor} give the immediate neighboring nodes:
+
+<<children>>=
+children(geospiza, 16)
+ancestor(geospiza, 16)
+@
+
+while \code{descendants} and \code{ancestors} can traverse the tree up to the
+tips or root respectively:
+
+<<descendants>>=
+descendants(geospiza, 16)    # by default returns only the tips
+descendants(geospiza, "all") # also include the internal nodes
+ancestors(geospiza, 20)
+ancestors(geospiza, 20, "ALL") # uppercase ALL includes self
+@
+
+\code{siblings} returns the other node(s) associated with the same ancestor:
+
+<<siblings>>=
+siblings(geospiza, 20)
+siblings(geospiza, 20, include.self=TRUE)
+@
+
+\code{MRCA} returns the most common recent ancestor for a set of tips, and
+shortest path returns the nodes connecting 2 nodes:
+
+<<mrca>>=
+MRCA(geospiza, 1:6)
+shortestPath(geospiza, 4, "pauper")
+@
+
+\section{multiPhylo4 classes}
+
+\code{multiPhylo4} classes are not yet implemented but will be coming soon.
+
+\section{Examples}
+
+\subsection{Constructing a Brownian motion trait simulator}
+
+This section will describe a way of constructing a simulator that generates
+trait values for extant species (tips) given a tree with branch lengths,
+assuming a model of Brownian motion.
+
+We can use \code{as(tree,"phylo4vcov")} to coerce the tree into a
+variance-covariance matrix form, and then use \code{mvrnorm} from the
+\code{MASS} package to generate a set of multivariate normally distributed
+values for the tips. (A benefit of this approach is that we can very quickly
+generate a very large number of replicates.) This example illustrates a common
+feature of working with \code{phylobase} --- combining tools from several
+different packages to operate on phylogenetic trees with data.
+
+We start with a randomly generated tree using \code{rcoal()} from \code{ape} to
+generate the tree topology and branch lengths:
+
+<<rtree2>>=
+set.seed(1001)
+tree <- as(rcoal(12), "phylo4")
+@
+
+Next we generate the phylogenetic variance-covariance matrix (by coercing the
+tree to a \code{phylo4vcov} object) and pick a single set of normally
+distributed traits (using \code{MASS:mvrnorm} to pick a multivariate normal
+deviate with a variance-covariance matrix that matches the structure of the
+tree).
+
+<<vcvphylo>>=
+vmat <- as(tree, "phylo4vcov")
+vmat <- cov2cor(vmat)
+library(MASS)
+trvec <- mvrnorm(1, mu=rep(0, 12), Sigma=vmat)
+@
+
+The last step (easy) is to convert the \code{phylo4vcov} object back to a
+\code{phylo4d} object:
+
+<<plotvcvphylo>>=
+treed <- phylo4d(tree, tip.data=as.data.frame(trvec))
+plot(treed)
+@
+
+% \subsubsection{The hard way}
+
+% <<tidy=FALSE>>=
+% ## add node labels so we can match to data
+% nodeLabels(tree) <- as.character(nodeId(tree, "internal"))
+% ## ordering will make sure that we have ancestor value
+% ## defined before descendant
+% tree <- reorder(tree, "preorder")
+% edgemat <- edges(tree)
+% ## set aside space for values
+% nodevals <- numeric(nrow(edgemat))
+% ## label data in edge matrix order
+% names(nodevals) <- labels(tree, "all")[nodeId(tree, "all")]
+% ## variance is proportional to edge length; drop first
+% ## element of edge length, which is NA
+% dvals <- rnorm(nrow(edgemat) - 1, sd=edgeLength(tree)[-1]^2)
+% ## indexing: ind[node number] gives position in edge matrix
+% ind <- order(nodeId(tree, "all"))
+% for (i in 2:nrow(edgemat)) {
+%   ## value of ancestor node plus change
+%   nodevals[i] <- nodevals[ind[edgemat[i, 1]]] + dvals[i - 1]
+%   }
+% nodevals <- data.frame(nodevals)
+% treed2 <- phylo4d(tree, all.data=nodevals)
+% @
+
+
+% ========================================
+% = Table of commands, worth the effort? =
+% ========================================
+% \begin{tabular}{>{\tt}ll}
+% \hline
+% \rm Method & Description\\
+% \hline
+% tdata & Retrieve tip data\\
+% plot & plot tree with data if present\\
+% \hline
+% \end{tabular}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Appendices %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+\section{Definitions/slots}
+
+This section details the internal structure of the \code{phylo4},
+\code{multiphylo4} (coming soon!), \code{phylo4d}, and \code{multiphylo4d}
+(coming soon!) classes. The basic building blocks of these classes are the
+\code{phylo4} object and a dataframe.  The \code{phylo4} tree format is largely
+similar to the one used by \code{phylo} class in the package
+\code{ape}\footnote{\url{http://ape.mpl.ird.fr/}}.
+
+We use ``edge'' for ancestor-descendant relationships in the phylogeny
+(sometimes called ``branches'') and ``edge lengths'' for their lengths (``branch
+lengths''). Most generally, ``nodes'' are all species in the tree; species with
+descendants are ``internal nodes'' (we often refer to these just as ``nodes'',
+meaning clear from context); ``tips'' are species with no descendants. The
+``root node'' is the node with no ancestor (if one exists).
+
+\subsection{phylo4}
+Like \code{phylo}, the main components of
+the \code{phylo4} class are:
+\begin{description}
+\item[edge]{a 2-column matrix of integers,
+    with $N$ rows for a rooted tree or
+    $N-1$ rows for an unrooted tree and
+    column names \code{ancestor} and \code{descendant}.
+    Each row contains information on one edge in the tree.
+    See below for further constraints on the edge matrix.}
+\item[edge.length]{numeric list of edge lengths
+    (length $N$ (rooted) or $N-1$ (unrooted) or empty (length 0))}
+\item[tip.label]{character vector of tip labels (required), with length=\# of
+    tips. Tip labels need not be unique, but data-tree matching with non-unique
+    labels will cause an error}
+\item[node.label]{character vector of node labels, length=\# of internal nodes
+    or 0 (if empty).  Node labels need not be unique, but data-tree matching
+    with non-unique labels will cause an error}
+\item[order]{character: ``preorder'', ``postorder'', or ``unknown'' (default),
+    describing the order of rows in the edge matrix.  , ``pruningwise'' and
+    ``cladewise'' are accepted for compatibility with \code{ape}}
+\end{description}
+
+The edge matrix must not contain \code{NA}s, with the exception of the root
+node, which has an \code{NA} for \code{ancestor}. \code{phylobase} does not
+enforce an order on the rows of the edge matrix, but it stores information on
+the current ordering in the \code{@order} slot --- current allowable values are
+``unknown'' (the default), ``preorder'' (equivalent to ``cladewise'' in
+\code{ape}) or ``postorder'' \footnote{see
+  \url{http://en.wikipedia.org/wiki/Tree_traversal} for more information on
+  orderings. (\code{ape}'s ``pruningwise'' is ``bottom-up'' ordering).}.
+
+The basic criteria for the edge matrix are similar to those of \code{ape}, as
+documented it's tree
+specification\footnote{\url{ape.mpl.ird.fr/misc/FormatTreeR_28July2008.pdf}}. This
+is a modified version of those rules, for a tree with $n$ tips and $m$ internal
+nodes:
+
+\begin{itemize}
+\item Tips (no descendants) are coded $1,\ldots, n$,
+  and internal nodes ($\ge 1$ descendant)
+  are coded $n + 1, \ldots , n + m$
+  ($n + 1$ is the root).
+  Both series are numbered with no gaps.
+\item The first (ancestor)
+  column has only values $> n$ (internal nodes): thus, values $\le n$
+  (tips) appear only in the second (descendant) column)
+\item all internal nodes [not including the root] must appear in the first
+  (ancestor) column at least once [unlike \code{ape}, which nominally requires
+  each internal node to have at least two descendants (although it doesn't
+  absolutely prohibit them and has a \code{collapse.singles} function to get rid
+  of them), \code{phylobase} does allow these ``singleton nodes'' and has a
+  method \code{hasSingle} for detecting them]. Singleton nodes can be useful as
+  a way of representing changes along a lineage; they are used this way in the
+  \code{ouch} package.
+
+\item the number of occurrences of a node in the first column is related to the
+  nature of the node: once if it is a singleton, twice if it is dichotomous
+  (i.e., of degree 3 [counting ancestor as well as descendants]), three times if
+  it is trichotomous (degree 4), and so on.
+\end{itemize}
+
+\code{phylobase} does not technically prohibit reticulations (nodes or tips that
+appear more than once in the descendant column), but they will probably break
+most of the methods. Disconnected trees, cycles, and other exotica are not
+tested for, but will certainly break the methods.
+
+We have defined basic methods for \code{phylo4}:\code{show}, \code{print}, and a
+variety of accessor functions (see help files). \code{summary} does not seem to
+be terribly useful in the context of a ``raw'' tree, because there is not much
+to compute.
+
+\subsection{phylo4d}
+
+The \code{phylo4d} class extends \code{phylo4} with data. Tip data, and
+(internal) node data are stored separately, but can be retrieved together or
+separately with \code{tdata(x,"tip")}, \code{tdata(x,"internal")} or
+\code{tdata(x,"all")}. There is no separate slot for edge data, but these can be
+stored as node data associated with the descendant node.
+
+
+% \subsection{multiphylo4}
+
+\end{document}

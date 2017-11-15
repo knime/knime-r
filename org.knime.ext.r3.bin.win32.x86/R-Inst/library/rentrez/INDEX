@@ -1,0 +1,24 @@
+entrez_citmatch         Fetch pubmed ids matching specially formatted
+                        citation strings
+entrez_db_links         List available links for records from a given
+                        NCBI database
+entrez_db_searchable    List available search fields for a given
+                        database
+entrez_db_summary       Retrieve summary information about an NCBI
+                        database
+entrez_dbs              List databases available from the NCBI
+entrez_fetch            Download data from NCBI databases
+entrez_global_query     Find the number of records that match a given
+                        term across all NCBI Entrez databases
+entrez_info             Get information about EUtils databases
+entrez_link             Get links to datasets related to records from
+                        an NCBI database
+entrez_post             Post IDs to Eutils for later use
+entrez_search           Search the NCBI databases using EUtils
+entrez_summary          Get summaries of objects in NCBI datasets from
+                        a unique ID
+extract_from_esummary   Extract elements from a list of esummary
+                        records
+linkout_urls            Extract URLs from an elink object
+parse_pubmed_xml        Summarize an XML record from pubmed.
+rentrez                 rentrez

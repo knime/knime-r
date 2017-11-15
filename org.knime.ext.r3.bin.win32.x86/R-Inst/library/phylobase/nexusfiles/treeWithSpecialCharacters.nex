@@ -1,0 +1,35 @@
+#NEXUS
+
+BEGIN TAXA;
+  DIMENSIONS NTAX=6;
+  TAXLABELS
+    Species_1 'Species 2' 'Species  3' 'Species/4' 'Species\5' 'Species"6'
+    ;
+END;
+ 
+BEGIN CHARACTERS;
+  TITLE TestCharacters;
+  DIMENSIONS  NCHAR=2;
+	FORMAT DATATYPE = STANDARD GAP = - MISSING = ? SYMBOLS = "  0 1";
+	CHARSTATELABELS
+	  1 character1 / state1.1 'state 1.2', 2 character2 / state2.1 'state 2 2';
+	MATRIX
+	  Species_1     01
+	  'Species 2'   10
+	  'Species  3'   11
+	  'Species/4'   00
+	  'Species\5'   01
+	  'Species"6'   ?1
+	  ;
+END;
+
+BEGIN TREES;
+  TRANSLATE
+   1 Species_1,
+   2 'Species 2',
+   3 'Species  3',
+   4 'Species/4',
+   5 'Species\5',
+   6 'Species"6';
+   TREE tree1 = ((((1,2),3),4),5);
+END;

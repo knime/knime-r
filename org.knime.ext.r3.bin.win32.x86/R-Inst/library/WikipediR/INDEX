@@ -1,0 +1,16 @@
+WikipediR               A client library for MediaWiki's API
+categories_in_page      Retrieves categories associated with a page.
+page_backlinks          Retrieve a page's backlinks
+page_content            Retrieves MediaWiki page content
+page_external_links     Retrieve a page's links
+page_info               Retrieve information about a particular page
+page_links              Retrieve a page's links
+pages_in_category       Retrieves a list of category members.
+query                   base query function
+random_page             Retrieve the page content of a random MediaWiki
+                        page
+recent_changes          Retrieves entries from the RecentChanges feed
+revision_content        Retrieves MediaWiki revisions
+revision_diff           Generates a "diff" between a pair of revisions
+user_contributions      Retrieve user contributions
+user_information        Retrieve user information

@@ -1,0 +1,24 @@
+Package: abc.data
+Type: Package
+Title: Data Only: Tools for Approximate Bayesian Computation (ABC)
+Version: 1.0
+Date: 2015-05-04
+Authors@R: c( 
+    person("Csillery", "Katalin", role = "aut", email="kati.csillery@gmail.com"),
+    person("Lemaire", "Louisiane", role = "aut"),
+    person("Francois", "Olivier", role = "aut"),
+    person("Blum", "Michael",
+    email = "michael.blum@imag.fr", role = c("aut", "cre")))
+Depends: R (>= 2.10)
+Description: Contains data which are used by functions of the 'abc' package.
+Repository: CRAN
+License: GPL (>= 3)
+NeedsCompilation: no
+Packaged: 2015-05-05 09:25:25 UTC; mblum
+Author: Csillery Katalin [aut],
+  Lemaire Louisiane [aut],
+  Francois Olivier [aut],
+  Blum Michael [aut, cre]
+Maintainer: Blum Michael <michael.blum@imag.fr>
+Date/Publication: 2015-05-05 11:34:13
+Built: R 3.4.1; ; 2017-08-16 00:50:53 UTC; windows

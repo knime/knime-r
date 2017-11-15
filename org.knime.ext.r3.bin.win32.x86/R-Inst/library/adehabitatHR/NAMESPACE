@@ -1,0 +1,26 @@
+useDynLib(adehabitatHR)
+
+import(sp,adehabitatLT,methods,deldir,ade4,adehabitatMA)
+importFrom("graphics", "box", "grid", "image", "lines", "par", "title")
+importFrom("grDevices", "chull", "contourLines", "grey", "n2mfrow")
+importFrom("stats", "na.omit", "quantile", "var")
+
+
+exportPattern("^[^\\.]")
+
+S3method(image, estUDm)
+S3method(print, estUDm)
+S3method(image, estUD)
+S3method(as.data.frame, estUD)
+S3method(print, MCHu)
+S3method(plot, MCHu)
+S3method(plot, hrsize)
+S3method(print, liker)
+
+S3method(getverticeshr, estUD)
+S3method(getverticeshr, estUDm)
+S3method(getverticeshr, MCHu)
+S3method(getverticeshr, default)
+
+
+exportMethods(show)

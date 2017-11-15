@@ -1,0 +1,24 @@
+Package: expm
+Type: Package
+Title: Matrix Exponential, Log, 'etc'
+Version: 0.999-2
+Date: 2017-03-28
+Author: Vincent Goulet, Christophe Dutang, Martin Maechler,
+	David Firth, Marina Shapira, Michael Stadelmann
+Contact: expm-developers@lists.R-forge.R-project.org
+Maintainer: Martin Maechler <maechler@stat.math.ethz.ch>
+Description: Computation of the matrix exponential, logarithm, sqrt,
+  and related quantities.
+Depends: Matrix
+Imports: methods
+Suggests: RColorBrewer, sfsmisc, Rmpfr
+BuildResaveData: no
+License: GPL (>= 2)
+URL: http://R-Forge.R-project.org/projects/expm/
+Encoding: UTF-8
+NeedsCompilation: yes
+Packaged: 2017-03-29 07:09:26 UTC; maechler
+Repository: CRAN
+Date/Publication: 2017-03-29 12:17:31 UTC
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-10 16:22:40 UTC; windows
+Archs: i386, x64

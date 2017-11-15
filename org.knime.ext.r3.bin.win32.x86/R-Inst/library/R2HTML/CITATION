@@ -1,0 +1,22 @@
+citHeader("To cite R2HTML in publications use:")
+
+citEntry(entry = "Article",
+         title = "The {R2HTML} Package",
+         author = person(first="Eric",last="Lecoutre",email="lecoutre@stat.ucl.ac.be"),
+         journal = "R News",
+	 year = "2003",
+         volume = "3",
+         number = "3",
+         pages = "33--36",
+	 month = "December",
+         url = "http://cran.r-project.org/doc/Rnews/Rnews_2003-3.pdf", 
+         textVersion =   
+         paste("Lecoutre, Eric (2003). ",
+               "The R2HTML Package. ",
+               "R News, Vol 3. N. 3, Vienna, Austria.",sep="")
+	 )
+
+citFooter("See",sQuote("citation()"),"for citing R itself.")
+
+
+ 

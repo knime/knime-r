@@ -1,0 +1,152 @@
+EBImoran.mc             Permutation test for empirical Bayes index
+EBest                   Global Empirical Bayes estimator
+EBlocal                 Local Empirical Bayes estimator
+GMerrorsar              Spatial simultaneous autoregressive error model
+                        estimation by GMM
+LR.sarlm                Likelihood ratio test
+MCMCsamp                MCMC sample from fitted spatial regression
+ME                      Moran eigenvector GLM filtering
+NY_data                 New York leukemia data
+Rotation                Rotate a set of point by a certain angle
+SpatialFiltering        Semi-parametric spatial filtering
+afcon                   Spatial patterns of conflict in Africa 1966-78
+aggregate.nb            Aggregate a spatial neighbours object
+airdist                 Measure distance from plot
+anova.sarlm             Comparison of simultaneous autoregressive
+                        models
+aple                    Approximate profile-likelihood estimator (APLE)
+aple.mc                 Approximate profile-likelihood estimator (APLE)
+                        permutation test
+aple.plot               Approximate profile-likelihood estimator (APLE)
+                        scatterplot
+as_dgRMatrix_listw      Interface between Matrix class objects and
+                        weights lists
+auckland                Marshall's infant mortality in Auckland dataset
+autocov_dist            Distance-weighted autocovariate
+baltimore               House sales prices, Baltimore, MD 1978
+bhicv                   Data set with 4 life condition indices of Belo
+                        Horizonte region
+boston                  Corrected Boston Housing Data
+bptest.sarlm            Breusch-Pagan test for spatial models
+card                    Cardinalities for neighbours lists
+cell2nb                 Generate neighbours list for grid cells
+choynowski              Choynowski probability map values
+columbus                Columbus OH spatial analysis data set
+diffnb                  Differences between neighbours lists
+dnearneigh              Neighbourhood contiguity by distance
+do_ldet                 Spatial regression model Jacobian computations
+droplinks               Drop links in a neighbours list
+edit.nb                 Interactive editing of neighbours lists
+eigenw                  Spatial weights matrix eigenvalues
+eire                    Eire data sets
+elect80                 1980 Presidential election results
+errorsarlm              Spatial simultaneous autoregressive error model
+                        estimation
+gabrielneigh            Graph based spatial weights
+geary                   Compute Geary's C
+geary.mc                Permutation test for Geary's C statistic
+geary.test              Geary's C test for spatial autocorrelation
+getisord                Getis-Ord remote sensing example data
+globalG.test            Global G test for spatial autocorrelation
+gstsls                  Spatial simultaneous autoregressive SAC model
+                        estimation by GMM
+hopkins                 Hopkins burnt savanna herb remains
+house                   Lucas county OH housing
+huddersfield            Prevalence of respiratory symptoms
+impacts                 Impacts in spatial lag models
+include.self            Include self in neighbours list
+intersect.nb            Set operations on neighborhood objects
+invIrM                  Compute SAR generating operator
+is.symmetric.nb         Test a neighbours list for symmetry
+joincount.mc            Permutation test for same colour join count
+                        statistics
+joincount.multi         BB, BW and Jtot join count statistic for
+                        k-coloured factors
+joincount.test          BB join count statistic for k-coloured factors
+knearneigh              K nearest neighbours for spatial weights
+knn2nb                  Neighbours list from knn object
+lag.listw               Spatial lag of a numeric vector
+lagmess                 Matrix exponential spatial lag model
+lagsarlm                Spatial simultaneous autoregressive lag model
+                        estimation
+lee                     Compute Lee's statistic
+lee.mc                  Permutation test for Lee's L statistic
+lee.test                Lee's L test for spatial autocorrelation
+lextrB                  Find extreme eigenvalues of binary symmetric
+                        spatial weights
+listw2sn                Spatial neighbour sparse representation
+lm.LMtests              Lagrange Multiplier diagnostics for spatial
+                        dependence in linear models
+lm.morantest            Moran's I test for residual spatial
+                        autocorrelation
+lm.morantest.exact      Exact global Moran's I test
+lm.morantest.sad        Saddlepoint approximation of global Moran's I
+                        test
+localG                  G and Gstar local spatial statistics
+localmoran              Local Moran's I statistic
+localmoran.exact        Exact local Moran's Ii tests
+localmoran.sad          Saddlepoint approximation of local Moran's Ii
+                        tests
+mat2listw               Convert a square spatial weights matrix to a
+                        weights list object
+moran                   Compute Moran's I
+moran.mc                Permutation test for Moran's I statistic
+moran.plot              Moran scatterplot
+moran.test              Moran's I test for spatial autocorrelation
+mstree                  Find the minimal spanning tree
+n.comp.nb               Depth First Search on Neighbor Lists
+nb2INLA                 Output spatial neighbours for INLA
+nb2WB                   Output spatial weights for WinBUGS
+nb2blocknb              Block up neighbour list for location-less
+                        observations
+nb2lines                Use arc-type shapefiles for import and export
+                        of weights
+nb2listw                Spatial weights for neighbours lists
+nb2mat                  Spatial weights matrices for neighbours lists
+nbcosts                 Compute cost of edges
+nbdists                 Spatial link distance measures
+nblag                   Higher order neighbours lists
+nc.sids                 North Carolina SIDS data
+oldcol                  Columbus OH spatial analysis data set - old
+                        numbering
+p.adjustSP              Adjust local association measures' p-values
+plot.mst                Plot the Minimum Spanning Tree
+plot.nb                 Plot a neighbours list
+plot.skater             Plot the object of skater class
+poly2nb                 Construct neighbours list from polygon list
+predict.sarlm           Prediction for spatial simultaneous
+                        autoregressive linear model objects
+probmap                 Probability mapping for rates
+prunecost               Compute cost of prune each edge
+prunemst                Prune a Minimun Spanning Tree
+read.gal                Read a GAL lattice file into a neighbours list
+read.gwt2nb             Read and write spatial neighbour files
+residuals.sarlm         Access functions for spatial simultaneous
+                        autoregressive linear model objects
+sacsarlm                Spatial simultaneous autoregressive SAC model
+                        estimation
+set.mcOption            Options for parallel support
+set.spChkOption         Control checking of spatial object IDs
+similar.listw           Create symmetric similar weights lists
+skater                  Spatial 'K'luster Analysis by Tree Edge Removal
+sp.correlogram          Spatial correlogram
+sp.mantel.mc            Mantel-Hubert spatial general cross product
+                        statistic
+spautolm                Spatial conditional and simultaneous
+                        autoregression model estimation
+spdep                   Return package version number
+spweights.constants     Provides constants for spatial weights matrices
+ssw                     Compute the sum of dissimilarity
+stsls                   Generalized spatial two stage least squares
+subset.listw            Subset a spatial weights list
+subset.nb               Subset a neighbours list
+summary.nb              Print and summary function for neighbours and
+                        weights lists
+summary.sarlm           summary method for class sarlm
+tolerance.nb            Function to construct edges based on a
+                        tolerance angle and a maximum distance
+trW                     Spatial weights matrix powers traces
+tri2nb                  Neighbours list from tri object
+used.cars               US 1960 used car prices
+wheat                   Mercer and Hall wheat yield data
+write.nb.gal            Write a neighbours list as a GAL lattice file

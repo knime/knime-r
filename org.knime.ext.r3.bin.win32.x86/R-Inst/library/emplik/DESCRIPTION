@@ -1,0 +1,18 @@
+Package: emplik
+Maintainer: Mai Zhou <mai@ms.uky.edu>
+Version: 1.0-3
+Depends: R (>= 3.0), quantreg
+Suggests: KMsurv, boot
+Author: Mai Zhou. (Art Owen for el.test(). Yifan Yang for C code.)
+Description: Empirical likelihood ratio tests for means/quantiles/hazards
+ 	from possibly censored and/or truncated data. Now does regression too.
+	This version contains some C code.
+Title: Empirical Likelihood Ratio for Censored/Truncated Data
+License: GPL (>= 2)
+URL: http://www.ms.uky.edu/~mai/EmpLik.html
+NeedsCompilation: yes
+Packaged: 2016-08-12 22:51:42 UTC; mai
+Repository: CRAN
+Date/Publication: 2016-08-13 11:01:31
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-10 17:53:48 UTC; windows
+Archs: i386, x64

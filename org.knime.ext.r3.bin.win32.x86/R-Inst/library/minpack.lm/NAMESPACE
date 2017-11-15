@@ -1,0 +1,15 @@
+useDynLib(minpack.lm)
+export(nls.lm, nls.lm.control, nlsLM, wfct)
+S3method("print", "nls.lm")
+S3method("residuals", "nls.lm")
+S3method("coef", "nls.lm")
+S3method("deviance", "nls.lm")
+S3method("summary", "nls.lm")
+S3method("vcov", "nls.lm")
+S3method("df.residual", "nls.lm")
+S3method("print", "summary.nls.lm")
+importFrom("stats", "as.formula", "coef", "deviance", "getInitial",
+             "model.weights", "na.omit", "nls.control", "numericDeriv",
+             "printCoefmat", "pt", "qt", "resid", "residuals",
+             "setNames", "var", "vcov")
+

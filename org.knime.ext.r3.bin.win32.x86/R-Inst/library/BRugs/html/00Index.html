@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Interface to the 'OpenBUGS' MCMC Software</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Interface to the 'OpenBUGS' MCMC Software
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;BRugs&rsquo; version 0.9-0</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="BRugs.html">BRugs</a></td>
+<td>Introduction to BRugs</td></tr>
+<tr><td style="width: 25%;"><a href="BRugsFit.html">BRugsFit</a></td>
+<td>BRugs' meta function</td></tr>
+<tr><td style="width: 25%;"><a href="bugs.data.html">bugsData</a></td>
+<td>Writing input for OpenBUGS</td></tr>
+<tr><td style="width: 25%;"><a href="bugs.inits.html">bugsInits</a></td>
+<td>Writing input for OpenBUGS</td></tr>
+<tr><td style="width: 25%;"><a href="buildMCMC.html">buildMCMC</a></td>
+<td>Generating mcmc.list objects for package coda</td></tr>
+<tr><td style="width: 25%;"><a href="dic.html">dicClear</a></td>
+<td>DIC</td></tr>
+<tr><td style="width: 25%;"><a href="dic.html">dicSet</a></td>
+<td>DIC</td></tr>
+<tr><td style="width: 25%;"><a href="dic.html">dicStats</a></td>
+<td>DIC</td></tr>
+<tr><td style="width: 25%;"><a href="get.num.chains.html">getNumChains</a></td>
+<td>Number of chains</td></tr>
+<tr><td style="width: 25%;"><a href="BRugs.html">help.BRugs</a></td>
+<td>Introduction to BRugs</td></tr>
+<tr><td style="width: 25%;"><a href="help.WinBUGS.html">help.WinBUGS</a></td>
+<td>WinBUGS documentation</td></tr>
+<tr><td style="width: 25%;"><a href="info.memory.html">infoMemory</a></td>
+<td>Show memory usage</td></tr>
+<tr><td style="width: 25%;"><a href="info.modules.html">infoModules</a></td>
+<td>Loaded modules</td></tr>
+<tr><td style="width: 25%;"><a href="info.node.html">infoNodeMethods</a></td>
+<td>Node information</td></tr>
+<tr><td style="width: 25%;"><a href="info.node.html">infoNodeTypes</a></td>
+<td>Node information</td></tr>
+<tr><td style="width: 25%;"><a href="info.node.html">infoNodeValues</a></td>
+<td>Node information</td></tr>
+<tr><td style="width: 25%;"><a href="info.updaters.html">infoUpdatersbyDepth</a></td>
+<td>Information on MCMC updaters</td></tr>
+<tr><td style="width: 25%;"><a href="info.updaters.html">infoUpdatersbyName</a></td>
+<td>Information on MCMC updaters</td></tr>
+<tr><td style="width: 25%;"><a href="loadOpenBUGS.html">loadOpenBUGS</a></td>
+<td>Load OpenBUGS from given directory</td></tr>
+<tr><td style="width: 25%;"><a href="model.adaptivePhase.html">modelAdaptivePhase</a></td>
+<td>Getting length of adaptive phase</td></tr>
+<tr><td style="width: 25%;"><a href="model.check.html">modelCheck</a></td>
+<td>Checking the model file</td></tr>
+<tr><td style="width: 25%;"><a href="model.compile.html">modelCompile</a></td>
+<td>Compiling the model</td></tr>
+<tr><td style="width: 25%;"><a href="model.data.html">modelData</a></td>
+<td>Loading the data</td></tr>
+<tr><td style="width: 25%;"><a href="model.factory.html">modelDisable</a></td>
+<td>Enable and disable factories to create updaters</td></tr>
+<tr><td style="width: 25%;"><a href="model.factory.html">modelEnable</a></td>
+<td>Enable and disable factories to create updaters</td></tr>
+<tr><td style="width: 25%;"><a href="model.gen.inits.html">modelGenInits</a></td>
+<td>Generating initial values</td></tr>
+<tr><td style="width: 25%;"><a href="model.inits.html">modelInits</a></td>
+<td>Loading initial values</td></tr>
+<tr><td style="width: 25%;"><a href="model.iteration.html">modelIteration</a></td>
+<td>Returns number of iterations</td></tr>
+<tr><td style="width: 25%;"><a href="model.names.html">modelNames</a></td>
+<td>Get variable names in model</td></tr>
+<tr><td style="width: 25%;"><a href="model.precision.html">modelPrecision</a></td>
+<td>Setting precision for prec figures</td></tr>
+<tr><td style="width: 25%;"><a href="model.save.state.html">modelSaveState</a></td>
+<td>Save the model's current state</td></tr>
+<tr><td style="width: 25%;"><a href="model.setAP.html">modelSetAP</a></td>
+<td>Changing settings of updating algorithms</td></tr>
+<tr><td style="width: 25%;"><a href="model.setAP.html">modelSetIts</a></td>
+<td>Changing settings of updating algorithms</td></tr>
+<tr><td style="width: 25%;"><a href="model.setAP.html">modelSetOR</a></td>
+<td>Changing settings of updating algorithms</td></tr>
+<tr><td style="width: 25%;"><a href="model.RN.html">modelSetRN</a></td>
+<td>State of Random Number Generator</td></tr>
+<tr><td style="width: 25%;"><a href="model.setWD.html">modelSetWD</a></td>
+<td>Set working directory</td></tr>
+<tr><td style="width: 25%;"><a href="model.update.html">modelUpdate</a></td>
+<td>Updating the model</td></tr>
+<tr><td style="width: 25%;"><a href="plot.autoC.html">plotAutoC</a></td>
+<td>Plot autocorrelation function for a scalar variable</td></tr>
+<tr><td style="width: 25%;"><a href="plot.bgr.html">plotBgr</a></td>
+<td>Plot the Gelman-Rubin convergence statistic for a scalar variable</td></tr>
+<tr><td style="width: 25%;"><a href="plot.density.html">plotDensity</a></td>
+<td>Plot density estimate or histogram of a scalar variable</td></tr>
+<tr><td style="width: 25%;"><a href="plot.history.html">plotHistory</a></td>
+<td>Trace of a scalar variable</td></tr>
+<tr><td style="width: 25%;"><a href="ranks.html">ranksClear</a></td>
+<td>Calculation of ranks</td></tr>
+<tr><td style="width: 25%;"><a href="ranks.html">ranksSet</a></td>
+<td>Calculation of ranks</td></tr>
+<tr><td style="width: 25%;"><a href="ranks.html">ranksStats</a></td>
+<td>Calculation of ranks</td></tr>
+<tr><td style="width: 25%;"><a href="rats.html">ratsdata</a></td>
+<td>ratsdata example</td></tr>
+<tr><td style="width: 25%;"><a href="rats.html">ratsinits</a></td>
+<td>ratsdata example</td></tr>
+<tr><td style="width: 25%;"><a href="samples.autoC.html">samplesAutoC</a></td>
+<td>Plot autocorrelation function</td></tr>
+<tr><td style="width: 25%;"><a href="samples.bgr.html">samplesBgr</a></td>
+<td>Plot the Gelman-Rubin convergence statistic</td></tr>
+<tr><td style="width: 25%;"><a href="samples.clear.html">samplesClear</a></td>
+<td>Clear recorded values</td></tr>
+<tr><td style="width: 25%;"><a href="samples.coda.html">samplesCoda</a></td>
+<td>Writing files in CODA format</td></tr>
+<tr><td style="width: 25%;"><a href="samples.correl.html">samplesCorrel</a></td>
+<td>Correlation</td></tr>
+<tr><td style="width: 25%;"><a href="samples.density.html">samplesDensity</a></td>
+<td>Plot density estimate or histogram</td></tr>
+<tr><td style="width: 25%;"><a href="samples.get.html">samplesGetBeg</a></td>
+<td>Get settings used for calculations</td></tr>
+<tr><td style="width: 25%;"><a href="samples.get.html">samplesGetEnd</a></td>
+<td>Get settings used for calculations</td></tr>
+<tr><td style="width: 25%;"><a href="samples.get.html">samplesGetFirstChain</a></td>
+<td>Get settings used for calculations</td></tr>
+<tr><td style="width: 25%;"><a href="samples.get.html">samplesGetLastChain</a></td>
+<td>Get settings used for calculations</td></tr>
+<tr><td style="width: 25%;"><a href="samples.get.html">samplesGetThin</a></td>
+<td>Get settings used for calculations</td></tr>
+<tr><td style="width: 25%;"><a href="samples.history.html">samplesHistory</a></td>
+<td>Trace of a variable</td></tr>
+<tr><td style="width: 25%;"><a href="samples.monitors.html">samplesMonitors</a></td>
+<td>Names of monitored scalar variables</td></tr>
+<tr><td style="width: 25%;"><a href="samples.sample.html">samplesSample</a></td>
+<td>Stored values</td></tr>
+<tr><td style="width: 25%;"><a href="samples.set.html">samplesSet</a></td>
+<td>Start recording</td></tr>
+<tr><td style="width: 25%;"><a href="samples.setting.html">samplesSetBeg</a></td>
+<td>Change settings used for calculations</td></tr>
+<tr><td style="width: 25%;"><a href="samples.setting.html">samplesSetEnd</a></td>
+<td>Change settings used for calculations</td></tr>
+<tr><td style="width: 25%;"><a href="samples.setting.html">samplesSetFirstChain</a></td>
+<td>Change settings used for calculations</td></tr>
+<tr><td style="width: 25%;"><a href="samples.setting.html">samplesSetLastChain</a></td>
+<td>Change settings used for calculations</td></tr>
+<tr><td style="width: 25%;"><a href="samples.setting.html">samplesSetThin</a></td>
+<td>Change settings used for calculations</td></tr>
+<tr><td style="width: 25%;"><a href="samples.size.html">samplesSize</a></td>
+<td>Size of the stored sample</td></tr>
+<tr><td style="width: 25%;"><a href="samples.stats.html">samplesStats</a></td>
+<td>Calculate summary statistics</td></tr>
+<tr><td style="width: 25%;"><a href="set.values.html">setValues</a></td>
+<td>Setting current values</td></tr>
+<tr><td style="width: 25%;"><a href="summary.html">summaryClear</a></td>
+<td>Summary of MCMC simulation</td></tr>
+<tr><td style="width: 25%;"><a href="summary.html">summarySet</a></td>
+<td>Summary of MCMC simulation</td></tr>
+<tr><td style="width: 25%;"><a href="summary.html">summaryStats</a></td>
+<td>Summary of MCMC simulation</td></tr>
+<tr><td style="width: 25%;"><a href="write.model.html">writeModel</a></td>
+<td>Creating an OpenBUGS model file</td></tr>
+</table>
+</body></html>

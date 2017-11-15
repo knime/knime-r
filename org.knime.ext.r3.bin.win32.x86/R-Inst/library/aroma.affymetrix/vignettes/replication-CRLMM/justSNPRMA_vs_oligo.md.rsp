@@ -1,0 +1,110 @@
+<%@meta title="CRLMM/SNPRMA reproducibility: justSNPRMA() versus oligo::justSNPRMA()"%>
+<%@meta author="Henrik Bengtsson"%>
+
+# <%@meta name="title"%>
+
+by <%@meta name="author"%>
+
+This test verifies that `aroma.affymetrix::justSNPRMA()` can reproduce the GCRMA chip-effect estimates as estimated by `oligo::justSNPRMA()`.
+
+<%
+library("R.utils")
+use("R.devices")
+verbose <- Arguments$getVerbose(-8, timestamp=TRUE)
+options(digits=4L)
+plotDensity <- aroma.light::plotDensity
+%>
+
+## Setup
+```r
+<%=withCapture({
+use("aroma.affymetrix")
+use("oligo")
+use("pd.mapping50k.hind240")
+})%>
+```
+
+## Data
+```r
+<%=withCapture({
+dataset <- "HapMap,CEU,testset"
+chiptype <- "Mapping50K_Hind240"
+cdf <- AffymetrixCdfFile$byChipType(chiptype)
+cdf
+
+csR <- AffymetrixCelSet$byName(dataset, cdf=cdf)
+csR
+})%>
+```
+
+<%
+normalizeToHapmap <- TRUE
+%>
+
+## SNPRMA by aroma.affymetrix
+```r
+<%=withCapture({
+eset <- justSNPRMA(csR, normalizeToHapmap=normalizeToHapmap, verbose=verbose)
+eset
+})%>
+```
+
+## SNPRMA by oligo
+```r
+<%=withCapture({
+eset0 <- justSNPRMA(getPathnames(csR), normalizeToHapmap=normalizeToHapmap, verbose=as.logical(verbose))
+eset0
+})%>
+```
+
+<%
+if (!normalizeToHapmap) {
+  # CLEAN UP: justSNPRMA() stores a target distribution file
+  # in the working directory that we don't need
+  filename <- sprintf("%s.quantileReference.rda", pdPkgName)
+  if (isFile(filename)) file.remove(filename)
+}
+%>
+
+
+## Comparisons
+
+Overall correlation of chip effects per each sample:
+```r
+<%=withCapture({
+compareESets <- function(eset1, eset2, tolerance=1e-4) {
+  # Default
+  res <- all.equal(eset1, eset2, tolerance=tolerance)
+  if (!isTRUE(res)) return(res)
+
+  # Compare assayData()
+  data1 <- assayData(eset1)
+  data2 <- assayData(eset2)
+  data1 <- as.list(data1)
+  data2 <- as.list(data2)
+  res <- all.equal(data1, data2, tolerance=tolerance)
+  if (!isTRUE(res)) return(res)
+  TRUE
+} # compareESets()
+})%>
+```
+
+```r
+<%=withCapture({
+res <- compareESets(eset, eset0)
+res
+# Sanity check
+stopifnot(compareESets(eset, eset0))
+})%>
+```
+
+## Appendix
+```r
+<%=withCapture({
+sessionInfo()
+})%>
+```
+
+--------------------------------------------------------------------
+Last generated: <%=format(Sys.time(), "%Y-%m-%d %H:%M:%S UTC%z")%>.
+Powered by [RSP](http://cran.r-project.org/package=R.rsp).

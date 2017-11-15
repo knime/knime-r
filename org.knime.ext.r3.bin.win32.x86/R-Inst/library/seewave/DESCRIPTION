@@ -1,0 +1,28 @@
+Package: seewave
+Type: Package
+Title: Sound Analysis and Synthesis
+Version: 2.0.5
+Date: 2016-10-12
+Author: Jerome Sueur <sueur@mnhn.fr> [cre, au], Thierry Aubin [au],
+        Caroline Simonis [au], Laurent Lellouch [main ctrb],
+        Ethan C. Brown [ctrb], Marion Depraetere [ctrb],
+        Camille Desjonqueres [ctrb], Francois Fabianek [ctrb], 
+        Amandine Gasc [ctrb], Stefanie LaZerte [ctrb], Jonathan Lees [ctrb],
+        Jean Marchal [ctrb], Sandrine Pavoine [ctrb], Alicia Stotz [ctrb],
+        Luis J. Villanueva-Rivera [ctrb], Zev Ross [ctrb], 
+        Carl G. Witthoft [ctrb], Hristo Zhivomirov [ctrb].
+Maintainer: Jerome Sueur <sueur@mnhn.fr>
+Encoding: UTF-8
+SystemRequirements: LIBSNDFILE
+Imports: graphics, grDevices, stats, utils, tuneR
+Suggests: audio, fftw, ggplot2, rgl, rpanel, signal
+ZipData: no
+Description: Functions for analysing, manipulating, displaying, editing and synthesizing time waves (particularly sound).  This package processes time analysis (oscillograms and envelopes), spectral content, resonance quality factor, entropy, cross correlation and autocorrelation, zero-crossing, dominant frequency, analytic signal, frequency coherence, 2D and 3D spectrograms and many other analyses.
+License: GPL (>= 2)
+URL: http://rug.mnhn.fr/seewave
+NeedsCompilation: yes
+Packaged: 2016-10-12 14:20:47 UTC; root
+Repository: CRAN
+Date/Publication: 2016-10-13 00:18:10
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-10 14:31:40 UTC; windows
+Archs: i386, x64

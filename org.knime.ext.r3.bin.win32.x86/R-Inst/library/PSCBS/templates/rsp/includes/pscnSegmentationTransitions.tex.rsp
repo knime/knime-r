@@ -1,0 +1,51 @@
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% PARENT-SPECIFIC COPY-NUMBER TRANSITIONS
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<% pscnSegmentationTransitions <- function(fit, ...) { %>
+\clearpage
+\subsection{Parent-specific copy-number transitions}
+\label{sec:PSCNSegmentationTransitions}
+<%
+# plotC1C2Grid()
+require("aroma.cn") || throw("Package not loaded: aroma.cn");
+
+chromosomes <- getChromosomes(fit);
+nbrOfChromosomes <- length(chromosomes);
+chromosomesH <- seqToHumanReadable(chromosomes);
+chromosomesH <- if (nbrOfChromosomes == 1) {
+  sprintf("Chr %s", chromosomesH);
+} else {
+  sprintf("Chrs %s", chromosomesH);
+}
+chrsTags <- if (nbrOfChromosomes == 1) {
+  sprintf("chr%02d", chromosomes[1]);
+} else {
+  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
+}
+%>
+\begin{figure}[htbp]
+ \begin{center}
+  \resizebox{0.6\textwidth}{!}{%
+    \includegraphics{<%={
+      tags <- c(chrsTags, fitClass, "C1C2", getChecksum(fit));
+      toPNG(name=sampleNameEscDots, tags=tags, width=640, aspectRatio=1, par=list(mar=c(4,4,1,1)+0.1, cex=2), {
+        plotC1C2Grid(fit, Clim=ClimX);
+        linesC1C2(fit, lwd=2);
+      }, force=FALSE);
+    }%>}%
+  }%
+ \end{center}
+ \caption{
+   A graph representation of the minor ($C_1$) and major ($C_2$) 
+   copy-number segmentation on <%=chromosomesH%>,
+   where the nodes represent ($S=<%=nbrOfSegments(fit, splitters=FALSE)%>$)
+   segments and the lines change points.
+   The size of a node reflects the length of the corresponding segment.
+   The marginal distributions (gray curves) of the minor and the major CNs 
+   are projected onto the horizontal and vertical axis, respectively.
+   To easy a visual comparison, the latter is also projected onto the
+   horizontal axis (light blue curve).
+ }
+ \label{fig:C1C2}
+\end{figure}
+<% } # pscnSegmentationTransitions() %>

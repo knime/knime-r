@@ -1,0 +1,7 @@
+<%--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
+  SESSION INFORMATION
+==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--%>
+\section*{Session information}
+<%=paste(toLatex(sessionInfo()), collapse="\n")%>
+This report was generated via \code{report(fit)} which utilizes the R.rsp package.
+The template for this report was created by  Henrik Bengtsson and last updated on March 21, 2013.

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="David Winter" />
+
+<meta name="date" content="2017-03-03" />
+
+<title>Connecting data to Open Tree trees</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Connecting data to Open Tree trees</h1>
+<h4 class="author"><em>David Winter</em></h4>
+<h4 class="date"><em>2017-03-03</em></h4>
+
+
+
+<div id="combining-data-from-otol-and-other-sources." class="section level2">
+<h2>Combining data from OToL and other sources.</h2>
+<p>One of the major goals of <code>rotl</code> is to help users combine data from other sources with the phylogenetic trees in the Open Tree database. This examples document describes some of the ways in whih a user might connect data to trees from Open Tree.</p>
+</div>
+<div id="get-open-tree-ids-to-match-your-data." class="section level2">
+<h2>Get Open Tree IDs to match your data.</h2>
+<p>Let’s say you have a dataset where each row represents a measurement taken from one species, and your goal is to put these measurements in some phylogenetic context. Here’s a small example: the best estimate of the mutation rate for a set of unicellular Eukaryotes along with some other property of those species which might explain the mutation rate:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">csv_path &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;protist_mutation_rates.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;rotl&quot;</span>)
+mu &lt;-<span class="st"> </span><span class="kw">read.csv</span>(csv_path, <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)
+mu</code></pre></div>
+<pre><code>##                     species       mu pop.size genome.size
+## 1   Tetrahymena thermophila 7.61e-12 1.12e+08    1.04e+08
+## 2    Paramecium tetraurelia 1.94e-11 1.24e+08    7.20e+07
+## 3 Chlamydomonas reinhardtii 2.08e-10 1.00e+08    1.12e+08
+## 4  Dictyostelium discoideum 2.90e-11 7.40e+06    3.40e+07
+## 5  Saccharomyces cerevisiae 3.30e-10 1.00e+08    1.25e+08
+## 6       Saccharomyces pombe 2.00e-10 1.00e+07    1.25e+08</code></pre>
+<p>If we want to get a tree for these species we need to start by finding the unique ID for each of these species in the Open Tree database. We can use the Taxonomic Name Resolution Service (<code>tnrs</code>) functions to do this. Before we do that we should see if any of the taxonomic contexts, which can be used to narrow a search and avoid conflicts between different codes, apply to our group of species:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rotl)
+<span class="kw">tnrs_contexts</span>()</code></pre></div>
+<pre><code>## Possible contexts:
+##    Animals 
+##       Birds, Tetrapods, Mammals, Amphibians, Vertebrates 
+##       Arthropods, Molluscs, Nematodes, Platyhelminthes, Annelids 
+##       Cnidarians, Arachnides, Insects 
+##    Bacteria 
+##       SAR group, Archaea, Excavata, Amoebae, Centrohelida 
+##       Haptophyta, Apusozoa, Diatoms, Ciliates, Forams 
+##    Fungi 
+##       Basidiomycetes, Ascomycetes 
+##    Land plants 
+##       Hornworts, Mosses, Liverworts, Vascular plants, Club mosses 
+##       Ferns, Seed plants, Flowering plants, Monocots, Eudicots 
+##       Rosids, Asterids, Asterales, Asteraceae, Aster 
+##       Symphyotrichum, Campanulaceae, Lobelia 
+##    All life</code></pre>
+<p>Hmm, none of those groups contain all of our species. In this case we can search using the <code>All life</code> context and the function <code>tnrs_match_names</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">taxon_search &lt;-<span class="st"> </span><span class="kw">tnrs_match_names</span>(<span class="dt">names=</span>mu$species, <span class="dt">context_name=</span><span class="st">&quot;All life&quot;</span>)
+knitr::<span class="kw">kable</span>(taxon_search)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">search_string</th>
+<th align="left">unique_name</th>
+<th align="left">approximate_match</th>
+<th align="left">ott_id</th>
+<th align="left">is_synonym</th>
+<th align="left">flags</th>
+<th align="left">number_matches</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">tetrahymena thermophila</td>
+<td align="left">Tetrahymena thermophila</td>
+<td align="left">FALSE</td>
+<td align="left">180195</td>
+<td align="left">FALSE</td>
+<td align="left">SIBLING_HIGHER</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">paramecium tetraurelia</td>
+<td align="left">Paramecium tetraurelia</td>
+<td align="left">FALSE</td>
+<td align="left">568130</td>
+<td align="left">FALSE</td>
+<td align="left"></td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">chlamydomonas reinhardtii</td>
+<td align="left">Chlamydomonas reinhardtii</td>
+<td align="left">FALSE</td>
+<td align="left">33153</td>
+<td align="left">FALSE</td>
+<td align="left"></td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">dictyostelium discoideum</td>
+<td align="left">Dictyostelium discoideum</td>
+<td align="left">FALSE</td>
+<td align="left">160850</td>
+<td align="left">FALSE</td>
+<td align="left"></td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">saccharomyces cerevisiae</td>
+<td align="left">Saccharomyces cerevisiae</td>
+<td align="left">FALSE</td>
+<td align="left">908549</td>
+<td align="left">FALSE</td>
+<td align="left"></td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">saccharomyces pombe</td>
+<td align="left">Schizosaccharomyces pombe</td>
+<td align="left">FALSE</td>
+<td align="left">990004</td>
+<td align="left">TRUE</td>
+<td align="left"></td>
+<td align="left">1</td>
+</tr>
+</tbody>
+</table>
+<p>Good, all of our species are known to Open Tree. Note, though, that one of the names is a synonym. <em>Saccharomyces pombe</em> is older name for what is now called <em>Schizosaccharomyces pombe</em>. As the name suggests, the Taxonomic Name Resolution Service is designed to deal with these problems (and similar ones like misspellings), but it is always a good idea to check the results of <code>tnrs_match_names</code> closely to ensure the results are what you expect.</p>
+<p>In this case we have a good ID for each of our species so we can move on. Before we do that, let’s ensure we can match up our original data to the Open Tree names and IDs by adding them to our <code>data.frame</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mu$ott_name &lt;-<span class="st"> </span>taxon_search$unique_name
+mu$ott_id &lt;-<span class="st"> </span>taxon_search$ott_id</code></pre></div>
+</div>
+<div id="find-a-tree-with-your-taxa" class="section level2">
+<h2>Find a tree with your taxa</h2>
+<p>Now let’s find a tree. There are two possible options here: we can search for published studies that include our taxa or we can use the ‘synthetic tree’ from Open Tree. We can try both approaches.</p>
+<div id="published-trees" class="section level3">
+<h3>Published trees</h3>
+<p>Before we can search for published studies or trees, we should check out the list of properties we can use to perform such searches:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">studies_properties</span>()</code></pre></div>
+<pre><code>## $tree_properties
+##  [1] &quot;ot:treebaseOTUId&quot;           &quot;ot:nodeLabelMode&quot;          
+##  [3] &quot;ot:originalLabel&quot;           &quot;oti_tree_id&quot;               
+##  [5] &quot;ot:ottTaxonName&quot;            &quot;ot:inferenceMethod&quot;        
+##  [7] &quot;ot:tag&quot;                     &quot;ot:treebaseTreeId&quot;         
+##  [9] &quot;ot:comment&quot;                 &quot;ot:branchLengthDescription&quot;
+## [11] &quot;ot:treeModified&quot;            &quot;ot:studyId&quot;                
+## [13] &quot;ot:branchLengthTimeUnits&quot;   &quot;ot:ottId&quot;                  
+## [15] &quot;is_deprecated&quot;              &quot;ot:branchLengthMode&quot;       
+## [17] &quot;ot:treeLastEdited&quot;          &quot;ot:nodeLabelDescription&quot;   
+## 
+## $study_properties
+##  [1] &quot;ot:studyModified&quot;             &quot;ot:focalClade&quot;               
+##  [3] &quot;ot:focalCladeOTTTaxonName&quot;    &quot;ot:focalCladeOTTId&quot;          
+##  [5] &quot;ot:studyPublication&quot;          &quot;ot:studyLastEditor&quot;          
+##  [7] &quot;ot:focalCladeTaxonName&quot;       &quot;ot:tag&quot;                      
+##  [9] &quot;ot:comment&quot;                   &quot;ot:studyLabel&quot;               
+## [11] &quot;ot:authorContributed&quot;         &quot;ot:studyPublicationReference&quot;
+## [13] &quot;ot:curatorName&quot;               &quot;ot:studyId&quot;                  
+## [15] &quot;ot:studyYear&quot;                 &quot;ot:studyUploaded&quot;            
+## [17] &quot;is_deprecated&quot;                &quot;ot:dataDeposit&quot;              
+## [19] &quot;ot:candidateTreeForSynthesis&quot;</code></pre>
+<p>We have <code>ottIds</code> for our taxa, so let’s use those IDs to search for trees that contain them. Starting with our first species <em>Tetrahymena thermophila</em> we can use <code>studies_find_trees</code> to do this search.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">studies_find_trees</span>(<span class="dt">property=</span><span class="st">&quot;ot:ottId&quot;</span>, <span class="dt">value=</span><span class="st">&quot;180195&quot;</span>)</code></pre></div>
+<pre><code>## [1] study_ids       dat             n_matched_trees
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<p>Well… that’s not very promising. We can repeat that process for all of the IDs to see if the other species are better represented.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hits &lt;-<span class="st"> </span><span class="kw">lapply</span>(mu$ott_id, studies_find_trees, <span class="dt">property=</span><span class="st">&quot;ot:ottId&quot;</span>, <span class="dt">detailed =</span> <span class="ot">FALSE</span>)
+<span class="kw">sapply</span>(hits, function(x) <span class="kw">sum</span>(x[[<span class="st">&quot;n_matched_trees&quot;</span>]]))</code></pre></div>
+<pre><code>## [1]  0  0  2  0 32  3</code></pre>
+<p>OK, most of our species are not in any of the published trees available. You can help fix this sort of problem by <a href="https://tree.opentreeoflife.org/curator">making sure you submit your published trees to Open Tree</a>.</p>
+</div>
+<div id="a-part-of-the-synthesis-tree" class="section level3">
+<h3>A part of the synthesis tree</h3>
+<p>Thankfully, we can still use the complete Tree of Life made from the combined results of all of the published trees and taxonomies that go into Open Tree. The function <code>tol_induced_subtree</code> will fetch a tree relating a set of IDs.</p>
+<p>Using the default arguments you can get a tree object into your R session:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr &lt;-<span class="st"> </span><span class="kw">tol_induced_subtree</span>(<span class="dt">ott_ids=</span>mu$ott_id)
+<span class="kw">plot</span>(tr)</code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAGACAMAAABFpiBcAAADAFBMVEUAAAABAQECAgIDAwMEBAQFBQUGBgYHBwcICAgJCQkKCgoLCwsMDAwNDQ0ODg4PDw8QEBARERESEhITExMUFBQVFRUWFhYXFxcYGBgZGRkaGhobGxscHBwdHR0eHh4fHx8gICAhISEiIiIjIyMkJCQlJSUmJiYnJycoKCgpKSkqKiorKyssLCwtLS0uLi4vLy8wMDAxMTEyMjIzMzM0NDQ1NTU2NjY3Nzc4ODg5OTk6Ojo7Ozs8PDw9PT0+Pj4/Pz9AQEBBQUFCQkJDQ0NERERFRUVGRkZHR0dISEhJSUlKSkpLS0tMTExNTU1OTk5PT09QUFBRUVFSUlJTU1NUVFRVVVVWVlZXV1dYWFhZWVlaWlpbW1tcXFxdXV1eXl5fX19gYGBhYWFiYmJjY2NkZGRlZWVmZmZnZ2doaGhpaWlqampra2tsbGxtbW1ubm5vb29wcHBxcXFycnJzc3N0dHR1dXV2dnZ3d3d4eHh5eXl6enp7e3t8fHx9fX1+fn5/f3+AgICBgYGCgoKDg4OEhISFhYWGhoaHh4eIiIiJiYmKioqLi4uMjIyNjY2Ojo6Pj4+QkJCRkZGSkpKTk5OUlJSVlZWWlpaXl5eYmJiZmZmampqbm5ucnJydnZ2enp6fn5+goKChoaGioqKjo6OkpKSlpaWmpqanp6eoqKipqamqqqqrq6usrKytra2urq6vr6+wsLCxsbGysrKzs7O0tLS1tbW2tra3t7e4uLi5ubm6urq7u7u8vLy9vb2+vr6/v7/AwMDBwcHCwsLDw8PExMTFxcXGxsbHx8fIyMjJycnKysrLy8vMzMzNzc3Ozs7Pz8/Q0NDR0dHS0tLT09PU1NTV1dXW1tbX19fY2NjZ2dna2trb29vc3Nzd3d3e3t7f39/g4ODh4eHi4uLj4+Pk5OTl5eXm5ubn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz9/f3+/v7////isF19AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAfhklEQVR4nO2dC3gU1dnHDyEQEkhECchFuSsoFxUKSrmIKAUtIiCgFcULBqRqFfQrSitatRUrRRGVGhS1FPgglYjYKAiiFhXwioA3Ln4oFOXmDUhCkj3feWd33pnJ7oQsmV1e5P97nmxO5pz3PRPyZ3Y3PMxPaQAEo470CQBQEQgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAgoEA0CCkSDgALRIKBANAhoUJRM7Zl9XPcXXUfyU36qSsMqlsfPjb+scHrX4iLrI7kgoAFxoGuDu/53Zo9qy51DEztEBmPUzsPoyOXJouutFU7nZpZaH3p278zWfwtp12DriEZN/lgac2CYn/J/h39SCGhATKq/zTweyLzJOdT3+sjg7hsOpyOXJ4mimnMrnL/u/PDHLVkPFNyuZroGm5oOzLtH5cYaGBZWbxQ6/LNCQAOiwxDr021ztN57Y/vMfl/o0PGP3Nwyc1SZ3p/yvH5FEbWK9IFbT6rd8z2z8qUeWfXGFmv939FNa7Z8RHNZVDmvKOnzzoi6e+wGxTXzrmjSKn/jJQ1OeVOP7GQabE+fzU0O3ndOnW4rXdsYFqe8NSy75TNmFLPHGrWk73Ft87WrWDtrS2srVTtdqaxl1deYo30v1K/ZA92vr7lW9hgUa6D1i/UbDanCnysCGhA9suaEY6C3tD4jd2bTM/VGdeKDK0eopfpt9aX+7tNPP30pY4LefU6bx1/onL1XL6px26KJ6gldfNppMxacqz7isqhyXrFWtbrwEW7wgeq16fvudQdt292mh76rgdl4VKcyu/invif9fVG3zK94G2JSnS6v7x2v3texezyuTr7/xYtSNzjFhL22bGu1Z3ebj72je9LhvpdqHqxTn5jBwItjDLQuqP927Yeq8OeKgAbEG41V5uAn6W3NkPbfaf2oOjBXzdf6S5Wnp59gPcV93SwnpH/XyrwcXa/y9UUDtQ7dvlS/132D1u+odVwWVc4rnlZ/1U6DmSlbtJ6QuVfrK881U0V6XcoKbjK5/tfmdaB5+rW3IfpnmlchRRn3+/S4OuUtrX9Iv1dzMcFr6a8ZffTrZ46urTnJGYxqTws73B5joJdmv/2RWhn1p1V5ENCg+HHOVfVV07fMD/N581XhjtC41iaX76sv9LV9af6bUy8v1d+mPWuG+0z2Lkkds+RAuPKHtwZllNhl66LK7RV6bIsyV4Ox9J57wHDz0PlWvUxt0RdewnsXNbxxo6FWrnubUD3rTdDJk3x6nPYbmj7l1mIuNjhr6a8Zfdxf7fcv/7WJOcCDdneYJSUZuTEGy7Pf1DNqFFbhjxUB9WHP5nj4fleJqSl9I6uLfrb6wXCHHvR+6cmsMt1xAvXrOMAcX6zMFU5vMM/Xu+9vrrKnar16SIPaPVr04LLocnuF7nKLu0FX85Vu/BC9kJxnXg/8Z1nqZ1z8ngpTwNsYNquXzGNxyuzYPX6oRu+RytJnOMXavd815q8ZfRTd3KDepdPUZzwoTZtllixR70UP3s5eofXVXavyc0BAfWjbqGUcDFUbrap+vfUfmtNg4+7SjOfM55w+urD6AnN97XoeXcim1qXJh+rSOLShp9r7TvoNb5bqs8dxWVQ5ryimd9nc4GCtf2i9Qy3X5oXkZl1Ubc5ZJtB28TPVSvkbsbahwTy1VlPiPovd4zW1yhx9Q611F7tOuIO5KtKHxeBznMGX6jUzuK5NKHowIpL1FYf/c0BAfRiwOJ7Vy9S/6NO76c/pe7OKzHVRrf5YmZeO+qzfm/Fmvf/cs3+kBQ9X/17rbQ3/on9zjfnq7+kl1/Q2nz9KmctlUeW8wnq65wZraf7fao/WT9UzrwUad8rapbnJP9VWrfdf9jBvQ3uPMy8k9b7OQ316TFYLTc3Zl2gu9pzwgep51se8zt9q/Zp60RlsoV8nraoxN8bg/RUrVvxL3beiCs/xCKgP8QV036kn3L/wmZxaY0J6bfXLXp3ZcIh+ura5EBWmLtBP1A2V9m+82rys26Y/rdH/lceanb9PD09/qGDS8eP0Zce//O6DDdRfSuyyqHJeQU/3ToNZGWb+3hZm799eaB660RsoLt6V/cvFz/6y/kbehuiR3Xz+3HNabPbpMeTUVs/P7tL6S6eY4LUb1Kyv6OMtNWTx5Iw7teZBWZu2L01tPDYUY0C8bN5YVQEE1If4Aqq/uq5pWusB9Mym89unNbvzgB5Lv4Whq+f1fczFz+Jqc706o/bZ95kL2vbBx2d0fLREf/KLtJNv/uzMLiG7LKqcV+ScR93tBjfR+5tB9BvGwc+Yh2HNCl1764/Oq9Poqk3ONpres0yb0LDFqG/9egxfPrFJ3ctp2i7W7v1K+6QvpA89o0Xtc6ynCx6s71W7y5RQzIHhT9lV+DU9AupLnAE9wmzPnHeoJR+pNck4k6BBQH04mgJ6cG/fXoe8TM1MK07GuQQNAurD0RTQ8eq0XYdclNM9CWcSPAioD0dTQL/4sOxIn0LCQEB9OJoC+nMGAfUBAZUBAuoDAioDBNQHBFQGCKgPCKgMEFAfEFAZIKA+IKAyQEB9QEBlgID6gIDKAAH1AQGVAQLqAwIqgyQEdM5x8fznCSlkTE/8nww4NEkI6IsXxPX/z4RwPq6gIkhGQC9O/B7Bg6d4GSCgPiCgMkBAfUBAZYCA+oCAygAB9QEBlQEC6gMCKgME1AcEVAYIqA8IqAwQUB8QUBkgoD4goDJAQH2IO6DRGpooki6WOUyOjHAmNgioD/EGNIaGJoqki2Vs3B6cSjhxooUzbJV579fZ2SP3aF3W1Lod2tfW+rBnhhcHCgLqQ7wBjaGhiSLZYhnG7cGphBMnSjjDVpmlqTctfqDOSK3frDZtxowZuVYew54ZXhwsCKgP8QbUpaFJnlgmajLc0P6qM53Tj/XvJQ+OXWaN+QwrJ5xxrDKtxpgj13c11+E+/J2HPTOOlCZYEFAf4g2oo6FJolgmatJqyF8No7vD39N4H8k57DIa8/6VFM6wVeYHuoqWdb5LF5/w1H8/DssZIp4ZXhwwCKgP8QbU0dAkUSwTNWk15K8mNNb62zqzLDmHXUZj3r+Swhm2yoQuardw+dCcEr1InaVUJt1F3/bM8OKAQUB9iPtdvK2hIZIklomepIaORubJlBJ9U4dSy4Njl4WdOOH9KyucYavMjuFKpafmaX1FkwXffTWwxk7HM8OLAwYB9aFDj2Fx8JijoUmiWCZ6kho6Xy1VX29KXaItD45dRmN7/0oKZ9gq832rM1/bVzY+fX/4+3lXrXY8M2ynCRgE1IdX/rkgDh5zNDRJFMtETVoNnaWb1KrLzTOv5cGJlNGY96+kcIatMg/XpFvYF0S+V12Qsq+cZ4btNMGBgAaCS0OTRLFM1KTV0NHIHEy5s/rasIrBLqMx719J4QxbZX5HQhCdc0LZmNPNCYb6D3c8M7w4aBDQQHBpaJIolomatBq6NDLNU0eZxyfqhriMxrx/JYUzbJXJV9e+8PwwNcUke+yyOb1P2W0VWp4ZXhw0CGgwOBqa5IlloifDDR2NTJ+M7ebx+j5OGY2dM6ykcIatMk+1T1P1zCg0pVWtjhMjL0XDnhleHDAIqFAqIZY5EoRKk3w7fARUJJUSyxwTIKAiqZRY5pgAARXJz1ksEx8IKBANAgpEg4AC0SCgQDQIKBANAgpEg4AC0SCgQDQIKBANAgpEg4AC0SCgQDQIKBANAgpEg4AC0SCgQDQIKBANAgpEg4AC0SCgQDQIKBANAgpEg4AGw9fKZk/kSLQmo0qSD2p3eA08VfNqFFawgRS1hwsENBh25uXlDa82Ly9vkX3E0mR4qJLkg9odXgOuIr/H+M4VbRA5522ZP9An2+jhOD54yjZ6eGQfCQEBDY6hp7m/Ik2GlypJPqjd4TXgKvJ79PR1fNhqD31gRRfrlt9s9GDHB0+x0cMt+0gMCGhwNDM/TNubQaqMrGLLuWErNVjyYQs8PFYPFm4Upr5wXZvM0S4XiMFqV8qWEI/UY4enja0MWZzy1rDsls+4tiW/R2ntpz19o9UeZS/WVMqKNBs92PFhTzlGD5fsI0EgoIGxU03X7M0gVcZey7nBSg2WfNgCD4/Vg4Uba1SHlQcnu10gBqsdN/BKPTxtWBkyqU6X1/eOV+8725IXYZ362NM3Wu2hd65bU+0pM8NGD3Z88BQbPVyyj0SBgAZGgVrlMmxQHCznBis1WPJhCzw8Vg8unEFtvlELnUKC2nEDr9TD04ZVHf0zt2ldlHG/U0VehFkZJd6+UWoPw0q13jyy0YMdHzzFRg9H9pEwENDA+FNqocuwQXEg5wYRVnqw5CMi8PBYPZzCHHoBsFJtdgoJamc3KPZIPTxtWNURqncrlZ08ydmW/B5je2hP32i1h2GK9VaJjR7s+OApNnqw7CNxIKA+xCdRILnFgLPchg3SZJBzw1F6sOQjIvDwWD2cwk7/Y45OqxtyCglqZzfwSj08bVjVsVm9ZAbFKbOdbcnv8Ytx2tM3Wu1huPQC88BGD3Z88FQ5o8e7anUCfw4IqA/xaWhmmKfEE0e7DRsd7gg7N1ipwZIPW+DhsXo4oo4adGflqy9wCu123MAr9fC0YVXHPLVWU/4+4yryexSZAk/fmGqPJn80D2z0YMcHT4Vho0dByr7A//QdEFAf4hZ5fUW/dmFvBmkyLOcGKzVY8mELPDxWD5eo43Ozov0Ep5CgdtzAK/XwtGFVxzjzslLv6zzUqaK7469RG719o9Qemv7NgS6+bPRgxwdPsdGDZR8JBAH1Ie6APk/vi9mbQZoMy7nBSg2WfNgCD4/VgwtzM8sojy4XCDWndtzAK/XwtGFVR4/s5vPnntNis+MWIb/H427HB/WNUnuYY3mWr5uNHuz44Ck2enhkHwkCAfUh7oDeWYt+5LY3gzQZlnODlRos+bAFHl6rh114Qy9zYJXbBULNqZ3TwCP18LaJqDpKMqZNaNhilLnScRX5Peh9kqdvtNpD69taWTO20cNxfPCUbfTwyD4SBALqQ9wBrTxJEHh8pNZUvUnSjR6xQEB9SFhAkyLwmJlWnOgtkgQC6kPCApoUgUdO94RvkSQQUB8SFlAIPOICAfUhga9BQRwgoD4goDJAQH1AQGWAgPqAgMoAAfUBAZUBAuoDAioDBNQHBFQGCKgPCKgMEFAfEFAZIKA+IKAyOJYCunVzHJyPgIrgGArothot4yBj+pE+X0AcQwHd3jie1XiKlwEC6gMCKgME1AcEVAYIqA8IqAwQUB8QUBkgoD4goDJAQH1AQGWAgPqAgMoAAfUBAZUBAuoDAioDBNQHBFQGCKgPCKgMEFAf4g3owVp0T9kTBm2Lr6xyePxFlZYZ+TuR7DYCvUjlQUB9iDegH6o78vLm3KyGxldmM0ZVdB9tj3MpWsDkAzmR/PvaXiRHdbRrdIPMAVu1S5DEXqQFXeqcmEP3qXUpk5IDAupDvAHNDQsI+jWLr8zmbl9/EeFxLkULmHwgJ5J/X9uLxKqj7c3Onfdw3QtcgiT2Ij1d866Ce9PGuZVJyQIB9SHegI6uZ92y7sJurCEq8ViSYkuR9N4b22f2+8JyGO1WS8yB3qPLLY1Iksr8BUxcGN7R7k1OJOp7CC8Sq45+1f+g1g90dwmSbC/S/qwp5nHweS5lUtJAQH2IN6Bn/YoeP0m7mzVEXktSbCnSltZn5M5seqYlgFmidmtdlpXrXaojkqQKBExcaB3m3uREor4Ve5FYdbQuZVP4O2FBEnuRPhjxncl7u1tcyqSkgYD6EGdAC1Mvzs/Pu6fuqftYQ+S1JMWWIg1pb370j6oDJID5M93G+3P1gXcpQTGrQMDEhdZhXkhOJOpbsReJVUc53Z7rXLvbGpcgSdteJMOGgkHddnmUSUkCAfWhbaN4/oPIxFXWO40WY76n2rCGyGtJiilFWq/MM7Au3BGie3MPpvdXc2oWe5ZaHUzMKhIwOYXmsEui1CN8z29doReJVUeNjxswP69dg/2OIEnbXiStf0w7Je0DrzIpSSCgPuyJ53/Ybd4/Xf03UsgaIq8lKaYU6dnqB8NF5DBqOtkMxnX1LrVmr+lboYCJC+mws5CcSNT3kF4kS3X0o7rSvIh+Xb3PgiSaCHuRzDN+qX7wpJBHmZQkENBgGHlSZMAaIq8lKbYU6Q/N6XHjbnIY7VTLzNNr2996l1rLOtxRkYCJC63DvJCcSNT30F4kS3X0LhkY9ctqLwuSaMLyIs2cQMPpx4U8yqQkgYAGw+mDIwPWEHktSbGlSPdmFZGCYzVZOF4hc9tCNcu7lFqSv6gCARMXWod5ITmRqG/FXiRWHa2kgIYG9XUESdr2IuVQIg/+4grtViYlCwQ0EH6s9kBkxBoiryUpthRpbfXLXp3ZcIjlMMpXI1ZPr2feeXuWEuQvqkDAxIXWYV5ITqQnDulFYtXRvkYd8/MvbvSVI0jSthfpOXX14tlnN93pUSYlCwQ0EN6gp1kL1hB5LUmxpUg6v31aszsPWA6jwuEZJ13+Sq+ScuIjHXYYVSBg4kLrMC+k90fUt2IvkqM6+rB3ndZj6Z+PWJBke5FCf2pWq8N4+hcllzIpWSCgIAoRgqQICCgQDQIKRHN0B3TdzDic7k9mJ+w8QMI4ugN6Zbs4nO4D6iTsPEDCOLoDevc9cSzGU/zRCAIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CGhgfDP+lFrNb6K7x+Wn/BQ+VLHGwKHVfQk7Kz4Xn319PQpCJAsIaFC8XrfD1PkT088LaT2xQ+QYaQwqQfge3oHhESfwufjsSx4FKoiyLdiSBUegwAPbreD4F1xTAYOABsSGjFF0r88Z6k2t+14fOdizQjUCU6D2BHkqHnECn4vPvuRRuDuWbcGWLLBAgQfsVmD/gjMVOAhoMIQ6d7VuH/dNm3/o0PGP3Nwyc1SZpTHQMS0KIzvRCaXP1l9fdXKzv919CssNyhkU7KOFqS9c1yZzdJnLiPBSj6x6Y4utzb3yBBIn8Ho+l3Juh8i+lpLhJ1Ng2RaI8pKFn2yBgmNSsN0K2vYvOFPBg4AGQ4F1J80wG9WJD64coZZaGoPYFoW7Gph1ozqVrW/Uc87M7MYjWG7gXcZH16gOKw9ONi253aIaty2aqJ6wNvTKE+jO87yez8XrdrD3tZQM9u3qiSjJAgsUeMBuBfYvOFPBg4AGw8imzl0J56r5Wn+p8iyNQWyLwtOqSK9LWaHP72neRU1X0xy5gWcZH51Bt5f9Ri102l000Fy2b19qbeiVJ9Cd53k9n4vX7cD7UjDt29UTUZIFbQsU3IOwW4H9C+6poEFAg6HlAGc8rrX5YdPtjseGbwwfbVHQy9QWfeElerX6j6abvr/jyA3cy5yjOfSSYGX4juDhdpekjllyILKhV55ANwbl9Xwu2u124H2tYFJBxLYQLVlggYJrEHErsH/BPRU0x1BAt2ZNThhL0m4Ob7JgltY9bjIDut0xaQxiWhTMM+9/lqV+ph/LogTkphY6cgP3Mudop/8xg2l1Q0673fc3V9lTw5t65QkkTuD1fC4etwPva3kUqKCjdR/6mJKFsEDBPWC3grb8C56poDmGAlo4bELCKGg0xNrji9SHdWkGPevl9LE0BrEtCrqo2pyzTHRusX4HNLizIzfwLOOjxTVI93H1BR4jQmhDT7WXBl55AokTeD2fi9ftwPuSR4EK6IOIkiywQIEH9MlyK4QpSNnnmQqaYyigCWVgGt3R+6fObYv0xyRB0Gf93tIYxLYomGtkpyzzku327GK6ffhYR27gWcZH31efmzbtJzjtfnONGfw93frNgVeeQOIEXs/n4nU78L7kUaCC1RGfSJRkgQUKPNC2W4H9C+6pwEFAg2F92olT/vVgs5NNSp6uXUq/F1pgaQxiWxS07kZvVfSr6oolDzRJecaRG3iW8dHczDKSfSxw2g1Pf6hg0vHh3zx65QkkTuD1fC5etwPvSx6FJyK2BSJKssACBR5o263A/gX3VOAgoAGxfkDDOh3vpldwY3tqbV2S6I2Hj0VBD2tm/SPo1CYNhrza/XNHbuBdZh+9oZc5sMq05HbbBx+f0fFR6wJaTp5A4gRez+fidTvwvuRRoILrbaNslGTBFig4JgV2K9j+BfdU4CQhoLmN47jLbHycflXiTz8hbM+cd6RP4SghCQHd83gc9+mOj2HJ1JoGx8G9fXslV+Zy9JKEgCYQQU/x8TBenZaQX2r/HEFAjwBffCjHQyQdBBSIBgEFokFAgWgQUCAaBBSIBgEFokFAgWgQUCAaBBSIBgEFokFAgWgQUCAaBBSIBgEFokFAgWgQUCAaBBSIBgEFokFAgWgQUCAaBBSIBgEFokFAA+JAqlIq5fQ/l5Q7XqEowzMZvBIkTnmIEK+HFwQ0IN5Wk/LyZvRXN2qvZsMSZfjhmSQlSJRrIxpSc1S4jCfjlYew18O2eOhdoxtkDthqBltHNGryR5p579fZ2SP3uAUfPJUYENCAmKa+NY+hYSk7vMYMEmX44pnsGcu1EQ2pOSpcxpPxykNsrwdbPLY3O3few3Uv0HpT04F596hcrZem3rT4gTojXYIPnkoQCGhAXNnU+vSiWho2Zuy9sX1mvy8si8aVttLDdnZEDB3WZJkt5yAlCFWGr3u9R5fzfRC2EsTawLZ8hDdyhCDWJMtD7O4VdC3v9Shji8ev+h/U+oHuWvfray6RPQaZFw1jzOHruzqCD2cqQSCgAdHmUuvTcrXIcg9saX1G7symZ1oWDVvpwc6OiKHDmmQ5BylBqHKJ2m2eQbNyvb4PgpUgtMy2fEQ2coQgNMkrubt/1yivB1s81qVsCn9v69Qn5nHgxfoHulSWdb7LEXzwVKJAQIPhBzXZ+vxUREwwpP13Wj+qDlBcbKUHGzRsQwdNspyDlCBU+We6e+3n6gOv74NgNQcts3vYG3FzmuSV3N2/ayyvR9jikdPtuc61u60xf7msJ/wOt+vQRe0WLh+aU+IIPngqUSCgwbCcbitvuKPGfrpx7XpFXqzCHSGKS0Tp4Rg0bEOHmXTkHKQEoVveDh5qZubULPZqQbR2qTloWaSHvdE33NxM8kqnu2/XWF6PiMWj8XED5ue1a7Bft7vDfFWSkat3DFcqPTXPJfjgqURxdAf0rls2y2D/ZPU9nVBJs0stY8az1Q+Gz5BEGRGlh2PQsA0dZtKRc5AShFwbTelSPK5rOS2Idqs5aFmkh72R09xM8kqnu2/XWF6PsMXjR3WlafO6er80bZamvL/3faszX9tXNj59f/h7e1et5qmE/YiP7oDm1G8pg4mXtrFO6J/V1lvGjD80p6827rZkGRGlh2PQsA0dZpLlHKQEocqdapmZbvvbcloQ7VJzRJQcVg97I25Ok7ySu/t3jfJ6EJbF412SgemX1d4v1WtmcF2b0MM16TcVBWpjuGlByj6eSszPVx/tAZVD0yvpcVnta8O3hL83q4gGq0mUYSs92KBhGzpokuUcpAShylfUZ1ovVLPKa0Fcag5aZvewN+LmNMkrubt/1yivh7YtHispoKFBffUWemu0qsZc/Tt6IatzTihjwQdPJQwENBC+VVfl588eW/NCc3kkY8ba6pe9OrPhEEuWYSs92KBhGzpokuUcj0dcG/lqxOrp9cw7+nJaEJeag5bZPeyNuDlN8kru7t81yuuhbYvHvkYd8/MvbvSVLmvT9qWpjcfSuV37wvPD1BRH8MFTCQMBDYR/0yu9jK5P0Z2TLWNGfvu0ZncesGQZrPSwDRq2ocOatOUc9MaHKguHZ5x0+Su9Ssr5PghbzUHL2PIR2YibW7uzPMTuXkHX8l4PbVs89Ie967QeS7/rX9+rdpcpFMKn2qepembEgg9nKlEgoInn56T0CJUm+e7lCGiigdKjSiCgiQZKjyqBgCYaKD2qBAIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtEgoEA0CCgQDQIKRIOAAtH8P9WFkesQ3EjaAAAAAElFTkSuQmCC" /><!-- --></p>
+</div>
+<div id="connect-your-data-to-the-tips-of-your-tree" class="section level3">
+<h3>Connect your data to the tips of your tree</h3>
+<p>Now we have a tree for of our species, how can we use the tree and the data together?</p>
+<p>The package <code>phylobase</code> provide an object class called <code>phylo4d</code>, which is designed to represent a phylogeny and data associated with its tips. In oder to get our tree and data into one of these objects we have to make sure the labels in the tree and in our data match exactly. That’s not quite the case at the moment (tree labels have underscores and IDs appended):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mu$ott_name[<span class="dv">1</span>]</code></pre></div>
+<pre><code>## [1] &quot;Tetrahymena thermophila&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr$tip.label[<span class="dv">4</span>]</code></pre></div>
+<pre><code>## [1] &quot;Dictyostelium_discoideum_ott160850&quot;</code></pre>
+<p><code>rotl</code> provides a convienence function <code>strip_ott_ids</code> to deal with these.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr$tip.label &lt;-<span class="st"> </span><span class="kw">strip_ott_ids</span>(tr$tip.label, <span class="dt">remove_underscores=</span><span class="ot">TRUE</span>)
+tr$tip.label %in%<span class="st"> </span>mu$ott_name</code></pre></div>
+<pre><code>## [1] TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
+<p>Ok, now the tips are together we can make a new dataset. The <code>phylo4d()</code> functions matches tip labels to the row names of a <code>data.frame</code>, so let’s make a new dataset that contains just the relevant data and has row names to match the tree</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(phylobase)
+mu_numeric &lt;-<span class="st"> </span>mu[,<span class="kw">c</span>(<span class="st">&quot;mu&quot;</span>, <span class="st">&quot;pop.size&quot;</span>, <span class="st">&quot;genome.size&quot;</span>)]
+<span class="kw">rownames</span>(mu_numeric) &lt;-<span class="st"> </span>mu$ott_name
+tree_data &lt;-<span class="st"> </span><span class="kw">phylo4d</span>(tr, mu_numeric)</code></pre></div>
+<p>And now we can plot the data and the tree together</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(tree_data)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+<div id="find-external-data-associated-with-studies-trees-and-taxa-from-open-tree" class="section level2">
+<h2>Find external data associated with studies, trees and taxa from Open Tree</h2>
+<p>In the above example we looked for a tree that related species in another dataset. Now we will go the other way, and try to find data associated with Open Tree records in other databases.</p>
+<div id="get-external-data-from-a-study" class="section level3">
+<h3>Get external data from a study</h3>
+<p>Let’s imagine you were interested in extending or reproducing the results of a published study. If that study is included in Open Tree you can find it via <code>studies_find_studies</code> or <code>studies_find_trees</code> and retrieve the published trees with <code>get_study</code>. <code>rotl</code> will also help you find external. The function <code>study_external_IDs</code> retrieves the DOI for a given study, and uses that to gather some more data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">extra_data &lt;-<span class="st"> </span><span class="kw">study_external_IDs</span>(<span class="st">&quot;pg_1980&quot;</span>)
+extra_data</code></pre></div>
+<pre><code>## External data identifiers for study 
+##  $doi:  10.1016/j.ympev.2006.04.016 
+##  $pubmed_id:  16762568 
+##  $nucleotide_ids: vector of 58 IDs
+##  $external_data_url http://purl.org/phylo/treebase/phylows/study/TB2:S1575</code></pre>
+<p>Here the returned object contains an <code>external_data_url</code> (in this case a link to the study in Treebase), a pubmed ID for the paper and a vector IDs for the NCBI’s nuleotide database. The packages <code>treebase</code> and <code>rentrez</code> provide functions to make use of these IDs within R.</p>
+<p>As an example, let’s use <code>rentrez</code> to download the first two DNA seqences and print them.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rentrez)
+seqs &lt;-<span class="st"> </span><span class="kw">entrez_fetch</span>(<span class="dt">db=</span><span class="st">&quot;nucleotide&quot;</span>, <span class="dt">id=</span>extra_data$nucleotide_ids[<span class="dv">1</span>:<span class="dv">2</span>], <span class="dt">rettype=</span><span class="st">&quot;fasta&quot;</span>)
+<span class="kw">cat</span>(seqs)</code></pre></div>
+<pre><code>## &gt;AM181011.1 Plectroninia neocaledoniense partial 28S rRNA gene, specimen voucher G316300 (Queensland Museum)
+## GCTAGCAAGCGCGTCGGTGGTTCAGCCGGCTGGTCTCGTCGAGTTGTCGGTGTGCGGATCCGAACGGACC
+## GCGGCCGATGGCGTCGGCGGGCAAGCTGTGGTGCACTCTGTCGGCGTGCGCGTCAGCGTCGGTTTCGGCC
+## GGACGACGAGGCGCTCGGGGAAGGTAGCTGGACCGGTCTTCGGTGCAGTGTTATAGCCCTGGGCCGCTGG
+## GTTCGGCGTTTGGGACCGAGGAGAGAGATGATCGCTGCAGCGCCTGTCTCCCTCTCGAGGGGGGCTAGCC
+## AGCCGCTGTTTGGGTGGCGTCACTGGCGGAGGACTGCACGCAGTGCTTCGCCGGTGGTCGTGTCCAGGCG
+## GGCGGTGTGGGTATAGAGGCGCTTAGGACGCTGGCGTCCAAATGGCCGTGCGCGACCCGTCTTGAAACAC
+## GGACCAAGGAGTCTAGCATGTGCGCGAGTCTTAGGGTGTGGAAGCCCTCGGGCGCAATGAAAGTGAAGGG
+## CCGTCGTCTCTCGGGGCTGCGGTGTGAGGTGAGAGCCGTCGCCGTCGGGTGGCGGTGCATCATCGGCCGG
+## TCCATCCTGCTCTCAGGAGGATCTGCGCAAGAGCGTGTTTGCTGGGACCCGAAAGATGGTGAACTATGCC
+## TGAATAGGGTGAAGCCAGAGGAAACTCTGGTGGAGGCTCGTAGCGGTTCTGACGTGCAAATCGATCGTCA
+## AATTTGGGTATAGGGGCGAAAGACTAATCGAACCATCTAGTAGCTGGTTCCCTCCGAAGTTTCCCTCAGG
+## ATAGCTGGAACTCGTCTTGACACAGTTTTATCAGGTAAAGCGAATGATTAGAGGTCTTGGGGGTGAAACA
+## CCCTCAACCTATTCTCAAACTTTAAATAGGTAAGAAGCGCGACTTGCTCAATTGAAGTGGCGCGCAGTGA
+## ATGTGAGTTCCAAGTGGGCCATTTTTGGTAAGCAGAACTGGCGATGCGGGATGAACCGAACGCTCGGTTA
+## AGGTGCCCAAGTCGACGCTCATCAGACCCCAGAAAAGGTGTTGGTCGATATAGACAGCAGGACGGTGGCC
+## ATGGAAGTCGGAATCCGCTAAGGAGTGTGTAACAACTCACCTGCCGAATCAACTAGCCCTGAAAATGGAT
+## GGCGCTCAAGCGTCGCACCTATACCGAGCCGTCGTGGTAAATGCCAGGCCACGACGAGTAGGAGGGCGCG
+## GTGGTCGTGACGCAGCCCTTGGCGCGAGCCTGGGCGAAACGGCCTCCGGTGCAGATCTTGGTGGTAGTAG
+## CAAATATTCAAATGAGAGCTTTGAAGACCGAAGTGGAGAAAGGTTCCATGTGAACAGCAGTTGGACATGG
+## GTTAGTCGATCCTAAGAGATAGGGAAGTTCCGTGTGAAAGTGCGCAATGCGCTTCTGTGCTGCGCGCCTC
+## CTATCGAAAGGGAATCGGGTTAATATTCCCGAACCGGAAGGCGGATATCTCTGGCTCTCGGGTCAGGAGC
+## GGCAACGCAAGCGTACTGCGAGACGTCGGCGGGGGCTCCGGGAAGAGTTGTCTTTTCTTTTTAACGCAGT
+## CGCCATCCCTGGAATCGGTTTGCCCGGAGATAGGGTTGGCTGGCTCGGTAAAGCAGCACACTTCATGTGC
+## TGTCCGGTGCGCTCTCGACGGCCCTTGAAAATCGCAGGTGTGCATCGATTCTCGCATCCGGTCGTACTCA
+## TAACCGCATCAGGTCTCCAAGGT
+## 
+## &gt;AM181010.1 Eilhardia schulzei partial 28S rRNA gene, specimen voucher G316071 (Queensland Museum)
+## GCTAGTAATGTACGTTGGTGGTTCAGCCGGCTAGTCTTGTCGAGTCGTCGTGTGGTGGATCCGACTGGAC
+## CGTCCGCGGTGGTGTCGGCGGGCGAGCTGTGGTGCACTCTACGGACGTGCGCGTCAGCGTCGGTTCTCGA
+## TGGGCGATAAGGTGCGTGGGGGAAGGTGGCTCGGTCCTTGGGAACTGAGTGTTACAGACCCTGGTGCTGG
+## GCTCGTCGTGGGACCGAGGAGAGAGAGAGATGATCGCTGCGGCACCTGCCCCGTTGTCATTTTTCGGGGC
+## TAGCCAGCCGTTTGTCAGGTGTGCGTCGGACGTTGAGGACTGCACGCAGTGCTGGACGTGGAGGCGTGAT
+## CTGATGGCGGTGTGGGCATTAGAGGTGCCTAGGACGCTGGCGTCCAAATGGCCGTGCGCGACCCGTCTTG
+## AAACACGGACCAAGGAGTCTAACATGTGCGCGAGTCTTAGGGTGTGCAAGCCCTCGGGCGCAATGAAAGT
+## GAAGGCTCGGCGGCGCTAGTCGAGCTGAGGTGAGAGCCGTGGCCGTTGCATGTGGCGGCGGCGGCGCATC
+## ATCGGCCGGTCCATCCTGCTCTCAGGGGGATCCGAGCAAGAGCGTATTTGTTGGGACCCGAAAGATGGTG
+## AACTATGCCTGAATAGGGTGAAGCCAGAGGAAACTCTGGTGGAGGCTCGTAGCGATTCTGACGTGCAAAT
+## CGATCGTCAAATTTGGGTATAGGGGCGAAAGACTAATCGAACCATCTAGTAGCTGGTTCCCTCCGAAGTT
+## TCCCTCAGGATAGCTGGAGCTCTTGGACACAGTTTTATCAGGTAAAGCGAATGATCAGAGGTCTTGGGGG
+## TGAAACACCCTCAACCTATTCTCAAACTTTAAATCGGTAAGAAGCGCGACTTGCTGAATTGAAGCCGCGC
+## GCAAGCAATGTGAGTTCCAAGTGGGCCATTTTTGGTAAGCAGAACTGGCGATGCGGGATGAACCGAACGC
+## TGGGTTAAGGTGCCAAAGTCGACGCTCATCAGACCCCAGAAAAGGTGTTGGTTGATATAGACAGCAGGAC
+## GATGGCCATGGAAGTCGGAATCCGCTAAGGAGTGTGTAACAACTCACCTGCCGAATCAACTAGCCCTGAA
+## AATGGATGGCGCTCAAGCGTCGCACCTATACCGGGCCGTCGTCGCAAATGCCAGGCGACGACGAGTAGGA
+## GGGCGCAGTGGTCGTCATGCAGCCCTTGGCGTGAGCCTGGGTCAAACGGCCTCTGGTGCAGATCTTGGTG
+## GTAGTAGCAAATATTCAAATGAGAGCTTTGAAGACCGAAGTGGAGAAAGGTTCCATGTGAACAGCAGTTG
+## GACATGGGTTAGTCGATCCTAAGTGATAGGGGAGCTCCGTATGAAAGTGCGCAATCGGCCCTGCTTGTGT
+## CGCCTTGCGCCACCTATCGAAAGGGAATCGGGTTAATATTCCCGAACCGGAAGGCGGATTTTCTCTGGCT
+## CTCGGGTCAGGAGCGGCAACGCTAGCGAACCGCGAGACGTCGGCGGGGGCTCCGGGAAGAGTTGTCTTTT
+## CTTTTTAACGCAGTCGCCATCCCTGGAATCGGTTTGCCCGGAGATAGGGTTGGCTGGCTCGGTAAAGCAG
+## CACACTTCATGTGCTGTCCGGTGCGCTCTCGACGGCCCTTGAAAATCGCGGCGAGTGTAGTCTGATTTTC
+## GCATCCGTTCGTACTCATAACCGCATCAGGTCTCCAAGGT</code></pre>
+<p>You could further process these sequences in R with the function <code>read.dna</code> from <code>ape</code> or save them to disk by specifying a file name with <code>cat</code>.</p>
+</div>
+<div id="find-a-ott-taxon-in-another-taxonomic-database" class="section level3">
+<h3>Find a OTT taxon in another taxonomic database</h3>
+<p>It is also possible map an Open Tree taxon to a record in another taxonomic database. For instance, if we wanted to search for data about one of the tips of the sub-tree we fetched in the example above we could do so using <code>taxon_external_IDs</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Tt_ids &lt;-<span class="st"> </span><span class="kw">taxon_external_IDs</span>(mu$ott_id[<span class="dv">2</span>])
+Tt_ids</code></pre></div>
+<pre><code>##   source       id
+## 1  silva AY102613
+## 2   ncbi     5888
+## 3   gbif  5839866</code></pre>
+<p>A user could then use <code>rgbif</code> to find locality records using the gbif ID or <code>rentrez</code> to get genetic or bibliometric data about from the NCBI’s databases.</p>
+</div>
+</div>
+<div id="what-next" class="section level2">
+<h2>What next</h2>
+<p>The demonstration gets you to the point of visualizing your data in a phylogenetic context. But there’s a lot more you do with this sort of data in R. For instance, you could use packages like <code>ape</code>, <code>caper</code>, <code>phytools</code> and <code>mcmcGLMM</code> to perform phylogenetic comparative analyses of your data. You could gather more data on your species using packages that connect to trait databases like <code>rfishbase</code>, <code>AntWeb</code> or <code>rnpn</code> which provides data from the US National Phenology Network. You could also use <code>rentrez</code> to find genetic data for each of your species, and use that data to generate branch lengths for the phylogeny.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

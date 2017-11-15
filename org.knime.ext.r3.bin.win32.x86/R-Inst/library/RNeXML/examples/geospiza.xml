@@ -1,0 +1,130 @@
+<nex:nexml xmlns:nex="http://www.nexml.org/2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:prism="http://prismstandard.org/namespaces/1.2/basic/" xmlns:cc="http://creativecommons.org/ns#" xmlns:ncbi="http://www.ncbi.nlm.nih.gov/taxonomy#" xmlns:tc="http://rs.tdwg.org/ontology/voc/TaxonConcept#" xmlns="http://www.nexml.org/2009" version="0.9" generator="RNeXML">
+  <meta xsi:type="LiteralMeta" property="dc:date" datatype="xsd:string" content="2013-11-27"/>
+  <meta xsi:type="ResourceMeta" href="http://creativecommons.org/publicdomain/zero/1.0/" rel="cc:license"/>
+  <meta xsi:type="LiteralMeta" property="prism:volume" datatype="xsd:string" content="38"/>
+  <meta xsi:type="LiteralMeta" property="dc:publisher" datatype="xsd:string" content="Evolution"/>
+  <meta xsi:type="LiteralMeta" property="prism:publicationName" datatype="xsd:string" content="Evolution"/>
+  <meta xsi:type="LiteralMeta" property="prism:endingPage" datatype="xsd:string" content=" "/>
+  <meta xsi:type="LiteralMeta" property="prism:startingPage" datatype="xsd:string" content="921"/>
+  <meta xsi:type="LiteralMeta" property="prism:publicationDate" datatype="xsd:string" content="1984"/>
+  <meta xsi:type="LiteralMeta" property="dc:title" datatype="xsd:string" content="Morphological And Phylogenetic Relations Among The Darwin'S Finches"/>
+  <meta xsi:type="LiteralMeta" property="dcterms:bibliographicCitation" datatype="xsd:string" content="Schluter D (1984). &#x201C;Morphological And Phylogenetic Relations Among The&#10;Darwin'S Finches.&#x201D; _Evolution_, *38*, pp. 921-. ISSN 00143820, &lt;URL:&#10;http://dx.doi.org/10.2307/2408428&gt;."/>
+  <meta xsi:type="LiteralMeta" property="dc:contributor" datatype="xsd:string" content="Dolph Schluter"/>
+  <otus about="#os2" id="os2">
+    <otu about="#ou15" label="magnirostris" id="ou15"/>
+    <otu about="#ou16" label="conirostris" id="ou16"/>
+    <otu about="#ou17" label="difficilis" id="ou17"/>
+    <otu about="#ou18" label="scandens" id="ou18"/>
+    <otu about="#ou19" label="fortis" id="ou19"/>
+    <otu about="#ou20" label="fuliginosa" id="ou20"/>
+    <otu about="#ou21" label="pallida" id="ou21"/>
+    <otu about="#ou22" label="fusca" id="ou22"/>
+    <otu about="#ou23" label="parvulus" id="ou23"/>
+    <otu about="#ou24" label="pauper" id="ou24"/>
+    <otu about="#ou25" label="Pinaroloxias" id="ou25"/>
+    <otu about="#ou26" label="Platyspiza" id="ou26"/>
+    <otu about="#ou27" label="psittacula" id="ou27"/>
+  </otus>
+  <characters xsi:type="nex:ContinuousCells" about="#cs1" id="cs1" otus="os2">
+    <format>
+      <char about="#cr1" label="wingL" id="cr1"/>
+      <char about="#cr2" label="tarsusL" id="cr2"/>
+      <char about="#cr3" label="culmenL" id="cr3"/>
+      <char about="#cr4" label="beakD" id="cr4"/>
+      <char about="#cr5" label="gonysW" id="cr5"/>
+    </format>
+    <matrix>
+      <row about="#rw1" label="magnirostris" id="rw1" otu="ou15">
+        <cell char="cr1" state="4.4042"/>
+        <cell char="cr2" state="3.03895"/>
+        <cell char="cr3" state="2.724667"/>
+        <cell char="cr4" state="2.823767"/>
+        <cell char="cr5" state="2.675983"/>
+      </row>
+      <row about="#rw2" label="conirostris" id="rw2" otu="ou16">
+        <cell char="cr1" state="4.349867"/>
+        <cell char="cr2" state="2.9842"/>
+        <cell char="cr3" state="2.6544"/>
+        <cell char="cr4" state="2.5138"/>
+        <cell char="cr5" state="2.360167"/>
+      </row>
+      <row about="#rw3" label="difficilis" id="rw3" otu="ou17">
+        <cell char="cr1" state="4.224067"/>
+        <cell char="cr2" state="2.898917"/>
+        <cell char="cr3" state="2.277183"/>
+        <cell char="cr4" state="2.0111"/>
+        <cell char="cr5" state="1.929983"/>
+      </row>
+      <row about="#rw4" label="scandens" id="rw4" otu="ou18">
+        <cell char="cr1" state="4.261222"/>
+        <cell char="cr2" state="2.929033"/>
+        <cell char="cr3" state="2.621789"/>
+        <cell char="cr4" state="2.1447"/>
+        <cell char="cr5" state="2.036944"/>
+      </row>
+      <row about="#rw5" label="fortis" id="rw5" otu="ou19">
+        <cell char="cr1" state="4.244008"/>
+        <cell char="cr2" state="2.894717"/>
+        <cell char="cr3" state="2.407025"/>
+        <cell char="cr4" state="2.362658"/>
+        <cell char="cr5" state="2.221867"/>
+      </row>
+      <row about="#rw6" label="fuliginosa" id="rw6" otu="ou20">
+        <cell char="cr1" state="4.132957"/>
+        <cell char="cr2" state="2.806514"/>
+        <cell char="cr3" state="2.094971"/>
+        <cell char="cr4" state="1.941157"/>
+        <cell char="cr5" state="1.845379"/>
+      </row>
+      <row about="#rw7" label="pallida" id="rw7" otu="ou21">
+        <cell char="cr1" state="4.265425"/>
+        <cell char="cr2" state="3.08945"/>
+        <cell char="cr3" state="2.43025"/>
+        <cell char="cr4" state="2.01635"/>
+        <cell char="cr5" state="1.949125"/>
+      </row>
+      <row about="#rw8" label="fusca" id="rw8" otu="ou22">
+        <cell char="cr1" state="3.975393"/>
+        <cell char="cr2" state="2.936536"/>
+        <cell char="cr3" state="2.051843"/>
+        <cell char="cr4" state="1.191264"/>
+        <cell char="cr5" state="1.401186"/>
+      </row>
+      <row about="#rw9" label="parvulus" id="rw9" otu="ou23">
+        <cell char="cr1" state="4.1316"/>
+        <cell char="cr2" state="2.97306"/>
+        <cell char="cr3" state="1.97442"/>
+        <cell char="cr4" state="1.87354"/>
+        <cell char="cr5" state="1.81334"/>
+      </row>
+      <row about="#rw10" label="pauper" id="rw10" otu="ou24">
+        <cell char="cr1" state="4.2325"/>
+        <cell char="cr2" state="3.0359"/>
+        <cell char="cr3" state="2.187"/>
+        <cell char="cr4" state="2.0734"/>
+        <cell char="cr5" state="1.9621"/>
+      </row>
+      <row about="#rw11" label="Pinaroloxias" id="rw11" otu="ou25">
+        <cell char="cr1" state="4.1886"/>
+        <cell char="cr2" state="2.9802"/>
+        <cell char="cr3" state="2.3111"/>
+        <cell char="cr4" state="1.5475"/>
+        <cell char="cr5" state="1.6301"/>
+      </row>
+      <row about="#rw12" label="Platyspiza" id="rw12" otu="ou26">
+        <cell char="cr1" state="4.419686"/>
+        <cell char="cr2" state="3.270543"/>
+        <cell char="cr3" state="2.331471"/>
+        <cell char="cr4" state="2.347471"/>
+        <cell char="cr5" state="2.282443"/>
+      </row>
+      <row about="#rw13" label="psittacula" id="rw13" otu="ou27">
+        <cell char="cr1" state="4.23502"/>
+        <cell char="cr2" state="3.04912"/>
+        <cell char="cr3" state="2.25964"/>
+        <cell char="cr4" state="2.23004"/>
+        <cell char="cr5" state="2.07394"/>
+      </row>
+    </matrix>
+  </characters>
+</nex:nexml>

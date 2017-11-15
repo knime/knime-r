@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+        "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<html>
+<head>
+<title>Array Explorer v3.5</title>
+<link rel="icon" type="image/ico" href="../../favicon.ico">
+<link media="screen" type="text/css" rel="StyleSheet" href="../../includes/css/R.css">
+<link media="screen" type="text/css" rel="StyleSheet" href="../../includes/css/rsp.css">
+<link media="screen" type="text/css" rel="StyleSheet" href="../../includes/css/figures.css"> 
+<link media="screen" type="text/css" rel="StyleSheet" href="../../includes/css/ArrayExplorer.css"> 
+<script type="text/javascript" src="../../includes/js/require.js"></script>
+</head>
+
+<body onLoad="onPageLoad();">
+<table width="100%" border="0" cellpadding="2" cellspacing="0" style="margin: 0px; border: none; border-bottom: 2px solid black;">
+<tr>
+<td align="left">
+<big>Array Explorer v3.5</big>
+<small><small>(&copy; 2006-2013 Henrik Bengtsson)</small></small>
+</td>
+<td align="right">
+ <span style="float:right; font-size:smaller;">
+ <a href="http://www.aroma-project.org/">About</a>
+ </span>
+</td>
+<td align="right" width="20px">
+<div id="statusImage" style="float: right;">
+ <img src="../../includes/images/indicator.gif" alt="Wait..." title="indicator">
+</div>
+</td>
+</tr>
+</table>
+<table width="100%" border="0" cellpadding="1" cellspacing="0">
+<tr valign="top">
+<td align="left">
+Sample:
+<span id="sampleLabel">?</span><br>
+<small>
+Tags: <span id="sampleTags"></span><br>
+<span id="chipTypeLabel"></span>
+<span id="samplesLabel">?</span>
+</small>
+</td>
+<td align="right">
+ <table border="0" cellpadding="0" cellspacing="0">
+ <tr valign="top">
+ <td align="right">
+  <div id="nav2d">
+   <img id="nav2dImage" src="../../includes/images/indicator.gif" alt="Navigator" title="Move">
+   <div id="nav2dMarker" title="Drag"></div>
+  </div>
+ </td>
+ <td style="width:0.5em;">
+ </td>
+ <td align="left">
+ <small>
+ <span id="zoomLabel">?</span>
+ <span id="colorMapLabel"></span>
+ </small>
+ </td>
+ </tr>
+ </table>
+</td>
+</tr>
+</table>
+<div style="border: solid 1px #000000; padding: 1px;">
+<div id="image2dInfoTL">(0,0)</div>
+<div id="image2dInfoBR">(1,1)</div>
+<div id="image2d" style="border: solid 1px #000000;">
+<img id="image2dImage" src="../../includes/images/indicator.gif" alt="Panel" title="Drag">
+</div>
+</div>
+</body>
+
+<script type="text/javascript">
+var explorer = null; 
+
+function onPageLoad() {
+  require.config({
+    paths: {
+      'order': '../../includes/js/order',
+      'Webcuts': '../../includes/js/Webcuts',
+      'domUtils': '../../includes/js/domUtils',
+      'ScrollImage2d': '../../includes/js/ScrollImage2d',
+      'Scrollbar2d': '../../includes/js/Scrollbar2d',
+      'ArrayExplorer': '../../includes/js/ArrayExplorer/ArrayExplorer',
+      'setupExplorer': 'setupExplorer'
+    }
+  }); 
+
+  require(["Webcuts", "domUtils", "ScrollImage2d", "Scrollbar2d",
+           "ArrayExplorer", "setupExplorer"],
+  function(wc, du, si, sb, ae, se) {
+    // This function will be called when all the dependencies
+    // listed above are loaded. Note that this function could
+    // be called before the page is loaded.
+    explorer = new ArrayExplorer(); 
+
+    setupExplorer(explorer);
+
+    explorer.start();
+
+    window.onresize = function() {
+      explorer.update();
+    } 
+  });
+}
+</script>
+</html>

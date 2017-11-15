@@ -1,0 +1,26 @@
+ahaz                    Fit semiparametric additive hazards model
+ahaz.adjust             Adjusted univariate association measures from
+                        ahaz
+ahaz.partial            Partial calculation of estimating quantities
+                        used by ahaz
+ahaz.tune.control       Tuning controls for regularization
+ahazisis                Independent screening for the semiparametric
+                        additive hazards model
+ahazpen                 Fit penalized semiparametric additive hazards
+                        model
+ahazpen.fit.control     Controls for ahazpen fitting algorithm
+ahazpen.pen.control     Penalty controls for ahazpen
+plot.ahaz               Plot an ahaz object
+plot.ahazpen            Plot an ahazpen object
+plot.cumahaz            Plot a cumahaz object
+plot.tune.ahazpen       Plot a tune.ahazpen object
+predict.ahaz            Prediction methods for ahaz
+predict.ahazpen         Prediction methods for ahazpen
+predict.tune.ahazpen    Prediction methods for tune.ahazpen
+print.ahazisis          Print an ahazisis object
+print.ahazpen           Print an ahazpen object
+print.summary.ahaz      Print a summary.ahaz object
+print.tune.ahazpen      Print a tune.ahazpen object
+sorlie                  Sorlie gene expressions
+summary.ahaz            Summarize an ahaz object
+tune.ahazpen            Choice of penalty parameter in ahazpen

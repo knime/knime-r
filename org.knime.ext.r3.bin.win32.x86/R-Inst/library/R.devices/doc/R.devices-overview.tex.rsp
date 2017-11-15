@@ -1,0 +1,306 @@
+<%@meta language="R-vignette" content="--------------------------------
+DIRECTIVES FOR R:
+%\VignetteIndexEntry{R.devices overview}
+%\VignetteAuthor{Henrik Bengtsson}
+%\VignetteKeyword{devices}
+%\VignetteKeyword{graphics}
+%\VignetteKeyword{plots}
+%\VignetteKeyword{figures}
+%\VignetteEngine{R.rsp::rsp}
+--------------------------------------------------------------------"%>
+
+<% t0 <- Sys.time() %>
+
+<%
+library("R.devices")
+R.rsp <- R.oo::Package("R.rsp")
+withCapture <- R.utils::withCapture
+hpaste <- R.utils::hpaste
+
+devOptions("png", width=840)
+devOptions("png", field="fullname") # Better for LaTeX
+options(width=85)
+options(digits=3)
+options(str=strOptions(strict.width="cut"))
+%>
+
+\documentclass[letter,12pt]{article}
+\usepackage{xspace}
+\usepackage{alltt}
+\usepackage{xcolor}
+\usepackage{natbib} % \citep{}, \citet{}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+
+<%-------------------------------------------------------------------
+  Assign PDF metadata
+  -------------------------------------------------------------------%>
+% PDF metadata
+\usepackage{hyperref}
+% Ideally \hypersetup{hidelinks}, but for backward compatibility:
+\hypersetup{pdfborder={0 0 0}}
+\hypersetup{
+  pdfauthor={<%@meta name="author"%>},
+  pdftitle={<%@meta name="title"%>},
+  pdfsubject={},
+  pdfkeywords={<%@meta name="keywords"%>},
+  pdfproducer={R.rsp v<%=R.rsp$version%> by <%=R.rsp$author%>}
+}
+
+% Page margins
+\addtolength{\oddsidemargin}{-0.5in}	
+\addtolength{\evensidemargin}{-0.5in}	
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-0.5in}	
+\addtolength{\textheight}{1in}
+\setlength{\parindent}{0in}
+
+% Placement of floats
+\setcounter{bottomnumber}{2}
+\renewcommand{\topfraction}{1.0}
+\renewcommand{\bottomfraction}{1.0}
+\renewcommand{\textfraction}{0.0}
+\renewcommand{\floatpagefraction}{1.0}
+
+% Macros
+\newcommand{\keywords}[1]{\footnotesize{\textbf{Keywords: }#1}\xspace}
+\newcommand{\pkg}[1]{\textsl{#1}\xspace}
+\newcommand{\file}[1]{\textsl{#1}\xspace}
+\newcommand{\code}[1]{\texttt{#1}\xspace}
+\newcommand{\bs}{$\backslash$}
+
+\newenvironment{rspVerbatim}{\vspace{-\parskip}\begin{alltt}\color{blue}}{\end{alltt}}
+\newenvironment{escapeRspVerbatim}{\vspace{-\parskip}\begin{alltt}}{\end{alltt}}
+
+
+\title{<%@meta name="title"%>}
+\author{<%@meta name="author"%>}
+\date{<%=format(as.Date(R.devices$date), format="%B %d, %Y")%>}
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+The \pkg{R.devices} package provides functions for creating plots and image files in a unified way regardless of output format (EPS, PDF, PNG, SVG, TIFF, WMF, etc.).  Default device options as well as scales and aspect ratios are controlled in a uniform way across all device types.  Switching output format requires minimal changes in code.  This package is ideal for large-scale batch processing, because it will never leave open graphics devices or incomplete image files behind, even on errors or user interrupts.
+\end{abstract}
+
+\keywords{<%@meta name="keywords"%>}
+
+\begin{center}
+\emph{This vignette is distributed as part of the \pkg{R.devices} package, which is available on CRAN (\href{http://cran.r-project.org/}{http://cran.r-project.org/}).
+Feedback is very much appreciated.}
+\end{center}
+
+%\clearpage
+\tableofcontents
+
+\clearpage
+
+<%-------------------------------------------------------------------
+  BACKGROUND
+  -------------------------------------------------------------------%>
+%\section{Introduction}
+%\label{secIntroduction}
+
+
+<%-------------------------------------------------------------------
+  CREATING IMAGE FILES
+  -------------------------------------------------------------------%>
+\section{Creating image files}
+When creating image files using one of the built-in R device functions (e.g. \code{pdf()}) several device specific arguments need to the specified.  For instance, when creating a PDF file with aspect ratio 0.6, one will do something like
+\begin{rspVerbatim}
+pdf("GaussianDensity.pdf", width=7, height=0.6*7)
+curve(dnorm, from=-5, to=+5)
+dev.off()
+\end{rspVerbatim}
+If one later wish to output a PNG file instead, one has to change (i) the name of the function, (ii) filename, (iii) the \code{width} and (iv) the \code{height} arguments, e.g.
+\begin{rspVerbatim}
+png("GaussianDensity.png", width=480, height=0.6*480)
+curve(dnorm, from=-5, to=+5)
+dev.off()
+\end{rspVerbatim}
+Changing output formats is not only tedious but also error prone, e.g. you may forget to change the filename extension or create images with ridiculously large or small dimensions because units are not the same across devices types.
+
+
+\subsection{devEval()}
+To overcome the above and other hurdles, the \code{devEval()} function was created.  When using \code{devEval()} it is only the argument that specify the image format that needs to be modified.  For instance,
+\begin{rspVerbatim}
+devEval("pdf", name="GaussianDensity", aspectRatio=0.6, \{
+  curve(dnorm, from=-5, to=+5)
+\})
+\end{rspVerbatim}
+creates a PDF file named \file{GaussianDensity.pdf} that is 7.0 inches wide and 4.2 inches tall (for default dimensions see Section~\ref{secOptions}), whereas
+\begin{rspVerbatim}
+devEval("png", name="GaussianDensity", aspectRatio=0.6, \{
+  curve(dnorm, from=-5, to=+5)
+\})
+\end{rspVerbatim}
+creates a PNG file named \file{GaussianDensity.png} that is 480 pixels wide and 288 pixels tall (Section~\ref{secOptions}).
+By specifying the \code{scale} argument, it is possible to create an image file with a smaller or a larger dimension relative to that of the default, e.g.
+\begin{rspVerbatim}
+devEval("png", name="GaussianDensity,large", aspectRatio=0.6, scale=2, \{
+  curve(dnorm, from=-5, to=+5)
+\})
+\end{rspVerbatim}
+creates a PNG file named \file{GaussianDensity,large.png} that is 960 pixels wide and 576 pixels tall.
+Note also how in none of the above examples there is a need for closing the device via \code{dev.off()}, which is sometimes forgotten, particularly by newcomers to R.  The graphical device opened is also guaranteed to be closed by \code{devEval()} regardless of errors or interrupts (Section~\ref{secRobust}).
+
+
+
+\subsection{Creating multiple image files of different formats in one call}
+The \code{devEval()} function can also be used to generate image files or different formats in one call.  For instance,
+\begin{rspVerbatim}
+devEval(c("pdf", "png", "svg"), name="GaussianDensity", aspectRatio=0.6, {
+  curve(dnorm, from=-5, to=+5)
+})
+\end{rspVerbatim}
+creates image files \file{GaussianDensity.pdf}, \file{GaussianDensity.png}, and \file{GaussianDensity.svg}.  To adjust the default image dimensions for each format, see Section~\ref{secOptions}.
+
+
+\subsection{Creating one image file trying different device types}
+Some image formats, or more precisely some device types, are only supported on certain systems.  If that is the case, and it does not matter exactly which of many image formats is used, then \code{devEval()} can be used to generate an image file based on the first supported device type.  For instance,
+\begin{rspVerbatim}
+devEval("png|pdf|eps", name="GaussianDensity", aspectRatio=0.6, {
+  curve(dnorm, from=-5, to=+5)
+})
+\end{rspVerbatim}
+will first try to create a PNG file and if that does not work it will try to create a PDF file and as a last resort an EPS file.  It is only if none of them work that an error is generated.
+
+
+\subsection{toEPS(), toPDF(), toPNG() etc.}
+For conveniency, there exists a set of \code{toNNN()} functions that basically are wrappers for \code{devEval()}.  For instance, instead of calling \code{devEval("png", ...)} one can use \code{toPNG(...)} as
+\begin{rspVerbatim}
+toPNG("GaussianDensity,large", aspectRatio=0.6, scale=2, \{
+  curve(dnorm, from=-5, to=+5)
+\})
+\end{rspVerbatim}
+<%
+envir <- getNamespace("R.devices")
+tos <- ls(pattern="^to[A-Z][a-zA-Z]+", envir=envir)
+tos <- sprintf("%s()", tos)
+%>
+The following \code{toNNN()} functions are currently available: <%=hpaste(sprintf("\\code{%s}", tos), maxHead=Inf, lastCollapse=", and ")%>.
+
+\subsection{Setting default output directory}
+All figures created by \code{devEval()/toNNN()} are by default written to the \file{figures/} directory (created if missing), which can be overridden by passing argument \code{path} to \code{devEval()}.  The default figure path can be change by setting "global" device option \code{"path"}, e.g.
+\begin{rspVerbatim}
+devOptions("*", path="figures/col/")
+\end{rspVerbatim}
+
+\subsection{Names and comma-separated tags}
+The filename used by \code{devEval()/toNNN()}, is made up of argument \code{name}, followed by comma-separated argument \code{tags} (an optional character vector) and a filename extension (specified by the device type).  Argument \code{tags} provides a convenient way to adjust the filename, e.g.
+\begin{rspVerbatim}
+for (ar in c(0.6, 0.8)) \{
+  arTag <- sprintf("aspect=%g", ar)
+  for (sc in 2:4) \{
+    scaleTag <- sprintf("scale=%d", sc)
+    toEPS("GaussianDensity", tags=c(arTag, scaleTag), aspectRatio=ar, scale=sc, \{
+      curve(dnorm, from=-5, to=+5)
+    \})
+  \}
+\})
+\end{rspVerbatim}
+which creates six images files (\file{GaussianDensity,aspect=0.6,scale=2.eps}, \file{GaussianDensity,aspect=0.6,scale=3.eps}, ..., and \file{GaussianDensity,aspect=0.8,scale=4.eps}).
+To use a different separator specify argument \code{sep}, or change the global device option, e.g.
+\begin{rspVerbatim}
+devOptions("*", sep="_")
+\end{rspVerbatim}
+
+\subsection{Overwriting existing figure files}
+By default, existing figure files created by \code{devEval()/toNNN()} are overwritten without notice.  By passing argument \code{force=FALSE} to \code{devEval()}, existing figure files will be skipped.  To change the default, do:
+\begin{rspVerbatim}
+devOptions("*", force=FALSE)
+\end{rspVerbatim}
+Note that whenever a figure is skipped this way, it also means that none of the expressions in \code{devEval(..., \{<exprs>\})} are executed.  This will speed up the processing, but it also means that the rest of your code must not rely on such code being executed.
+
+
+\subsection{No more incomplete image files}
+\label{secRobust}
+The \code{devEval()/toNNN()} functions create image files atomically.
+When creating image files by opening a device, calling a set of plot functions and then closing the device (\code{png(...); \{...\}; dev.off()}), there is a risk of creating an incomplete file whenever an error or an interrupt occurs while plotting.
+By contrast, \code{devEval()/toNNN()} is fault tolerant and guarantees that the image file created is complete; if an error or an interrupt occurs, then the default is to remove the incomplete image.  For instance, the following will not result in an image file:
+\begin{rspVerbatim}
+toPDF("GaussianDensity", \{
+  curve(dnorm, from=-5, to=+5)
+  abline(v=log("a"))
+\})
+\end{rspVerbatim}
+because the last plot statement generates an error.
+To further lower the risk for incomplete image files, for instance due to abrupt power failures, all image files are first written to a temporary file which is renamed to the final file only when the plotting is complete.  This is useful when for instance running large non-interactive batch jobs that creates hundreds or thousands of image files.
+
+
+
+\subsection{Including images in RSP-embedded LaTeX documents}
+By using RSP markup, image files can be included in for instance LaTeX, Sweave and knitr documents in a very clean fashion, while keeping full control of all image formatting.  For instance, the plot in Figure~\ref{fig:MyGaussianDensity} was included as:
+\begin{rspVerbatim}
+{\bs}includegraphics\{<\%=toPDF("MyGaussianDensity", aspectRatio=0.6, \{
+  curve(dnorm, from=-5, to=+5)
+\})\%>\}
+\end{rspVerbatim}
+\begin{figure}[htp]
+ \begin{center}
+ \resizebox{0.70\textwidth}{!}{%
+  \includegraphics{<%=toPDF("MyGaussianDensity", aspectRatio=0.6, {
+   curve(dnorm, from=-5, to=+5)
+  })%>}
+ }%
+ \end{center}
+ \caption{This graph was generated using \code{toPDF()} and then include into the LaTeX document using RSP.}
+ \label{fig:MyGaussianDensity}
+\end{figure}
+For more details on RSP, see the vignettes of the \pkg{R.rsp} package (available on \href{cran.r-project.org/package=R.rsp}{CRAN}).
+
+
+
+\section{Default device options}
+\label{secOptions}
+\subsection{devOptions()}
+The \code{devOptions()} function provides a unified interface to getting and settings common options for the various graphical devices available in R.
+When using one of the \code{toNNN()} functions, \code{devEval()} or \code{devNew()}, the device options used are given by \code{devOptions()}.  For example, to see the current settings used by PNG device, do:
+\begin{rspVerbatim}
+<% devOptions("png", reset=TRUE) %>
+<%=withCapture({
+devOptions("png")
+})%>
+\end{rspVerbatim}
+
+To change one or several options, do:
+\begin{rspVerbatim}
+<%=withCapture({
+devOptions("png", width=1024, bg="lightblue")
+})%>
+\end{rspVerbatim}
+
+To reset the options back to the built-in defaults, do:
+\begin{rspVerbatim}
+<%=withCapture({
+devOptions("png", reset=TRUE)
+})%>
+\end{rspVerbatim}
+
+To get an overview of a set of common options for all supported devices, do:
+\begin{rspVerbatim}
+<%=withCapture({
+devOptions()[,c("width", "height", "bg", "fg", "pointsize")]
+})%>
+\end{rspVerbatim}
+
+
+\subsection{Under the hood (advanced)}
+The \code{devOptions()} function tries as far as possible to infer the default options from the default arguments of the device function and any additional options for that device, e.g. \code{formals(pdf)} and \code{pdf.options()}.  Likewise, when setting an option it uses the standard interfaces to do so, whenever possible.  This means that for instance \code{pdf()} will also be affected by \code{devOptions("pdf", width=5)}.  Note that this may not be the case for all devices, because their options cannot be set.  Instead they are all specified as arguments when opening the device, e.g. \code{png()} will \emph{not} be affected by \code{devOptions("png", width=1024)}.
+This is why we recommend to always use \code{devNew()} in place of \code{dev.new()}, or better, \code{devEval()} or the corresponding \code{toNNN()} function, which all respects the options set via \code{devOptions()}.
+
+
+
+<%-------------------------------------------------------------------
+  APPENDIX
+  -------------------------------------------------------------------%>
+\clearpage
+\section*{Appendix}
+\subsection*{Session information}
+<%=toLatex(sessionInfo())%>
+This report was automatically generated using \code{rfile()} of the R.rsp package.
+Total processing time after RSP-to-R translation was <%=dt <- round(Sys.time()-t0, digits=2)%> <%=attr(dt, "units")%>.
+
+\end{document}

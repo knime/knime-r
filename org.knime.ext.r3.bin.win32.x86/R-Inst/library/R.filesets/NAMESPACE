@@ -1,0 +1,381 @@
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# IMPORTS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+importFrom("R.methodsS3", "setMethodS3")
+importFrom("R.oo", "setConstructorS3")
+importFrom("R.oo", "extend")
+importFrom("R.oo", "uses")
+
+## Importing Class:es
+importFrom("R.oo", "Object")
+importFrom("R.oo", "Interface")
+importFrom("R.oo", "Package")
+importFrom("R.utils", "GenericSummary")
+
+## Importing generics
+importFrom("R.cache", "getChecksum")
+importFrom("R.oo", "clearCache") ## Multi-sources: R.oo, R.cache
+importFrom("R.oo", "clone")
+importFrom("R.oo", "dimension")
+importFrom("R.oo", "equals")
+importFrom("R.oo", "getName")
+importFrom("R.oo", "getPath")
+importFrom("R.utils", "getFilename")
+importFrom("R.utils", "getLabel")
+importFrom("R.utils", "hsize")
+importFrom("R.utils", "gunzip")
+importFrom("R.utils", "gzip")
+importFrom("R.utils", "isFile")
+importFrom("R.utils", "isGzipped")
+importFrom("R.utils", "loadToEnv")
+importFrom("R.utils", "setLabel")
+importFrom("stats", "reorder")
+
+## Importing functions
+importFrom("digest", "digest")
+importFrom("future", "future_lapply")
+importFrom("R.methodsS3", "throw")
+importFrom("R.oo", "getKnownSubclasses")
+importFrom("R.oo", "getStaticInstance")
+importFrom("R.oo", "newInstance")
+importFrom("R.oo", "objectSize")
+importFrom("R.oo", "startupMessage")
+importFrom("R.oo", "trim")
+importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
+importFrom("R.utils", "copyFile")
+importFrom("R.utils", "createLink")
+importFrom("R.utils", "countLines")
+importFrom("R.utils", "enter")
+importFrom("R.utils", "exit")
+importFrom("R.utils", "file.info2")
+importFrom("R.utils", "getAbsolutePath")
+importFrom("R.utils", "getParent")
+importFrom("R.utils", "getRelativePath")
+importFrom("R.utils", "hpaste")
+importFrom("R.utils", "insert")
+importFrom("R.utils", "isDirectory")
+importFrom("R.utils", "less")
+importFrom("R.utils", "loadObject")
+importFrom("R.utils", "mergeByCommonTails")
+importFrom("R.utils", "popState")
+importFrom("R.utils", "printf")
+importFrom("R.utils", "pushState")
+importFrom("R.utils", "renameFile")
+importFrom("R.utils", "saveObject")
+importFrom("R.utils", "writeRaw")
+importFrom("stats", "na.omit")
+
+
+## Needed in order for corresponding S3method():s below to work
+importFrom("utils", "head") # generic function
+importFrom("utils", "tail") # generic function
+importFrom("utils", "packageDescription")
+importFrom("utils", "packageVersion")
+importFrom("utils", "str")
+importFrom("utils", "capture.output")
+importFrom("utils", "file_test")
+importFrom("utils", "read.table")
+importFrom("utils", "write.table")
+
+## Manually imported
+importFrom("R.oo", "Class")
+importFrom("R.utils", "Arguments")
+
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# EXPORTS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Export all public methods, that is, those without a preceeding dot
+# in their names.
+exportPattern("^[^\\.]")
+
+export("clone") # Re-export from 'R.oo'
+export("clearCache") # Re-export from 'R.oo'
+
+export("getChecksum") # Re-export from 'R.cache'
+
+export("getName") # Re-export from 'R.oo'
+export("getPath") # Re-export from 'R.oo'
+export("getFilename") # Re-export from 'R.utils'
+export("isFile") # Re-export from 'R.utils'
+export("isGzipped") # Re-export from 'R.utils'
+export("gzip") # Re-export from 'R.utils'
+export("gunzip") # Re-export from 'R.utils'
+export("loadObject") # Re-export from 'R.utils'
+
+# Only needed when/if R.oo is not attached, which will
+# happen when it is moved from Depends to Imports.
+# /HB 2014-01-02
+export("equals") # Re-export from 'equals'
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# DECLARE
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# From 006.fixVarArgs.R
+S3method("readLines", "default")
+S3method("append", "default")
+
+# Arguments
+S3method("getTags", "Arguments")
+
+# ChecksumFile
+S3method("as.character", "ChecksumFile")
+S3method("create", "ChecksumFile")
+S3method("getChecksum", "ChecksumFile")
+S3method("getMainFile", "ChecksumFile")
+S3method("isOld", "ChecksumFile")
+S3method("readChecksum", "ChecksumFile")
+S3method("validate", "ChecksumFile")
+
+# ChecksumFileSet
+S3method("readChecksums", "ChecksumFileSet")
+S3method("validate", "ChecksumFileSet")
+
+# ColumnNamesInterface
+S3method("appendColumnNamesTranslator", "ColumnNamesInterface")
+S3method("appendColumnNamesTranslatorBycharacter", "ColumnNamesInterface")
+S3method("appendColumnNamesTranslatorByfunction", "ColumnNamesInterface")
+S3method("appendColumnNamesTranslatorBylist", "ColumnNamesInterface")
+S3method("appendColumnNamesTranslatorByNULL", "ColumnNamesInterface")
+S3method("clearColumnNamesTranslator", "ColumnNamesInterface")
+S3method("clearListOfColumnNamesTranslators", "ColumnNamesInterface")
+S3method("getColumnNames", "ColumnNamesInterface")
+S3method("getColumnNamesTranslator", "ColumnNamesInterface")
+S3method("getDefaultColumnNames", "ColumnNamesInterface")
+S3method("getListOfColumnNamesTranslators", "ColumnNamesInterface")
+S3method("nbrOfColumns", "ColumnNamesInterface")
+S3method("setColumnNames", "ColumnNamesInterface")
+S3method("setColumnNamesTranslator", "ColumnNamesInterface")
+S3method("setListOfColumnNamesTranslators", "ColumnNamesInterface")
+S3method("translateColumnNames", "ColumnNamesInterface")
+S3method("updateColumnNames", "ColumnNamesInterface")
+
+# default
+S3method("append", "default")
+S3method("dropRootPathTags", "default")
+S3method("dropTags", "default")
+S3method("fullname", "default")
+S3method("hasChecksumFile", "default")
+S3method("getChecksumFile", "default")
+S3method("loadRDS", "default")
+S3method("name", "default")
+S3method("readDataFrame", "default")
+S3method("readLines", "default")
+S3method("readTableHeader", "default")
+S3method("tags", "default")
+
+# FullNameInterface
+S3method("appendFullNameTranslator", "FullNameInterface")
+S3method("appendFullNameTranslatorBycharacter", "FullNameInterface")
+S3method("appendFullNameTranslatorBydata.frame", "FullNameInterface")
+S3method("appendFullNameTranslatorByfunction", "FullNameInterface")
+S3method("appendFullNameTranslatorBylist", "FullNameInterface")
+S3method("appendFullNameTranslatorByNULL", "FullNameInterface")
+S3method("appendFullNameTranslatorByTabularTextFile", "FullNameInterface")
+S3method("appendFullNameTranslatorByTabularTextFileSet", "FullNameInterface")
+S3method("clearFullNameTranslator", "FullNameInterface")
+S3method("clearListOfFullNameTranslators", "FullNameInterface")
+S3method("getDefaultFullName", "FullNameInterface")
+S3method("getFullName", "FullNameInterface")
+S3method("getFullNameTranslator", "FullNameInterface")
+S3method("getListOfFullNameTranslators", "FullNameInterface")
+S3method("getName", "FullNameInterface")
+S3method("getTags", "FullNameInterface")
+S3method("hasTag", "FullNameInterface")
+S3method("hasTags", "FullNameInterface")
+S3method("resetFullName", "FullNameInterface")
+S3method("setFullName", "FullNameInterface")
+S3method("setFullNameTranslator", "FullNameInterface")
+S3method("setListOfFullNameTranslators", "FullNameInterface")
+S3method("setName", "FullNameInterface")
+S3method("setTags", "FullNameInterface")
+S3method("translateFullName", "FullNameInterface")
+S3method("updateFullName", "FullNameInterface")
+
+# GenericDataFile
+S3method("as.character", "GenericDataFile")
+S3method("clone", "GenericDataFile")
+S3method("compareChecksum", "GenericDataFile")
+S3method("copyTo", "GenericDataFile")
+S3method("equals", "GenericDataFile")
+S3method("fromFile", "GenericDataFile")
+S3method("getAttribute", "GenericDataFile")
+S3method("getAttributes", "GenericDataFile")
+S3method("getChecksum", "GenericDataFile")
+S3method("getChecksumFile", "GenericDataFile")
+S3method("getCreatedOn", "GenericDataFile")
+S3method("getDefaultFullName", "GenericDataFile")
+S3method("getExtension", "GenericDataFile")
+S3method("getExtensionPattern", "GenericDataFile")
+S3method("getFilename", "GenericDataFile")
+S3method("getFilenameExtension", "GenericDataFile")
+S3method("getFileSize", "GenericDataFile")
+S3method("getFileType", "GenericDataFile")
+S3method("getLastAccessedOn", "GenericDataFile")
+S3method("getLastModifiedOn", "GenericDataFile")
+S3method("getOutputExtension", "GenericDataFile")
+S3method("getPath", "GenericDataFile")
+S3method("getPathname", "GenericDataFile")
+S3method("gunzip", "GenericDataFile")
+S3method("gzip", "GenericDataFile")
+S3method("hasBeenModified", "GenericDataFile")
+S3method("is.na", "GenericDataFile")
+S3method("isFile", "GenericDataFile")
+S3method("isGzipped", "GenericDataFile")
+S3method("linkTo", "GenericDataFile")
+S3method("names", "GenericDataFileSet")
+S3method("readChecksum", "GenericDataFile")
+S3method("renameTo", "GenericDataFile")
+S3method("renameToUpperCaseExt", "GenericDataFile")
+S3method("setAttribute", "GenericDataFile")
+S3method("setAttributes", "GenericDataFile")
+S3method("setAttributesBy", "GenericDataFile")
+S3method("setAttributesByTags", "GenericDataFile")
+S3method("setExtensionPattern", "GenericDataFile")
+S3method("testAttributes", "GenericDataFile")
+S3method("validate", "GenericDataFile")
+S3method("validateChecksum", "GenericDataFile")
+S3method("writeChecksum", "GenericDataFile")
+
+# GenericDataFileSet
+S3method("[", "GenericDataFileSet")
+S3method("[[", "GenericDataFileSet")
+S3method("anyDuplicated", "GenericDataFileSet")
+S3method("anyNA", "GenericDataFileSet")
+S3method("append", "GenericDataFileSet")
+S3method("appendFiles", "GenericDataFileSet")
+S3method("appendFullNamesTranslator", "GenericDataFileSet")
+S3method("appendFullNamesTranslatorBydata.frame", "GenericDataFileSet")
+S3method("appendFullNamesTranslatorByfunction", "GenericDataFileSet")
+S3method("appendFullNamesTranslatorBylist", "GenericDataFileSet")
+S3method("appendFullNamesTranslatorByNULL", "GenericDataFileSet")
+S3method("appendFullNamesTranslatorByTabularTextFile", "GenericDataFileSet")
+S3method("appendFullNamesTranslatorByTabularTextFileSet", "GenericDataFileSet")
+S3method("as.character", "GenericDataFileSet")
+S3method("as.list", "GenericDataFileSet")
+S3method("byName", "GenericDataFileSet")
+S3method("byPath", "GenericDataFileSet")
+S3method("c", "GenericDataFileSet")
+S3method("clearCache", "GenericDataFileSet")
+S3method("clearFullNamesTranslator", "GenericDataFileSet")
+S3method("clone", "GenericDataFileSet")
+S3method("copyTo", "GenericDataFileSet")
+S3method("duplicated", "GenericDataFileSet")
+S3method("equals", "GenericDataFileSet")
+S3method("extract", "GenericDataFileSet")
+S3method("findByName", "GenericDataFileSet")
+S3method("findDuplicated", "GenericDataFileSet")
+S3method("getChecksum", "GenericDataFileSet")
+S3method("getChecksumFileSet", "GenericDataFileSet")
+S3method("getChecksumObjects", "GenericDataFileSet")
+S3method("getDefaultFullName", "GenericDataFileSet")
+S3method("getDepth", "GenericDataFileSet")
+S3method("getFile", "GenericDataFileSet")
+S3method("getFileClass", "GenericDataFileSet")
+S3method("getFiles", "GenericDataFileSet")
+S3method("getFileSize", "GenericDataFileSet")
+S3method("getFullNames", "GenericDataFileSet")
+S3method("getNames", "GenericDataFileSet")
+S3method("getOneFile", "GenericDataFileSet")
+S3method("getPath", "GenericDataFileSet")
+S3method("getPathnames", "GenericDataFileSet")
+S3method("getSubdirs", "GenericDataFileSet")
+S3method("gunzip", "GenericDataFileSet")
+S3method("gzip", "GenericDataFileSet")
+S3method("hasFile", "GenericDataFileSet")
+S3method("indexOf", "GenericDataFileSet")
+S3method("is.na", "GenericDataFileSet")
+S3method("length", "GenericDataFileSet")
+S3method("nbrOfFiles", "GenericDataFileSet")
+S3method("reorder", "GenericDataFileSet")
+S3method("rep", "GenericDataFileSet")
+S3method("resetFullNames", "GenericDataFileSet")
+##S3method("setAlias", "GenericDataFileSet")
+S3method("setDepth", "GenericDataFileSet")
+S3method("setFullNamesTranslator", "GenericDataFileSet")
+S3method("sortBy", "GenericDataFileSet")
+S3method("unique", "GenericDataFileSet")
+S3method("update2", "GenericDataFileSet")
+S3method("updateFullName", "GenericDataFileSet")
+S3method("updateFullNames", "GenericDataFileSet")
+S3method("validate", "GenericDataFileSet")
+S3method("dsApply", "GenericDataFileSet")
+S3method("dsApplyInPairs", "GenericDataFileSet")
+
+# GenericDataFileSetList
+S3method("as.character", "GenericDataFileSetList")
+S3method("as.data.frame", "GenericDataFileSetList")
+S3method("as.GenericDataFileSetList", "GenericDataFileSetList")
+S3method("as.list", "GenericDataFileSetList")
+S3method("assertDuplicates", "GenericDataFileSetList")
+S3method("clone", "GenericDataFileSetList")
+S3method("extract", "GenericDataFileSetList")
+S3method("getAsteriskTags", "GenericDataFileSetList")
+S3method("getDefaultFullName", "GenericDataFileSetList")
+S3method("getFileList", "GenericDataFileSetList")
+S3method("getFileListClass", "GenericDataFileSetList")
+S3method("getFullNames", "GenericDataFileSetList")
+S3method("getNames", "GenericDataFileSetList")
+S3method("getSet", "GenericDataFileSetList")
+S3method("getSets", "GenericDataFileSetList")
+S3method("getTags", "GenericDataFileSetList")
+S3method("indexOf", "GenericDataFileSetList")
+S3method("length", "GenericDataFileSetList")
+S3method("nbrOfFiles", "GenericDataFileSetList")
+S3method("nbrOfSets", "GenericDataFileSetList")
+S3method("setTags", "GenericDataFileSetList")
+
+# GenericTabularFile
+S3method("[", "GenericTabularFile")
+S3method("as.character", "GenericTabularFile")
+S3method("dim", "GenericTabularFile")
+S3method("extractMatrix", "GenericTabularFile")
+S3method("head", "GenericTabularFile")
+S3method("nbrOfColumns", "GenericTabularFile")
+S3method("nbrOfRows", "GenericTabularFile")
+S3method("readColumns", "GenericTabularFile")
+S3method("readDataFrame", "GenericTabularFile")
+S3method("tail", "GenericTabularFile")
+S3method("verify", "GenericTabularFile")
+S3method("writeColumnsToFiles", "GenericTabularFile")
+
+# GenericTabularFileSet
+S3method("extractMatrix", "GenericTabularFileSet")
+
+# RDataFile
+S3method("loadObject", "RDataFile")
+
+# RDataFileSet
+S3method("byPath", "RDataFileSet")
+
+# RdsFile
+S3method("loadObject", "RdsFile")
+S3method("loadRDS", "RdsFile")
+
+# RdsFileSet
+S3method("byPath", "RdsFileSet")
+
+# TabularTextFile
+S3method("as.character", "TabularTextFile")
+S3method("dimension", "TabularTextFile")
+S3method("getCommentChar", "TabularTextFile")
+S3method("getDefaultColumnClasses", "TabularTextFile")
+S3method("getDefaultColumnClassPatterns", "TabularTextFile")
+S3method("getDefaultColumnNames", "TabularTextFile")
+S3method("getHeader", "TabularTextFile")
+S3method("getReadArguments", "TabularTextFile")
+S3method("hasColumnHeader", "TabularTextFile")
+S3method("nbrOfLines", "TabularTextFile")
+S3method("nbrOfRows", "TabularTextFile")
+S3method("readColumnNames", "TabularTextFile")
+S3method("readColumns", "TabularTextFile")
+S3method("readDataFrame", "TabularTextFile")
+S3method("readLines", "TabularTextFile")
+S3method("readRawHeader", "TabularTextFile")
+S3method("setCommentChar", "TabularTextFile")
+S3method("verify", "TabularTextFile")
+
+# TabularTextFileSet
+S3method("readDataFrame", "TabularTextFileSet")

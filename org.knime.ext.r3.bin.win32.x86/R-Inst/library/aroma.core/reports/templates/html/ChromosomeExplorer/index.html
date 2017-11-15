@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+        "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<html>
+<head>
+<title>Chromosome Explorer</title>
+<link rel="icon" type="image/ico" href="../../favicon.ico">
+<link media="screen" type="text/css" rel="StyleSheet" href="../../includes/css/R.css">
+<link media="screen" type="text/css" rel="StyleSheet" href="../../includes/css/rsp.css">
+<link media="screen" type="text/css" rel="StyleSheet" href="../../includes/css/figures.css"> 
+<link media="screen" type="text/css" rel="StyleSheet" href="../../includes/css/ChromosomeExplorer.css"> 
+<script type="text/javascript" src="../../includes/js/ChromosomeExplorer2/include.js" language="JavaScript1.2"></script>
+<script type="text/javascript" src="../../includes/js/ChromosomeExplorer2/main.js" language="JavaScript1.2"></script></head>
+
+<body onLoad="onLoad();">
+<table width="100%" border="0" cellpadding="2" cellspacing="0" style="margin: 0px; border: none; border-bottom: 2px solid black;">
+<tr valign="bottom">
+<td align="left">
+<big>Chromosome Explorer</big>
+<small><small>(&copy; 2006-2007 Henrik Bengtsson)</small></small>
+</td>
+<td align="right">
+ <span style="float:right; font-size:smaller;">
+ <a href="../../includes/html/help.html">Help</a> |
+ <a href="../../includes/html/about.html">About</a>
+ </span> 
+<td align="right">
+<div id="statusImage" style="float: right;">
+ <img src="../../includes/images/indicator.gif" alt="Wait..." title="indicator">
+</div>
+</td>
+</tr>
+</table>
+<table width="100%" border="0" cellpadding="4" cellspacing="0">
+<tr valign="top">
+<td align="left">
+Sample:
+<span id="sampleLabel">?</span><br>
+<small><small><span id="sampleTags"></span></small></small>
+</td>
+<td align="right">
+<small>
+<span id="zoomLabel">zooms?</span><br>
+<span id="setLabel">sets?</span><br>
+</small>
+</td>
+</tr>
+<tr valign="bottom">
+<td align="left" colspan="2">
+<small>
+<span id="chipTypeLabel"></span>
+<span id="samplesLabel">?</span> 
+&nbsp;
+&nbsp;
+Step:&nbsp;[<a href="javascript:gotoNextSample(-1);">prev</a>][<a href="javascript:gotoNextSample(+1);">next</a>]
+&nbsp;
+Play:&nbsp;[<a href="javascript:playAlongSamples('start');">start</a>][<a href="javascript:playAlongSamples('stop');">stop</a>]&nbsp;(<a href="javascript:{playDelay=playDelay*2; return true;}">slower</a>,<a href="javascript:{playDelay=playDelay/2; return true;}">faster</a>)
+<br>
+Chromosome: 
+<script type="text/javascript" language="JavaScript1.2">
+for (var kk=0; kk < chromosomes.length; kk++) {
+  var chr = chromosomes[kk];
+  var chrLabel = chr;
+  if (chr == 'X')
+    chrLabel = "23(X)";
+  if (chr == 'Y')
+    chrLabel = "24(Y)";
+  document.write('[<span id="chromosome' + chr + '"><a href="javascript:changeChromosome(' + kk + ');">' + chrLabel + '</a></span>]');
+}
+</script>
+<br>
+<script type="text/javascript" language="JavaScript1.2">
+if (shortcuts.length > 0) {
+  document.write('<br>Shortcuts: ');
+  for (var kk=0; kk < shortcuts.length; kk++) {
+    var args = shortcuts[kk];
+    if (args.substring(0,1) == '{') {
+      var label = args.substring(1,args.length-1);
+      document.write('<strong>' + label + '</strong>: ');
+    } else if (args != "") {
+      var label = kk+1;
+      if (shortcutLabels.length > kk)
+        label = shortcutLabels[kk];
+      document.write('[<span id="shortcut' + kk + '"><a href="javascript:jumpTo(' + args + ');">' + label + '</a></span>] ');
+    }
+  }
+  document.write('<br><small>Legends: i) If a shortcut is tagged with a chip type or an analysis label, it means that the region is not clearly visible for the other chip types or analysis methods. ii) An asterisk (*) indicates the mean level of diploid is most likely biased due to too many samples with abberations in this region.</small>');
+}
+</script>
+</small>
+</td>
+</tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0" style="border: solid 1px #000000;">
+<tr>
+ <td align="center" style="border: solid 1px #000000;">
+ <small>Chr:</small><br>
+ <div id="chromosomeLabel">?</div>
+ </td>
+ <td style="border: solid 1px #000000;">
+  <div id="navigator">
+   <div id="navigatorArea" title="Drag"></div>
+   <img id="navigatorImage" src="../../includes/images/indicator.gif" alt="Navigator" title="Click">
+  </div>
+ </td>
+</tr>
+<tr valign="top">
+ <td align="left" style="border: solid 1px #000000;">
+  <img id="yaxis" src="../images/yaxis.png" alt="y-axis">
+ </td>
+ <td width="95%" style="border: solid 1px #000000;">
+  <div id="panel">
+   <div id="panelLocator"><div id="panelLocatorTag"></div></div>
+   <img id="panelImage" src="../../includes/images/indicator.gif" alt="Panel" title="Drag">
+  </div>
+ </td>
+</tr>
+</table>
+<table width="100%" border="0" cellpadding="2" cellspacing="0">
+<tr valign="top">
+<td align="left">
+</small></small>
+<small><small>
+Identified regions: <a id="cnrUrl" href=""></a>
+<!--
+Shortcut to this location: <a id="bookmarkUrl" href=""></a>
+-->
+</small></small>
+ </td>
+<td align="right">
+<small><small>
+Image URL: <a id="imageUrl" href="" target="otherWindow"></a>
+</small></small>
+ </td>
+</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,22 @@
+importFrom(graphics, "lines", "mtext", "points")
+importFrom(stats, "delete.response", "glm", "model.matrix",
+           "predict", "qnorm", "residuals", "stepfun", "terms", "var",
+           "vcov", "family", "model.extract", "model.frame", "optim", "pnorm",
+		"printCoefmat")
+importFrom(survival, "coxph", "coxph.detail")
+importFrom(data.table, "data.table")
+importFrom(numDeriv, "grad")
+
+export(stdGlm, stdCoxph, stdParfrailty, parfrailty, delmet, CI)
+
+S3method(summary, stdGlm)
+S3method(print, summary.stdGlm)
+S3method(plot, stdGlm)
+S3method(summary, stdCoxph)
+S3method(print, summary.stdCoxph)
+S3method(plot, stdCoxph)
+S3method(summary, stdParfrailty)
+S3method(print, summary.stdParfrailty)
+S3method(plot, stdParfrailty)
+S3method(summary, parfrailty)
+S3method(print, summary.parfrailty)

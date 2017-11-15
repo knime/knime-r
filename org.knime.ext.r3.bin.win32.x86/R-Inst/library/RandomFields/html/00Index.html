@@ -1,0 +1,1463 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Simulation and Analysis of Random Fields</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Simulation and Analysis of Random Fields
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;RandomFields&rsquo; version 3.1.50</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="# "> </a>
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#H">H</a>
+<a href="#I">I</a>
+<a href="#J">J</a>
+<a href="#K">K</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#O">O</a>
+<a href="#P">P</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#V">V</a>
+<a href="#W">W</a>
+<a href="#Z">Z</a>
+<a href="#misc">misc</a>
+</p>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="RandomFields.html">RandomFields-package</a></td>
+<td>Simulation and Analysis of Random Fields</td></tr>
+</table>
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="QMath.html">abs</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">acosh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsAdvanced.html">Advanced RMmodels</a></td>
+<td>Advanced features of the mdoels</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">AIC-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">AIC.RF_fit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">AICc.RFfit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">AICc.RF_fit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">anova-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">anova-method</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">anova.RF_fit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">anova.RM_modelFit</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">as.array.RFgridDataFrame</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">as.array.RFpointsDataFrame</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">as.array.RFspatialGridDataFrame</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">as.array.RFspatialPointsDataFrame</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">as.data.frame.RFgridDataFrame</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">as.data.frame.RFpointsDataFrame</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">as.data.frame.RFspatialGridDataFrame</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">as.data.frame.RFspatialPointsDataFrame</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">as.matrix.RFgridDataFrame</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">as.matrix.RFpointsDataFrame</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">as.matrix.RFspatialGridDataFrame</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">as.matrix.RFspatialPointsDataFrame</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">as.vector.RFgridDataFrame</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">as.vector.RFpointsDataFrame</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">as.vector.RFspatialGridDataFrame</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">as.vector.RFspatialPointsDataFrame</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">asin</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">asinh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">atan</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">atan2</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">atanh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsAuxiliary.html">Auxiliary Models</a></td>
+<td>Auxiliary and other Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsAuxiliary.html">Auxiliary RMmodels</a></td>
+<td>Auxiliary and other Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsAuxiliary.html">AuxiliaryModels</a></td>
+<td>Auxiliary and other Models</td></tr>
+<tr><td style="width: 25%;"><a href="RPcoin.html">Average</a></td>
+<td>Random coin method</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="Bayesian.html">Bayesian</a></td>
+<td>Bayesian Spatial Modelling</td></tr>
+<tr><td style="width: 25%;"><a href="Bayesian.html">bayesian</a></td>
+<td>Bayesian Spatial Modelling</td></tr>
+<tr><td style="width: 25%;"><a href="Bayesian.html">Bayesian Modelling</a></td>
+<td>Bayesian Spatial Modelling</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">BIC-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">BIC.RF_fit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="BRspecific.html">BRmethods</a></td>
+<td>Simulation methods for Brown-Resnick processes</td></tr>
+<tr><td style="width: 25%;"><a href="RPbrownresnick.html">Brown-Resnick</a></td>
+<td>Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="RPbrownresnick.html">Brown-Resnick process</a></td>
+<td>Brown-Resnick process</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="QMath.html">c</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">c-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">cbind.RFgridDataFrame</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">cbind.RFpointsDataFrame</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">cbind.RFspatialGridDataFrame</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">cbind.RFspatialPointsDataFrame</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="Changings.html">Changings</a></td>
+<td>Documentation of some further changings</td></tr>
+<tr><td style="width: 25%;"><a href="Changings.html">changings</a></td>
+<td>Documentation of some further changings</td></tr>
+<tr><td style="width: 25%;"><a href="internal.html">checkExamples</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="RMchoquet.html">Choquet's representation</a></td>
+<td>Schoenberg's representation for the classes psi_d and psi_{Inf} in d=2</td></tr>
+<tr><td style="width: 25%;"><a href="RPcirculant.html">Circulant</a></td>
+<td>Circulant Embedding methods</td></tr>
+<tr><td style="width: 25%;"><a href="RFempVariog-class.html">coerce-method</a></td>
+<td>Class 'RFempVariog'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">coerce-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">coerce-method</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">coerce-method</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">coerce-method</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">coerce-method</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RPcoin.html">Coins</a></td>
+<td>Random coin method</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">CondSimu</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">constants</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">contour.RFempVariog</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">contour.RFfit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="plot-method.html">contour.RFspatialGridDataFrame</a></td>
+<td>Methods for function 'plot' in package 'RandomFields'</td></tr>
+<tr><td style="width: 25%;"><a href="conventional2RFspDataFrame.html">conventional2RFspDataFrame</a></td>
+<td>Coercion to class 'RFsp' objects</td></tr>
+<tr><td style="width: 25%;"><a href="CoordinateSystems.html">coordinate system</a></td>
+<td>Coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="CoordinateSystems.html">coordinate systems</a></td>
+<td>Coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="CoordinateSystems.html">coordinates</a></td>
+<td>Coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="Changings.html">coord_units</a></td>
+<td>Documentation of some further changings</td></tr>
+<tr><td style="width: 25%;"><a href="RMmatrix.html">coregionalisation</a></td>
+<td>Matrix operator</td></tr>
+<tr><td style="width: 25%;"><a href="RMmatrix.html">coregionalization</a></td>
+<td>Matrix operator</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">cos</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">cosh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">Covariance</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">CovarianceFct</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">CovMatrix</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="RPcirculant.html">Cutoff</a></td>
+<td>Circulant Embedding methods</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="obsolete.html">DeleteAllRegisters</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">DeleteRegister</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="internal.html">Dependencies</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">dimensions-method</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">dimensions-method</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">dimensions-method</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">dimensions-method</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">dimensions-method</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RPsequential.html">Direct</a></td>
+<td>Methods relying on square roots of the covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">DoSimulateRF</a></td>
+<td>Obsolete functions</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="RMmodelsSphere.html">Earth models</a></td>
+<td>Covariance models valid on a sphere</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsSphere.html">earth models</a></td>
+<td>Covariance models valid on a sphere</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">EmpiricalVariogram</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="RMbrownresnick.html">error function model</a></td>
+<td>Tail correlation function of the Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">exp</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">expm1</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RPschlather.html">extremal Gaussian</a></td>
+<td>Extremal Gaussian process</td></tr>
+<tr><td style="width: 25%;"><a href="RPschlather.html">extremal Gaussian process</a></td>
+<td>Extremal Gaussian process</td></tr>
+<tr><td style="width: 25%;"><a href="RPopitz.html">extremal t</a></td>
+<td>Extremal t process</td></tr>
+<tr><td style="width: 25%;"><a href="RPopitz.html">extremal t process</a></td>
+<td>Extremal t process</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="internal.html">FinalizeExample</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="fitgauss.html">fitgauss</a></td>
+<td>Details on fitting Gaussian random fields, including Box-Cox transformation</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">fitvario</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">floor</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">fractal.dim</a></td>
+<td>Obsolete functions</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="QMath.html">gamma</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="GaussianFields.html">Gaussian</a></td>
+<td>Methods for Gaussian Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">GaussRF</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="PrintModelList.html">GetModelList</a></td>
+<td>Information about the implemented covariance models</td></tr>
+<tr><td style="width: 25%;"><a href="PrintModelList.html">GetModelNames</a></td>
+<td>Information about the implemented covariance models</td></tr>
+<tr><td style="width: 25%;"><a href="weather.html">GKS11</a></td>
+<td>Pressure and temperature forecast errors over the Pacific Northwest</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">GridTopology2gridVectors-method</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="papers.GSPSJ06.html">GSPSJ06</a></td>
+<td>Fast and Exact Simulation of Large Gaussian Lattice Systems in R2</td></tr>
+</table>
+
+<h2><a name="H">-- H --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="Bayesian.html">Hierarchical</a></td>
+<td>Bayesian Spatial Modelling</td></tr>
+<tr><td style="width: 25%;"><a href="Bayesian.html">Hierarchical Modelling</a></td>
+<td>Bayesian Spatial Modelling</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">hist.RFgridDataFrame</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">hist.RFpointsDataFrame</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">hist.RFspatialGridDataFrame</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">hist.RFspatialPointsDataFrame</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">hurst</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="RPhyperplane.html">Hyperplane</a></td>
+<td>Hyperplane method</td></tr>
+<tr><td style="width: 25%;"><a href="RPhyperplane.html">Hyperplanes</a></td>
+<td>Hyperplane method</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">image-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">InitGaussRF</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">InitMaxStableRF</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">InitSimulateRF</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="RPcirculant.html">Intrinsic</a></td>
+<td>Circulant Embedding methods</td></tr>
+<tr><td style="width: 25%;"><a href="RMmultiquad.html">Inverse multiquadric</a></td>
+<td>The Multiquadric Family Covariance Model on th Sphere</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">isGridded</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">isGridded-method</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">isGridded-method</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">isGridded-method</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">isGridded-method</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">isGridded-method</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+</table>
+
+<h2><a name="J">-- J --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="papers.jss14.html">jss14</a></td>
+<td>Covariance models for multivariate and vector valued fields</td></tr>
+</table>
+
+<h2><a name="K">-- K --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="obsolete.html">Kriging</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="RFinterpolate.html">kriging</a></td>
+<td>Interpolation methods</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="QMath.html">lgamma</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">lines-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">lines.RMmodel</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">log</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">log1p</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">log2</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">logb</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">logLik.RFfit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">logLik.RF_fit</a></td>
+<td>Class 'RFfit'</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="RPsmith.html">M2</a></td>
+<td>(Mixed) Moving Maxima</td></tr>
+<tr><td style="width: 25%;"><a href="RPsmith.html">M3</a></td>
+<td>(Mixed) Moving Maxima</td></tr>
+<tr><td style="width: 25%;"><a href="MajorRevisions.html">MajorRevisions</a></td>
+<td>Documentation of major changings</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">math.c</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">max</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RPmaxstable.html">Maxstable</a></td>
+<td>Simulation of Max-Stable Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RPmaxstable.html">maxstable</a></td>
+<td>Simulation of Max-Stable Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RPmaxstableAdvanced.html">maxstableAdvanced</a></td>
+<td>Simulation examples of advanced Max-Stable Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">MaxStableRF</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">min</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RPsmith.html">mixed moving maxima</a></td>
+<td>(Mixed) Moving Maxima</td></tr>
+<tr><td style="width: 25%;"><a href="RPsmith.html">moving maxima</a></td>
+<td>(Mixed) Moving Maxima</td></tr>
+<tr><td style="width: 25%;"><a href="RMmultiquad.html">multiquadric family</a></td>
+<td>The Multiquadric Family Covariance Model on th Sphere</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsMultivariate.html">Multivariate RMmodels</a></td>
+<td>Multivariate models</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="Changings.html">new_coord_units</a></td>
+<td>Documentation of some further changings</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsNonstatationary.html">non-stationary</a></td>
+<td>Nonstationary features of the mdoels</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsNonstatationary.html">non-stationary RMmodels</a></td>
+<td>Nonstationary features of the mdoels</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsNonstatationary.html">Nonstationary RMmodels</a></td>
+<td>Nonstationary features of the mdoels</td></tr>
+<tr><td style="width: 25%;"><a href="RPnugget.html">Nugget</a></td>
+<td>Method to simulate the Nugget effect</td></tr>
+</table>
+
+<h2><a name="O">-- O --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="RMmodelsAuxiliary.html">Other models</a></td>
+<td>Auxiliary and other Models</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="papers.html">papers</a></td>
+<td>Papers involving 'RandomFields' and co-authored by M. Schlather</td></tr>
+<tr><td style="width: 25%;"><a href="RFempVariog-class.html">persp-method</a></td>
+<td>Class 'RFempVariog'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">persp-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">persp-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="plot-method.html">persp-method</a></td>
+<td>Methods for function 'plot' in package 'RandomFields'</td></tr>
+<tr><td style="width: 25%;"><a href="RFempVariog-class.html">plot-method</a></td>
+<td>Class 'RFempVariog'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">plot-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">plot-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="plot-method.html">plot-method</a></td>
+<td>Methods for function 'plot' in package 'RandomFields'</td></tr>
+<tr><td style="width: 25%;"><a href="internal.html">plotWithCircles</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">points-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">points.RMmodel</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmultiquad.html">Poisson spline</a></td>
+<td>The Multiquadric Family Covariance Model on th Sphere</td></tr>
+<tr><td style="width: 25%;"><a href="RMbrownresnick.html">powered error function</a></td>
+<td>Tail correlation function of the Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="RMstable.html">powered exponential</a></td>
+<td>Stable Family / Powered Exponential Model</td></tr>
+<tr><td style="width: 25%;"><a href="RFempVariog-class.html">print-method</a></td>
+<td>Class 'RFempVariog'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">print-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">print-method</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RFcrossvalidate.html">print.crossvalidate</a></td>
+<td>Fitting model parameters to spatial data (regionalised variables) and to linear (mixed) models</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">print.RFfit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">print.RFgridDataFrame</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">print.RFpointsDataFrame</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFratiotest.html">print.RFratiotest</a></td>
+<td>Likelihood ratio test</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">print.RFspatialGridDataFrame</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">print.RFspatialPointsDataFrame</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFempVariog-class.html">print.RF_empVariog</a></td>
+<td>Class 'RFempVariog'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">print.RF_fit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">print.RMmodel</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">print.RMmodelFit</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelgenerator-class.html">print.RMmodelgenerator</a></td>
+<td>Class 'RMmodelgenerator'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">print.RM_modelFit</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RFcrossvalidate.html">print.summary.crossvalidate</a></td>
+<td>Fitting model parameters to spatial data (regionalised variables) and to linear (mixed) models</td></tr>
+<tr><td style="width: 25%;"><a href="PrintModelList.html">PrintModelList</a></td>
+<td>Information about the implemented covariance models</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="QMath.html">R.</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.acos</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.acosh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.asin</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.asinh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.atan</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.atan2</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.atanh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.c</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.cbrt</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.ceil</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.const</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.cos</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.cosh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.div</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.erf</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.erfc</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.exp</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.exp2</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.expm1</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.fabs</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.fdim</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.floor</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.fmax</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.fmin</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.fmod</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.gamma</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.hypot</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.is</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.lat</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.lgamma</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.log</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.log1p</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.log2</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.logb</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.lon</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.minus</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.models</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.mult</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.p</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.plus</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.pow</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.remainder</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.round</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.sin</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.sinh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.sqrt</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.tan</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.tanh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">R.trunc</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RandomFields.html">RandomFields</a></td>
+<td>Simulation and Analysis of Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">range.RFgridDataFrame</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">range.RFpointsDataFrame</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">range.RFspatialGridDataFrame</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">range.RFspatialPointsDataFrame</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_CARTESIAN_COORD</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_DOMAIN_NAMES</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_EARTH_COORDS</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_GNOMONIC_PROJ</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_ISONAMES</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_ISOTROPIC</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_LIKELIHOOD_NAMES</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_MONOTONE_NAMES</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_NLOPTR_NAMES</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_OPTIMISER_NAMES</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_ORTHOGRAPHIC_PROJ</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_SPACEISOTROPIC</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_SPHERICAL_COORDS</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RC.html">RC_TYPENAMES</a></td>
+<td>Constants used in RandomFields (RC constants)</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">residuals-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RF.html">RF</a></td>
+<td>Evaluation operators (RF commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RFboxcox.html">RFboxcox</a></td>
+<td>Linear part of 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">RFcalc</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RFcov.html">RFcov</a></td>
+<td>Evaluate Covariance and Variogram Functions</td></tr>
+<tr><td style="width: 25%;"><a href="RFcov.html">RFcovmatrix</a></td>
+<td>Evaluate Covariance and Variogram Functions</td></tr>
+<tr><td style="width: 25%;"><a href="RFcrossvalidate.html">RFcrossvalidate</a></td>
+<td>Fitting model parameters to spatial data (regionalised variables) and to linear (mixed) models</td></tr>
+<tr><td style="width: 25%;"><a href="RFcrossvalidate.html">RFcrossvalidate.default</a></td>
+<td>Fitting model parameters to spatial data (regionalised variables) and to linear (mixed) models</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">RFdataFrame</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">RFdataFrame-class</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFdistr.html">RFddistr</a></td>
+<td>Evaluating distribution families</td></tr>
+<tr><td style="width: 25%;"><a href="RFdistr.html">RFdistr</a></td>
+<td>Evaluating distribution families</td></tr>
+<tr><td style="width: 25%;"><a href="RMtrafo.html">RFearth2cartesian</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMtrafo.html">RFearth2dist</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RFempiricalcovariance.html">RFempiricalcovariance</a></td>
+<td>Empirical (Cross-)Covariance function</td></tr>
+<tr><td style="width: 25%;"><a href="RFempiricalmadogram.html">RFempiricalmadogram</a></td>
+<td>Empirical (Cross-)Madogram</td></tr>
+<tr><td style="width: 25%;"><a href="RFempiricalvariogram.html">RFempiricalvariogram</a></td>
+<td>Empirical (Cross-)Variogram</td></tr>
+<tr><td style="width: 25%;"><a href="RFempVariog-class.html">RFempVariog-class</a></td>
+<td>Class 'RFempVariog'</td></tr>
+<tr><td style="width: 25%;"><a href="RFcov.html">RFfctn</a></td>
+<td>Evaluate Covariance and Variogram Functions</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit.html">RFfit</a></td>
+<td>Fitting model parameters to spatial data (regionalised variables) and to linear (mixed) models</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">RFfit-class</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit.html">RFfit.default</a></td>
+<td>Fitting model parameters to spatial data (regionalised variables) and to linear (mixed) models</td></tr>
+<tr><td style="width: 25%;"><a href="RFfitOptimiser.html">RFfitOptimiser</a></td>
+<td>Optimisers for fitting model parameters to spatial data</td></tr>
+<tr><td style="width: 25%;"><a href="RFfitOptimiser.html">RFfitoptimiser</a></td>
+<td>Optimisers for fitting model parameters to spatial data</td></tr>
+<tr><td style="width: 25%;"><a href="RFformula.html">RFformula</a></td>
+<td>RFformula - syntax to design random field models with trend or linear mixed models</td></tr>
+<tr><td style="width: 25%;"><a href="RFfractaldim.html">RFfractaldim</a></td>
+<td>RFfractaldimension</td></tr>
+<tr><td style="width: 25%;"><a href="RF.html">RFfunction</a></td>
+<td>Evaluation operators (RF commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RF.html">RFfunctions</a></td>
+<td>Evaluation operators (RF commands)</td></tr>
+<tr><td style="width: 25%;"><a href="internal.html">rfGenerateConstants</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="internal.html">rfGenerateMaths</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="internal.html">rfGenerateModels</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="internal.html">rfGenerateTest</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="RFgetMethodNames.html">RFgetMethodNames</a></td>
+<td>Simulation Techniques</td></tr>
+<tr><td style="width: 25%;"><a href="RFgetModel.html">RFgetModel</a></td>
+<td>Internally stored model</td></tr>
+<tr><td style="width: 25%;"><a href="RFgetModelInfo.html">RFgetModelInfo</a></td>
+<td>Information on RMmodels</td></tr>
+<tr><td style="width: 25%;"><a href="RFgetModelInfo.html">RFgetModelInfo_model</a></td>
+<td>Information on RMmodels</td></tr>
+<tr><td style="width: 25%;"><a href="RFgetModelInfo.html">RFgetModelInfo_register</a></td>
+<td>Information on RMmodels</td></tr>
+<tr><td style="width: 25%;"><a href="RFgetModelNames.html">RFgetModelNames</a></td>
+<td>Names of implemented covariance and variogram models</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">RFgridDataFrame</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">RFgridDataFrame-class</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgui.html">RFgui</a></td>
+<td>Graphical User Interface For Fitting Covariance Models And Variograms</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">RFhessian</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFhurst.html">RFhurst</a></td>
+<td>Hurst coefficient</td></tr>
+<tr><td style="width: 25%;"><a href="RFinterpolate.html">RFinterpolate</a></td>
+<td>Interpolation methods</td></tr>
+<tr><td style="width: 25%;"><a href="RFloglikelihood.html">RFlikelihood</a></td>
+<td>Likelihood and estimation of linear models</td></tr>
+<tr><td style="width: 25%;"><a href="RFlinearpart.html">RFlinearpart</a></td>
+<td>Linear part of 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RFloglikelihood.html">RFloglikelihood</a></td>
+<td>Likelihood and estimation of linear models</td></tr>
+<tr><td style="width: 25%;"><a href="RF.html">RFmodel</a></td>
+<td>Evaluation operators (RF commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RF.html">RFmodels</a></td>
+<td>Evaluation operators (RF commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RFoldstyle.html">RFoldstyle</a></td>
+<td>RFoldstyle</td></tr>
+<tr><td style="width: 25%;"><a href="RFoptions.html">RFoptions</a></td>
+<td>Setting control arguments</td></tr>
+<tr><td style="width: 25%;"><a href="RFoptionsAdvanced.html">RFoptionsAdvanced</a></td>
+<td>Setting control arguments of 'RandomFields' - advanced examples</td></tr>
+<tr><td style="width: 25%;"><a href="RFpar.html">RFpar</a></td>
+<td>Graphical parameters for plots</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">RFparameters</a></td>
+<td>Obsolete functions</td></tr>
+<tr><td style="width: 25%;"><a href="RFdistr.html">RFpdistr</a></td>
+<td>Evaluating distribution families</td></tr>
+<tr><td style="width: 25%;"><a href="RFempVariog-class.html">RFplotEmpVariogram</a></td>
+<td>Class 'RFempVariog'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">RFplotModel</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="plot-method.html">RFplotSimulation</a></td>
+<td>Methods for function 'plot' in package 'RandomFields'</td></tr>
+<tr><td style="width: 25%;"><a href="plot-method.html">RFplotSimulation1D</a></td>
+<td>Methods for function 'plot' in package 'RandomFields'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">RFpointsDataFrame</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">RFpointsDataFrame-class</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFcov.html">RFpseudovariogram</a></td>
+<td>Evaluate Covariance and Variogram Functions</td></tr>
+<tr><td style="width: 25%;"><a href="RFdistr.html">RFqdistr</a></td>
+<td>Evaluating distribution families</td></tr>
+<tr><td style="width: 25%;"><a href="RFratiotest.html">RFratiotest</a></td>
+<td>Likelihood ratio test</td></tr>
+<tr><td style="width: 25%;"><a href="RFdistr.html">RFrdistr</a></td>
+<td>Evaluating distribution families</td></tr>
+<tr><td style="width: 25%;"><a href="RFsimulate.html">RFsimulate</a></td>
+<td>Simulation of Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RFsimulate.more.examples.html">RFsimulate.more.examples</a></td>
+<td>Further Examples for the Simulation of Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RFsimulate.sophisticated.examples.html">RFsimulate.sophisticated.examples</a></td>
+<td>Sophisticated Examples for the Simulation of Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RFsimulateAdvanced.html">RFsimulateAdvanced</a></td>
+<td>Simulation of Random Fields - Advanced</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">RFsp-class</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">RFspatialDataFrame</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">RFspatialDataFrame-class</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">RFspatialGridDataFrame</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">RFspatialGridDataFrame-class</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">RFspatialPointsDataFrame</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">RFspatialPointsDataFrame-class</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">RFspDataFrame2conventional</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">RFspDataFrame2conventional-method</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">RFspDataFrame2conventional-method</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">RFspDataFrame2conventional-method</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">RFspDataFrame2conventional-method</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">RFspDataFrame2conventional-method</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">RFspDataFrame2dataArray</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">RFspDataFrame2dataArray-method</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">RFspDataFrame2dataArray-method</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">RFspDataFrame2dataArray-method</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFcov.html">RFvariogram</a></td>
+<td>Evaluate Covariance and Variogram Functions</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">RF_fit-class</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RM.html">RM</a></td>
+<td>Overview over classes of 'RMmodels'</td></tr>
+<tr><td style="width: 25%;"><a href="RMangle.html">RMangle</a></td>
+<td>Anisotropy matrix given by angle</td></tr>
+<tr><td style="width: 25%;"><a href="RMaskey.html">RMaskey</a></td>
+<td>Askey model</td></tr>
+<tr><td style="width: 25%;"><a href="RMave.html">RMave</a></td>
+<td>Space-time moving average model</td></tr>
+<tr><td style="width: 25%;"><a href="RMball.html">RMball</a></td>
+<td>RMball</td></tr>
+<tr><td style="width: 25%;"><a href="RMbcw.html">RMbcw</a></td>
+<td>Model bridging stationary and intrinsically stationary processes</td></tr>
+<tr><td style="width: 25%;"><a href="RMbernoulli.html">RMbernoulli</a></td>
+<td>Covariance Model for binary field based on a Gaussian field</td></tr>
+<tr><td style="width: 25%;"><a href="RMbessel.html">RMbessel</a></td>
+<td>Bessel Family Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMbicauchy.html">RMbicauchy</a></td>
+<td>Bivariate Cauchy Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMbigneiting.html">RMbigneiting</a></td>
+<td>Gneiting-Wendland Covariance Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMbistable.html">RMbistable</a></td>
+<td>Bivariate stableModel</td></tr>
+<tr><td style="width: 25%;"><a href="RMbigneiting.html">RMbiwendland</a></td>
+<td>Gneiting-Wendland Covariance Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMbiwm.html">RMbiwm</a></td>
+<td>Full Bivariate Whittle Matern Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMbr2bg.html">RMbr2bg</a></td>
+<td>Transformation from Brown-Resnick to Bernoulli</td></tr>
+<tr><td style="width: 25%;"><a href="RMbr2.html">RMbr2eg</a></td>
+<td>Transformation from Brown-Resnick to Gauss</td></tr>
+<tr><td style="width: 25%;"><a href="RMbrownresnick.html">RMbrownresnick</a></td>
+<td>Tail correlation function of the Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="RMwave.html">RMcardinalsine</a></td>
+<td>Wave Covariance Model / Cardinal Sine</td></tr>
+<tr><td style="width: 25%;"><a href="RMcauchy.html">RMcauchy</a></td>
+<td>Cauchy Family Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMcauchytbm.html">RMcauchytbm</a></td>
+<td>Modifications of the Cauchy Family Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMchoquet.html">RMchoquet</a></td>
+<td>Schoenberg's representation for the classes psi_d and psi_{Inf} in d=2</td></tr>
+<tr><td style="width: 25%;"><a href="RMcircular.html">RMcircular</a></td>
+<td>Circular Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMconstant.html">RMconstant</a></td>
+<td>Covariance Matrix Constant in Space</td></tr>
+<tr><td style="width: 25%;"><a href="RMcoord.html">RMcoord</a></td>
+<td>Coordinates in the mixed model representation</td></tr>
+<tr><td style="width: 25%;"><a href="RMcovariate.html">RMcovariate</a></td>
+<td>Model for covariates</td></tr>
+<tr><td style="width: 25%;"><a href="RMcoxisham.html">RMcoxisham</a></td>
+<td>Cox Isham Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMcubic.html">RMcubic</a></td>
+<td>Cubic Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMcurlfree.html">RMcurlfree</a></td>
+<td>Curlfree Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMcutoff.html">RMcutoff</a></td>
+<td>Gneiting's modification towards finite range</td></tr>
+<tr><td style="width: 25%;"><a href="RMdagum.html">RMdagum</a></td>
+<td>Dagum Covariance Model Family</td></tr>
+<tr><td style="width: 25%;"><a href="RMdampedcos.html">RMdampedcos</a></td>
+<td>Exponentially Damped Cosine</td></tr>
+<tr><td style="width: 25%;"><a href="RMdelay.html">RMdelay</a></td>
+<td>Bivariate Delay Effect</td></tr>
+<tr><td style="width: 25%;"><a href="RMdewijsian.html">RMdewijsian</a></td>
+<td>Modified DeWijsian Variogram Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMdivfree.html">RMdivfree</a></td>
+<td>Divfree Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMeaxxa.html">RMeaxxa</a></td>
+<td>Special models for rotation like fields</td></tr>
+<tr><td style="width: 25%;"><a href="RMepscauchy.html">RMepscauchy</a></td>
+<td>Generalized Cauchy Family Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMeaxxa.html">RMetaxxa</a></td>
+<td>Special models for rotation like fields</td></tr>
+<tr><td style="width: 25%;"><a href="RMexp.html">RMexp</a></td>
+<td>Exponential Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMexponential.html">RMexponential</a></td>
+<td>Exponential operator</td></tr>
+<tr><td style="width: 25%;"><a href="RMfbm.html">RMfbm</a></td>
+<td>Variogram Model of Fractal Brownian Motion</td></tr>
+<tr><td style="width: 25%;"><a href="RMfix.html">RMfixcov</a></td>
+<td>Fixed Covariance Matrix</td></tr>
+<tr><td style="width: 25%;"><a href="RMfixed.html">RMfixed</a></td>
+<td>Fixed Effect Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMoesting.html">RMflatpower</a></td>
+<td>Variogram Model Similar to Fractal Brownian Motion</td></tr>
+<tr><td style="width: 25%;"><a href="RMfractdiff.html">RMfractdiff</a></td>
+<td>Fractionally Differenced Process Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMfractgauss.html">RMfractgauss</a></td>
+<td>Fractal Gaussian Model Family</td></tr>
+<tr><td style="width: 25%;"><a href="RMgauss.html">RMgauss</a></td>
+<td>Gaussian Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMgencauchy.html">RMgencauchy</a></td>
+<td>Generalized Cauchy Family Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMgenfbm.html">RMgenfbm</a></td>
+<td>Generalized Fractal Brownian Motion Variogram Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMgengneiting.html">RMgengneiting</a></td>
+<td>Gneiting-Wendland Covariance Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMgennsst.html">RMgennsst</a></td>
+<td>Non-Separable Space-Time model</td></tr>
+<tr><td style="width: 25%;"><a href="RMgneiting.html">RMgneiting</a></td>
+<td>Gneiting Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMgneitingdiff.html">RMgneitingdiff</a></td>
+<td>Gneiting Covariance Model Used as Tapering Function</td></tr>
+<tr><td style="width: 25%;"><a href="RMmatern.html">RMhandcock</a></td>
+<td>Whittle-Matern Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMhyperbolic.html">RMhyperbolic</a></td>
+<td>Generalized Hyperbolic Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMiaco.html">RMiaco</a></td>
+<td>Iaco-Cesare model</td></tr>
+<tr><td style="width: 25%;"><a href="RMid.html">RMid</a></td>
+<td>Identical Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMintern</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMintexp.html">RMintexp</a></td>
+<td>Integral exponential operator</td></tr>
+<tr><td style="width: 25%;"><a href="RMintrinsic.html">RMintrinsic</a></td>
+<td>Intrinsic Embedding Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMbessel.html">RMjbessel</a></td>
+<td>Bessel Family Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMmatern.html">RMkbessel</a></td>
+<td>Whittle-Matern Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMkolmogorov.html">RMkolmogorov</a></td>
+<td>Identical Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMlgd.html">RMlgd</a></td>
+<td>Local-Global Distinguisher Family Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMlsfbm.html">RMlsfbm</a></td>
+<td>Locally Positive Definite Function Given by the Fractal Brownian Motion</td></tr>
+<tr><td style="width: 25%;"><a href="RMstrokorb.html">RMm2r</a></td>
+<td>Tail correlation function of the Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="RMstrokorb.html">RMm3b</a></td>
+<td>Tail correlation function of the Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="RMma.html">RMma</a></td>
+<td>Ma operator</td></tr>
+<tr><td style="width: 25%;"><a href="RMmastein.html">RMmastein</a></td>
+<td>Ma-Stein operator</td></tr>
+<tr><td style="width: 25%;"><a href="RMmatern.html">RMmatern</a></td>
+<td>Whittle-Matern Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMmatrix.html">RMmatrix</a></td>
+<td>Matrix operator</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMmixed</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel.html">RMmodel</a></td>
+<td>Covariance and Variogram Models in 'RandomFields' (RM commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">RMmodel-class</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">RMmodelFit-class</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelgenerator-class.html">RMmodelgenerator-class</a></td>
+<td>Class 'RMmodelgenerator'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel.html">RMmodels</a></td>
+<td>Covariance and Variogram Models in 'RandomFields' (RM commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsAdvanced.html">RMmodelsAdvanced</a></td>
+<td>Advanced features of the mdoels</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsAuxiliary.html">RMmodelsAuxiliary</a></td>
+<td>Auxiliary and other Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsMultivariate.html">RMmodelsMultivariate</a></td>
+<td>Multivariate models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsNonstatationary.html">RMmodelsNonstationary</a></td>
+<td>Nonstationary features of the mdoels</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsSpaceTime.html">RMmodelsSpaceTime</a></td>
+<td>Space-time Covariance Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsSpaceTime.html">RMmodelsSpacetime</a></td>
+<td>Space-time Covariance Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsTailcorrelation.html">RMmodelsTailCorrelation</a></td>
+<td>Covariance models valid for max-stable random fields</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsTrend.html">RMmodelsTrend</a></td>
+<td>Trend Modelling</td></tr>
+<tr><td style="width: 25%;"><a href="RMmppplus.html">RMmppplus</a></td>
+<td>Mixture of shape functions</td></tr>
+<tr><td style="width: 25%;"><a href="RMstrokorb.html">RMmps</a></td>
+<td>Tail correlation function of the Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="RMmqam.html">RMmqam</a></td>
+<td>multivariate quasi-arithmetic mean</td></tr>
+<tr><td style="width: 25%;"><a href="RMmult.html">RMmult</a></td>
+<td>Multiplication of Random Field Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmultiquad.html">RMmultiquad</a></td>
+<td>The Multiquadric Family Covariance Model on th Sphere</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMmult_inverse</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMnatsc.html">RMnatsc</a></td>
+<td>Natural scale</td></tr>
+<tr><td style="width: 25%;"><a href="RMnonstwm.html">RMnonstwm</a></td>
+<td>RMnonstwm</td></tr>
+<tr><td style="width: 25%;"><a href="RMnsst.html">RMnsst</a></td>
+<td>Non-Separable Space-Time model</td></tr>
+<tr><td style="width: 25%;"><a href="RMnugget.html">RMnugget</a></td>
+<td>Nugget Effect Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMnull</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMparswm.html">RMparswm</a></td>
+<td>Parsimonious Multivariate Whittle Matern Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMparswm.html">RMparswmX</a></td>
+<td>Parsimonious Multivariate Whittle Matern Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMpenta.html">RMpenta</a></td>
+<td>Penta Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMplus.html">RMplus</a></td>
+<td>Addition of Random Field Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMpoissonpoly.html">RMpolygon</a></td>
+<td>RMpolygon</td></tr>
+<tr><td style="width: 25%;"><a href="RMpolynome.html">RMpolynome</a></td>
+<td>Creating poylonmial models</td></tr>
+<tr><td style="width: 25%;"><a href="RMpower.html">RMpower</a></td>
+<td>Power operator for Variograms and Covariance functions</td></tr>
+<tr><td style="width: 25%;"><a href="RMstable.html">RMpoweredexp</a></td>
+<td>Stable Family / Powered Exponential Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMstable.html">RMpoweredexponential</a></td>
+<td>Stable Family / Powered Exponential Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMprod.html">RMprod</a></td>
+<td>Plain scalar product</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMptsGivenShape</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMqam.html">RMqam</a></td>
+<td>Quasi-arithmetic mean</td></tr>
+<tr><td style="width: 25%;"><a href="RMqexp.html">RMqexp</a></td>
+<td>Variant of the exponential model</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMr3binner</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMrational.html">RMrational</a></td>
+<td>Rational function</td></tr>
+<tr><td style="width: 25%;"><a href="RMrotat.html">RMrotat</a></td>
+<td>Rotation matrices</td></tr>
+<tr><td style="width: 25%;"><a href="RMrotat.html">RMrotation</a></td>
+<td>Rotation matrices</td></tr>
+<tr><td style="width: 25%;"><a href="RMS.html">RMS</a></td>
+<td>Scaling operator</td></tr>
+<tr><td style="width: 25%;"><a href="RMschlather.html">RMschlather</a></td>
+<td>Covariance Model for binary field based on Gaussian field</td></tr>
+<tr><td style="width: 25%;"><a href="RMschur.html">RMschur</a></td>
+<td>Schur product</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMselect</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMsetparam</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMshape.ave</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMshape.stp</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMsign.html">RMsign</a></td>
+<td>Random sign</td></tr>
+<tr><td style="width: 25%;"><a href="RMsinepower.html">RMsinepower</a></td>
+<td>The Sinepower Covariance Model on the Sphere</td></tr>
+<tr><td style="width: 25%;"><a href="RMspheric.html">RMspheric</a></td>
+<td>The Spherical Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMSpower</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMstable.html">RMstable</a></td>
+<td>Stable Family / Powered Exponential Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMstandardShape</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RMstatShape</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMstein.html">RMstein</a></td>
+<td>Stein nonseparable space-time model</td></tr>
+<tr><td style="width: 25%;"><a href="RMstp.html">RMstp</a></td>
+<td>Single temporal process</td></tr>
+<tr><td style="width: 25%;"><a href="RMstrokorb.html">RMstrokorb</a></td>
+<td>Tail correlation function of the Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="RMstrokorb.html">RMstrokorbBall</a></td>
+<td>Tail correlation function of the Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="RMstrokorb.html">RMstrokorbMono</a></td>
+<td>Tail correlation function of the Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="RMstrokorb.html">RMstrokorbPoly</a></td>
+<td>Tail correlation function of the Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="RMsum.html">RMsum</a></td>
+<td>Plain scalar product</td></tr>
+<tr><td style="width: 25%;"><a href="RMtbm.html">RMtbm</a></td>
+<td>Turning Bands Method</td></tr>
+<tr><td style="width: 25%;"><a href="RMaskey.html">RMtent</a></td>
+<td>Askey model</td></tr>
+<tr><td style="width: 25%;"><a href="RMtrafo.html">RMtrafo</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMtrend.html">RMtrend</a></td>
+<td>Trend Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMtruncsupport.html">RMtruncsupport</a></td>
+<td>Random sign</td></tr>
+<tr><td style="width: 25%;"><a href="RMuser.html">RMuser</a></td>
+<td>User Defined Function</td></tr>
+<tr><td style="width: 25%;"><a href="RMvector.html">RMvector</a></td>
+<td>Vector Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMwave.html">RMwave</a></td>
+<td>Wave Covariance Model / Cardinal Sine</td></tr>
+<tr><td style="width: 25%;"><a href="RMgengneiting.html">RMwendland</a></td>
+<td>Gneiting-Wendland Covariance Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmatern.html">RMwhittle</a></td>
+<td>Whittle-Matern Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">RM_modelFit-class</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RO#</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RO&gt;</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">ROmissing</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">round</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RP.html">RP</a></td>
+<td>Models for classes of random fields (RP commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RPcoin.html">RPaverage</a></td>
+<td>Random coin method</td></tr>
+<tr><td style="width: 25%;"><a href="RPbernoulli.html">RPbernoulli</a></td>
+<td>Simulation of Binary Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="BRspecific.html">RPbrmixed</a></td>
+<td>Simulation methods for Brown-Resnick processes</td></tr>
+<tr><td style="width: 25%;"><a href="BRspecific.html">RPbrorig</a></td>
+<td>Simulation methods for Brown-Resnick processes</td></tr>
+<tr><td style="width: 25%;"><a href="RPbrownresnick.html">RPbrownresnick</a></td>
+<td>Brown-Resnick process</td></tr>
+<tr><td style="width: 25%;"><a href="BRspecific.html">RPbrshifted</a></td>
+<td>Simulation methods for Brown-Resnick processes</td></tr>
+<tr><td style="width: 25%;"><a href="RPchi2.html">RPchi2</a></td>
+<td>Simulation of a Chi2 Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RPcirculant.html">RPcirculant</a></td>
+<td>Circulant Embedding methods</td></tr>
+<tr><td style="width: 25%;"><a href="RPcoin.html">RPcoins</a></td>
+<td>Random coin method</td></tr>
+<tr><td style="width: 25%;"><a href="RPcirculant.html">RPcutoff</a></td>
+<td>Circulant Embedding methods</td></tr>
+<tr><td style="width: 25%;"><a href="RPsequential.html">RPdirect</a></td>
+<td>Methods relying on square roots of the covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="RPgauss.html">RPgauss</a></td>
+<td>Simulation of Gaussian Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RPhyperplane.html">RPhyperplane</a></td>
+<td>Hyperplane method</td></tr>
+<tr><td style="width: 25%;"><a href="RPcirculant.html">RPintrinsic</a></td>
+<td>Circulant Embedding methods</td></tr>
+<tr><td style="width: 25%;"><a href="RPmaxstable.html">RPmaxstable</a></td>
+<td>Simulation of Max-Stable Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RPmaxstableAdvanced.html">RPmaxstableAdvanced</a></td>
+<td>Simulation examples of advanced Max-Stable Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RP.html">RPmodel</a></td>
+<td>Models for classes of random fields (RP commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RP.html">RPmodels</a></td>
+<td>Models for classes of random fields (RP commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RPmppplus</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RPmult</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RPnugget.html">RPnugget</a></td>
+<td>Method to simulate the Nugget effect</td></tr>
+<tr><td style="width: 25%;"><a href="RPopitz.html">RPopitz</a></td>
+<td>Extremal t process</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RPplus</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RPpoisson.html">RPpoisson</a></td>
+<td>Simulation of Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RP.html">RPprocess</a></td>
+<td>Models for classes of random fields (RP commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RP.html">RPprocesses</a></td>
+<td>Models for classes of random fields (RP commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RPS</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RPschlather.html">RPschlather</a></td>
+<td>Extremal Gaussian process</td></tr>
+<tr><td style="width: 25%;"><a href="RPsequential.html">RPsequential</a></td>
+<td>Methods relying on square roots of the covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="RPsmith.html">RPsmith</a></td>
+<td>(Mixed) Moving Maxima</td></tr>
+<tr><td style="width: 25%;"><a href="RPspecific.html">RPspecific</a></td>
+<td>Methods that are specific to certain covariance models</td></tr>
+<tr><td style="width: 25%;"><a href="RPspectral.html">RPspectral</a></td>
+<td>Spectral turning bands method</td></tr>
+<tr><td style="width: 25%;"><a href="RPt.html">RPt</a></td>
+<td>Simulation of a T Random Fields</td></tr>
+<tr><td style="width: 25%;"><a href="RPtbm.html">RPtbm</a></td>
+<td>Turning Bands method</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RPtrend</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RR.html">RR</a></td>
+<td>Distribution families (RR commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RRarcsqrt</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RRdeterm.html">RRdeterm</a></td>
+<td>Random scaling used with balls</td></tr>
+<tr><td style="width: 25%;"><a href="RRdistr.html">RRdistr</a></td>
+<td>RRdistr</td></tr>
+<tr><td style="width: 25%;"><a href="RRgauss.html">RRgauss</a></td>
+<td>Random scaling used with balls</td></tr>
+<tr><td style="width: 25%;"><a href="RRloc.html">RRloc</a></td>
+<td>Random scaling used with balls</td></tr>
+<tr><td style="width: 25%;"><a href="RRmcmc.html">RRmcmc</a></td>
+<td>RRmcmc</td></tr>
+<tr><td style="width: 25%;"><a href="RR.html">RRmodel</a></td>
+<td>Distribution families (RR commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RR.html">RRmodels</a></td>
+<td>Distribution families (RR commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RRrectangular.html">RRrectangular</a></td>
+<td>Random scaling used with balls</td></tr>
+<tr><td style="width: 25%;"><a href="RMintern.html">RRsetDistr</a></td>
+<td>Internal models</td></tr>
+<tr><td style="width: 25%;"><a href="RMsign.html">RRsign</a></td>
+<td>Random sign</td></tr>
+<tr><td style="width: 25%;"><a href="RRspherical.html">RRspheric</a></td>
+<td>Random scaling used with balls</td></tr>
+<tr><td style="width: 25%;"><a href="RRunif.html">RRunif</a></td>
+<td>Random scaling used with balls</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="papers.S02.html">S02</a></td>
+<td>Models for stationary max-stable random fields</td></tr>
+<tr><td style="width: 25%;"><a href="papers.S10.html">S10</a></td>
+<td>On some covariance models based on normal scale mixtures</td></tr>
+<tr><td style="width: 25%;"><a href="papers.SBS14.html">SBS14</a></td>
+<td>Systematic co-occurrence of tail correlation functions among max-stable processes</td></tr>
+<tr><td style="width: 25%;"><a href="RMchoquet.html">Schoenberg's representation</a></td>
+<td>Schoenberg's representation for the classes psi_d and psi_{Inf} in d=2</td></tr>
+<tr><td style="width: 25%;"><a href="internal.html">ScreenDevice</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="RPsequential.html">Sequential</a></td>
+<td>Methods relying on square roots of the covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="RFempVariog-class.html">show-method</a></td>
+<td>Class 'RFempVariog'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">show-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">show-method</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">show-method</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">show-method</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">show-method</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">show-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">show-method</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelgenerator-class.html">show-method</a></td>
+<td>Class 'RMmodelgenerator'</td></tr>
+<tr><td style="width: 25%;"><a href="internal.html">showManpages</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">sin</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMsinepower.html">sine power function</a></td>
+<td>The Sinepower Covariance Model on the Sphere</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">sinh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMmatern.html">Sobolev</a></td>
+<td>Whittle-Matern Covariance Model</td></tr>
+<tr><td style="width: 25%;"><a href="soil.html">soil</a></td>
+<td>Soil data of North Bavaria, Germany</td></tr>
+<tr><td style="width: 25%;"><a href="sp2RF.html">sp2RF</a></td>
+<td>Transformation of an 'sp' object to an 'RFsp' object</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsSpaceTime.html">space-time</a></td>
+<td>Space-time Covariance Models</td></tr>
+<tr><td style="width: 25%;"><a href="RPspecific.html">Specific</a></td>
+<td>Methods that are specific to certain covariance models</td></tr>
+<tr><td style="width: 25%;"><a href="RPspectral.html">Spectral</a></td>
+<td>Spectral turning bands method</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsSphere.html">sphere</a></td>
+<td>Covariance models valid on a sphere</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsSphere.html">Spherical models</a></td>
+<td>Covariance models valid on a sphere</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsSphere.html">spherical models</a></td>
+<td>Covariance models valid on a sphere</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">sqrt</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="papers.SS11.html">SS12</a></td>
+<td>Covariance Models for Random Vector Fields</td></tr>
+<tr><td style="width: 25%;"><a href="internal.html">StartExample</a></td>
+<td>Internal functions</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">str.RMmodel</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">summary,RFfit-methodt</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFempVariog-class.html">summary-method</a></td>
+<td>Class 'RFempVariog'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">summary-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">summary-method</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">summary-method</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RFcrossvalidate.html">summary.crossvalidate</a></td>
+<td>Fitting model parameters to spatial data (regionalised variables) and to linear (mixed) models</td></tr>
+<tr><td style="width: 25%;"><a href="RFempVariog-class.html">summary.RF_empVariog</a></td>
+<td>Class 'RFempVariog'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">summary.RF_fit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">summary.RM_modelFit</a></td>
+<td>Class "RMmodelFit"</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="RMmodelsTailcorrelation.html">Tail correlation functions</a></td>
+<td>Covariance models valid for max-stable random fields</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsTailcorrelation.html">tail correlation functions</a></td>
+<td>Covariance models valid for max-stable random fields</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">tan</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">tanh</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RPtbm.html">Tbm</a></td>
+<td>Turning Bands method</td></tr>
+<tr><td style="width: 25%;"><a href="Changings.html">tbmdim</a></td>
+<td>Documentation of some further changings</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsTailcorrelation.html">tcf</a></td>
+<td>Covariance models valid for max-stable random fields</td></tr>
+<tr><td style="width: 25%;"><a href="RMtrend.html">trend</a></td>
+<td>Trend Model</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelsTrend.html">trend modelling</a></td>
+<td>Trend Modelling</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">trunc</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMaskey.html">truncated power function</a></td>
+<td>Askey model</td></tr>
+</table>
+
+<h2><a name="V">-- V --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="Changings.html">variab_units</a></td>
+<td>Documentation of some further changings</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">variance-method</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">variance-method</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">variance-method</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">variance-method</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">variance-method</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="obsolete.html">Variogram</a></td>
+<td>Obsolete functions</td></tr>
+</table>
+
+<h2><a name="W">-- W --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="weather.html">weather</a></td>
+<td>Pressure and temperature forecast errors over the Pacific Northwest</td></tr>
+<tr><td style="width: 25%;"><a href="RMmatern.html">whittle-matern</a></td>
+<td>Whittle-Matern Covariance Model</td></tr>
+</table>
+
+<h2><a name="Z">-- Z --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="CoordinateSystems.html">zenit</a></td>
+<td>Coordinate systems</td></tr>
+</table>
+
+<h2><a name="misc">-- misc --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="RMmult.html">*</a></td>
+<td>Multiplication of Random Field Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">*-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RMplus.html">+</a></td>
+<td>Addition of Random Field Models</td></tr>
+<tr><td style="width: 25%;"><a href="RMmppplus.html">++</a></td>
+<td>Mixture of shape functions</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">+-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">-</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">--method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">.RFfit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">.RF_fit</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="QMath.html">/</a></td>
+<td>Transformation of coordinate systems</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">/-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RFfit-class.html">[-method</a></td>
+<td>Class 'RFfit'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">[-method</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">[-method</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">[-method</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">[-method</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">[-method</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">[-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel.html">[-method</a></td>
+<td>Covariance and Variogram Models in 'RandomFields' (RM commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">[-method</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelgenerator-class.html">[-method</a></td>
+<td>Class 'RMmodelgenerator'</td></tr>
+<tr><td style="width: 25%;"><a href="RFgridDataFrame-class.html">[&lt;--method</a></td>
+<td>Class 'RFgridDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFpointsDataFrame-class.html">[&lt;--method</a></td>
+<td>Class 'RFpointsDataFrame'</td></tr>
+<tr><td style="width: 25%;"><a href="RFsp-class.html">[&lt;--method</a></td>
+<td>Class 'RFsp'</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialGridDataFrame-class.html">[&lt;--method</a></td>
+<td>Class "RFspatialGridDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RFspatialPointsDataFrame-class.html">[&lt;--method</a></td>
+<td>Class "RFspatialPointsDataFrame"</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">[&lt;--method</a></td>
+<td>Class 'RMmodel'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel.html">[&lt;--method</a></td>
+<td>Covariance and Variogram Models in 'RandomFields' (RM commands)</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelExt-class.html">[&lt;--method</a></td>
+<td>Class "RMmodelFit"</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodelgenerator-class.html">[&lt;--method</a></td>
+<td>Class 'RMmodelgenerator'</td></tr>
+<tr><td style="width: 25%;"><a href="RMmodel-class.html">^-method</a></td>
+<td>Class 'RMmodel'</td></tr>
+</table>
+</body></html>

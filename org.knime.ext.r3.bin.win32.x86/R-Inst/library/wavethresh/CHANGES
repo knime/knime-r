@@ -1,0 +1,111 @@
+4.5-1 Fixed memory leak in av_basis which is called by AvBasis.wst
+
+4.6 Changed PsiJ. Added new option verbose, so that the information messages
+	that previously were always printed out can now be suppressed.
+	Also, changed default value of OPLENGTH to be 100000
+
+    Changed wvrelease. Changed the previous two uses of "cat" to now use "message", which can be suppressed. This helps the package knitr
+
+    Changed draw.default. Added a type argument.
+
+    Changed nlevels to nlevelsWT. This was because nlevels clashed with
+	a function of the same name in another package to do with factor
+	levels.
+
+4.6.1  Merged the contents of the cthresh package into wavethresh. Keeping
+    the two as separate packages was causing big problems.
+
+4.6.2  Minor bugfixes.
+
+	In CWCV...
+
+	Changed the argument "interptype" in "CWCV" to "noise". Sometimes
+	the "normal" argument causes the routine not to terminate.
+
+
+	In WaveletCV...
+
+	Two function calls to "threshold" needed the argument
+	policy="universal" added. This is because they were using
+	the "sure" policy by default and the routine required a
+	universal threshold. Note, people would have probably been
+	using CWCV so this error would not have been noticed much.
+	The bug comes to the fore when one changes the threshold type
+	from the default "soft" to "hard", as SURE thresholding
+	can't be computed with the latter.
+
+	In rsswav...
+
+	Function was returning a multi-argument, which is no longer
+	allowed, changed so that a list is returned.
+
+	In PsiJ and PsiJmati...
+
+	The default value of the OPLENGTH argument has been increased to 10^7
+
+	In PsiJ,ipndacw,rmget...
+
+	Various matrices and objects get stored in an environment (WTEnv)
+	now. So, invocation of one of these functions *the first time*
+	will result in the object being computed from scratch and stored.
+	Repeat invocation will used the stored objects saving computing time.
+	This is different to previous versions of WaveThresh. In previous
+	versions the stored objects got stored in your home R directory
+	(ok .GlobalEnv) without your permission and without your knowledge
+	(unless you looked) - but they were useful. The previous version
+	though did have the advantage that the stored objects persisted across
+	different sessions of R, or could be used if you attached another
+	directory which had the stored objects in. 
+
+	I'd like to see how things go with the current version. If
+	continued recomputing is a pain then let me know and I'll think
+	up some different model.
+
+4.6.3	Make some corrections after running valgrind. See comments in code
+	for details - search on Valgrind
+
+	In function evalF, SFDE6, SFDE5, PLDE2 (these latter functions
+	were also modified to catch and report on failures of memory
+	allocation and also to properly free memory once it had been used). 	
+
+4.6.4	The h_n quadrature mirror file coefficients for the (little-used)
+	Littlewood-Paley wavelet have been changed so that they
+	sum to \sqrt(2) and their sum of squares is 1. This is to bring
+	them in line with the Daubechies compactly supported wavelets
+
+4.6.5	Changed CWaveletCV to count the number of iterations in the
+	main iterative process (using the counter iterations) and to
+	check that it is always less than the supplied argument
+	maxits. This is so that calls to this routine (e.g. from the
+	much used threshold.wd using the "cv" policy do not run on without
+	limit). The R code CWCV and threshold.wd have also been changed
+	to take account of new maxits and cvmaxits arguments and associated
+	help pages changed.
+
+4.6.6	Bugfix in plot.mwd found by Sebastian Muller. This was caused
+	by a reference to nlevels() which is not a WaveThresh function
+	anymore (its name got changed to nlevelsWT() in version 4.6)
+	This call was accidentally left over. 
+	Also took opportunity to bring the DESCRIPTION file up to date.
+
+4.6.7	Remove all references to the tsp function. This was a compatibility
+	fix in R to relate to S, but now causes problems.
+
+4.6.8	Added Coiflets to the filter.select function and updated help
+	file (thanks to Anestis Antoniadis. I could have sworn I
+	put these in before, but apparently not).
+
+	Fixed bug. This bug only manifested itself in Windows code.
+	In Best1D cols an operation occurs which compares all wavelet
+	packets to the groups vector, to identify which packets are
+	similar enough to the groups vector for further consideration.
+	The first wavelet packet, though, is always a constant vector
+	and hence the correlation is always zero (unless the groups
+	vector was itself constant, but then this is not an interesting
+	case). Now, we set this first value equal to zero. Previously,
+	the correlation was computed but the denominator involves calculating
+	the standard deviation of the constant vector, which is zero, and
+	this causes a division by zero warning and returns and NA which
+	can't then be handled. Now setting the correlation for this entry
+	to be zero is correct and bypasses the problem.
+	

@@ -1,0 +1,15 @@
+add.xy	shapefiles
+calc.header	shapefiles
+change.id	shapefiles
+convert.to.shapefile	shapefiles
+convert.to.simple	shapefiles
+dp	shapefiles
+read.dbf	shapefiles
+read.shapefile	shapefiles
+read.shp	shapefiles
+read.shx	shapefiles
+scaleXY	shapefiles
+write.dbf	shapefiles
+write.shapefile	shapefiles
+write.shp	shapefiles
+write.shx	shapefiles

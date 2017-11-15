@@ -1,0 +1,149 @@
+#NEXUS
+[R-package APE, Wed Mar 19 07:11:50 2014]
+
+BEGIN TAXA;
+	DIMENSIONS NTAX = 68;
+	TAXLABELS
+		Laccaria_bicolor
+		Gloeophyllum_trabeum
+		Dacryopinax_sp._DJM-731_SS1
+		Trichosporon_asahii
+		Rhodosporidium_toruloides
+		Tetrapisispora_phaffii
+		Pyrenophora_tritici-repentis
+		Pyrenophora_teres
+		Setosphaeria_turcica
+		Bipolaris_zeicola
+		Bipolaris_victoriae
+		Bipolaris_sorokiniana
+		Bipolaris_oryzae
+		Bipolaris_maydis
+		Leptosphaeria_maculans
+		Parastagonospora_nodorum
+		Baudoinia_compniacensis
+		Pseudocercospora_fijiensis
+		Mycosphaerella_pini
+		Sphaerulina_musiva
+		Neofusicoccum_parvum
+		Macrophomina_phaseolina
+		Cyphellophora_europaea
+		Exophiala_dermatitidis
+		Coniosporium_apollinis
+		Cladophialophora_carrionii
+		Byssochlamys_spectabilis
+		Talaromyces_islandicus
+		Talaromyces_stipitatus
+		Talaromyces_marneffei
+		Penicillium_chrysogenum
+		Penicillium_simplicissimum
+		Penicillium_digitatum
+		Aspergillus_kawachii
+		Aspergillus_niger
+		Aspergillus_nidulans
+		Aspergillus_oryzae
+		Coccidioides_immitis
+		Coccidioides_posadasii
+		Eutypa_lata
+		Pestalotiopsis_fici
+		Colletotrichum_gloeosporioides
+		Colletotrichum_higginsianum
+		Colletotrichum_graminicola
+		Colletotrichum_orbiculare
+		Fusarium_verticillioides
+		Fusarium_fujikuroi
+		Fusarium_graminearum
+		Nectria_haematococca
+		Fusarium_oxysporum
+		Ophiocordyceps_sinensis
+		Cordyceps_militaris
+		Beauveria_bassiana
+		Sporothrix_schenckii
+		Ophiostoma_piceae
+		Grosmannia_clavigera
+		Gaeumannomyces_graminis
+		Podospora_anserina
+		Thielavia_terrestris
+		Chaetomium_thermophilum
+		Myceliophthora_thermophila
+		Sclerotinia_borealis
+		Sclerotinia_sclerotiorum
+		Botryotinia_fuckeliana
+		Marssonina_brunnea
+		Pyronema_omphalodes
+		Dactylellina_haptotyla
+		Arthrobotrys_oligospora
+	;
+END;
+BEGIN TREES;
+	TRANSLATE
+		1	Laccaria_bicolor,
+		2	Gloeophyllum_trabeum,
+		3	Dacryopinax_sp._DJM-731_SS1,
+		4	Trichosporon_asahii,
+		5	Rhodosporidium_toruloides,
+		6	Tetrapisispora_phaffii,
+		7	Pyrenophora_tritici-repentis,
+		8	Pyrenophora_teres,
+		9	Setosphaeria_turcica,
+		10	Bipolaris_zeicola,
+		11	Bipolaris_victoriae,
+		12	Bipolaris_sorokiniana,
+		13	Bipolaris_oryzae,
+		14	Bipolaris_maydis,
+		15	Leptosphaeria_maculans,
+		16	Parastagonospora_nodorum,
+		17	Baudoinia_compniacensis,
+		18	Pseudocercospora_fijiensis,
+		19	Mycosphaerella_pini,
+		20	Sphaerulina_musiva,
+		21	Neofusicoccum_parvum,
+		22	Macrophomina_phaseolina,
+		23	Cyphellophora_europaea,
+		24	Exophiala_dermatitidis,
+		25	Coniosporium_apollinis,
+		26	Cladophialophora_carrionii,
+		27	Byssochlamys_spectabilis,
+		28	Talaromyces_islandicus,
+		29	Talaromyces_stipitatus,
+		30	Talaromyces_marneffei,
+		31	Penicillium_chrysogenum,
+		32	Penicillium_simplicissimum,
+		33	Penicillium_digitatum,
+		34	Aspergillus_kawachii,
+		35	Aspergillus_niger,
+		36	Aspergillus_nidulans,
+		37	Aspergillus_oryzae,
+		38	Coccidioides_immitis,
+		39	Coccidioides_posadasii,
+		40	Eutypa_lata,
+		41	Pestalotiopsis_fici,
+		42	Colletotrichum_gloeosporioides,
+		43	Colletotrichum_higginsianum,
+		44	Colletotrichum_graminicola,
+		45	Colletotrichum_orbiculare,
+		46	Fusarium_verticillioides,
+		47	Fusarium_fujikuroi,
+		48	Fusarium_graminearum,
+		49	Nectria_haematococca,
+		50	Fusarium_oxysporum,
+		51	Ophiocordyceps_sinensis,
+		52	Cordyceps_militaris,
+		53	Beauveria_bassiana,
+		54	Sporothrix_schenckii,
+		55	Ophiostoma_piceae,
+		56	Grosmannia_clavigera,
+		57	Gaeumannomyces_graminis,
+		58	Podospora_anserina,
+		59	Thielavia_terrestris,
+		60	Chaetomium_thermophilum,
+		61	Myceliophthora_thermophila,
+		62	Sclerotinia_borealis,
+		63	Sclerotinia_sclerotiorum,
+		64	Botryotinia_fuckeliana,
+		65	Marssonina_brunnea,
+		66	Pyronema_omphalodes,
+		67	Dactylellina_haptotyla,
+		68	Arthrobotrys_oligospora
+	;
+	TREE * UNTITLED = [&R] ((((1,2),3,4),5),(6,((((((7,8),9,(10,11,12,13,14)),15,16),(17,(18,19,20)),(21,22)),((23,(24,25,26)),((27,(28,29,30),((31,32,33),(34,35,36,37))),(38,39))),(((40,41),((42,43,44,45),(((46,47),48,49,50),51,(52,53))),((54,55,56),57,(58,(59,60,61)))),(((62,63),64),65))),66,(67,68))));
+END;

@@ -1,0 +1,4 @@
+export(rbga)
+export(rbga.bin)
+S3method(plot, rbga)
+S3method(summary, rbga)

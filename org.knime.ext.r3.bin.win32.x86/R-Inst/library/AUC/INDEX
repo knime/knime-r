@@ -1,0 +1,13 @@
+AUC-package             Threshold independent performance measures for
+                        probabilistic classifiers.
+AUCNews                 Display the NEWS file
+accuracy                Compute the accuracy curve.
+auc                     Compute the area under the curve of a given
+                        performance measure.
+churn                   Churn data
+plot.AUC                Plot the sensitivity, specificity, accuracy and
+                        roc curves.
+roc                     Compute the receiver operating characteristic
+                        (ROC) curve.
+sensitivity             Compute the sensitivity curve.
+specificity             Compute the specificity curve.

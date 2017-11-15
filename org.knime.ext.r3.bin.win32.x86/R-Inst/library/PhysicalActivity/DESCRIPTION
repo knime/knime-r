@@ -1,0 +1,13 @@
+Package: PhysicalActivity
+Version: 0.1-1
+Date: 2011-11-15
+Title: Process Physical Activity Accelerometer Data
+Author: Leena Choi, Zhouwen Liu, Charles E. Matthews, and Maciej S. Buchowski
+Maintainer: Leena Choi <leena.choi@Vanderbilt.Edu>
+Description: This package contains functions to classify monitor wear and nonwear time intervals in accelerometer data collected to assess physical activity in free-living condition. The package also contains functions to make plot for accelerometer data, and to obtain the summary of daily monitor wear time and the mean of monitor wear time during valid days. A monitored day is considered valid if the total minutes of classified monitor wear time per day is greater than a user defined cutoff.
+License: GPL (>= 3)
+Packaged: 2011-11-15 22:07:31 UTC; leenachoi
+Depends: R (>= 2.10)
+Repository: CRAN
+Date/Publication: 2011-11-16 12:16:32
+Built: R 3.4.1; ; 2017-08-16 01:00:58 UTC; windows

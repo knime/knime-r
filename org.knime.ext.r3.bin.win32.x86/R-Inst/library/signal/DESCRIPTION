@@ -1,0 +1,61 @@
+Package: signal
+Title: Signal Processing
+Version: 0.7-6
+Date: 2015-07-29
+Authors@R: c(person("Uwe", "Ligges", role = c("aut", "cre"), email="ligges@statistik.tu-dortmund.de", comment = "new maintainer"),
+ person("Tom", "Short", role = "aut", email = "tshort@eprisolutions.com", comment="port to R"),
+ person("Paul", "Kienzle", role = "aut", comment="majority of the original sources"),
+ person("Sarah", "Schnackenberg", role = "ctb", comment="various test cases and bug fixes"),
+ person("David", "Billinghurst", role = "ctb"),
+ person("Hans-Werner", "Borchers", role = "ctb"),
+ person("Andre", "Carezia", role = "ctb"),
+ person("Pascal", "Dupuis", role = "ctb"),
+ person("John W.", "Eaton", role = "ctb"),
+ person("E.", "Farhi", role = "ctb"),
+ person("Kai", "Habel", role = "ctb"),
+ person("Kurt", "Hornik", role = "ctb"),
+ person("Sebastian", "Krey", role = "ctb"),
+ person("Bill", "Lash", role = "ctb"),
+ person("Friedrich", "Leisch", role = "ctb"),
+ person("Olaf", "Mersmann", role = "ctb"),
+ person("Paulo", "Neis", role = "ctb"),
+ person("Jaakko", "Ruohio", role = "ctb"),
+ person("Julius O.", "Smith III", role = "ctb"),                   	   
+ person("Doug", "Stewart", role = "ctb"),
+ person("Andreas", "Weingessel", role = "ctb"))
+Depends: R (>= 2.14.0)
+Imports: MASS, graphics, grDevices, stats, utils
+Suggests: pracma
+Description: A set of signal processing functions originally written for 'Matlab' and 'Octave'.
+  Includes filter generation utilities, filtering functions,
+  resampling routines, and visualization of filter models. It also
+  includes interpolation functions.
+License: GPL-2
+NeedsCompilation: yes
+Packaged: 2015-07-29 17:06:27 UTC; ligges
+Author: Uwe Ligges [aut, cre] (new maintainer),
+  Tom Short [aut] (port to R),
+  Paul Kienzle [aut] (majority of the original sources),
+  Sarah Schnackenberg [ctb] (various test cases and bug fixes),
+  David Billinghurst [ctb],
+  Hans-Werner Borchers [ctb],
+  Andre Carezia [ctb],
+  Pascal Dupuis [ctb],
+  John W. Eaton [ctb],
+  E. Farhi [ctb],
+  Kai Habel [ctb],
+  Kurt Hornik [ctb],
+  Sebastian Krey [ctb],
+  Bill Lash [ctb],
+  Friedrich Leisch [ctb],
+  Olaf Mersmann [ctb],
+  Paulo Neis [ctb],
+  Jaakko Ruohio [ctb],
+  Julius O. Smith III [ctb],
+  Doug Stewart [ctb],
+  Andreas Weingessel [ctb]
+Maintainer: Uwe Ligges <ligges@statistik.tu-dortmund.de>
+Repository: CRAN
+Date/Publication: 2015-07-30 00:17:37
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-10 14:12:52 UTC; windows
+Archs: i386, x64

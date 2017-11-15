@@ -1,0 +1,834 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Spatial Dependence: Weighting Schemes, Statistics and Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Spatial Dependence: Weighting Schemes, Statistics and Models
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;spdep&rsquo; version 0.6-15</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#H">H</a>
+<a href="#I">I</a>
+<a href="#J">J</a>
+<a href="#K">K</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#O">O</a>
+<a href="#P">P</a>
+<a href="#Q">Q</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#U">U</a>
+<a href="#V">V</a>
+<a href="#W">W</a>
+<a href="#X">X</a>
+<a href="#Y">Y</a>
+</p>
+
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="afcon.html">afcon</a></td>
+<td>Spatial patterns of conflict in Africa 1966-78</td></tr>
+<tr><td style="width: 25%;"><a href="afcon.html">africa.rook.nb</a></td>
+<td>Spatial patterns of conflict in Africa 1966-78</td></tr>
+<tr><td style="width: 25%;"><a href="afcon.html">afxy</a></td>
+<td>Spatial patterns of conflict in Africa 1966-78</td></tr>
+<tr><td style="width: 25%;"><a href="aggregate.nb.html">aggregate.nb</a></td>
+<td>Aggregate a spatial neighbours object</td></tr>
+<tr><td style="width: 25%;"><a href="airdist.html">airdist</a></td>
+<td>Measure distance from plot</td></tr>
+<tr><td style="width: 25%;"><a href="anova.sarlm.html">anova.sarlm</a></td>
+<td>Comparison of simultaneous autoregressive models</td></tr>
+<tr><td style="width: 25%;"><a href="aple.html">aple</a></td>
+<td>Approximate profile-likelihood estimator (APLE)</td></tr>
+<tr><td style="width: 25%;"><a href="aple.mc.html">aple.mc</a></td>
+<td>Approximate profile-likelihood estimator (APLE) permutation test</td></tr>
+<tr><td style="width: 25%;"><a href="aple.plot.html">aple.plot</a></td>
+<td>Approximate profile-likelihood estimator (APLE) scatterplot</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.exact.html">as.data.frame.localmoranex</a></td>
+<td>Exact local Moran's Ii tests</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.sad.html">as.data.frame.localmoransad</a></td>
+<td>Saddlepoint approximation of local Moran's Ii tests</td></tr>
+<tr><td style="width: 25%;"><a href="predict.sarlm.html">as.data.frame.sarlm.pred</a></td>
+<td>Prediction for spatial simultaneous autoregressive linear model objects</td></tr>
+<tr><td style="width: 25%;"><a href="listw2sn.html">as.spam.listw</a></td>
+<td>Spatial neighbour sparse representation</td></tr>
+<tr><td style="width: 25%;"><a href="as_dgRMatrix_listw.html">as_dgRMatrix_listw</a></td>
+<td>Interface between Matrix class objects and weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="as_dgRMatrix_listw.html">as_dsCMatrix_I</a></td>
+<td>Interface between Matrix class objects and weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="as_dgRMatrix_listw.html">as_dsCMatrix_IrW</a></td>
+<td>Interface between Matrix class objects and weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="as_dgRMatrix_listw.html">as_dsTMatrix_listw</a></td>
+<td>Interface between Matrix class objects and weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="auckland.html">auckland</a></td>
+<td>Marshall's infant mortality in Auckland dataset</td></tr>
+<tr><td style="width: 25%;"><a href="auckland.html">auckland.nb</a></td>
+<td>Marshall's infant mortality in Auckland dataset</td></tr>
+<tr><td style="width: 25%;"><a href="auckland.html">auckpolys</a></td>
+<td>Marshall's infant mortality in Auckland dataset</td></tr>
+<tr><td style="width: 25%;"><a href="autocov_dist.html">autocov_dist</a></td>
+<td>Distance-weighted autocovariate</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="baltimore.html">baltimore</a></td>
+<td>House sales prices, Baltimore, MD 1978</td></tr>
+<tr><td style="width: 25%;"><a href="columbus.html">bbs</a></td>
+<td>Columbus OH spatial analysis data set</td></tr>
+<tr><td style="width: 25%;"><a href="bhicv.html">bhicv</a></td>
+<td>Data set with 4 life condition indices of Belo Horizonte region</td></tr>
+<tr><td style="width: 25%;"><a href="boston.html">boston</a></td>
+<td>Corrected Boston Housing Data</td></tr>
+<tr><td style="width: 25%;"><a href="boston.html">boston.c</a></td>
+<td>Corrected Boston Housing Data</td></tr>
+<tr><td style="width: 25%;"><a href="boston.html">boston.soi</a></td>
+<td>Corrected Boston Housing Data</td></tr>
+<tr><td style="width: 25%;"><a href="boston.html">boston.utm</a></td>
+<td>Corrected Boston Housing Data</td></tr>
+<tr><td style="width: 25%;"><a href="bptest.sarlm.html">bptest.sarlm</a></td>
+<td>Breusch-Pagan test for spatial models</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="nb2listw.html">can.be.simmed</a></td>
+<td>Spatial weights for neighbours lists</td></tr>
+<tr><td style="width: 25%;"><a href="card.html">card</a></td>
+<td>Cardinalities for neighbours lists</td></tr>
+<tr><td style="width: 25%;"><a href="cell2nb.html">cell2nb</a></td>
+<td>Generate neighbours list for grid cells</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">cheb_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="set.spChkOption.html">chkIDs</a></td>
+<td>Control checking of spatial object IDs</td></tr>
+<tr><td style="width: 25%;"><a href="choynowski.html">choynowski</a></td>
+<td>Choynowski probability map values</td></tr>
+<tr><td style="width: 25%;"><a href="GMerrorsar.html">coef.gmsar</a></td>
+<td>Spatial simultaneous autoregressive error model estimation by GMM</td></tr>
+<tr><td style="width: 25%;"><a href="lagmess.html">coef.lagmess</a></td>
+<td>Matrix exponential spatial lag model</td></tr>
+<tr><td style="width: 25%;"><a href="residuals.sarlm.html">coef.sarlm</a></td>
+<td>Access functions for spatial simultaneous autoregressive linear model objects</td></tr>
+<tr><td style="width: 25%;"><a href="spautolm.html">coef.spautolm</a></td>
+<td>Spatial conditional and simultaneous autoregression model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="stsls.html">coef.stsls</a></td>
+<td>Generalized spatial two stage least squares</td></tr>
+<tr><td style="width: 25%;"><a href="as_dgRMatrix_listw.html">coerce-method</a></td>
+<td>Interface between Matrix class objects and weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="columbus.html">col.gal.nb</a></td>
+<td>Columbus OH spatial analysis data set</td></tr>
+<tr><td style="width: 25%;"><a href="COL.OLD.html">COL.nb</a></td>
+<td>Columbus OH spatial analysis data set - old numbering</td></tr>
+<tr><td style="width: 25%;"><a href="COL.OLD.html">COL.OLD</a></td>
+<td>Columbus OH spatial analysis data set - old numbering</td></tr>
+<tr><td style="width: 25%;"><a href="columbus.html">columbus</a></td>
+<td>Columbus OH spatial analysis data set</td></tr>
+<tr><td style="width: 25%;"><a href="nboperations.html">complement.nb</a></td>
+<td>Set operations on neighborhood objects</td></tr>
+<tr><td style="width: 25%;"><a href="columbus.html">coords</a></td>
+<td>Columbus OH spatial analysis data set</td></tr>
+<tr><td style="width: 25%;"><a href="errorsarlm.html">create_WX</a></td>
+<td>Spatial simultaneous autoregressive error model estimation</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="GMerrorsar.html">deviance.gmsar</a></td>
+<td>Spatial simultaneous autoregressive error model estimation by GMM</td></tr>
+<tr><td style="width: 25%;"><a href="lagmess.html">deviance.lagmess</a></td>
+<td>Matrix exponential spatial lag model</td></tr>
+<tr><td style="width: 25%;"><a href="residuals.sarlm.html">deviance.sarlm</a></td>
+<td>Access functions for spatial simultaneous autoregressive linear model objects</td></tr>
+<tr><td style="width: 25%;"><a href="spautolm.html">deviance.spautolm</a></td>
+<td>Spatial conditional and simultaneous autoregression model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="stsls.html">deviance.stsls</a></td>
+<td>Generalized spatial two stage least squares</td></tr>
+<tr><td style="width: 25%;"><a href="nb2lines.html">df2sn</a></td>
+<td>Use arc-type shapefiles for import and export of weights</td></tr>
+<tr><td style="width: 25%;"><a href="diffnb.html">diffnb</a></td>
+<td>Differences between neighbours lists</td></tr>
+<tr><td style="width: 25%;"><a href="elect80.html">dll</a></td>
+<td>1980 Presidential election results</td></tr>
+<tr><td style="width: 25%;"><a href="dnearneigh.html">dnearneigh</a></td>
+<td>Neighbourhood contiguity by distance</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">do_ldet</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="droplinks.html">droplinks</a></td>
+<td>Drop links in a neighbours list</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="elect80.html">e80_queen</a></td>
+<td>1980 Presidential election results</td></tr>
+<tr><td style="width: 25%;"><a href="EBest.html">EBest</a></td>
+<td>Global Empirical Bayes estimator</td></tr>
+<tr><td style="width: 25%;"><a href="EBImoran.mc.html">EBImoran</a></td>
+<td>Permutation test for empirical Bayes index</td></tr>
+<tr><td style="width: 25%;"><a href="EBImoran.mc.html">EBImoran.mc</a></td>
+<td>Permutation test for empirical Bayes index</td></tr>
+<tr><td style="width: 25%;"><a href="EBlocal.html">EBlocal</a></td>
+<td>Local Empirical Bayes estimator</td></tr>
+<tr><td style="width: 25%;"><a href="edit.nb.html">edit.nb</a></td>
+<td>Interactive editing of neighbours lists</td></tr>
+<tr><td style="width: 25%;"><a href="eigenw.html">eigenw</a></td>
+<td>Spatial weights matrix eigenvalues</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">eigen_pre_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">eigen_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="eire.html">eire</a></td>
+<td>Eire data sets</td></tr>
+<tr><td style="width: 25%;"><a href="eire.html">eire.coords.utm</a></td>
+<td>Eire data sets</td></tr>
+<tr><td style="width: 25%;"><a href="eire.html">eire.df</a></td>
+<td>Eire data sets</td></tr>
+<tr><td style="width: 25%;"><a href="eire.html">eire.nb</a></td>
+<td>Eire data sets</td></tr>
+<tr><td style="width: 25%;"><a href="eire.html">eire.polys.utm</a></td>
+<td>Eire data sets</td></tr>
+<tr><td style="width: 25%;"><a href="elect80.html">elect80</a></td>
+<td>1980 Presidential election results</td></tr>
+<tr><td style="width: 25%;"><a href="elect80.html">elect80_lw</a></td>
+<td>1980 Presidential election results</td></tr>
+<tr><td style="width: 25%;"><a href="errorsarlm.html">errorsarlm</a></td>
+<td>Spatial simultaneous autoregressive error model estimation</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="GMerrorsar.html">fitted.gmsar</a></td>
+<td>Spatial simultaneous autoregressive error model estimation by GMM</td></tr>
+<tr><td style="width: 25%;"><a href="lagmess.html">fitted.lagmess</a></td>
+<td>Matrix exponential spatial lag model</td></tr>
+<tr><td style="width: 25%;"><a href="ME.html">fitted.ME_res</a></td>
+<td>Moran eigenvector GLM filtering</td></tr>
+<tr><td style="width: 25%;"><a href="residuals.sarlm.html">fitted.sarlm</a></td>
+<td>Access functions for spatial simultaneous autoregressive linear model objects</td></tr>
+<tr><td style="width: 25%;"><a href="SpatialFiltering.html">fitted.SFResult</a></td>
+<td>Semi-parametric spatial filtering</td></tr>
+<tr><td style="width: 25%;"><a href="spautolm.html">fitted.spautolm</a></td>
+<td>Spatial conditional and simultaneous autoregression model estimation</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="graphneigh.html">gabrielneigh</a></td>
+<td>Graph based spatial weights</td></tr>
+<tr><td style="width: 25%;"><a href="geary.html">geary</a></td>
+<td>Compute Geary's C</td></tr>
+<tr><td style="width: 25%;"><a href="geary.mc.html">geary.mc</a></td>
+<td>Permutation test for Geary's C statistic</td></tr>
+<tr><td style="width: 25%;"><a href="geary.test.html">geary.test</a></td>
+<td>Geary's C test for spatial autocorrelation</td></tr>
+<tr><td style="width: 25%;"><a href="set.mcOption.html">get.ClusterOption</a></td>
+<td>Options for parallel support</td></tr>
+<tr><td style="width: 25%;"><a href="set.mcOption.html">get.coresOption</a></td>
+<td>Options for parallel support</td></tr>
+<tr><td style="width: 25%;"><a href="set.spChkOption.html">get.listw_is_CsparseMatrix_Option</a></td>
+<td>Control checking of spatial object IDs</td></tr>
+<tr><td style="width: 25%;"><a href="set.mcOption.html">get.mcOption</a></td>
+<td>Options for parallel support</td></tr>
+<tr><td style="width: 25%;"><a href="set.spChkOption.html">get.spChkOption</a></td>
+<td>Control checking of spatial object IDs</td></tr>
+<tr><td style="width: 25%;"><a href="set.spChkOption.html">get.VerboseOption</a></td>
+<td>Control checking of spatial object IDs</td></tr>
+<tr><td style="width: 25%;"><a href="set.spChkOption.html">get.ZeroPolicyOption</a></td>
+<td>Control checking of spatial object IDs</td></tr>
+<tr><td style="width: 25%;"><a href="getisord.html">getisord</a></td>
+<td>Getis-Ord remote sensing example data</td></tr>
+<tr><td style="width: 25%;"><a href="globalG.test.html">globalG.test</a></td>
+<td>Global G test for spatial autocorrelation</td></tr>
+<tr><td style="width: 25%;"><a href="GMerrorsar.html">GMargminImage</a></td>
+<td>Spatial simultaneous autoregressive error model estimation by GMM</td></tr>
+<tr><td style="width: 25%;"><a href="GMerrorsar.html">GMerrorsar</a></td>
+<td>Spatial simultaneous autoregressive error model estimation by GMM</td></tr>
+<tr><td style="width: 25%;"><a href="graphneigh.html">graph2nb</a></td>
+<td>Graph based spatial weights</td></tr>
+<tr><td style="width: 25%;"><a href="eigenw.html">griffith_sone</a></td>
+<td>Spatial weights matrix eigenvalues</td></tr>
+<tr><td style="width: 25%;"><a href="gstsls.html">gstsls</a></td>
+<td>Spatial simultaneous autoregressive SAC model estimation by GMM</td></tr>
+</table>
+
+<h2><a name="H">-- H --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="LR.sarlm.html">Hausman.test</a></td>
+<td>Likelihood ratio test</td></tr>
+<tr><td style="width: 25%;"><a href="LR.sarlm.html">Hausman.test.gmsar</a></td>
+<td>Likelihood ratio test</td></tr>
+<tr><td style="width: 25%;"><a href="LR.sarlm.html">Hausman.test.sarlm</a></td>
+<td>Likelihood ratio test</td></tr>
+<tr><td style="width: 25%;"><a href="hopkins.html">hopkins</a></td>
+<td>Hopkins burnt savanna herb remains</td></tr>
+<tr><td style="width: 25%;"><a href="house.html">house</a></td>
+<td>Lucas county OH housing</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">HPDinterval.lagImpact</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="huddersfield.html">huddersfield</a></td>
+<td>Prevalence of respiratory symptoms</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">impacts</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">impacts.gmsar</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">impacts.lagmess</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">impacts.MCMC_sar_g</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">impacts.sarlm</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">impacts.SLX</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">impacts.stsls</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="include.self.html">include.self</a></td>
+<td>Include self in neighbours list</td></tr>
+<tr><td style="width: 25%;"><a href="nboperations.html">intersect.nb</a></td>
+<td>Set operations on neighborhood objects</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">intImpacts</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="invIrM.html">invIrM</a></td>
+<td>Compute SAR generating operator</td></tr>
+<tr><td style="width: 25%;"><a href="invIrM.html">invIrW</a></td>
+<td>Compute SAR generating operator</td></tr>
+<tr><td style="width: 25%;"><a href="testnb.html">is.symmetric.glist</a></td>
+<td>Test a neighbours list for symmetry</td></tr>
+<tr><td style="width: 25%;"><a href="testnb.html">is.symmetric.nb</a></td>
+<td>Test a neighbours list for symmetry</td></tr>
+</table>
+
+<h2><a name="J">-- J --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="do_ldet.html">jacobianSetup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="as_dgRMatrix_listw.html">Jacobian_W</a></td>
+<td>Interface between Matrix class objects and weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="joincount.mc.html">joincount.mc</a></td>
+<td>Permutation test for same colour join count statistics</td></tr>
+<tr><td style="width: 25%;"><a href="joincount.multi.html">joincount.multi</a></td>
+<td>BB, BW and Jtot join count statistic for k-coloured factors</td></tr>
+<tr><td style="width: 25%;"><a href="joincount.test.html">joincount.test</a></td>
+<td>BB join count statistic for k-coloured factors</td></tr>
+</table>
+
+<h2><a name="K">-- K --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="elect80.html">k4</a></td>
+<td>1980 Presidential election results</td></tr>
+<tr><td style="width: 25%;"><a href="knearneigh.html">knearneigh</a></td>
+<td>K nearest neighbours for spatial weights</td></tr>
+<tr><td style="width: 25%;"><a href="knn2nb.html">knn2nb</a></td>
+<td>Neighbours list from knn object</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="lag.listw.html">lag.listw</a></td>
+<td>Spatial lag of a numeric vector</td></tr>
+<tr><td style="width: 25%;"><a href="lagmess.html">lagmess</a></td>
+<td>Matrix exponential spatial lag model</td></tr>
+<tr><td style="width: 25%;"><a href="lagsarlm.html">lagsarlm</a></td>
+<td>Spatial simultaneous autoregressive lag model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="lee.html">lee</a></td>
+<td>Compute Lee's statistic</td></tr>
+<tr><td style="width: 25%;"><a href="lee.mc.html">lee.mc</a></td>
+<td>Permutation test for Lee's L statistic</td></tr>
+<tr><td style="width: 25%;"><a href="lee.test.html">lee.test</a></td>
+<td>Lee's L test for spatial autocorrelation</td></tr>
+<tr><td style="width: 25%;"><a href="lextrB.html">lextrB</a></td>
+<td>Find extreme eigenvalues of binary symmetric spatial weights</td></tr>
+<tr><td style="width: 25%;"><a href="lextrB.html">lextrS</a></td>
+<td>Find extreme eigenvalues of binary symmetric spatial weights</td></tr>
+<tr><td style="width: 25%;"><a href="lextrB.html">lextrW</a></td>
+<td>Find extreme eigenvalues of binary symmetric spatial weights</td></tr>
+<tr><td style="width: 25%;"><a href="nb2lines.html">listw2lines</a></td>
+<td>Use arc-type shapefiles for import and export of weights</td></tr>
+<tr><td style="width: 25%;"><a href="nb2mat.html">listw2mat</a></td>
+<td>Spatial weights matrices for neighbours lists</td></tr>
+<tr><td style="width: 25%;"><a href="listw2sn.html">listw2sn</a></td>
+<td>Spatial neighbour sparse representation</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.sad.html">listw2star</a></td>
+<td>Saddlepoint approximation of local Moran's Ii tests</td></tr>
+<tr><td style="width: 25%;"><a href="lm.morantest.html">listw2U</a></td>
+<td>Moran's I test for residual spatial autocorrelation</td></tr>
+<tr><td style="width: 25%;"><a href="nb2WB.html">listw2WB</a></td>
+<td>Output spatial weights for WinBUGS</td></tr>
+<tr><td style="width: 25%;"><a href="NY_data.html">listw_NY</a></td>
+<td>New York leukemia data</td></tr>
+<tr><td style="width: 25%;"><a href="lm.LMtests.html">lm.LMtests</a></td>
+<td>Lagrange Multiplier diagnostics for spatial dependence in linear models</td></tr>
+<tr><td style="width: 25%;"><a href="lm.morantest.html">lm.morantest</a></td>
+<td>Moran's I test for residual spatial autocorrelation</td></tr>
+<tr><td style="width: 25%;"><a href="lm.morantest.exact.html">lm.morantest.exact</a></td>
+<td>Exact global Moran's I test</td></tr>
+<tr><td style="width: 25%;"><a href="lm.morantest.sad.html">lm.morantest.sad</a></td>
+<td>Saddlepoint approximation of global Moran's I test</td></tr>
+<tr><td style="width: 25%;"><a href="errorsarlm.html">lmSLX</a></td>
+<td>Spatial simultaneous autoregressive error model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="aple.plot.html">localAple</a></td>
+<td>Approximate profile-likelihood estimator (APLE) scatterplot</td></tr>
+<tr><td style="width: 25%;"><a href="localG.html">localG</a></td>
+<td>G and Gstar local spatial statistics</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.html">localmoran</a></td>
+<td>Local Moran's I statistic</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.exact.html">localmoran.exact</a></td>
+<td>Exact local Moran's Ii tests</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.exact.html">localmoran.exact.alt</a></td>
+<td>Exact local Moran's Ii tests</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.sad.html">localmoran.sad</a></td>
+<td>Saddlepoint approximation of local Moran's Ii tests</td></tr>
+<tr><td style="width: 25%;"><a href="lagmess.html">logLik.lagmess</a></td>
+<td>Matrix exponential spatial lag model</td></tr>
+<tr><td style="width: 25%;"><a href="LR.sarlm.html">logLik.sarlm</a></td>
+<td>Likelihood ratio test</td></tr>
+<tr><td style="width: 25%;"><a href="spautolm.html">logLik.spautolm</a></td>
+<td>Spatial conditional and simultaneous autoregression model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="house.html">LO_nb</a></td>
+<td>Lucas county OH housing</td></tr>
+<tr><td style="width: 25%;"><a href="LR.sarlm.html">LR.sarlm</a></td>
+<td>Likelihood ratio test</td></tr>
+<tr><td style="width: 25%;"><a href="LR.sarlm.html">LR1.sarlm</a></td>
+<td>Likelihood ratio test</td></tr>
+<tr><td style="width: 25%;"><a href="spautolm.html">LR1.spautolm</a></td>
+<td>Spatial conditional and simultaneous autoregression model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">LU_prepermutate_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">LU_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="lextrB.html">l_max</a></td>
+<td>Find extreme eigenvalues of binary symmetric spatial weights</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="testnb.html">make.sym.nb</a></td>
+<td>Test a neighbours list for symmetry</td></tr>
+<tr><td style="width: 25%;"><a href="mat2listw.html">mat2listw</a></td>
+<td>Convert a square spatial weights matrix to a weights list object</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">Matrix_J_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">Matrix_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">mcdet_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="MCMCsamp.html">MCMCsamp</a></td>
+<td>MCMC sample from fitted spatial regression</td></tr>
+<tr><td style="width: 25%;"><a href="MCMCsamp.html">MCMCsamp.sarlm</a></td>
+<td>MCMC sample from fitted spatial regression</td></tr>
+<tr><td style="width: 25%;"><a href="MCMCsamp.html">MCMCsamp.spautolm</a></td>
+<td>MCMC sample from fitted spatial regression</td></tr>
+<tr><td style="width: 25%;"><a href="ME.html">ME</a></td>
+<td>Moran eigenvector GLM filtering</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">moments_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="trW.html">mom_calc</a></td>
+<td>Spatial weights matrix powers traces</td></tr>
+<tr><td style="width: 25%;"><a href="trW.html">mom_calc_int2</a></td>
+<td>Spatial weights matrix powers traces</td></tr>
+<tr><td style="width: 25%;"><a href="moran.html">moran</a></td>
+<td>Compute Moran's I</td></tr>
+<tr><td style="width: 25%;"><a href="moran.mc.html">moran.mc</a></td>
+<td>Permutation test for Moran's I statistic</td></tr>
+<tr><td style="width: 25%;"><a href="moran.plot.html">moran.plot</a></td>
+<td>Moran scatterplot</td></tr>
+<tr><td style="width: 25%;"><a href="moran.test.html">moran.test</a></td>
+<td>Moran's I test for spatial autocorrelation</td></tr>
+<tr><td style="width: 25%;"><a href="cell2nb.html">mrc2vi</a></td>
+<td>Generate neighbours list for grid cells</td></tr>
+<tr><td style="width: 25%;"><a href="mstree.html">mstree</a></td>
+<td>Find the minimal spanning tree</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="compon.html">n.comp.nb</a></td>
+<td>Depth First Search on Neighbor Lists</td></tr>
+<tr><td style="width: 25%;"><a href="nb2blocknb.html">nb2blocknb</a></td>
+<td>Block up neighbour list for location-less observations</td></tr>
+<tr><td style="width: 25%;"><a href="nb2INLA.html">nb2INLA</a></td>
+<td>Output spatial neighbours for INLA</td></tr>
+<tr><td style="width: 25%;"><a href="nb2lines.html">nb2lines</a></td>
+<td>Use arc-type shapefiles for import and export of weights</td></tr>
+<tr><td style="width: 25%;"><a href="nb2listw.html">nb2listw</a></td>
+<td>Spatial weights for neighbours lists</td></tr>
+<tr><td style="width: 25%;"><a href="nb2mat.html">nb2mat</a></td>
+<td>Spatial weights matrices for neighbours lists</td></tr>
+<tr><td style="width: 25%;"><a href="nb2WB.html">nb2WB</a></td>
+<td>Output spatial weights for WinBUGS</td></tr>
+<tr><td style="width: 25%;"><a href="nbcosts.html">nbcost</a></td>
+<td>Compute cost of edges</td></tr>
+<tr><td style="width: 25%;"><a href="nbcosts.html">nbcosts</a></td>
+<td>Compute cost of edges</td></tr>
+<tr><td style="width: 25%;"><a href="nbdists.html">nbdists</a></td>
+<td>Spatial link distance measures</td></tr>
+<tr><td style="width: 25%;"><a href="nblag.html">nblag</a></td>
+<td>Higher order neighbours lists</td></tr>
+<tr><td style="width: 25%;"><a href="nblag.html">nblag_cumul</a></td>
+<td>Higher order neighbours lists</td></tr>
+<tr><td style="width: 25%;"><a href="nc.sids.html">nc.sids</a></td>
+<td>North Carolina SIDS data</td></tr>
+<tr><td style="width: 25%;"><a href="nc.sids.html">ncCC89.nb</a></td>
+<td>North Carolina SIDS data</td></tr>
+<tr><td style="width: 25%;"><a href="nc.sids.html">ncCR85.nb</a></td>
+<td>North Carolina SIDS data</td></tr>
+<tr><td style="width: 25%;"><a href="NY_data.html">nydata</a></td>
+<td>New York leukemia data</td></tr>
+<tr><td style="width: 25%;"><a href="NY_data.html">NY_data</a></td>
+<td>New York leukemia data</td></tr>
+</table>
+
+<h2><a name="O">-- O --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="testnb.html">old.make.sym.nb</a></td>
+<td>Test a neighbours list for symmetry</td></tr>
+<tr><td style="width: 25%;"><a href="COL.OLD.html">oldcol</a></td>
+<td>Columbus OH spatial analysis data set - old numbering</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="p.adjustSP.html">p.adjustSP</a></td>
+<td>Adjust local association measures' p-values</td></tr>
+<tr><td style="width: 25%;"><a href="afcon.html">paper.nb</a></td>
+<td>Spatial patterns of conflict in Africa 1966-78</td></tr>
+<tr><td style="width: 25%;"><a href="graphneigh.html">plot.Gabriel</a></td>
+<td>Graph based spatial weights</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">plot.lagImpact</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="plot.nb.html">plot.listw</a></td>
+<td>Plot a neighbours list</td></tr>
+<tr><td style="width: 25%;"><a href="sp.mantel.mc.html">plot.mc.sim</a></td>
+<td>Mantel-Hubert spatial general cross product statistic</td></tr>
+<tr><td style="width: 25%;"><a href="plot.mst.html">plot.mst</a></td>
+<td>Plot the Minimum Spanning Tree</td></tr>
+<tr><td style="width: 25%;"><a href="plot.nb.html">plot.nb</a></td>
+<td>Plot a neighbours list</td></tr>
+<tr><td style="width: 25%;"><a href="graphneigh.html">plot.relative</a></td>
+<td>Graph based spatial weights</td></tr>
+<tr><td style="width: 25%;"><a href="plot.skater.html">plot.skater</a></td>
+<td>Plot the object of skater class</td></tr>
+<tr><td style="width: 25%;"><a href="sp.correlogram.html">plot.spcor</a></td>
+<td>Spatial correlogram</td></tr>
+<tr><td style="width: 25%;"><a href="poly2nb.html">poly2nb</a></td>
+<td>Construct neighbours list from polygon list</td></tr>
+<tr><td style="width: 25%;"><a href="columbus.html">polys</a></td>
+<td>Columbus OH spatial analysis data set</td></tr>
+<tr><td style="width: 25%;"><a href="invIrM.html">powerWeights</a></td>
+<td>Compute SAR generating operator</td></tr>
+<tr><td style="width: 25%;"><a href="predict.sarlm.html">predict.sarlm</a></td>
+<td>Prediction for spatial simultaneous autoregressive linear model objects</td></tr>
+<tr><td style="width: 25%;"><a href="predict.sarlm.html">predict.SLX</a></td>
+<td>Prediction for spatial simultaneous autoregressive linear model objects</td></tr>
+<tr><td style="width: 25%;"><a href="GMerrorsar.html">print.gmsar</a></td>
+<td>Spatial simultaneous autoregressive error model estimation by GMM</td></tr>
+<tr><td style="width: 25%;"><a href="joincount.test.html">print.jclist</a></td>
+<td>BB join count statistic for k-coloured factors</td></tr>
+<tr><td style="width: 25%;"><a href="joincount.multi.html">print.jcmulti</a></td>
+<td>BB, BW and Jtot join count statistic for k-coloured factors</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">print.lagImpact</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="lagmess.html">print.lagmess</a></td>
+<td>Matrix exponential spatial lag model</td></tr>
+<tr><td style="width: 25%;"><a href="summary.nb.html">print.listw</a></td>
+<td>Print and summary function for neighbours and weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="lm.LMtests.html">print.LMtestlist</a></td>
+<td>Lagrange Multiplier diagnostics for spatial dependence in linear models</td></tr>
+<tr><td style="width: 25%;"><a href="lm.LMtests.html">print.LMtestlist.summary</a></td>
+<td>Lagrange Multiplier diagnostics for spatial dependence in linear models</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.exact.html">print.localmoranex</a></td>
+<td>Exact local Moran's Ii tests</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.sad.html">print.localmoransad</a></td>
+<td>Saddlepoint approximation of local Moran's Ii tests</td></tr>
+<tr><td style="width: 25%;"><a href="ME.html">print.ME_res</a></td>
+<td>Moran eigenvector GLM filtering</td></tr>
+<tr><td style="width: 25%;"><a href="lm.morantest.exact.html">print.moranex</a></td>
+<td>Exact global Moran's I test</td></tr>
+<tr><td style="width: 25%;"><a href="lm.morantest.sad.html">print.moransad</a></td>
+<td>Saddlepoint approximation of global Moran's I test</td></tr>
+<tr><td style="width: 25%;"><a href="summary.nb.html">print.nb</a></td>
+<td>Print and summary function for neighbours and weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="summary.sarlm.html">print.sarlm</a></td>
+<td>summary method for class sarlm</td></tr>
+<tr><td style="width: 25%;"><a href="predict.sarlm.html">print.sarlm.pred</a></td>
+<td>Prediction for spatial simultaneous autoregressive linear model objects</td></tr>
+<tr><td style="width: 25%;"><a href="SpatialFiltering.html">print.SFResult</a></td>
+<td>Semi-parametric spatial filtering</td></tr>
+<tr><td style="width: 25%;"><a href="spautolm.html">print.spautolm</a></td>
+<td>Spatial conditional and simultaneous autoregression model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="sp.correlogram.html">print.spcor</a></td>
+<td>Spatial correlogram</td></tr>
+<tr><td style="width: 25%;"><a href="stsls.html">print.stsls</a></td>
+<td>Generalized spatial two stage least squares</td></tr>
+<tr><td style="width: 25%;"><a href="GMerrorsar.html">print.summary.gmsar</a></td>
+<td>Spatial simultaneous autoregressive error model estimation by GMM</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">print.summary.lagImpact</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="lagmess.html">print.summary.lagmess</a></td>
+<td>Matrix exponential spatial lag model</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.sad.html">print.summary.localmoransad</a></td>
+<td>Saddlepoint approximation of local Moran's Ii tests</td></tr>
+<tr><td style="width: 25%;"><a href="lm.morantest.sad.html">print.summary.moransad</a></td>
+<td>Saddlepoint approximation of global Moran's I test</td></tr>
+<tr><td style="width: 25%;"><a href="summary.sarlm.html">print.summary.sarlm</a></td>
+<td>summary method for class sarlm</td></tr>
+<tr><td style="width: 25%;"><a href="spautolm.html">print.summary.spautolm</a></td>
+<td>Spatial conditional and simultaneous autoregression model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="stsls.html">print.summary.stsls</a></td>
+<td>Generalized spatial two stage least squares</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">print.summary.WXImpact</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">print.WXImpact</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="probmap.html">probmap</a></td>
+<td>Probability mapping for rates</td></tr>
+<tr><td style="width: 25%;"><a href="prunecost.html">prunecost</a></td>
+<td>Compute cost of prune each edge</td></tr>
+<tr><td style="width: 25%;"><a href="prunemst.html">prunemst</a></td>
+<td>Prune a Minimun Spanning Tree</td></tr>
+</table>
+
+<h2><a name="Q">-- Q --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="cell2nb.html">queencell</a></td>
+<td>Generate neighbours list for grid cells</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="read.gwt2nb.html">read.dat2listw</a></td>
+<td>Read and write spatial neighbour files</td></tr>
+<tr><td style="width: 25%;"><a href="read.gal.html">read.gal</a></td>
+<td>Read a GAL lattice file into a neighbours list</td></tr>
+<tr><td style="width: 25%;"><a href="read.gal.html">read.geoda</a></td>
+<td>Read a GAL lattice file into a neighbours list</td></tr>
+<tr><td style="width: 25%;"><a href="read.gwt2nb.html">read.gwt2nb</a></td>
+<td>Read and write spatial neighbour files</td></tr>
+<tr><td style="width: 25%;"><a href="graphneigh.html">relativeneigh</a></td>
+<td>Graph based spatial weights</td></tr>
+<tr><td style="width: 25%;"><a href="GMerrorsar.html">residuals.gmsar</a></td>
+<td>Spatial simultaneous autoregressive error model estimation by GMM</td></tr>
+<tr><td style="width: 25%;"><a href="lagmess.html">residuals.lagmess</a></td>
+<td>Matrix exponential spatial lag model</td></tr>
+<tr><td style="width: 25%;"><a href="residuals.sarlm.html">residuals.sarlm</a></td>
+<td>Access functions for spatial simultaneous autoregressive linear model objects</td></tr>
+<tr><td style="width: 25%;"><a href="spautolm.html">residuals.spautolm</a></td>
+<td>Spatial conditional and simultaneous autoregression model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="stsls.html">residuals.stsls</a></td>
+<td>Generalized spatial two stage least squares</td></tr>
+<tr><td style="width: 25%;"><a href="cell2nb.html">rookcell</a></td>
+<td>Generate neighbours list for grid cells</td></tr>
+<tr><td style="width: 25%;"><a href="rotation.html">Rotation</a></td>
+<td>Rotate a set of point by a certain angle</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="sacsarlm.html">sacsarlm</a></td>
+<td>Spatial simultaneous autoregressive SAC model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="set.mcOption.html">set.ClusterOption</a></td>
+<td>Options for parallel support</td></tr>
+<tr><td style="width: 25%;"><a href="set.mcOption.html">set.coresOption</a></td>
+<td>Options for parallel support</td></tr>
+<tr><td style="width: 25%;"><a href="set.spChkOption.html">set.listw_is_CsparseMatrix_Option</a></td>
+<td>Control checking of spatial object IDs</td></tr>
+<tr><td style="width: 25%;"><a href="set.mcOption.html">set.mcOption</a></td>
+<td>Options for parallel support</td></tr>
+<tr><td style="width: 25%;"><a href="set.spChkOption.html">set.spChkOption</a></td>
+<td>Control checking of spatial object IDs</td></tr>
+<tr><td style="width: 25%;"><a href="set.spChkOption.html">set.VerboseOption</a></td>
+<td>Control checking of spatial object IDs</td></tr>
+<tr><td style="width: 25%;"><a href="set.spChkOption.html">set.ZeroPolicyOption</a></td>
+<td>Control checking of spatial object IDs</td></tr>
+<tr><td style="width: 25%;"><a href="nboperations.html">setdiff.nb</a></td>
+<td>Set operations on neighborhood objects</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">SE_classic_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">SE_interp_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">SE_whichMin_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="nc.sids.html">sidscents</a></td>
+<td>North Carolina SIDS data</td></tr>
+<tr><td style="width: 25%;"><a href="nc.sids.html">sidspolys</a></td>
+<td>North Carolina SIDS data</td></tr>
+<tr><td style="width: 25%;"><a href="similar.listw.html">similar.listw</a></td>
+<td>Create symmetric similar weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="skater.html">skater</a></td>
+<td>Spatial 'K'luster Analysis by Tree Edge Removal</td></tr>
+<tr><td style="width: 25%;"><a href="listw2sn.html">sn2listw</a></td>
+<td>Spatial neighbour sparse representation</td></tr>
+<tr><td style="width: 25%;"><a href="graphneigh.html">soi.graph</a></td>
+<td>Graph based spatial weights</td></tr>
+<tr><td style="width: 25%;"><a href="sp.correlogram.html">sp.correlogram</a></td>
+<td>Spatial correlogram</td></tr>
+<tr><td style="width: 25%;"><a href="sp.mantel.mc.html">sp.mantel.mc</a></td>
+<td>Mantel-Hubert spatial general cross product statistic</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">spam_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="do_ldet.html">spam_update_setup</a></td>
+<td>Spatial regression model Jacobian computations</td></tr>
+<tr><td style="width: 25%;"><a href="SpatialFiltering.html">SpatialFiltering</a></td>
+<td>Semi-parametric spatial filtering</td></tr>
+<tr><td style="width: 25%;"><a href="spautolm.html">spautolm</a></td>
+<td>Spatial conditional and simultaneous autoregression model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="lagsarlm.html">spBreg_lag</a></td>
+<td>Spatial simultaneous autoregressive lag model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="spdep.html">spdep</a></td>
+<td>Return package version number</td></tr>
+<tr><td style="width: 25%;"><a href="set.spChkOption.html">spNamedVec</a></td>
+<td>Control checking of spatial object IDs</td></tr>
+<tr><td style="width: 25%;"><a href="spweights.constants.html">spweights.constants</a></td>
+<td>Provides constants for spatial weights matrices</td></tr>
+<tr><td style="width: 25%;"><a href="ssw.html">ssw</a></td>
+<td>Compute the sum of dissimilarity</td></tr>
+<tr><td style="width: 25%;"><a href="stsls.html">stsls</a></td>
+<td>Generalized spatial two stage least squares</td></tr>
+<tr><td style="width: 25%;"><a href="eigenw.html">subgraph_eigenw</a></td>
+<td>Spatial weights matrix eigenvalues</td></tr>
+<tr><td style="width: 25%;"><a href="subset.listw.html">subset.listw</a></td>
+<td>Subset a spatial weights list</td></tr>
+<tr><td style="width: 25%;"><a href="subset.nb.html">subset.nb</a></td>
+<td>Subset a neighbours list</td></tr>
+<tr><td style="width: 25%;"><a href="GMerrorsar.html">summary.gmsar</a></td>
+<td>Spatial simultaneous autoregressive error model estimation by GMM</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">summary.lagImpact</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="lagmess.html">summary.lagmess</a></td>
+<td>Matrix exponential spatial lag model</td></tr>
+<tr><td style="width: 25%;"><a href="summary.nb.html">summary.listw</a></td>
+<td>Print and summary function for neighbours and weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="lm.LMtests.html">summary.LMtestlist</a></td>
+<td>Lagrange Multiplier diagnostics for spatial dependence in linear models</td></tr>
+<tr><td style="width: 25%;"><a href="localmoran.sad.html">summary.localmoransad</a></td>
+<td>Saddlepoint approximation of local Moran's Ii tests</td></tr>
+<tr><td style="width: 25%;"><a href="lm.morantest.sad.html">summary.moransad</a></td>
+<td>Saddlepoint approximation of global Moran's I test</td></tr>
+<tr><td style="width: 25%;"><a href="summary.nb.html">summary.nb</a></td>
+<td>Print and summary function for neighbours and weights lists</td></tr>
+<tr><td style="width: 25%;"><a href="summary.sarlm.html">summary.sarlm</a></td>
+<td>summary method for class sarlm</td></tr>
+<tr><td style="width: 25%;"><a href="spautolm.html">summary.spautolm</a></td>
+<td>Spatial conditional and simultaneous autoregression model estimation</td></tr>
+<tr><td style="width: 25%;"><a href="stsls.html">summary.stsls</a></td>
+<td>Generalized spatial two stage least squares</td></tr>
+<tr><td style="width: 25%;"><a href="impacts.sarlm.html">summary.WXImpact</a></td>
+<td>Impacts in spatial lag models</td></tr>
+<tr><td style="width: 25%;"><a href="testnb.html">sym.attr.nb</a></td>
+<td>Test a neighbours list for symmetry</td></tr>
+<tr><td style="width: 25%;"><a href="spweights.constants.html">Szero</a></td>
+<td>Provides constants for spatial weights matrices</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="tolerance.nb.html">tolerance.nb</a></td>
+<td>Function to construct edges based on a tolerance angle and a maximum distance</td></tr>
+<tr><td style="width: 25%;"><a href="tri2nb.html">tri2nb</a></td>
+<td>Neighbours list from tri object</td></tr>
+<tr><td style="width: 25%;"><a href="house.html">trMat</a></td>
+<td>Lucas county OH housing</td></tr>
+<tr><td style="width: 25%;"><a href="trW.html">trW</a></td>
+<td>Spatial weights matrix powers traces</td></tr>
+</table>
+
+<h2><a name="U">-- U --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="nboperations.html">union.nb</a></td>
+<td>Set operations on neighborhood objects</td></tr>
+<tr><td style="width: 25%;"><a href="used.cars.html">usa48.nb</a></td>
+<td>US 1960 used car prices</td></tr>
+<tr><td style="width: 25%;"><a href="used.cars.html">used.cars</a></td>
+<td>US 1960 used car prices</td></tr>
+</table>
+
+<h2><a name="V">-- V --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="residuals.sarlm.html">vcov.sarlm</a></td>
+<td>Access functions for spatial simultaneous autoregressive linear model objects</td></tr>
+<tr><td style="width: 25%;"><a href="cell2nb.html">vi2mrc</a></td>
+<td>Generate neighbours list for grid cells</td></tr>
+</table>
+
+<h2><a name="W">-- W --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="LR.sarlm.html">Wald1.sarlm</a></td>
+<td>Likelihood ratio test</td></tr>
+<tr><td style="width: 25%;"><a href="wheat.html">wheat</a></td>
+<td>Mercer and Hall wheat yield data</td></tr>
+<tr><td style="width: 25%;"><a href="write.nb.gal.html">write.nb.gal</a></td>
+<td>Write a neighbours list as a GAL lattice file</td></tr>
+<tr><td style="width: 25%;"><a href="read.gwt2nb.html">write.sn2dat</a></td>
+<td>Read and write spatial neighbour files</td></tr>
+<tr><td style="width: 25%;"><a href="read.gwt2nb.html">write.sn2gwt</a></td>
+<td>Read and write spatial neighbour files</td></tr>
+</table>
+
+<h2><a name="X">-- X --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="getisord.html">x</a></td>
+<td>Getis-Ord remote sensing example data</td></tr>
+<tr><td style="width: 25%;"><a href="getisord.html">xyz</a></td>
+<td>Getis-Ord remote sensing example data</td></tr>
+</table>
+
+<h2><a name="Y">-- Y --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="getisord.html">y</a></td>
+<td>Getis-Ord remote sensing example data</td></tr>
+</table>
+</body></html>

@@ -1,0 +1,58 @@
+# Methods needed from other packages
+importFrom(stats, confint, fitted, coef, vcov, predict, update, profile,
+    simulate, residuals, logLik, as.formula, binomial, cov, dbinom,
+           dmultinom, dnbinom, dnorm, dpois, formula,
+           glm.fit, integrate, median, model.frame,
+           model.matrix, model.offset, optim, pchisq, plogis,
+           pnorm, qchisq, qnorm, quantile, rbinom,
+           rmultinom, rnbinom, rpois, runif, sd, uniroot,
+           update.formula)
+importFrom(graphics, plot, hist, abline)
+importFrom(utils, head, read.csv)
+importFrom(reshape, melt, cast, recast)
+importFrom(plyr, ldply, alply, ddply)
+importFrom(grDevices, devAskNewPage)
+importFrom("raster","stack")
+importFrom("raster", "raster", "extent", "extent<-", "getValues") ## MM
+
+import(lattice, methods, parallel, Rcpp)
+
+# Fitting functions
+export(occu, occuFP, occuRN, pcount, pcountOpen, multinomPois, distsamp,
+       colext, gmultmix, gdistsamp, gpcount, occuPEN, occuPEN_CV, 
+       computeMPLElambda, pcount.spHDS)
+export(removalPiFun, doublePiFun)
+
+# S4 classes
+exportClasses(unmarkedFit, unmarkedFitOccu, unmarkedFitOccuFP, unmarkedFitDS,
+              unmarkedFitPCount, unmarkedFitMPois, unmarkedFitPCO,
+              unmarkedFrame, unmarkedFrameOccu, unmarkedFramePCount,
+              unmarkedFrameMPois, unmarkedFrameDS, unmarkedMultFrame,
+              unmarkedFrameGMM, unmarkedFrameGDS, unmarkedFramePCO,
+              unmarkedFrameGPC, unmarkedEstimate, unmarkedFitList,
+              unmarkedModSel, unmarkedRanef)
+
+# Methods
+exportMethods(backTransform, coef, confint, coordinates, fitted, getData,
+              getP, getFP, getB, getY, head, hessian, linearComb, mle,
+              modSel, nllFun, numSites, numY, obsCovs, obsNum, "obsCovs<-",
+              obsToY, "obsToY<-", parboot, plot, hist, predict, profile,
+              projection, residuals, sampleSize, SE, show, simulate, siteCovs,
+              "siteCovs<-", summary, update, vcov, yearlySiteCovs,
+              "yearlySiteCovs<-", "[", smoothed, projected, nonparboot, logLik,
+              LRT, ranef, bup)
+
+# Constructors
+export(unmarkedEstimate, fitList, mapInfo, unmarkedFrame,
+    unmarkedFrameOccu, unmarkedFrameOccuFP, unmarkedFramePCount, unmarkedFrameMPois,
+    unmarkedFrameDS, unmarkedMultFrame, unmarkedFrameGMM,
+    unmarkedFramePCO, unmarkedFrameGDS, unmarkedFrameGPC)
+
+# Formatting
+export(csvToUMF, formatLong, formatWide, formatMult, formatDistData)
+
+# Misc
+export(imputeMissing, gxhn, gxexp, gxhaz, dxhn, dxexp, dxhaz, drhn, drexp,
+    drhaz, grhn, grexp, grhaz, sight2perpdist, lambda2psi, SSE)
+
+useDynLib("unmarked", .registration=TRUE)

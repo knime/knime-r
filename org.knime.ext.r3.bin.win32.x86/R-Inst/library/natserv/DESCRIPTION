@@ -1,0 +1,27 @@
+Package: natserv
+Title: 'NatureServe' Interface
+Description: Interface to 'NatureServe' (<http://www.natureserve.org>).
+    Includes methods to get data, image metadata, search taxonomic names,
+    and make maps.
+Version: 0.1.4
+License: MIT + file LICENSE
+URL: https://github.com/ropensci/natserv
+BugReports: https://github.com/ropensci/natserv/issues
+Encoding: UTF-8
+Authors@R: c(
+    person("Scott", "Chamberlain", role = c("aut", "cre"),
+    email = "myrmecocystus@gmail.com")
+  )
+LazyData: true
+Depends: R(>= 3.2.1)
+Imports: crul (>= 0.2.0), xml2 (>= 1.0.0), tibble (>= 1.2), data.table
+        (>= 1.10.0)
+Suggests: roxygen2 (>= 5.0.1), testthat, covr, ggplot2, maps, mapproj
+RoxygenNote: 5.0.1
+NeedsCompilation: no
+Packaged: 2017-01-03 20:21:45 UTC; sacmac
+Author: Scott Chamberlain [aut, cre]
+Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
+Repository: CRAN
+Date/Publication: 2017-01-03 23:58:07
+Built: R 3.4.2; ; 2017-11-10 16:28:29 UTC; windows

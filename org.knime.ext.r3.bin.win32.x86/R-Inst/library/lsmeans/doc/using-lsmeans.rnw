@@ -1,0 +1,1067 @@
+%    Copyright (c) 2012-2016 Russell V. Lenth                                %
+%                                                                            %
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathpazo}
+\usepackage{hyperref}
+\usepackage{fancyvrb}
+\usepackage{multicol}
+\usepackage{natbib}
+\usepackage{Sweave}
+
+\usepackage{makeidx}
+\makeindex
+
+\hypersetup{colorlinks=true,allcolors=black,urlcolor=blue}
+
+
+\let\dq="
+\DefineShortVerb{\"}
+
+\def\pkg{\textbf}
+\def\proglang{\textsf}
+
+\def\lsm{\pkg{lsmeans}}
+
+% double-quoted text
+\def\dqt#1{\code{\dq{}#1\dq{}}}
+
+% The objects I want to talk about
+\def\rg{\dqt{ref.grid}}
+\def\lsmo{\dqt{lsmobj}}
+
+% for use in place of \item in a description env where packages are listed
+\def\pitem#1{\item[\pkg{#1}]}
+
+
+\def\R{\proglang{R}}
+\def\SAS{\proglang{SAS}}
+\def\code{\texttt}
+
+
+\def\Fig#1{Figure~\ref{#1}}
+\def\bottomfraction{.5}
+
+
+% For indexing...
+% Naming: \[w]ix[fmt]{#1} -- always use lower-case for alphabetization.
+%   fmt defines format, use w prefix for in-text refs (word is included) 
+\def\ix#1{\index{#1@\MakeUppercase#1}}
+\def\wix#1{#1\ix{#1}}
+\def\ixcode#1{\index{#1@\texttt{#1}}}
+\def\wixcode#1{\texttt{#1}\ixcode{#1}}
+\def\ixpkg#1{\index{#1@\textbf{#1} package}}
+\def\wixpkg#1{\textbf{#1}\ixpkg{#1}}
+% Add subheadings...
+\def\ixsub#1#2{\index{#1@\MakeUppercase#1!#2}}
+\def\wixsub#1#2{#1\ixsub{#1}{#2}}
+\def\ixcodesub#1#2{\index{#1@\texttt{#1}!#2}}                             
+\def\wixcodesub#1#2{\texttt{#1}\ixcodesub{#1}{#2}}                                 
+
+%\VignetteIndexEntry{Using lsmeans}
+%\VignetteDepends{lsmeans}
+%\VignetteKeywords{least-squares means}
+%\VignettePackage{lsmeans}
+
+
+% Initialization
+<<echo=FALSE>>=
+options(show.signif.stars=FALSE, prompt="R> ", continue="   ", 
+    useFancyQuotes=FALSE, width=100, digits=6)
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% almost as usual
+\author{Russell V.~Lenth\\The University of Iowa}
+\title{Using \lsm{}} %% without formatting
+
+\ifx %xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% for pretty printing and a nice hypersummary also set:
+\Plainauthor{Russell V.~Lenth} %% comma-separated
+\Plaintitle{Least-squares Means: The R Package lsmeans} %% without formatting
+\Shorttitle{The R Package lsmeans} %% a short title (if necessary)
+\fi %xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+\ifx % IGNORE xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% The address of (at least) one author should be given
+%% in the following format:
+\Address{
+  Russell V.~Lenth,  Professor Emeritus\\
+  Department of Statistics and Actuarial Science\\
+%  241 Schaeffer Hall\\
+  The University of Iowa\\
+  Iowa City, IA 52242 ~ USA\\
+  E-mail: \email{russell-lenth@uiowa.edu} %\\
+%  URL: \url{http://www.stat.uiowa.edu/~rlenth/}
+}
+%% It is also possible to add a telephone and fax number
+%% before the e-mail in the following format:
+%% Telephone: +43/1/31336-5053
+%% Fax: +43/1/31336-734
+\fi %xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+%% for those who use Sweave please include the following line (with % symbols):
+%% need no \usepackage{Sweave.sty}
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle{}
+
+\begin{abstract}
+  Least-squares means are predictions from a linear model, or averages thereof. They are useful in the
+  analysis of experimental data for summarizing the effects of factors, and for testing linear contrasts among predictions. The \lsm{} package provides a simple way of obtaining least-squares means and contrasts thereof. It supports many models fitted by \R{} core packages (as well as a few key contributed ones) that fit linear or mixed models, and provides a simple way of extending it to cover more model classes.
+\end{abstract}
+
+
+
+
+\section{Introduction}
+\wix{least-squares means} (\wix{LS~means} for short) for a linear model are simply predictions---or averages thereof---over a regular grid of predictor settings which I call the \emph{\wix{reference grid}}. They date back at least to \cite{Har60} and his associated computer program \proglang{LSML} \citep{Har77} and the contributed \SAS{} procedure named \pkg{HARVEY}\index{SAS!PROC HARVEY} \citep{Har76}. Later, they were incorporated via \code{LSMEANS}\index{SAS!LSMEANS} statements for various linear model procedures such as \pkg{GLM} in the regular \SAS{} releases. See also \cite{Goo97} and \cite{SAS12} for more information about the \SAS{} implementation.
+
+In simple \wix{analysis-of-covariance models}, LS~means are the same as covariate-\wix{adjusted means}. In unbalanced factorial experiments, LS~means for each factor mimic the main-effects means but are adjusted for imbalance. The latter interpretation is quite similar to the ``\wix{unweighted means}'' method for unbalanced data, as presented in old design books.
+
+LS~means are not always well understood, in part because the term itself is confusing. \cite{Sea80} discusses exactly how they are defined for various factorial, nested, and covariance models. \citeauthor{Sea80} suggest the term ``\wix{predicted marginal means}'' (or \wix{PMMs}) as a better descriptor. However, the term ``least-squares means'' was already well established in the \SAS{} software, and it has stuck.
+
+The most important things to remember are:\ixsub{least-squares means}{defined}
+\begin{itemize}
+\item LS~means are computed relative to a \emph{reference grid}.
+\item Once the reference grid is established, LS~means are simply predictions on this grid, or marginal averages of a table of these predictions.
+\end{itemize}
+A user who understands these points will know what is being computed, and thus can judge whether or not LS~means are appropriate for the analysis.
+
+
+
+
+\section{The reference grid}
+Since the reference grid\ixsub{reference grid}{defined} is fundamental, it is our starting point. For each predictor in the model, we define a set of one or more \emph{reference levels}. The reference grid is then the set of all combinations of reference levels. If not specified explicitly, the default reference levels are obtained as follows:
+\begin{itemize}
+\item For each predictor that is a factor, its reference levels are the unique levels of that factor.
+\item Each numeric predictor has just one reference level---its mean over the dataset. 
+\end{itemize}
+So the reference grid depends on both the model and the dataset.
+
+\subsection{Example: Orange sales}\index{Examples!orange sales}
+To illustrate, consider the \wixcode{oranges} data provided with \lsm{}.  This dataset has sales of two varieties of oranges (response variables "sales1" and "sales2") at 6 stores (factor "store"), over a period of 6 days (factor "day"). The prices of the oranges (covariates "price1" and "price2") fluctuate in the different stores and the different days. There is just one observation on each store on each day.
+
+For starters, let's consider an additive covariance model for sales of the first variety, with the two factors and both "price1" and "price2" as covariates (since the price of the other variety could also affect sales).
+<<>>=
+library("lsmeans")
+oranges.lm1 <- lm(sales1 ~ price1 + price2 + day + store, data = oranges)
+anova(oranges.lm1)
+@
+The \wixcode{ref.grid} function in \lsm{} may be used to establish the reference grid. Here is the default one:
+<<>>=
+( oranges.rg1 <- ref.grid(oranges.lm1) )
+@
+As outlined above, the two covariates "price1" and "price2" have their means as their sole reference level; and the two factors have their levels as reference levels. The reference grid thus consists of the $1\times1\times6\times6=36$ combinations of these reference levels. LS~means are based on predictions on this reference grid, which we can obtain using "predict" or "summary":
+<<>>=
+summary(oranges.rg1)
+@
+
+\subsection{LS means as \wix{marginal averages} over the reference grid}
+The ANOVA indicates there is a significant "day" effect after adjusting for the covariates, so we might want to do a follow-up analysis that involves comparing the days. The \wixcode{lsmeans} function provides a starting point:
+<<>>=
+lsmeans(oranges.rg1, "day")   ## or lsmeans(oranges.lm1, "day")
+@
+These results, as indicated in the annotation in the output, are in fact the averages of the predictions shown earlier, for each day, over the 6 stores. The above LS~means (often called ``\wix{adjusted means}'') are not the same as the overall means for each day:
+<<>>=
+with(oranges, tapply(sales1, day, mean))
+@
+These \wix{unadjusted means} are not comparable with one another because they are affected by the differing "price1" and "price2" values on each day, whereas the LS~means are comparable because they use predictions at uniform "price1" and "price2" values.
+
+Note that one may call "lsmeans" with either the reference grid or the model. If the model is given, then the first thing it does is create the reference grid; so if the reference grid is already available, as in this example, it's more efficient to make use of it.
+
+For users who dislike the term ``LS~means,'' there is also a \wixcode{pmmeans} function (for \wix{predicted marginal means}) which is an alias for "lsmeans" but relabels the "lsmean" column in the summary.
+
+\subsection{Altering the reference grid}\ixsub{reference grid}{altering}
+The wixcode{at} argument may be used to override defaults in the reference grid.
+The user may specify this argument either in a "ref.grid" call or an "lsmeans" call; and should specify a "list" with named sets of reference levels. Here is a silly example:
+<<>>=
+lsmeans(oranges.lm1, "day", at = list(price1 = 50, 
+    price2 = c(40,60), day = c("2","3","4")) )
+@
+Here, we restricted the results to three of the days, and used different prices.
+One possible surprise is that the predictions are averaged over the two "price2"
+values. That is because "price2" is no longer a single reference level, and we average over the levels of all factors not used to split-out the LS~means.
+This is probably not what we want.\footnote{%
+The \emph{default} reference grid produces LS~means exactly as described in \cite{Sea80}.
+However, an altered reference grid containing more than one value of a covariate, such as in this example, departs from (or generalizes, if you please) their definition by averaging with equal weights over those \wix{covariate levels}. It is not a good idea here, but there is an example later in this vignette where it makes sense.}
+To get separate sets of predictions for each "price2", one must specify it as another factor or as a \wixcode{by} factor in the "lsmeans" call (we will save the result for later discussion):
+<<>>=
+org.lsm <- lsmeans(oranges.lm1, "day", by = "price2", 
+    at = list(price1 = 50, price2 = c(40,60), day = c("2","3","4")) )
+org.lsm
+@
+Note: We could have obtained the same results using any of these:
+<<eval=FALSE>>=
+lsmeans(oranges.lm1, ~ day | price, at = ... )         # Ex 1
+lsmeans(oranges.lm1, c("day","price2"), at = ... )     # Ex 2
+lsmeans(oranges.lm1, ~ day * price, at = ... )         # Ex 3
+@
+Ex~1 illustrates the formula method for \wix{specifying factors}\ixsub{factors}{specifying}, which is more compact. The "|" character replaces the "by" specification. Ex~2 and Ex~3 produce the same results, but their results are displayed as one table (with columns for "day" and "price") rather than as two separate tables.\ixsub{formula specs}{one-sided}
+
+
+
+
+\section{Working with the results}\index{ref.grid@\dqt{ref.grid} class}
+\subsection{Objects}
+The "ref.grid" function produces an object of class \rg{}, and the "lsmeans" function produces an object of class \lsmo{},\index{lsmobj@\dqt{lsmobj} class} which is a subclass of \rg. There is really no practical difference between these two classes except for their "show" methods---what is displayed by default---and the fact that an \lsmo{} is not (necessarily) a true reference grid as defined earlier in this article. Let's use the \wixcode{str} function to examine the \lsmo{} object just produced:
+<<>>=
+str(org.lsm)
+@
+We no longer see the reference levels for all predictors in the model---only the levels of "day" and "price2". These \emph{act} like reference levels, but they do not define the reference grid upon which the predictions are based.
+
+\subsection{Summaries}
+There are several methods for \rg{} (and hence also for \lsmo{}) objects. One already seen is \wixcode{summary}. It has a number of arguments---see its help page. In the following call, we summarize "days.lsm" differently than before. We will also save the object produced by "summary" for further discussion.
+<<>>=
+( org.sum <- summary(org.lsm, infer = c(TRUE,TRUE), 
+                    level = .90, adjust = "bon", by = "day") )
+@
+The \wixcode{infer} argument causes both \wix{confidence intervals} and \wix{tests} to be produced; the default confidence level of $.95$ was overridden; a Bonferroni adjustment\ixcode{adjust}\ixcode{level}\ix{multiplicity adjustment}\ixsub{multiplicity adjustment}{Bonferroni} was applied to both the intervals and the $P$~values; and the tables are organized the opposite way from what we saw before.
+
+What kind of object was produced by "summary"? Let's see:
+<<>>=
+class(org.sum)
+@
+The \dqt{\wixcode{summary.ref.grid}} class is an extension of \dqt{data.frame}. It includes some attributes that, among other things, cause additional messages to appear when the object is displayed. But it can also be used as a \dqt{data.frame} if the user just wants to use the results computationally. For example, suppose we want to convert the LS~means from dollars to Russian rubles (at the July 13, 2014 exchange rate):
+{\small
+<<>>=
+transform(org.sum, lsrubles = lsmean * 34.2)
+@
+}
+Observe also that the summary is just one data frame with six rows, rather than a collection of three data frames; and it contains a column for all reference variables, including any "by" variables.
+
+Besides "str" and "summary", there is also a \wixcode{confint} method, which is the same as "summary" with "infer=c(TRUE,FALSE)", and a \wixcode{test} method (same as "summary" with "infer=c(FALSE,TRUE)", by default). The "test" method may in addition be called with "joint=TRUE"\ixsub{tests}{joint} to obtain a joint test that all or some of the linear functions are equal to zero or some other value. 
+
+There is also an \wixcode{update} method which may be used for changing the object's display settings. For example:
+<<>>=
+org.lsm2 <- update(org.lsm, by.vars = NULL, level = .99)
+org.lsm2
+@
+
+\subsection{Plots}\ix{plots}\ix{graphical displays}
+Confidence intervals for LS~means may be displayed graphically, using the \wixcode{plot} method. For example:
+<<org-plot, fig = TRUE, height=3, include=FALSE>>=
+plot(org.lsm, by = "price2")
+@
+The resulting display is shown in \Fig{org-plot}. This function requires that the \wixpkg{lattice} package be installed. 
+\begin{figure}
+\begin{center}
+\includegraphics{using-lsmeans-org-plot.pdf}
+\end{center}
+\caption{Confidence intervals for LS~means in the \code{oranges} example.}\label{org-plot}
+\end{figure}
+Additional graphical presentations are covered later in this vignette.
+
+
+
+\section{Contrasts and comparisons}
+\subsection{Contrasts in general}\ix{contrasts}
+Often, people want to do pairwise comparisons of LS~means, or compute other contrasts among them. This is the purpose of the \wixcode{contrast} function, which uses a \dqt{ref.grid} or \dqt{lsmobj} object as input. There are several standard contrast families such as \dqt{pairwise}, \dqt{trt.vs.ctrl}, and \dqt{\wixcode{poly}}.\ixsub{contrasts}{polynomial}\ixsub{contrasts}{effects (offsets from mean)}
+In the following command, we request \dqt{\wixcode{eff}} contrasts, which are differences between each mean and the overall mean:
+<<>>=
+contrast(org.lsm, method = "eff")
+@
+Note that this preserves the "by" specification from before, and obtains the effects for each group. In this example, since it is an \wix{additive model}, we obtain exactly the same results in each group. This isn't wrong, it's just redundant.\index{Redundant results}
+
+Another popular method is Dunnett-style \wixsub{contrasts}{Dunnett}, where a particular LS~mean is compared with each of the others. This is done using \dqt{\wixcode{trt.vs.ctrl}}. In the following, we obtain (again) the LS~means for days, and compare each with the average of the LS~means on day~5 and~6.
+<<>>=
+days.lsm <- lsmeans(oranges.rg1, "day")
+( days_contr.lsm <- contrast(days.lsm, "trt.vs.ctrl", ref = c(5,6)) )
+@
+For convenience, \dqt{\wixcode{trt.vs.ctrl1}} and \dqt{\wixcode{trt.vs.ctrlk}} methods are provided for use in lieu of "ref" for comparing with the first and the last LS~means. The \dqt{\wixcode{dunnettx}} adjustment is a good approximation to the exact Dunnett $P$~value adjustment. If the exact adjustment is desired, use \wixcode{adjust}" = "\dqt{\wixcode{mvt}}; but this can take a lot of computing time when there are several tests.
+
+Note that by default, "lsmeans" results are displayed with confidence intervals while "contrast" results are displayed with $t$ tests. One can easily override this; for example,
+<<eval=FALSE>>=
+confint(contrast(days.lsm, "trt.vs.ctrlk"))
+@
+(Results not shown.)
+
+In the above examples, a default \wixsub{multiplicity adjustment}{default} is determined from the contrast method. This may be overridden by adding an \wixcode{adjust} argument. 
+
+\subsection{Pairwise comparisons}\ixsub{contrasts}{pairwise comparisons}
+Often, users want \wix{pairwise comparisons} among the LS~means. These may be obtained by specifying \dqt{\wixcode{pairwise}} or \dqt{\wixcode{revpairwise}} as the "method" argument in the call to \wixcodesub{contrast}{method@\code{method}}. For group labels $A,B,C$, \dqt{pairwise} generates the comparisons $A-B, A-C, B-C$ while \dqt{revpairwise} generates $B-A, C-A, C-B$. As a convenience, a \wixcode{pairs} method is provided that calls "contrast" with "method="\dqt{pairwise}:\ixsub{pairwise comparisons}{using \code{pairs}}
+<<>>=
+pairs(org.lsm)
+@
+There is also a \wixcode{cld} (\wix{compact letter display}) method that lists the LS~means along with grouping symbols for pairwise contrasts. It requires the \wixpkg{multcompView} package \citep{mcview} to be installed.
+<<>>=
+cld(days.lsm, alpha = .10)
+@
+Two LS~means that share one or more of the same grouping symbols are not significantly different at the stated value of "alpha", after applying the multiplicity adjustment (in this case Tukey's HSD).
+By default, the LS~means are ordered in this display, but this may be overridden with the argument "sort=FALSE". "cld" returns a \dqt{summary.ref.grid} object, not an "lsmobj".
+
+Another way to display pairwise comparisons is via the "comparisons" argument of \wixcode{plot}.
+\ixcodesub{plot}{\code{comparisons}}\ixsub{pairwise comparisons}{graphical}
+When this is set to "TRUE", arrows are added to the plot, with lengths set so that the amount by which they overlap (or don't overlap) matches as closely as possible to the amounts by which corresponding confidence intervals for differences cover (or don't cover) the value zero. 
+\ix{comparison arrows}
+This does not always work, and if there are discrepancies, a message is printed. But it usually works as long as the standard errors of differences are not too discrepant.
+<<days-cmp, fig = TRUE, height=2.75, include = FALSE>>=
+plot(days.lsm, comparisons = TRUE, alpha = .10)
+@
+\Fig{days-cmp} shows the result. Note that the pairs of means having overlapping arrows are the same as those grouped together in the "cld" display. However, these comparison arrows show more about the degree of significance in the comparisons. The lowest and highest LS~mean have arrows pointing only inward, as the others are not needed. If the confidence intervals and arrows together look too cluttered, one can add the argument \code{intervals = FALSE}, then only the arrows will be displayed.\ixcodesub{plot}{intervals@\code{intervals}}
+\begin{figure}
+\begin{center}
+\includegraphics{using-lsmeans-days-cmp.pdf}
+\end{center}
+\caption{Graphical comparisons of the LS~means for \code{days}.}\label{days-cmp}
+\end{figure}
+
+\subsection{Multiplicity adjustments---changing the family}\ixsub{multiplicity adjustment}{combining/subsetting families}
+You may have noticed that in the preceding examples where $P$-value adjustments were implemented, those adjustments were made \emph{separately} for each sub-table when a "by" variable is active. Some users prefer that all the adjusted tests together as one family---or even combine more than one family of tests into one family for purposes of adjustment. This may be done using the \wixcode{rbind} method (similar to using "rbind" to combine matrices. 
+
+On the flip side, perhaps we want to exclude some tests. This may be used using the \ixcode{[]} operator: simply specify the row indexes of the tests to include.
+
+To illustrate, consider the previously obtained "org.lsm" object. In "pairs(org.lsm)", we obtain the same results twice (as seen above) because the model is additive. For the same reason, if we change the "by" variable to \dqt{day}, we'll obtain three copies of the same comparison of the two "price2"s. If we want to consider the three "day" comparisons and the one "price2" comparison together as one family of four tests, we can do:
+<<>>=
+rbind(pairs(org.lsm)[1:3], pairs(org.lsm, by = "day")[1])
+@
+Note that by default, the \dqt{mvt} adjustment level is used; for complicated families like this, ordinary Tukey and Dunnett adjustments are usually not appropriate.
+
+We arrived at this point by a circuitous path. In the additive model, the above conditional results are the same as the marginal ones:
+<<>>=
+rbind(pairs(lsmeans(org.lsm, "day")), pairs(lsmeans(org.lsm, "price2")))
+@
+
+
+\section{Multivariate models}
+The "oranges" data has two response variables. Let's try a \wix{multivariate model} for predicting the sales of the two varieties of oranges, and see what we get if we call "ref.grid":
+<<>>=
+oranges.mlm <- lm(cbind(sales1,sales2) ~ price1 + price2 + day + store, 
+                 data = oranges)
+ref.grid(oranges.mlm)
+@
+What happens is that the multivariate response is treated like an additional factor, by default named \wixcode{rep.meas}. In turn, it can be used to specify levels for LS~means. Here we rename the multivariate response to \dqt{variety} and obtain "day" means (and a compact letter display for comparisons thereof)  for each "variety":\ixcode{mult.name}
+<<>>=
+org.mlsm <- lsmeans(oranges.mlm, ~ day | variety, mult.name = "variety")
+cld(org.mlsm, sort = FALSE)
+@
+
+
+
+
+\section{Contrasts of contrasts (interaction contrasts)}
+With the preceding model, we might want to compare the two varieties on each day:
+<<>>=
+org.vardiff <- update(pairs(org.mlsm, by = "day"), by = NULL)
+@
+The results (not yet shown) will comprise the six "sales1-sales2" differences, one for each day. The two "by" specifications seems odd, but the one in "pairs" specifies doing a separate comparison for each day, and the one in "update" asks that we convert it to one table with six rows, rather than 6 tables with one row each.  Now, let's compare these differences to see if they vary from day to day.
+<<>>=
+cld(org.vardiff)
+@
+There is little evidence of variety differences, nor that these differences vary from day to day.
+
+A newer feature of the \wixcodesub{contrast}{\code{interaction}} function is the optional "interaction" argument, which may be used to specify \wix{interaction contrasts}\ixsub{contrasts}{interaction}\ixsub{contrasts}{of contrasts}
+by naming which contrast to use for each variable (in the order of appearance in the grid). In a similar example to the above, suppose we want to compare each polynomial contrast in "day" between the two varieties:\ixsub{contrasts}{polynomial}
+<<>>=
+org.icon <- contrast(org.mlsm, interaction = c("poly", "pairwise"))
+org.icon
+@
+
+Exactly what contrasts are being generated can become somewhat confusing, especially where interaction contrasts are concerned. The \wixcode{coef} method\ixsub{contrasts}{retrieving coefficients} helps with this; it returns a "data.frame" with the grid of factor levels that were contrasted, along with the contrast coefficients that were used:
+<<>>=
+coef(org.icon)
+@
+We can see more clearly that each contrast is the difference of a polynomial contrast on the first six rows of "org.mlsm", minus that same contrast of the last six rows. (Note: "coef" is only useful for objects generated by "contrast" or "pairs"; if called on some other "ref.grid" object, it simply returns "NULL".)
+
+\section[Interfacing with multcomp]{Interfacing with \pkg{multcomp}}
+The \wixpkg{multcomp} package \citep{multc} supports more options for simultaneous inference than are available in \lsm{}. Its \wixcode{glht} (general linear hypothesis testing) function and associated \dqt{glht} class are similar in some ways to "lsmeans" and \dqt{lsmobj} objects, respectively. So \lsm{} provides an \wixcode{as.glht} function to do the conversion.
+
+To illustrate, let us convert the "days_contr.lsm" object (produced earlier) to a "glht" object, and use it to obtain adjusted $P$~values under \wix{Westfall's adjustment procedure} (not available in \lsm{}):
+<<echo = FALSE, results = hide>>=
+# Ensure we see the same results each time
+set.seed(123454321)
+@
+<<>>=
+library("multcomp")
+days.glht <- as.glht(days_contr.lsm)
+summary(days.glht, test = adjusted("Westfall"))
+@
+In addition, \lsm{} provides an \wixcode{lsm} function (or its alias, \wixcode{pmm}) that may be called from within a call to "glht". Thus, another way to obtain the same "glht" object is to use
+<<eval = FALSE>>=
+days.glht1 <- glht(oranges.lm1, 
+                   lsm("day", contr = "trt.vs.ctrl", ref = c(5,6)))
+@
+
+By the way, the following two statements will produce the same results:
+<<eval = FALSE>>=
+summary(days_contr.lsm, adjust = "mvt")
+summary(days.glht)
+@
+That is, the \dqt{mvt} adjust method in \lsm{} is the same as the default single-step $P$~value adjustment in \pkg{multcomp}.\ixsub{multiplicity adjustment}{single-step (\code{mvt})}
+
+
+One additional detail: If there is a "by" variable in effect, "glht" or "as.glht" returns a "list" of "glht" objects---one for each "by" level. There are courtesy "coef", "confint", "plot", "summary", and "vcov" methods for this \dqt{\wixcode{glht.list}} class to make things a bit more user-friendly. Recall the earlier example result "org.lsm", which contains information for LS~means for three "day"s at each of two values of "price2". Suppose we are interested in pairwise comparisons of these LS~means, by "price2". If we call
+<<eval=FALSE>>=
+summary(as.glht(pairs(org.lsm)))
+@
+(results not displayed) we will obtain two "glht" objects with three contrasts each, so that the results shown will incorporate multiplicity adjustments for each family of three contrasts. If, on the other hand, we want to consider those six contrasts as one family, use
+<<eval=FALSE>>=
+summary(as.glht(pairs(org.lsm), by = NULL))
+@
+\ldots{} and note (look carefully at the parentheses) that this is \emph{not} the same as
+<<eval=FALSE>>=
+summary(as.glht(pairs(org.lsm, by = NULL)))
+@
+which removes the "by" grouping \emph{before} the pairwise comparisons are generated, thus yielding ${6 \choose 2}=15$ contrasts instead of just six.\ixsub{multiplicity adjustment}{effect of \code{by} on family}
+
+
+
+
+\section{A new example: Oat yields}\index{Examples!oat yields}\index{Examples!split-plot experiment}
+Orange-sales illustrations are probably getting tiresome. To illustrate some new features, let's turn to a new example.
+The \wixcode{Oats} dataset in the \wixpkg{nlme} package \citep{nlme} has the results of a split-plot experiment discussed in \citet{Yat35}. The experiment was conducted on six blocks (factor "Block"). Each block was divided into three plots, which were randomized to three varieties (factor "Variety") of oats. Each plot was divided into subplots and randomized to four levels of nitrogen (variable "nitro"). The response, "yield", was measured once on each subplot after a suitable growing period.
+
+We will fit a model using the "lmer" function in the \wixpkg{lme4} package \citep{lme4}. This will be a mixed model with random intercepts for "Block" and "Block:Variety" (which identifies the plots). A logarithmic transformation is applied to the response variable (mostly for illustration purposes, though it does produce a good fit to the data). Note that "nitro" is stored as a numeric variable, but we want to consider it as a factor in this initial model.
+<<>>=
+data("Oats", package = "nlme")
+library("lme4")
+Oats.lmer <- lmer(log(yield) ~ Variety*factor(nitro) + (1|Block/Variety), 
+                 data = Oats)
+anova(Oats.lmer)
+@
+Apparently, the interaction is not needed. But perhaps we can further simplify the model by using only a linear or quadratic trend in "nitro". We can find out by looking at polynomial contrasts:\ixsub{contrasts}{polynomial}
+<<oatcontr, eval=FALSE>>=
+contrast(lsmeans(Oats.lmer, "nitro"), "poly")
+@
+%%% Fake the warning message
+<<echo=FALSE>>=
+cat("NOTE: Results may be misleading due to involvement in interactions")
+@
+<<echo=FALSE>>=
+<<oatcontr>>
+@
+\ixsub{warnings}{when interaction is in model}
+(A message is issued when we average over predictors that interact with those that delineate the LS~means. In this case, it is not a serious problem because the interaction is weak.) Both the linear and quadratic contrasts are pretty significant. All this suggests fitting an additive model where "nitro" is included as a numeric predictor with a quadratic trend.
+<<>>=
+Oats.lmer2 <- lmer(log(yield) ~ Variety + poly(nitro,2) 
+                                + (1|Block/Variety),  data = Oats)
+@
+Remember that "nitro" is now used as a quantitative predictor.\ixsub{factors}{with quantitative levels}
+But for comparing with the previous model, we want to see predictions at the four unique "nitro" values rather than at the average of "nitro". This may be done using "at" as illustrated earlier, or a shortcut is to specify \wixcode{cov.reduce} as "FALSE", which tells "ref.grid" to use all the unique values of numeric predictors.
+<<>>=
+Oats.lsm2 <- lsmeans(Oats.lmer2, ~ nitro | Variety, cov.reduce = FALSE)
+@
+The results are displayed as an export table (see Section~\ref{xtsect}) in Table~\ref{xtable:example}, page~\pageref{xtable:example}.
+These LS~means follow the same quadratic trend for each variety, but with different intercepts.\footnote{%
+This is the promised example where our generalization of \cite{Sea80}'s definition of LS~means makes sense. Suppose we want to compare the LS~means for \code{Variety} with those in the original model \code{Oats.lmer} where \code{nitro} was a factor, we want to average equally over the four \code{nitro} levels, even though \code{nitro} is a covariate in this second model.}\ixsub{reference grid}{altered for quantitative factor}
+
+Fractional \wixsub{degrees of freedom}{fractional} are displayed in these results. These are obtained by default using the Satterthwaite method, using routines in the \wixpkg{lmerTest} package \citep{lmert}. Adding the argument \code{mode = \dqt{kenward-roger}} to the \code{lsmeans} call will cause the degrees of freedom to be computed using instead the Kenward-Roger (K-R) method from the \wixpkg{pbkrtest} package \citep{pbkrt}, which also implements, as a side-effect, a bias adjustment in the estimated covariances (and hence standard errors). The K-R method is probably preferable, but it requires a lot more computation, and hence is no longer the default. A third option is to specify \code{mode = \dqt{asymptotic}}, for which all the degrees of freedom are set to \code{NA}---producing $z$~tests rather than $t$~tests. You may change the default via \code{lsm.options(lmer.df = \emph{\dqt{desired default}})}. These \code{mode} settings are partially matched, so \code{mode = \dqt{k}} is actually good enough.
+
+
+\section{Additional display methods}
+\subsection{Export tables}\ix{export tables}\label{xtsect}
+The \pkg{lsmeans} package provides an \wixcode{xtable} method \citep{xtable} that works with "lsmobj", "ref.grid", and "summary.ref.grid" objects. (It actually uses the \wixcode{xtableList} interface; see the \ixpkg{xtable} documentation for details.) This is quite useful if you want a nicely formatted table, especially using \wixcode{Sweave} or \wixcode{knitr}. To illustrate, we display the "Oats.lsm2" object just created.
+<<results = tex>>=
+library("xtable")
+xtbl <- xtable(Oats.lsm2, caption = "Example using \\texttt{xtable}",
+    label = "xtable:example")
+print(xtbl, table.placement = "t")    
+cat("See Table~\\ref{xtable:example}.\n")
+@
+
+
+\subsection{Displaying LS means graphically}\ixsub{graphical displays}{interaction plot}
+We have already seen the use of the "plot" function to display confidence intervals and/or comparison arrows.
+The \lsm{} package also includes a function \wixcode{lsmip} that displays predictions in an interaction-plot-like manner.\ix{interaction plot} It uses a formula of the form
+\begin{Sinput}
+curve.factors ~ x.factors | by.factors
+\end{Sinput}
+This function also requires the \wixpkg{lattice} package.
+In the above formula, "curve.factors" specifies factor(s) used to delineate one displayed curve from another (i.e., groups in \pkg{lattice}'s parlance). "x.factors" are those whose levels are plotted on the horizontal axis. And "by.factors", if present, break the plots into panels.
+
+To illustrate, consider the first model we fitted to the "Oats" data. Let's do a graphical comparison of the two models we have fitted to the "Oats" data. 
+<<oatslmer, fig=TRUE, height=4.5, include=FALSE>>=
+lsmip(Oats.lmer, Variety ~ nitro, ylab = "Observed log(yield)")
+@
+\vspace{-12pt}
+<<oatslmer2, fig=TRUE, height=4.5, include=FALSE>>=
+lsmip(Oats.lsm2, Variety ~ nitro, ylab = "Predicted log(yield)")
+@
+The plots are shown in \Fig{intplots}.
+Note that the first model fits the cell means perfectly, so its plot is truly an interaction plot of the data. The other displays the parabolic trends we fitted in the revised model.
+\begin{figure}
+\includegraphics[width=3in]{using-lsmeans-oatslmer.pdf}
+\hfill
+\includegraphics[width=3in]{using-lsmeans-oatslmer2.pdf}
+\caption{Interaction plots for the cell means and the fitted model, \code{Oats} example.}\label{intplots}
+\end{figure}
+
+
+
+
+\section{Transformations}\ix{transformations}
+\subsection{Automatic support for transformations}\ixsub{transformations}{automatically detected}
+When a transformation or link function is used in fitting a model, "ref.grid" (also called by "lsmeans") stores that information in the returned object, as seen in this example:
+<<>>=
+str(Oats.lsm2)
+@
+This allows us to conveniently unravel the transformation, via the \wixcode{type} argument in "summary" or related functions such as "lsmip" and "predict".\ixcodesub{summary}{type@\code{type = }\dqt{response}} Here are the predicted yields for (as opposed to predicted log yields) for the polynomial model:
+<<>>=
+summary(Oats.lsm2, type = "response")
+@
+It is important to realize that the statistical inferences are all done \emph{before} reversing the transformation. Thus, $t$ ratios are based on the linear predictors and will differ from those computed using the printed estimates and standard errors. Likewise, \wixsub{confidence intervals}{back-transformed} are computed on the linear-predictor scale, then the endpoints are back-transformed.
+
+This kind of automatic support is available for most popular response transformations such as "log", "log10", and even transformations like "asin(sqrt())" and "sqrt(y)+sqrt(y+1)". The Details section for \verb|help("make.tran")| provides a complete list. It is also possible to support custom transformations via the "tran" argument in the "update" method---see its help page.
+\ixsub{transformations}{custom}
+
+\subsection{Using \code{make.tran}}\ixsub{transformations}{using \code{make.tran}}\ixsub{transformations}{requiring parameter(s)}\ixsub{transformations}{Box-Cox}
+The \wixcode{make.tran} function provides support for yet more popular types of transformations, particularly those that require specifying one or more parameters. Examples are general power transformations, \wix{Box-Cox transformations}, and transformations with a shifted origin such as "log(y + a)". Details may of course be found via \verb|help("make.tran")|. The function returns a "list" of functions, compatible with what is returned by "make.link" in the \pkg{stats} package. The latter is intended primarily for use with generalized linear models, and "make.tran" extends such capabilities to other response transformations.
+
+There are two basic ways to use "make.tran": retrospectively on an existing model, and prospectively in fitting a new model. Here is an example of retrospective use, where the $\log(y+5)$ transformation was used. This transformation is not auto-detected.
+<<>>=
+Oats.log1 <- lmer(log(yield + 5) ~ Variety + factor(nitro) 
+                  + (1|Block/Variety), data = Oats)
+( Oats.rg1 <- update(ref.grid(Oats.log1), 
+                    tran = make.tran("genlog", 5)) )
+@
+Here, we created a reference grid for the model, then updated it with its "tran" component set to the result of "make.tran" for a generalized log transformation with parameter 5.
+\ixcodesub{update}{tran@\code{tran}}
+This updated reference grid has all the information needed to back-transform the results to the original "yield" scale:
+<<>>=
+round(predict(Oats.rg1, type = "response"), 1)
+@
+
+\ixcodesub{tran}{using \code{linkfun}}\ixcodesub{make.tran}{as enclosing environment}
+Using "make.tran" prospectively makes use of the fact that the transformation itself is included in the returned list as a function named "linkfun" (somewhat oddly named due to the fact that "make.tran" mimics the functionality of "make.link"). When a model is fitted with "linkfun" as the transformation, its \wix{enclosing environment} is automatically used to obtain the transformation definitions. For illustration, consider a rather far-fetched transformation:
+<<>>=
+my.tran <- make.tran("boxcox", c(.567, 10))
+my.tran$linkfun(10:15)
+@
+This specifies a Box-Cox transformation with the origin shifted to $10$:%
+\footnote{To obtain an ordinary Box-Cox transformation, provide just one parameter: \code{make.tran(\dqt{boxcox}, .567)}.}
+\[ 
+    h(y) = \frac{(y-10)^{.567} - 1}{1 - .567}
+\]
+If we use "my.tran" as an enclosing environment for fitting the model, the transformation is saved automatically:
+<<>>=
+Oats.bc <- with(my.tran, lmer(linkfun(yield) ~ Variety + factor(nitro)
+                              + (1|Block/Variety), data = Oats))
+( rg.bc <- ref.grid(Oats.bc) )
+round(predict(rg.bc, type = "response"), 1)
+@
+
+\subsection{Using \code{regrid}}\ixsub{reference grid}{re-gridding to response scale}
+The \wixcode{regrid} function may be used to, in essence, give a new beginning to an existing reference grid (or "lsmobj"), most redefined on the response scale (i.e., back-transformed). Consider the preceding Box-Cox example, after applying "regrid":
+<<>>=
+rg.bc.regrid <- regrid(rg.bc)
+@
+By default, the estimates are back-transformed to the response scale. In a "regrid" result, the "linfct" slot (linear functions) become the identity matrix, and the "bhat" slot (regression coefficients) become the predictions at each grid point:
+<<>>=
+round(rg.bc.regrid@bhat, 1)
+@
+which matches the predictions shown previously.
+
+The interesting thing is what happens if we subsequently obtain LS~means. Compare these results:
+<<>>=
+summary(lsmeans(rg.bc, "Variety"), type = "response")
+lsmeans(rg.bc.regrid, "Variety")
+@
+\ixcodesub{regrid}{effect on LS~means}
+Why are the answers somewhat different? Recall that LS~means are obtained via equally-weighted averages of predictions. In the first "lsmeans" call, the predictions, on the Box-Cox scale, are averaged together and then back-transformed to the response scale; whereas in the second "lsmeans" call, the predictions being averaged were already on the response scale. (Hence, the results are the usual arithmetic means of the predictions on the grid.) Since the Box-Cox transformation is nonlinear, averaging then back-transforming is not the same as back-transforming then averaging.\ixsub{mean}{arithmetic}
+
+Even the degrees of freedom (d.f.) differ in the two results, because degrees-of-freedom calculations take place on the linear-predictor scale. Once results are back-transformed, "regrid" ``freezes'' the calculated \wixsub{degrees of freedom}{containment method} for each prediction. Subsequently, a containment method is used whereby the returned d.f.\ is the minimum d.f.\ of predictions involved in each LS~mean.
+
+Some users prefer averaging the predictions on the response scale as they are then the arithmentic means; and now you see that the way to make that happen is through the "regrid" function.
+
+\subsection{Reverse-engineering a log transformation}\ixsub{reference grid}{re-gridding to log scale}
+When a response has been log-transformed, then there are useful special properties of back-transformed summaries:
+\begin{itemize}
+\item LS~means, when back-transformed to the response scale, are actually the \emph{geometric} means of the response-scale predictions.\ixsub{mean}{geometric}
+\item A difference of two LS~means on the log scale, after back-transforming, becomes an estimate of the \emph{ratio} of the two geometric means. Such comparisons via ratios can be quite useful for positive responses.\ixsub{pairwise comparisons}{by ratios instead of differences}
+\end{itemize}
+
+The \wixcodesub{regrid}{log@\dqt{log} option} function provides a \dqt{log} option that recomputes the reference grid \emph{as if} the response transformation had been the natural logarithm. We can then take advantage of the above special properties of log-transformed responses. The only proviso is that, on the response scale,  all of the reference-grid predictions must be positive.
+
+To illustrate, we revisit the above Box-Cox model once again, and regrid it on the log scale:
+<<>>=
+rg.log <- regrid(rg.bc, "log")
+lsm.log <- lsmeans(rg.log, "Variety")
+summary(lsm.log, type = "response")
+summary(pairs(lsm.log), type = "response")
+@
+The LS~means shown are the geometric means of the predictions, as opposed to the arithmetic means obtained above from "rg.bc.regrid". And the pairwise comparisons come out as ratios of these.
+
+\subsection{The \code{transform} argument}\ixcodesub{transform}{in \code{ref.grid} or \code{lsmeans}}
+For convenience, the user may use a "transform" argument to re-grid as part of a "ref.grid" or "lsmeans" call. For example, \verb|lsmeans(Oats.bc, "Variety", transform = "response")| is equivalent to \verb|lsmeans(rg.bc.regrid, "Variety")| but without needing the two code steps previously used to produce "rg.bc" and "rg.bc.regrid".
+
+
+\subsection{Duplex transformations}\ix{duplex transformations}\ix{two transformations}\ixsub{transformations}{duplex}\ixsub{transformations}{two in same model}
+It is possible to have both a response transformation and a link function in a generalized linear model. For example,
+<<>>=
+warp.glm <- glm(sqrt(breaks) ~ wool * tension, family = gaussian(link = "log"),
+                data = warpbreaks)
+@
+In such a case, both the link function and response transformation are auto-detected, as can be seen here:
+<<>>=
+warp.rg <- ref.grid(warp.glm)
+warp.rg
+@
+Using predictions, summaries, or tests of type \dqt{response} will undo both transformations, so that in the above example, the results would be on the original scale (number of warp breaks). Some users may want to back-transform only half-way---undoing the link function but not the response transformation. For that purpose, prediction type of \dqt{mu} (or equivalently, \dqt{unlink}) is supported. In this example, here are predictions on three different scales:
+<<>>=
+predict(warp.rg, type = "linear")    ### log(sqrt) scale - no back-transformation
+predict(warp.rg, type = "unlink")    ### sqrt scale
+predict(warp.rg, type = "response")  ### response scale
+@
+
+
+\section{More on tests}
+\def\tj{\theta^{(j)}}%%% Notation for this section only
+The default settings for "test" yield traditional two-tailed $t$ (or $z$) tests of significance against zero. So if $\tj$ is the $j$th parameter (e.g., LS~mean or contrast) being estimated, we are testing the null hypothesis $H_0: \tj=0$ versus the alternative $H_1:\tj\ne 0$. We can, however, specify different types of tests in the \wixcode{test} or \wixcode{summary} functions.
+
+\subsection{Nonzero null values}\ixsub{tests}{nonzero null}
+If we wish to use nonzero null values, i,e., test $H_0:\tj=\tj_0$, use "test" or "summary" with the \wixcode{null} argument set to the desired $\tj_0$ values. For example, in the Oat-yield example, suppose we want to test each of the "Variety" yields against 100 (actually $\log 100$ since the response was transformed):
+<<>>=
+Oats.Vlsm = lsmeans(Oats.lmer2, "Variety")
+test(Oats.Vlsm, null = log(100), type = "response")
+@
+Note that "null" should always be given on the linear-predictor scale (in this case $\log$ yield), even when specifying \verb|type="response"|. We could have specified different null values for each hypothesis by providing a vector of three numbers. 
+
+\subsection{Equivalence tests}\ixsub{tests}{equivalence}\ix{equivalence tests}\ix{TOST method}
+The preceding results say that none of the variety means differs significantly from 100, after transforming. But this is not the same as saying that we have evidence that the means are close to 100 (that is, absence of proof is not proof of absence). To make a strong statement that an effect is small, we should use an equivalence test, which more-or-less turns the hypotheses around:
+\[ H_0: |\tj - \tj_0| \ge \delta \qquad\mbox{versus}\qquad H_1: |\tj - \tj_0| < \delta \]
+where $\delta$ is a specified threshold of equivalence. A common test procedure is the two one-sided test (TOST) method \citep{Sch87}, whereby we obtain equivalence only if we can establish both that $\tj-\tj_0>-\delta$ and that $\tj-\tj_0<\delta$. In "lsmeans", we do this by pre-identifying the less significant of these two tests:
+\[ t = \frac{|\hat\tj-\tj_0| - \delta}{SE(\hat\tj)} \]
+and the $P$~value is the \emph{left}-tail probability of this quantity from the central $t$ distribution.
+
+In "test" or "summary", an equivalence test is requested by specifying a nonzero \wixcode{delta} argument, which in turn is used as the threshold $\delta$. In the Oat-yield example, the following results are obtained using a threshold of $\delta=0.20$:\ixcodesub{test}{delta@\code{delta} argument}
+<<>>=
+test(Oats.Vlsm, null = log(100), delta = 0.20, type = "r")
+@
+So two of the three Variety means are established as being within $.20$ of $\log100$. The natural log scale has the special property that small increments on the log scale translate to approximate percentage differences of the same size. That is, a threshold of $.20$ corresponds to about a 20\% difference: $\log 80 - \log100 = \log.8 \approx -.223$, and $\log120 - \log100 = \log1.2 \approx .182$.
+
+\subsection{One-sided tests, noninferiority, nonsuperiority}
+\ixsub{tests}{one-sided}
+The \wixcode{side} argument is also available to specify \wix{one-sided tests}. A right-tailed alternative may be requested using "side" partially matching one of \dqt{+}, \dqt{right}, \verb|">"|, "+1", "1", \dqt{superiority}, or (see later) \dqt{noninferiority}. Similarly, a left-tailed alternative may be specified using "side" equal to \dqt{-}, \dqt{left}, \verb|"<"|, "-1", \dqt{inferiority}, or \dqt{nonsuperiority}. (And for completeness, a two-sided alternative is specified using "0", "2", \verb|"!="|, \dqt{both}, \dqt{two-sided}, \dqt{equivalence}, or \dqt{=}.) In the following example, we test to see if either Golden Rain or Marvellous has better yield than Victory:
+<<>>=
+test(contrast(Oats.Vlsm, "trt.vs.ctrlk"), side = ">")
+@
+\ixsub{tests}{noninferity or nonsuperiority}
+The one-sided version of an equivalence test is called a noninferiority or nonsuperiority test. It is obtained by specifying both "side" and a nonzero "delta". For example, to test whether Victory is as good as the other two within a 25\% threshold, use
+<<>>=
+test(contrast(Oats.Vlsm, "trt.vs.ctrlk"), side = "nonsup", delta = .25)
+@
+We find strong evidence that, with the stated threshold of .25, Golden Rain is nonsuperior to Victory (so that Victory is noninferior to Golden Rain); but not strong evidence that Victory is noninferior to Marvellous.
+
+
+
+
+
+\section{Trends}\ix{trends, estimating and comparing}\ix{slopes, estimating and comparing}
+\index{Examples!chick weights}\index{Examples!comparing trends}
+The \lsm{} package provides a function \wixcode{lstrends} for estimating and comparing the slopes of fitted lines (or curves). To illustrate, consider the built-in R dataset \wixcode{ChickWeight} which has data on the growths of newly hatched chicks under four different diets. The following code produces the display in \Fig{chick-plot}.
+<<chick-plot, fig=TRUE, include=FALSE, height=3.5, width=8>>=
+require("lattice")
+xyplot(weight ~ Time | Diet, groups = ~ Chick, data = ChickWeight, 
+    type = "o", layout=c(4, 1))
+@
+\begin{figure}
+\centerline{\includegraphics[width=6in]{using-lsmeans-chick-plot}}
+\caption{Growth curves of chicks, dataset \texttt{ChickWeight}.}\label{chick-plot}
+\end{figure}
+
+Let us fit a model to these data using random slopes for each chick and allowing for a different average slope for each diet (a square-root transformation straightens-out the curves somewhat):
+<<>>=
+Chick.lmer <- lmer(sqrt(weight) ~ Diet * Time + (0 + Time | Chick), 
+    data = ChickWeight)
+@
+We can then call \wixcode{lstrends} (or, its anti-SAS alias, \wixcode{pmtrends}) to estimate and compare the average slopes for each diet.
+<<>>=
+Chick.lst <- lstrends (Chick.lmer, ~ Diet, var = "Time")
+@
+Now, let's summarize the estimated trends and pairwise comparisons of these slopes using a compact letter display.
+<<>>=
+cld (Chick.lst)
+@
+According to the Tukey~HSD comparisons (with default significance level of $.05$), there are two groupings of slopes: Diet~1's mean slope is significantly less than $3$ or $4$'s, Diet~2's slope is not distinguished from any other.
+
+Because of the response transformation, the slopes we just computed are for trends on the square-root-weight scale. If you want the trends on the actual weight scale after back-transforming, that is possible via the "transform" argument:\ixcodesub{lstrends}{with response transformation}\ixcodesub{transform}{in \code{lstrends}}
+<<>>=
+lstrends(Chick.lmer, ~ Diet | Time, var = "Time", 
+    transform = "response", at = list(Time = c(5, 15)))
+@
+We specified two different "Time" values to emphasize that after back-transforming, the slopes are different at each "Time", whereas (by the model specification) the slopes don't depend on "Time" when we leave it on the square-root scale.
+
+Note: "lstrends" computes a difference quotient based on two slightly different reference grids. Thus, if it it must be called with a model object, not a "ref.grid" object.
+\ixsub{reference grid}{difference quotient of two}
+
+
+
+
+\section{User preferences}\ix{user preferences}
+\lsm{} sets certain defaults for displaying results---for example, using $.95$ for the confidence coefficient, and showing intervals for "lsmeans" output and test statistics for "contrast" results. As discussed before, one may use arguments in "summary" to change what is displayed, or "update" to change the defaults for a given object. But suppose you want different defaults to begin with. These can be set using the \wixcode{lsm.options} statement. For example:
+<<>>=
+lsm.options(ref.grid = list(level = .90),
+            lsmeans = list(),
+            contrast = list(infer = c(TRUE, TRUE)))
+@
+This requests that any object created by "ref.grid" be set to have confidence levels default to $90$\%, and that "contrast" results are displayed with both intervals and tests. No new options are set for "lsmeans" results, and the "lsmeans" part could have been omitted. These options are stored with objects created by "ref.grid", "lsmeans", and "contrast". For example, even though no new defaults are set for "lsmeans", future calls to "lsmeans" \emph{on a model object} will be displayed with 90\% confidence intervals, because "lsmeans" calls "ref.grid". However, calling "lsmeans" on an existing \dqt{ref.grid} object will inherit that object's setting.
+
+Certain other options are available; for example, the \dqt{\wixcode{estble.tol}} option sets the tolerance for determining estimability of linear contrasts. To see its current value:
+<<>>=
+get.lsm.option("estble.tol")
+@
+Defaults for this and some other parameters are saved in \wixcode{defaults.lsm}.
+\ixcode{get.lsm.option}
+
+
+%%%%%%%%%%%%%%%%% INDEXING COMPLETED TO HERE 3-5-16 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section{Two-sided formulas}\ixsub{factors}{specifying}\ixsub{formula specs}{two-sided}
+In its original design, the only way to obtain contrasts and comparisons in \lsm{} was to specify a two-sided formula, e.g., "pairwise ~ treatment", in the "lsmeans" call. The result is then a list of "lsmobj" objects (class \dqt{lsm.list}). 
+\index{lsm.list@\dqt{lsm.list} class}
+In its newer versions, \lsm{} offers a richer family of objects that can be re-used, and dealing with a list of objects can be awkward or confusing, so its continued use is not encouraged. Nonetheless, it is still available for backward compatibility.
+
+Here is an example where, with one command, we obtain both the LS~means and pairwise comparisons for "Variety" in the model "Oats.lmer2":
+{\small
+<<>>=
+lsmeans(Oats.lmer2, pairwise ~ Variety)
+@
+}
+This example also illustrates the effect of the preceding "lsm.options" settings. Let us now return to the default display for contrast results.
+<<>>=
+lsm.options(ref.grid = NULL, contrast = NULL)
+@
+
+
+
+
+\section{Messy data}\ix{messy data}\index{Examples!nutrition study}\index{Examples!messy data}
+To illustrate some more \code{lsmeans} capabilities, consider the dataset named \wixcode{nutrition} that is provided with the \lsm{} package. These data come from \citet{Mil92}, and contain the results of an observational study on nutrition education. Low-income mothers are classified by race, age category, and whether or not they received food stamps (the \code{group} factor); and the response variable is a gain score (post minus pre scores) after completing a nutrition training program. 
+
+Consider the model that includes all main effects and two-way interactions. A Type-II (hierarchical) analysis-of-variance table is also shown.
+<<>>=
+nutr.lm <- lm(gain ~ (age + group + race)^2, data = nutrition)
+library("car")
+Anova(nutr.lm)
+@
+One main effect ("group") is quite significant, and there is possibly an interaction with "race". Let us look at the \code{group} by \code{race} LS~means:
+<<nutr-intplot, fig=TRUE, include=FALSE, height=3.25>>=
+lsmip(nutr.lm, race ~ age | group)
+lsmeans(nutr.lm, ~ group*race)
+@
+\begin{figure}
+\centerline{\includegraphics[scale=.75]{using-lsmeans-nutr-intplot}}
+\caption{Predictions for the nutrition data}\label{nutr-intplot}
+\end{figure}
+
+\Fig{nutr-intplot} shows the predictions from this model. One thing the output illustrates is that \code{lsmeans} incorporates an \wix{estimability} check, and returns a missing value when a prediction cannot be made uniquely. In this example, we have very few Hispanic mothers in the dataset, resulting in \wix{empty cells}. This creates a \wix{rank deficiency} in the fitted model, and some predictors are thrown out.
+
+We can avoid non-estimable cases by using \code{at} to restrict the reference levels to a smaller set. A useful summary of the results might be obtained by narrowing the scope of the reference levels to two races and the two middle age groups, where most of the data lie. However, always keep in mind that whenever we change the reference grid, we also change the definition of the LS~means. Moreover, it may be more appropriate to average the two ages using weights proportional to their frequencies in the data set. The simplest way to do this is to add a \wixcode{weights} argument.\footnote{
+It may also be done by specifying a custom function in the \wixcode{fac.reduce} argument, but for simple weighting, \code{weights} is simpler.} 
+With those ideas in mind, here are the LS~means and comparisons within rows and columns:
+<<>>=
+nutr.lsm <- lsmeans(nutr.lm, ~ group * race, weights = "proportional",
+    at = list(age = c("2","3"), race = c("Black","White")))
+@
+So here are the results
+<<>>=
+nutr.lsm    
+summary(pairs(nutr.lsm, by = "race"), by = NULL)
+summary(pairs(nutr.lsm, by = "group"), by = NULL)
+@
+The general conclusion from these analyses is that for age groups 2 and~3, the expected gains from the training are higher among families receiving food stamps.
+Note that this analysis is somewhat different than the results we would obtain by subsetting the data before analysis, as we are borrowing information from the other observations in estimating and testing these LS~means.
+
+\subsection{More on weighting}\label{weights}
+The \wixcodesub{weights}{equal, proportional, outer, cells} argument can be a vector of numerical weights (it has to be of the right length), or one of five text values: \dqt{equal} (weight the predictions equally when averaging them, the default), \dqt{proportional} (weight them proportionally to the observed frequencies of the factor combinations being averaged over), \dqt{outer} (weight according to the outer products of the one-factor marginal counts), \dqt{cells} (weight each mean differently, according to the frequencies of the predictions being averaged), or \dqt{flat} (like \dqt{cells}, but give all nonemprty cells equal weight). \Fig{wtcomp} shows the LS~means for "race" using the first four different weighting schemes. (Note: If the model itself has weights, then the total weights are used instead of counts.)
+\begin{figure}
+\hspace{-.06\linewidth}
+\begin{minipage}{1.12\linewidth}
+\hrule
+\columnseprule=.2pt
+\begin{multicols}{2}\footnotesize
+<<>>=
+lsmeans(nutr.lm, "race", weights = "equal")
+lsmeans(nutr.lm, "race", weights = "prop")
+lsmeans(nutr.lm, "race", weights = "outer")
+lsmeans(nutr.lm, "race", weights = "cells")
+@
+\end{multicols}
+\hrule
+\end{minipage}
+\caption{Comparison of four different weighting methods}\label{wtcomp}
+\end{figure}
+
+Note there are four different sets of answers. The \dqt{equal} weighting is self-explanatory. But what's the distinction between \dqt{proportional} and \dqt{outer}? To clarify, consider:
+<<>>=
+temp = lsmeans(nutr.lm, c("group","race"), weights = "prop")
+lsmeans(temp, "race", weights = "prop")
+@
+The previous results using \dqt{outer} weights are the same as those using  \dqt{proportional} weights on one factor at a time. Thus, if only one factor is being averaged over, \dqt{outer} and \dqt{proportional} are the same. Another way to look at it is that outer weights are like the expected counts in a chi-square test; each factor is weighted independently of the others.
+
+The results for \dqt{cells} weights stand out because everything is estimable---that's because the empty cells in the data were given weight zero. These results are the same as the unadjusted means:
+<<>>=
+with(nutrition, tapply(gain, race, mean))
+@
+
+
+\subsection{Nested fixed effects}\ix{nested models}
+A factor $A$ is nested in another factor $B$ if the levels of $A$ have a different meaning in one level of $B$ than in another. Often, nested factors are random effects---for example, subjects in an experiment may be randomly assigned to treatments, in which case subjects are nested in treatments---and if we model them as random effects, these random nested effects are not among the fixed effects and are not an issue to "lsmeans". But sometimes we have fixed nested factors. For example, we may have data on different cities of particular interest, in three states of particular interest. Then cities are nested in states. We might want to compare the states because they have different social services policies or something; and we might want to compare the cities in each state. This nesting becomes particularly important when we have cities with the same name in different states: we need to be able to distinguish Springfield, Illinois and Springfield, Missouri.
+
+In contrast to older versions of the package, "lsmeans" now tries to discover and accommodate nested structures in the fixed effects. It does this in two ways: first, by identifying factors whose levels appear in combination with only one level of another factor; and second, by examining the "terms" attribute of the fixed effects.
+
+\index{Examples!cow treatments}\index{Examples!messy data}
+Here is an example of a fictional study of five fictional treatments for some disease in cows. Two of the treatments are administered by injection, and the other three are administered orally. There are varying numbers of observations for each drug. The data and model follow:
+<<>>=
+cows = data.frame (
+    route = factor(rep(c("injection", "oral"), c(5, 9))),
+    drug = factor(rep(c("Bovineumab", "Charloisazepam", 
+              "Angustatin", "Herefordmycin", "Mollycoddle"), c(3,2,  4,2,3))),
+    resp = c(34, 35, 34, 44, 43, 36, 33, 36, 32, 26, 25, 25, 24, 24)
+)
+cows.lm <- lm(resp ~ route + drug, data = cows)
+@
+The "ref.grid" function finds a nested structure in this model:
+<<>>=
+( cows.rg <- ref.grid(cows.lm) )
+@
+
+When there is nesting, "lsmeans" computes averages separately in each group\ldots
+<<>>=
+( route.lsm <- lsmeans(cows.rg, "route") )
+@
+\ldots\ and insists on carrying along any grouping factors that a factor is nested in:
+<<>>=
+( drug.lsm <- lsmeans(cows.rg, "drug") )
+@
+Here are the associated pairwise comparisons:
+<<>>=
+pairs(route.lsm, reverse = TRUE)
+pairs(drug.lsm, by = "route", reverse = TRUE)
+@
+In the latter result, the contrast itself becomes a nested factor in the returned reference grid. That would not be the case if there had been no "by" variable.
+
+It is possible for "lsmeans" or "ref.grid" to mis-detect or overlook the nesting structure. If that happens, you may see a lot of "NA"s in the "lsmeans" results. The user can alter the nesting structure via the "update" function or the "nesting" argument to "ref.grid". The nesting is specified using a named "list" where each member's name is a factor name, and each member is a character vector of the names of other factors that it is nested in; for example,
+<<eval=FALSE>>=
+lsmeans(city.model, "county", 
+        nesting = list(county = "state", city = c("county", "state")))
+@
+
+
+\subsection{Alternative covariate adjustments}\ix{covariate adjustments}
+\index{Example!framing experiment}
+The \wixcode{framing} data in the \pkg{mediation} package has the results of an experiment conducted by \cite{Bra08} where subjects were given the opportunity to send a message to Congress regarding immigration. However, before being offered this, some subjects ("treat=1") were first shown a news story that portrays Latinos in a negative way. Besides the binary response (whether or not they elected to send a message), we also measured "emo", the subjects' emotional state after the treatment was applied. There are various demographic variables as well.
+
+Before fitting a logistic regression model, I will change the labels for "educ" to shorter strings.
+<<>>=
+library("mediation")
+levels(framing$educ) = c("NA","Ref","< HS", "HS", "> HS","Coll +")
+framing.glm = glm(cong_mesg ~ age + income + educ + emo + gender * factor(treat),
+                  family = binomial, data = framing)
+@                  
+The left-hand plot in \Fig{framing} displays the conventional \wix{adjusted means}, where predictions are made with the covariates "age", "income", and "emo" set to their mean values:
+<<framinga, fig=TRUE, height=5, include=FALSE>>=
+lsmip(framing.glm, treat ~ educ | gender, type = "response")
+@
+This plot is rather implausible because the displayed treatment effects are the opposite for females as for males, and the effect of education isn't monotone as one might expect.
+
+\begin{figure}
+\begin{center}
+\begin{tabular}{c@{\qquad}c}
+(a) & (b) \\
+\includegraphics[width=3in]{using-lsmeans-framinga.pdf} &
+\includegraphics[width=3in]{using-lsmeans-framingb.pdf}
+\end{tabular}
+\end{center}
+\caption{Estimated responses for the \code{framing} data. (a)~Holding \code{emo} constant at its mean; (b)~Using predictions of \code{emo} for each \code{treat}.}\label{framing}
+\end{figure}
+
+\ix{covariate affected by treatments}\ix{mediating covariate}
+However, "emo" is a post-treatment measurement. This means that the treatment could have affected it (it is a \emph{mediating} covariate). If it is indeed affected by "treat", then \Fig{framing}(a) would be misleading because "emo" is held constant.
+Instead, consider making the predictions where "emo" is set to its predicted value at each combination of "treat" and the demographic variables. This is easily done by setting \wixcodesub{cov.reduce}{as a formula} to a formula for how to predict "emo":
+<<framingb, fig=TRUE, height=5, include=FALSE>>=
+lsmip(framing.glm, treat ~ educ | gender, type = "response",
+      cov.reduce = emo ~ treat*gender + age + educ + income)
+@
+This plot is shown in \Fig{framing}(b). It is quite different, suggesting that "emo" does indeed play a strong mediating role. (The \pkg{mediation} package has functions for estimating the strength of these effects.) The predictions suggest that, taking emotional response into account, male subjects exposed to the negative news story are more likely to send the message than are females or those not seeing the negative news story. Also, the effect of "educ" is (almost) monotone.
+You can see what values of "emo" are used in these predictions by looking at the "grid" slot in the reference grid:
+<<>>=
+ref.grid(framing.glm, 
+    cov.reduce = emo ~ treat*gender + age + educ + income)@grid
+@
+whereas the overall mean of \Sexpr{round(mean(framing$emo), 3)} is used as the value of "emo" in \Fig{framing}(a).
+
+
+
+\ifx %%% Old covariate example is commented-out %%%%%%%%%%%%%%%%%%
+
+\cite{urq82} reports data on slaughter weights of animals that entered a feedlot as yearling calves. The animals came from 11 different herds, and each animal was randomized to one of three diets. In addition, the weight of each yearling at entry was recorded. The  "feedlot" dataset provided in \lsm{} contains these results. From the feedlot operator's perspective, both diets and herds are fixed effects. Let us fit a factorial model with slaughter weight "swt" as the response and entry weight "ewt" as a covariate.
+%<<>>=
+feedlot.lm <- lm(swt ~ ewt + herd * diet, data = feedlot)
+Anova(feedlot.lm)
+@
+The interaction tesrm doesn't make much of a contribution here, so we will work with an additive model instead (which also ameliorates some non-estimability issues due to missing cells).
+%<<>>=
+feedlot.add <- update(feedlot.lm, . ~ . - herd:diet)
+@
+Here are the "LS~means" for the herds, and a compact letter display for comparisons thereof:
+%<<>>=
+cld(lsmeans(feedlot.add, "herd"))
+@
+No herds are found to be different---not a surprise given that the $P$~value for "herd" is about the same as for the original model.
+However, these predictions are made at the same entry weight for every herd. This is \emph{not} the right thing to do here, because the herds differ in genetic makeup, the way they were fed and managed, and so forth---which affect the yearlings' entry weights. This is an example where a treatment affects a covariate. Each herd should have its own reference value for entry weight. This is done in "lsmeans" by providing a formula in the "cov.reduce" argument. The formula "ewt ~ herd" indicates that the reference grid should be constructed using the predicted value of "ewt", based on a linear model with "herd" as the predictor. Here are the results:
+%<<>>=
+cld(lsmeans(feedlot.add, "herd", cov.reduce = ewt ~ herd))
+@
+What a world of difference! We now see many significant differences in the comparisons. By the way, another approach would be to simply omit "ewt" from the model, to prevent making inappropriate adjustments in the traditional analysis. With such a model (not shown), the predictions are similar to those above; however, their standard errors are substantially higher, because---as seen in the ANOVA table---the covariate explains a lot of the variation.
+
+\fi %%%%%%%%%%%%% end of commented-out section %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Another use of formulas in \wixcodesub{cov.reduce}{to reflect dependence} is to create representative values of some covariates when others are specified in \wixcode{at}. For example, suppose there are three covariates $x_1,x_2,x_3$ in a model, and we want to see predictions at a few different values of $x_1$. We might use
+<<eval=FALSE>>=
+rg <- ref.grid(my.model, at = list(x1 = c(5,10,15)),
+               cov.reduce = list(x2 ~ x1,  x3 ~ x1 + x2))
+@
+(When more than one formula is given, they are processed in the order given.)
+The values used for $x_2$ and $x_3$ will depend on $x_1$ and should in some sense be more realistic values of those covariates as $x_1$ varies than would be the overall means of $x_2$ and $x_3$. Of course, it would be important to display the values used---available as "rg@grid"---when reporting the analysis.
+
+
+
+
+
+\section{Other types of models}\ix{models supported}
+\subsection[Models supported by lsmeans]{Models supported by \lsm{}}
+The \lsm{} package comes with built-in support for quite a number of packages and model classes,
+including \dqt{lm}, \dqt{mlm}, \dqt{aov}, \dqt{aovlist}, and \dqt{glm} in the \wixpkg{stats} package, mixed models such as \dqt{lme}, \dqt{lmerMod}, and \dqt{glmerMod}, several survival models, GEE-type models, models having responses that are ordinal, multinomial, counts, and interval-(0,1), and Bayesian models. For a complete list, use \code{help(\dqt{models})}.
+
+\ifx % COMPLETE-ish LIST IS NOW COMMENTED-OUT -----------------
+\begin{quote}
+\begin{description}
+\pitem{stats}: \dqt{lm}, \dqt{mlm}, \dqt{aov}, \dqt{aovlist}, \dqt{glm}
+\pitem{nlme}: \dqt{lme}, \dqt{gls}, \dqt{nlme}
+\pitem{lme4}: \dqt{lmerMod}, \dqt{glmerMod}
+\pitem{survival}: \dqt{survreg}, \dqt{coxph}
+%%%\pitem{coxme}: \dqt{coxme}
+\pitem{MASS}: \dqt{polr}
+\pitem{gee, geepack}: \dqt{gee}, \dqt{geeglm}, \dqt{geese}
+\pitem{ordinal}: \dqt{clm}, \dqt{clmm}
+\pitem{rms}: \dqt{rms} and descendents such as \dqt{ols}, \dqt{lrm}, \dqt{orm}, etc.
+\end{description}
+\end{quote}
+\fi % -----------------------------------------
+
+\lsm{} support for all these models works similarly to the examples we have presented. Note that generalized linear or mixed models, and several others such as survival models, typically employ link functions such as "log" or "logit". In most cases, the LS~means displayed are on the scale of the linear predictor, and any averaging over the reference grid is performed on the linear-predictor scale; but there are exceptions. Some objects have optional arguments that can be specified in the "ref.grid" or "lsmeans" call: see "?models" for details.
+
+\subsection{Ordinal-data example}
+The "clm" and "clmm" functions in \wixpkg{ordinal}, as well as the "polr" function in \wixpkg{MASS}, fit polytomous regression models to \wix{Likert-scale data}. They do this by modeling the ordinal response as a categorization of a continuous latent variable $S$, then estimating thresholds for this categorization and fitting a generalized linear model to the cumulative probabilities for each threshold.
+By default, "lsmeans" produces predictions of the \wix{latent variable}.
+
+\index{Example!ordinal response}\index{Examples!housing data}
+The example shown here is based on the \wixcode{housing} data in the \pkg{MASS} package, where the response variable is satisfaction ("Sat") on a three-point scale of low, medium, high; and predictors include "Type" (type of rental unit, four levels), "Infl" (influence on management of the unit, three levels), and "Cont" (contact with other residents, two levels). We will assume that the latent variable is normally distributed (by specifying a probit link). 
+<<housing-plot, fig=TRUE, width= 9, height = 3.5, include=FALSE>>=
+library("ordinal")
+data(housing, package = "MASS")
+housing.clm <- clm(Sat ~ (Infl + Type + Cont)^2,
+                   data = housing, weights = Freq, link = "probit")
+lsmip(housing.clm, Cont ~ Infl | Type, layout = c(4,1))
+@
+\begin{figure}
+\begin{center}
+\includegraphics[width=6in]{using-lsmeans-housing-plot.pdf}
+\end{center}
+\caption{Interaction plot for the latent variable in the  \code{housing} example.}\label{housing-plot}
+\end{figure}
+The plot is shown in \Fig{housing-plot}. Generally, the higher the influence, the higher the satisfaction. Overall $F$ tests of the "Infl" effect suggest that it is strong for all four housing types:
+<<>>=
+test(pairs(lsmeans(housing.clm, ~ Infl | Type)), joint = TRUE)
+@
+The tests are asymptotic (signaled by "df2 = NA"), so they are actually chi-square tests for the statistics $X^2 = df_1\cdot F$ with $df_1$ degrees of freedom. Higher contact also seems to be associated with higher satisfaction, but terrace apartments may be an exception. Let's see:
+<<>>=
+test(pairs(lsmeans(housing.clm, ~ Cont | Type)), joint = TRUE)
+@
+So the effect is inconclusive for both atria and terraces.
+
+The \wixcode{mode} argument may be used to choose what to examine. Modes \dqt{linear.predictor} and \dqt{cum.prob} create an additional pseudo-factor named "cut" for the thresholds at which the predictions are made.
+<<>>=
+ref.grid(housing.clm, mode = "cum.prob")
+@
+So here are our estimated marginal probabilities for "Infl" of being less than highly satisfied:
+<<>>=
+lsmeans(housing.clm, ~ Infl, at = list(cut = "Medium|High"), 
+        mode = "cum.prob")
+@
+Compare these results with those for the back-transformed linear predictor:
+<<>>=
+summary(lsmeans(housing.clm, ~ Infl, at = list(cut = "Medium|High"), 
+                mode = "linear.predictor"), type = "response")
+@
+The results are similar, but somewhat different because of the back-transformation\ix{transformations} coming before (first case) or after (second case) averaging or computing confidence limits.
+
+\subsection{Chick weights, revisited}\index{Examples!chick weights}\index{Examples!nonlinear curves}
+Previously, we used the \wixcode{ChickWeight} data to illustrate the use of "lstrends". That example made the simplifying assumption that the growth trends are linear, which is clearly questionable. To do a better job of fitting the data, consider instead the idea of fitting a \wix{logistic curve} to each chick's data. The \pkg{stats} package provides the "SSlogis" function for this purpose: it is an S-shaped curve (scaled from the cdf of a logistic distribution) having three parameters "asym" (the asymptotic value at which it levels off), "xmid" (the $x$ coordinate of its inflection point), and "scal" (roughly the difference between the median and the .73rd quantile). Also, the \wixpkg{nlme} package's \wixcode{nlme} function can fit a set of \wix{nonlinear curves} such that the parameters of those curves may be modeled using a mixed-effects linear model. 
+
+Accordingly, let us fit a model where each chick has a logistic curve for which the "asym" parameter varies randomly for each chick, and for which both "asym" and "xmid" depend on the chick's diet. We chose starting values by examining the curves and making a rough judgment of the typical asymptotic value, midpoint, and scale for each diet. We need to keep firmly in mind how factors are coded; so we explicitly show that we intend to use \dqt{contr.treatment} coding, by which the first mean is estimated directly, and the remaining estimates are offsets from that. We need a set of four starting values for "asym" and "xmid", and one for "scal".
+<<>>=
+require("nlme")
+options(contrasts = c("contr.treatment", "contr.poly"))
+Chick.nlme = nlme(weight ~ SSlogis(Time, asym, xmid, scal), 
+    data = ChickWeight,
+    fixed = list(asym + xmid ~ Diet, scal ~ 1),
+    random = asym ~ 1 | Chick, 
+    start = c(200, 100, 200, 100,   10, 0, 0, 0,   7))
+Chick.nlme
+@
+Now we can use "lsmeans" to compare the parameters based on "Diet":
+<<>>=
+cld(lsmeans(Chick.nlme, ~ Diet, param = "asym"))    
+cld(lsmeans(Chick.nlme, ~ Diet, param = "xmid"))    
+@
+The result is that diet~3 has both a higher mean "asym" an a higher mean "xmid" than the other diets. This is compatible with the results of the earlier "lstrends" analysis, but grounded in terms of the parameters of the logistic curve.
+
+
+\subsection{Extending to more models}\ix{extending the \pkg{lsmeans} package}
+The functions "ref.grid" and "lsmeans" work by first reconstructing the dataset (so that the reference grid can be identified) and extracting needed information about the model, such as the regression coefficients, covariance matrix, and the linear functions associated with each point in the reference grid. For a fitted model of class, say, \dqt{modelobj}, these tasks are accomplished by defining S3 methods \wixcode{recover.data}".modelobj" and \wixcode{lsm.basis}".modelobj". The help page \dqt{extending-lsmeans} and the vignette by the same name provide details and examples.
+
+Developers of packages that fit models are encouraged to include support for \lsm{} by incorporating (and exporting) "recover.data" and "lsm.basis" methods for their model classes. 
+
+\subsection{Bayesian models}\index{Examples!Bayesian Poisson regression}
+Certain \wix{Bayesian models} are now supported by \lsm{}. For illustration, consider a two-factor Poisson regression example given in the \wixpkg{MCMCpack} package:
+<<>>=
+library("MCMCpack")
+counts <- c(18, 17, 15,   20, 10, 20,   25, 13, 12)
+outcome <- gl(3, 1, 9)
+treatment <- gl(3, 3)
+posterior <- MCMCpoisson(counts ~ outcome + treatment, mcmc = 1000)
+@
+The result is an "mcmc" object\index{mcmc@\code{mcmc} object} (defined in the \wixpkg{coda} package), but it has an added \dqt{call} attribute that enables "lsmeans" to do its work. Here are results for treatments, averaged over outcomes:
+<<>>=
+( post.lsm <- lsmeans(posterior, "treatment") )
+@
+This is a frequentist summary, based on the mean and covariance of the regression parameters in the "posterior" sample. But \lsm{} provides an \wixcode{as.mcmc} method to obtain a sample from the posterior distribution of the LS~means\ix{posterior LS~means} (that is, the original posterior sample of regression coefficients, transformed by the appropriate linear functions.)
+<<>>=
+library("coda")
+summary(as.mcmc(post.lsm))
+@
+Since "as.mcmc" produces an "mcmc" object, any of the other available methods may be used with it.
+
+
+
+\section{Discussion}
+The design goal of \lsm{} is primarily to provide the functionality of the "LSMEANS"\index{SAS!LSMEANS} statement in various \SAS{} procedures. Thus its emphasis is on tabular results which, of course, may also be used as data for further analysis or graphics. By design, it can be extended with relative ease to additional model classes.
+A unique capability of \lsm{} is its explicit reliance on the concept of a reference grid, which I feel is a useful approach for understanding what is being computed.
+
+Some \lsm{} capabilities exceed those of \SAS, including the "lstrends" capability, more flexibility in organizing the output, and more built-in contrast families. In addition, \SAS{} does not allow LS~means for factor combinations when the model does not include the interaction of those factors; or creating a grid of covariate values using "at". 
+
+There are a few other \R{} packages that provide capabilities that overlap with those of \lsm{}. The \wixpkg{effects} package \citep{effects,fox09} can compute LS~means. However, for an unbalanced dataset, it does not use equal \wix{weights}, but rather it appears to use ``outer'' weights, as described in Section~\ref{weights}. Also, it does not check \wix{estimability}, so some results could be questionable.
+The emphasis of \pkg{effects} is on graphical rather than tabular displays. 
+It has special strengths for curve-fitting models such as splines. In contrast, \lsm{}'s strengths are more in the area of factorial models where one wants traditional summaries in the form of estimates, contrasts, and interaction plots.
+
+The \wixpkg{doBy} package \citep{doBy} provides an "LSmeans" function that has some of the capabilities of "lsmeans", but it produces a data frame rather than a reusable object. In earlier versions of the package, this function was named "popMeans". The package also has an "LSmatrix" function to obtain the linear functions needed to obtain LS~means. Also, the \wixpkg{lmerTest} package also offers an "lsmeans" function, as well as "difflsmeans" for differences of LS~means. These are designed particularly for "lmerMod" objects.
+
+
+\bibliography{lsmeans}\bibliographystyle{jss}
+
+\printindex
+
+\end{document}

@@ -1,0 +1,805 @@
+<nex:nexml xmlns:nex="http://www.nexml.org/2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cdao="http://www.evolutionaryontology.org/cdao/1.0/cdao.owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:prism="http://prismstandard.org/namespaces/1.2/basic/" xmlns:cc="http://creativecommons.org/ns#" xmlns:ncbi="http://www.ncbi.nlm.nih.gov/taxonomy#" xmlns:tc="http://rs.tdwg.org/ontology/voc/TaxonConcept#" xmlns="http://www.nexml.org/2009" about="#S10327" version="0.9" generator="org.nexml.model.impl.DocumentImpl">
+  <meta xsi:type="LiteralMeta" property="dc:date" datatype="xsd:string" content="2013-10-24"/>
+  <meta xsi:type="ResourceMeta" href="http://creativecommons.org/publicdomain/zero/1.0/" rel="cc:license"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439467" property="skos:changeNote" datatype="xsd:string" content="Generated on Thu Apr 05 15:01:06 EDT 2012"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439466" property="skos:historyNote" datatype="xsd:string" content="Mapped from TreeBASE schema using org.cipres.treebase.domain.nexus.nexml.NexmlDocumentWriter@4a840678 $Rev: 1060 $"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439465" property="prism:number" datatype="xsd:string" content=""/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439464" property="prism:volume" datatype="xsd:string" content=""/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439463" property="dc:publisher" datatype="xsd:string" content="Mycologia"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439462" property="prism:publicationName" datatype="xsd:string" content="Mycologia"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439461" property="dc:subject" datatype="xsd:string" content="pathogen"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439460" property="dc:subject" datatype="xsd:string" content="Panam?"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439459" property="dc:subject" datatype="xsd:string" content="multi-locus"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439458" property="dc:subject" datatype="xsd:string" content="endophyte"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439457" property="dc:subject" datatype="xsd:string" content="China"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439456" property="dc:subject" datatype="xsd:string" content="anthracnose"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439455" property="prism:doi" datatype="xsd:string" content=""/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439454" property="prism:publicationDate" datatype="xsd:string" content="2010"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439453" property="dc:contributor" datatype="xsd:string" content="Sha T."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439452" property="dc:contributor" datatype="xsd:string" content="Peng Y."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439451" property="dc:contributor" datatype="xsd:string" content="Zhang Y."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439450" property="dc:contributor" datatype="xsd:string" content="Wang R."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439449" property="dc:contributor" datatype="xsd:string" content="Pang J."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439448" property="dc:contributor" datatype="xsd:string" content="Rui C."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439447" property="dc:contributor" datatype="xsd:string" content="Cannon P."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439446" property="dc:contributor" datatype="xsd:string" content="Herre E.A."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439445" property="dc:contributor" datatype="xsd:string" content="Vanbael S.A."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439444" property="dc:contributor" datatype="xsd:string" content="Samuels G.J."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439443" property="dc:contributor" datatype="xsd:string" content="Rehner S.A."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439442" property="dc:contributor" datatype="xsd:string" content="Rojas E.I."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439441" property="dc:creator" datatype="xsd:string" content="Rojas E.I., Rehner S.A., Samuels G.J., Vanbael S.A., Herre E.A., Cannon P., Rui C., Pang J., Wang R., Zhang Y., Peng Y., &amp; Sha T."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439440" property="dc:title" datatype="xsd:string" content="Colletotrichum gloeosporioides s.l. associated with Theobroma cacao and other plants in Panam?: multilocus phylogenies distinguish host-associated pathogens from asymptomatic endophytes"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439439" property="dcterms:bibliographicCitation" datatype="xsd:string" content="Rojas E.I., Rehner S.A., Samuels G.J., Vanbael S.A., Herre E.A., Cannon P., Rui C., Pang J., Wang R., Zhang Y., Peng Y., &amp; Sha T. 2010. Colletotrichum gloeosporioides s.l. associated with Theobroma cacao and other plants in Panam?: multilocus phylogenies distinguish host-associated pathogens from asymptomatic endophytes. Mycologia, ."/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439438" property="prism:creationDate" datatype="xsd:string" content="2010-03-23"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439437" property="prism:modificationDate" datatype="xsd:string" content="2010-03-26"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439436" property="dc:date" datatype="xsd:string" content="2010-03-26"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439435" property="tb:title.study" datatype="xsd:string" content="Colletotrichum gloeosporioides s.l. associated with Theobroma cacao and other plants in Panam?: multilocus phylogenies distinguish host-associated pathogens from asymptomatic endophytes"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439434" property="tb:identifier.study.tb1" datatype="xsd:anySimpleType"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439433" property="tb:identifier.study" datatype="xsd:string" content="10327"/>
+  <meta xsi:type="nex:LiteralMeta" id="meta2439431" property="prism:section" datatype="xsd:string" content="Study"/>
+  <otus about="#Tls16161" label="Taxa" id="Tls16161">
+    <meta xsi:type="nex:LiteralMeta" id="meta2439469" property="skos:historyNote" datatype="xsd:string" content="Mapped from TreeBASE schema using org.cipres.treebase.domain.nexus.nexml.NexmlOTUWriter@77c77abb $Rev: 1040 $"/>
+    <otu about="#Tl277670" label="Colletotrichum tropicale E1164" id="Tl277670">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277682" label="Colletotrichum tropicale Q633" id="Tl277682">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277770" label="Colletotrichum sp A2 107" id="Tl277770">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277794" label="Colletotrichum sp B1 122" id="Tl277794">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277787" label="Colletotrichum sp B3 131" id="Tl277787">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277776" label="Colletotrichum sp C2 154" id="Tl277776">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277782" label="Colletotrichum sp C1 152" id="Tl277782">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277766" label="Colletotrichum sp C3 155" id="Tl277766">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277768" label="Colletotrichum sp C3 148" id="Tl277768">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277795" label="Colletotrichum sp A2 108" id="Tl277795">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277789" label="Colletotrichum sp C3 161" id="Tl277789">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277783" label="Colletotrichum sp C3 147" id="Tl277783">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277767" label="Colletotrichum sp C3 156" id="Tl277767">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277781" label="Colletotrichum sp A2 102" id="Tl277781">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277775" label="Colletotrichum sp B2 124" id="Tl277775">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277786" label="Colletotrichum sp B2 126" id="Tl277786">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277771" label="Colletotrichum sp C2 143" id="Tl277771">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277774" label="Colletotrichum sp A2 105" id="Tl277774">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277790" label="Colletotrichum sp B2 165" id="Tl277790">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277769" label="Colletotrichum sp B2 169" id="Tl277769">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277792" label="Colletotrichum sp A3 173" id="Tl277792">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277793" label="Colletotrichum sp C3 160" id="Tl277793">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277778" label="Colletotrichum sp C2 138" id="Tl277778">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277788" label="Colletotrichum sp B2 125" id="Tl277788">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277772" label="Colletotrichum sp B2 167" id="Tl277772">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277791" label="Colletotrichum sp A3 176" id="Tl277791">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277779" label="Colletotrichum sp indet 2 1091b" id="Tl277779">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277773" label="Colletotrichum sp indet 2 7767b" id="Tl277773">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277785" label="Colletotrichum sp B2 127" id="Tl277785">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277780" label="Colletotrichum sp C1 132" id="Tl277780">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277784" label="Colletotrichum sp C1 134" id="Tl277784">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277777" label="Colletotrichum sp C2 136" id="Tl277777">
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277679" label="Colletotrichum theobromicola GJS08 47" id="Tl277679">
+      <meta xsi:type="nex:LiteralMeta" id="meta2439539" property="tb:identifier.taxon" datatype="xsd:long" content="570082"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2439538" property="tb:identifier.taxonVariant" datatype="xsd:long" content="790132"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2439537" property="skos:altLabel" datatype="xsd:string" content="Colletotrichum theobromicola"/>
+      <meta xsi:type="nex:ResourceMeta" href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3069209" rel="skos:closeMatch"/>
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+    <otu about="#Tl277661" label="Colletotrichum theobromicola GJS08 51" id="Tl277661">
+      <meta xsi:type="nex:LiteralMeta" id="meta2439545" property="tb:identifier.taxon" datatype="xsd:long" content="570082"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2439544" property="tb:identifier.taxonVariant" datatype="xsd:long" content="790132"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2439543" property="skos:altLabel" datatype="xsd:string" content="Colletotrichum theobromicola"/>
+      <meta xsi:type="nex:ResourceMeta" href="http://www.ubio.org/authority/metadata.php?lsid=urn:lsid:ubio.org:namebank:3069209" rel="skos:closeMatch"/>
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+    </otu>
+  </otus>
+  <trees about="#Tb11431" label="Colletotrichum tef1 1b" id="Tb11431" otus="Tls16159">
+    <meta xsi:type="nex:LiteralMeta" id="meta2447182" property="skos:historyNote" datatype="xsd:string" content="Mapped from TreeBASE schema using org.cipres.treebase.domain.nexus.nexml.NexmlTreeBlockWriter@cea7e3f $Rev: 1040 $"/>
+    <meta xsi:type="nex:ResourceMeta" href="S10327" rel="rdfs:isDefinedBy"/>
+    <tree xsi:type="nex:FloatTree" about="#Tr6990" label="tef1_1b" id="Tr6990">
+      <meta xsi:type="nex:LiteralMeta" id="meta2447188" property="tb:ntax.tree" datatype="xsd:integer" content="77"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447187" property="tb:quality.tree" datatype="xsd:string" content="Unrated"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447186" property="tb:type.tree" datatype="xsd:string" content="Single"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447185" property="tb:kind.tree" datatype="xsd:string" content="Species Tree"/>
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+      <node id="Tn602944"/>
+      <node id="Tn602982"/>
+      <node id="Tn602938"/>
+      <node id="Tn603014"/>
+      <node id="Tn602979"/>
+      <node label="Colletotrichum sp 4766" id="Tn602970" otu="Tl277727"/>
+      <node id="Tn603010"/>
+      <node id="Tn602990"/>
+      <node label="Colletotrichum sp 1093" id="Tn603017" otu="Tl277729"/>
+      <node label="Colletotrichum sp E1249" id="Tn602968" otu="Tl277728"/>
+      <node label="Colletotrichum sp E681" id="Tn602972" otu="Tl277733"/>
+      <node label="Colletotrichum sp LCM243" id="Tn602988" otu="Tl277720"/>
+      <node id="Tn603009"/>
+      <node label="Colletotrichum sp 3386x" id="Tn602989" otu="Tl277732"/>
+      <node id="Tn602952"/>
+      <node label="Colletotrichum sp 4801" id="Tn602936" otu="Tl277744"/>
+      <node label="Colletotrichum sp E2452" id="Tn602958" otu="Tl277718"/>
+      <node id="Tn602977"/>
+      <node id="Tn602939"/>
+      <node id="Tn602991"/>
+      <node label="Colletotrichum boninense 8975" id="Tn602922" otu="Tl277664"/>
+      <node label="Colletotrichum boninense Z1098" id="Tn603007" otu="Tl277663"/>
+      <node id="Tn602984"/>
+      <node label="Colletotrichum boninense LCM232" id="Tn602961" otu="Tl277644"/>
+      <node label="Colletotrichum boninense Z1090" id="Tn603002" otu="Tl277688"/>
+      <node id="Tn602935"/>
+      <node id="Tn602965"/>
+      <node label="Colletotrichum theobromicola GJS08 51" id="Tn602975" otu="Tl277661"/>
+      <node label="Colletotrichum theobromicola GJS08 43" id="Tn602962" otu="Tl277676"/>
+      <node label="Colletotrichum theobromicola GJS08 46" id="Tn602931" otu="Tl277675"/>
+      <node label="Colletotrichum theobromicola GJS08 45" id="Tn602943" otu="Tl277643"/>
+      <node label="Colletotrichum theobromicola GJS08 48" id="Tn602974" otu="Tl277659"/>
+      <node label="Colletotrichum theobromicola GJS08 50" id="Tn602918" otu="Tl277694"/>
+      <node label="Colletotrichum theobromicola GJS08 47" id="Tn603015" otu="Tl277679"/>
+      <node id="Tn602941"/>
+      <node id="Tn602995"/>
+      <node id="Tn602985"/>
+      <node id="Tn603021"/>
+      <node id="Tn602964"/>
+      <node label="Colletotrichum tropicale E1456" id="Tn602966" otu="Tl277698"/>
+      <node label="Colletotrichum tropicale E2303" id="Tn602987" otu="Tl277683"/>
+      <node label="Colletotrichum tropicale 4259" id="Tn602992" otu="Tl277710"/>
+      <node label="Colletotrichum tropicale E1198" id="Tn602940" otu="Tl277699"/>
+      <node label="Colletotrichum tropicale 8401" id="Tn602994" otu="Tl277671"/>
+      <node id="Tn602996"/>
+      <node label="Colltotrichum sp indet 2 V1H1" id="Tn602929" otu="Tl277741"/>
+      <node label="Colltotrichum sp indet 2 7767" id="Tn603018" otu="Tl277735"/>
+      <node label="Colltotrichum sp indet 2 GJS08 52" id="Tn602959" otu="Tl277739"/>
+      <node label="Colltotrichum sp indet 2 1091" id="Tn602993" otu="Tl277743"/>
+      <node label="Colltotrichum sp indet 2 1092" id="Tn603023" otu="Tl277722"/>
+      <node id="Tn602957"/>
+      <node label="Colletotrichum ignotum E183" id="Tn603024" otu="Tl277736"/>
+      <node label="Colletotrichum ignotum 8395" id="Tn603022" otu="Tl277745"/>
+      <node id="Tn602971"/>
+      <node id="Tn602998"/>
+      <node id="Tn602942"/>
+      <node label="Colletotrichum ignotum E42" id="Tn603016" otu="Tl277746"/>
+      <node label="Colletotrichum ignotum E886" id="Tn602934" otu="Tl277726"/>
+      <node label="Colletotrichum ignotum E1418" id="Tn602986" otu="Tl277724"/>
+      <node label="Colletotrichum ignotum 7574" id="Tn603019" otu="Tl277721"/>
+      <node label="Colletotrichum ignotum 3679" id="Tn602956" otu="Tl277737"/>
+      <node label="Colletotrichum ignotum 1087" id="Tn602973" otu="Tl277725"/>
+      <node label="Colletotrichum ignotum 3589" id="Tn602927" otu="Tl277738"/>
+      <node label="Colltotrichum sp indet 2 GJS08 57" id="Tn602923" otu="Tl277740"/>
+      <node id="Tn602999"/>
+      <node label="Colletotrichum tropicale 3870" id="Tn602925" otu="Tl277690"/>
+      <node label="Colletotrichum tropicale E1533" id="Tn602928" otu="Tl277709"/>
+      <node label="Colletotrichum tropicale Q633" id="Tn603008" otu="Tl277682"/>
+      <node label="Colletotrichum tropicale GJS08 54" id="Tn602955" otu="Tl277708"/>
+      <node label="Colletotrichum tropicale 5806" id="Tn602981" otu="Tl277665"/>
+      <node label="Colletotrichum tropicale gjs08 56" id="Tn603012" otu="Tl277719"/>
+      <node label="Colletotrichum tropicale 7584" id="Tn603003" otu="Tl277689"/>
+      <node label="Colletotrichum tropicale 5283" id="Tn602920" otu="Tl277687"/>
+      <node label="Colletotrichum tropicale E649" id="Tn602921" otu="Tl277692"/>
+      <node label="Colletotrichum tropicale GJS 08 42" id="Tn602930" otu="Tl277742"/>
+      <node label="Colletotrichum tropicale 8364" id="Tn602948" otu="Tl277703"/>
+      <node label="Colletotrichum tropicale 7423" id="Tn602967" otu="Tl277701"/>
+      <node label="Colletotrichum tropicale 2126" id="Tn602953" otu="Tl277668"/>
+      <node label="Colletotrichum tropicale 4861" id="Tn602950" otu="Tl277652"/>
+      <node label="Colletotrichum tropicale E1153" id="Tn603005" otu="Tl277648"/>
+      <node label="Colletotrichum tropicale 5101" id="Tn602960" otu="Tl277660"/>
+      <node label="Colletotrichum tropicale 5087" id="Tn602963" otu="Tl277717"/>
+      <node label="Colletotrichum tropicale E1164" id="Tn602997" otu="Tl277670"/>
+      <node label="Colletotrichum tropicale E449" id="Tn602945" otu="Tl277716"/>
+      <node label="Colletotrichum tropicale 7585" id="Tn602983" otu="Tl277641"/>
+      <node label="Colletotrichum tropicale E347" id="Tn602937" otu="Tl277707"/>
+      <node label="Colletotrichum tropicale E704" id="Tn603011" otu="Tl277649"/>
+      <node label="Colletotrichum tropicale E406" id="Tn602924" otu="Tl277669"/>
+      <node label="Colletotrichum tropicale 8453" id="Tn602954" otu="Tl277656"/>
+      <node label="Colletotrichum tropicale Z1080" id="Tn602980" otu="Tl277693"/>
+      <node label="Colletotrichum tropicale 4226" id="Tn603001" otu="Tl277714"/>
+      <node label="Colletotrichum tropicale Z1093" id="Tn602951" otu="Tl277673"/>
+      <node label="Colletotrichum tropicale 8416" id="Tn603004" otu="Tl277695"/>
+      <node id="Tn602969"/>
+      <node label="Colletorichum gloeosporioides IMI356878" id="Tn602949" otu="Tl277734"/>
+      <node id="Tn603000"/>
+      <node label="Colletotrichum sp indet 1 GJS08 144" id="Tn602933" otu="Tl277650"/>
+      <node label="Colletotrichum sp indet 1 GJS08 145" id="Tn603013" otu="Tl277658"/>
+      <node label="Colletotrichum sp indet 1 GJS08 143" id="Tn602947" otu="Tl277686"/>
+      <node label="Colletotrichum sp indet 1 GJS08 147" id="Tn603006" otu="Tl277697"/>
+      <node label="Colletotrichum sp indet 1 GJS08 146" id="Tn602976" otu="Tl277713"/>
+      <node label="Colletotrichum sp indet 1 GJS08 148" id="Tn602926" otu="Tl277657"/>
+      <node id="Tn602978"/>
+      <node id="Tn602919"/>
+      <node label="Colletotrichum sp Q855" id="Tn603020" otu="Tl277723"/>
+      <node label="Colletotrichum sp Q882" id="Tn602932" otu="Tl277730"/>
+      <node label="Colletotrichum sp E2550" id="Tn602946" otu="Tl277731"/>
+      <edge id="edge2447191" source="Tn602944" target="Tn602982" length="0.5"/>
+      <edge id="edge2447193" source="Tn602982" target="Tn602938"/>
+      <edge id="edge2447195" source="Tn602938" target="Tn603014"/>
+      <edge id="edge2447197" source="Tn603014" target="Tn602979"/>
+      <edge id="edge2447199" source="Tn602979" target="Tn602970"/>
+      <edge id="edge2447201" source="Tn602979" target="Tn603010"/>
+      <edge id="edge2447203" source="Tn603010" target="Tn602990"/>
+      <edge id="edge2447205" source="Tn602990" target="Tn603017"/>
+      <edge id="edge2447207" source="Tn602990" target="Tn602968"/>
+      <edge id="edge2447209" source="Tn603010" target="Tn602972"/>
+      <edge id="edge2447211" source="Tn603014" target="Tn602988"/>
+      <edge id="edge2447213" source="Tn602938" target="Tn603009"/>
+      <edge id="edge2447215" source="Tn603009" target="Tn602989"/>
+      <edge id="edge2447217" source="Tn603009" target="Tn602952"/>
+      <edge id="edge2447219" source="Tn602952" target="Tn602936"/>
+      <edge id="edge2447221" source="Tn602952" target="Tn602958"/>
+      <edge id="edge2447223" source="Tn602982" target="Tn602977"/>
+      <edge id="edge2447225" source="Tn602977" target="Tn602939"/>
+      <edge id="edge2447227" source="Tn602939" target="Tn602991"/>
+      <edge id="edge2447229" source="Tn602991" target="Tn602922"/>
+      <edge id="edge2447231" source="Tn602991" target="Tn603007"/>
+      <edge id="edge2447233" source="Tn602939" target="Tn602984"/>
+      <edge id="edge2447235" source="Tn602984" target="Tn602961"/>
+      <edge id="edge2447237" source="Tn602984" target="Tn603002"/>
+      <edge id="edge2447239" source="Tn602977" target="Tn602935"/>
+      <edge id="edge2447241" source="Tn602935" target="Tn602965"/>
+      <edge id="edge2447243" source="Tn602965" target="Tn602975"/>
+      <edge id="edge2447245" source="Tn602965" target="Tn602962"/>
+      <edge id="edge2447247" source="Tn602965" target="Tn602931"/>
+      <edge id="edge2447249" source="Tn602965" target="Tn602943"/>
+      <edge id="edge2447251" source="Tn602965" target="Tn602974"/>
+      <edge id="edge2447253" source="Tn602965" target="Tn602918"/>
+      <edge id="edge2447255" source="Tn602965" target="Tn603015"/>
+      <edge id="edge2447257" source="Tn602935" target="Tn602941"/>
+      <edge id="edge2447259" source="Tn602941" target="Tn602995"/>
+      <edge id="edge2447261" source="Tn602995" target="Tn602985"/>
+      <edge id="edge2447263" source="Tn602985" target="Tn603021"/>
+      <edge id="edge2447265" source="Tn603021" target="Tn602964"/>
+      <edge id="edge2447267" source="Tn602964" target="Tn602966"/>
+      <edge id="edge2447269" source="Tn602964" target="Tn602987"/>
+      <edge id="edge2447271" source="Tn602964" target="Tn602992"/>
+      <edge id="edge2447273" source="Tn602964" target="Tn602940"/>
+      <edge id="edge2447275" source="Tn602964" target="Tn602994"/>
+      <edge id="edge2447277" source="Tn603021" target="Tn602996"/>
+      <edge id="edge2447279" source="Tn602996" target="Tn602929"/>
+      <edge id="edge2447281" source="Tn602996" target="Tn603018"/>
+      <edge id="edge2447283" source="Tn602996" target="Tn602959"/>
+      <edge id="edge2447285" source="Tn602996" target="Tn602993"/>
+      <edge id="edge2447287" source="Tn602996" target="Tn603023"/>
+      <edge id="edge2447289" source="Tn602985" target="Tn602957"/>
+      <edge id="edge2447291" source="Tn602957" target="Tn603024"/>
+      <edge id="edge2447293" source="Tn602957" target="Tn603022"/>
+      <edge id="edge2447295" source="Tn602995" target="Tn602971"/>
+      <edge id="edge2447297" source="Tn602971" target="Tn602998"/>
+      <edge id="edge2447299" source="Tn602998" target="Tn602942"/>
+      <edge id="edge2447301" source="Tn602942" target="Tn603016"/>
+      <edge id="edge2447303" source="Tn602942" target="Tn602934"/>
+      <edge id="edge2447305" source="Tn602942" target="Tn602986"/>
+      <edge id="edge2447307" source="Tn602942" target="Tn603019"/>
+      <edge id="edge2447309" source="Tn602998" target="Tn602956"/>
+      <edge id="edge2447311" source="Tn602998" target="Tn602973"/>
+      <edge id="edge2447313" source="Tn602998" target="Tn602927"/>
+      <edge id="edge2447315" source="Tn602971" target="Tn602923"/>
+      <edge id="edge2447317" source="Tn602941" target="Tn602999"/>
+      <edge id="edge2447319" source="Tn602999" target="Tn602925" length="2"/>
+      <edge id="edge2447321" source="Tn602999" target="Tn602928" length="2"/>
+      <edge id="edge2447323" source="Tn602999" target="Tn603008" length="2"/>
+      <edge id="edge2447325" source="Tn602999" target="Tn602955" length="2"/>
+      <edge id="edge2447327" source="Tn602999" target="Tn602981" length="2"/>
+      <edge id="edge2447329" source="Tn602999" target="Tn603012" length="2"/>
+      <edge id="edge2447331" source="Tn602999" target="Tn603003" length="2"/>
+      <edge id="edge2447333" source="Tn602999" target="Tn602920" length="2"/>
+      <edge id="edge2447335" source="Tn602999" target="Tn602921" length="2"/>
+      <edge id="edge2447337" source="Tn602999" target="Tn602930" length="2"/>
+      <edge id="edge2447339" source="Tn602999" target="Tn602948" length="2"/>
+      <edge id="edge2447341" source="Tn602999" target="Tn602967" length="2"/>
+      <edge id="edge2447343" source="Tn602999" target="Tn602953" length="2"/>
+      <edge id="edge2447345" source="Tn602999" target="Tn602950" length="2"/>
+      <edge id="edge2447347" source="Tn602999" target="Tn603005" length="2"/>
+      <edge id="edge2447349" source="Tn602999" target="Tn602960" length="2"/>
+      <edge id="edge2447351" source="Tn602999" target="Tn602963" length="2"/>
+      <edge id="edge2447353" source="Tn602999" target="Tn602997" length="2"/>
+      <edge id="edge2447355" source="Tn602999" target="Tn602945" length="2"/>
+      <edge id="edge2447357" source="Tn602999" target="Tn602983" length="2"/>
+      <edge id="edge2447359" source="Tn602999" target="Tn602937" length="2"/>
+      <edge id="edge2447361" source="Tn602999" target="Tn603011" length="2"/>
+      <edge id="edge2447363" source="Tn602999" target="Tn602924" length="2"/>
+      <edge id="edge2447365" source="Tn602999" target="Tn602954" length="2"/>
+      <edge id="edge2447367" source="Tn602999" target="Tn602980" length="2"/>
+      <edge id="edge2447369" source="Tn602999" target="Tn603001" length="2"/>
+      <edge id="edge2447371" source="Tn602999" target="Tn602951" length="2"/>
+      <edge id="edge2447373" source="Tn602999" target="Tn603004" length="2"/>
+      <edge id="edge2447375" source="Tn602999" target="Tn602969"/>
+      <edge id="edge2447377" source="Tn602969" target="Tn602949"/>
+      <edge id="edge2447379" source="Tn602969" target="Tn603000"/>
+      <edge id="edge2447381" source="Tn603000" target="Tn602933"/>
+      <edge id="edge2447383" source="Tn603000" target="Tn603013"/>
+      <edge id="edge2447385" source="Tn603000" target="Tn602947"/>
+      <edge id="edge2447387" source="Tn603000" target="Tn603006"/>
+      <edge id="edge2447389" source="Tn603000" target="Tn602976"/>
+      <edge id="edge2447391" source="Tn603000" target="Tn602926"/>
+      <edge id="edge2447393" source="Tn602944" target="Tn602978" length="0.5"/>
+      <edge id="edge2447395" source="Tn602978" target="Tn602919"/>
+      <edge id="edge2447397" source="Tn602919" target="Tn603020"/>
+      <edge id="edge2447399" source="Tn602919" target="Tn602932"/>
+      <edge id="edge2447401" source="Tn602978" target="Tn602946"/>
+    </tree>
+  </trees>
+  <trees about="#Tb11432" label="Colletotrichum multiloc 3" id="Tb11432" otus="Tls16160">
+    <meta xsi:type="nex:LiteralMeta" id="meta2447404" property="skos:historyNote" datatype="xsd:string" content="Mapped from TreeBASE schema using org.cipres.treebase.domain.nexus.nexml.NexmlTreeBlockWriter@cea7e3f $Rev: 1040 $"/>
+    <meta xsi:type="nex:ResourceMeta" href="S10327" rel="rdfs:isDefinedBy"/>
+    <tree xsi:type="nex:FloatTree" about="#Tr6991" label="multiloc_3" id="Tr6991">
+      <meta xsi:type="nex:LiteralMeta" id="meta2447410" property="tb:ntax.tree" datatype="xsd:integer" content="29"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447409" property="tb:quality.tree" datatype="xsd:string" content="Unrated"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447408" property="tb:type.tree" datatype="xsd:string" content="Single"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447407" property="tb:kind.tree" datatype="xsd:string" content="Species Tree"/>
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+      <node id="Tn603030"/>
+      <node id="Tn603025"/>
+      <node id="Tn603058"/>
+      <node label="Colletotrichum theobromicola GJS08 48" id="Tn603037" otu="Tl277659"/>
+      <node label="Colletotrichum theobromicola GJS08 43" id="Tn603029" otu="Tl277676"/>
+      <node label="Colletotrichum theobromicola GJS08 50" id="Tn603067" otu="Tl277694"/>
+      <node id="Tn603069"/>
+      <node label="Colletotrichum gloeosporioides IMI356878" id="Tn603035" otu="Tl277706"/>
+      <node id="Tn603031"/>
+      <node id="Tn603070"/>
+      <node id="Tn603033"/>
+      <node id="Tn603073"/>
+      <node id="Tn603055"/>
+      <node label="Cignotum 1087" id="Tn603038" otu="Tl277749"/>
+      <node label="Cignotum 3679" id="Tn603060" otu="Tl277758"/>
+      <node label="Cignotum 3589" id="Tn603036" otu="Tl277753"/>
+      <node label="Cignotum E886" id="Tn603044" otu="Tl277763"/>
+      <node label="Cignotum 7574" id="Tn603065" otu="Tl277748"/>
+      <node id="Tn603043"/>
+      <node label="Cignotum E183" id="Tn603066" otu="Tl277761"/>
+      <node label="Cignotum 8395" id="Tn603051" otu="Tl277765"/>
+      <node id="Tn603061"/>
+      <node id="Tn603041"/>
+      <node label="Ctropicale E406" id="Tn603057" otu="Tl277764"/>
+      <node label="Ctropicale 4861" id="Tn603026" otu="Tl277752"/>
+      <node label="Ctropicale 5101" id="Tn603054" otu="Tl277750"/>
+      <node label="Ctropicale E1164" id="Tn603040" otu="Tl277751"/>
+      <node label="Ctropicale Q663" id="Tn603046" otu="Tl277757"/>
+      <node label="Ctropicale GJS08 42" id="Tn603062" otu="Tl277756"/>
+      <node id="Tn603052"/>
+      <node label="Ctropicale E2303" id="Tn603068" otu="Tl277747"/>
+      <node label="Ctropicale 8401" id="Tn603071" otu="Tl277754"/>
+      <node id="Tn603045"/>
+      <node id="Tn603048"/>
+      <node id="Tn603028"/>
+      <node id="Tn603056"/>
+      <node label="Colletotrichum sp indet 2 7767" id="Tn603049" otu="Tl277645"/>
+      <node label="Colletotrichum sp indet 2 GJS 08 52" id="Tn603053" otu="Tl277760"/>
+      <node label="Colletotrichum sp indet 2 1092" id="Tn603064" otu="Tl277681"/>
+      <node label="Colletotrichum sp indet 3 GJS08 57" id="Tn603050" otu="Tl277646"/>
+      <node id="Tn603047"/>
+      <node label="Colletotrichum sp indet 1 GJS 08 144" id="Tn603034" otu="Tl277755"/>
+      <node label="Colletotrichum sp indet 1 GJS08 147" id="Tn603059" otu="Tl277697"/>
+      <node label="Ctropicale 7423" id="Tn603063" otu="Tl277762"/>
+      <node id="Tn603039"/>
+      <node id="Tn603032"/>
+      <node label="Colletotrichum sp 3386" id="Tn603042" otu="Tl277759"/>
+      <node label="Colletotrichum sp 4801" id="Tn603027" otu="Tl277744"/>
+      <node label="Colletotrichum sp 4766" id="Tn603072" otu="Tl277727"/>
+      <edge id="edge2447413" source="Tn603030" target="Tn603025" length="0.5"/>
+      <edge id="edge2447415" source="Tn603025" target="Tn603058"/>
+      <edge id="edge2447417" source="Tn603058" target="Tn603037"/>
+      <edge id="edge2447419" source="Tn603058" target="Tn603029"/>
+      <edge id="edge2447421" source="Tn603058" target="Tn603067"/>
+      <edge id="edge2447423" source="Tn603025" target="Tn603069"/>
+      <edge id="edge2447425" source="Tn603069" target="Tn603035"/>
+      <edge id="edge2447427" source="Tn603069" target="Tn603031"/>
+      <edge id="edge2447429" source="Tn603031" target="Tn603070"/>
+      <edge id="edge2447431" source="Tn603070" target="Tn603033"/>
+      <edge id="edge2447433" source="Tn603033" target="Tn603073"/>
+      <edge id="edge2447435" source="Tn603073" target="Tn603055"/>
+      <edge id="edge2447437" source="Tn603055" target="Tn603038"/>
+      <edge id="edge2447439" source="Tn603055" target="Tn603060"/>
+      <edge id="edge2447441" source="Tn603055" target="Tn603036"/>
+      <edge id="edge2447443" source="Tn603073" target="Tn603044"/>
+      <edge id="edge2447445" source="Tn603033" target="Tn603065"/>
+      <edge id="edge2447447" source="Tn603070" target="Tn603043"/>
+      <edge id="edge2447449" source="Tn603043" target="Tn603066"/>
+      <edge id="edge2447451" source="Tn603043" target="Tn603051"/>
+      <edge id="edge2447453" source="Tn603031" target="Tn603061"/>
+      <edge id="edge2447455" source="Tn603061" target="Tn603041" length="2"/>
+      <edge id="edge2447457" source="Tn603041" target="Tn603057"/>
+      <edge id="edge2447459" source="Tn603041" target="Tn603026"/>
+      <edge id="edge2447461" source="Tn603041" target="Tn603054"/>
+      <edge id="edge2447463" source="Tn603041" target="Tn603040"/>
+      <edge id="edge2447465" source="Tn603041" target="Tn603046"/>
+      <edge id="edge2447467" source="Tn603041" target="Tn603062"/>
+      <edge id="edge2447469" source="Tn603041" target="Tn603052"/>
+      <edge id="edge2447471" source="Tn603052" target="Tn603068"/>
+      <edge id="edge2447473" source="Tn603052" target="Tn603071"/>
+      <edge id="edge2447475" source="Tn603061" target="Tn603045"/>
+      <edge id="edge2447477" source="Tn603045" target="Tn603048"/>
+      <edge id="edge2447479" source="Tn603048" target="Tn603028"/>
+      <edge id="edge2447481" source="Tn603028" target="Tn603056"/>
+      <edge id="edge2447483" source="Tn603056" target="Tn603049"/>
+      <edge id="edge2447485" source="Tn603056" target="Tn603053"/>
+      <edge id="edge2447487" source="Tn603028" target="Tn603064"/>
+      <edge id="edge2447489" source="Tn603048" target="Tn603050"/>
+      <edge id="edge2447491" source="Tn603045" target="Tn603047"/>
+      <edge id="edge2447493" source="Tn603047" target="Tn603034"/>
+      <edge id="edge2447495" source="Tn603047" target="Tn603059"/>
+      <edge id="edge2447497" source="Tn603061" target="Tn603063" length="2"/>
+      <edge id="edge2447499" source="Tn603030" target="Tn603039" length="0.5"/>
+      <edge id="edge2447501" source="Tn603039" target="Tn603032"/>
+      <edge id="edge2447503" source="Tn603032" target="Tn603042"/>
+      <edge id="edge2447505" source="Tn603032" target="Tn603027"/>
+      <edge id="edge2447507" source="Tn603039" target="Tn603072"/>
+    </tree>
+  </trees>
+  <trees about="#Tb11430" label="Colletotrichum ITS 1a" id="Tb11430" otus="Tls16158">
+    <meta xsi:type="nex:LiteralMeta" id="meta2447510" property="skos:historyNote" datatype="xsd:string" content="Mapped from TreeBASE schema using org.cipres.treebase.domain.nexus.nexml.NexmlTreeBlockWriter@cea7e3f $Rev: 1040 $"/>
+    <meta xsi:type="nex:ResourceMeta" href="S10327" rel="rdfs:isDefinedBy"/>
+    <tree xsi:type="nex:FloatTree" about="#Tr6989" label="Fig. 1a ITS" id="Tr6989">
+      <meta xsi:type="nex:LiteralMeta" id="meta2447516" property="tb:ntax.tree" datatype="xsd:integer" content="77"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447515" property="tb:quality.tree" datatype="xsd:string" content="Alternative Tree"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447514" property="tb:type.tree" datatype="xsd:string" content="Single"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447513" property="tb:kind.tree" datatype="xsd:string" content="Species Tree"/>
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+      <node id="Tn602911"/>
+      <node id="Tn602841"/>
+      <node id="Tn602879"/>
+      <node label="Colletorichum sp 4766" id="Tn602887" otu="Tl277696"/>
+      <node id="Tn602854"/>
+      <node id="Tn602884"/>
+      <node id="Tn602896"/>
+      <node label="Colletorichum sp 1093" id="Tn602850" otu="Tl277667"/>
+      <node label="Colletorichum sp E1249" id="Tn602847" otu="Tl277666"/>
+      <node label="Colletorichum sp E681" id="Tn602842" otu="Tl277684"/>
+      <node label="Colletorichum sp 4801" id="Tn602909" otu="Tl277705"/>
+      <node label="Colletorichum sp E2452" id="Tn602849" otu="Tl277691"/>
+      <node label="Colletorichum sp 3386" id="Tn602851" otu="Tl277715"/>
+      <node label="Colletorichum sp LCM243" id="Tn602883" otu="Tl277674"/>
+      <node id="Tn602857"/>
+      <node id="Tn602836"/>
+      <node label="Colletotrichum boninense 8975" id="Tn602827" otu="Tl277664"/>
+      <node label="Colletotrichum boninense Z1098" id="Tn602838" otu="Tl277663"/>
+      <node label="Colletotrichum boninense LCM232" id="Tn602890" otu="Tl277644"/>
+      <node label="Colletotrichum boninense Z1090" id="Tn602865" otu="Tl277688"/>
+      <node id="Tn602853"/>
+      <node label="Colletotrichum sp indet 3 GJS08 57" id="Tn602845" otu="Tl277646"/>
+      <node label="Colletotrichum sp indet 2 GJS08 52" id="Tn602848" otu="Tl277702"/>
+      <node label="Colletotrichum sp indet 2 7767" id="Tn602915" otu="Tl277645"/>
+      <node label="Colletotrichum sp indet 2 V1H1" id="Tn602885" otu="Tl277685"/>
+      <node label="Colletotrichum tropicale 8401" id="Tn602825" otu="Tl277671"/>
+      <node label="Colletotrichum tropicale E1198" id="Tn602861" otu="Tl277699"/>
+      <node label="Colletotrichum tropicale 4259" id="Tn602878" otu="Tl277710"/>
+      <node label="Colletotrichum tropicale E2303" id="Tn602863" otu="Tl277683"/>
+      <node label="Colletotrichum tropicale E1456" id="Tn602913" otu="Tl277698"/>
+      <node label="Colletotrichum tropicale 3870" id="Tn602866" otu="Tl277690"/>
+      <node label="Colletotrichum tropicale E1533" id="Tn602908" otu="Tl277709"/>
+      <node label="Colletotrichum tropicale Q633" id="Tn602831" otu="Tl277682"/>
+      <node label="Colletotrichum tropicale GJS08 54" id="Tn602869" otu="Tl277708"/>
+      <node label="Colletotrichum tropicale 5806" id="Tn602859" otu="Tl277665"/>
+      <node label="Colletotrichum tropicale GJS08 56" id="Tn602834" otu="Tl277700"/>
+      <node label="Colletotrichum tropicale 7584" id="Tn602880" otu="Tl277689"/>
+      <node label="Colletotrichum tropicale 5283" id="Tn602914" otu="Tl277687"/>
+      <node label="Colletotrichum tropicale E649" id="Tn602877" otu="Tl277692"/>
+      <node label="Colletotrichum tropicale GJS08 42" id="Tn602916" otu="Tl277704"/>
+      <node label="Colletotrichum tropicale 8364" id="Tn602833" otu="Tl277703"/>
+      <node label="Colletotrichum tropicale 7423" id="Tn602823" otu="Tl277701"/>
+      <node label="Colletotrichum tropicale 2126" id="Tn602912" otu="Tl277668"/>
+      <node label="Colletotrichum tropicale 4861" id="Tn602843" otu="Tl277652"/>
+      <node label="Colletotrichum tropicale E1153" id="Tn602858" otu="Tl277648"/>
+      <node label="Colletotrichum tropicale 5101" id="Tn602891" otu="Tl277660"/>
+      <node label="Colletotrichum tropicale 5087" id="Tn602855" otu="Tl277717"/>
+      <node label="Colletotrichum tropicale E1164" id="Tn602832" otu="Tl277670"/>
+      <node label="Colletotrichum tropicale E449" id="Tn602868" otu="Tl277716"/>
+      <node label="Colletotrichum tropicale 7585" id="Tn602888" otu="Tl277641"/>
+      <node label="Colletotrichum tropicale E347" id="Tn602839" otu="Tl277707"/>
+      <node label="Colletotrichum tropicale E704" id="Tn602917" otu="Tl277649"/>
+      <node label="Colletotrichum tropicale E406" id="Tn602846" otu="Tl277669"/>
+      <node label="Colletotrichum tropicale 8453" id="Tn602828" otu="Tl277656"/>
+      <node label="Colletotrichum tropicale Z1080" id="Tn602873" otu="Tl277693"/>
+      <node label="Colletotrichum tropicale 4226" id="Tn602881" otu="Tl277714"/>
+      <node label="Colletotrichum tropicale Z1093" id="Tn602824" otu="Tl277673"/>
+      <node label="Colletotrichum tropicale 8416" id="Tn602903" otu="Tl277695"/>
+      <node id="Tn602892"/>
+      <node label="Colletotrichum theobromicola GJS08 51" id="Tn602894" otu="Tl277661"/>
+      <node label="Colletotrichum theobromicola GJS08 43" id="Tn602840" otu="Tl277676"/>
+      <node label="Colletotrichum theobromicola GJS08 46" id="Tn602830" otu="Tl277675"/>
+      <node label="Colletotrichum theobromicola GJS08 45" id="Tn602864" otu="Tl277643"/>
+      <node label="Colletotrichum theobromicola GJS08 48" id="Tn602895" otu="Tl277659"/>
+      <node label="Colletotrichum theobromicola GJS08 50" id="Tn602900" otu="Tl277694"/>
+      <node label="Colletotrichum theobromicola GJS08 47" id="Tn602875" otu="Tl277679"/>
+      <node id="Tn602874"/>
+      <node id="Tn602862"/>
+      <node label="Colletotrichum gloeosporioides IMI356878" id="Tn602835" otu="Tl277706"/>
+      <node label="Colletorichum ignotum E183" id="Tn602901" otu="Tl277647"/>
+      <node id="Tn602876"/>
+      <node label="Colletotrichum sp indet 2 1091" id="Tn602870" otu="Tl277711"/>
+      <node label="Colletotrichum sp indet 2 1092" id="Tn602898" otu="Tl277681"/>
+      <node id="Tn602893"/>
+      <node label="Colletorichum ignotum E42" id="Tn602906" otu="Tl277677"/>
+      <node label="Colletorichum ignotum E886" id="Tn602826" otu="Tl277680"/>
+      <node label="Colletorichum ignotum E1418" id="Tn602837" otu="Tl277672"/>
+      <node label="Colletorichum ignotum 7574" id="Tn602910" otu="Tl277655"/>
+      <node label="Colletorichum ignotum 8395" id="Tn602829" otu="Tl277654"/>
+      <node id="Tn602904"/>
+      <node label="Colletorichum ignotum 3589" id="Tn602882" otu="Tl277651"/>
+      <node label="Colletorichum ignotum 1087" id="Tn602886" otu="Tl277662"/>
+      <node label="Colletorichum ignotum 3679" id="Tn602856" otu="Tl277653"/>
+      <node id="Tn602902"/>
+      <node label="Colletotrichum sp indet 1 GJS08 144" id="Tn602907" otu="Tl277650"/>
+      <node label="Colletotrichum sp indet 1 GJS08 145" id="Tn602860" otu="Tl277658"/>
+      <node label="Colletotrichum sp indet 1 GJS08 143" id="Tn602852" otu="Tl277686"/>
+      <node label="Colletotrichum sp indet 1 GJS08 147" id="Tn602899" otu="Tl277697"/>
+      <node label="Colletotrichum sp indet 1 GJS08 146" id="Tn602871" otu="Tl277713"/>
+      <node label="Colletotrichum sp indet 1 GJS08 148" id="Tn602889" otu="Tl277657"/>
+      <node id="Tn602897"/>
+      <node id="Tn602872"/>
+      <node label="Colletorichum sp Q855" id="Tn602867" otu="Tl277678"/>
+      <node label="Colletorichum sp Q882" id="Tn602844" otu="Tl277712"/>
+      <node label="Colletorichum sp E2550" id="Tn602905" otu="Tl277642"/>
+      <edge id="edge2447519" source="Tn602911" target="Tn602841" length="0.5"/>
+      <edge id="edge2447521" source="Tn602841" target="Tn602879"/>
+      <edge id="edge2447523" source="Tn602879" target="Tn602887"/>
+      <edge id="edge2447525" source="Tn602879" target="Tn602854"/>
+      <edge id="edge2447527" source="Tn602854" target="Tn602884"/>
+      <edge id="edge2447529" source="Tn602884" target="Tn602896"/>
+      <edge id="edge2447531" source="Tn602896" target="Tn602850"/>
+      <edge id="edge2447533" source="Tn602896" target="Tn602847"/>
+      <edge id="edge2447535" source="Tn602896" target="Tn602842"/>
+      <edge id="edge2447537" source="Tn602896" target="Tn602909"/>
+      <edge id="edge2447539" source="Tn602896" target="Tn602849"/>
+      <edge id="edge2447541" source="Tn602884" target="Tn602851"/>
+      <edge id="edge2447543" source="Tn602854" target="Tn602883"/>
+      <edge id="edge2447545" source="Tn602841" target="Tn602857"/>
+      <edge id="edge2447547" source="Tn602857" target="Tn602836"/>
+      <edge id="edge2447549" source="Tn602836" target="Tn602827"/>
+      <edge id="edge2447551" source="Tn602836" target="Tn602838"/>
+      <edge id="edge2447553" source="Tn602836" target="Tn602890"/>
+      <edge id="edge2447555" source="Tn602836" target="Tn602865"/>
+      <edge id="edge2447557" source="Tn602857" target="Tn602853"/>
+      <edge id="edge2447559" source="Tn602853" target="Tn602845" length="2"/>
+      <edge id="edge2447561" source="Tn602853" target="Tn602848" length="2"/>
+      <edge id="edge2447563" source="Tn602853" target="Tn602915" length="2"/>
+      <edge id="edge2447565" source="Tn602853" target="Tn602885" length="2"/>
+      <edge id="edge2447567" source="Tn602853" target="Tn602825" length="2"/>
+      <edge id="edge2447569" source="Tn602853" target="Tn602861" length="2"/>
+      <edge id="edge2447571" source="Tn602853" target="Tn602878" length="2"/>
+      <edge id="edge2447573" source="Tn602853" target="Tn602863" length="2"/>
+      <edge id="edge2447575" source="Tn602853" target="Tn602913" length="2"/>
+      <edge id="edge2447577" source="Tn602853" target="Tn602866" length="2"/>
+      <edge id="edge2447579" source="Tn602853" target="Tn602908" length="2"/>
+      <edge id="edge2447581" source="Tn602853" target="Tn602831" length="2"/>
+      <edge id="edge2447583" source="Tn602853" target="Tn602869" length="2"/>
+      <edge id="edge2447585" source="Tn602853" target="Tn602859" length="2"/>
+      <edge id="edge2447587" source="Tn602853" target="Tn602834" length="2"/>
+      <edge id="edge2447589" source="Tn602853" target="Tn602880" length="2"/>
+      <edge id="edge2447591" source="Tn602853" target="Tn602914" length="2"/>
+      <edge id="edge2447593" source="Tn602853" target="Tn602877" length="2"/>
+      <edge id="edge2447595" source="Tn602853" target="Tn602916" length="2"/>
+      <edge id="edge2447597" source="Tn602853" target="Tn602833" length="2"/>
+      <edge id="edge2447599" source="Tn602853" target="Tn602823" length="2"/>
+      <edge id="edge2447601" source="Tn602853" target="Tn602912" length="2"/>
+      <edge id="edge2447603" source="Tn602853" target="Tn602843" length="2"/>
+      <edge id="edge2447605" source="Tn602853" target="Tn602858" length="2"/>
+      <edge id="edge2447607" source="Tn602853" target="Tn602891" length="2"/>
+      <edge id="edge2447609" source="Tn602853" target="Tn602855" length="2"/>
+      <edge id="edge2447611" source="Tn602853" target="Tn602832" length="2"/>
+      <edge id="edge2447613" source="Tn602853" target="Tn602868" length="2"/>
+      <edge id="edge2447615" source="Tn602853" target="Tn602888" length="2"/>
+      <edge id="edge2447617" source="Tn602853" target="Tn602839" length="2"/>
+      <edge id="edge2447619" source="Tn602853" target="Tn602917" length="2"/>
+      <edge id="edge2447621" source="Tn602853" target="Tn602846" length="2"/>
+      <edge id="edge2447623" source="Tn602853" target="Tn602828" length="2"/>
+      <edge id="edge2447625" source="Tn602853" target="Tn602873" length="2"/>
+      <edge id="edge2447627" source="Tn602853" target="Tn602881" length="2"/>
+      <edge id="edge2447629" source="Tn602853" target="Tn602824" length="2"/>
+      <edge id="edge2447631" source="Tn602853" target="Tn602903" length="2"/>
+      <edge id="edge2447633" source="Tn602853" target="Tn602892"/>
+      <edge id="edge2447635" source="Tn602892" target="Tn602894"/>
+      <edge id="edge2447637" source="Tn602892" target="Tn602840"/>
+      <edge id="edge2447639" source="Tn602892" target="Tn602830"/>
+      <edge id="edge2447641" source="Tn602892" target="Tn602864"/>
+      <edge id="edge2447643" source="Tn602892" target="Tn602895"/>
+      <edge id="edge2447645" source="Tn602892" target="Tn602900"/>
+      <edge id="edge2447647" source="Tn602892" target="Tn602875"/>
+      <edge id="edge2447649" source="Tn602853" target="Tn602874" length="2"/>
+      <edge id="edge2447651" source="Tn602874" target="Tn602862"/>
+      <edge id="edge2447653" source="Tn602862" target="Tn602835"/>
+      <edge id="edge2447655" source="Tn602862" target="Tn602901"/>
+      <edge id="edge2447657" source="Tn602862" target="Tn602876"/>
+      <edge id="edge2447659" source="Tn602876" target="Tn602870"/>
+      <edge id="edge2447661" source="Tn602876" target="Tn602898"/>
+      <edge id="edge2447663" source="Tn602862" target="Tn602893"/>
+      <edge id="edge2447665" source="Tn602893" target="Tn602906"/>
+      <edge id="edge2447667" source="Tn602893" target="Tn602826"/>
+      <edge id="edge2447669" source="Tn602893" target="Tn602837"/>
+      <edge id="edge2447671" source="Tn602893" target="Tn602910"/>
+      <edge id="edge2447673" source="Tn602893" target="Tn602829"/>
+      <edge id="edge2447675" source="Tn602893" target="Tn602904"/>
+      <edge id="edge2447677" source="Tn602904" target="Tn602882"/>
+      <edge id="edge2447679" source="Tn602904" target="Tn602886"/>
+      <edge id="edge2447681" source="Tn602904" target="Tn602856"/>
+      <edge id="edge2447683" source="Tn602874" target="Tn602902"/>
+      <edge id="edge2447685" source="Tn602902" target="Tn602907"/>
+      <edge id="edge2447687" source="Tn602902" target="Tn602860"/>
+      <edge id="edge2447689" source="Tn602902" target="Tn602852"/>
+      <edge id="edge2447691" source="Tn602902" target="Tn602899"/>
+      <edge id="edge2447693" source="Tn602902" target="Tn602871"/>
+      <edge id="edge2447695" source="Tn602902" target="Tn602889"/>
+      <edge id="edge2447697" source="Tn602911" target="Tn602897" length="0.5"/>
+      <edge id="edge2447699" source="Tn602897" target="Tn602872"/>
+      <edge id="edge2447701" source="Tn602872" target="Tn602867"/>
+      <edge id="edge2447703" source="Tn602872" target="Tn602844"/>
+      <edge id="edge2447705" source="Tn602897" target="Tn602905"/>
+    </tree>
+  </trees>
+  <trees about="#Tb11433" label="Colletotrichum tef1 4" id="Tb11433" otus="Tls16161">
+    <meta xsi:type="nex:LiteralMeta" id="meta2447708" property="skos:historyNote" datatype="xsd:string" content="Mapped from TreeBASE schema using org.cipres.treebase.domain.nexus.nexml.NexmlTreeBlockWriter@cea7e3f $Rev: 1040 $"/>
+    <meta xsi:type="nex:ResourceMeta" href="S10327" rel="rdfs:isDefinedBy"/>
+    <tree xsi:type="nex:FloatTree" about="#Tr6992" label="tef1_4" id="Tr6992">
+      <meta xsi:type="nex:LiteralMeta" id="meta2447714" property="tb:ntax.tree" datatype="xsd:integer" content="34"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447713" property="tb:quality.tree" datatype="xsd:string" content="Unrated"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447712" property="tb:type.tree" datatype="xsd:string" content="Single"/>
+      <meta xsi:type="nex:LiteralMeta" id="meta2447711" property="tb:kind.tree" datatype="xsd:string" content="Species Tree"/>
+      <meta xsi:type="nex:ResourceMeta" href="http://purl.org/phylo/treebase/phylows/study/TB2:S10327" rel="rdfs:isDefinedBy"/>
+      <node id="Tn603099"/>
+      <node id="Tn603127"/>
+      <node id="Tn603092"/>
+      <node label="Colletotrichum sp C3 156" id="Tn603093" otu="Tl277767"/>
+      <node id="Tn603088"/>
+      <node label="Colletotrichum sp A2 102" id="Tn603112" otu="Tl277781"/>
+      <node id="Tn603079"/>
+      <node label="Colletotrichum sp B2 124" id="Tn603124" otu="Tl277775"/>
+      <node label="Colletotrichum sp B2 126" id="Tn603113" otu="Tl277786"/>
+      <node label="Colletotrichum sp C2 143" id="Tn603078" otu="Tl277771"/>
+      <node id="Tn603089"/>
+      <node id="Tn603108"/>
+      <node label="Colletotrichum sp A2 105" id="Tn603097" otu="Tl277774"/>
+      <node label="Colletotrichum sp B2 165" id="Tn603096" otu="Tl277790"/>
+      <node label="Colletotrichum sp B2 169" id="Tn603098" otu="Tl277769"/>
+      <node label="Colletotrichum sp A3 173" id="Tn603076" otu="Tl277792"/>
+      <node label="Colletotrichum sp C3 160" id="Tn603083" otu="Tl277793"/>
+      <node label="Colletotrichum sp C2 138" id="Tn603077" otu="Tl277778"/>
+      <node label="Colletotrichum sp B2 125" id="Tn603104" otu="Tl277788"/>
+      <node label="Colletotrichum sp B2 167" id="Tn603102" otu="Tl277772"/>
+      <node id="Tn603128"/>
+      <node id="Tn603084"/>
+      <node label="Colletotrichum sp A3 176" id="Tn603123" otu="Tl277791"/>
+      <node label="Colletotrichum sp Colletotrichum sp indet 2 1091" id="Tn603121" otu="Tl277779"/>
+      <node label="Colletotrichum sp Colletotrichum sp indet 2 7767" id="Tn603100" otu="Tl277773"/>
+      <node id="Tn603110"/>
+      <node label="Colletotrichum sp B2 127" id="Tn603119" otu="Tl277785"/>
+      <node id="Tn603094"/>
+      <node label="Colletotrichum sp C1 132" id="Tn603095" otu="Tl277780"/>
+      <node label="Colletotrichum sp C1 134" id="Tn603114" otu="Tl277784"/>
+      <node label="Colletotrichum sp C2 136" id="Tn603081" otu="Tl277777"/>
+      <node id="Tn603091"/>
+      <node id="Tn603101"/>
+      <node label="Colletotrichum tropicale Q633" id="Tn603117" otu="Tl277682"/>
+      <node label="Colletotrichum tropicale E1164" id="Tn603075" otu="Tl277670"/>
+      <node id="Tn603125"/>
+      <node id="Tn603122"/>
+      <node id="Tn603111"/>
+      <node id="Tn603074"/>
+      <node id="Tn603085"/>
+      <node id="Tn603086"/>
+      <node label="Colletotrichum sp A2 107" id="Tn603126" otu="Tl277770"/>
+      <node id="Tn603118"/>
+      <node label="Colletotrichum sp C2 154" id="Tn603082" otu="Tl277776"/>
+      <node label="Colletotrichum sp C1 152" id="Tn603103" otu="Tl277782"/>
+      <node label="Colletotrichum sp C3 155" id="Tn603090" otu="Tl277766"/>
+      <node label="Colletotrichum sp B1 122" id="Tn603115" otu="Tl277794"/>
+      <node label="Colletotrichum sp C3 147" id="Tn603105" otu="Tl277783"/>
+      <node label="Colletotrichum sp C3 161" id="Tn603116" otu="Tl277789"/>
+      <node label="Colletotrichum sp A2 108" id="Tn603106" otu="Tl277795"/>
+      <node label="Colletotrichum sp C3 148" id="Tn603107" otu="Tl277768"/>
+      <node label="Colletotrichum sp B3 131" id="Tn603120" otu="Tl277787"/>
+      <node id="Tn603109"/>
+      <node label="Colletotrichum theobromicola GJS08 47" id="Tn603080" otu="Tl277679"/>
+      <node label="Colletotrichum theobromicola GJS08 51" id="Tn603087" otu="Tl277661"/>
+      <edge id="edge2447717" source="Tn603099" target="Tn603127" length="0.5"/>
+      <edge id="edge2447719" source="Tn603127" target="Tn603092"/>
+      <edge id="edge2447721" source="Tn603092" target="Tn603093"/>
+      <edge id="edge2447723" source="Tn603092" target="Tn603088"/>
+      <edge id="edge2447725" source="Tn603088" target="Tn603112"/>
+      <edge id="edge2447727" source="Tn603088" target="Tn603079"/>
+      <edge id="edge2447729" source="Tn603079" target="Tn603124"/>
+      <edge id="edge2447731" source="Tn603079" target="Tn603113"/>
+      <edge id="edge2447733" source="Tn603079" target="Tn603078"/>
+      <edge id="edge2447735" source="Tn603127" target="Tn603089"/>
+      <edge id="edge2447737" source="Tn603089" target="Tn603108"/>
+      <edge id="edge2447739" source="Tn603108" target="Tn603097"/>
+      <edge id="edge2447741" source="Tn603108" target="Tn603096"/>
+      <edge id="edge2447743" source="Tn603108" target="Tn603098"/>
+      <edge id="edge2447745" source="Tn603108" target="Tn603076"/>
+      <edge id="edge2447747" source="Tn603108" target="Tn603083"/>
+      <edge id="edge2447749" source="Tn603108" target="Tn603077"/>
+      <edge id="edge2447751" source="Tn603108" target="Tn603104"/>
+      <edge id="edge2447753" source="Tn603108" target="Tn603102"/>
+      <edge id="edge2447755" source="Tn603089" target="Tn603128"/>
+      <edge id="edge2447757" source="Tn603128" target="Tn603084"/>
+      <edge id="edge2447759" source="Tn603084" target="Tn603123"/>
+      <edge id="edge2447761" source="Tn603084" target="Tn603121"/>
+      <edge id="edge2447763" source="Tn603084" target="Tn603100"/>
+      <edge id="edge2447765" source="Tn603128" target="Tn603110"/>
+      <edge id="edge2447767" source="Tn603110" target="Tn603119"/>
+      <edge id="edge2447769" source="Tn603110" target="Tn603094"/>
+      <edge id="edge2447771" source="Tn603094" target="Tn603095"/>
+      <edge id="edge2447773" source="Tn603094" target="Tn603114"/>
+      <edge id="edge2447775" source="Tn603094" target="Tn603081"/>
+      <edge id="edge2447777" source="Tn603099" target="Tn603091" length="0.5"/>
+      <edge id="edge2447779" source="Tn603091" target="Tn603101"/>
+      <edge id="edge2447781" source="Tn603101" target="Tn603117" length="2"/>
+      <edge id="edge2447783" source="Tn603101" target="Tn603075" length="2"/>
+      <edge id="edge2447785" source="Tn603101" target="Tn603125"/>
+      <edge id="edge2447787" source="Tn603125" target="Tn603122"/>
+      <edge id="edge2447789" source="Tn603122" target="Tn603111"/>
+      <edge id="edge2447791" source="Tn603111" target="Tn603074"/>
+      <edge id="edge2447793" source="Tn603074" target="Tn603085"/>
+      <edge id="edge2447795" source="Tn603085" target="Tn603086"/>
+      <edge id="edge2447797" source="Tn603086" target="Tn603126"/>
+      <edge id="edge2447799" source="Tn603086" target="Tn603118"/>
+      <edge id="edge2447801" source="Tn603118" target="Tn603082"/>
+      <edge id="edge2447803" source="Tn603118" target="Tn603103"/>
+      <edge id="edge2447805" source="Tn603118" target="Tn603090"/>
+      <edge id="edge2447807" source="Tn603085" target="Tn603115"/>
+      <edge id="edge2447809" source="Tn603074" target="Tn603105"/>
+      <edge id="edge2447811" source="Tn603111" target="Tn603116"/>
+      <edge id="edge2447813" source="Tn603122" target="Tn603106"/>
+      <edge id="edge2447815" source="Tn603125" target="Tn603107"/>
+      <edge id="edge2447817" source="Tn603125" target="Tn603120"/>
+      <edge id="edge2447819" source="Tn603091" target="Tn603109"/>
+      <edge id="edge2447821" source="Tn603109" target="Tn603080"/>
+      <edge id="edge2447823" source="Tn603109" target="Tn603087"/>
+    </tree>
+  </trees>
+</nex:nexml>

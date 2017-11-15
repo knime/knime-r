@@ -1,0 +1,20 @@
+ChecksumFile            The ChecksumFile class
+ChecksumFileSet         The ChecksumFileSet class
+ColumnNamesInterface    The ColumnNamesInterface class interface
+FullNameInterface       The FullNameInterface class interface
+GenericDataFile         The abstract GenericDataFile class
+GenericDataFileSet      The GenericDataFileSet class
+GenericDataFileSetList
+                        The GenericDataFileSetList class
+GenericTabularFile      The abstract GenericTabularFile class
+GenericTabularFileSet   The GenericTabularFileSet class
+R.filesets-package      Package R.filesets
+RDataFile               The RDataFile class
+RDataFileSet            The RDataFileSet class
+RdsFile                 The RdsFile class
+RdsFileSet              The RdsFileSet class
+TabularTextFile         The TabularTextFile class
+TabularTextFileSet      The TabularTextFileSet class
+loadRDS                 Reads data from a RDS file
+loadToEnv               Reads data from a RDS file
+readDataFrame           Reads data from a tabular file

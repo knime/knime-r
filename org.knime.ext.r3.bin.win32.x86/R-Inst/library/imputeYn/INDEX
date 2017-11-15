@@ -1,0 +1,15 @@
+                        Imputing the Last Largest Censored
+                        Observation(s) Under Weighted Least Squares
+aft.kmweight            Computing Kaplan-Meier Weights
+aft.qp                  Fiting Regularized Weighted Least Squares
+                        Method by Quadratic Programming
+data                    Generating Survival Data from Log-normal AFT
+                        Model
+imputeYn                Imputing the Censored Largest Datum Under
+                        Weighted Least Squares Method
+imputeYn.extra          Imputing the Last Largest tied Observations
+                        with a new method
+lss.mod                 Modified Least Squares Pricnciple for Solving
+                        the AFT Model
+print.imputeYn          Printing the Important Components of the Class
+                        "imputeYn"

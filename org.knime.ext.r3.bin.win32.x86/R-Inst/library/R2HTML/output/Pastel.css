@@ -1,0 +1,82 @@
+body {  
+	background: #ffffe0;  
+	color: #9932cc; 
+	margin: 0%; 
+	}  
+
+
+ .tablesort  {
+    cursor: pointer ;
+    behavior:url(tablesort.htc);
+    -moz-binding: url(tablesort.htc);
+    }
+    
+	H1 { font-family: Arial, Helvetica, sans-serif; font-size: 20pt; font-style: normal; font-weight: normal; color: #FFFFFF; background: #004080; text-align: center; margin: 10pt 2.5%}
+H2 { font-family: Arial, Helvetica, sans-serif; font-size: 18pt; font-style: normal; font-weight: normal; color: #FFFFFF; background: #03a89e}
+H2.index { font-family: Arial, Helvetica, sans-serif; font-size: 18pt; font-style: normal; font-weight: normal; color: #FFFFFF; background: #000000; margin: 10pt 5%}
+H3 { font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-style: normal; font-weight: bold; color: #004080  }
+H4 { font-family: T, Helvetica, sans-serif; font-size: 10pt; font-style: normal; font-weight: bold; color: #000000; line-height: 16pt}
+
+LI { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt }
+
+A { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt ;text-decoration:none}
+
+
+.call{color:navy; font-weight:bold}
+.caption{font-style:italic}
+.logical{color:darkred}
+.function{font-family:courier; color:#0000cd; font-size: 10pt }
+.factorlevels{color:darkblue}
+.pvalue{color:darkred}
+.command {font-family:verdana, arial; color:red	}
+.function{font-family:verdana, arial; color:#0000cd}
+.partitle{font-family:verdana, arial; font-weight:bold}
+
+P { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt ;font-weight:normal}
+
+
+XMP{font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt }
+
+
+
+TR{font-family: Arial, Helvetica,Times, Helvetica, sans-serif; font-size: 10pt; font-style: normal  ; padding:0 0}
+TR.firstline{color: #556b2f; background: #fdd6d2;text-align:center;font-weight: bold}
+
+TR.ListBackTitle{color: #FFFFFF; background: #000000;text-align:left;font-weight: bold}
+
+
+
+TD{background:#FFFFFF; padding:0 0}
+TD.ListBackMain{background: #00ff7f; padding:0 0}
+TD.firstcolumn{padding:5 10;background:#D8F6C4;text-align:right;font-weight: bold}
+TD.cellinside{padding:5 10;background:#FFFFFF;text-align:right}
+TD.cellinsideLeft {
+	padding: 5 5;
+	background: #FFFFFF;
+	text-align:left
+}
+
+
+
+
+/* CORRELATION MATRIX TRAFFIC HIGHLIGHT*/
+
+TD.corvarname{background-color:"#ffffe0" ;color:black;  height:1.1cm; text-align:right; font-weight:bold}
+TD.corbody{background-color:#ffffe0}
+TD.corsep{width:0.5cm; background-color:#ffffe0}
+TD.cordiag{background-color:#fffff;color:white}
+TD.cor0{background-color:"#FFFFFF" ;color:black;  width:1.1cm; height:1.1cm; text-align:center}
+TD.cor1{background-color:"#FFFFFF" ;color:black;  width:1.1cm; height:1.1cm; text-align:center}
+TD.cor2{background-color:"#FFFFFF" ;color:black;   width:1.1cm; height:1.1cm; text-align:center}
+TD.cor3{background-color:"#FFFFFF" ;color:black;   width:1.1cm; height:1.1cm; text-align:center}
+TD.cor4{background-color:"#fdd6d2" ;color:black;   width:1.1cm; height:1.1cm; text-align:center}
+TD.cor5{background-color:"#fdd6d2" ;color:black;   width:1.1cm; height:1.1cm; text-align:center}
+TD.cor6{background-color:"#03a89e" ;color:white;  width:1.1cm; height:1.1cm; text-align:center} 
+TD.cor7{background-color:"#03a89e" ;color:white;  width:1.1cm; height:1.1cm; text-align:center} 
+TD.cor8{background-color:"#03a89e" ;color:white;  width:1.1cm; height:1.1cm; text-align:center} 
+TD.cor9{background-color:"#004080" ;color:yellow; width:1.1cm; height:1.1cm; text-align:center} 
+TD.cor10{background-color:"#004080";color:yellow;  width:1.1cm; height:1.1cm; text-align:center}
+						
+
+
+ 

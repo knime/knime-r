@@ -1,0 +1,684 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Wavelets Statistics and Transforms</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Wavelets Statistics and Transforms
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;wavethresh&rsquo; version 4.6.8</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="# "> </a>
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#H">H</a>
+<a href="#I">I</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#P">P</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#U">U</a>
+<a href="#W">W</a>
+</p>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="wavethresh-package.html">wavthresh-package</a></td>
+<td>Wavelet transforms and associated statistical methodology.</td></tr>
+</table>
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="accessC2.html">accessC</a></td>
+<td>Get "detail" (mother wavelet) coefficients data from wavelet object</td></tr>
+<tr><td style="width: 25%;"><a href="accessc.html">accessc</a></td>
+<td>Get variance information from irregularly spaced wavelet decomposition object.</td></tr>
+<tr><td style="width: 25%;"><a href="accessC.mwd.html">accessC.mwd</a></td>
+<td>Get Smoothed Data from Wavelet Structure</td></tr>
+<tr><td style="width: 25%;"><a href="accessC.wd.html">accessC.wd</a></td>
+<td>Get smoothed data from wavelet object (wd)</td></tr>
+<tr><td style="width: 25%;"><a href="accessC.wp.html">accessC.wp</a></td>
+<td>Warning function when trying to access smooths from wavelet packet object (wp).</td></tr>
+<tr><td style="width: 25%;"><a href="accessC.wst.html">accessC.wst</a></td>
+<td>Get smoothed data from packet ordered non-decimated wavelet object (wst)</td></tr>
+<tr><td style="width: 25%;"><a href="accessD.html">accessD</a></td>
+<td>Get "detail" (mother wavelet) coefficients data from wavelet object</td></tr>
+<tr><td style="width: 25%;"><a href="accessD.mwd.html">accessD.mwd</a></td>
+<td>Get wavelet coefficients from multiple wavelet structure (mwd).</td></tr>
+<tr><td style="width: 25%;"><a href="accessD.wd.html">accessD.wd</a></td>
+<td>Get detail (mother wavelet) coefficients from wavelet object (wd).</td></tr>
+<tr><td style="width: 25%;"><a href="accessD.wd3D.html">accessD.wd3D</a></td>
+<td>Get wavelet coefficients from 3D wavelet object</td></tr>
+<tr><td style="width: 25%;"><a href="accessD.wp.html">accessD.wp</a></td>
+<td>Obtain whole resolution level of wavelet packet coefficients from a wavelet packet object (wp).</td></tr>
+<tr><td style="width: 25%;"><a href="accessD.wpst.html">accessD.wpst</a></td>
+<td>Get coefficients from a non-decimated wavelet packet object (wpst) in time order.</td></tr>
+<tr><td style="width: 25%;"><a href="accessD.wst.html">accessD.wst</a></td>
+<td>Get mother wavelet coefficients from a packet ordered non-decimated wavelet object (wst).</td></tr>
+<tr><td style="width: 25%;"><a href="addpkt.html">addpkt</a></td>
+<td>Add a wavelet packet box to an already set up time-frequency plot</td></tr>
+<tr><td style="width: 25%;"><a href="AutoBasis.html">AutoBasis</a></td>
+<td>Run Coifman-Wickerhauser best basis algorithm on wavelet packet object</td></tr>
+<tr><td style="width: 25%;"><a href="av.basis.html">av.basis</a></td>
+<td>Perform basis averaging for wst class object</td></tr>
+<tr><td style="width: 25%;"><a href="AvBasis.html">AvBasis</a></td>
+<td>Basis averaging ("inversion")</td></tr>
+<tr><td style="width: 25%;"><a href="AvBasis.wst.html">AvBasis.wst</a></td>
+<td>Perform basis averaging for (packet-ordered) non-decimated wavelet transform.</td></tr>
+<tr><td style="width: 25%;"><a href="AvBasis.wst2D.html">AvBasis.wst2D</a></td>
+<td>Perform basis averaging for (packet-ordered) 2D non-decimated wavelet transform.</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="BabyECG.html">BabyECG</a></td>
+<td>Physiological data time series.</td></tr>
+<tr><td style="width: 25%;"><a href="BabySS.html">BabySS</a></td>
+<td>Physiological data time series.</td></tr>
+<tr><td style="width: 25%;"><a href="basisplot.html">basisplot</a></td>
+<td>Generic basis plot function</td></tr>
+<tr><td style="width: 25%;"><a href="basisplot.BP.html">basisplot.BP</a></td>
+<td>Plot time-frequency plane and basis slots associated with basis object</td></tr>
+<tr><td style="width: 25%;"><a href="basisplot.wp.html">basisplot.wp</a></td>
+<td>Function to graphically select a wavelet packet basis</td></tr>
+<tr><td style="width: 25%;"><a href="BAYES.THR.html">BAYES.THR</a></td>
+<td>Bayesian wavelet thresholding.</td></tr>
+<tr><td style="width: 25%;"><a href="Best1DCols.html">Best1DCols</a></td>
+<td>Extract the best (one-dimensional) nondecimated WP packets</td></tr>
+<tr><td style="width: 25%;"><a href="bestm.html">bestm</a></td>
+<td>Function called by makewpstRO to identify which packets are individually good for correlating with a response</td></tr>
+<tr><td style="width: 25%;"><a href="BMdiscr.html">BMdiscr</a></td>
+<td>Subsidiary routine for makewpstDO function</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="c2to4.html">c2to4</a></td>
+<td>Take integer, represent in binary, then think of and return that representation in base 4</td></tr>
+<tr><td style="width: 25%;"><a href="CanUseMoreThanOneColor.html">CanUseMoreThanOneColor</a></td>
+<td>Deprecated function</td></tr>
+<tr><td style="width: 25%;"><a href="checkmyews.html">checkmyews</a></td>
+<td>Check a LSW spectrum through repeated simulation and empirical averages</td></tr>
+<tr><td style="width: 25%;"><a href="Chires5.html">Chires5</a></td>
+<td>Subsid routine for denproj (calcs scaling function coefs without cov)</td></tr>
+<tr><td style="width: 25%;"><a href="Chires6.html">Chires6</a></td>
+<td>Subsid routine for denproj (calcs scaling function coefs with cov)</td></tr>
+<tr><td style="width: 25%;"><a href="cns.html">cns</a></td>
+<td>Create new zeroed spectrum.</td></tr>
+<tr><td style="width: 25%;"><a href="compare.filters.html">compare.filters</a></td>
+<td>Compares two filters.</td></tr>
+<tr><td style="width: 25%;"><a href="compgrot.html">compgrot</a></td>
+<td>Compute empirical shift for time ordered non-decimated transforms.</td></tr>
+<tr><td style="width: 25%;"><a href="compress.html">compress</a></td>
+<td>Compress objects</td></tr>
+<tr><td style="width: 25%;"><a href="compress.default.html">compress.default</a></td>
+<td>Do "zero" run-length encoding compression of a vector of numbers.</td></tr>
+<tr><td style="width: 25%;"><a href="compress.imwd.html">compress.imwd</a></td>
+<td>Compress a (thresholded) imwd class object by removing zeroes.</td></tr>
+<tr><td style="width: 25%;"><a href="conbar.html">conbar</a></td>
+<td>Performs inverse DWT reconstruction step</td></tr>
+<tr><td style="width: 25%;"><a href="convert.html">convert</a></td>
+<td>Convert one type of wavelet object into another.</td></tr>
+<tr><td style="width: 25%;"><a href="convert.wd.html">convert.wd</a></td>
+<td>Convert a non-decimated wd object into a wst object.</td></tr>
+<tr><td style="width: 25%;"><a href="convert.wst.html">convert.wst</a></td>
+<td>Convert a non-decimated wst object into a wd object.</td></tr>
+<tr><td style="width: 25%;"><a href="ConvertMessage.html">ConvertMessage</a></td>
+<td>Print out a text message about an object which is from old version of WaveThresh</td></tr>
+<tr><td style="width: 25%;"><a href="Crsswav.html">Crsswav</a></td>
+<td>Wrapper to C code version of rsswav</td></tr>
+<tr><td style="width: 25%;"><a href="cthresh.html">cthresh</a></td>
+<td>Estimate real signal using complex-valued wavelets</td></tr>
+<tr><td style="width: 25%;"><a href="Cthreshold.html">Cthreshold</a></td>
+<td>Calls C code to threshold wd class object.</td></tr>
+<tr><td style="width: 25%;"><a href="CWavDE.html">CWavDE</a></td>
+<td>Simple wavelet density estimator with hard thresholding</td></tr>
+<tr><td style="width: 25%;"><a href="CWCV.html">CWCV</a></td>
+<td>C Wavelet Cross-validation</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="dclaw.html">dclaw</a></td>
+<td>Claw distribution</td></tr>
+<tr><td style="width: 25%;"><a href="dencvwd.html">dencvwd</a></td>
+<td>Calculate variances of wavlet coefficients of a p.d.f.</td></tr>
+<tr><td style="width: 25%;"><a href="denplot.html">denplot</a></td>
+<td>Calculate plotting information for a density estimate.</td></tr>
+<tr><td style="width: 25%;"><a href="denproj.html">denproj</a></td>
+<td>Calculate empirical scaling function coefficients of a p.d.f.</td></tr>
+<tr><td style="width: 25%;"><a href="denwd.html">denwd</a></td>
+<td>Wavelet decomposition of empirical scaling function coefficients of a p.d.f.</td></tr>
+<tr><td style="width: 25%;"><a href="denwr.html">denwr</a></td>
+<td>Wavelet reconstruction for density estimation.</td></tr>
+<tr><td style="width: 25%;"><a href="DJ.EX.html">DJ.EX</a></td>
+<td>Produce Donoho and Johnstone test functions</td></tr>
+<tr><td style="width: 25%;"><a href="dof.html">dof</a></td>
+<td>Compute number of non-zero coefficients in wd object</td></tr>
+<tr><td style="width: 25%;"><a href="doppler.html">doppler</a></td>
+<td>Evaluate the Donoho and Johnstone Doppler signal.</td></tr>
+<tr><td style="width: 25%;"><a href="draw.html">draw</a></td>
+<td>Draw wavelets or scaling functions.</td></tr>
+<tr><td style="width: 25%;"><a href="draw.default.html">draw.default</a></td>
+<td>Draw picture of a wavelet or scaling function.</td></tr>
+<tr><td style="width: 25%;"><a href="draw.imwd.html">draw.imwd</a></td>
+<td>Draw mother wavelet associated with an imwd object.</td></tr>
+<tr><td style="width: 25%;"><a href="draw.imwdc.html">draw.imwdc</a></td>
+<td>Draw mother wavelet associated with an imwdc object.</td></tr>
+<tr><td style="width: 25%;"><a href="draw.mwd.html">draw.mwd</a></td>
+<td>Draws a wavelet or scaling function used to compute an 'mwd' object</td></tr>
+<tr><td style="width: 25%;"><a href="draw.wd.html">draw.wd</a></td>
+<td>Draw mother wavelet or scaling function associated with wd object.</td></tr>
+<tr><td style="width: 25%;"><a href="draw.wp.html">draw.wp</a></td>
+<td>Draw wavelet packet associated with a wp object.</td></tr>
+<tr><td style="width: 25%;"><a href="draw.wst.html">draw.wst</a></td>
+<td>Draw mother wavelet or scaling function associated with wst object.</td></tr>
+<tr><td style="width: 25%;"><a href="drawbox.html">drawbox</a></td>
+<td>Draw a shaded coloured box</td></tr>
+<tr><td style="width: 25%;"><a href="drawwp.default.html">drawwp.default</a></td>
+<td>Subsidiary routine that actually computes wavelet packet values</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="ewspec.html">ewspec</a></td>
+<td>Compute evolutionary wavelet spectrum estimate.</td></tr>
+<tr><td style="width: 25%;"><a href="example.1.html">example.1</a></td>
+<td>Compute and return piecewise polynomial coordinates.</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="filter.select.html">filter.select</a></td>
+<td>Provide wavelet filter coefficients.</td></tr>
+<tr><td style="width: 25%;"><a href="find.parameters.html">find.parameters</a></td>
+<td>Find estimates of prior parameters</td></tr>
+<tr><td style="width: 25%;"><a href="first.last.html">first.last</a></td>
+<td>Build a first/last database for wavelet transforms.</td></tr>
+<tr><td style="width: 25%;"><a href="first.last.dh.html">first.last.dh</a></td>
+<td>Build special first/last database for some wavelet density functions</td></tr>
+<tr><td style="width: 25%;"><a href="firstdot.html">firstdot</a></td>
+<td>Return the location of the first period character within a character string (for a vector of strings of arbitrary length).</td></tr>
+<tr><td style="width: 25%;"><a href="FullWaveletCV.html">FullWaveletCV</a></td>
+<td>Perform whole wavelet cross-validation in C code</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="GenW.html">GenW</a></td>
+<td>Generate (inverse) discrete wavelet transform matrix.</td></tr>
+<tr><td style="width: 25%;"><a href="getarrvec.html">getarrvec</a></td>
+<td>Compute and return weaving permutation for conversion from wst objects to wd class objects.</td></tr>
+<tr><td style="width: 25%;"><a href="getpacket.html">getpacket</a></td>
+<td>Get a packet of coefficients from a wavelet object</td></tr>
+<tr><td style="width: 25%;"><a href="getpacket.wp.html">getpacket.wp</a></td>
+<td>Get packet of coefficients from a wavelet packet object (wp).</td></tr>
+<tr><td style="width: 25%;"><a href="getpacket.wpst.html">getpacket.wpst</a></td>
+<td>Get packet of coefficients from a non-decimated wavelet packet object (wpst).</td></tr>
+<tr><td style="width: 25%;"><a href="getpacket.wst.html">getpacket.wst</a></td>
+<td>Get packet of coefficients from a packet ordered non-decimated wavelet object (wst).</td></tr>
+<tr><td style="width: 25%;"><a href="getpacket.wst2D.html">getpacket.wst2D</a></td>
+<td>Get packet of coefficients from a two-dimensional non-decimated wavelet object (wst2D).</td></tr>
+<tr><td style="width: 25%;"><a href="GetRSSWST.html">GetRSSWST</a></td>
+<td>Computes estimate of error for function estimate.</td></tr>
+<tr><td style="width: 25%;"><a href="griddata.html">griddata objects</a></td>
+<td>Data interpolated to a grid objects.</td></tr>
+<tr><td style="width: 25%;"><a href="guyrot.html">guyrot</a></td>
+<td>Cyclically rotate elements of a vector</td></tr>
+</table>
+
+<h2><a name="H">-- H --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="HaarConcat.html">HaarConcat</a></td>
+<td>Generate a concatenated Haar MA process</td></tr>
+<tr><td style="width: 25%;"><a href="HaarMA.html">HaarMA</a></td>
+<td>Generate Haar MA processes.</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="image.wd.html">image.wd</a></td>
+<td>Produce image representation of nondecimated wavelet transform</td></tr>
+<tr><td style="width: 25%;"><a href="image.wst.html">image.wst</a></td>
+<td>Produce image representation of a wst class object</td></tr>
+<tr><td style="width: 25%;"><a href="imwd.html">imwd</a></td>
+<td>Two-dimensional wavelet transform (decomposition).</td></tr>
+<tr><td style="width: 25%;"><a href="imwd.object.html">imwd.object</a></td>
+<td>Two-dimensional wavelet decomposition objects.</td></tr>
+<tr><td style="width: 25%;"><a href="imwdc.object.html">imwdc.object</a></td>
+<td>Two-dimensional compressed wavelet decomposition objects.</td></tr>
+<tr><td style="width: 25%;"><a href="imwr.html">imwr</a></td>
+<td>Inverse two-dimensional wavelet transform.</td></tr>
+<tr><td style="width: 25%;"><a href="imwr.imwd.html">imwr.imwd</a></td>
+<td>Inverse two-dimensional discrete wavelet transform.</td></tr>
+<tr><td style="width: 25%;"><a href="imwr.imwdc.html">imwr.imwdc</a></td>
+<td>Inverse two-dimensional discrete wavelet transform.</td></tr>
+<tr><td style="width: 25%;"><a href="InvBasis.html">InvBasis</a></td>
+<td>Generic basis inversion for libraries</td></tr>
+<tr><td style="width: 25%;"><a href="InvBasis.wp.html">InvBasis.wp</a></td>
+<td>Invert a wp library representation with a particular basis spec</td></tr>
+<tr><td style="width: 25%;"><a href="InvBasis.wst.html">InvBasis.wst</a></td>
+<td>Invert a wst library representation with a basis specification</td></tr>
+<tr><td style="width: 25%;"><a href="ipd.html">ipd</a></td>
+<td>Inductance plethysmography data.</td></tr>
+<tr><td style="width: 25%;"><a href="ipndacw.html">ipndacw</a></td>
+<td>Compute inner product matrix of discrete non-decimated autocorrelation wavelets.</td></tr>
+<tr><td style="width: 25%;"><a href="irregwd.html">irregwd</a></td>
+<td>Irregular wavelet transform (decomposition).</td></tr>
+<tr><td style="width: 25%;"><a href="irregwd.objects.html">irregwd.objects</a></td>
+<td>Irregular wavelet decomposition objects.</td></tr>
+<tr><td style="width: 25%;"><a href="IsEarly.html">IsEarly</a></td>
+<td>Generic function to detect whether object is from an early version</td></tr>
+<tr><td style="width: 25%;"><a href="IsEarly.default.html">IsEarly.default</a></td>
+<td>Detects whether object is from an earlier version of WaveThresh</td></tr>
+<tr><td style="width: 25%;"><a href="IsEarly.wd.html">IsEarly.wd</a></td>
+<td>Function to detect whether a wd object is from WaveThresh2 or not</td></tr>
+<tr><td style="width: 25%;"><a href="IsPowerOfTwo.html">IsPowerOfTwo</a></td>
+<td>Decides whether vector elements are integral powers of two (returns NA if not).</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="l2norm.html">l2norm</a></td>
+<td>Compute L2 distance between two vectors of numbers.</td></tr>
+<tr><td style="width: 25%;"><a href="lennon.html">lennon</a></td>
+<td>John Lennon image.</td></tr>
+<tr><td style="width: 25%;"><a href="levarr.html">levarr</a></td>
+<td>Subsidiary routine that generates a particular permutation</td></tr>
+<tr><td style="width: 25%;"><a href="linfnorm.html">linfnorm</a></td>
+<td>Compute L infinity distance between two vectors of numbers.</td></tr>
+<tr><td style="width: 25%;"><a href="LocalSpec.html">LocalSpec</a></td>
+<td>Compute Nason and Silverman smoothed wavelet periodogram.</td></tr>
+<tr><td style="width: 25%;"><a href="LocalSpec.wd.html">LocalSpec.wd</a></td>
+<td>Compute Nason and Silverman raw or smoothed wavelet periodogram.</td></tr>
+<tr><td style="width: 25%;"><a href="LocalSpec.wst.html">LocalSpec.wst</a></td>
+<td>Obsolete function (use ewspec)</td></tr>
+<tr><td style="width: 25%;"><a href="logabs.html">logabs</a></td>
+<td>Take the logarithm of the squares of the argument</td></tr>
+<tr><td style="width: 25%;"><a href="LSWsim.html">LSWsim</a></td>
+<td>Simulate arbitrary locally stationary wavelet process.</td></tr>
+<tr><td style="width: 25%;"><a href="lt.to.name.html">lt.to.name</a></td>
+<td>Convert desired level and orientation into code used by imwd</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="madmad.html">madmad</a></td>
+<td>Compute square of median absolute deviation (mad) function.</td></tr>
+<tr><td style="width: 25%;"><a href="make.dwwt.html">make.dwwt</a></td>
+<td>Compute diagonal of the matrix WWT</td></tr>
+<tr><td style="width: 25%;"><a href="makegrid.html">makegrid</a></td>
+<td>Interpolate data to a grid.</td></tr>
+<tr><td style="width: 25%;"><a href="makewpstDO.html">makewpstDO</a></td>
+<td>Help page for a function</td></tr>
+<tr><td style="width: 25%;"><a href="makewpstRO.html">makewpstRO</a></td>
+<td>Make a wavelet packet regression object from a dependent and independent time series variable.</td></tr>
+<tr><td style="width: 25%;"><a href="MaNoVe.html">MaNoVe</a></td>
+<td>Make Node Vector (using Coifman-Wickerhauser best-basis type algorithm)</td></tr>
+<tr><td style="width: 25%;"><a href="MaNoVe.wp.html">MaNoVe.wp</a></td>
+<td>Make Node Vector (using Coifman-Wickerhauser best-basis type algorithm) on wavelet packet object</td></tr>
+<tr><td style="width: 25%;"><a href="MaNoVe.wst.html">MaNoVe.wst</a></td>
+<td>Make Node Vector (using Coifman-Wickerhauser best-basis type algorithm) on nondecimated wavelet transform object</td></tr>
+<tr><td style="width: 25%;"><a href="mfilter.select.html">mfilter.select</a></td>
+<td>Provide filter coefficients for multiple wavelets.</td></tr>
+<tr><td style="width: 25%;"><a href="mfirst.last.html">mfirst.last</a></td>
+<td>Build a first/last database for multiple wavelet transforms.</td></tr>
+<tr><td style="width: 25%;"><a href="modernise.html">modernise</a></td>
+<td>Generic function to upgrade a V2 WaveThresh object to V4</td></tr>
+<tr><td style="width: 25%;"><a href="modernise.wd.html">modernise.wd</a></td>
+<td>Modernise a wd class object</td></tr>
+<tr><td style="width: 25%;"><a href="mpostfilter.html">mpostfilter</a></td>
+<td>Multiwavelet postfilter</td></tr>
+<tr><td style="width: 25%;"><a href="mprefilter.html">mprefilter</a></td>
+<td>Multiwavelet prefilter</td></tr>
+<tr><td style="width: 25%;"><a href="mwd.html">mwd</a></td>
+<td>Discrete multiple wavelet transform (decomposition).</td></tr>
+<tr><td style="width: 25%;"><a href="mwd.object.html">mwd.object</a></td>
+<td>Multiple wavelet decomposition object (1D)</td></tr>
+<tr><td style="width: 25%;"><a href="mwr.html">mwr</a></td>
+<td>Multiple discrete wavelet transform (reconstruction).</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="newsure.html">newsure</a></td>
+<td>Version of sure that acts as subsidiary for threshold.irregwd</td></tr>
+<tr><td style="width: 25%;"><a href="nlevelsWT.html">nlevelsWT</a></td>
+<td>Returns number of scale (resolution) levels.</td></tr>
+<tr><td style="width: 25%;"><a href="nlevelsWT.default.html">nlevelsWT.default</a></td>
+<td>Returns number of levels associated with an object</td></tr>
+<tr><td style="width: 25%;"><a href="nullevels.html">nullevels</a></td>
+<td>Set whole resolution levels of coefficients equal to zero.</td></tr>
+<tr><td style="width: 25%;"><a href="nullevels.imwd.html">nullevels.imwd</a></td>
+<td>Sets whole resolution levels of coefficients equal to zero in a imwd object.</td></tr>
+<tr><td style="width: 25%;"><a href="nullevels.wd.html">nullevels.wd</a></td>
+<td>Sets whole resolution levels of coefficients equal to zero in a wd object.</td></tr>
+<tr><td style="width: 25%;"><a href="nullevels.wst.html">nullevels.wst</a></td>
+<td>Sets whole resolution levels of coefficients equal to zero in a wst object.</td></tr>
+<tr><td style="width: 25%;"><a href="numtonv.html">numtonv</a></td>
+<td>Convert an index number into a node vector object.</td></tr>
+<tr><td style="width: 25%;"><a href="nv.object.html">nv.object</a></td>
+<td>Node vector objects.</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="dclaw.html">pclaw</a></td>
+<td>Claw distribution</td></tr>
+<tr><td style="width: 25%;"><a href="plot.imwd.html">plot.imwd</a></td>
+<td>Draw a picture of the 2D wavelet coefficients using image</td></tr>
+<tr><td style="width: 25%;"><a href="plot.imwd.html">plot.imwdc</a></td>
+<td>Draw a picture of the 2D wavelet coefficients using image</td></tr>
+<tr><td style="width: 25%;"><a href="plot.irregwd.html">plot.irregwd</a></td>
+<td>Plot variance factors of wavelet transform coefficients for irregularly spaced wavelet transform object</td></tr>
+<tr><td style="width: 25%;"><a href="plot.mwd.html">plot.mwd</a></td>
+<td>Use plot on an mwd object.</td></tr>
+<tr><td style="width: 25%;"><a href="plot.nvwp.html">plot.nvwp</a></td>
+<td>Depict wavelet packet basis specfication</td></tr>
+<tr><td style="width: 25%;"><a href="plot.wd.html">plot.wd</a></td>
+<td>Plot wavelet transform coefficients.</td></tr>
+<tr><td style="width: 25%;"><a href="plot.wp.html">plot.wp</a></td>
+<td>Plot wavelet packet transform coefficients</td></tr>
+<tr><td style="width: 25%;"><a href="plot.wst.html">plot.wst</a></td>
+<td>Plot packet-ordered non-decimated wavelet transform coefficients.</td></tr>
+<tr><td style="width: 25%;"><a href="plot.wst2D.html">plot.wst2D</a></td>
+<td>Plot packet-ordered 2D non-decimated wavelet coefficients.</td></tr>
+<tr><td style="width: 25%;"><a href="plotdenwd.html">plotdenwd</a></td>
+<td>Plot the wavelet coefficients of a p.d.f.</td></tr>
+<tr><td style="width: 25%;"><a href="plotpkt.html">plotpkt</a></td>
+<td>Sets up a high level plot ready to show the time-frequency plane and wavelet packet basis slots</td></tr>
+<tr><td style="width: 25%;"><a href="print.BP.html">print.BP</a></td>
+<td>Print top best basis information for BP class object</td></tr>
+<tr><td style="width: 25%;"><a href="print.imwd.html">print.imwd</a></td>
+<td>Print out information about an imwd object in readable form.</td></tr>
+<tr><td style="width: 25%;"><a href="print.imwdc.html">print.imwdc</a></td>
+<td>Print out information about an imwdc object in readable form.</td></tr>
+<tr><td style="width: 25%;"><a href="print.mwd.html">print.mwd</a></td>
+<td>Use print() on a mwd object.</td></tr>
+<tr><td style="width: 25%;"><a href="print.nv.html">print.nv</a></td>
+<td>Print a node vector object, also used by several other functions to obtain packet list information</td></tr>
+<tr><td style="width: 25%;"><a href="print.nvwp.html">print.nvwp</a></td>
+<td>Print a wavelet packet node vector object, also used by several other functions to obtain packet list information</td></tr>
+<tr><td style="width: 25%;"><a href="print.w2d.html">print.w2d</a></td>
+<td>Print method for printing w2d class objects</td></tr>
+<tr><td style="width: 25%;"><a href="print.w2m.html">print.w2m</a></td>
+<td>Print a w2m class object</td></tr>
+<tr><td style="width: 25%;"><a href="print.wd.html">print.wd</a></td>
+<td>Print out information about an wd object in readable form.</td></tr>
+<tr><td style="width: 25%;"><a href="print.wd3D.html">print.wd3D</a></td>
+<td>Print out information about an wd3D object in a readable form.</td></tr>
+<tr><td style="width: 25%;"><a href="print.wp.html">print.wp</a></td>
+<td>Print out information about an wd object in readable form.</td></tr>
+<tr><td style="width: 25%;"><a href="print.wpst.html">print.wpst</a></td>
+<td>Prints out basic information about a wpst class object</td></tr>
+<tr><td style="width: 25%;"><a href="print.wpstCL.html">print.wpstCL</a></td>
+<td>Prints some information about a wpstCL object</td></tr>
+<tr><td style="width: 25%;"><a href="print.wpstDO.html">print.wpstDO</a></td>
+<td>Print information about a wpstDO class object</td></tr>
+<tr><td style="width: 25%;"><a href="print.wpstRO.html">print.wpstRO</a></td>
+<td>Print a wpstRO class object</td></tr>
+<tr><td style="width: 25%;"><a href="print.wst.html">print.wst</a></td>
+<td>Print out information about an wst object in readable form.</td></tr>
+<tr><td style="width: 25%;"><a href="print.wst2D.html">print.wst2D</a></td>
+<td>Print out information about an wst2d object in a readable form.</td></tr>
+<tr><td style="width: 25%;"><a href="PsiJ.html">PsiJ</a></td>
+<td>Compute discrete autocorrelation wavelets.</td></tr>
+<tr><td style="width: 25%;"><a href="PsiJmat.html">PsiJmat</a></td>
+<td>Compute discrete autocorrelation wavelets but return result in matrix form.</td></tr>
+<tr><td style="width: 25%;"><a href="Psiname.html">Psiname</a></td>
+<td>Return a PsiJ list object style name.</td></tr>
+<tr><td style="width: 25%;"><a href="putC.html">putC</a></td>
+<td>Put smoothed data (father wavelet) coefficients into wavelet structure</td></tr>
+<tr><td style="width: 25%;"><a href="putC.mwd.html">putC.mwd</a></td>
+<td>Put smoothed data into wavelet structure</td></tr>
+<tr><td style="width: 25%;"><a href="putC.wd.html">putC.wd</a></td>
+<td>Puts a whole resolution level of father wavelet coeffients into wd wavelet object.</td></tr>
+<tr><td style="width: 25%;"><a href="putC.wp.html">putC.wp</a></td>
+<td>Warning function when trying to insert father wavelet coefficients into wavelet packet object (wp).</td></tr>
+<tr><td style="width: 25%;"><a href="putC.wst.html">putC.wst</a></td>
+<td>Puts a whole resolution level of father wavelet coeffients into wst wavelet object.</td></tr>
+<tr><td style="width: 25%;"><a href="putD.html">putD</a></td>
+<td>Put mother wavelet coefficients into wavelet structure</td></tr>
+<tr><td style="width: 25%;"><a href="putD.mwd.html">putD.mwd</a></td>
+<td>Put wavelet coefficients into multiple wavelet structure</td></tr>
+<tr><td style="width: 25%;"><a href="putD.wd.html">putD.wd</a></td>
+<td>Puts a whole resolution level of mother wavelet coeffients into wd wavelet object.</td></tr>
+<tr><td style="width: 25%;"><a href="putD.wd3D.html">putD.wd3D</a></td>
+<td>Put wavelet coefficient array into a 3D wavelet object</td></tr>
+<tr><td style="width: 25%;"><a href="putD.wp.html">putD.wp</a></td>
+<td>Puts a whole resolution level of wavelet packet coeffients into wp wavelet object.</td></tr>
+<tr><td style="width: 25%;"><a href="putD.wst.html">putD.wst</a></td>
+<td>Puts a whole resolution level of mother wavelet coeffients into wst wavelet object.</td></tr>
+<tr><td style="width: 25%;"><a href="putDwd3Dcheck.html">putDwd3Dcheck</a></td>
+<td>Check argument list for putD.wd3D</td></tr>
+<tr><td style="width: 25%;"><a href="putpacket.html">putpacket</a></td>
+<td>Insert a packet of coefficients into a wavelet object.</td></tr>
+<tr><td style="width: 25%;"><a href="putpacket.wp.html">putpacket.wp</a></td>
+<td>Inserts a packet of coefficients into a wavelet packet object (wp).</td></tr>
+<tr><td style="width: 25%;"><a href="putpacket.wst.html">putpacket.wst</a></td>
+<td>Put a packet of coefficients into a packet ordered non-decimated wavelet object (wst).</td></tr>
+<tr><td style="width: 25%;"><a href="putpacket.wst2D.html">putpacket.wst2D</a></td>
+<td>Replace packet of coefficients in a two-dimensional non-decimated wavelet object (wst2D).</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="dclaw.html">rclaw</a></td>
+<td>Claw distribution</td></tr>
+<tr><td style="width: 25%;"><a href="rcov.html">rcov</a></td>
+<td>Computes robust estimate of covariance matrix</td></tr>
+<tr><td style="width: 25%;"><a href="rfft.html">rfft</a></td>
+<td>Real Fast Fourier transform</td></tr>
+<tr><td style="width: 25%;"><a href="rfftinv.html">rfftinv</a></td>
+<td>Inverse real FFT, inverse of rfft</td></tr>
+<tr><td style="width: 25%;"><a href="rfftwt.html">rfftwt</a></td>
+<td>Weight a Fourier series sequence by a set of weights</td></tr>
+<tr><td style="width: 25%;"><a href="rm.det.html">rm.det</a></td>
+<td>Set coarse levels of a wavelets on the interval transform object to zero</td></tr>
+<tr><td style="width: 25%;"><a href="rmget.html">rmget</a></td>
+<td>Search for existing ipndacw matrices.</td></tr>
+<tr><td style="width: 25%;"><a href="rmname.html">rmname</a></td>
+<td>Return a ipndacw matrix style name.</td></tr>
+<tr><td style="width: 25%;"><a href="rotateback.html">rotateback</a></td>
+<td>Cyclically shift a vector one place to the right</td></tr>
+<tr><td style="width: 25%;"><a href="rsswav.html">rsswav</a></td>
+<td>Compute mean residual sum of squares for odd prediction of even ordinates and vice versa</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="ScalingFunction.html">ScalingFunction</a></td>
+<td>Compute scaling functions on internally predefined grid</td></tr>
+<tr><td style="width: 25%;"><a href="Shannon.entropy.html">Shannon.entropy</a></td>
+<td>Compute Shannon entropy</td></tr>
+<tr><td style="width: 25%;"><a href="simchirp.html">simchirp</a></td>
+<td>Compute and return simulated chirp function.</td></tr>
+<tr><td style="width: 25%;"><a href="ssq.html">ssq</a></td>
+<td>Compute sum of squares difference between two vectors</td></tr>
+<tr><td style="width: 25%;"><a href="summary.imwd.html">summary.imwd</a></td>
+<td>Print out some basic information associated with an imwd object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.imwdc.html">summary.imwdc</a></td>
+<td>Print out some basic information associated with an imwdc object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.mwd.html">summary.mwd</a></td>
+<td>Use summary() on a mwd object.</td></tr>
+<tr><td style="width: 25%;"><a href="summary.wd.html">summary.wd</a></td>
+<td>Print out some basic information associated with a wd object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.wd3D.html">summary.wd3D</a></td>
+<td>Print out some basic information associated with a wd3D object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.wp.html">summary.wp</a></td>
+<td>Print out some basic information associated with a wp object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.wpst.html">summary.wpst</a></td>
+<td>Print out some basic information associated with a wpst object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.wst.html">summary.wst</a></td>
+<td>Print out some basic information associated with a wst object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.wst2D.html">summary.wst2D</a></td>
+<td>Print out some basic information associated with a wst2D object</td></tr>
+<tr><td style="width: 25%;"><a href="support.html">support</a></td>
+<td>Returns support of compactly supported wavelets.</td></tr>
+<tr><td style="width: 25%;"><a href="sure.html">sure</a></td>
+<td>Computes the minimum of the SURE thresholding function</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="teddy.html">teddy</a></td>
+<td>Picture of a teddy bear's picnic.</td></tr>
+<tr><td style="width: 25%;"><a href="test.dataCT.html">test.dataCT</a></td>
+<td>Test functions for wavelet regression and thresholding</td></tr>
+<tr><td style="width: 25%;"><a href="threshold.html">threshold</a></td>
+<td>Threshold coefficients</td></tr>
+<tr><td style="width: 25%;"><a href="threshold.imwd.html">threshold.imwd</a></td>
+<td>Threshold two-dimensional wavelet decomposition object</td></tr>
+<tr><td style="width: 25%;"><a href="threshold.imwdc.html">threshold.imwdc</a></td>
+<td>Threshold two-dimensional compressed wavelet decomposition object</td></tr>
+<tr><td style="width: 25%;"><a href="threshold.irregwd.html">threshold.irregwd</a></td>
+<td>hold irregularly spaced wavelet decomposition object</td></tr>
+<tr><td style="width: 25%;"><a href="threshold.mwd.html">threshold.mwd</a></td>
+<td>Use threshold on an mwd object.</td></tr>
+<tr><td style="width: 25%;"><a href="threshold.wd.html">threshold.wd</a></td>
+<td>Threshold (DWT) wavelet decomposition object</td></tr>
+<tr><td style="width: 25%;"><a href="threshold.wd3D.html">threshold.wd3D</a></td>
+<td>Threshold 3D DWT object</td></tr>
+<tr><td style="width: 25%;"><a href="threshold.wp.html">threshold.wp</a></td>
+<td>Threshold wavelet packet decomposition object</td></tr>
+<tr><td style="width: 25%;"><a href="threshold.wst.html">threshold.wst</a></td>
+<td>Threshold (NDWT) packet-ordered non-decimated wavelet decomposition object</td></tr>
+<tr><td style="width: 25%;"><a href="TOgetthrda1.html">TOgetthrda1</a></td>
+<td>Subsidiary routines for Ogden and Parzen's wavelet shrinkage methods</td></tr>
+<tr><td style="width: 25%;"><a href="TOgetthrda1.html">TOgetthrda2</a></td>
+<td>Subsidiary routines for Ogden and Parzen's wavelet shrinkage methods</td></tr>
+<tr><td style="width: 25%;"><a href="TOgetthrda1.html">TOkolsmi.chi2</a></td>
+<td>Subsidiary routines for Ogden and Parzen's wavelet shrinkage methods</td></tr>
+<tr><td style="width: 25%;"><a href="TOgetthrda1.html">TOonebyone1</a></td>
+<td>Subsidiary routines for Ogden and Parzen's wavelet shrinkage methods</td></tr>
+<tr><td style="width: 25%;"><a href="TOgetthrda1.html">TOonebyone2</a></td>
+<td>Subsidiary routines for Ogden and Parzen's wavelet shrinkage methods</td></tr>
+<tr><td style="width: 25%;"><a href="TOgetthrda1.html">TOshrinkit</a></td>
+<td>Subsidiary routines for Ogden and Parzen's wavelet shrinkage methods</td></tr>
+<tr><td style="width: 25%;"><a href="TOthreshda1.html">TOthreshda1</a></td>
+<td>Data analytic wavelet thresholding routine</td></tr>
+<tr><td style="width: 25%;"><a href="TOthreshda2.html">TOthreshda2</a></td>
+<td>Data analytic wavelet thresholding routine</td></tr>
+<tr><td style="width: 25%;"><a href="tpwd.html">tpwd</a></td>
+<td>Tensor product 2D wavelet transform</td></tr>
+<tr><td style="width: 25%;"><a href="tpwr.html">tpwr</a></td>
+<td>Inverse tensor product 2D wavelet transform.</td></tr>
+</table>
+
+<h2><a name="U">-- U --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="uncompress.html">uncompress</a></td>
+<td>Uncompress objects</td></tr>
+<tr><td style="width: 25%;"><a href="uncompress.default.html">uncompress.default</a></td>
+<td>Undo zero run-length encoding for a vector.</td></tr>
+<tr><td style="width: 25%;"><a href="uncompress.imwdc.html">uncompress.imwdc</a></td>
+<td>Uncompress an imwdc class object</td></tr>
+</table>
+
+<h2><a name="W">-- W --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="wavegrow.html">wavegrow</a></td>
+<td>Interactive graphical tool to grow a wavelet synthesis</td></tr>
+<tr><td style="width: 25%;"><a href="WaveletCV.html">WaveletCV</a></td>
+<td>Wavelet cross-validation</td></tr>
+<tr><td style="width: 25%;"><a href="wavethresh-package.html">wavethresh</a></td>
+<td>Wavelet transforms and associated statistical methodology.</td></tr>
+<tr><td style="width: 25%;"><a href="wd.html">wd</a></td>
+<td>Wavelet transform (decomposition).</td></tr>
+<tr><td style="width: 25%;"><a href="wd.dh.html">wd.dh</a></td>
+<td>Compute specialized wavelet transform for density estimation</td></tr>
+<tr><td style="width: 25%;"><a href="wd.int.html">wd.int</a></td>
+<td>Computes "wavelets on the interval" transform</td></tr>
+<tr><td style="width: 25%;"><a href="wd.object.html">wd.object</a></td>
+<td>Wavelet decomposition objects</td></tr>
+<tr><td style="width: 25%;"><a href="wd3D.html">wd3D</a></td>
+<td>Three-dimensional discrete wavelet transform</td></tr>
+<tr><td style="width: 25%;"><a href="wd3D.object.html">wd3D.object</a></td>
+<td>Three-dimensional wavelet object</td></tr>
+<tr><td style="width: 25%;"><a href="Whistory.html">Whistory</a></td>
+<td>Obsolete function supposedly detailed history of object</td></tr>
+<tr><td style="width: 25%;"><a href="Whistory.wst.html">Whistory.wst</a></td>
+<td>Obsolete function: as Whistory, but for wst objects</td></tr>
+<tr><td style="width: 25%;"><a href="wp.html">wp</a></td>
+<td>Wavelet packet transform.</td></tr>
+<tr><td style="width: 25%;"><a href="wp.object.html">wp.object</a></td>
+<td>Wavelet Packet decomposition objects.</td></tr>
+<tr><td style="width: 25%;"><a href="wpst.html">wpst</a></td>
+<td>Non-decimated wavelet packet transform.</td></tr>
+<tr><td style="width: 25%;"><a href="wpst2discr.html">wpst2discr</a></td>
+<td>Reshape/reformat packet coefficients into a multivariate data set</td></tr>
+<tr><td style="width: 25%;"><a href="wpst2m.html">wpst2m</a></td>
+<td>Converts a nondecimated wavelet packet object to a (large) matrix with packets stored as columns</td></tr>
+<tr><td style="width: 25%;"><a href="wpstCLASS.html">wpstCLASS</a></td>
+<td>Predict values using new time series values via a non-decimated wavelet packet discrimination object.</td></tr>
+<tr><td style="width: 25%;"><a href="wpstREGR.html">wpstREGR</a></td>
+<td>Construct data frame using new time series using information from a previously constructed wpstRO object</td></tr>
+<tr><td style="width: 25%;"><a href="wr.html">wr</a></td>
+<td>Wavelet reconstruction (inverse DWT).</td></tr>
+<tr><td style="width: 25%;"><a href="wr.int.html">wr.int</a></td>
+<td>Computes inverse "wavelets on the interval" transform.</td></tr>
+<tr><td style="width: 25%;"><a href="wr.mwd.html">wr.mwd</a></td>
+<td>Multiple wavelet reconstruction for mwd objects</td></tr>
+<tr><td style="width: 25%;"><a href="wr.wd.html">wr.wd</a></td>
+<td>Wavelet reconstruction for wd class objects (inverse discrete wavelet transform).</td></tr>
+<tr><td style="width: 25%;"><a href="wr3D.html">wr3D</a></td>
+<td>Inverse DWT for 3D DWT object.</td></tr>
+<tr><td style="width: 25%;"><a href="wst.html">wst</a></td>
+<td>Packet-ordered non-decimated wavelet transform.</td></tr>
+<tr><td style="width: 25%;"><a href="wst.object.html">wst.object</a></td>
+<td>(Packet ordered) Nondecimated wavelet transform decomposition objects.</td></tr>
+<tr><td style="width: 25%;"><a href="wst2D.html">wst2D</a></td>
+<td>(Packet-ordered) 2D non-decimated wavelet transform.</td></tr>
+<tr><td style="width: 25%;"><a href="wst2D.object.html">wst2D.object</a></td>
+<td>(Packet ordered) Two-dimensional nondecimated wavelet transform decomposition objects.</td></tr>
+<tr><td style="width: 25%;"><a href="wstCV.html">wstCV</a></td>
+<td>Performs two-fold cross-validation estimation using packet-ordered non-decimated wavelet transforms and one, global, threshold.</td></tr>
+<tr><td style="width: 25%;"><a href="wstCVl.html">wstCVl</a></td>
+<td>Performs two-fold cross-validation estimation using packet-ordered non-decimated wavelet transforms and a (vector) level-dependent threshold.</td></tr>
+<tr><td style="width: 25%;"><a href="WTEnv.html">WTEnv</a></td>
+<td>Environment that exists to store intermediate calculations for re-use within the same R session.</td></tr>
+<tr><td style="width: 25%;"><a href="wvcvlrss.html">wvcvlrss</a></td>
+<td>Computes estimate of error for function estimate.</td></tr>
+<tr><td style="width: 25%;"><a href="wvmoments.html">wvmoments</a></td>
+<td>Compute moments of wavelets or scaling function</td></tr>
+<tr><td style="width: 25%;"><a href="wvrelease.html">wvrelease</a></td>
+<td>Prints out the release number of the WaveThresh package</td></tr>
+</table>
+</body></html>

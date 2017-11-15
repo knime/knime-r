@@ -1,0 +1,1678 @@
+\documentclass[nojss]{jss}
+%\VignetteIndexEntry{BB: An R Package for Solving a Large System of Nonlinear Equations and for Optimizing a High-Dimensional Nonlinear Objective Function}
+%\VignetteDepends{BB, numDeriv, setRNG, survival, Hmisc}
+%\VignetteKeywords{accelerate failure time model, Barzilai-Borwein, derivative-free, estimating equations, large-scale optimization, non-monotone line search, non-smooth optimization, rank-based regression}
+%\VignettePackage{BB}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+
+%% almost as usual
+\author{Ravi Varadhan\\Johns Hopkins University \And 
+        Paul D. Gilbert\\Bank of Canada}
+\title{\pkg{BB}: An \proglang{R} Package for Solving a Large System of 
+  Nonlinear Equations and for Optimizing a High-Dimensional Nonlinear 
+  Objective Function}
+
+%% for pretty printing and a nice hypersummary also set:
+\Plainauthor{Ravi Varadhan, Paul Gilbert} %% comma-separated
+\Plaintitle{BB: An R Package for Solving a Large System of 
+   Nonlinear Equations and for Optimizing a High-Dimensional Nonlinear 
+   Objective Function} %% without formatting
+\Shorttitle{\pkg{BB}} %% a short title (if necessary)
+
+%% an abstract and keywords
+\Abstract{
+\textit{This introduction to the \proglang{R} package \pkg{BB} is a (slightly) 
+modified version of \citet{VarGil2009}, published in the Journal of 
+Statistical Software.}
+
+We discuss \proglang{R} package \pkg{BB}, in particular, its capabilities 
+for solving a nonlinear system of equations.  The function \code{BBsolve} 
+in \pkg{BB} can be used for this purpose.  
+We demonstrate the utility of these functions for solving: 
+(a) large systems of nonlinear equations, 
+(b) smooth, nonlinear estimating equations in statistical modeling, and 
+(c) non-smooth estimating equations arising in rank-based regression modeling 
+of censored failure time data. The function \code{BBoptim} 
+can be used to solve smooth, box-constrained optimization problems.  
+A main strength of \pkg{BB} is that, due to its low memory and storage 
+requirements, it is ideally suited for solving high-dimensional problems 
+with thousands of variables. 
+}
+\Keywords{accelerate failure time model, Barzilai-Borwein, derivative-free, 
+estimating equations, large-scale optimization, non-monotone line search,  
+non-smooth optimization, rank-based regression}
+%% \Plainkeywords{keywords, comma-separated, not capitalized, Java} %% without formatting
+%% at least one keyword must be supplied
+
+%% publication information
+%% NOTE: Typically, this can be left commented and will be filled out by the technical editor
+%% \Volume{32}
+%% \Issue{4}
+%% \Year{2009}
+
+%% The address of (at least) one author should be given
+%% in the following format:
+\Address{
+  Ravi Varadhan\\
+  The Center on Aging and Health \& School of Medicine\\
+  Johns Hopkins University\\
+  Baltimore, USA\\
+  E-mail: \email{rvaradhan@jhmi.edu}\\
+  URL: \url{http://www.jhsph.edu/agingandhealth/People/Faculty/Varadhan.html}
+\\
+\\
+  Paul D. Gilbert\\
+  Canadian Economic Analysis Department\\
+  Bank of Canada\\
+  Ottawa, Canada\\
+  E-mail: \email{pgilbert@bank-banque-canada.ca}\\
+  URL: \url{http://www.bank-banque-canada.ca/pgilbert}
+}
+
+%% for those who use Sweave please include the following line (with % symbols):
+%% need no \usepackage{Sweave.sty}
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+%% include your article here, just as usual
+%% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
+\begin{Scode}{echo=FALSE,results=hide}
+options(prompt="R> ", continue="+  ")
+\end{Scode}
+
+\section{Introduction}
+\proglang{R} \citep{R} package \pkg{BB} provides functions for solving 
+large-scale nonlinear problems.  \pkg{BB} (version 2009.6-1) comprises six 
+functions, which are nested at three levels.  At the bottom level are three 
+functions: 
+\code{sane} and \code{dfsane} for solving a nonlinear system of equations; 
+and \code{spg} for optimizing a nonlinear objective function with box 
+constraints.  These functions, especially \code{dfsane} and \code{spg}, 
+are the workhorses of \pkg{BB}.  The functions \code{BBsolve} and 
+\code{BBoptim} are at the next higher level.  \code{BBsolve} is a wrapper 
+for \code{dfsane}.  It takes a single parameter vector as starting value and 
+calls \code{dfsane} repeatedly with different algorithm control parameters to 
+try and achieve successful convergence to the solution.  
+Similarly, \code{BBoptim}, which is a wrapper for \code{spg}, takes a single 
+parameter vector as starting value and calls \code{spg} repeatedly with 
+different algorithm control parameters.  
+At the top-most level is the function \code{multiStart}.  This takes a matrix 
+of parameters as multiple starting values and, depending on the value of 
+the argument \code{action} specified by the user, calls either \code{BBsolve} 
+or \code{BBoptim} for each starting value.  
+
+The main purposes of this article are: 
+(1) to introduce \pkg{BB} to \proglang{R} users, 
+(2) to present background necessary for the appropriate use of the algorithms, 
+and (3) to demonstrate the utility of the algorithms by presenting results on 
+a variety of test problems.  In addition to \pkg{BB}, \proglang{R} 
+package \pkg{nleqslv} \citep{Has09} 
+has recently been added to the Comprehensive \proglang{R} 
+Archive Network (CRAN) \url{http://CRAN.R-project.org/}. 
+However, \pkg{nleqslv} uses Newton-type methods, and hence it may not be 
+suitable for solving large systems of equations.
+We will confine this article to the problem of finding a root of simultaneous nonlinear equations, and 
+not discuss \code{spg} for nonlinear optimization, since that problem can be 
+addressed using existing \proglang{R} functions including \code{optim}, 
+\code{nlminb}, and \code{nlm}. 
+Other optimization packages are summarized in the CRAN task view 
+\citep{ctv} on optimization at
+\url{http://cran.at.r-project.org/web/views/Optimization.html}.  
+However, we point out that the optimization 
+function \code{spg} in \pkg{BB} is different from the existing functions in 
+that it is well suited to large-scale optimization, 
+since it does not require the Hessian matrix of the objective function.  
+It is based on the Barzilai-Borwein gradient method developed by \citet{Ray97}. 
+Our \proglang{R} implementation 
+\citep[which is based on the Fortran code of][]{BirMarRay01} 
+is competitive with the limited-memory BFGS algorithm
+(\code{method = "L-BFGS-B"}) in \code{optim} for large-scale, box-constrained 
+optimization, and is superior to the conjugate gradient methods 
+(\code{method = "CG"}) in \code{optim} for large-scale, unconstrained 
+optimization.  
+Results presented here were obtained with \pkg{BB} version 2009-6.1.
+The most recent version of package \pkg{BB} is available from CRAN 
+at \url{http://CRAN.R-project.org/package=BB}.
+A tutorial on \pkg{BB} is available and can be viewed from an \proglang{R} 
+session by typing:  
+%%\SweaveOpts{echo=TRUE,results=verbatim,fig=FALSE}
+\begin{Scode}{eval=FALSE}
+vignette("BB", package = "BB")
+\end{Scode}
+Also, a version of this paper, augmented with results from the system on which
+the vignette is compiled, can be viewed  by typing:  
+\begin{Scode}{eval=FALSE}
+vignette("BBvignetteJSS", package = "BB")
+\end{Scode}
+The JSS paper was compiled with settings for the number of simulations and bootstrap
+samples as \code{nsim=1000, nboot=500},
+but, in order to maintain a reasonable build time for the package, these 
+values are set very much smaller in the vignette (nsim=10, nboot=50).
+\begin{Scode}{echo=TRUE,results=hide}
+nsim  <- 10 # 1000  
+nboot <- 50 # 500
+\end{Scode}
+
+\section{Solving nonlinear system of equations}
+We are interested in solving the nonlinear system of equation
+\begin{equation}
+F(x) = 0,  \label{problem}
+\end{equation}
+where $F: \mathbb{R}^p \mapsto \mathbb{R}^p$ is a nonlinear function with 
+continuous partial derivatives.  We are interested in situations where $p$ is 
+large, and where the Jacobian of $F$ is either unavailable or 
+requires a prohibitive amount of storage, although the algorithms in \pkg{BB} 
+are also applicable when $p$ is small.  The best known methods for solving 
+(1) are Newton's method and the 
+quasi-Newton's methods (\citealp{OrtRhe70}; \citealp{DenSch83}).  
+Newton's method employs a working linear approximation to $F(x)$ around an 
+estimate of the solution, and improves it in an iterative manner:
+\begin{equation*}
+x_{k+1} = x_k \, - \, {J(x_k)}^{-1} \, F(x_k),   
+\end{equation*}
+where $J: \mathbb{R}^p \times \mathbb{R}^p \mapsto \mathbb{R}^p$ is the 
+Jacobian of $F$ evaluated at $x_k$.  Quasi-Newton methods use an approximation 
+of $J$, which, along with the solution vector, 
+is updated at each iteration.  For example, the classical Broyden's (``good'') 
+method is given by the equations:
+\begin{eqnarray*}
+x_{k+1} &=& x_k \, - \, {B_k}^{-1} \, F(x_k); \\
+B_{k+1} &=& B_k + \frac{F(x_{k+1}) \, (x_{k+1} - x_k)^\top } {(x_{k+1} - x_k)^\top (x_{k+1} - x_k)},    
+\end{eqnarray*}
+where $B_0$ is usually the identity matrix.  These methods are attractive 
+because they converge rapidly from any good starting value.  However, they 
+need to solve a linear system of equations 
+using the Jacobian or an approximation of it at each iteration, which can be 
+prohibitively expensive for large $p$ problems. 
+
+An indirect approach to solving Equation~\ref{problem} is to transform it to a 
+standard optimization problem by defining a merit function $\phi(u)$ where 
+$\phi: \mathbb{R}^p \mapsto \mathbb{R}$ is a functional with a unique global 
+minimum at $u=0$.  Now, any solution of $F(x) = 0$ is also a minimizer of 
+$\phi(F(x))$, but the converse does not always hold.  
+A sufficient condition for the converse to hold is that the Jacobian of $F$ be 
+non-singular at the minimizer of $\phi(u)$ \citep{OrtRhe70}.   
+A commonly used merit function is the $L_2$-norm of $F$: 
+$\phi(F(x)) = \|F(x)\|$, which is also known as the ``residual''.  
+This approach generally does not work well in practice, and hence is little 
+used as a stand-alone method for solving nonlinear systems.  
+However, as discussed later, we shall use this approach for generating good 
+starting values for the spectral algorithms.  
+
+\subsection{Spectral method for nonlinear systems}
+Recently, two efficient algorithms, SANE and DF-SANE, for solving large-scale
+nonlinear systems of equations have been proposed in the numerical analysis
+literature by Raydan and his colleagues (SANE: \citealp{LaCRay03}; 
+DF-SANE: \citealp{LaCMarRay06}).  These methods are an extension of the
+Barzilai-Borwein method for finding local minimum (\citealp{BarBor88};
+\citealp{Ray97}).  They use $\pm F(x)$ as search 
+directions in a systematic way, with one of the spectral coefficients as 
+steplength, and a non-monotone line-search technique for global convergence.  
+This provides a robust scheme for solving nonlinear systems.  
+The simplicity of search direction and steplength results in low-cost 
+per iteration.  
+
+The spectral approach for nonlinear systems is defined by the following 
+iteration:
+\begin{equation}
+ x_{k+1} = x_k \, + \,  \alpha_k \, d_k; \: k=0,1,2, \ldots  \label{BB}
+\end{equation}
+where $\alpha_k$ is the spectral steplength, and $d_k$ is the search direction, 
+which is defined as follows.  
+\[
+d_k = \left\{ \begin{array} 
+{r@{\quad:\quad}l} - F(x_k) &  \mbox{for DF-SANE}, \\
+\pm F(x_k) & \mbox{for SANE} 
+\end{array} \right. 
+\]
+For the SANE algorithm, the sign associated with $F(x_k)$ is that which yields 
+a descent direction with respect to the merit function $\|F(x_k)\|^2$.  
+The only spectral steplength considered in 
+\citet{LaCRay03} and \citet{LaCMarRay06} is:
+\begin{equation}
+ \alpha_k = \frac {s_{k-1}^\top \, s_{k-1}} {s_{k-1}^\top \, y_{k-1}}; k=1,2, \ldots, \label{step1}
+\end{equation}
+where $s_{k-1} = x_k - x_{k-1}$, and $y_{k-1} = F(x_k) - F(x_{k-1})$.  
+Below, and in the tables, we denote the SANE and DF-SANE algorithms that 
+use this steplength as \textit{sane-1} and \textit{dfsane-1}, respectively.
+In addition to Equation~\ref{step1}, \citet{BarBor88} proposed a second 
+spectral steplength:
+\begin{equation}
+ \alpha_k = \frac {s_{k-1}^\top \, y_{k-1}} {y_{k-1}^\top \, y_{k-1}}.  \label{step2}
+\end{equation}
+We denote the SANE and DF-SANE algorithms that use this steplength 
+as \textit{sane-2} and \textit{dfsane-2}, respectively.  
+We also consider a third spectral steplength, first proposed in 
+\citet{VarRol08} for the acceleration of EM algorithms:
+\begin{equation}
+ \alpha_k = \mbox{sgn}(s_{k-1}^\top \, y_{k-1}) \: \frac {\|s_{k-1}\|} {\|y_{k-1}\|}, \label{step3}
+\end{equation}
+where $\mbox{sgn}(x) = x / |x|, \mbox{when } x \not= 0,$ and is zero when $x=0$.
+For all three steplengths, we define $\alpha_0 = \min(1, 1/\|F(x_0)\|)$.  
+The general effectiveness of spectral steplengths 
+is due to the fact that they can be viewed as a Rayleigh quotient with 
+respect to a secant approximation of the Jacobian.  The scalar $|\alpha_k|$ 
+is closely related to the condition number of the Jacobian $J_k$ \citep{Fle01}.
+
+\subsection{Globalization using non-monotone line search} 
+To achieve global convergence, the spectral iterative scheme (\ref{BB}) must be
+combined with a suitable line search technique.  For SANE, \citet{LaCRay03} 
+consider a non-monotone line search technique \citep{GriLamLuc86}, 
+which can be written as
+\begin{equation}
+ f(x_{k+1}) \leq  \max_{0 \leq j \leq M} f(x_{k-j}) \: + \: \gamma \alpha_k \nabla f(x_k)^\top d_k, \label{GLL}
+\end{equation}
+where the merit function $f(x) = F(x)^\top F(x),$ and $\gamma$ is a small positive 
+number (we choose $\gamma = 10^{-4}$).  In the above condition, denoted here 
+as the GLL condition, M is a positive integer 
+that plays an important role in dictating the allowable degree of 
+non-monotonicity in the value of the merit function, with $M=0$ yielding a 
+strictly monotone scheme.  As pointed out by Fletcher (2001), the 
+Barzilai-Borwein schemes perform poorly when strict monotonicity is imposed, 
+especially in ill-conditioned problems.  They perform better when some amount 
+of non-monotonicity is allowed, hence globalization using the GLL condition, 
+with values 
+of M between 5-20.  The term $\nabla f(x_k)^\top d_k$ in SANE is equal 
+to $\pm F_k^\top J_k F_k$, where $F_k = F(x_k)$ and $J_k$ is the Jacobian 
+of $F$ at $x_k$.  This can be evaluated without computing the Jacobian as 
+follows:
+\begin{equation*}
+ F_k^\top J_k F_k \approx F_k^\top \left[ \frac{F(x_k + h F_k) - F_k}{h}\right],
+\end{equation*}
+where $h = 10^{-7}$.
+
+For DF-SANE (stands for "derivative-free SANE"), \citet{LaCMarRay06} propose a 
+new, and different globalization line search technique:
+\begin{equation}
+ f(x_{k+1}) \leq  \max_{0 \leq j \leq M} f(x_{k-j}) \: + \: \eta_k - \gamma \alpha_k^2 f(x_k), \label{LF}
+\end{equation}
+where $\gamma = 10^{-4}$, and $\eta_k > 0$ decreases with $k$ such 
+that $\sum_{k=0}^\infty \eta_k = \eta < \infty$.  Note that this strategy  
+does not involve any Jacobian computations.  Hence the phrase "derivative-free".  
+This strategy maintains the non-monotonicity of GLL, while avoiding the 
+quadratic product involving the Jacobian, which entails an additional 
+function evaluation at each iteration.  Consequently, 
+DF-SANE is generally more economical than SANE in terms of number of 
+evaluations of $F$.  The presence of $\eta_k > 0$ ensures that all the 
+iterations are well-defined, and the forcing term 
+$-\gamma \alpha_k^2 f(x_k)$ provides the theoretical condition sufficient 
+for establishing global convergence (\citet{LaCMarRay06}).
+
+\subsection[Implementations of SANE and DF-SANE in BB]
+{Implementations of SANE and DF-SANE in \pkg{BB}}
+For detailed algorithmic implementation of the iterations and non-monotone line
+searches for SANE and DF-SANE, the reader is directed to \citet{LaCRay03} 
+and \citet{LaCMarRay06}, respectively.
+Also see the documentation for the \proglang{R} functions \code{sane} 
+and \code{dfsane} in \pkg{BB} for more details.  
+Here we only discuss the salient features of our \proglang{R} implementation 
+for SANE and DF-SANE algorithms in the package \pkg{BB} that are different 
+from the original Fortran codes \citep[which can be obtained from][]{Ray09}. 
+These are:
+
+\begin{enumerate}
+\item We provide an option for three spectral steplengths, 
+Equations~\ref{step1}, \ref{step2} and \ref{step3}.  
+The \code{method} argument in \code{sane} 
+and \code{dfsane} functions can be used to select between these steplengths.  
+The original SANE and DF-SANE algorithms only allowed one steplength, 
+Equation~\ref{step1}, which can be selected with \code{method=1}. 
+We have set \code{method=2}, which corresponds to Equation~\ref{step2}, as 
+the default.  In our numerical experiments, this generally outperformed the 
+other two methods. 
+(See Table~\ref{table:stdexpmts} discussed in the next section for results.)  
+\item We re-scale the first BB steplength as: 
+$\alpha_0 = \min(1, 1/\|F(x_0)\|)$, whereas in the original 
+implementation $\alpha_0 = 1$.
+\item We provide an option for improving on starting values, when the user 
+is unable to generate good starting values.  We do this by calling the 
+Nelder-Mead nonlinear simplex algorithm \citep{NelMea65}, 
+as implemented in the \proglang{R} function \code{optim}, with the merit 
+function $f(x)$ as the objective function.  
+\item We provide an option for improving upon convergence when \code{sane} 
+or \code{dfsane} terminates unsuccessfully in some particular manner, 
+i.e. when \code{convergence = 4} or \code{5} 
+for \code{sane} and when \code{convergence = 2 or 5} for \code{dfsane}.  
+We do this by calling the limited memory BFGS algorithm 
+(\code{method="L-BFGS-B"}) in \code{optim} with the 
+merit function $f(x)$ as the objective function.  
+\item When we are close to the solution, i.e. when $f(x_k) < 10^{-4}$, we 
+use the dynamic retard strategy proposed in \citet{LueRay03}:
+    \[
+     x_{k+1} = x_k \, + \,  \alpha_{k-1} \, d_k, 
+    \]
+i.e. we use the spectral steplength from two iterations before the current one. 
+This retarded spectral scheme was never worse than the unretarded spectral 
+method (Eq. \ref{BB}) in our experiments, and in many cases it actually 
+exhibited faster convergence (results not shown).
+\item We implement an additional stopping criterion in our \proglang{R} 
+functions.  The iterations are terminated when there is no decrease in the 
+merit function $f(x)$ over \code{noimp} iterations, where 
+we choose a default value of \code{noimp = 100}.  This is particularly 
+essential when a large $M$, say, $M \geq 100$ is used.  
+
+\end{enumerate}
+
+\subsection[What to do when the algorithm fails? -- Function BBsolve]
+{What to do when the algorithm fails? -- Function \code{BBsolve}}
+Algorithm \code{dfsane} or (\code{sane}) is said to have failed when a non-zero 
+convergence type is obtained, i.e. when \code{convergence} > 0.  In this case, 
+we have found that the 
+following sequential strategy generally works quite well:
+\begin{enumerate}
+\item Try a different non-monotonicity parameter \code{M}.  Since the default 
+is \code{M = 10}, try \code{M=50}.
+\item Try a different method.  Since the default is \code{method = 2}, try 
+methods 1 and 3.
+\item Try with Nelder-Mead initialization \code{NM}.  Since the default 
+is \code{NM = FALSE}, the user should try \code{NM = TRUE}.
+\end{enumerate}
+We have written an \proglang{R} wrapper function called \code{BBsolve} to 
+automatically implement this strategy.  We have found this function to be 
+successful in problems where \code{dfsane} and \code{sane} had failed to 
+converge.  Here we give a simple example to illustrate this using the
+Freudenstein-Roth function.
+
+\begin{Scode}
+require("BB")  
+froth <- function(p){
+  r <- rep(NA, length(p))
+  r[1] <- -13 + p[1] + (p[2] * (5 - p[2]) - 2)  * p[2]
+  r[2] <- -29 + p[1] + (p[2] * (1 + p[2]) - 14) * p[2]
+  r
+  }
+
+p0 <- rep(0, 2)  
+dfsane(par = p0, fn = froth, control = list(trace = FALSE)) 
+sane(par = p0, fn = froth, control = list(trace = FALSE))
+BBsolve(par = p0, fn = froth)
+\end{Scode}
+
+Function \code{dfsane} and \code{sane} fail to converge, while \code{BBsolve}
+converges successfully.
+A similar wrapper function called \code{BBoptim} can be used to solve 
+optimization problems when \code{spg} fails to converge.   
+
+\section{Numerical Experiments}
+
+\subsection{Standard test problems}
+We have tested our algorithms extensively on a number of nonlinear systems 
+considered in \citet{LaCRay03}, \citet{LaCMarRay06}, and \citet{LukVlc03}.  
+Here we report the results for six problems, whose statements are given 
+in Apppendix~\ref{app:A}.  We tested four methods, \code{sane} 
+and \code{dfsane}, each with two steplengths Equations~\ref{step1} and \ref{step2}, 
+for 1000 randomly generated 
+initial values for each problem, which are also provided in Appendix~\ref{app:A}.
+This approach of using random starting values is uncommon in the numerical 
+analysis literature when testing new methods, and when comparing methods.  
+Rather, a single, reasonably good starting value is used in each test problem.  
+Hence, our tests are much more stringent than those commonly seen in the 
+numerical analysis literature (e.g. \citealp{LaCRay03}, \citealp{LaCMarRay06}).  
+Therefore, it should not come as a surprise that there are substantial number 
+of convergence failures in some problems.  
+We used $\frac{\|F(x_n)\|}{\sqrt{p}} \,\leq \, 10^{-7}$, where $p$ is the 
+dimensionality of the problem, as the stopping criterion.  
+We have successful convergence (i.e. \code{convergence = 0}) 
+when this criterion is satisfied. The algorithm (\code{sane} or \code{dfsane})
+is said to have failed when \code{convergence > 0}.
+
+We chose $p=500$ for all the 6 test problems.  Unless otherwise stated 
+explicitly, we used the default control parameter setting for all the parameters of \code{dfsane} 
+and \code{sane}.  The numerical experiment results presented here were 
+performed using \proglang{R} version 2.9.1 running on a Microsoft Windows 
+Vista operating system, with a 2.2 GHz Intel Dual-core Pentium processor 
+and 4 GB of RAM.  The results are presented in Table~\ref{table:stdexpmts}.  
+
+In order to reproduce the random numbers used in this paper,
+the seed and RNG types are set to known values.  
+
+\begin{Scode}{keep.source=TRUE}
+require("setRNG")
+test.rng <- list(kind = "Mersenne-Twister", normal.kind = "Inversion", 
+		    seed = 1234)
+old.seed <- setRNG(test.rng)
+\end{Scode}
+
+Iterative numerical procedures can be sensitive to system math libraries
+and even hardware floating point calculation, since a very small difference
+in a search steps will result in slightly different paths to the solution.
+This can result in a different number of iterations and/or a slightly
+different answer. The difference may be especially aggravated in problems
+where the objective function is nearly ''flat'' near the solution. We have run the
+examples here with different versions of R and on different hardware and
+operating systems and the results are relatively similar, but users
+replicating the results may see small differences.
+
+We define a ''failure'' as the inability of an algorithm to achieve the
+default tolerance of $1.e-07$ under default values for all the control
+parameters.  It might be possible that a different control setting 
+enables successful convergence.  In fact, this is one of the main motivations
+for creating the \code{BBsolve} function that can automatically try different
+control settings to achieve successful convergence.
+
+\begin{table}[!t]
+\centering
+\begin{tabular}{lcccc}
+\hline Methods & \# Iters  & \# Fevals & CPU (sec) & \# Failures  \\
+\hline 
+\multicolumn{5}{c}{\emph{1. Exponential function 3}}  \\
+\textit{sane-1}   & 147 (  50,   92) &  630 ( 131,  275) & 0.30 (0.06, 0.14) &  427\\
+\textit{dfsane-1} & 231 ( 152,  271) &  551 ( 283,  490) & 0.31 (0.17, 0.28) &  428\\
+\textit{sane-2}   & 115 (  99,  130) &  252 ( 208,  279) & 0.13 (0.11, 0.14) &   57\\
+\textit{dfsane-2} & 210 ( 175,  237) &  227 ( 183,  256) & 0.15 (0.12, 0.17) &    7\\
+\code{BBsolve}    & 212 ( 175,  235) &  229 ( 183,  254) & 0.15 (0.12, 0.17) &    1\\
+\hline 
+\multicolumn{5}{c}{\emph{2. Trigexp function}}  \\
+\textit{sane-1}   &  33 (  24,   27) &   72 (  49,   55) & 0.08 (0.05, 0.06) &    6\\
+\textit{dfsane-1} &  29 (  24,   28) &   30 (  25,   29) & 0.04 (0.03, 0.04) &    0\\
+\textit{sane-2}   &  37 (  24,   28) &   76 (  49,   57) & 0.08 (0.05, 0.07) &    0\\
+\textit{dfsane-2} &  31 (  24,   28) &   32 (  25,   29) & 0.04 (0.03, 0.05) &    0\\
+\hline 
+\multicolumn{5}{c}{\emph{3. Broyden's tridiagonal function}}  \\
+\textit{sane-1}   &  19 (  19,   19) &   39 (  39,   39) & 0.02 (0.01, 0.02) &    0\\
+\textit{dfsane-1} &  19 (  19,   19) &   20 (  20,   20) & 0.01 (0.00, 0.02) &    0\\
+\textit{sane-2}   &  20 (  20,   20) &   41 (  41,   41) & 0.02 (0.01, 0.02) &    0\\
+\textit{dfsane-2} &  20 (  20,   20) &   21 (  21,   21) & 0.01 (0.00, 0.02) &    0\\
+\hline 
+\multicolumn{5}{c}{\emph{4. Extended Rosenbrock function}} \\
+\textit{sane-1}   &  41 (  35,   41) &   91 (  73,   86) & 0.03 (0.03, 0.03) &   30\\
+\textit{dfsane-1} &  43 (  35,   42) &   61 (  39,   50) & 0.03 (0.01, 0.03) &   39\\
+\textit{sane-2}   &  80 (  39,  120) &  174 (  80,  247) & 0.07 (0.03, 0.10) &  484\\
+\textit{dfsane-2} &  61 (  38,   60) &   66 (  42,   68) & 0.04 (0.02, 0.04) &  158\\
+\code{BBsolve}    &  40 (  37,   43) &   42 (  39,   45) & 0.02 (0.02, 0.03) &    0\\
+\hline 
+\multicolumn{5}{c}{\emph{5. Troesch function}}  \\
+\textit{sane-1}   &1501 (1501, 1501) & 6068 (6026, 6107) & 3.29 (3.21, 3.28) & 1000\\
+\textit{dfsane-1} &1481 (1501, 1501) & 4005 (3936, 4192) & 2.43 (2.37, 2.53) &  949\\
+\textit{sane-2}   & 803 ( 673,  904) & 2067 (1722, 2338) & 1.17 (0.97, 1.33) &    1\\
+\textit{dfsane-2} & 907 ( 763, 1033) & 1391 (1169, 1580) & 0.93 (0.78, 1.06) &    1\\
+\hline 
+\multicolumn{5}{c}{\emph{6. Chandrasekhar's H-equation}}  \\
+\textit{sane-1}   &  14 (  14,   14) &   29 (  29,   29) & 2.15 (2.08, 2.21) &    0\\
+\textit{dfsane-1} &  14 (  14,   14) &   15 (  15,   15) & 2.15 (2.08, 2.21) &    0\\
+\textit{sane-2}   &  13 (  13,   13) &   27 (  27,   27) & 2.15 (2.08, 2.21) &    0\\
+\textit{dfsane-2} &  13 (  13,   13) &   14 (  14,   14) & 2.15 (2.08, 2.21) &    0\\
+\hline
+\end{tabular}
+
+\caption{Results of numerical experiments for 6 standard test problems. 1000 randomly 
+   generated starting values were used for each problem. Means 
+   and inter-quartile ranges (in parentheses) are shown.  Default control 
+   parameters were used in all the algorithms.\label{table:stdexpmts}} 
+\end{table}
+
+\begin{Scode}{echo=FALSE,results=hide}
+expo3 <- function(p) {
+   n <- length(p)
+   r <- rep(NA, n)
+   onm1 <- 1:(n-1) 
+   r[onm1] <- onm1/10 * (1 - p[onm1]^2 - exp(-p[onm1]^2))
+   r[n] <- (n/10) * (1 - exp(-p[n]^2))
+   r
+}
+
+dfsane1.expo3 <- dfsane2.expo3 <- sane1.expo3 <- sane2.expo3 <-  bbs.expo3  <- 
+   bbs.expo3 <- matrix(NA, nsim, 5, 
+             dimnames = list(NULL, c("value", "feval", "iter", "conv", "cpu")))
+
+old.seed <- setRNG(test.rng)
+
+cat("Simulation test 1: ")
+for (i in 1:nsim) {
+cat(i, " ")
+p0 <- rnorm(500)
+t1 <- system.time(ans <- 
+    sane(par = p0, fn = expo3, method = 1, control = list(trace = FALSE)))[1]
+sane1.expo3[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t1)
+
+t2 <- system.time(ans <- 
+    sane(par = p0, fn = expo3, method = 2, control = list(trace = FALSE)))[1]
+sane2.expo3[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t2)
+
+t3 <- system.time(ans <-
+    dfsane(par = p0, fn = expo3, method = 1, control = list(trace = FALSE)))[1]
+dfsane1.expo3[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t3)
+
+t4 <- system.time(ans <-
+    dfsane(par = p0, fn = expo3, method = 2, control = list( trace = FALSE)))[1]
+dfsane2.expo3[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t4)
+
+t5 <- system.time(ans <- 
+    BBsolve(par = p0, fn = expo3,  control = list(trace = FALSE)))[1]
+bbs.expo3[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t5)
+}
+cat("\n")
+
+table1.test1 <- rbind(
+  c(apply(  sane1.expo3, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(  sane1.expo3[,4] > 0)),
+  c(apply(dfsane1.expo3, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(dfsane1.expo3[,4] > 0)),
+  c(apply(  sane2.expo3, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(  sane2.expo3[,4] > 0)),
+  c(apply(dfsane2.expo3, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(dfsane2.expo3[,4] > 0)),
+  c(apply(    bbs.expo3, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(    bbs.expo3[,4] > 0))
+ )
+
+dimnames(table1.test1) <- list(
+    c("sane-1", "dfsane-1", "sane-2", "dfsane-2", "BBsolve"), NULL)
+
+table1.test1
+
+
+###################### test function 2 ######################
+
+trigexp <- function(x) {
+   n <- length(x)
+   r <- rep(NA, n)
+   r[1] <- 3*x[1]^2 + 2*x[2] - 5 + sin(x[1] - x[2]) * sin(x[1] + x[2])
+   tn1 <- 2:(n-1)
+   r[tn1] <- -x[tn1-1] * exp(x[tn1-1] - x[tn1]) + x[tn1] * ( 4 + 3*x[tn1]^2) +
+        2 * x[tn1 + 1] + sin(x[tn1] - x[tn1 + 1]) * sin(x[tn1] + x[tn1 + 1]) - 8 
+   r[n] <- -x[n-1] * exp(x[n-1] - x[n]) + 4*x[n] - 3
+   r
+}
+
+
+old.seed <- setRNG(test.rng)
+
+dfsane1.trigexp <- dfsane2.trigexp <- sane1.trigexp <- sane2.trigexp <- 
+   matrix(NA, nsim, 5, 
+      dimnames=list(NULL,c("value", "feval", "iter", "conv", "cpu")))
+
+cat("Simulation  test 2: ")
+for (i in 1:nsim) {
+cat(i, " ")
+p0 <- rnorm(500)
+t1 <- system.time(ans <- 
+   sane(par=p0, fn=trigexp, method=1, control=list( trace=FALSE)))[1]
+sane1.trigexp[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t1)
+
+t2 <- system.time(ans <- 
+   sane(par=p0, fn=trigexp, method=2, control=list(   trace=FALSE)))[1]
+sane2.trigexp[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t2)
+
+t3 <- system.time(ans <- 
+   dfsane(par=p0, fn=trigexp, method=1, control=list(   trace=FALSE)))[1]
+dfsane1.trigexp[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t3)
+
+t4 <- system.time(ans <- 
+   dfsane(par=p0, fn=trigexp, method=2, control=list(   trace=FALSE)))[1]
+dfsane2.trigexp[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t4)
+}
+cat("\n")
+
+table1.test2 <- rbind(
+  c(apply(  sane1.trigexp, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(  sane1.trigexp[,4] > 0)),
+  c(apply(dfsane1.trigexp, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(dfsane1.trigexp[,4] > 0)),
+  c(apply(  sane2.trigexp, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(  sane2.trigexp[,4] > 0)),
+  c(apply(dfsane2.trigexp, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(dfsane2.trigexp[,4] > 0))
+ )
+
+dimnames(table1.test2) <- list(
+    c("sane-1", "dfsane-1", "sane-2", "dfsane-2"), NULL)
+
+table1.test2
+
+###################### test function 3 ######################
+
+broydt <- function(x, h=2) {
+   n <- length(x)
+   r <- rep(NA, n)
+   r[1] <- ((3 - h * x[1]) * x[1]) - 2 * x[2] + 1
+   tnm1 <- 2:(n-1)
+   r[tnm1] <- ((3 - h * x[tnm1]) * x[tnm1]) - x[tnm1-1] - 2 * x[tnm1+1] + 1
+   r[n] <- ((3 - h * x[n]) * x[n]) - x[n-1] + 1
+   r
+   }
+
+
+old.seed <- setRNG(test.rng)
+
+dfsane1.broydt <- dfsane2.broydt <- sane1.broydt <- sane2.broydt <-
+     matrix(NA, nsim, 5, 
+       dimnames=list(NULL,c("value", "feval", "iter", "conv", "cpu")))
+
+cat("Simulation  test 3: ")
+for (i in 1:nsim) {
+cat(i, " ")
+p0 <- -runif(500)
+t1 <- system.time(ans <- 
+   sane(par=p0, fn=broydt, method=1, control=list(trace=FALSE)))[1]
+sane1.broydt[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t1)
+
+t2 <- system.time(ans <- 
+   sane(par=p0, fn=broydt, method=2, control=list(trace=FALSE)))[1]
+sane2.broydt[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t2)
+
+t3 <- system.time(ans <- 
+   dfsane(par=p0, fn=broydt, method=1, control=list(trace=FALSE)))[1]
+dfsane1.broydt[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t3)
+
+t4 <- system.time(ans <- 
+   dfsane(par=p0, fn=broydt, method=2, control=list(trace=FALSE)))[1]
+dfsane2.broydt[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t4)
+}
+cat("\n")
+
+table1.test3 <- rbind(
+  c(apply(  sane1.broydt, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(  sane1.broydt[,4] > 0)),
+  c(apply(dfsane1.broydt, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(dfsane1.broydt[,4] > 0)),
+  c(apply(  sane2.broydt, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(  sane2.broydt[,4] > 0)),
+  c(apply(dfsane2.broydt, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(dfsane2.broydt[,4] > 0))
+ )
+
+dimnames(table1.test3) <- list(
+    c("sane-1", "dfsane-1", "sane-2", "dfsane-2"), NULL)
+
+table1.test3
+
+###################### test function 4 ######################
+
+extrosbk <- function(x) {
+   n <- length(x)
+   r <- rep(NA, n)
+   j <- 2 * (1:(n/2))
+   jm1 <- j - 1
+   r[jm1] <- 10 * (x[j] - x[jm1]^2)
+   r[j] <-  1 - x[jm1]
+   r
+}
+
+old.seed <- setRNG(test.rng)
+
+dfsane1.extrosbk <- dfsane2.extrosbk <- sane1.extrosbk <- sane2.extrosbk <- 
+  bbs.extrosbk <- matrix(NA, nsim, 5, 
+      dimnames = list(NULL,c("value", "feval", "iter", "conv", "cpu")))
+
+cat("Simulation  test 4: ")
+for (i in 1:nsim) {
+cat(i, " ")
+p0 <- runif(500)
+t1 <- system.time(ans <- 
+   sane(par = p0, fn = extrosbk, method = 1, control = list( M = 10, noimp = 100, trace = FALSE)))[1]
+sane1.extrosbk[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t1)
+
+t2 <- system.time(ans <- 
+   sane(par = p0, fn = extrosbk, method = 2, control = list( M = 10, noimp = 100,  trace = FALSE)))[1]
+sane2.extrosbk[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t2)
+
+t3 <- system.time(ans <- 
+   dfsane(par = p0, fn = extrosbk, method = 1, control = list( M = 10, noimp = 100,  trace = FALSE)))[1]
+dfsane1.extrosbk[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t3)
+
+t4 <- system.time(ans <- 
+   dfsane(par = p0, fn = extrosbk, method = 2, control = list( M = 10, noimp = 100, trace = FALSE)))[1]
+dfsane2.extrosbk[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t4)
+
+t5 <- system.time(ans <- 
+   BBsolve(par = p0, fn = extrosbk, control = list(trace = FALSE)))[1]
+bbs.extrosbk[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t5)
+}
+cat("\n")
+
+table1.test4 <- rbind(
+  c(apply(  sane1.extrosbk, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(  sane1.extrosbk[,4] > 0)),
+  c(apply(dfsane1.extrosbk, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(dfsane1.extrosbk[,4] > 0)),
+  c(apply(  sane2.extrosbk, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(  sane2.extrosbk[,4] > 0)),
+  c(apply(dfsane2.extrosbk, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(dfsane2.extrosbk[,4] > 0)),
+  c(apply(    bbs.extrosbk, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(    bbs.extrosbk[,4] > 0))
+ )
+
+dimnames(table1.test4) <- list(
+    c("sane-1", "dfsane-1", "sane-2", "dfsane-2", "BBsolve"), NULL)
+
+table1.test4
+
+
+###################### test function 5 ######################
+
+troesch <- function(x) {
+  n <- length(x)
+  tnm1 <- 2:(n-1)
+  r <- rep(NA, n)
+    h <- 1 / (n+1)
+    h2 <- 10 * h^2
+    r[1] <- 2 * x[1] + h2 * sinh(10 * x[1]) - x[2] 
+    r[tnm1] <- 2 * x[tnm1] + h2 * sinh(10 * x[tnm1]) - x[tnm1-1] - x[tnm1+1]    
+
+    r[n] <- 2 * x[n] + h2 * sinh(10 * x[n]) - x[n-1] - 1
+  r
+  }
+  
+
+
+old.seed <- setRNG(test.rng)
+
+dfsane1.troesch <- dfsane2.troesch <- sane1.troesch <- sane2.troesch <- 
+    matrix(NA, nsim, 5,
+       dimnames = list(NULL,c("value", "feval", "iter", "conv", "cpu")))
+
+cat("Simulation  test 5: ")
+for (i in 1:nsim) {
+cat(i, " ")
+p0 <- sort(runif(500))
+
+t1 <- system.time(ans <- 
+   sane(par = p0, fn = troesch, method = 1, control = list(trace = FALSE)))[1]
+   sane1.troesch[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t1)
+
+t2 <- system.time(ans <- 
+   sane(par = p0, fn = troesch, method = 2, control = list(trace = FALSE)))[1]
+   sane2.troesch[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t2)
+
+t3 <- system.time(ans <- 
+   dfsane(par = p0, fn = troesch, method = 1, control = list(trace = FALSE)))[1]
+   dfsane1.troesch[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t3)
+
+t4 <- system.time(ans <- 
+   dfsane(par = p0, fn = troesch, method = 2, control = list(trace = FALSE)))[1]
+   dfsane2.troesch[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t4)
+}
+cat("\n")
+
+table1.test5 <- rbind(
+  c(apply(  sane1.troesch, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(  sane1.troesch[,4] > 0)),
+  c(apply(dfsane1.troesch, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(dfsane1.troesch[,4] > 0)),
+  c(apply(  sane2.troesch, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(  sane2.troesch[,4] > 0)),
+  c(apply(dfsane2.troesch, 2, summary)[c(4, 2,5), c(3, 2, 5)], sum(dfsane2.troesch[,4] > 0))
+ )
+
+dimnames(table1.test5) <- list(
+    c("sane-1", "dfsane-1", "sane-2", "dfsane-2"), NULL)
+
+table1.test5
+
+###################### test function 6 ######################
+
+chandraH <- function(x, c=0.9) {
+   n <- length(x)
+   k <- 1:n
+   mu <- (k - 0.5)/n
+   dterm <- outer(mu, mu, function(x1,x2) x1 / (x1 + x2) )
+   x - 1 / (1 - c/(2*n) * rowSums(t(t(dterm) * x)))
+   } 
+
+
+old.seed <- setRNG(test.rng)
+
+dfsane1.chandraH <- dfsane2.chandraH <- sane1.chandraH <- sane2.chandraH <-  
+    matrix(NA, nsim, 5, 
+       dimnames = list(NULL,c("value", "feval", "iter", "conv", "cpu")))
+
+cat("Simulation  test 6: ")
+for (i in 1:nsim) {
+   cat(i, " ")
+   p0 <- runif(500)
+   t1 <- system.time(ans <-
+      sane(par = p0, fn = chandraH, method = 1, control = list(trace = FALSE)))[1]
+   sane1.chandraH[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t1)
+
+   t2 <- system.time(ans <- 
+      sane(par = p0, fn = chandraH, method = 2, control = list(trace = FALSE)))[1]
+   sane2.chandraH[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t1)
+
+   t3 <- system.time(ans <- 
+      dfsane(par = p0, fn = chandraH, method = 1, control = list(trace = FALSE)))[1]
+   dfsane1.chandraH[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t1)
+
+   t4 <- system.time(ans <- 
+      dfsane(par = p0, fn = chandraH, method = 2, control = list(trace = FALSE)))[1]
+   dfsane2.chandraH[i, ] <- c(ans$residual, ans$feval, ans$iter, ans$convergence, t1)
+   }
+cat("\nSimulations for table 1 complete.\n")
+
+table1.test6 <- rbind(
+  c(apply(  sane1.chandraH, 2, summary)[c(4, 2, 5), c(3, 2, 5)], sum(  sane1.chandraH[,4] > 0)),
+  c(apply(dfsane1.chandraH, 2, summary)[c(4, 2, 5), c(3, 2, 5)], sum(dfsane1.chandraH[,4] > 0)),
+  c(apply(  sane2.chandraH, 2, summary)[c(4, 2, 5), c(3, 2, 5)], sum(  sane2.chandraH[,4] > 0)),
+  c(apply(dfsane2.chandraH, 2, summary)[c(4, 2, 5), c(3, 2, 5)], sum(dfsane2.chandraH[,4] > 0))
+ )
+
+dimnames(table1.test6) <- list(
+    c("sane-1", "dfsane-1", "sane-2", "dfsane-2"), NULL)
+
+
+table1.caption <- paste("Results of numerical experiments for 6 standard test problems.",
+   nsim, "randomly generated starting values were used for each problem. Means 
+   and inter-quartile ranges (in parentheses) are shown.  Default control 
+   parameters were used in all the algorithms.")
+
+table1 <- rbind(table1.test1, table1.test2, table1.test3, table1.test4, 
+                table1.test5, table1.test6) 
+
+#dimnames(table1) <- list(dimnames(table1.test1)[[1]], 
+#   c("", "# Iters", "", "", "# Fevals", "", "", "CPU (sec)", "", "# Failures"))
+
+cgroups <- c("# Iters", "# Fevals", "CPU (sec)","# Failures")
+
+rgroups <- c("\\emph{1. Exponential function 3}", 
+             "\\emph{2. Trigexp function}",
+             "\\emph{3. Broyden's tridiagonal function}",
+             "\\emph{4. Extended Rosenbrock function}", 
+	     "\\emph{5. Troesch function}",
+	     "\\emph{6. Chandrasekhar's H-equation}")
+\end{Scode}
+
+
+\begin{Scode}{echo=FALSE,results=tex}
+require("Hmisc")
+
+latex(table1,  
+       file="",
+       caption=table1.caption, caption.loc='bottom',
+       #align  = "cccccccccc",
+       #colheads="Methods & \\# Iters  & \\# Fevals & CPU (sec) & \\# Failures  \\\\",
+       cgroups = cgroups, n.cgroups= c(3,3,3,1),
+       rgroups = rgroups, n.rgroups= c(5,4,4,5,4,4),      
+       dec=3,
+       label="table:stdexpmtsGENERATED",
+       landscape=FALSE, size="small", 
+       numeric.dollar=TRUE)
+ 
+\end{Scode}
+
+
+Algorithms \textit{sane-2} and \textit{dfsane-2} performed better (using 
+steplength Equation~\ref{step2}) than \textit{sane-1} and \textit{dfsane-1} 
+(with steplength Equation~\ref{step1}), except for the \emph{extended 
+Rosenbrock function}.  
+\textit{dfsane-2} was the best method overall.   We re-ran the tests 
+with \code{BBsolve} for the two problems: \emph{exponential function 3} 
+and \emph{extended Rosenbrock}, 
+where even the best performing method had a substantial number of convergence 
+failures.  Now, \code{BBsolve} converged successfully in the \emph{extended 
+Rosenbrock} problem for all 1000 starting values, and had only one 
+failure in the \emph{exponential function 3} problem.  This demonstrates that 
+\code{BBsolve} is a reliable tool for solving a nonlinear system of equations.
+
+\subsection[Finding multiple roots or multiple local optima -- Function multiStart]
+{Finding multiple roots or multiple local optima -- Function \code{multiStart}}
+It is not uncommon for a nonlinear system of equations to have multiple roots 
+or for a nonlinear objective function to have multiple local minima (or maxima).
+In this case, it may be of interest to identify
+as many, if not all, solutions as possible.  To this end, we have provided a 
+function called \code{multiStart}, which can accept a matrix of parameter 
+values, where each row of the matrix is a starting value.  
+The user needs to define this matrix and pass it as an input 
+to \code{multiStart}.  Two widely used approaches are: (1) generate random 
+numbers according to some probability distribution, and (2) regular grid search.  
+This function has an argument called \code{action}, which indicates whether the 
+user wants to \emph{solve} a nonlinear system of equations or to \emph{optimize}
+a nonlinear objective function.  
+For each starting value, \code{multiStart} calls either \code{BBsolve} 
+or \code{BBoptim}.   
+
+We now illustrate how to use \code{multiStart} to find multiple roots.  
+We consider a system of high-degree polynomial equations \citep{Kearfoot87}, 
+comprising 3 equations in 3 variables.  
+It has 12 real roots and 126 complex roots.  Here we find all the 12 roots.
+
+We generate 300 random starting values, each a vector of length equal to 3.  
+The system is then solved 300 times and the unique solutions were picked out. 
+
+\begin{Scode}{echo=TRUE,results=verbatim}
+hdp <- function(x) {
+  r <- rep(NA, length(x))
+  r[1] <- 5*x[1]^9 - 6*x[1]^5 * x[2]^2 + x[1] * x[2]^4 + 2*x[1] * x[3]
+  r[2] <- -2 * x[1]^6 * x[2] + 2 * x[1]^2 * x[2]^3 + 2 * x[2] * x[3]
+  r[3] <- x[1]^2 + x[2]^2 - 0.265625
+  r
+  }
+
+old.seed <- setRNG(test.rng)
+p0 <- matrix(runif(900), 300, 3)
+\end{Scode}
+
+\begin{Scode}{echo=TRUE,results=hide}
+ans <- multiStart(par = p0, fn = hdp, action = "solve")
+\end{Scode}
+
+\begin{Scode}
+sum(ans$conv)  
+pmat <- ans$par[ans$conv, ] 
+ord1 <- order(pmat[, 1])
+ans <- round(pmat[ord1, ], 4)
+ans[!duplicated(ans), ] 
+\end{Scode}
+
+The \code{sum(ans$conv)} gives the number of successful runs (284 in our
+experiments). \code{pmat} are the converged solutions
+and \code{ans[!duplicated(ans), ]} displays the 12 unique solutions.
+
+
+\section{Solving nonlinear estimating equations in statistics}
+Nonlinear system of equations arise commonly in statistics.  In some cases, 
+there will be a naturally associated scalar function of parameters, which can 
+be optimized to obtain parameter estimates.  For example, 
+maximum likelihood estimates can be obtained by solving the score equations, 
+even though in general it is better to obtain parameter estimates by directly 
+maximizing the log-likelihood.  In other cases, 
+there may not be a natural scalar function associated with the nonlinear system,
+and we need to solve the system of equations to obtain parameter estimates.  
+This includes a broad class of statistical estimation 
+problems under the heading of estimating functions or estimating equations, 
+where a probability distribution for the data generating process is not 
+explicitly postulated, but only weaker conditions 
+such as unbiasedness and information unbiasedness are imposed on the 
+estimating function \citep{SmaWan03}.  Well known examples are: generalized 
+least squares \citep{CarRup88}, generalized estimating 
+equations \citep{DigHeaLiaZeg02}, and semi-parametric accelerated failure 
+time models in survival analysis \citep{KalPre02}.  
+Here we consider two examples with simulated data, and one with real data.  
+Our goal is to show the utility of \pkg{BB} for solving nonlinear 
+estimating equations.
+
+\subsection{Poisson regression with offset}
+Poisson regression is commonly used to model data in the form of counts, 
+i.e. number of times a particular event occurred over some known period of time.
+We consider data of the form $(Y_i, t_i, X_i):
+i = 1, \cdots, n$, where $Y_i$ are the counts over an observation 
+period $t_i$, and $X_i$ are the corresponding covariates.  
+Estimating equations for poisson regression of count data, with offset, can be 
+written as:
+\begin{equation}
+\sum_{i=1}^n X_i^\top \bigg\{ Y_i \, - \, t_i \, e^{X_i^\top \beta} \bigg\} \: = \: 0. \label{poiss}
+\end{equation}
+We consider a simulation problem with $n=500$, and $p=8$.  We 
+set $\beta = (-5, 0.04, 0.3, 0.05, \\ 0.3, -0.005, 0.1, -0.4),$ and generate 
+data from a poisson distribution: 
+$Y_i \, | \, t_i, X_i \: \sim \: \mbox{poisson} (t_i X_i^\top \beta),$ 
+where $t_i \sim N(\mu=100, \sigma=30)$, and the covariates $X_i$ are 
+generated according to the following \proglang{R} code.  
+This problem can be readily solved using the \code{glm} function 
+in \proglang{R}, by specifying the \code{offset} option.  
+However, we show that it can also be directly solved by solving the 
+estimating equations Eq. \ref{poiss}, which are 
+nothing but the score equations of the Poisson likelihood.  
+Parameter estimates from \code{dfsane} are identical to that from \code{glm}.
+
+\begin{Scode}{keep.source=TRUE}
+U.eqn <- function(beta) {
+      Xb <- c(X %*% beta)
+      c(crossprod(X,  Y - (obs.period * exp(Xb))))
+      }
+
+poisson.sim <- function(beta, X, obs.period) {
+      Xb <- c(X %*% beta)
+      mean <- exp(Xb) * obs.period
+      rpois(nrow(X), lambda = mean)
+      }
+
+old.seed <- setRNG(test.rng)
+
+n <- 500
+X <- matrix(NA, n, 8)
+X[,1] <- rep(1, n)
+X[,3] <- rbinom(n, 1, prob=0.5)
+X[,5] <- rbinom(n, 1, prob=0.4)
+X[,7] <- rbinom(n, 1, prob=0.4)
+X[,8] <- rbinom(n, 1, prob=0.2)
+X[,2] <- rexp(n, rate = 1/10)
+X[,4] <- rexp(n, rate = 1/10)
+X[,6] <- rnorm(n, mean = 10, sd = 2)
+
+obs.period <- rnorm(n, mean = 100, sd = 30)
+beta <- c(-5, 0.04, 0.3,  0.05, 0.3, -0.005, 0.1, -0.4)
+Y <- poisson.sim(beta, X, obs.period)
+
+res <- dfsane(par = rep(0,8), fn = U.eqn, 
+     control = list(NM = TRUE, M = 100, trace = FALSE))
+res
+
+glm(Y ~ X[,-1], offset = log(obs.period), 
+         family = poisson(link = "log"))  
+\end{Scode}
+
+The last command shows that \code{glm} gives the same result.
+
+\subsection{Rank-based regression using accelerated failure time model}\label{rank-aft}
+
+Accelerated failure time (AFT) model is a useful alternative to the popular 
+Cox relative risk model for the analysis of failure time data subject to 
+censoring.  The AFT model relates the logarithm of the failure time to a 
+linear function of the covariates, and hence the model has direct physical 
+interpretation in terms of the failure time.  Let $T_i$ be the failure time, and 
+$X_i \in \mathbb{R}^p$ be the corresponding covariates for the $i$th individual 
+($i = 1, \ldots, n$).  The semi-parametric AFT model may be written as:
+\[
+\log \, T_i \,=\, X_i^\top \beta \,+\, \epsilon_i; \quad (i = 1,\ldots,n),
+\]
+where $\beta \in \mathbb{R}^p$ is a vector of regression parameters to be 
+estimated from the data, and $\epsilon_i$ are independent errors with a common, 
+but unspecified, probability distribution. Let $C_i$ be the censoring time 
+for $i$th individual. It is usually assumed that $C_i$ is independent of $T_i$, 
+given $X_i$.  Let $T_i^* = \min(T_i, C_i)$ and $\delta_i = I(T_i \leq C_i)$, 
+where $I(.)$ is the usual indicator function.  The data then 
+comprises $(T_i^*, \delta_i, X_i)$. The regression parameters $\beta$ are 
+estimated by solving the weighted log-rank estimating function \citep{JinLinWeiYin03}:
+\begin{equation}
+U(\beta) = \sum_{i=1}^n \delta_i \: \phi_i \: \bigg\{ X_i - \frac{\sum_{j=1}^n X_j \, I(T_j^* - X_j^\top \beta \geq T_i^* - X_i^\top \beta) } { \sum_{j=1}^n I(T_j^* - X_j^\top\beta \geq T_i^* - X_i^\top\beta)} \bigg\} \: = \: 0, \label{aft}
+\end{equation}
+where $\phi_i$ is a possibly data-dependent weight function.  
+The choice of $\phi_i = 1$ yields the log-rank estimator, and 
+$\phi_i = n^{-1} \, \sum_{j=1}^n I(T_j^* - X_j^\top \beta \geq T_i^* - X_i^\top \beta)$ 
+yields the Gehan estimator.  
+
+In spite of the theoretical advances, semiparametric methods for the AFT model 
+have been seldom used in practice, mainly because of the lack of efficient 
+and reliable computational methods \citep{JinLinWeiYin03}.  
+One main difficulty is that the system of semiparametric estimating 
+functions, (\ref{aft}), involves step functions of the regression parameters.  
+Therefore, conventional numerical techniques, which depend essentially on 
+the smoothness of the functions, cannot be used.  \citet{LinGey92} proposed 
+simulated annealing, but their algorithm is not guaranteed to find the true 
+minimum. \citet{JinLinWeiYin03} proposed an iterative estimator that converts 
+the solution of (\ref{aft}) into a sequence of minimization problems, 
+which can be solved using linear programming techniques.  
+Here we take a more direct approach by directly solving (\ref{aft}) using 
+the DF-SANE algorithm, which does not involve any derivatives.
+
+We first consider a simulation problem with $n=1000$, and $p=8$.  
+We randomly generated a $1000 \times 8$ matrix of binary and continuous 
+covariates (see the code below for details of simulation).  
+We set $\beta = (0.5, -0.4, 0.3, -0.2, -0.1, 0.4, 0.1, -0.6)$.  
+We generated independent errors $\epsilon_i$ from a log-normal distribution 
+with mean = 1 and variance = 1. Censoring times $C_i$ were generated from a 
+uniform distribution so as to obtain close to 20\% censoring.  
+We ran 1000 simulations, with a fixed covariate matrix $X$, but generating 
+new $T^*$ and $\delta$ in each simulation. For each simulated data set, 
+we used the same starting value $\beta_0 = $ \code{rep(0, 8)} 
+in \code{dfsane} to find a root of (\ref{aft}).  
+The function \code{aft.eqn} computes~(\ref{aft}).
+
+\begin{Scode}{keep.source=TRUE}
+aft.eqn <- function (beta, X, Y, delta, weights = "logrank") {
+      deltaF <- delta == 1
+      Y.zeta <- Y - c(X %*% beta)
+      ind <- order(Y.zeta, decreasing = TRUE) 
+      dd <- deltaF[ind]
+      n <- length(Y.zeta)
+      tmp <- apply(X[ind, ], 2, function (x) cumsum(x))
+  
+      if (weights == "logrank") {
+         c1 <- colSums(X[deltaF, ])
+         r <- (c1 - colSums(tmp[dd, ] / (1:n)[dd])) / sqrt(n)
+         }
+  
+      if (weights == "gehan") {
+         c1 <- colSums(X[deltaF, ]* ((1:n)[order(ind)][deltaF]))
+         r <- (c1 - colSums(tmp[dd, ])) / ( n * sqrt(n))
+         }
+  r
+  }
+
+old.seed <- setRNG(test.rng)
+n <- 1000
+X <- matrix(NA, n, 8)
+X[,1] <- rbinom(n, 1, prob=0.5)
+X[,2] <- rbinom(n, 1, prob=0.4)
+X[,3] <- rbinom(n, 1, prob=0.4)
+X[,4] <- rbinom(n, 1, prob=0.3)
+temp <- as.factor(sample(c("0", "1", "2"), size=n, rep=T, 
+                     prob=c(1/3,1/3,1/3)))
+X[,5] <- temp == "1"
+X[,6] <- temp == "2"
+X[,7] <- rexp(n, rate=1/10)
+X[,8] <- rnorm(n)
+
+eta.true <- c(0.5, -0.4, 0.3, -0.2, -0.1, 0.4, 0.1, -0.6)
+Xb <- drop(X %*% eta.true)
+
+old.seed <- setRNG(test.rng)
+
+par.lr <- par.gh <- matrix(NA, nsim, 8)
+stats.lr <- stats.gh <- matrix(NA, nsim, 5)
+sumDelta <- rep(NA, nsim)
+t1 <- t2 <-0
+\end{Scode}
+
+The \code{sum(Delta)} indicates that 81.8 percent of the individuals experienced failure.
+The results are shown in Table~\ref{table:aft} for both log-rank and 
+Gehan estimators.  
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{cr|rrl||rrl}
+\hline 
+& & & Log-rank & & & Gehan & \\\
+Parameter & Truth  & Mean & Bias & Std. Dev &  Mean & Bias & Std. Dev \\
+\hline
+$X_1$&$  0.5 $&$  0.498 $&$ -0.002 $&$ 0.233 $&$  0.501 $&$  0.001 $&$ 0.139 $\\
+$X_2$&$ -0.4 $&$ -0.386 $&$  0.014 $&$ 0.228 $&$ -0.397 $&$  0.003 $&$ 0.136 $\\
+$X_3$&$  0.3 $&$  0.297 $&$ -0.003 $&$ 0.226 $&$  0.298 $&$ -0.002 $&$ 0.135 $\\
+$X_4$&$ -0.2 $&$ -0.196 $&$  0.004 $&$ 0.256 $&$ -0.195 $&$  0.005 $&$ 0.152 $\\
+$X_5$&$ -0.1 $&$ -0.102 $&$ -0.002 $&$ 0.270 $&$ -0.104 $&$ -0.004 $&$ 0.166 $\\
+$X_6$&$  0.4 $&$  0.405 $&$  0.005 $&$ 0.277 $&$  0.400 $&$  0.000 $&$ 0.168 $\\
+$X_7$&$  0.1 $&$  0.100 $&$  0.000 $&$ 0.011 $&$  0.100 $&$  0.000 $&$ 0.007 $\\
+$X_8$&$ -0.6 $&$ -0.601 $&$ -0.001 $&$ 0.114 $&$ -0.601 $&$ -0.001 $&$ 0.068 $\\
+\hline
+\end{tabular}
+
+\caption{Simulation results for the rank-based regression 
+in accelerated failure time model (1000 simulations). Estimates were obtained using 
+the \code{dfsane} algorithm with \code{M=100}.\label{table:aft}} 
+\end{table}
+
+\begin{Scode}{echo=TRUE,results=hide,keep.source=TRUE}
+cat("Simulation for Table 2: ")
+for (i in 1:nsim) {
+   cat( i, " ")
+   err <- rlnorm(n, mean=1)
+   Y.orig <- Xb + err 
+   cutoff <- floor(quantile(Y.orig, prob=0.5))
+   cens <- runif(n, cutoff, quantile(Y.orig, prob=0.95))
+   Y <- pmin(cens, Y.orig)
+   delta <- 1 * (Y.orig <= cens)
+   sumDelta[i] <- sum(delta)
+
+   t1 <- t1 + system.time(ans.eta <- 
+      dfsane(par=rep(0,8), fn=aft.eqn,
+          control = list(NM = TRUE,  trace = FALSE), 
+	  X=X, Y=Y, delta = delta, weights = "logrank"))[1]
+   par.lr[i,] <- ans.eta$par
+   stats.lr[i, ] <- c(ans.eta$iter, ans.eta$feval, as.numeric(t1), 
+                            ans.eta$conv, ans.eta$resid)
+
+   t2 <- t2 + system.time(ans.eta <- 
+      dfsane(par=rep(0,8), fn=aft.eqn, 
+         control = list(NM = TRUE,  trace = FALSE), 
+	 X=X, Y=Y, delta = delta, weights="gehan"))[1]
+   par.gh[i,] <- ans.eta$par
+   stats.gh[i, ] <- c(ans.eta$iter, ans.eta$feval, as.numeric(t2), 
+                            ans.eta$conv, ans.eta$resid)
+   invisible({gc(); gc()})
+   }
+cat("\n")
+\end{Scode}
+
+\begin{Scode}
+print(t1/nsim)
+print(t2/nsim)
+print(mean(sumDelta))
+
+
+mean.lr <- signif(colMeans(par.lr),3)
+bias.lr <- mean.lr - eta.true
+
+sd.lr <- signif(apply(par.lr, 2, sd),3)
+
+mean.gh <- signif(colMeans(par.gh),3)
+bias.gh <- mean.gh - eta.true
+
+sd.gh <- signif(apply(par.gh, 2, sd),3)
+
+signif(colMeans(stats.lr),3)
+
+signif(colMeans(stats.gh),3)
+\end{Scode}
+
+\begin{Scode}{echo=FALSE,results=tex}
+table2 <- cbind( eta.true, mean.lr, bias.lr, sd.lr, mean.gh, bias.gh, sd.gh)
+dimnames(table2) <- list( c("$X_1$", "$X_2$", "$X_3$", "$X_4$", 
+     "$X_5$", "$X_6$", "$X_7$", "$X_8$"), NULL) 
+
+table2.caption <- paste("Simulation results for the rank-based regression 
+in accelerated failure time model (", nsim, "simulations). Estimates were obtained using 
+the \\code{dfsane} algorithm with \\code{M=100}.")
+
+latex(table2, 
+         caption=table2.caption, caption.loc='bottom', 
+         file="",
+         colheads=c("", "Log-rank", "Gehan"),
+         label="table:aftGENERATED",
+         landscape=FALSE, size="small", 
+	 dec=3, numeric.dollar=TRUE, 
+         extracolheads=c( #"Parameter", 
+            "Truth", "Mean", "Bias", "Std. Dev.",
+                     "Mean", "Bias", "Std. Dev."),
+	 double.slash=FALSE)
+\end{Scode}
+
+We conducted another test of the ability of \code{dfsane} for solving the 
+semi-parametric AFT equations (\ref{aft}) on a real data set that has been 
+widely used in survival analysis: Mayo Clinic's 
+primary biliary cirrhosis (PBC) data \citep[see the appendix of][]{DicEtAl89}. 
+A corrected version of this data is available at the Mayo Clinic's website 
+(\url{http://mayoresearch.mayo.edu/mayo/research/biostat/upload/therneau_upload/pbc.dat})
+and in the \proglang{R} package \pkg{survival} \citep{TheLum09}.  
+We computed the regression coefficients for an AFT model with 5 covariates, 
+age, log(albumin), log (bilirubin), edema, and log(protime), with log-rank 
+and Gehan weights.  
+We also estimated standard errors for them using 500 bootstrap samples.  
+Results are provided in Table~\ref{table:pbc}.
+
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{c|r@{}llr@{}ll||r@{}llr@{}ll}
+\hline 
+   & \multicolumn{6}{c||}{Gehan} & \multicolumn{6}{c}{Log-rank}\\
+Covariate &
+   \multicolumn{3}{c}{\code{dfsane}} &
+			 \multicolumn{3}{c||}{\citet{JinLinWeiYin03}} &
+      \multicolumn{3}{c}{\code{dfsane}} & 
+			\multicolumn{3}{c}{\citet{JinLinWeiYin03}}\\
+\hline
+\code{age}          &$ -0$&$.026 $&$ (0.006) $&$ -0$&$.025 $&$ (0.006) $&$ -0$&$.027 $&$ (0.006) $&$ -0$&$.026 $&$ (0.005) $\\
+\code{log(albumin)} &$  1$&$.456 $&$ (0.518) $&$  1$&$.499 $&$ (0.523) $&$  1$&$.094 $&$ (0.504) $&$  1$&$.633 $&$ (0.449) $\\
+\code{log(bili)}    &$ -0$&$.574 $&$ (0.069) $&$ -0$&$.558 $&$ (0.063) $&$ -0$&$.596 $&$ (0.065) $&$ -0$&$.572 $&$ (0.056) $\\
+\code{edema}        &$ -0$&$.996 $&$ (0.291) $&$ -0$&$.924 $&$ (0.284) $&$ -0$&$.842 $&$ (0.310) $&$ -0$&$.762 $&$ (0.246) $\\
+\code{log(protime)} &$ -2$&$.124 $&$ (0.918) $&$ -2$&$.776 $&$ (0.776) $&$ -0$&$.941 $&$ (0.695) $&$ -1$&$.918 $&$ (0.548) $\\
+\hline
+Residual norm&&&&&&&&&&&&\\ 
+  $\frac{\|F(x_n)\|}{\sqrt{p}}$&
+    \multicolumn{3}{c}{$0.002$} & \multicolumn{3}{c||}{$0.005$} &
+    \multicolumn{3}{c}{$0.040$}  & \multicolumn{3}{c}{$0.173$} \\
+\hline 
+\end{tabular}
+\normalsize
+\caption {Rank-based regression of the accelerated failure time (AFT) model 
+for the primary biliary cirrhosis (PBC) data set.  Point estimates and 
+standard errors (in parentheses) are provided. Standard errors 
+for \code{dfsane} are obtained from 500 bootstrap samples.\label{table:pbc}}
+\end{table}
+
+\begin{Scode}{echo=TRUE,results=hide}
+require("survival") 
+attach(pbc)
+\end{Scode}
+
+\begin{Scode}{keep.source=TRUE,keep.source=TRUE}
+Y <- log(time)
+delta <- status == 2
+X <- cbind(age,  log(albumin), log(bili), edema, log(protime))
+missing <- apply(X, 1, function(x) any(is.na(x)))
+Y <- Y[!missing]
+X <- X[!missing, ]
+delta <- delta[!missing]
+
+####### Log-rank estimator ####### 
+t1 <- system.time(ans.lr <- 
+         dfsane(par=rep(0, ncol(X)), fn = aft.eqn, 
+	      control=list(NM = TRUE, M = 100, noimp = 500, trace = FALSE),
+	      X=X, Y=Y, delta=delta))[1]
+
+# With maxit=5000 this fails with "Lack of improvement in objective function"
+#  not with "Maximum limit for iterations exceeded"
+
+t1
+
+ans.lr
+
+####### Gehan estimator ####### 
+t2 <- system.time(ans.gh <- 
+       dfsane(par = rep(0, ncol(X)), fn = aft.eqn, 
+       control = list(NM = TRUE, M = 100, noimp = 500, trace = FALSE),
+       X=X, Y=Y, delta=delta, weights = "gehan"))[1]
+
+t2
+
+ans.gh
+\end{Scode}
+
+\emph{The sections which do estimates with code from Jin's web site 
+are not executed in the vignette because they takes too long. 
+You can change this by indicating 
+\code{eval=TRUE} for the Scode sections in the vignette.}
+
+\begin{Scode}{eval=FALSE,keep.source=TRUE}
+# This source defines functions l1fit and aft.fun
+source("http://www.columbia.edu/~zj7/aftsp.R")
+# N.B. aft.fun resets the RNG seed by default to a fixed value,
+#    and does not reset it. Beware. 
+
+
+require("quantreg")
+t3 <- system.time(ans.jin <- 
+        aft.fun(x=X, y=Y, delta=delta, mcsize=1))[1]
+
+t3
+
+ans.jin$beta
+\end{Scode}
+
+\begin{Scode}{eval=TRUE,keep.source=TRUE}
+#  without Jin's results
+U <- function(x, func, ...)  sqrt(mean(func(x, ...)^2))
+# result from Jin et al. (2003) gives higher residuals
+table3.ResidualNorm <- c(
+   U(ans.gh$par,       func=aft.eqn, X=X, Y=Y, delta=delta,
+       weights="gehan"),
+   U(ans.lr$par,       func=aft.eqn, X=X, Y=Y, delta=delta))
+\end{Scode}
+   
+
+\begin{Scode}{eval=FALSE,keep.source=TRUE}
+#  with Jin's results
+U <- function(x, func, ...)  sqrt(mean(func(x, ...)^2))
+# result from Jin et al. (2003) gives higher residuals
+table3.ResidualNorm <- c(
+   U(ans.gh$par,       func=aft.eqn, X=X, Y=Y, delta=delta,
+       weights="gehan"),
+   U(ans.jin$beta[1,], func=aft.eqn, X=X, Y=Y, delta=delta,
+       weights="gehan"),
+   U(ans.lr$par,       func=aft.eqn, X=X, Y=Y, delta=delta),
+   U(ans.jin$beta[2,], func=aft.eqn, X=X, Y=Y, delta=delta))
+   
+\end{Scode}
+   
+
+\begin{Scode}{eval=TRUE,keep.source=TRUE}
+# Bootstrap to obtain standard errors
+
+Y <- log(time)
+delta <- status==2
+X <- cbind(age,  log(albumin), log(bili), edema, log(protime))
+missing <- apply(X, 1, function(x) any(is.na(x)))
+Y.orig <- Y[!missing]
+X.orig <- X[!missing, ]
+delta.orig <- delta[!missing]
+
+old.seed <- setRNG(test.rng)
+lr.boot <- gh.boot <- matrix(NA, nboot, ncol(X))
+time1 <- time2 <- 0
+\end{Scode}
+
+\begin{Scode}{echo=TRUE,results=hide,keep.source=TRUE}
+cat("Bootstrap sample: ")
+for (i in 1:nboot) {
+   cat(i, " ")
+   select <- sample(1:nrow(X.orig), size=nrow(X.orig), rep=TRUE)
+   Y <- Y.orig[select]
+   X <- X.orig[select, ]
+   delta <- delta.orig[select]
+   time1 <- time1 + system.time(ans.lr <- 
+         dfsane(par = rep(0, ncol(X)), fn = aft.eqn, 
+           control = list(NM = TRUE, M = 100, noimp = 500, trace = FALSE),
+	   X=X, Y=Y, delta=delta))[1]
+   time2 <- time2 + system.time(ans.gh <- 
+         dfsane(par = rep(0, ncol(X)), fn = aft.eqn, 
+	   control = list(NM = TRUE, M = 100, noimp = 500, trace = FALSE),
+	   X=X, Y=Y, delta=delta, weights = "gehan"))[1]
+   lr.boot[i,] <- ans.lr$par
+   gh.boot[i,] <- ans.gh$par
+   }
+cat("\n")
+\end{Scode}
+
+\begin{Scode}{eval=FALSE,echo=TRUE,results=verbatim,keep.source=TRUE}
+time3 <- system.time( ans.jin.boot <-
+      aft.fun(x = X.orig, y = Y.orig, delta = delta.orig,
+         mcsize = nboot))[1]
+
+time1
+
+time2
+
+time3
+
+colMeans(lr.boot)
+# Results on different systems and versions of R:
+# [1] -0.02744423  1.09871350 -0.59597720 -0.84169498 -0.95067376
+# [1] -0.02718006  1.01484050 -0.60553894 -0.83216296 -0.82671339
+# [1] -0.02746916  1.09371431 -0.59630955 -0.84170621 -0.94147407
+
+sd(lr.boot) * (499/500)
+# Results on different systems and versions of R:
+# [1] 0.005778319 0.497075716 0.064839483 0.306026261 0.690452468
+# [1] 0.006005054 0.579962922 0.068367668 0.307980986 0.665742686
+# [1] 0.005777676 0.504362828 0.064742446 0.309687062 0.695128194
+
+colMeans(gh.boot)
+# Results on different systems and versions of R:
+# [1] -0.0263899  1.4477801 -0.5756074 -0.9990443 -2.0961280
+# [1] -0.02616728  1.41126364 -0.58311902 -1.00953045 -2.01724976
+# [1] -0.02633854  1.45577255 -0.57439183 -0.99630007 -2.12363711
+
+sd(gh.boot) * (499/500)
+# Results on different systems and versions of R:
+# [1] 0.006248941 0.519016144 0.068759981 0.294145730 0.919565487
+# [1] 0.005599693 0.571631837 0.075018323 0.304463597 1.043196254
+# [1] 0.006183826 0.518332233 0.068672881 0.291036025 0.917733660
+
+
+ans.jin.boot$beta
+
+sqrt(diag(ans.jin.boot$betacov[,,2]))  # log-rank
+# Results on different systems and versions of R:
+# [1] 0.005304614 0.470080732 0.053191766 0.224331718 0.545344403
+# [1] 0.00517431 0.44904332 0.05632078 0.24613883 0.54826652
+# [1] 0.00517431 0.44904332 0.05632078 0.24613883 0.54826652
+
+sqrt(diag(ans.jin.boot$betacov[,,1]))  # Gehan
+# Results on different systems and versions of R:
+# [1] 0.005553049 0.522259799 0.061634483 0.270337048 0.803683570
+# [1] 0.005659013 0.522871858 0.062670939 0.283731999 0.775959845
+# [1] 0.005659013 0.522871858 0.062670939 0.283731999 0.775959845
+\end{Scode}
+
+\emph{The table is generated here without the results from running Jin's code.}
+
+\begin{Scode}{echo=FALSE,results=tex}
+
+table3.caption <- paste("Rank-based regression of the accelerated failure time (AFT) model 
+for the primary biliary cirrhosis (PBC) data set.  Point estimates and 
+standard errors (in parentheses) are provided. Standard errors 
+for \\code{dfsane} are obtained from", nboot, "bootstrap samples.")
+
+table3.part1 <- cbind(
+      colMeans(gh.boot), sd(gh.boot) * (499/500),
+      colMeans(lr.boot), sd(lr.boot) * (499/500)
+      )
+
+dimnames(table3.part1) <- list(
+     c("age", "log(albumin)", "log(bili)", "edema", "log(protime)"), NULL) 
+
+latex(table3.part1,  
+       file="",
+       #align  = "c|cc||cc",
+       #halign = "c|cc||cc",
+       #colheads=c("", "", "Gehan","", "Log-rank"),
+       #extracolheads=c("Covariate", 
+       #          "\\code{dfsane}", "",
+       #          "\\code{dfsane}", ""),
+       dec=3,
+       label="table:pbcGENERATEDp1",
+       landscape=FALSE, size="small", 
+       numeric.dollar=TRUE)
+
+table3.ResidualNorm <- matrix(table3.ResidualNorm, 1,2)
+dimnames(table3.ResidualNorm) <- list(
+   "Residual norm $\\frac{\\|F(x_n)\\|}{\\sqrt{p}}$" , NULL)
+
+latex(table3.ResidualNorm,  
+       file="",
+       caption=table3.caption, caption.loc='bottom',
+       align  = "c|c||c",
+       dec=3,
+       label="table:pbcGENERATEDp2",
+       landscape=FALSE, size="small", 
+       numeric.dollar=TRUE)
+
+
+\end{Scode}
+
+\begin{Scode}{eval=FALSE,echo=FALSE,results=tex}
+# This version of the table requires Jin's code results
+
+table3.caption <- paste("Rank-based regression of the accelerated failure time (AFT) model 
+for the primary biliary cirrhosis (PBC) data set.  Point estimates and 
+standard errors (in parentheses) are provided. Standard errors 
+for \\code{dfsane} are obtained from", nboot, "bootstrap samples.")
+
+table3.part1 <- cbind(
+      colMeans(gh.boot), sd(gh.boot) * (499/500),
+         ans.jin.boot$beta[1,], # Gehan
+         sqrt(diag(ans.jin.boot$betacov[,,1])),  # Gehan
+      colMeans(lr.boot), sd(lr.boot) * (499/500),
+         ans.jin.boot$beta[2,], # log-rank
+         sqrt(diag(ans.jin.boot$betacov[,,2]))  # log-rank
+      )
+
+dimnames(table3.part1) <- list(
+     c("age", "log(albumin)", "log(bili)", "edema", "log(protime)"), NULL) 
+
+latex(table3.part1,  
+       file="",
+       align  = "c|cccc||cccc",
+       halign = "c|cccc||cccc",
+       colheads=c("", "", "Gehan","", "", "","Log-rank", "", ""),
+       extracolheads=c("Covariate", 
+                 "\\code{dfsane}", "", "\\citet{JinLinWeiYin03}", "",
+                 "\\code{dfsane}", "", "\\citet{JinLinWeiYin03}", ""),
+       dec=3,
+       label="table:pbcGENERATEDp1",
+       landscape=FALSE, size="small", 
+       numeric.dollar=TRUE)
+
+table3.ResidualNorm <- matrix(table3.ResidualNorm, 1,4)
+dimnames(table3.ResidualNorm) <- list(
+   "Residual norm $\\frac{\\|F(x_n)\\|}{\\sqrt{p}}$" , NULL)
+
+latex(table3.ResidualNorm,  
+       file="",
+       caption=table3.caption, caption.loc='bottom',
+       align  = "c|cc||cc",
+       dec=3,
+       label="table:pbcGENERATEDp2",
+       landscape=FALSE, size="small", 
+       numeric.dollar=TRUE)
+
+
+\end{Scode}
+
+We also estimated the semiparametric AFT model using the algorithm 
+of \citet{JinLinWeiYin03}. (The \proglang{R} code was obtained from Dr. Jin's 
+website \url{http://www.columbia.edu/~zj7/index_files/Page382.htm}).  
+Comparing our results with theirs (see Table~\ref{table:pbc}), 
+we observe some differences in both the point estimates and standard errors.  
+The point estimates for the Gehan estimator seem to agree reasonably well.  
+For the logrank estimator, the point estimates of \code{log(albumin)} 
+and \code{log(protime)} are considerably smaller (in absolute magnitude) for 
+\code{dfsane} than those obtained using the method of \citet{JinLinWeiYin03}.  
+The residual norm from \code{dfsane} is 2 to 4 times smaller than that 
+of \citet{JinLinWeiYin03}, indicating that our solutions to (\ref{aft}) 
+are better than those in \citet{JinLinWeiYin03}.  
+More accurate solutions for the log-rank estimator can be obtained from 
+Jin's algorithm by using a larger number of iterations.  
+For example, when we used 6 iterations (the default is 3), the residual error 
+was almost as small as that from \code{dfsane}, and the point estimates were 
+in better agreement.  Another noteworthy difference, especially for the 
+log-rank estimator, is that our bootstrapped standard error estimates are 
+higher than the standard error estimates of \citet{JinLinWeiYin03}, 
+which were obtained using a perturbed estimating equation approach.   
+
+We also note that our AFT model estimation using \code{dfsane} is substantially 
+faster than the algorithm proposed in \citet{JinLinWeiYin03}.  For example, 
+for the PBC data, the total CPU time for Gehan and log-rank estimates 
+using \code{dfsane} is around 6.5 seconds, 
+whereas it is around 99 seconds for Jin's algorithm (for 3 iterations).  
+For standard error estimation, the \code{dfsane} algorithm took 1 hour, and 
+Jin's algorithm took 6 hours for 500 Monte-Carlo samples.  
+A major limitation of Jin's \proglang{R} function is that it can only handle 
+small data sets.  It runs into memory limits for even moderate size data sets, 
+for example, it crashed when we tried it on one of the simulated data sets 
+discussed previously with n=1000 and 8 covariates.  
+
+It should also be noted that some problems are intrinsically hard and
+cannot be solved to within a small error tolerance (e.g. default tolerance
+$= 1.e-07$). The AFT model problem is an example of this. This is a
+non-smooth problem. We cannot always achieve a tolerance of $1.0e-07$ in these
+problems. With the PBC data, there may not even be an ''exact'' solution that
+will yield a residual of $1.0e-07$.  However, we can obtain a solution that is
+accurate enough. It might be possible to improve upon the solution given by
+\code{dfsane} by changing the control parameters (e.g. \code{M, noimp, maxit}) 
+or by using
+\code{BBsolve}, but it may not be worth the added effort for this problem.
+
+\section{Conclusions}
+The package \pkg{BB} provides functions which improve the capabilities 
+of \proglang{R} for solving nonlinear systems of equations and for optimizing 
+smooth, nonlinear functions in the following ways:
+
+\begin{enumerate}
+\item The function \code{BBsolve} offers a reliable, low-cost method to 
+solving large-scale nonlinear systems of equations. 
+\item The function \code{BBoptim} offers a reliable, low-cost method to 
+optimizing smooth, large-scale nonlinear problems. 
+\item The function \code{multiStart} can be used to find multiple roots 
+or multiple local optima. 
+\item \code{dfsane} appears to be promising for solving non-smooth 
+estimating equations, since it does not involve any derivatives 
+(see condition~\ref{LF}).   
+\item Rank-based regression estimation in the accelerated failure time 
+models can be performed effectively in \proglang{R} using the \code{dfsane} 
+function in \code{BB}.
+\end{enumerate}
+
+\section*{Acknowledgements}
+The work of first author (R.V.) was supported by the funding from NIH grant 
+DA023879-01.  The authors would like to thank Drs. Marcos Raydan, 
+Jose-Mario Martinez, Dimitris Rizopoulos, 
+Constantine Frangakis, and Daniel Scharfstein for the many valuable 
+discussions pertaining to this research.  They would also like to thank the 
+two anonymous referees, the associate editor, and Achim Zeileis 
+for their penetrating comments which improved the quality of the manuscript 
+and the software package. 
+ 
+%%\section{References}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%\bibliographystyle{plainnat}
+%%\bibliographystyle{apalike}
+%%abbrv    apalike  plain    unsrt alpha ieeetr siam newapa
+\bibliography{BB_JSS}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{appendix}
+\section{Appendix: Test Functions}\label{app:A}
+\begin{enumerate}
+\item  \emph{Exponential function 3:} $F(x) = (F_1(x), \cdots, F_p(x))^\top$, where:
+    \begin{eqnarray*} 
+    F_1(x) &=& e^{x_1} - 1 \\
+    F_i(x) &=& (i/10) \, (e^{x_i} \, + \, x_{i-1} \, -1), \quad i=2,3, \cdots, p \\    
+    \end{eqnarray*} 
+Initial value:  $x_0 = \mbox{rnorm}(p)$
+\item  \emph{Trigexp function:} $F(x) = (F_1(x), \cdots, F_p(x))^\top$, where:
+    \begin{eqnarray*} 
+    F_1(x) &=& 3x_1^3 \,+\, 2x_2 \,-\, 5 \,+\, \sin(x_1-x_2) \, \sin(x_1+x_2) \\
+    F_i(x) &=& -x_{i-1}e^{(x_{i-1}-x_i)} \,+\, x_i (4+3x_i^2) \,+\, 2 x_{i+1}\,+\, \sin(x_i-x_{i+1}) \, \sin(x_i+x_{i+1}) \,-\, 8, \\ & & i=2,3, \cdots, p-1 \\    
+    F_p(x) &=& -x_{p-1} e^{(x_{p-1}-x_p)}\,+\, 4x_p \,-\, 3 .
+    \end{eqnarray*} 
+Initial value:  $x_0 = \mbox{rnorm}(p)$
+\item  \emph{Broyden tridiagonal function:} $F(x) = (F_1(x), \cdots, F_p(x))^\top$, where:
+    \begin{eqnarray*} 
+    F_1(x) &=& x_1(3-0.5x_1) \,-\, 2x_2 \,+\, 1,\\
+    F_i(x) &=& x_i(3-0.5x_i) \,-\, x_{i-1} \,-\, 2x_{i+1} \,+\, 1, \quad i=2,3, \cdots, p-1 \\    
+    F_p(x) &=& x_p(3-0.5x_p) \,-\, x_{p-1} \,+\, 1 .
+    \end{eqnarray*} 
+Initial value:  $x_0 = \,- \, \mbox{ runif}(p)$
+\item  \emph{Extended-Rosenbrock function:} $F(x) = (F_1(x), \cdots, F_p(x))^\top$, where, \\ for $i=1,2,\cdots,p/2,$
+    \begin{eqnarray*} 
+    F_{2i-1}(x) &=& 10 (x_{2i} - x_{2i-1}^2) \\
+    F_{2i}(x) &=& 1\,-\, x_{2i-1}.    
+    \end{eqnarray*} 
+Initial value:  $x_0 = \mbox{runif}(p)$
+\item  \emph{Troesch function:} $F(x) = (F_1(x), \cdots, F_p(x))^\top$, where:
+    \begin{eqnarray*} 
+    F_1(x) &=& 2x_1 \,+\, \rho h^2 \sinh(\rho x_1) \,-\, x_2,\\
+    F_i(x) &=& 2x_i \,+\, \rho h^2 \sinh(\rho x_i) \,-\, x_{i-1} \,-\, x_{i+1}, \quad i=2,3, \cdots, p-1 \\    
+    F_p(x) &=& 2x_p \,+\, \rho h^2 \sinh(\rho x_p) \,-\, x_{p-1} \,-\, 1,
+    \end{eqnarray*} 
+    where $\rho\,=\,10, \,h \,=\, 1/(p+1).$ \\
+Initial value:  $x_0 = \mbox{sort(runif}(p))$
+\item  \emph{Discretized version of Chandrasekhar's H-equation:} $F(x) = (F_1(x), \cdots, F_p(x))^\top$, where:
+    \begin{eqnarray*} 
+    F_i(x) &=& x_i \: - \: \bigg(1\,-\, \frac{c}{2p} \sum_{j=1}^p \frac{y_i \,x_j}{y_i+y_j} \bigg)^{-1}, \quad i=1, 2, \cdots, p     
+    \end{eqnarray*} 
+Initial value:  $x_0 = \mbox{runif}(p)$
+
+\end{enumerate}
+\end{appendix}
+
+\end{document}
+

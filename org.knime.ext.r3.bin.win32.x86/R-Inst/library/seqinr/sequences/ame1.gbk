@@ -1,0 +1,581 @@
+LOCUS       NW_001253191          395045 bp    DNA     linear   CON 27-JUL-2006
+DEFINITION  Apis mellifera linkage group 1 genomic contig, reference assembly
+            (based on Amel_4.0 Group1.32), whole genome shotgun sequence.
+ACCESSION   NW_001253191
+VERSION     NW_001253191.1  GI:110749203
+KEYWORDS    WGS.
+SOURCE      Apis mellifera (honey bee)
+  ORGANISM  Apis mellifera
+            Eukaryota; Metazoa; Arthropoda; Hexapoda; Insecta; Pterygota;
+            Neoptera; Endopterygota; Hymenoptera; Apocrita; Aculeata; Apoidea;
+            Apidae; Apis.
+COMMENT     GENOME ANNOTATION REFSEQ:  Features on this sequence have been
+            produced for build 4 version 1 of the NCBI's genome annotation [see
+            documentation].
+            The DNA sequence is from the whole genome assembly released by the
+            Baylor College of Medicine Human Genome Sequencing Center as
+            Amel_4.0, 10 March 2006 (see
+            http://www.hgsc.bcm.tmc.edu/projects/honeybee/). The original whole
+            genome shotgun project has the project accession AADG00000000.5.
+FEATURES             Location/Qualifiers
+     source          1..395045
+                     /organism="Apis mellifera"
+                     /mol_type="genomic DNA"
+                     /strain="DH4"
+                     /db_xref="taxon:7460"
+     gap             15697..16488
+                     /estimated_length=792
+     gap             33780..33829
+                     /estimated_length=50
+     gap             36567..36616
+                     /estimated_length=50
+     STS             36914..37059
+                     /db_xref="UniSTS:496079"
+     gene            complement(<41314..42282)
+                     /gene="LOC725278"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 34 Proteins"
+                     /db_xref="GeneID:725278"
+     mRNA            complement(<41314..42282)
+                     /gene="LOC725278"
+                     /product="similar to bab2 CG9102-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 34 Proteins"
+                     /transcript_id="XM_001121146.1"
+                     /db_xref="GI:110749172"
+                     /db_xref="GeneID:725278"
+     CDS             complement(<41314..42282)
+                     /gene="LOC725278"
+                     /codon_start=1
+                     /product="similar to bab2 CG9102-PA"
+                     /protein_id="XP_001121146.1"
+                     /db_xref="GI:110749173"
+                     /db_xref="GeneID:725278"
+     gap             45235..45284
+                     /estimated_length=50
+     gap             80327..80816
+                     /estimated_length=490
+     STS             86242..86449
+                     /db_xref="UniSTS:468894"
+     gap             90521..90570
+                     /estimated_length=50
+     gene            91144..95539
+                     /gene="LOC408598"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 2 ESTs, 4 Proteins"
+                     /db_xref="GeneID:408598"
+     mRNA            join(91144..91461,91544..91675,92508..92534,93494..93661,
+                     93753..93824,93894..94018,94102..94226,94631..94807,
+                     94929..95272,95363..95539)
+                     /gene="LOC408598"
+                     /product="similar to skiff CG30021-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 2 ESTs, 4 Proteins"
+                     /transcript_id="XM_392140.2"
+                     /db_xref="GI:66499702"
+                     /db_xref="GeneID:408598"
+     CDS             join(91144..91461,91544..91675,92508..92534,93494..93661,
+                     93753..93824,93894..94018,94102..94226,94631..94807,
+                     94929..95272,95363..95539)
+                     /gene="LOC408598"
+                     /codon_start=1
+                     /product="similar to skiff CG30021-PA"
+                     /protein_id="XP_392140.2"
+                     /db_xref="GI:66499703"
+                     /db_xref="GeneID:408598"
+     gene            99353..105343
+                     /gene="LOC725347"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST"
+                     /db_xref="GeneID:725347"
+     mRNA            join(99353..99440,99825..99904,100322..100664,
+                     100900..101274,101813..102003,103301..103430,
+                     104176..104316,104396..104580,104922..105145,
+                     105220..105343)
+                     /gene="LOC725347"
+                     /product="similar to ankyrin repeat domain 32"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST"
+                     /transcript_id="XM_001121206.1"
+                     /db_xref="GI:110749174"
+                     /db_xref="GeneID:725347"
+     CDS             join(99353..99440,99825..99904,100322..100664,
+                     100900..101274,101813..102003,103301..103430,
+                     104176..104316,104396..104580,104922..105145,
+                     105220..105343)
+                     /gene="LOC725347"
+                     /codon_start=1
+                     /product="similar to ankyrin repeat domain 32"
+                     /protein_id="XP_001121206.1"
+                     /db_xref="GI:110749175"
+                     /db_xref="GeneID:725347"
+     gene            complement(105904..108711)
+                     /gene="LOC410730"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 2 Proteins"
+                     /db_xref="GeneID:410730"
+     mRNA            complement(join(105904..106812,106865..106972,
+                     107049..107413,107869..108016,108226..108711))
+                     /gene="LOC410730"
+                     /product="similar to wurst CG9089-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 2 Proteins"
+                     /transcript_id="XM_394206.3"
+                     /db_xref="GI:110749176"
+                     /db_xref="GeneID:410730"
+     CDS             complement(join(106600..106812,106865..106972,
+                     107049..107413,107869..108016,108226..108513))
+                     /gene="LOC410730"
+                     /codon_start=1
+                     /product="similar to wurst CG9089-PA"
+                     /protein_id="XP_394206.1"
+                     /db_xref="GI:48094544"
+                     /db_xref="GeneID:410730"
+     gene            110434..112649
+                     /gene="LOC408597"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 3 ESTs, 4 Proteins"
+                     /db_xref="GeneID:408597"
+     mRNA            join(110434..110685,111064..111365,111455..111997,
+                     112143..112649)
+                     /gene="LOC408597"
+                     /product="similar to U2 small nuclear ribonucleoprotein
+                     auxiliary factor 35 kDa subunit related-protein 2
+                     (U2(RNU2) small nuclear RNA auxillary factor 1-like 2)
+                     (NY-REN-20 antigen)"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 3 ESTs, 4 Proteins"
+                     /transcript_id="XM_392139.3"
+                     /db_xref="GI:110749177"
+                     /db_xref="GeneID:408597"
+     CDS             join(110434..110685,111064..111365,111455..111997,
+                     112143..112407)
+                     /gene="LOC408597"
+                     /codon_start=1
+                     /product="similar to U2 small nuclear ribonucleoprotein
+                     auxiliary factor 35 kDa subunit related-protein 2
+                     (U2(RNU2) small nuclear RNA auxillary factor 1-like 2)
+                     (NY-REN-20 antigen)"
+                     /protein_id="XP_392139.1"
+                     /db_xref="GI:48094536"
+                     /db_xref="GeneID:408597"
+     gene            113052..115690
+                     /gene="LOC410729"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 11 Proteins"
+                     /db_xref="GeneID:410729"
+     mRNA            join(113052..113249,113318..113499,113681..113913,
+                     113971..114106,114174..114240,114324..114531,
+                     114606..114738,114813..114982,115054..115690)
+                     /gene="LOC410729"
+                     /product="similar to CG3734-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 11 Proteins"
+                     /transcript_id="XM_623673.2"
+                     /db_xref="GI:110749178"
+                     /db_xref="GeneID:410729"
+     CDS             join(113052..113249,113318..113499,113681..113913,
+                     113971..114106,114174..114240,114324..114531,
+                     114606..114738,114813..114982,115054..115163)
+                     /gene="LOC410729"
+                     /codon_start=1
+                     /product="similar to CG3734-PA"
+                     /protein_id="XP_623676.2"
+                     /db_xref="GI:110749179"
+                     /db_xref="GeneID:410729"
+     gene            complement(115594..117288)
+                     /gene="LOC408596"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 3 Proteins"
+                     /db_xref="GeneID:408596"
+     mRNA            complement(join(115594..115799,115897..116110,
+                     116300..116493,116737..116798,116855..117014,
+                     117111..117288))
+                     /gene="LOC408596"
+                     /product="similar to Cellular retinaldehyde binding
+                     protein CG10546-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 3 Proteins"
+                     /transcript_id="XM_392138.3"
+                     /db_xref="GI:110749180"
+                     /db_xref="GeneID:408596"
+     CDS             complement(join(115594..115799,115897..116110,
+                     116300..116493,116737..116798,116855..117014,
+                     117111..117288))
+                     /gene="LOC408596"
+                     /codon_start=1
+                     /product="similar to Cellular retinaldehyde binding
+                     protein CG10546-PA"
+                     /protein_id="XP_392138.3"
+                     /db_xref="GI:110749181"
+                     /db_xref="GeneID:408596"
+     gene            123566..130015
+                     /gene="LOC725576"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 2 ESTs, 4 Proteins"
+                     /db_xref="GeneID:725576"
+     mRNA            join(123566..123754,124184..124294,125135..125298,
+                     125396..125547,127204..127427,127522..127655,
+                     127746..128013,128964..129236,129308..129477,
+                     129697..129806,129939..130015)
+                     /gene="LOC725576"
+                     /product="similar to CG12121-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 2 ESTs, 4 Proteins"
+                     /transcript_id="XM_001121399.1"
+                     /db_xref="GI:110749183"
+                     /db_xref="GeneID:725576"
+     CDS             join(123704..123754,124184..124294,125135..125298,
+                     125396..125547,127204..127427,127522..127655,
+                     127746..128013,128964..129236,129308..129477,
+                     129697..129806,129939..130015)
+                     /gene="LOC725576"
+                     /codon_start=1
+                     /product="similar to CG12121-PA"
+                     /protein_id="XP_001121399.1"
+                     /db_xref="GI:110749184"
+                     /db_xref="GeneID:725576"
+     gap             144819..160230
+                     /estimated_length=15412
+     gap             177671..177720
+                     /estimated_length=50
+     gene            178989..209002
+                     /gene="LOC551385"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 11 Proteins"
+                     /db_xref="GeneID:551385"
+     mRNA            join(178989..179052,204368..204392,205334..205382,
+                     205486..205575,207877..207955,208878..209002)
+                     /gene="LOC551385"
+                     /product="similar to CG5907-PA, isoform A"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 11 Proteins"
+                     /transcript_id="XM_623780.1"
+                     /db_xref="GI:66499716"
+                     /db_xref="GeneID:551385"
+     CDS             join(178989..179052,204368..204392,205334..205382,
+                     205486..205575,207877..207955,208878..209002)
+                     /gene="LOC551385"
+                     /codon_start=1
+                     /product="similar to CG5907-PA, isoform A"
+                     /protein_id="XP_623783.1"
+                     /db_xref="GI:66499717"
+                     /db_xref="GeneID:551385"
+     gap             215643..216092
+                     /estimated_length=450
+     gap             235974..236265
+                     /estimated_length=292
+     gene            265623..269178
+                     /gene="LOC725683"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 4 Proteins"
+                     /db_xref="GeneID:725683"
+     mRNA            join(265623..265731,266759..267418,267523..267680,
+                     267766..267924,268017..268286,268445..268696,
+                     268834..269178)
+                     /gene="LOC725683"
+                     /product="similar to dusky CG9355-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 4 Proteins"
+                     /transcript_id="XM_001121500.1"
+                     /db_xref="GI:110749185"
+                     /db_xref="GeneID:725683"
+     CDS             join(265623..265731,266759..267418,267523..267680,
+                     267766..267924,268017..268286,268445..268696,
+                     268834..269178)
+                     /gene="LOC725683"
+                     /codon_start=1
+                     /product="similar to dusky CG9355-PA"
+                     /protein_id="XP_001121500.1"
+                     /db_xref="GI:110749186"
+                     /db_xref="GeneID:725683"
+     gene            complement(269821..270523)
+                     /gene="LOC725721"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 4 Proteins"
+                     /pseudo
+                     /db_xref="GeneID:725721"
+     mRNA            complement(join(269821..270470,270502..270523))
+                     /gene="LOC725721"
+                     /product="similar to CG9960-PA, isoform A"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 4 Proteins"
+                     /pseudo
+                     /transcript_id="XR_014924.1"
+                     /db_xref="GI:110749187"
+                     /db_xref="GeneID:725721"
+     gene            complement(270647..271288)
+                     /gene="LOC725747"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 2 Proteins"
+                     /db_xref="GeneID:725747"
+     mRNA            complement(join(270647..270971,271137..271288))
+                     /gene="LOC725747"
+                     /product="similar to CG9958-PA, isoform A"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 2 Proteins"
+                     /transcript_id="XM_001121556.1"
+                     /db_xref="GI:110749188"
+                     /db_xref="GeneID:725747"
+     CDS             complement(join(270647..270971,271137..271288))
+                     /gene="LOC725747"
+                     /codon_start=1
+                     /product="similar to CG9958-PA, isoform A"
+                     /protein_id="XP_001121556.1"
+                     /db_xref="GI:110749189"
+                     /db_xref="GeneID:725747"
+     gap             277350..277399
+                     /estimated_length=50
+     gap             286941..287823
+                     /estimated_length=883
+     gene            complement(293586..351751)
+                     /gene="LOC725776"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 2 Proteins"
+                     /db_xref="GeneID:725776"
+     mRNA            complement(join(293586..293779,300730..300789,
+                     301316..301734,301813..302291,351275..351751))
+                     /gene="LOC725776"
+                     /product="similar to CG12029-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 2 Proteins"
+                     /transcript_id="XM_001121583.1"
+                     /db_xref="GI:110749190"
+                     /db_xref="GeneID:725776"
+     CDS             complement(join(293586..293779,300730..300789,
+                     301316..301734,301813..302291,351275..351751))
+                     /gene="LOC725776"
+                     /codon_start=1
+                     /product="similar to CG12029-PA"
+                     /protein_id="XP_001121583.1"
+                     /db_xref="GI:110749191"
+                     /db_xref="GeneID:725776"
+     gap             310814..311565
+                     /estimated_length=752
+     gap             312805..312854
+                     /estimated_length=50
+     gene            complement(357891..360635)
+                     /gene="LOC551557"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST"
+                     /db_xref="GeneID:551557"
+     mRNA            complement(join(357891..357970,359209..359315,
+                     359494..359602,359709..359839,359917..360182,
+                     360337..360635))
+                     /gene="LOC551557"
+                     /product="hypothetical LOC551557"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST"
+                     /transcript_id="XM_625253.2"
+                     /db_xref="GI:110749192"
+                     /db_xref="GeneID:551557"
+     CDS             complement(join(357891..357970,359209..359315,
+                     359494..359602,359709..359839,359917..360182,
+                     360337..360384))
+                     /gene="LOC551557"
+                     /codon_start=1
+                     /product="hypothetical protein"
+                     /protein_id="XP_625256.1"
+                     /db_xref="GI:66499720"
+                     /db_xref="GeneID:551557"
+     gap             360694..361646
+                     /estimated_length=953
+     gene            367137..370759
+                     /gene="LOC413713"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 6 Proteins"
+                     /db_xref="GeneID:413713"
+     mRNA            join(367137..367451,368003..368231,368363..368705,
+                     368774..368893,369011..369200,369592..369666,
+                     369741..369798,369879..370006,370110..370313,
+                     370421..370759)
+                     /gene="LOC413713"
+                     /product="similar to CG31915-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 6 Proteins"
+                     /transcript_id="XM_397154.3"
+                     /db_xref="GI:110749193"
+                     /db_xref="GeneID:413713"
+     CDS             join(367309..367451,368003..368231,368363..368705,
+                     368774..368893,369011..369200,369592..369666,
+                     369741..369798,369879..370006,370110..370313,
+                     370421..370589)
+                     /gene="LOC413713"
+                     /codon_start=1
+                     /product="similar to CG31915-PA"
+                     /protein_id="XP_397154.2"
+                     /db_xref="GI:66499725"
+                     /db_xref="GeneID:413713"
+     gene            372041..374176
+                     /gene="LOC410115"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 19 Proteins"
+                     /db_xref="GeneID:410115"
+     mRNA            join(372041..372257,372600..372780,372868..373182,
+                     373312..373626,373711..373929,373997..374176)
+                     /gene="LOC410115"
+                     /product="similar to Actin-related protein 66B CG7558-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 19 Proteins"
+                     /transcript_id="XM_393599.3"
+                     /db_xref="GI:110749194"
+                     /db_xref="GeneID:410115"
+     CDS             join(372214..372257,372600..372780,372868..373182,
+                     373312..373626,373711..373929,373997..374176)
+                     /gene="LOC410115"
+                     /codon_start=1
+                     /product="similar to Actin-related protein 66B CG7558-PA"
+                     /protein_id="XP_393599.2"
+                     /db_xref="GI:66499731"
+                     /db_xref="GeneID:410115"
+     gene            complement(375339..378048)
+                     /gene="LOC410116"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 3 Proteins"
+                     /db_xref="GeneID:410116"
+     mRNA            complement(join(375339..375363,375481..375671,
+                     375749..376042,376136..376445,376506..376759,
+                     376895..377123,377210..377568,377725..377879,
+                     377982..378048))
+                     /gene="LOC410116"
+                     /product="similar to Protein FKSG26, transcript variant 1"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 3 Proteins"
+                     /transcript_id="XM_393600.3"
+                     /db_xref="GI:110749195"
+                     /db_xref="GeneID:410116"
+     CDS             complement(join(375339..375363,375481..375671,
+                     375749..376042,376136..376445,376506..376759,
+                     376895..377123,377210..377568,377725..377856))
+                     /gene="LOC410116"
+                     /codon_start=1
+                     /product="similar to Protein FKSG26 isoform 1"
+                     /protein_id="XP_393600.2"
+                     /db_xref="GI:66499735"
+                     /db_xref="GeneID:410116"
+     gene            378362..380121
+                     /gene="LOC726037"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 2 Proteins"
+                     /db_xref="GeneID:726037"
+     mRNA            join(378362..378559,378800..378859,378935..379057,
+                     379136..379352,379430..379468,379559..379627,
+                     379691..379890,380107..380121)
+                     /gene="LOC726037"
+                     /product="similar to CG3408-PA"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST, 2 Proteins"
+                     /transcript_id="XM_001121810.1"
+                     /db_xref="GI:110749196"
+                     /db_xref="GeneID:726037"
+     CDS             join(378470..378559,378800..378859,378935..379057,
+                     379136..379352,379430..379468,379559..379627,
+                     379691..379890,380107..380121)
+                     /gene="LOC726037"
+                     /codon_start=1
+                     /product="similar to CG3408-PA"
+                     /protein_id="XP_001121810.1"
+                     /db_xref="GI:110749197"
+                     /db_xref="GeneID:726037"
+     gene            complement(380225..381671)
+                     /gene="LOC551729"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST"
+                     /db_xref="GeneID:551729"
+     mRNA            complement(join(380225..380237,380363..380868,
+                     380999..381397,381554..381671))
+                     /gene="LOC551729"
+                     /product="hypothetical LOC551729"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 1 EST"
+                     /transcript_id="XM_624117.2"
+                     /db_xref="GI:110749198"
+                     /db_xref="GeneID:551729"
+     CDS             complement(join(380225..380237,380363..380868,
+                     380999..381397,381554..381616))
+                     /gene="LOC551729"
+                     /codon_start=1
+                     /product="hypothetical protein"
+                     /protein_id="XP_624120.2"
+                     /db_xref="GI:110749199"
+                     /db_xref="GeneID:551729"
+     gap             381672..381725
+                     /estimated_length=54
+     gene            complement(384791..393499)
+                     /gene="LOC413907"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 9 Proteins"
+                     /db_xref="GeneID:413907"
+     mRNA            complement(join(384791..384940,385031..385276,
+                     385388..385636,386181..386399,386511..386684,
+                     387874..388075,388580..388710,389129..389248,
+                     389446..389715,389790..389882,389975..390365,
+                     391150..391397,391484..391614,391950..392010,
+                     392243..392415,392491..392798,393312..393499))
+                     /gene="LOC413907"
+                     /product="similar to Pyruvate dehydrogenase E1 component
+                     alpha subunit, testis-specific form, mitochondrial
+                     precursor (PDHE1-A type II)"
+                     /note="Derived by automated computational analysis using
+                     gene prediction method: GNOMON. Supporting evidence
+                     includes similarity to: 9 Proteins"
+                     /transcript_id="XM_397346.3"
+                     /db_xref="GI:110749200"
+                     /db_xref="GeneID:413907"
+     CDS             complement(join(384791..384940,385031..385276,
+                     385388..385636,386181..386399,386511..386684,
+                     387874..388075,388580..388710,389129..389248,
+                     389446..389715,389790..389882,389975..390365,
+                     391150..391397,391484..391614,391950..392010,
+                     392243..392415,392491..392798,393312..393499))
+                     /gene="LOC413907"
+                     /codon_start=1
+                     /product="similar to Pyruvate dehydrogenase E1 component
+                     alpha subunit, testis-specific form, mitochondrial
+                     precursor (PDHE1-A type II)"
+                     /protein_id="XP_397346.3"
+                     /db_xref="GI:110749201"
+                     /db_xref="GeneID:413907"
+     STS             389225..389486
+                     /db_xref="UniSTS:496080"
+     gap             393500..393670
+                     /estimated_length=171

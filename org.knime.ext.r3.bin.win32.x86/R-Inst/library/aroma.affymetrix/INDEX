@@ -1,0 +1,140 @@
+AbstractProbeSequenceNormalization
+                        The AbstractProbeSequenceNormalization class
+AdditiveCovariatesNormalization
+                        The AdditiveCovariatesNormalization class
+AffineCnPlm             The AffineCnPlm class
+AffinePlm               The AffinePlm class
+AffineSnpPlm            The AffineSnpPlm class
+AffymetrixCdfFile       The AffymetrixCdfFile class
+AffymetrixCelFile       The AffymetrixCelFile class
+AffymetrixCelSet        The AffymetrixCelSet class
+AffymetrixCelSetReporter
+                        The AffymetrixCelSetReporter class
+AffymetrixCelSetTuple   The AffymetrixCelSetTuple class
+AffymetrixCnChpSet      The AffymetrixCnChpSet class
+AffymetrixFile          The abstract AffymetrixFile class
+AffymetrixFileSet       The AffymetrixFileSet class
+AffymetrixFileSetReporter
+                        The AffymetrixFileSetReporter class
+AffymetrixPgfFile       The AffymetrixPgfFile class
+AlleleSummation         The AlleleSummation class
+AllelicCrosstalkCalibration
+                        The AllelicCrosstalkCalibration class
+AromaChipTypeAnnotationFile
+                        The AromaChipTypeAnnotationFile class
+ArrayExplorer           The ArrayExplorer class
+AvgCnPlm                The AvgCnPlm class
+AvgPlm                  The AvgPlm class
+AvgSnpPlm               The AvgSnpPlm class
+BackgroundCorrection    The BackgroundCorrection class
+BaseCountNormalization
+                        The BaseCountNormalization class
+BasePositionNormalization
+                        The BasePositionNormalization class
+ChipEffectFile          The ChipEffectFile class
+ChipEffectSet           The ChipEffectSet class
+ChipEffectTransform     The ChipEffectTransform class
+CnChipEffectFile        The CnChipEffectFile class
+CnChipEffectSet         The CnChipEffectSet class
+CnPlm                   The CnPlm class
+CnProbeAffinityFile     The CnProbeAffinityFile class
+CnagCfhFile             The CnagCfhFile class
+CnagCfhSet              The CnagCfhSet class
+CrlmmParametersFile     The CrlmmParametersFile class
+CrlmmParametersSet      The CrlmmParametersSet class
+DChipCdfBinFile         The DChipCdfBinFile class
+DChipDcpFile            The DChipDcpFile class
+DChipDcpSet             The DChipDcpSet class
+DChipGenomeInformation
+                        The DChipGenomeInformation class
+DChipQuantileNormalization
+                        The DChipQuantileNormalization class
+DChipSnpInformation     The DChipSnpInformation class
+ExonChipEffectFile      The ExonChipEffectFile class
+ExonChipEffectSet       The ExonChipEffectSet class
+ExonProbeAffinityFile   The ExonProbeAffinityFile class
+ExonRmaPlm              The ExonRmaPlm class
+FirmaFile               The FirmaFile class
+FirmaModel              The FirmaModel class
+FirmaSet                The FirmaSet class
+FragmentEquivalentClassNormalization
+                        The FragmentEquivalentClassNormalization class
+FragmentLengthNormalization
+                        The FragmentLengthNormalization class
+GcContentNormalization
+                        The GcContentNormalization class
+GcContentNormalization2
+                        The GcContentNormalization2 class
+GcRmaBackgroundCorrection
+                        The GcRmaBackgroundCorrection class
+GenericReporter         The GenericReporter class
+GenomeInformation       The GenomeInformation class
+HetLogAddCnPlm          The HetLogAddCnPlm class
+HetLogAddPlm            The HetLogAddPlm class
+HetLogAddSnpPlm         The HetLogAddSnpPlm class
+LimmaBackgroundCorrection
+                        The LimmaBackgroundCorrection class
+LinearModelProbeSequenceNormalization
+                        The LinearModelProbeSequenceNormalization class
+MatNormalization        The MatNormalization class
+MatSmoothing            The MatSmoothing class
+MbeiCnPlm               The MbeiCnPlm class
+MbeiPlm                 The MbeiPlm class
+MbeiSnpPlm              The MbeiSnpPlm class
+Model                   The Model class
+MultiArrayUnitModel     The MultiArrayUnitModel class
+NormExpBackgroundCorrection
+                        The NormExpBackgroundCorrection class
+OpticalBackgroundCorrection
+                        The OpticalBackgroundCorrection class
+ParameterCelFile        The ParameterCelFile class
+ParameterCelSet         The ParameterCelSet class
+ProbeAffinityFile       The ProbeAffinityFile class
+ProbeLevelModel         The ProbeLevelModel class
+ProbeLevelTransform     The ProbeLevelTransform class
+ProbeLevelTransform3    The ProbeLevelTransform3 class
+QualityAssessmentFile   The QualityAssessmentFile class
+QualityAssessmentModel
+                        The QualityAssessmentModel class
+QualityAssessmentSet    The QualityAssessmentSet class
+QuantileNormalization   The QuantileNormalization class
+ReseqCrosstalkCalibration
+                        The ReseqCrosstalkCalibration class
+ResidualFile            The ResidualFile class
+ResidualSet             The ResidualSet class
+RmaBackgroundCorrection
+                        The RmaBackgroundCorrection class
+RmaCnPlm                The RmaCnPlm class
+RmaPlm                  The RmaPlm class
+RmaSnpPlm               The RmaSnpPlm class
+ScaleNormalization      The ScaleNormalization class
+ScaleNormalization3     The ScaleNormalization3 class
+SingleArrayUnitModel    The SingleArrayUnitModel class
+SmoothMultiarrayModel   The SmoothMultiarrayModel class
+SmoothRmaModel          The SmoothRmaModel class
+SnpChipEffectFile       The SnpChipEffectFile class
+SnpChipEffectSet        The SnpChipEffectSet class
+SnpInformation          The SnpInformation class
+SnpPlm                  The SnpPlm interface class
+SnpProbeAffinityFile    The SnpProbeAffinityFile class
+SpatialReporter         The SpatialReporter class
+TransformReport         The TransformReport class
+UgpGenomeInformation    The UgpGenomeInformation class
+UnitModel               The UnitModel class
+UnitTypeScaleNormalization
+                        The UnitTypeScaleNormalization class
+WeightsFile             The WeightsFile class
+WeightsSet              The WeightsSet class
+aroma.affymetrix-package
+                        Package aroma.affymetrix
+doCRMAv1                Estimation and assessment of raw copy numbers
+                        at the single locus level (CRMA v1)
+doCRMAv2                A single-array preprocessing method for
+                        estimating full-resolution raw copy numbers
+                        from all Affymetrix genotyping arrays (CRMA v2)
+doFIRMA                 Finding Isoforms using Robust Multichip
+                        Analysis (FIRMA)
+doGCRMA                 Robust Multichip Analysis (GCRMA)
+doRMA                   Robust Multichip Analysis (RMA)
+justRMA                 Robust Multichip Analysis (RMA) reproducing the
+                        affy package

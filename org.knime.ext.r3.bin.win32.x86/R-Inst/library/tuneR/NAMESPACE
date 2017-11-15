@@ -1,0 +1,21 @@
+useDynLib(tuneR, .registration = TRUE, .fixes = "C_")
+importFrom(graphics, plot, image)
+importFrom(signal, hamming, hanning, levinson, specgram)
+import("stats","methods")
+importFrom("graphics", "abline", "axTicks", "axis", "locator", "mtext", "par", "segments", "title")
+importFrom("utils", "flush.console")
+  
+exportClasses("Wspec","WspecMat","Wave","WaveMC")
+exportMethods("plot","image","panorama","summary","show","Wave","WaveMC","coerce","[","play","Arith", "periodogram", "bind", "length", "nchannel", "normalize", "noSilence")
+
+export(channel, prepComb, downsample, mono, stereo, updateWave,
+    extractWave, writeWave, readWave, readMP3, readMidi, MCnames,
+    getMidiNotes,
+    FFpure, noteFromFF, FF,
+    smoother, notenames, melodyplot,
+    quantize, quantplot, quantMerge, lilyinput,
+    setWavPlayer, getWavPlayer,
+    silence, sine, sawtooth, square, noise, pulse,
+    MFCC, melfcc, deltas, audspec, dolpc, lifter, postaud, powspec,
+    bark2hz, hz2bark, hz2mel, mel2hz, lpc2cep, spec2cep
+)

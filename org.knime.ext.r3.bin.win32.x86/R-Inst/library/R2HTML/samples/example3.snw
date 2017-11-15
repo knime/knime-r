@@ -1,0 +1,98 @@
+<!--
+Use the following R command to sweave this file:
+Sweave("example3.snw",driver=RweaveHTML())
+!-->
+
+
+
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+<title>UCL/STAT - Eric Lecoutre</title>
+<style><!--a:hover{background-color:#E7E7FA}!--></style>
+</head>
+
+
+<body bgcolor="#E7E7FA"  text="#000000"><div align="center">
+<table width="650" border="0" cellspacing="0" cellpadding="0">
+<tr> <td colspan="3"><img src="http://www.stat.ucl.ac.be/commun/images/barreISperso.gif" width="650" height="77" usemap="#map" border="0"></td>    </tr>
+
+<tr><td bgcolor="#ffffff" width="10" background="http://www.stat.ucl.ac.be/commun/images/ss-fond-gauche.gif">&nbsp;</td><td bgcolor="#ffffff" width="630" class="justifier"><link href="http://www.stat.ucl.ac.be/commun/stylesPerso.css" type=text/css rel=stylesheet>
+
+
+<!-- DEBUT DE LA ZONE EDITABLE DE LA PAGE !-->
+
+<br>
+
+<center><table width=100%><td width=100 valign=top>
+<a href="http://www.r-project.org"><img src="http://www.r-project.org/Rlogo.jpg" border=0></a></td><td width=10>&nbsp;</td><td valign=top><table width=100% cellspacing=0 cellpadding=0><tr><td><font face=arial size=+3>R2HTML package</font></td></tr><tr bgcolor=000063><td><font color=FFFFFF><B>&nbsp;U S I N G &nbsp; &nbsp; S W E A V E</B></font></td>	</tr><tr><td width=100%>
+	<p align=right><i>
+	R2HTML package contains a driver to Sweave function, allowing to embedd R code even in rather complex HTML files. Sweave in a wonderfull tool provided by  <a href=mailto:Friedrich.Leisch@ci.tuwien.ac.at>Friedrich Leisch</a></i></p>
+<br><br>
+
+
+<p>
+This HTML file has been preparsed by R Sweave tool to create some graphs on the fly. One could imagine create daily reports.  
+</p>
+<table width=100% border=0>
+	<td align="left">
+
+	<a href="toothbig.png">
+
+<<echo=FALSE,fig=TRUE,align=left,border=1,width=200,height=200,pointsize=6,HTMLwidth=200, HTMLheight=200,results=hide>>=
+data(ToothGrowth)
+boxplot(len ~ dose, data = ToothGrowth, boxwex = 0.25, at = 1:3 - 0.2,subset= supp == "VC", col="yellow",             main="", xlab="Vitamin C dose mg",ylab="tooth length", ylim=c(0,35),cex=0.4)
+@
+	Clik to enlarge</a>
+
+	</td>
+	<td align="right">
+	Here are some computations performed on those data:
+
+<<echo=FALSE,results=html>>=		
+data(ToothGrowth)
+tmp=tapply(ToothGrowth[,1],ToothGrowth[,3],summary)
+tmp2=matrix(unlist(tmp),ncol=3)
+dimnames(tmp2)=list(names(tmp[[1]]),paste("dose=",unique(ToothGrowth[,3]),sep=""))
+HTML(as.data.frame(tmp2),align="right")
+@
+<i>summary of Tooth Length depending on Dose</i>
+	</td>
+
+</table>
+
+
+<br>
+<br>
+
+<!-- STOP: FIN DE LA PARTIE EDITABLE / JUSTE MODIFIER LES COORDONNES EN DESSOUS !-->
+</td></tr></table></td></table></center>
+<hr size=1 color="#000000"><table width="100%" border=0 cellpadding="0" cellspacing=0><td valign="bottom"><a href="http://www.stat.ucl.ac.be/index-eng.html"><img src="http://www.stat.ucl.ac.be/commun/images/blocstat100b.gif" border=0></a></td><td width=10>&nbsp;</td><td>
+
+<table width=100% border=0><td>
+Contact: Eric Lecoutre &lt;<A HREF=mailto:"lecoutre@stat.ucl.ac.be" CLASS="nonsouligne">lecoutre@stat.ucl.ac.be</A>&gt;</td>
+<TD ALIGN=RIGHT><I>Dernière modification: 7/03/2003
+</i></td></table>
+
+<hr size=1>	<table width=100% border=0><TD valign="bottom" width="250">Institut de statistique, UCL<BR>Voie du Roman Pays, 20<BR>B-1348 Louvain-la-Neuve<br> Belgium</TD><td width="150">&nbsp;</td><td valign="bottom" width="100">Bureau<br>Tel<br>Fax<br>E-Mail</td><td valign=bottom align=right >C.133<br>+32 10 47.30.50<br>+32 10 47.30.32<br><A HREF="mailto:lecoutre@stat.ucl.ac.be" CLASS="nonsouligne">lecoutre@stat.ucl.ac.be </A></td></table></td></tr></table>
+
+
+
+</td><td bgcolor="#ffffff" width="10" background="http://www.stat.ucl.ac.be/commun/images/ss-fond-droit.gif">&nbsp;</td></tr><tr><td bgcolor="#ffffff" colspan="3"><img src="http://www.stat.ucl.ac.be/commun/images/ss-bas.gif" width="650" height="5"></td></tr> </table></div>
+
+<map name="map"><area shape="rect" coords="0,0,100,51" href="http://www.ucl.ac.be" ><area shape="rect" coords="5,54,65,72" href="http://www.stat.ucl.ac.be" ></map>
+
+<<echo=FALSE,results=hide>>=
+	png("toothbig.png",width=1000,height=1000)
+	boxplot(len ~ dose, data = ToothGrowth,
+             boxwex = 0.25, at = 1:3 - 0.2,
+             subset= supp == "VC", col="yellow",
+             main="Guinea Pigs' Tooth Growth",
+             xlab="Vitamin C dose mg",
+             ylab="tooth length", ylim=c(0,35))
+            dev.off()
+@
+
+
+</body>
+</html>

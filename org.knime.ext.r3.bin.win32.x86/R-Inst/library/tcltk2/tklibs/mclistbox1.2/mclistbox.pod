@@ -1,0 +1,437 @@
+# mclistbox.pod
+# Copyright (c) 1999, Bryan Oakley
+# All Rights Reserved.
+#
+# this uses a modified version of pod2html. Specifically, it uses the
+# non-standard R<> directive, which inserts a line break.
+
+=pod
+
+=head2 NAME
+
+mclistbox::mclistbox - Create and manipulate a multi-column listbox
+
+=head2 SYNOPSIS
+
+B<package require mclistbox ?1.02>
+
+B<mclistbox::mclistbox> I<pathName> I<?options?>
+
+=head2 EXPORTS
+
+mclistbox
+
+=head2 STANDARD OPTIONS
+
+B<-background>
+B<-borderwidth>
+B<-cursor>
+B<-exportselection>
+B<-font>
+B<-foreground>
+B<-height>
+B<-highlightbackground>
+B<-highlightcolor>
+B<-highlightthickness>
+B<-relief>
+B<-selectbackground>
+B<-selectborderwidth>
+B<-selectforeground>
+B<-setgrid>
+B<-takefocus>
+B<-width>
+B<-xscrollcommand>
+B<-yscrollcommand>
+
+See the I<options> manual entry for detailed descriptions of the above options.
+
+
+=head2 WIDGET-SPECIFIC OPTIONS
+
+Command-Line Name: B<-columnborderwidth> R<>
+Database Name: B<columnBorderWidth>R<>
+Database Class: B<BorderWidth>
+
+
+Specifies a non-negative value indicating the width of the 3-D border
+to draw around the outside of the column (if such a border is being
+drawn; the B<columnrelief> option typically determines this).  The value may
+also be used when drawing 3-D effects in the interior of the
+widget. The value may have any of the forms acceptable to
+Tk_GetPixels.
+
+Command-Line Name: B<-columnrelief> R<>
+Database Name: B<columnRelief> R<>
+Database Class: B<Relief>
+
+Specifies the 3-D effect desired for the column.  Acceptable values
+are raised, B<sunken>, B<flat>, B<ridge>, B<solid>, and B<groove>. The
+value indicates how the interior of the column should appear relative to its
+exterior;  for example, raised means the interior of the column should
+appear to protrude from the screen, relative to the exterior of the
+column. 
+
+Command-Line Name: B<-fillcolumn> R<>
+Database Name: B<fillColumn>R<>
+Database Class: B<FillColumn>
+
+Specifies which column should grow or shrink such that all columns
+exactly fill the listbox widget. 
+
+Command-Line Name: B<-labelanchor> R<>
+Database Name: B<labelAnchor>R<>
+Database Class: B<Anchor>
+
+Specifies how the information in the column label is
+to be displayed. Must be one of the values B<n>, B<ne>, B<e>, B<se>,
+B<s>, B<sw>, B<w>, B<nw>, or B<center>. For example, nw means display
+the information such that its top-left corner is at the top-left
+corner of the column label. 
+
+Command-Line Name: B<-labelbackground> or B<-labelbg>R<>
+Database Name: B<labelBackground> R<>
+Database Class: B<Background>
+
+Specifies the normal background color to use when displaying the
+label. 
+
+Command-Line Name: B<-labelborderwidth or -labelbd> R<>
+Database Name: B<labelBorderWidth> R<>
+Database Class: B<BorderWidth>
+
+Specifies a non-negative value indicating the width of the 3-D border
+to draw around the outside of the column label (if such a border is
+being drawn; the relief option typically determines this).  The value
+may also be used when drawing 3-D effects in the interior of the
+column label. The value may have any of the forms acceptable to
+Tk_GetPixels.
+
+Command-Line Name: B<-labelfont> R<>
+Database Name: B<labelFont> R<>
+Database Class: B<Font>
+
+Specifies the font to use when drawing text inside the column label.
+
+Command-Line Name: B<-labelforeground> R<>
+Database Name: B<labelForeground> R<>
+Database Class: B<Foreground>
+
+Specifies the normal foreground color to use when displaying the
+column label. 
+
+Command-Line Name: B<-labelheight> R<>
+Database Name: B<labelHeight>R<>
+Database Class: B<Height>
+
+Specifies a desired height for the label. If an image or bitmap is
+being displayed in the label then the value is in screen units
+(i.e. any of the forms acceptable to Tk_GetPixels); for text it is in
+lines of text. If this option isn't specified, the label's desired
+height is computed from the size of the image or bitmap or text being
+displayed in it. 
+
+Command-Line Name: B<-labelrelief> R<>
+Database Name: B<labelRelief>R<>
+Database Class: B<Relief>
+
+Specifies the 3-D effect desired for the column label.  Acceptable
+values are B<raised>, B<sunken>, B<flat>, B<ridge>, B<solid>, and
+B<groove>. The value indicates how the interior of the column label
+should appear relative to its exterior; for example, raised means the
+interior of the column label should appear to protrude from the
+screen, relative to the exterior of the column label.
+
+
+Command-Line Name: B<-labels> R<>
+Database Name: B<labels>R<>
+Database Class: B<Labels>
+
+A boolean value which determines whether column labels are shown or
+not.
+
+Command-Line Name: B<-selectcommand> I<command> R<>
+Database Name: B<selectCommand>R<>
+Database Class: B<Command>
+
+Specifies a Tcl command to be run whenever the selection in the mclistbox
+changes. The command will be called with the result of the
+curselection command.
+
+Command-Line Name: B<-resizablecolumns> R<>
+Database Name: B<resizableColumns> R<>
+Database Class: B<ResizableColumns> 
+
+Specifies whether the columns can be resized interactively. If set to
+true, mouse bindings will be defined to allow the columns to be
+resized. See B<DEFAULT BINDINGS> for more information.
+
+Command-Line Name: B<-selectmode> R<>
+Database Name: B<selectMode>R<>
+Database Class: B<SelectMode>
+
+Specifies one of several styles for manipulating the selection. The
+value of the option may be arbitrary, but the default bindings expect
+it to be either B<single>, B<browse>, B<multiple>, or B<extended>; the
+default value is browse.
+
+=head2 DESCRIPTION
+
+The B<mclistbox> command creates a new window (given by the
+I<pathName> argument) and makes it into a mclistbox widget. Additional
+options, described above, may be specified on the command line to
+configure aspects of the mclistbox such as its colors, font, text, and
+relief.  The mclistbox command returns its pathName argument.  At the
+time this command is invoked, there must not exist a window named
+pathName, but pathName's parent must exist.  
+
+A mclistbox is a widget that displays a list of strings, one per
+line. When first created, a new mclistbox has no elements and no
+columns. Columns and elementd may
+be added or deleted using widget commands described below.  In
+addition, one or more elements may be selected as described
+below. When an element in one column is selected, the elements in all
+columns are selected. 
+
+It is not necessary for all the elements to be displayed in the
+mclistbox window at once; commands described below may be used to change
+the view in the window.  Mclistboxes allow scrolling in both directions
+using the standard xScrollCommand and yScrollCommand options. They
+also support scanning, as described below.
+
+=head2 WIDGET COMMAND
+
+The widget command accepts many of the same arguments as the standard
+listbox command. The following commands behave identically to the
+standard listbox commands:
+
+=over 4
+
+B<activate>
+B<bbox>
+B<cget>
+B<configure>
+B<curselection>
+B<delete>
+B<index>
+B<nearest>
+B<scan>
+B<see>
+B<selection>
+B<size>
+B<xview>
+B<yview>
+
+=back
+
+In addition, there are a few commands unique to the mclistbox:
+
+=over 4
+
+=item I<pathName> B<column> I<option> I<args>
+
+=over 4
+
+=item I<pathName> B<column> B<add> I<name> I<options>
+
+Adds a new column with the specified I<name>. I<options> may be any of
+the valid column configuration options.  
+
+=item I<pathName> B<column> B<cget> I<name> I<option>
+
+Returns the value for the named I<option>
+
+=item I<pathName> B<column> B<configure> I<name> I<options>
+
+Configures or queries attributes of the I<named> column.
+
+Columns may be configured with the standard listbox options
+(-background, -font, etc). In addition, the following options are
+available:
+
+=over 4
+
+=item B<-background>
+
+Specifies the background color for this column. If the value is an
+empty string the column will be configured with the default background
+color.  
+
+=item B<-bitmap>
+
+Specifies a bitmap to display in the column label. If the bitmap option
+is specified then it overrides the -label option. the bitmap option
+may be reset to an empty string to re-enable a text display. 
+
+=item B<-font>
+
+Specifies the font for this column. If the value is an empty string
+the column will be configured with the default font. Note that if
+fonts with different line heights are used for separate columns, the
+data in each column will not line up properly.
+
+=item B<-foreground> 
+
+Specifies the foreground color for this column. If the value is an
+empty string the column will be configured with the default foreground
+color.  
+
+
+=item B<-image>
+
+Specifies an image to display in the column label. If the image option
+is specified then it overrides other options that specify a bitmap or
+textual value to display in the column label; the image option may be reset
+to an empty string to re-enable a bitmap or text display. 
+
+=item B<-label>
+
+Specifies the desired text to be used in the column label.
+
+=item B<-position>
+
+Specifies the position of the column. 0 (zero) is the first column, 1
+(one) is the second and so on.  
+
+=item B<-resizable>
+
+Specifies whether the column is resizable. This only takes effect if 
+the global option B<-resizablecolumns> is true.
+
+=item B<-visible>
+
+Specifies whether the column is visible or not. 
+
+=item B<-width>
+
+Specifies the desired width of the column in characters. If the font
+doesn't have a uniform width then the width of the character "0" is
+used in translating from character units to screen units. If zero or
+less, then the desired width for the window is made just large enough
+to hold all the elements in the listbox.
+
+=back
+
+=item I<pathName> B<column> B<delete> I<name>
+
+Deletes the column identified by I<name>
+
+=item I<pathName> B<column> B<names>
+
+Returns a list containing all of the column I<names>. The order of the
+list is the same as the visual order of the columns, and is the same
+as the order the data is returned by the get command.
+
+=item I<pathName> B<column> B<nearext> I<x>
+
+Given a x-coordinate within the mclistbox window, this command returns
+the name of the column nearest to that x-coordinate.   
+
+=back
+
+=item I<pathName> B<get> I<first> I<?last?> 
+
+If last is omitted, returns a list containing the element from each
+column of the listbox element indicated by I<first>, or an empty list
+if first refers to a non-existent element. If I<last> is specified,
+the command returns a list of lists. Each of the sublists will contain
+an element from each column of the mclistbox element.  Both first and
+last may have any of the standard forms for indices.
+
+The data will be returned in the order that the columns appear
+visually, and is the same order as reported by the B<column names>
+command. 
+
+=item I<pathName> B<insert> I<index> I<list> I<?list ...?>
+
+Inserts zero or more new elements in the mclistbox just before the element
+given by index.  If index is specified as end then the new elements
+are added to the end of the list.  Returns an empty string. Each
+I<list> argument becomes one row in the mclistbox. If there are not
+enough elements to fill all of the columns, blank values will be used
+to fill in the missing columns.
+
+=item I<pathName> B<label> B<bind> I<name> I<sequence> I<command>
+
+This command associates I<command> with a column label such that
+whenever the event sequence given by I<sequence> occurs over the label
+for the column named I<name> the I<command> will be invoked. This
+widget command is similar to the bind command except that it operates
+on column labels rather than the entire widget. See the bind manual
+entry for complete details on the syntax of I<sequence> and the
+substitutions performed on I<command> before invoking it. 
+
+=back
+
+=head2 EXAMPLE
+
+The following example creates a listbox with three columns:
+
+    mclistbox .listbox -width 55
+
+    .listbox column add name -label "First Name"    -width 20
+    .listbox column add size -label "Last Name"     -width 20
+    .listbox column add mod  -label "Organization"  -width 15
+
+To add items to the list, do the following:
+
+    .listbox insert end [list "Bryan" "Oakley" "ChannelPoint"]
+    .listbox insert end [list "John"  "Ousterhout" "Scriptics"]
+
+... or more concisely:
+
+    .listbox insert end \
+            [list "Bryan" "Oakley" "ChannelPoint"] \
+            [list "John"  "Ousterhout" "Scriptics"]
+
+To cause a proc to be called when the user clicks on the column label
+of the column named "date", use "label bind" as in the following
+example: 
+
+    .listbox label bind date <ButtonPress-1> "sortByDate %W"
+
+    proc sortByDate {w} {
+        # code to sort the contents of the mclistbox named $w
+    }
+
+
+=head2 DEFAULT BINDINGS
+
+Bindings in the mclistbox widget are the same as for a standard
+listbox widget. In addition, if B<-resizableColumns> is set to true,
+the following additional bindings are set:
+
+B<ButtonPress-1> starts a column resize if the cursor is over a column
+header and within a few pixels of the left or right edge of the
+label. B<B1-Motion> causes the columns on either side of the cursor to
+be resized based on the amount the cursor has moved. B<ButtonRelease-1> 
+ends the column resize. 
+
+If a binding is set on a label via the B<label bind> command and
+B<-resizablecolumns> is set, the binding will not fire the event
+happens in the few pixels inside the left and right edges of the label
+where a resize can occur. This is to prevent both the label bindings
+and resize events to happen with a single button press.
+
+=head2 BUGS
+
+If you use different fonts for different columns, the data will not
+line up properly if those fonts don't have the same line height. There
+is currently no workaround other than to use fonts with the same
+line height. 
+
+Mixing labels and images in column headers can produce unevenly sized
+headers, which in turn will cause the data in the columns not to line
+up properly.
+
+Event bindings that fire while the mouse cursor is over a column
+return wrong values for %W, %x and %y. The returned values represent
+the internal widgets clicked over rather than relative to the
+mclistbox widget (there's no way to work around this in tk as of 8.1b2). 
+To convert a value returned for the %W keyword, use
+the function ::mclistbox::convert. Sorry, no real documentation here;
+see the example (example.tcl) that comes with this distribution
+
+The command "<pathName> xview index" doesn't work. 
+
+I'm sure there are others...
+

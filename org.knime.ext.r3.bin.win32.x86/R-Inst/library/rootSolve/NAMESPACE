@@ -1,0 +1,13 @@
+useDynLib(rootSolve)
+
+import(stats, graphics, grDevices)
+
+export(gradient, hessian, jacobian.band, jacobian.full, multiroot, multiroot.1D,
+ runsteady, steady, steady.1D, steady.2D,
+ steady.3D, steady.band, stode, stodes, uniroot.all)
+
+S3method("plot", "steady1D")
+S3method("image", "steady2D")
+S3method("subset", "steady2D")
+S3method("image", "steady3D")
+S3method("summary","rootSolve")

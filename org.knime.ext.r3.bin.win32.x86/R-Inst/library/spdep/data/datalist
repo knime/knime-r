@@ -1,0 +1,16 @@
+NY_data: listw_NY nydata
+afcon: afcon africa.rook.nb afxy paper.nb
+auckland: auckland auckland.nb auckpolys
+baltimore
+boston: boston.c boston.soi boston.utm
+columbus: bbs col.gal.nb columbus coords polys
+eire: eire.coords.utm eire.df eire.nb eire.polys.utm
+elect80: dll e80_queen elect80 k4
+getisord: x xyz y
+hopkins
+house: LO_nb house trMat
+huddersfield
+nc.sids: nc.sids ncCC89.nb ncCR85.nb sidscents sidspolys
+oldcol: COL.OLD COL.nb
+used.cars: usa48.nb used.cars
+wheat

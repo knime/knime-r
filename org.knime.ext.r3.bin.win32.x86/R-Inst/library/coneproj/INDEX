@@ -1,0 +1,27 @@
+FEV                     Forced Expiratory Volume
+TwoDamat                A Two Dimensional Constraint Matrix
+check_irred             Routine for Checking Irreducibility
+conc                    Specify a Concave Shape-Restriction in a
+                        SHAPEREG Formula
+coneA                   Cone Projection - Polar Cone
+coneB                   Cone Projection - Constraint Cone
+constreg                Constrained Parametric Regression
+conv                    Specify a Convex Shape-Restriction in a
+                        SHAPEREG Formula
+cubic                   A Data Set for the Example of the Qprog
+                        Function
+decr                    Specify a Decreasing Shape-Restriction in a
+                        SHAPEREG Formula
+decr.conc               Specify a Decreasing and Concave
+                        Shape-Restriction in a SHAPEREG Formula
+decr.conv               Specify a Decreasing and Convex
+                        Shape-Restriction in a SHAPEREG Formula
+feet                    Foot Measurements for Fourth Grade Children
+incr                    Specify an Increasing Shape-Restriction in a
+                        SHAPEREG Formula
+incr.conc               Specify an Increasing and Concave
+                        Shape-Restriction in a SHAPEREG Formula
+incr.conv               Specify an Increasing and Convex
+                        Shape-Restriction in a SHAPEREG Formula
+qprog                   Quadratic Programming
+shapereg                Shape-Restricted Regression

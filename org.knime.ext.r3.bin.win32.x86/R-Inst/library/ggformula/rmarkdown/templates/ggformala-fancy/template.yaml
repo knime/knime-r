@@ -1,0 +1,4 @@
+name: ggformula fancy
+description: >
+ A illustrative Rmd document using the mosaic and ggformula packages.
+create_dir: false

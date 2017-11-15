@@ -1,0 +1,82 @@
+Version 1.5.0
+------------------------------------------------------------------------------
+
+BUG FIXES
+* https is now the default for requests (Thanks to Hiroaki Yutani)
+* UTF-8 page names and similar are properly handled (Thanks to Hiroaki Yutani)
+
+Version 1.4.0
+------------------------------------------------------------------------------
+
+NEW FEATURES
+* `random_page` now allows you to return more than one page.
+* `page_backlinks` does as well; thanks to Brock Tibert for the code.
+
+DOCUMENTATION
+* Vignette tweaks made
+* Package-level documentation improved.
+
+DEVELOPMENT
+* "Depends" switched out for "Imports" to avoid annoying loading messages.
+
+Version 1.3.0
+------------------------------------------------------------------------------
+
+BUG FIXES
+
+* Various miscellaneous internal improvements.
+* `limit` introduced as an argument to pages_in_category - thanks to Ben Marwick for finding the bug.
+* `limit` introduced as an argument to page_links - thanks to Hui Li of the Universität Heidelberg for the initial report.
+
+Version 1.2.0
+------------------------------------------------------------------------------
+
+NEW FEATURES
+*Random pages can now be retrieved with random_page
+*pageID based querying is available
+*Custom user
+
+DEVELOPMENT
+*Doc tweaks and some simplification of argument parsing around page_content and random_page
+*Additional unit tests
+*query() marked as exportable to allow simple third-party plugins into WikipediR
+
+Version 1.0.1
+------------------------------------------------------------------------------
+* Roxygenised documentation, some R CHECK errors fixed.
+* Test suite added for error handlers.
+
+Version 1.0.0
+------------------------------------------------------------------------------
+* First release version
+* Introduction of wiki_usercontribs, which retrieves recent contributions for a specified username
+* Bugfixes to error handling routines
+* Bugfix to problems around wiki_con, where species or commons users were unable to take advantage of CurlOpts.
+
+Version 0.7.0
+------------------------------------------------------------------------------
+
+* wiki_page now returns the DOM of the relevant page, not the wikimarkup, in line with a suggestion from Scott Chamberlain. This should be parsable by the HTML tree parser in the XML package.
+
+Version 0.6.3
+------------------------------------------------------------------------------
+
+* Standardisation and cleanup of error handlers, and the introduction of a single central LimitHandler.
+
+Version 0.6.2
+------------------------------------------------------------------------------
+
+* Bug fix from Scott Chamberlain around wiki_page, switching the content type over to x-wikitext.
+* Introduction of w_timeout as a field in the connector object; will be extended to other CURL options in time.
+
+Version 0.6.1
+------------------------------------------------------------------------------
+
+* Support for Commons and Wikispecies
+* Addition of wiki_recentchanges(), which allows a useR to query the recentchanges feed.
+
+Version 0.5.1
+------------------------------------------------------------------------------
+
+* Format for wiki_revision changed from the (unacceptable-to-API) text/css to x/wikitext.
+* Error handling improved to pass the full error explanation through to the user, in the case of API errors.

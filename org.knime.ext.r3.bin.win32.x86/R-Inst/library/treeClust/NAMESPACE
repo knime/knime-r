@@ -1,0 +1,12 @@
+export ("treeClust", "treeClust.control", "treeClust.rpart", "d3.dist", 
+        "tcdist", "leaf.numbers", "make.leaf.paths", "rp.deviance", "cramer", 
+        "tcnewdata", "rpart.predict.leaves", "make.leaf.paths", 
+        "treeClust.dist")
+S3method ("plot",    "treeClust")
+S3method ("print",   "treeClust")
+S3method ("summary", "treeClust")
+import ("rpart")
+import ("cluster")
+importFrom ("graphics", "plot", "text")
+importFrom ("stats", "chisq.test", "cmdscale", "cutree", "kmeans", 
+            "model.matrix", "predict")

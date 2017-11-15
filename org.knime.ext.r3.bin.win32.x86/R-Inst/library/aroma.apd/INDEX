@@ -1,0 +1,25 @@
+aroma.apd-package       Package aroma.apd
+cdfToApdMap             Generates an APD read map file from an
+                        Affymetrix CDF file
+celToApd                Generates an APD file from an Affymetrix CEL
+                        file
+createApd               Creates an Affymetrix probe data (APD) file
+findApdMap              Search for APD map files in multiple
+                        directories
+gtypeCelToPQ            Function to immitate Affymetrix'
+                        gtype\_cel\_to\_pq software
+readApd                 Reads an Affymetrix probe data (APD) file
+readApdHeader           Reads the header of an Affymetrix probe data
+                        (APD) file
+readApdMap              Reads an APD probe map file
+readApdRectangle        Reads a spatial subset of probe-level data from
+                        Affymetrix APD files
+readApdUnits            Reads Affymetrix probe data (APD) as units
+                        (probesets)
+updateApd               Updates an Affymetrix probe data (APD) file
+updateApdHeader         Updates the header of an Affymetrix probe data
+                        (APD) file
+updateApdUnits          Updates an Affymetrix probe data (APD) file by
+                        units (probesets)
+writeApd                Writes an APD probe data file
+writeApdMap             Writes an APD probe map file

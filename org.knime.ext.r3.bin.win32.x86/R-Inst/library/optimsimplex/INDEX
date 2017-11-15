@@ -1,0 +1,14 @@
+optimsimplex            S3 optimsimplex class
+optimsimplex-package    R port of the Scilab optimsimplex module
+optimsimplex.center     Optimsimplex Utility Functions
+optimsimplex.computefv
+                        Computation of Function Value(s)
+optimsimplex.destroy    Erase Simplex Object
+optimsimplex.getall     Optimsimplex Get Function Class
+optimsimplex.gradientfv
+                        Simplex Gradient
+optimsimplex.log        Optimsimplex Logging
+optimsimplex.reflect    Simplex Reflection
+optimsimplex.setall     Optimsimplex Set Function Class
+optimsimplex.shrink     Simplex Shrink
+simplex                 S3 simplex and vertex classes

@@ -1,0 +1,8 @@
+attach.jags             Attach/detach elements of 'JAGS' objects to
+                        search path
+autojags                Function for auto-updating 'JAGS' until the
+                        model converges
+jags                    Run 'JAGS' from R
+jags2bugs               Read jags output files in CODA format
+recompile               Function for recompiling rjags object
+traceplot               Trace plot of bugs object

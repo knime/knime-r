@@ -1,0 +1,8 @@
+bounds                  Group Sequential Boundaries Using Spending
+                        Functions
+drift                   Drift and Probabilities for Group Sequential
+                        Boundaries
+plot.bounds             Plot for Group Sequential Boundaries
+summary.bounds          Summary for Group Sequential Boundaries
+summary.drift           Summary for Computations Related to Group
+                        Sequential Boundaries

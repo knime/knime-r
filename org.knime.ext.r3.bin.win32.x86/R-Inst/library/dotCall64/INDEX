@@ -1,0 +1,2 @@
+dotCall64               dotCall64 - Extended Foreign Function Interface
+vector_dc               Allocate vectors in .C64()

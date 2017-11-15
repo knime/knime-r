@@ -1,0 +1,17 @@
+Package: ada
+Version: 2.0-5
+Date: 2016-04-12
+Title: The R Package Ada for Stochastic Boosting
+Author: Mark Culp, Kjell Johnson, and George Michailidis
+Depends: R(>= 2.10),rpart
+Description: Performs discrete, real, and gentle boost under both exponential and 
+             logistic loss on a given data set.  The package ada provides a straightforward, 
+             well-documented, and broad boosting routine for classification, ideally suited 
+             for small to moderate-sized data sets.
+Maintainer: Mark Culp <mvculp@mail.wvu.edu>
+License: GPL
+NeedsCompilation: no
+Packaged: 2016-05-12 22:47:05 UTC; mculp
+Repository: CRAN
+Date/Publication: 2016-05-13 11:40:44
+Built: R 3.4.2; ; 2017-11-10 14:29:13 UTC; windows

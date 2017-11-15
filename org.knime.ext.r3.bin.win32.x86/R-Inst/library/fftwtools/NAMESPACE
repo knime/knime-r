@@ -1,0 +1,3 @@
+#exportPattern("^[^\\.]")
+export( fftw, fftw2d, fftw_c2c, fftw_c2c_2d, fftw_c2r, fftw_r2c, fftw_r2c_2d, mvfftw, mvfftw_c2c, mvfftw_c2r, mvfftw_r2c)
+useDynLib(fftwtools, .registration = TRUE)

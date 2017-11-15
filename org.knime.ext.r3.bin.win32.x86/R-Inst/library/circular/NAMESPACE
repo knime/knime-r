@@ -1,0 +1,341 @@
+useDynLib(circular)
+
+#Import directive
+importFrom("graphics", "axis", "text", "lines.default", "text.default", "par", "plot.default", "points.default", "hist.default", "arrows", "layout", "image", "mtext", "plot", "frame", "title", "abline", "lines", "polygon", "axTicks", "points", "segments")  
+importFrom("stats", "density", "quantile", "median", "weights", "runif", "weighted.mean", "pnorm", "dnorm", "qnorm", "rnorm", "pf", "qf", "pchisq", "qchisq", "integrate", "median.default", "uniroot", "lm.wfit", "lm", "optim", "optimize", "rcauchy", "kruskal.test", "approxfun", "na.omit", "complete.cases", "is.empty.model", "model.response", "model.matrix", "model.weights", "model.offset", "model.extract", "model.frame", "formula", "hclust", "reorder", "as.dendrogram", "order.dendrogram", "coef", "naprint", "printCoefmat", "setNames", "symnum", "rexp", "pt", "residuals", ".getXlevels", "as.formula", "naresid", "knots")    
+importFrom("utils", "packageDescription", "data")
+importFrom("boot", "boot")
+importFrom("mvtnorm", "rmvnorm", "dmvnorm")
+importFrom("grDevices", "hsv", "dev.flush", "dev.hold", "xy.coords")
+      
+#Export directive
+
+# functions
+export(
+# file A1.R
+ A1,
+# file A1FirstDerivative.R
+ A1FirstDerivative,
+# file A1SecondDerivative.R
+ A1SecondDerivative,
+# file A1inv.R
+ A1inv,
+# file I.0.R
+ I.0,
+# file I.1.R
+ I.1,
+# file I.p.R
+ I.p,
+# file angular.deviation.R
+ angular.deviation,
+# file angular.variance.R
+ angular.variance,
+# file aov.circular.R
+ aov.circular,
+# file arrows.circular.R
+ arrows.circular,
+# file as.circular.R
+ as.circular,
+# file as.data.frame.circular.R
+ as.data.frame.circular,
+# asytriangular.R
+ dasytriangular,
+# file axialvonmises.R
+ daxialvonmises,
+# file bw.circular.R
+ bw.cv.mse.circular,
+ bw.cv.ml.circular,
+ bw.nrd.circular,
+# file cardioid.R
+ rcardioid, dcardioid,
+# file change.point.R
+ change.point,
+# file circular.R
+ circular, conversion.circular, circularp, "circularp<-", is.circular,
+# file circular.colors.R
+ circular.colors,
+# file coord2rad.R
+ coord2rad,
+# file cor.circular.R
+ cor.circular,
+# file curve.circular.R
+ curve.circular, plot.function.circular,
+# file deg.R
+ deg,
+# file dist.circular.R
+ dist.circular,
+# file equal.kappa.test.R
+ equal.kappa.test,
+## # file family.circular.R
+ vonMises,      
+# file heatmap.circular.R
+ heatmap.circular,
+# file kuiper.test.R
+ kuiper.test,
+# file lm.circular.R
+ lm.circular,
+# file lsfit.circle.R
+ lsfit.circle,
+## # file make.circular.link.R
+##  make.circular.link,
+# file meandeviation.R
+ meandeviation,
+# file minuspipluspi.R
+ minusPiPlusPi,
+# file mle.vonmises.R
+ mle.vonmises,
+# file mle.vonmises.bootstrap.ci.R
+ mle.vonmises.bootstrap.ci,
+# file mle.wrappedcauchy.R
+ mle.wrappedcauchy,
+# file mle.wrappednormal.R
+ mle.wrappednormal,
+# file intersect.modal.region.R    
+ intersect.modal.region,
+ intersect.modal.region.default,
+ intersect.modal.region.circular,    
+# file modal.region.R
+ modal.region,
+ modal.region.default,
+ modal.region.circular,
+# file plot.edf.R
+ plot.edf, lines.edf,
+# file pp.plot.R
+ pp.plot,
+# file pp.unif.plot.R
+ pp.unif.plot,
+# file projectednormal.R
+ rpnorm, dpnorm, 
+# file quantile.circular.R
+ quantile.circular,
+# file rad.R
+ rad,
+# file rao.spacing.test.R
+ rao.spacing.test,
+# file rao.test.R
+ rao.test,
+# file rayleigh.test.R
+ rayleigh.test,
+# file rho.circular.R
+ rho.circular,
+# file rose.diag.R
+ rose.diag,
+# file rstable.R
+ rstable,
+# file triangular.R
+ rtriangular, dtriangular,
+# file ticks.circular.R
+ ticks.circular,
+# file trigonometric.moment.R
+ trigonometric.moment,
+# file totalvariation.R
+ totalvariation.circular,      
+# file uniform.R
+ rcircularuniform, dcircularuniform,      
+# file vonmises.R
+ rvonmises, dvonmises, pvonmises, qvonmises, rmixedvonmises, dmixedvonmises, pmixedvonmises,
+# file watson.test.R
+ watson.test,
+# file watson.two.test.R
+ watson.two.test,
+# file windrose.R
+ windrose,
+# file wrappedcauchy.R
+ rwrappedcauchy, dwrappedcauchy,
+# file wrappednormal.R
+ rwrappednormal, dwrappednormal, pwrappednormal, qwrappednormal,
+# file wrappedstable.R
+ rwrappedstable 
+)
+
+## unexported functions
+#export(
+## file lm.circular.cc.R
+# lm.circular.cc,
+## file lm.circular.cl.R
+# lm.circular.cl
+#)
+
+# methods
+export(
+# file circular.R
+ c.circular,
+# file density.circular.R
+ density.circular,
+# file mean.circular.R
+ mean.circular,
+# file weighted.mean.circular.R
+ weighted.mean.circular,    
+# file median.circular.R
+ median.circular,
+# file medianHL.circular.R
+ medianHL.circular,
+# file axis.circular.R
+ axis.circular,
+# file lines.circular.R
+ lines.circular,
+# file plot.circular.R
+ plot.circular, circle.control,
+# file points.circular.R
+ points.circular,
+# file plot.lsfit.circle.R
+ plot.lsfit.circle,
+# file range.circular.R
+ range.circular,
+# file unique.circular.R
+ unique.circular,       
+# fiel sd.circular.R
+ sd, sd.default, sd.data.frame, sd.circular,
+# file var.circular.R
+ var, var.default, var.data.frame, var.circular,
+# file carthwrite.R
+ dcarthwrite,
+# file genvonmises.R
+ dgenvonmises,
+# file jonespewsey.R
+ djonespewsey,
+# file katojones.R
+ dkatojones, rkatojones,
+# file watson.williams.test.R
+ watson.williams.test, watson.williams.test.default, watson.williams.test.list, watson.williams.test.formula,
+# file watson.wheeler.test.R
+ watson.wheeler.test, watson.wheeler.test.default, watson.wheeler.test.list, watson.wheeler.test.formula,
+# file wallraff.test.R
+ wallraff.test, wallraff.test.default, wallraff.test.list, wallraff.test.formula
+)
+
+
+## unexported methods
+#export(
+## file aov.circular.R
+# print.aov.circular,
+## file circular.R
+# print.circular,
+## file equal.kappa.test.R
+# print.equal.kappa.test,
+## file kuiper.test.R
+# print.kuiper.test,
+## file lm.circular.cl.R
+# print.lm.circular.cl,
+## file lsfit.circle.R
+# print.lsfit.circle,
+## file mle.vonmises.R
+# print.mle.vonmises,
+## file mle.vonmises.bootstrap.ci.R
+# print.mle.vonmises.bootstrap.ci,
+## file mle.wrappedcauchy.R
+# print.mle.wrappedcauchy,
+## file mle.wrappednormal.R
+# print.mle.wrappednormal,
+## file rao.spacing.test.R
+# print.rao.spacing.test,
+## file rao.test.R
+# print.rao.test,
+## file rayleigh.test.R
+# print.rayleigh.test,
+## file summary.circular.R
+# summary.circular,
+## file watson.test.R
+# print.watson.test,
+## file watson.two.test.R
+# print.watson.two.test
+#)
+
+#S3methods directive
+
+#[
+S3method("[", circular)
+
+#axis
+S3method(axis, circular)
+
+#c
+S3method(c, circular)
+
+#density
+S3method(density, circular)
+
+#lines
+S3method(lines, circular)
+S3method(lines, density.circular)
+S3method(lines, modal.region.circular)
+
+#mean
+S3method(mean, circular)
+
+#weighted mean
+S3method(weighted.mean, circular)
+
+#median
+S3method(median, circular)
+
+#print
+S3method(print, aov.circular)
+S3method(print, circular)
+S3method(print, density.circular)
+S3method(print, equal.kappa.test)
+S3method(print, kuiper.test)
+S3method(print, lm.circular.cl)
+S3method(print, lsfit.circle)
+S3method(print, mle.vonmises)
+S3method(print, mle.vonmises.bootstrap.ci)
+S3method(print, mle.wrappedcauchy)
+S3method(print, mle.wrappednormal)
+S3method(print, rao.spacing.test)
+S3method(print, rao.test)
+S3method(print, rayleigh.test)
+S3method(print, watson.test)
+S3method(print, watson.two.test)
+#plot
+S3method(plot, density.circular)
+S3method(plot, circular)
+S3method(plot, lsfit.circle)
+S3method(plot, modal.region.circular)
+S3method(plot, totalvariation.circular)
+#points
+S3method(points, circular)
+
+#quantile
+S3method(quantile, circular)
+
+#range
+S3method(range, circular)
+
+S3method(sd, default)
+#S3method(sd, matrix)
+S3method(sd, data.frame)
+S3method(sd, circular)
+
+#summary
+S3method(summary, circular)
+
+#unique
+S3method(unique, circular)
+
+#var
+S3method(var, default)
+#S3method(var, matrix)
+S3method(var, data.frame)
+S3method(var, circular)
+
+# tests
+S3method(watson.williams.test, default)
+S3method(watson.williams.test, list)
+S3method(watson.williams.test, formula)
+S3method(watson.wheeler.test, default)
+S3method(watson.wheeler.test, list)
+S3method(watson.wheeler.test, formula)
+S3method(wallraff.test, default)
+S3method(wallraff.test, list)
+S3method(wallraff.test, formula)
+
+S3method(modal.region, default)
+S3method(modal.region, circular)
+S3method(intersect.modal.region, default)
+S3method(intersect.modal.region, circular)
+
+S3method(as.data.frame, circular)
+
+S3method(plot, edf)
+S3method(lines, edf)
+S3method(plot, function.circular)    

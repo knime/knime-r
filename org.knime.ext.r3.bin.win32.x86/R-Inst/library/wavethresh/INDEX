@@ -1,0 +1,452 @@
+AutoBasis               Run Coifman-Wickerhauser best basis algorithm
+                        on wavelet packet object
+AvBasis                 Basis averaging ("inversion")
+AvBasis.wst             Perform basis averaging for (packet-ordered)
+                        non-decimated wavelet transform.
+AvBasis.wst2D           Perform basis averaging for (packet-ordered) 2D
+                        non-decimated wavelet transform.
+BAYES.THR               Bayesian wavelet thresholding.
+BMdiscr                 Subsidiary routine for makewpstDO function
+BabyECG                 Physiological data time series.
+BabySS                  Physiological data time series.
+Best1DCols              Extract the best (one-dimensional) nondecimated
+                        WP packets
+CWCV                    C Wavelet Cross-validation
+CWavDE                  Simple wavelet density estimator with hard
+                        thresholding
+CanUseMoreThanOneColor
+                        Deprecated function
+Chires5                 Subsid routine for denproj (calcs scaling
+                        function coefs without cov)
+Chires6                 Subsid routine for denproj (calcs scaling
+                        function coefs with cov)
+ConvertMessage          Print out a text message about an object which
+                        is from old version of WaveThresh
+Crsswav                 Wrapper to C code version of rsswav
+Cthreshold              Calls C code to threshold wd class object.
+DJ.EX                   Produce Donoho and Johnstone test functions
+FullWaveletCV           Perform whole wavelet cross-validation in C
+                        code
+GenW                    Generate (inverse) discrete wavelet transform
+                        matrix.
+GetRSSWST               Computes estimate of error for function
+                        estimate.
+HaarConcat              Generate a concatenated Haar MA process
+HaarMA                  Generate Haar MA processes.
+InvBasis                Generic basis inversion for libraries
+InvBasis.wp             Invert a wp library representation with a
+                        particular basis spec
+InvBasis.wst            Invert a wst library representation with a
+                        basis specification
+IsEarly                 Generic function to detect whether object is
+                        from an early version
+IsEarly.default         Detects whether object is from an earlier
+                        version of WaveThresh
+IsEarly.wd              Function to detect whether a wd object is from
+                        WaveThresh2 or not
+IsPowerOfTwo            Decides whether vector elements are integral
+                        powers of two (returns NA if not).
+LSWsim                  Simulate arbitrary locally stationary wavelet
+                        process.
+LocalSpec               Compute Nason and Silverman smoothed wavelet
+                        periodogram.
+LocalSpec.wd            Compute Nason and Silverman raw or smoothed
+                        wavelet periodogram.
+LocalSpec.wst           Obsolete function (use ewspec)
+MaNoVe                  Make Node Vector (using Coifman-Wickerhauser
+                        best-basis type algorithm)
+MaNoVe.wp               Make Node Vector (using Coifman-Wickerhauser
+                        best-basis type algorithm) on wavelet packet
+                        object
+MaNoVe.wst              Make Node Vector (using Coifman-Wickerhauser
+                        best-basis type algorithm) on nondecimated
+                        wavelet transform object
+PsiJ                    Compute discrete autocorrelation wavelets.
+PsiJmat                 Compute discrete autocorrelation wavelets but
+                        return result in matrix form.
+Psiname                 Return a PsiJ list object style name.
+ScalingFunction         Compute scaling functions on internally
+                        predefined grid
+Shannon.entropy         Compute Shannon entropy
+TOgetthrda1             Subsidiary routines for Ogden and Parzen's
+                        wavelet shrinkage methods
+TOthreshda1             Data analytic wavelet thresholding routine
+TOthreshda2             Data analytic wavelet thresholding routine
+WTEnv                   Environment that exists to store intermediate
+                        calculations for re-use within the same R
+                        session.
+WaveletCV               Wavelet cross-validation
+Whistory                Obsolete function supposedly detailed history
+                        of object
+Whistory.wst            Obsolete function: as Whistory, but for wst
+                        objects
+accessC                 Get "detail" (mother wavelet) coefficients data
+                        from wavelet object
+accessC.mwd             Get Smoothed Data from Wavelet Structure
+accessC.wd              Get smoothed data from wavelet object (wd)
+accessC.wp              Warning function when trying to access smooths
+                        from wavelet packet object (wp).
+accessC.wst             Get smoothed data from packet ordered
+                        non-decimated wavelet object (wst)
+accessD                 Get "detail" (mother wavelet) coefficients data
+                        from wavelet object
+accessD.mwd             Get wavelet coefficients from multiple wavelet
+                        structure (mwd).
+accessD.wd              Get detail (mother wavelet) coefficients from
+                        wavelet object (wd).
+accessD.wd3D            Get wavelet coefficients from 3D wavelet object
+accessD.wp              Obtain whole resolution level of wavelet packet
+                        coefficients from a wavelet packet object (wp).
+accessD.wpst            Get coefficients from a non-decimated wavelet
+                        packet object (wpst) in time order.
+accessD.wst             Get mother wavelet coefficients from a packet
+                        ordered non-decimated wavelet object (wst).
+accessc                 Get variance information from irregularly
+                        spaced wavelet decomposition object.
+addpkt                  Add a wavelet packet box to an already set up
+                        time-frequency plot
+av.basis                Perform basis averaging for wst class object
+basisplot               Generic basis plot function
+basisplot.BP            Plot time-frequency plane and basis slots
+                        associated with basis object
+basisplot.wp            Function to graphically select a wavelet packet
+                        basis
+bestm                   Function called by makewpstRO to identify which
+                        packets are individually good for correlating
+                        with a response
+c2to4                   Take integer, represent in binary, then think
+                        of and return that representation in base 4
+checkmyews              Check a LSW spectrum through repeated
+                        simulation and empirical averages
+cns                     Create new zeroed spectrum.
+compare.filters         Compares two filters.
+compgrot                Compute empirical shift for time ordered
+                        non-decimated transforms.
+compress                Compress objects
+compress.default        Do "zero" run-length encoding compression of a
+                        vector of numbers.
+compress.imwd           Compress a (thresholded) imwd class object by
+                        removing zeroes.
+conbar                  Performs inverse DWT reconstruction step
+convert                 Convert one type of wavelet object into
+                        another.
+convert.wd              Convert a non-decimated wd object into a wst
+                        object.
+convert.wst             Convert a non-decimated wst object into a wd
+                        object.
+cthresh                 Estimate real signal using complex-valued
+                        wavelets
+dclaw                   Claw distribution
+dencvwd                 Calculate variances of wavlet coefficients of a
+                        p.d.f.
+denplot                 Calculate plotting information for a density
+                        estimate.
+denproj                 Calculate empirical scaling function
+                        coefficients of a p.d.f.
+denwd                   Wavelet decomposition of empirical scaling
+                        function coefficients of a p.d.f.
+denwr                   Wavelet reconstruction for density estimation.
+dof                     Compute number of non-zero coefficients in wd
+                        object
+doppler                 Evaluate the Donoho and Johnstone Doppler
+                        signal.
+draw                    Draw wavelets or scaling functions.
+draw.default            Draw picture of a wavelet or scaling function.
+draw.imwd               Draw mother wavelet associated with an imwd
+                        object.
+draw.imwdc              Draw mother wavelet associated with an imwdc
+                        object.
+draw.mwd                Draws a wavelet or scaling function used to
+                        compute an 'mwd' object
+draw.wd                 Draw mother wavelet or scaling function
+                        associated with wd object.
+draw.wp                 Draw wavelet packet associated with a wp
+                        object.
+draw.wst                Draw mother wavelet or scaling function
+                        associated with wst object.
+drawbox                 Draw a shaded coloured box
+drawwp.default          Subsidiary routine that actually computes
+                        wavelet packet values
+ewspec                  Compute evolutionary wavelet spectrum estimate.
+example.1               Compute and return piecewise polynomial
+                        coordinates.
+filter.select           Provide wavelet filter coefficients.
+find.parameters         Find estimates of prior parameters
+first.last              Build a first/last database for wavelet
+                        transforms.
+first.last.dh           Build special first/last database for some
+                        wavelet density functions
+firstdot                Return the location of the first period
+                        character within a character string (for a
+                        vector of strings of arbitrary length).
+getarrvec               Compute and return weaving permutation for
+                        conversion from wst objects to wd class
+                        objects.
+getpacket               Get a packet of coefficients from a wavelet
+                        object
+getpacket.wp            Get packet of coefficients from a wavelet
+                        packet object (wp).
+getpacket.wpst          Get packet of coefficients from a non-decimated
+                        wavelet packet object (wpst).
+getpacket.wst           Get packet of coefficients from a packet
+                        ordered non-decimated wavelet object (wst).
+getpacket.wst2D         Get packet of coefficients from a
+                        two-dimensional non-decimated wavelet object
+                        (wst2D).
+griddata objects        Data interpolated to a grid objects.
+guyrot                  Cyclically rotate elements of a vector
+image.wd                Produce image representation of nondecimated
+                        wavelet transform
+image.wst               Produce image representation of a wst class
+                        object
+imwd                    Two-dimensional wavelet transform
+                        (decomposition).
+imwd.object             Two-dimensional wavelet decomposition objects.
+imwdc.object            Two-dimensional compressed wavelet
+                        decomposition objects.
+imwr                    Inverse two-dimensional wavelet transform.
+imwr.imwd               Inverse two-dimensional discrete wavelet
+                        transform.
+imwr.imwdc              Inverse two-dimensional discrete wavelet
+                        transform.
+ipd                     Inductance plethysmography data.
+ipndacw                 Compute inner product matrix of discrete
+                        non-decimated autocorrelation wavelets.
+irregwd                 Irregular wavelet transform (decomposition).
+irregwd.objects         Irregular wavelet decomposition objects.
+l2norm                  Compute L2 distance between two vectors of
+                        numbers.
+lennon                  John Lennon image.
+levarr                  Subsidiary routine that generates a particular
+                        permutation
+linfnorm                Compute L infinity distance between two vectors
+                        of numbers.
+logabs                  Take the logarithm of the squares of the
+                        argument
+lt.to.name              Convert desired level and orientation into code
+                        used by imwd
+madmad                  Compute square of median absolute deviation
+                        (mad) function.
+make.dwwt               Compute diagonal of the matrix WWT
+makegrid                Interpolate data to a grid.
+makewpstDO              Help page for a function
+makewpstRO              Make a wavelet packet regression object from a
+                        dependent and independent time series variable.
+mfilter.select          Provide filter coefficients for multiple
+                        wavelets.
+mfirst.last             Build a first/last database for multiple
+                        wavelet transforms.
+modernise               Generic function to upgrade a V2 WaveThresh
+                        object to V4
+modernise.wd            Modernise a wd class object
+mpostfilter             Multiwavelet postfilter
+mprefilter              Multiwavelet prefilter
+mwd                     Discrete multiple wavelet transform
+                        (decomposition).
+mwd.object              Multiple wavelet decomposition object (1D)
+mwr                     Multiple discrete wavelet transform
+                        (reconstruction).
+newsure                 Version of sure that acts as subsidiary for
+                        threshold.irregwd
+nlevelsWT               Returns number of scale (resolution) levels.
+nlevelsWT.default       Returns number of levels associated with an
+                        object
+nullevels               Set whole resolution levels of coefficients
+                        equal to zero.
+nullevels.imwd          Sets whole resolution levels of coefficients
+                        equal to zero in a imwd object.
+nullevels.wd            Sets whole resolution levels of coefficients
+                        equal to zero in a wd object.
+nullevels.wst           Sets whole resolution levels of coefficients
+                        equal to zero in a wst object.
+numtonv                 Convert an index number into a node vector
+                        object.
+nv.object               Node vector objects.
+plot.imwd               Draw a picture of the 2D wavelet coefficients
+                        using image
+plot.irregwd            Plot variance factors of wavelet transform
+                        coefficients for irregularly spaced wavelet
+                        transform object
+plot.mwd                Use plot on an mwd object.
+plot.nvwp               Depict wavelet packet basis specfication
+plot.wd                 Plot wavelet transform coefficients.
+plot.wp                 Plot wavelet packet transform coefficients
+plot.wst                Plot packet-ordered non-decimated wavelet
+                        transform coefficients.
+plot.wst2D              Plot packet-ordered 2D non-decimated wavelet
+                        coefficients.
+plotdenwd               Plot the wavelet coefficients of a p.d.f.
+plotpkt                 Sets up a high level plot ready to show the
+                        time-frequency plane and wavelet packet basis
+                        slots
+print.BP                Print top best basis information for BP class
+                        object
+print.imwd              Print out information about an imwd object in
+                        readable form.
+print.imwdc             Print out information about an imwdc object in
+                        readable form.
+print.mwd               Use print() on a mwd object.
+print.nv                Print a node vector object, also used by
+                        several other functions to obtain packet list
+                        information
+print.nvwp              Print a wavelet packet node vector object, also
+                        used by several other functions to obtain
+                        packet list information
+print.w2d               Print method for printing w2d class objects
+print.w2m               Print a w2m class object
+print.wd                Print out information about an wd object in
+                        readable form.
+print.wd3D              Print out information about an wd3D object in a
+                        readable form.
+print.wp                Print out information about an wd object in
+                        readable form.
+print.wpst              Prints out basic information about a wpst class
+                        object
+print.wpstCL            Prints some information about a wpstCL object
+print.wpstDO            Print information about a wpstDO class object
+print.wpstRO            Print a wpstRO class object
+print.wst               Print out information about an wst object in
+                        readable form.
+print.wst2D             Print out information about an wst2d object in
+                        a readable form.
+putC                    Put smoothed data (father wavelet) coefficients
+                        into wavelet structure
+putC.mwd                Put smoothed data into wavelet structure
+putC.wd                 Puts a whole resolution level of father wavelet
+                        coeffients into wd wavelet object.
+putC.wp                 Warning function when trying to insert father
+                        wavelet coefficients into wavelet packet object
+                        (wp).
+putC.wst                Puts a whole resolution level of father wavelet
+                        coeffients into wst wavelet object.
+putD                    Put mother wavelet coefficients into wavelet
+                        structure
+putD.mwd                Put wavelet coefficients into multiple wavelet
+                        structure
+putD.wd                 Puts a whole resolution level of mother wavelet
+                        coeffients into wd wavelet object.
+putD.wd3D               Put wavelet coefficient array into a 3D wavelet
+                        object
+putD.wp                 Puts a whole resolution level of wavelet packet
+                        coeffients into wp wavelet object.
+putD.wst                Puts a whole resolution level of mother wavelet
+                        coeffients into wst wavelet object.
+putDwd3Dcheck           Check argument list for putD.wd3D
+putpacket               Insert a packet of coefficients into a wavelet
+                        object.
+putpacket.wp            Inserts a packet of coefficients into a wavelet
+                        packet object (wp).
+putpacket.wst           Put a packet of coefficients into a packet
+                        ordered non-decimated wavelet object (wst).
+putpacket.wst2D         Replace packet of coefficients in a
+                        two-dimensional non-decimated wavelet object
+                        (wst2D).
+rcov                    Computes robust estimate of covariance matrix
+rfft                    Real Fast Fourier transform
+rfftinv                 Inverse real FFT, inverse of rfft
+rfftwt                  Weight a Fourier series sequence by a set of
+                        weights
+rm.det                  Set coarse levels of a wavelets on the interval
+                        transform object to zero
+rmget                   Search for existing ipndacw matrices.
+rmname                  Return a ipndacw matrix style name.
+rotateback              Cyclically shift a vector one place to the
+                        right
+rsswav                  Compute mean residual sum of squares for odd
+                        prediction of even ordinates and vice versa
+simchirp                Compute and return simulated chirp function.
+ssq                     Compute sum of squares difference between two
+                        vectors
+summary.imwd            Print out some basic information associated
+                        with an imwd object
+summary.imwdc           Print out some basic information associated
+                        with an imwdc object
+summary.mwd             Use summary() on a mwd object.
+summary.wd              Print out some basic information associated
+                        with a wd object
+summary.wd3D            Print out some basic information associated
+                        with a wd3D object
+summary.wp              Print out some basic information associated
+                        with a wp object
+summary.wpst            Print out some basic information associated
+                        with a wpst object
+summary.wst             Print out some basic information associated
+                        with a wst object
+summary.wst2D           Print out some basic information associated
+                        with a wst2D object
+support                 Returns support of compactly supported
+                        wavelets.
+sure                    Computes the minimum of the SURE thresholding
+                        function
+teddy                   Picture of a teddy bear's picnic.
+test.dataCT             Test functions for wavelet regression and
+                        thresholding
+threshold               Threshold coefficients
+threshold.imwd          Threshold two-dimensional wavelet decomposition
+                        object
+threshold.imwdc         Threshold two-dimensional compressed wavelet
+                        decomposition object
+threshold.irregwd       hold irregularly spaced wavelet decomposition
+                        object
+threshold.mwd           Use threshold on an mwd object.
+threshold.wd            Threshold (DWT) wavelet decomposition object
+threshold.wd3D          Threshold 3D DWT object
+threshold.wp            Threshold wavelet packet decomposition object
+threshold.wst           Threshold (NDWT) packet-ordered non-decimated
+                        wavelet decomposition object
+tpwd                    Tensor product 2D wavelet transform
+tpwr                    Inverse tensor product 2D wavelet transform.
+uncompress              Uncompress objects
+uncompress.default      Undo zero run-length encoding for a vector.
+uncompress.imwdc        Uncompress an imwdc class object
+wavegrow                Interactive graphical tool to grow a wavelet
+                        synthesis
+wavthresh-package       Wavelet transforms and associated statistical
+                        methodology.
+wd                      Wavelet transform (decomposition).
+wd.dh                   Compute specialized wavelet transform for
+                        density estimation
+wd.int                  Computes "wavelets on the interval" transform
+wd.object               Wavelet decomposition objects
+wd3D                    Three-dimensional discrete wavelet transform
+wd3D.object             Three-dimensional wavelet object
+wp                      Wavelet packet transform.
+wp.object               Wavelet Packet decomposition objects.
+wpst                    Non-decimated wavelet packet transform.
+wpst2discr              Reshape/reformat packet coefficients into a
+                        multivariate data set
+wpst2m                  Converts a nondecimated wavelet packet object
+                        to a (large) matrix with packets stored as
+                        columns
+wpstCLASS               Predict values using new time series values via
+                        a non-decimated wavelet packet discrimination
+                        object.
+wpstREGR                Construct data frame using new time series
+                        using information from a previously constructed
+                        wpstRO object
+wr                      Wavelet reconstruction (inverse DWT).
+wr.int                  Computes inverse "wavelets on the interval"
+                        transform.
+wr.mwd                  Multiple wavelet reconstruction for mwd objects
+wr.wd                   Wavelet reconstruction for wd class objects
+                        (inverse discrete wavelet transform).
+wr3D                    Inverse DWT for 3D DWT object.
+wst                     Packet-ordered non-decimated wavelet transform.
+wst.object              (Packet ordered) Nondecimated wavelet transform
+                        decomposition objects.
+wst2D                   (Packet-ordered) 2D non-decimated wavelet
+                        transform.
+wst2D.object            (Packet ordered) Two-dimensional nondecimated
+                        wavelet transform decomposition objects.
+wstCV                   Performs two-fold cross-validation estimation
+                        using packet-ordered non-decimated wavelet
+                        transforms and one, global, threshold.
+wstCVl                  Performs two-fold cross-validation estimation
+                        using packet-ordered non-decimated wavelet
+                        transforms and a (vector) level-dependent
+                        threshold.
+wvcvlrss                Computes estimate of error for function
+                        estimate.
+wvmoments               Compute moments of wavelets or scaling function
+wvrelease               Prints out the release number of the WaveThresh
+                        package

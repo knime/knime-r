@@ -1,0 +1,23 @@
+#NEXUS
+
+BEGIN TAXA;
+  DIMENSIONS NTAX=6;
+	TAXLABELS
+        cnidaria
+        porifera
+        ctenophora
+        protostomia
+        deuterostomia
+        xeno
+    ;
+END;
+
+BEGIN TREES;
+    TRANSLATE
+        1 deuterostomia,
+        2 protostomia,
+        3 porifera,
+        4 ctenophora,
+        5 cnidaria;
+    TREE hyp1 = (3,((4,5),(1,2)));
+END;

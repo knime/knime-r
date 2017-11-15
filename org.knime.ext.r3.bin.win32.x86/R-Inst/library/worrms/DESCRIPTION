@@ -1,0 +1,28 @@
+Package: worrms
+Type: Package
+Title: World Register of Marine Species (WoRMS) Client
+Description: Client for World Register of Marine Species 
+    (<http://www.marinespecies.org/>). Includes functions for each
+    of the API methods, including searching for names by name, date and
+    common names, searching using external identifiers, fetching
+    synonyms, as well as fetching taxonomic children and 
+    taxonomic classification.
+Version: 0.2.0
+Authors@R: c(person("Scott", "Chamberlain", role = c("aut", "cre"),
+    email = "myrmecocystus@gmail.com"))
+License: MIT + file LICENSE
+URL: https://github.com/ropensci/worrms
+BugReports: https://github.com/ropensci/worrms/issues
+LazyData: true
+VignetteBuilder: knitr
+Imports: crul (>= 0.3.6), tibble (>= 1.2), jsonlite (>= 1.1),
+        data.table
+Suggests: roxygen2 (>= 6.0.1), knitr, testthat
+RoxygenNote: 6.0.1
+NeedsCompilation: no
+Packaged: 2017-08-24 21:29:00 UTC; sacmac
+Author: Scott Chamberlain [aut, cre]
+Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
+Repository: CRAN
+Date/Publication: 2017-08-24 21:50:15 UTC
+Built: R 3.4.2; ; 2017-11-10 16:28:26 UTC; windows

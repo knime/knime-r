@@ -1,0 +1,25 @@
+broken.line             Fitted values for segmented relationships
+confint.segmented       Confidence intervals for breakpoints
+davies.test             Testing for a change in the slope
+down                    Down syndrome in babies
+draw.history            History for the breakpoint estimates
+intercept               Intercept estimates from segmented
+                        relationships
+lines.segmented         Bars for interval estimate of the breakpoints
+plant                   Plan organ dataset
+plot.segmented          Plot method for segmented objects
+points.segmented        Points method for segmented objects
+predict.segmented       Predict method for segmented model fits
+print.segmented         Print method for the segmented class
+pscore.test             Testing for existence of one breakpoint
+seg.control             Auxiliary for controlling segmented model
+                        fitting
+seg.lm.fit              Fitter Functions for Segmented Linear Models
+segmented               Segmented relationships in regression models
+segmented-package       Segmented relationships in regression models
+                        with breakpoints / changepoints estimation
+slope                   Slope estimates from segmented relationships
+stagnant                Stagnant band height data
+summary.segmented       Summarizing model fits for segmented regression
+vcov.segmented          Variance-Covariance Matrix for a Fitted
+                        Segmented Model

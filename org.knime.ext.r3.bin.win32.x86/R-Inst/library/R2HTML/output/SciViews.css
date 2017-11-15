@@ -1,0 +1,80 @@
+body {  
+	background: #ffffff;  
+	color: #000000; 
+	margin: 0%; 
+	}  
+
+ .tablesort  {
+    cursor: pointer ;
+    behavior:url(tablesort.htc);
+    -moz-binding: url(tablesort.htc);
+    }
+    
+H1 { background: #ECE6C4; padding: 3px; border-bottom: 1px solid #CCCC99}
+
+H2 { background: #fffacd; color:#0ac92b; padding: 3px; border-bottom: 1px solid #eee8aa; font-family: Comic,Comics,Arial}
+
+H2.index { font-family: Arial, Helvetica, sans-serif; font-size: 18pt; font-style: normal; font-weight: normal; color: #FFFFFF; background: #000000; margin: 10pt 5%}
+H3 { font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-style: normal; font-weight: bold; color: #004080  }
+H4 { font-family: T, Helvetica, sans-serif; font-size: 10pt; font-style: normal; font-weight: bold; color: #000000; line-height: 16pt}
+
+LI { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt }
+
+A { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt ;text-decoration:none}
+
+
+.caption{font-style:italic}
+.command {font-family:verdana, arial; color:red	}
+.function{font-family:courier; color:blue; font-size: 10pt }
+.partitle{font-family:verdana, arial; font-weight:bold}
+
+
+
+
+P { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt ;font-weight:normal}
+
+
+XMP{font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt }
+
+
+
+TR{font-family: Arial, Helvetica,Times, Helvetica, sans-serif; font-size: 10pt; font-style: normal  ; padding:0 0}
+TR.firstline{background: #eee8aa;text-align:center;font-weight: bold}
+
+TR.ListBackTitle{color: #FFFFFF; background: #000000;text-align:left;font-weight: bold}
+
+
+
+TD{background:#FFFFFF; padding:0 0}
+TD.ListBackMain{background: #E0E0E0; padding:0 0}
+TD.firstcolumn{padding:5 10;background:#fffacd;text-align:right}
+TD.cellinside{padding:5 10;background:#ffffe0;text-align:right}
+TD.cellinsideLeft {
+	padding: 5 5;
+	background: #FFFFFF;
+	text-align:left
+}
+
+
+
+
+/* CORRELATION MATRIX TRAFFIC HIGHLIGHT*/
+
+TD.corvarname{background-color:"#FFFFFF" ;color:black;  height:1.1cm; text-align:right; font-weight:bold}
+TD.corsep{width:0.5cm}
+TD.cordiag{background-color:#fffff;color:white}
+TD.cor0{background-color:"#FFFFFF" ;color:black;  width:1.1cm; height:1.1cm; text-align:center}
+TD.cor1{background-color:"#E6E6E6" ;color:black;  width:1.1cm; height:1.1cm; text-align:center}
+TD.cor2{background-color:"#CCCCCC" ;color:black;   width:1.1cm; height:1.1cm; text-align:center}
+TD.cor3{background-color:"#B3B3B3" ;color:black;   width:1.1cm; height:1.1cm; text-align:center}
+TD.cor4{background-color:"#999999" ;color:black;   width:1.1cm; height:1.1cm; text-align:center}
+TD.cor5{background-color:"#808080" ;color:white;   width:1.1cm; height:1.1cm; text-align:center}
+TD.cor6{background-color:"#666666" ;color:white;  width:1.1cm; height:1.1cm; text-align:center} 
+TD.cor7{background-color:"#4D4D4D" ;color:white;  width:1.1cm; height:1.1cm; text-align:center} 
+TD.cor8{background-color:"#333333" ;color:white;  width:1.1cm; height:1.1cm; text-align:center} 
+TD.cor9{background-color:"#1A1A1A" ;color:yellow; width:1.1cm; height:1.1cm; text-align:center} 
+TD.cor10{background-color:"#000000";color:yellow;  width:1.1cm; height:1.1cm; text-align:center}
+						
+
+
+ 

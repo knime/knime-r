@@ -1,0 +1,26 @@
+citHeader("To cite package 'rootSolve' in publications use:")
+
+citEntry(entry="book",
+  title = "A Practical Guide to Ecological Modelling. Using R as a Simulation Platform\n",
+  publisher = "Springer",
+  year = "2009",
+  author = personList(as.person("Karline Soetaert"),as.person("Peter M.J. Herman")),
+  pages = "372",
+  note = "ISBN 978-1-4020-8623-6",
+  textVersion =  paste("Soetaert K. and P.M.J. Herman (2009).
+  A Practical Guide to Ecological Modelling. Using R as a Simulation Platform.
+  Springer, 372 pp.")
+         )
+
+citEntry(entry="manual",
+  title = "rootSolve: Nonlinear root finding, equilibrium and steady-state analysis of ordinary differential equations\n",
+  year = "2009",
+  author = personList(as.person("Karline Soetaert")),
+  note = "R package 1.6",
+  textVersion =  paste("Soetaert K. (2009).
+  rootSolve: Nonlinear root finding, equilibrium and steady-state analysis of ordinary differential equations.
+  R-package version 1.6")
+         )
+
+citFooter("rootSolve was created to solve the examples from chapter 7 of our book - ",
+          "please cite this book when using it, thank you!")

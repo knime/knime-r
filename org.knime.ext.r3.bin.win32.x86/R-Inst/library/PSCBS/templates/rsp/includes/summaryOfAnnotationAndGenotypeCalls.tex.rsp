@@ -1,0 +1,47 @@
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% SUMMARY ANNOTATION AND GENOTYPE CALLS
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<% summaryOfAnnotationAndGenotypeCalls <- function(fit, ...) { %>
+\subsection{Summary of annotation and genotype calls}
+<%
+data <- getLocusData(fit, fields="full");
+nbrOfLoci <- nrow(data);
+nbrOfSNPs <- sum(data$isSNP, na.rm=TRUE);
+nbrOfHets <- sum(data$isHet, na.rm=TRUE);
+
+chromosomes <- getChromosomes(fit);
+nbrOfChromosomes <- length(chromosomes);
+chromosomesH <- seqToHumanReadable(chromosomes);
+chromosomesH <- if (nbrOfChromosomes == 1) {
+  sprintf("Chr %s", chromosomesH);
+} else {
+  sprintf("Chrs %s", chromosomesH);
+}
+chrsTags <- if (nbrOfChromosomes == 1) {
+  sprintf("chr%02d", chromosomes[1]);
+} else {
+  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
+}
+%>
+<% reportHeaderUpdate(fit) %>
+\begin{table}[htbp]
+ \begin{center}
+  \begin{tabular}{lrr}
+   Description & Count & Fraction \\
+   \hline
+   Number of loci & <%=nbrOfLoci%> & 100.00\% \\
+   Number of SNPs & <%=nbrOfSNPs%> & <%=sprintf("%.2f", 100*nbrOfSNPs/nbrOfLoci)%>\% \\
+   Number of heterozygous SNPs* & <%=nbrOfHets%> & <%=sprintf("%.2f", 100*nbrOfHets/nbrOfSNPs)%>\% \\
+   Number of non-polymorphic loci & <%=nbrOfLoci-nbrOfSNPs%> & <%=sprintf("%.2f", 100*(1-nbrOfSNPs/nbrOfLoci))%>\% \\
+   Number of chromosomes & <%=nbrOfChromosomes%> & - \\
+  \end{tabular}
+  \caption{
+  Summary of the locus-level data on <%=chromosomesH%>.
+  A locus is considered to be a SNP if it has either a non-missing BAF for the tumor.
+  (*) Heterozygous calls are based on (whole-genome) naive calling by thresholding \emph{tumor} DHs.
+  }
+  \label{tbl:LocusStats}
+ \end{center}
+\end{table}
+
+<% } # summaryOfAnnotationAndGenotypeCalls() %>

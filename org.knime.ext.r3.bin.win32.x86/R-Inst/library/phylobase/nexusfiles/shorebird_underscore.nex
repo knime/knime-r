@@ -1,0 +1,321 @@
+#NEXUS
+[Data from Gavin Thomas]
+BEGIN TAXA;
+	DIMENSIONS NTAX = 71;
+	TAXLABELS
+		Catoptrophorus_semipalmatus
+		Tringa_ochropus
+		Tringa_stagnatilis
+		Tringa_flavipes
+		Tringa_nebularia
+		Tringa_totanus
+		Tringa_erythropus
+		Tringa_melanoleuca
+		Tringa_glareola
+		Steganopus_tricolor
+		Phalaropus_lobatus
+		Phalaropus_fulicaria
+		Micropalama_himantopus
+		Eurynorhynchus_pygmeus
+		Aphriza_virgata
+		Calidris_canutus
+		Calidris_tenuirostris
+		Calidris_temminckii
+		Calidris_maritima
+		Calidris_ptilocnemis
+		Calidris_mauri
+		Calidris_alba
+		Calidris_alpina
+		Calidris_bairdii
+		Calidris_minutilla
+		Calidris_pusilla
+		Calidris_minuta
+		Calidris_ruficollis
+		Calidris_subminuta
+		Arenaria_interpres
+		Arenaria_melanocephala
+		Tringa_hypoleucos
+		Tringa_macularia
+		Limnodromus_griseus
+		Gallinago_gallinago
+		Coenocorypha_aucklandica
+		Coenocorypha_pusilla
+		Limosa_fedoa
+		Limosa_haemastica
+		Limosa_limosa
+		Limosa_lapponica
+		Bartramia_longicauda
+		Numenius_tahitiensis
+		Numenius_phaeopus
+		Numenius_arquata
+		Numenius_americanus
+		Rostratula_benghalensis
+		Jacana_spinosa
+		Jacana_jacana
+		Metopidius_indicus
+		Actophilornis_africanus
+		Pedionomus_torquatus
+		Pluvialis_apricaria
+		Pluvialis_dominica
+		Eudromias_morinellus
+		Charadrius_montanus
+		Charadrius_vociferus
+		Charadrius_wilsonia
+		Charadrius_dubius
+		Charadrius_hiaticula
+		Charadrius_melodus
+		Vanellus_vanellus
+		Vanellus_lugubris
+		Vanellus_armatus
+		Recurvirostra_avosetta
+		Haematopus_longirostris
+		Haematopus_fuliginosus
+		Haematopus_moquini
+		Haematopus_ostralegus
+		Haematopus_unicolor
+		Haematopus_finschi
+	;
+END;
+
+BEGIN CHARACTERS;
+	TITLE MassClutchSize;
+	DIMENSIONS NCHAR=4;
+	FORMAT DATATYPE = CONTINUOUS;
+	CHARSTATELABELS 
+		1 malemass,
+		2 femalemass,
+		3 eggmass,
+		4 clutchsize;
+	MATRIX
+	Actophilornis_africanus      143.2  260.7      8.6    4.00
+	Aphriza_virgata              186.3  216.3     22.4    4.00
+	Arenaria_interpres           108.0  113.0     17.9    3.50
+	Arenaria_melanocephala       113.6  124.2     17.3    4.00
+	Bartramia_longicauda         151.0  164.0     23.5    3.99
+	Calidris_alba                 52.8   55.4     11.2    3.90
+	Calidris_alpina               41.0   45.1     10.7    3.90
+	Calidris_bairdii              39.3   39.7      9.6    4.00
+	Calidris_canutus             126.0  148.0     19.3    3.70
+	Calidris_maritima             67.6   76.3     13.3    3.90
+	Calidris_mauri                28.0   31.0      7.5    3.90
+	Calidris_minuta               24.0   27.1      6.3    3.80
+	Calidris_minutilla            20.3   22.2      6.4    3.90
+	Calidris_ptilocnemis          76.3   83.0     14.2    4.00
+	Calidris_pusilla              25.0   27.0      6.9    4.00
+	Calidris_ruficollis           25.7   26.6      8.3    4.00
+	Calidris_subminuta            29.0   32.0      7.5    4.00
+	Calidris_temminckii           24.3   27.8      5.8    4.00
+	Calidris_tenuirostris        156.0  174.0     22.0    4.00
+	Catoptrophorus_semipalmatus  273.0  301.4     39.5    4.00
+	Charadrius_dubius             38.3   39.2      7.7    3.90
+	Charadrius_hiaticula          63.5   64.7     10.9    3.80
+	Charadrius_melodus            54.9   55.6      9.4    3.30
+	Charadrius_montanus          102.0  114.0     16.5    3.00
+	Charadrius_vociferus          92.1  101.0     14.5    4.00
+	Charadrius_wilsonia           59.0   63.0     12.4    3.00
+	Coenocorypha_aucklandica     101.2  116.1     23.7    2.00
+	Coenocorypha_pusilla          75.9   85.4     16.1    2.10
+	Eudromias_morinellus         100.0  117.0     17.0    2.90
+	Eurynorhynchus_pygmeus        31.0   34.6      8.0    4.00
+	Gallinago_gallinago          111.0  128.0     16.5    3.90
+	Haematopus_finschi           517.0  554.0     44.2    2.33
+	Haematopus_fuliginosus       740.3  778.5     69.5    2.00
+	Haematopus_longirostris      602.3  626.3     49.0    2.50
+	Haematopus_moquini           668.0  730.0     55.8    1.70
+	Haematopus_ostralegus        500.0  536.0     46.7    2.80
+	Haematopus_unicolor          717.0  734.0     48.2    2.40
+	Jacana_jacana                108.3  142.8      9.7    3.50
+	Jacana_spinosa                86.9  145.4      8.3    4.00
+	Limnodromus_griseus          111.0  116.0     17.5    4.10
+	Limosa_fedoa                 320.0  421.0     44.5    4.10
+	Limosa_haemastica            222.0  289.0     37.5    4.00
+	Limosa_lapponica             313.0  354.0     37.0    3.72
+	Limosa_limosa                264.0  315.0     39.0    3.90
+	Metopidius_indicus           176.2  282.4     11.9    4.00
+	Micropalama_himantopus        55.8   60.4     11.2    3.90
+	Numenius_americanus          640.1  758.6     73.0    4.00
+	Numenius_arquata             662.0  788.0     76.0    3.90
+	Numenius_phaeopus            368.0  398.0     50.0    3.90
+	Numenius_tahitiensis         378.0  489.0     54.8    4.00
+	Pedionomus_torquatus          54.0   72.4     10.0    3.60
+	Phalaropus_fulicaria          50.8   61.0      7.5    3.80
+	Phalaropus_lobatus            32.4   37.4      6.3    4.00
+	Pluvialis_apricaria          175.0  176.0     32.8    3.90
+	Pluvialis_dominica           145.0  146.0     26.0    4.00
+	Recurvirostra_avosetta       258.0  288.0     31.7    3.90
+	Rostratula_benghalensis      146.0  159.0     12.4    4.00
+	Steganopus_tricolor           50.2   68.1      9.4    4.00
+	Tringa_erythropus            142.0  161.0     24.5    4.00
+	Tringa_flavipes               80.0   83.7     17.4    4.00
+	Tringa_glareola               62.0   73.0     13.5    4.00
+	Tringa_hypoleucos             45.5   50.0     12.5    3.90
+	Tringa_macularia              36.9   48.0      9.0    4.00
+	Tringa_melanoleuca           164.0  176.0     27.9    3.70
+	Tringa_nebularia             172.0  175.0     30.5    3.90
+	Tringa_ochropus               75.0   85.0     15.5    3.90
+	Tringa_stagnatilis            67.1   76.0     14.0    4.00
+	Tringa_totanus               123.0  135.0     22.3    4.00
+	Vanellus_armatus             162.0  167.0     16.5    3.10
+	Vanellus_lugubris            109.5  113.0     13.7    3.00
+	Vanellus_vanellus            211.0  226.0     25.5    3.90
+	;
+END;
+
+BEGIN CHARACTERS;
+	TITLE MatingSystem;
+	DIMENSIONS NCHAR=1;
+	FORMAT DATATYPE = STANDARD SYMBOLS="0 1 2";
+	CHARSTATELABELS 
+		1 matingSystem / Monogamous Polygynous Polyandrous;
+	MATRIX
+	Actophilornis_africanus       2
+	Aphriza_virgata               0
+	Arenaria_interpres            0
+	Arenaria_melanocephala        0
+	Bartramia_longicauda          0
+	Calidris_alba                 2
+	Calidris_alpina               0
+	Calidris_bairdii              0
+	Calidris_canutus              0
+	Calidris_maritima             0
+	Calidris_mauri                0
+	Calidris_minuta               2
+	Calidris_minutilla            0
+	Calidris_ptilocnemis          0
+	Calidris_pusilla              0
+	Calidris_ruficollis           0
+	Calidris_subminuta            0
+	Calidris_temminckii           2
+	Calidris_tenuirostris         0
+	Catoptrophorus_semipalmatus   0
+	Charadrius_dubius             0
+	Charadrius_hiaticula          0
+	Charadrius_melodus            0
+	Charadrius_montanus           2
+	Charadrius_vociferus          0
+	Charadrius_wilsonia           0
+	Coenocorypha_aucklandica      1
+	Coenocorypha_pusilla          0
+	Eudromias_morinellus          2
+	Eurynorhynchus_pygmeus        0
+	Gallinago_gallinago           0
+	Haematopus_finschi            0
+	Haematopus_fuliginosus        0
+	Haematopus_longirostris       0
+	Haematopus_moquini            0
+	Haematopus_ostralegus         0
+	Haematopus_unicolor           0
+	Jacana_jacana                 2
+	Jacana_spinosa                2
+	Limnodromus_griseus           0
+	Limosa_fedoa                  0
+	Limosa_haemastica             0
+	Limosa_lapponica              0
+	Limosa_limosa                 0
+	Metopidius_indicus            2
+	Micropalama_himantopus        0
+	Numenius_americanus           0
+	Numenius_arquata              0
+	Numenius_phaeopus             0
+	Numenius_tahitiensis          0
+	Pedionomus_torquatus          2
+	Phalaropus_fulicaria          2
+	Phalaropus_lobatus            2
+	Pluvialis_apricaria           0
+	Pluvialis_dominica            0
+	Recurvirostra_avosetta        0
+	Rostratula_benghalensis       2
+	Steganopus_tricolor           2
+	Tringa_erythropus             0
+	Tringa_flavipes               0
+	Tringa_glareola               0
+	Tringa_hypoleucos             0
+	Tringa_macularia              2
+	Tringa_melanoleuca            0
+	Tringa_nebularia              0
+	Tringa_ochropus               0
+	Tringa_stagnatilis            0
+	Tringa_totanus                0
+	Vanellus_armatus              0
+	Vanellus_lugubris             0
+	Vanellus_vanellus             1
+	;
+END;
+
+
+BEGIN TREES;
+	TRANSLATE
+		1	Catoptrophorus_semipalmatus,
+		2	Tringa_ochropus,
+		3	Tringa_stagnatilis,
+		4	Tringa_flavipes,
+		5	Tringa_nebularia,
+		6	Tringa_totanus,
+		7	Tringa_erythropus,
+		8	Tringa_melanoleuca,
+		9	Tringa_glareola,
+		10	Steganopus_tricolor,
+		11	Phalaropus_lobatus,
+		12	Phalaropus_fulicaria,
+		13	Micropalama_himantopus,
+		14	Eurynorhynchus_pygmeus,
+		15	Aphriza_virgata,
+		16	Calidris_canutus,
+		17	Calidris_tenuirostris,
+		18	Calidris_temminckii,
+		19	Calidris_maritima,
+		20	Calidris_ptilocnemis,
+		21	Calidris_mauri,
+		22	Calidris_alba,
+		23	Calidris_alpina,
+		24	Calidris_bairdii,
+		25	Calidris_minutilla,
+		26	Calidris_pusilla,
+		27	Calidris_minuta,
+		28	Calidris_ruficollis,
+		29	Calidris_subminuta,
+		30	Arenaria_interpres,
+		31	Arenaria_melanocephala,
+		32	Tringa_hypoleucos,
+		33	Tringa_macularia,
+		34	Limnodromus_griseus,
+		35	Gallinago_gallinago,
+		36	Coenocorypha_aucklandica,
+		37	Coenocorypha_pusilla,
+		38	Limosa_fedoa,
+		39	Limosa_haemastica,
+		40	Limosa_limosa,
+		41	Limosa_lapponica,
+		42	Bartramia_longicauda,
+		43	Numenius_tahitiensis,
+		44	Numenius_phaeopus,
+		45	Numenius_arquata,
+		46	Numenius_americanus,
+		47	Rostratula_benghalensis,
+		48	Jacana_spinosa,
+		49	Jacana_jacana,
+		50	Metopidius_indicus,
+		51	Actophilornis_africanus,
+		52	Pedionomus_torquatus,
+		53	Pluvialis_apricaria,
+		54	Pluvialis_dominica,
+		55	Eudromias_morinellus,
+		56	Charadrius_montanus,
+		57	Charadrius_vociferus,
+		58	Charadrius_wilsonia,
+		59	Charadrius_dubius,
+		60	Charadrius_hiaticula,
+		61	Charadrius_melodus,
+		62	Vanellus_vanellus,
+		63	Vanellus_lugubris,
+		64	Vanellus_armatus,
+		65	Recurvirostra_avosetta,
+		66	Haematopus_longirostris,
+		67	Haematopus_fuliginosus,
+		68	Haematopus_moquini,
+		69	Haematopus_ostralegus,
+		70	Haematopus_unicolor,
+		71	Haematopus_finschi
+	;
+	TREE * UNTITLED = [&R] ((((((((1:19.701,(2:19.086,((3:13.762,4:13.762,5:13.762,6:13.762,(7:5.324,8:5.324):8.438):3.114,9:16.876):2.21):0.615):2.499,(10:3.42,(11:2.158,12:2.158):1.262):18.78):9.9,((13:17.413,14:17.413,(15:6.019,(16:3.798,17:3.798):2.221):11.394,(18:10.013,((19:2.588,20:2.588):6.989,(21:9.142,(22:8.707,((23:7.836,(24:7.4,(25:6.965,(26:3.483,27:3.483):3.482):0.435):0.436):0.435,(28:2.609,29:2.609):5.662):0.436):0.435):0.435):0.436):7.4):9.287,(30:5.68,31:5.68):21.02):5.4,(32:5.779,33:5.779):26.320999):2.3,(34:23.8,(35:22.8,(36:4.91,37:4.91):17.889999):1):10.6):2.6,(38:11.739,(39:9.303,(40:5.869,41:5.869):3.434):2.436):25.261):13.4,(42:20.299,(43:14.869,(44:10.15,(45:6.404,46:6.404):3.746):4.719):5.43):30.101):13.4,((47:43.3,((48:10.8,49:10.8):21.6,(50:19.845,51:19.845):12.555):10.9):8.8,52:52.099999):11.7):18.072,(((53:8.33,54:8.33):23.437001,((55:26.700001,(56:22.991999,((57:5.548,58:5.548):10.027,(59:12.882,(60:8.793,61:8.793):4.089):2.693):7.417):3.708):3,(62:22.961,63:22.960999,64:22.961):6.739):2.067):1.033,(65:19.1,(66:14.817,(67:12.849,(68:11.072,(69:4.283,70:4.283):6.789,71:11.072):1.777):1.968):4.283):13.7):49.071998);
+END;

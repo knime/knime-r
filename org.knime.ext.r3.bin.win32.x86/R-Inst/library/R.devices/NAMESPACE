@@ -1,0 +1,126 @@
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# IMPORTS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+importFrom("R.methodsS3", "throw")
+importFrom("R.methodsS3", "setMethodS3")
+importFrom("R.methodsS3", "appendVarArgs")
+importFrom("R.oo", "setConstructorS3")
+importFrom("R.oo", "extend")
+importFrom("R.oo", "Package")
+importFrom("R.oo", "startupMessage")
+
+## Import Class:es
+importFrom("R.oo", "BasicObject")
+importFrom("R.utils", "Arguments")
+
+## importFrom("R.oo", "[[.BasicObject")
+
+## Importing functions
+importFrom("R.oo", "trim")
+importFrom("R.utils", "capitalize")
+importFrom("R.utils", "getOption") ## Multi-sources: R.utils, base
+importFrom("R.utils", "setOption")
+importFrom("R.utils", "getAbsolutePath")
+importFrom("R.utils", "getRelativePath")
+importFrom("R.utils", "hpaste")
+importFrom("R.utils", "inherits") ## Multi-sources: R.utils, base
+importFrom("R.utils", "isFile")
+importFrom("R.utils", "isPackageInstalled")
+importFrom("R.utils", "isPackageLoaded")
+importFrom("base64enc", "dataURI")
+
+importFrom("graphics", "par")
+importFrom("utils", "browseURL")
+
+# Import from grDevices
+import("grDevices")
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# EXPORTS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+export("R.devices")
+
+export("withPar")
+
+export("capabilitiesX11")
+export("capturePlot")
+
+export("devDump")
+export("devEval")
+export("devIsOpen")
+export("devIsInteractive")
+export("devList")
+export("devGetLabel")
+export("devSetLabel")
+export("devSet")
+export("devOff")
+export("devDone")
+export("devNew")
+export("devOptions")
+export("getDevOption")
+export("eps")
+export("favicon")
+export("jpeg2")
+export("png2")
+
+export("toBMP")
+export("toEPS")
+export("toEMF")
+export("toPDF")
+export("toPNG")
+export("toSVG")
+export("toTIFF")
+export("toWMF")
+##export("toCairoPNG")
+export("toFavicon")
+
+export("toDefault")
+export("toQuartz")
+export("toWindows")
+export("toX11")
+export("toCairoWin")
+export("toCairoX11")
+##export("toJavaGD")
+
+export("asDataURI")
+
+export("DevEvalProduct")
+export("DevEvalFileProduct")
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# DECLARATIONS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# DevEvalFileProduct
+S3method("as.character", "DevEvalFileProduct")
+S3method("getData", "DevEvalFileProduct")
+S3method("getDataURI", "DevEvalFileProduct")
+S3method("getExtension", "DevEvalFileProduct")
+S3method("getFilename", "DevEvalFileProduct")
+S3method("getFullname", "DevEvalFileProduct")
+S3method("getMime", "DevEvalFileProduct")
+S3method("getMimeType", "DevEvalFileProduct")
+S3method("getPath", "DevEvalFileProduct")
+S3method("getPathname", "DevEvalFileProduct")
+S3method("view", "DevEvalFileProduct")
+
+# DevEvalProduct
+S3method("$", "DevEvalProduct")
+S3method("[[", "DevEvalProduct")
+S3method("as.character", "DevEvalProduct")
+S3method("getFullname", "DevEvalProduct")
+S3method("getName", "DevEvalProduct")
+S3method("getTags", "DevEvalProduct")
+S3method("getType", "DevEvalProduct")
+S3method("view", "DevEvalProduct")
+S3method("!", "DevEvalProduct")
+
+
+S3method(architecture,recordedplot)
+S3method(architecture,RecordedPlot)
+S3method(as.architecture,recordedplot)
+S3method(as.architecture,RecordedPlot)
+export(architecture)
+export(as.architecture)
+S3method(print,RecordedPlot)

@@ -1,0 +1,14 @@
+Change log:
+* Version 0.1.3: May 2015
+-Bug fix for syntactically invalid column names.
+-Added a verbose parameter
+
+* Version 0.1.2: April 2015
+-Bug fix for data frames with only one character or factor.
+
+* Version 0.1.1: November 2014
+-Bug fix for single columns.
+
+* Version 0.1.0: November 2014
+-Package submitted to CRAN.
+

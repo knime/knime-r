@@ -1,0 +1,141 @@
+---
+title: "The nexml S4 Object"
+author:
+  - Carl Boettiger
+  - Scott Chamberlain
+  - Rutger Vos
+  - Hilmar Lapp
+output: html_vignette
+---
+
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{The nexml S4 Object}
+-->
+
+
+```{r supplement-compile-settings, include=FALSE}
+library("methods")
+library("knitr")
+opts_chunk$set(tidy = FALSE, warning = FALSE, message = FALSE, 
+               cache = FALSE, comment = NA, verbose = TRUE)
+basename <- 'S4' 
+
+```
+
+```{r include=FALSE}
+library("RNeXML")
+```
+
+
+## Understanding the `nexml` S4 object
+
+The `RNeXML` package provides many convenient functions to add and extract
+information from `nexml` objects in the R environment without requiring
+the reader to understand the details of the NeXML data structure and
+making it less likely that a user will generate invalid NeXML syntax
+that could not be read by other parsers. The `nexml` object we have been using
+in all of the examples is built on R's S4 mechanism. Advanced users may
+sometimes prefer to interact with the data structure more directly using 
+R's S4 class mechanism and subsetting methods. Many R users are more familiar
+with the S3 class mechanism (such as in the `ape` package phylo objects)
+rather than the S4 class mechanism used in phylogenetics packages such as 
+`ouch` and `phylobase`. The `phylobase` vignette provides an excellent introduction
+to these data structures.  Users already familiar with subsetting lists and other
+S3 objects in R are likely familar with the use of the `$` operator, such as
+`phy$edge`. S4 objects simply use an `@` operator instead (but cannot be subset
+using numeric arguments such as `phy[[1]]` or named arguments such as phy[["edge"]]).  
+
+
+The `nexml` object is an S4 object, as are all of its components (slots).  Its 
+hierarchical structure corresponds exactly with the XML tree of a NeXML file, with 
+the single exception that both XML attributes and children are represented as slots.  
+S4 objects have constructor functions to initialize them.  We create a new `nexml` 
+object with the command:
+
+```{r}
+nex <- new("nexml")
+```
+
+We can see a list of slots contained in this object with
+
+```{r}
+slotNames(nex)
+```
+
+Some of these slots have already been populated for us, for instance, the schema version and default namespaces:
+
+```{r}
+nex@version
+nex@namespaces
+```
+
+Recognize that `nex@namespaces` serves the same role as `get_namespaces`
+function, but provides direct access to the slot data.  For instance,
+with this syntax we could also overwrite the existing namespaces with
+`nex@namespaces <- NULL`.  Changing the namespace in this way is not
+advised.
+
+Some slots can contain multiple elements of the same type, such as
+`trees`, `characters`, and `otus`.  For instance, we see that
+
+```{r}
+class(nex@characters)
+```
+
+is an object of class `ListOfcharacters`, and is currently empty,
+
+```{r}
+length(nex@characters)
+```
+
+In order to assign an object to a slot, it must match the class definition
+of the slot.  We can create a new element of any given class with the
+`new` function,
+
+```{r}
+nex@characters <- new("ListOfcharacters", list(new("characters")))
+```
+
+and now we have a length-1 list of character matrices,
+
+```{r}
+length(nex@characters)
+```
+
+and we access the first character matrix using the list notation,
+`[[1]]`. Here we check the class is a `characters` object.
+
+```{r}
+class(nex@characters[[1]])
+```
+
+Direct subsetting has two primary use cases: (a) useful in looking up
+(and possibly editing) a specific value of an element, or (b) when adding
+metadata annotations to specific elements. Consider the example file
+
+
+```{r}
+f <- system.file("examples", "trees.xml", package="RNeXML")
+nex <- nexml_read(f)
+```
+
+We can look up the species label of the first `otu` in the first `otus` block:
+
+```{r}
+nex@otus[[1]]@otu[[1]]@label
+```
+
+We can add metadata to this particular OTU using this subsetting format
+
+```{r}
+nex@otus[[1]]@otu[[1]]@meta <- 
+  c(meta("skos:note", 
+          "This species was incorrectly identified"),
+         nex@otus[[1]]@otu[[1]]@meta)
+```
+
+Here we use the `c` operator to append this element to any existing meta annotations to this otu.  
+
+
+

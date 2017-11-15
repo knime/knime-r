@@ -1,0 +1,65 @@
+accepted_names          Get accepted names from tsn
+any_match_count         Get any match count.
+comment_detail          Get comment detail from TSN
+common_names            Get common names from tsn
+core_metadata           Get core metadata from tsn
+coverage                Get coverge from tsn
+credibility             Get credibility rating from tsn
+currency                Get currency from tsn
+date_data               Get date data from tsn
+description             Get description of the ITIS service
+experts                 Get expert information for the TSN.
+full_record             Get full record from TSN or lsid
+geographic_divisions    Get geographic divisions from tsn
+geographic_values       Get all possible geographic values
+global_species_completeness
+                        Get global species completeness from tsn
+hierarchy               Get hierarchy down from tsn
+itis_facet              ITIS Solr facet
+itis_group              ITIS Solr group search
+itis_highlight          ITIS Solr highlight
+itis_search             ITIS Solr search
+jurisdiction            Get jurisdictional origin from tsn
+kingdoms                Get kingdom names from tsn
+last_change_date        Provides the date the ITIS database was last
+                        updated
+lsid2tsn                Gets the TSN corresponding to the LSID, or an
+                        empty result if there is no match.
+other_sources           Returns a list of the other sources used for
+                        the TSN.
+parent_tsn              Returns the parent TSN for the entered TSN.
+publications            Returns a list of the pulications used for the
+                        TSN.
+rank_name               Returns the kingdom and rank information for
+                        the TSN.
+rank_names              Provides a list of all the unique rank names
+                        contained in the database and their kingdom and
+                        rank ID values.
+record                  Gets a record from an LSID
+review_year             Returns the review year for the TSN.
+ritis-package           Interface to Integrated Taxonomic Information
+                        (ITIS)
+scientific_name         Returns the scientific name for the TSN. Also
+                        returns the component parts (names and
+                        indicators) of the scientific name.
+search_any_match_paged
+                        Search for any matched page
+search_anymatch         Search for any match
+search_common           Search for tsn by common name
+search_scientific       Search by scientific name
+solr                    ITIS Solr Methods
+synonym_names           Returns a list of the synonyms (if any) for the
+                        TSN.
+taxon_authorship        Returns the author information for the TSN.
+terms                   Get ITIS terms, i.e., tsn's, authors, common
+                        names, and scientific names.
+tsn2lsid                Gets the unique LSID for the TSN, or an empty
+                        result if there is no match.
+tsn_by_vernacular_language
+                        Get tsn by vernacular language
+unacceptability_reason
+                        Returns the unacceptability reason, if any, for
+                        the TSN.
+usage                   Returns the usage information for the TSN.
+vernacular_languages    Provides a list of the unique languages used in
+                        the vernacular table.

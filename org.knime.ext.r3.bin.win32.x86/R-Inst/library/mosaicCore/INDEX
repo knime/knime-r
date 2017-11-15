@@ -1,0 +1,16 @@
+ash_points              Compute knot points of an average shifted
+                        histogram
+coef.function           Extract coefficients from a function
+counts                  Compute all proportions or counts
+df_stats                Calculate statistics on a variable
+formularise             Convert lazy objects into formulas
+infer_transformation    Infer a Back-Transformation
+makeFun                 Create a function from a formula
+make_df                 Convert to a data frame
+modelVars               extract predictor variables from a model
+mosaic_formula          Convert formulas into standard shapes
+na.warn                 Exclude Missing Data with Warning
+named                   List extraction
+nice_names              Nice names
+parse.formula           Parse Formulas
+vector2df               Convert a vector to a data frame

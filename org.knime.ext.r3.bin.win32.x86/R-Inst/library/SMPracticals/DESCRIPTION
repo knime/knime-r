@@ -1,0 +1,21 @@
+Package: SMPracticals
+Version: 1.4-2
+Date: 2012-03-20
+Title: Practicals for use with Davison (2003) Statistical Models
+Author: Anthony Davison <Anthony.Davison@epfl.ch>
+Maintainer: Anthony Davison <Anthony.Davison@epfl.ch>
+Depends: R (>= 1.14.0), ellipse
+Imports: MASS, nlme, survival
+Description: This package contains the datasets and a few functions for
+        use with the practicals outlined in Appendix A of the book
+        Statistical Models (Davison, 2003, Cambridge University Press).
+        The practicals themselves can be found at
+        http://statwww.epfl.ch/davison/SM/
+License: GPL (>= 2)
+URL: http://statwww.epfl.ch/davison/SM/
+LazyLoad: yes
+LazyData: yes
+Packaged: 2013-01-15 16:55:11 UTC; ripley
+Repository: CRAN
+Date/Publication: 2013-01-15 17:57:22
+Built: R 3.4.2; ; 2017-11-10 17:15:09 UTC; windows

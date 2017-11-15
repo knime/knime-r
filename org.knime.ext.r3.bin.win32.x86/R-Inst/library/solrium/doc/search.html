@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Solr search</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Solr search}
+%\VignetteEncoding{UTF-8}
+-->
+
+<h1>Solr search</h1>
+
+<p><strong>A general purpose R interface to <a href="http://lucene.apache.org/solr/">Apache Solr</a></strong></p>
+
+<h2>Solr info</h2>
+
+<ul>
+<li><a href="http://lucene.apache.org/solr/">Solr home page</a></li>
+<li><a href="http://wiki.apache.org/solr/HighlightingParameters">Highlighting help</a></li>
+<li><a href="http://wiki.apache.org/solr/SimpleFacetParameters">Faceting help</a></li>
+<li><a href="http://risnandar.wordpress.com/2013/09/08/how-to-install-and-setup-apache-lucene-solr-in-osx/">Install and Setup SOLR in OSX, including running Solr</a></li>
+</ul>
+
+<h2>Installation</h2>
+
+<p>Stable version from CRAN</p>
+
+<pre><code class="r">install.packages(&quot;solrium&quot;)
+</code></pre>
+
+<p>Or the development version from GitHub</p>
+
+<pre><code class="r">install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;ropensci/solrium&quot;)
+</code></pre>
+
+<p>Load</p>
+
+<pre><code class="r">library(&quot;solrium&quot;)
+</code></pre>
+
+<h2>Setup connection</h2>
+
+<p>You can setup for a remote Solr instance or on your local machine.</p>
+
+<pre><code class="r">solr_connect(&#39;http://api.plos.org/search&#39;)
+#&gt; &lt;solr_connection&gt;
+#&gt;   url:    http://api.plos.org/search
+#&gt;   errors: simple
+#&gt;   verbose: TRUE
+#&gt;   proxy:
+</code></pre>
+
+<h2>Rundown</h2>
+
+<p><code>solr_search()</code> only returns the <code>docs</code> element of a Solr response body. If <code>docs</code> is
+all you need, then this function will do the job. If you need facet data only, or mlt
+data only, see the appropriate functions for each of those below. Another function,
+<code>solr_all()</code> has a similar interface in terms of parameter as <code>solr_search()</code>, but
+returns all parts of the response body, including, facets, mlt, groups, stats, etc.
+as long as you request those.</p>
+
+<h2>Search docs</h2>
+
+<p><code>solr_search()</code> returns only docs. A basic search:</p>
+
+<pre><code class="r">solr_search(q = &#39;*:*&#39;, rows = 2, fl = &#39;id&#39;)
+#&gt; Source: local data frame [2 x 1]
+#&gt; 
+#&gt;                                        id
+#&gt;                                     (chr)
+#&gt; 1 10.1371/journal.pone.0142243/references
+#&gt; 2       10.1371/journal.pone.0142243/body
+</code></pre>
+
+<p><strong>Search in specific fields with <code>:</code></strong></p>
+
+<p>Search for word ecology in title and cell in the body</p>
+
+<pre><code class="r">solr_search(q = &#39;title:&quot;ecology&quot; AND body:&quot;cell&quot;&#39;, fl = &#39;title&#39;, rows = 5)
+#&gt; Source: local data frame [5 x 1]
+#&gt; 
+#&gt;                                                       title
+#&gt;                                                       (chr)
+#&gt; 1                        The Ecology of Collective Behavior
+#&gt; 2                                   Ecology&#39;s Big, Hot Idea
+#&gt; 3     Spatial Ecology of Bacteria at the Microscale in Soil
+#&gt; 4 Biofilm Formation As a Response to Ecological Competition
+#&gt; 5    Ecology of Root Colonizing Massilia (Oxalobacteraceae)
+</code></pre>
+
+<p><strong>Wildcards</strong></p>
+
+<p>Search for word that starts with &ldquo;cell&rdquo; in the title field</p>
+
+<pre><code class="r">solr_search(q = &#39;title:&quot;cell*&quot;&#39;, fl = &#39;title&#39;, rows = 5)
+#&gt; Source: local data frame [5 x 1]
+#&gt; 
+#&gt;                                                                         title
+#&gt;                                                                         (chr)
+#&gt; 1                                Tumor Cell Recognition Efficiency by T Cells
+#&gt; 2 Cancer Stem Cell-Like Side Population Cells in Clear Cell Renal Cell Carcin
+#&gt; 3 Dcas Supports Cell Polarization and Cell-Cell Adhesion Complexes in Develop
+#&gt; 4                  Cell-Cell Contact Preserves Cell Viability via Plakoglobin
+#&gt; 5 MS4a4B, a CD20 Homologue in T Cells, Inhibits T Cell Propagation by Modulat
+</code></pre>
+
+<p><strong>Proximity search</strong></p>
+
+<p>Search for words &ldquo;sports&rdquo; and &ldquo;alcohol&rdquo; within four words of each other</p>
+
+<pre><code class="r">solr_search(q = &#39;everything:&quot;stem cell&quot;~7&#39;, fl = &#39;title&#39;, rows = 3)
+#&gt; Source: local data frame [3 x 1]
+#&gt; 
+#&gt;                                                                         title
+#&gt;                                                                         (chr)
+#&gt; 1 Correction: Reduced Intensity Conditioning, Combined Transplantation of Hap
+#&gt; 2                                            A Recipe for Self-Renewing Brain
+#&gt; 3  Gene Expression Profile Created for Mouse Stem Cells and Developing Embryo
+</code></pre>
+
+<p><strong>Range searches</strong></p>
+
+<p>Search for articles with Twitter count between 5 and 10</p>
+
+<pre><code class="r">solr_search(q = &#39;*:*&#39;, fl = c(&#39;alm_twitterCount&#39;, &#39;id&#39;), fq = &#39;alm_twitterCount:[5 TO 50]&#39;,
+rows = 10)
+#&gt; Source: local data frame [10 x 2]
+#&gt; 
+#&gt;                                                     id alm_twitterCount
+#&gt;                                                  (chr)            (int)
+#&gt; 1            10.1371/journal.ppat.1005403/introduction                6
+#&gt; 2  10.1371/journal.ppat.1005403/results_and_discussion                6
+#&gt; 3   10.1371/journal.ppat.1005403/materials_and_methods                6
+#&gt; 4  10.1371/journal.ppat.1005403/supporting_information                6
+#&gt; 5                         10.1371/journal.ppat.1005401                6
+#&gt; 6                   10.1371/journal.ppat.1005401/title                6
+#&gt; 7                10.1371/journal.ppat.1005401/abstract                6
+#&gt; 8              10.1371/journal.ppat.1005401/references                6
+#&gt; 9                    10.1371/journal.ppat.1005401/body                6
+#&gt; 10           10.1371/journal.ppat.1005401/introduction                6
+</code></pre>
+
+<p><strong>Boosts</strong></p>
+
+<p>Assign higher boost to title matches than to body matches (compare the two calls)</p>
+
+<pre><code class="r">solr_search(q = &#39;title:&quot;cell&quot; abstract:&quot;science&quot;&#39;, fl = &#39;title&#39;, rows = 3)
+#&gt; Source: local data frame [3 x 1]
+#&gt; 
+#&gt;                                                                         title
+#&gt;                                                                         (chr)
+#&gt; 1 I Want More and Better Cells! – An Outreach Project about Stem Cells and It
+#&gt; 2                                   Centre of the Cell: Science Comes to Life
+#&gt; 3 Globalization of Stem Cell Science: An Examination of Current and Past Coll
+</code></pre>
+
+<pre><code class="r">solr_search(q = &#39;title:&quot;cell&quot;^1.5 AND abstract:&quot;science&quot;&#39;, fl = &#39;title&#39;, rows = 3)
+#&gt; Source: local data frame [3 x 1]
+#&gt; 
+#&gt;                                                                         title
+#&gt;                                                                         (chr)
+#&gt; 1                                   Centre of the Cell: Science Comes to Life
+#&gt; 2 I Want More and Better Cells! – An Outreach Project about Stem Cells and It
+#&gt; 3          Derivation of Hair-Inducing Cell from Human Pluripotent Stem Cells
+</code></pre>
+
+<h2>Search all</h2>
+
+<p><code>solr_all()</code> differs from <code>solr_search()</code> in that it allows specifying facets, mlt, groups,
+stats, etc, and returns all of those. It defaults to <code>parsetype = &quot;list&quot;</code> and <code>wt=&quot;json&quot;</code>,
+whereas <code>solr_search()</code> defaults to <code>parsetype = &quot;df&quot;</code> and <code>wt=&quot;csv&quot;</code>. <code>solr_all()</code> returns
+by default a list, whereas <code>solr_search()</code> by default returns a data.frame.</p>
+
+<p>A basic search, just docs output</p>
+
+<pre><code class="r">solr_all(q = &#39;*:*&#39;, rows = 2, fl = &#39;id&#39;)
+#&gt; $response
+#&gt; $response$numFound
+#&gt; [1] 1502814
+#&gt; 
+#&gt; $response$start
+#&gt; [1] 0
+#&gt; 
+#&gt; $response$docs
+#&gt; $response$docs[[1]]
+#&gt; $response$docs[[1]]$id
+#&gt; [1] &quot;10.1371/journal.pone.0142243/references&quot;
+#&gt; 
+#&gt; 
+#&gt; $response$docs[[2]]
+#&gt; $response$docs[[2]]$id
+#&gt; [1] &quot;10.1371/journal.pone.0142243/body&quot;
+</code></pre>
+
+<p>Get docs, mlt, and stats output</p>
+
+<pre><code class="r">solr_all(q = &#39;ecology&#39;, rows = 2, fl = &#39;id&#39;, mlt = &#39;true&#39;, mlt.count = 2, mlt.fl = &#39;abstract&#39;, stats = &#39;true&#39;, stats.field = &#39;counter_total_all&#39;)
+#&gt; $response
+#&gt; $response$numFound
+#&gt; [1] 31467
+#&gt; 
+#&gt; $response$start
+#&gt; [1] 0
+#&gt; 
+#&gt; $response$docs
+#&gt; $response$docs[[1]]
+#&gt; $response$docs[[1]]$id
+#&gt; [1] &quot;10.1371/journal.pone.0059813&quot;
+#&gt; 
+#&gt; 
+#&gt; $response$docs[[2]]
+#&gt; $response$docs[[2]]$id
+#&gt; [1] &quot;10.1371/journal.pone.0001248&quot;
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; $moreLikeThis
+#&gt; $moreLikeThis$`10.1371/journal.pone.0059813`
+#&gt; $moreLikeThis$`10.1371/journal.pone.0059813`$numFound
+#&gt; [1] 152704
+#&gt; 
+#&gt; $moreLikeThis$`10.1371/journal.pone.0059813`$start
+#&gt; [1] 0
+#&gt; 
+#&gt; $moreLikeThis$`10.1371/journal.pone.0059813`$docs
+#&gt; $moreLikeThis$`10.1371/journal.pone.0059813`$docs[[1]]
+#&gt; $moreLikeThis$`10.1371/journal.pone.0059813`$docs[[1]]$id
+#&gt; [1] &quot;10.1371/journal.pone.0111996&quot;
+#&gt; 
+#&gt; 
+#&gt; $moreLikeThis$`10.1371/journal.pone.0059813`$docs[[2]]
+#&gt; $moreLikeThis$`10.1371/journal.pone.0059813`$docs[[2]]$id
+#&gt; [1] &quot;10.1371/journal.pone.0143687&quot;
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; $moreLikeThis$`10.1371/journal.pone.0001248`
+#&gt; $moreLikeThis$`10.1371/journal.pone.0001248`$numFound
+#&gt; [1] 159058
+#&gt; 
+#&gt; $moreLikeThis$`10.1371/journal.pone.0001248`$start
+#&gt; [1] 0
+#&gt; 
+#&gt; $moreLikeThis$`10.1371/journal.pone.0001248`$docs
+#&gt; $moreLikeThis$`10.1371/journal.pone.0001248`$docs[[1]]
+#&gt; $moreLikeThis$`10.1371/journal.pone.0001248`$docs[[1]]$id
+#&gt; [1] &quot;10.1371/journal.pone.0001275&quot;
+#&gt; 
+#&gt; 
+#&gt; $moreLikeThis$`10.1371/journal.pone.0001248`$docs[[2]]
+#&gt; $moreLikeThis$`10.1371/journal.pone.0001248`$docs[[2]]$id
+#&gt; [1] &quot;10.1371/journal.pone.0024192&quot;
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; $stats
+#&gt; $stats$stats_fields
+#&gt; $stats$stats_fields$counter_total_all
+#&gt; $stats$stats_fields$counter_total_all$min
+#&gt; [1] 16
+#&gt; 
+#&gt; $stats$stats_fields$counter_total_all$max
+#&gt; [1] 367697
+#&gt; 
+#&gt; $stats$stats_fields$counter_total_all$count
+#&gt; [1] 31467
+#&gt; 
+#&gt; $stats$stats_fields$counter_total_all$missing
+#&gt; [1] 0
+#&gt; 
+#&gt; $stats$stats_fields$counter_total_all$sum
+#&gt; [1] 141552408
+#&gt; 
+#&gt; $stats$stats_fields$counter_total_all$sumOfSquares
+#&gt; [1] 3.162032e+12
+#&gt; 
+#&gt; $stats$stats_fields$counter_total_all$mean
+#&gt; [1] 4498.44
+#&gt; 
+#&gt; $stats$stats_fields$counter_total_all$stddev
+#&gt; [1] 8958.45
+#&gt; 
+#&gt; $stats$stats_fields$counter_total_all$facets
+#&gt; named list()
+</code></pre>
+
+<h2>Facet</h2>
+
+<pre><code class="r">solr_facet(q = &#39;*:*&#39;, facet.field = &#39;journal&#39;, facet.query = c(&#39;cell&#39;, &#39;bird&#39;))
+#&gt; $facet_queries
+#&gt;   term  value
+#&gt; 1 cell 128657
+#&gt; 2 bird  13063
+#&gt; 
+#&gt; $facet_fields
+#&gt; $facet_fields$journal
+#&gt;                                 X1      X2
+#&gt; 1                         plos one 1233662
+#&gt; 2                    plos genetics   49285
+#&gt; 3                   plos pathogens   42817
+#&gt; 4       plos computational biology   36373
+#&gt; 5 plos neglected tropical diseases   33911
+#&gt; 6                     plos biology   28745
+#&gt; 7                    plos medicine   19934
+#&gt; 8             plos clinical trials     521
+#&gt; 9                     plos medicin       9
+#&gt; 
+#&gt; 
+#&gt; $facet_pivot
+#&gt; NULL
+#&gt; 
+#&gt; $facet_dates
+#&gt; NULL
+#&gt; 
+#&gt; $facet_ranges
+#&gt; NULL
+</code></pre>
+
+<h2>Highlight</h2>
+
+<pre><code class="r">solr_highlight(q = &#39;alcohol&#39;, hl.fl = &#39;abstract&#39;, rows = 2)
+#&gt; $`10.1371/journal.pmed.0040151`
+#&gt; $`10.1371/journal.pmed.0040151`$abstract
+#&gt; [1] &quot;Background: &lt;em&gt;Alcohol&lt;/em&gt; consumption causes an estimated 4% of the global disease burden, prompting&quot;
+#&gt; 
+#&gt; 
+#&gt; $`10.1371/journal.pone.0027752`
+#&gt; $`10.1371/journal.pone.0027752`$abstract
+#&gt; [1] &quot;Background: The negative influences of &lt;em&gt;alcohol&lt;/em&gt; on TB management with regard to delays in seeking&quot;
+</code></pre>
+
+<h2>Stats</h2>
+
+<pre><code class="r">out &lt;- solr_stats(q = &#39;ecology&#39;, stats.field = c(&#39;counter_total_all&#39;, &#39;alm_twitterCount&#39;), stats.facet = c(&#39;journal&#39;, &#39;volume&#39;))
+</code></pre>
+
+<pre><code class="r">out$data
+#&gt;                   min    max count missing       sum sumOfSquares
+#&gt; counter_total_all  16 367697 31467       0 141552408 3.162032e+12
+#&gt; alm_twitterCount    0   1756 31467       0    168586 3.267801e+07
+#&gt;                          mean     stddev
+#&gt; counter_total_all 4498.439889 8958.45030
+#&gt; alm_twitterCount     5.357549   31.77757
+</code></pre>
+
+<pre><code class="r">out$facet
+#&gt; $counter_total_all
+#&gt; $counter_total_all$volume
+#&gt;     min    max count missing      sum sumOfSquares      mean    stddev
+#&gt; 1    20 166202   887       0  2645927  63864880371  2983.007  7948.200
+#&gt; 2   495 103147   105       0  1017325  23587444387  9688.810 11490.287
+#&gt; 3  1950  69628    69       0   704216  13763808310 10206.029  9834.333
+#&gt; 4   742  13856     9       0    48373    375236903  5374.778  3795.438
+#&gt; 5  1871 182622    81       0  1509647  87261688837 18637.617 27185.811
+#&gt; 6  1667 117922   482       0  5836186 162503606896 12108.270 13817.754
+#&gt; 7  1340 128083   741       0  7714963 188647618509 10411.556 12098.852
+#&gt; 8   667 362410  1010       0  9692492 340237069126  9596.527 15653.040
+#&gt; 9   103 113220  1539       0 12095764 218958657256  7859.496  8975.188
+#&gt; 10   72 243873  2948       0 17699332 327210596846  6003.844  8658.717
+#&gt; 11   51 184259  4825       0 24198104 382922818910  5015.151  7363.541
+#&gt; 12   16 367697  6360       0 26374352 533183277470  4146.911  8163.790
+#&gt; 13   42 287741  6620       0 21003701 612616254755  3172.765  9082.194
+#&gt; 14  128 161520  5791       0 11012026 206899109466  1901.576  5667.209
+#&gt;    volume
+#&gt; 1      11
+#&gt; 2      12
+#&gt; 3      13
+#&gt; 4      14
+#&gt; 5       1
+#&gt; 6       2
+#&gt; 7       3
+#&gt; 8       4
+#&gt; 9       5
+#&gt; 10      6
+#&gt; 11      7
+#&gt; 12      8
+#&gt; 13      9
+#&gt; 14     10
+#&gt; 
+#&gt; $counter_total_all$journal
+#&gt;    min    max count missing      sum sumOfSquares      mean    stddev
+#&gt; 1  667 117922   243       0  4074303 1.460258e+11 16766.679 17920.074
+#&gt; 2  742 265561   884       0 14006081 5.507548e+11 15843.983 19298.065
+#&gt; 3 8463  13797     2       0    22260 2.619796e+08 11130.000  3771.708
+#&gt; 4   16 367697 25915       0 96069530 1.943903e+12  3707.101  7827.546
+#&gt; 5  915  61956   595       0  4788553 6.579963e+10  8047.988  6774.558
+#&gt; 6  548  76290   758       0  6326284 9.168443e+10  8346.021  7167.106
+#&gt; 7  268 212048  1239       0  5876481 1.010080e+11  4742.923  7686.101
+#&gt; 8  495 287741   580       0  4211717 1.411022e+11  7261.581 13815.867
+#&gt;                            journal
+#&gt; 1                    plos medicine
+#&gt; 2                     plos biology
+#&gt; 3             plos clinical trials
+#&gt; 4                         plos one
+#&gt; 5                   plos pathogens
+#&gt; 6                    plos genetics
+#&gt; 7 plos neglected tropical diseases
+#&gt; 8       plos computational biology
+#&gt; 
+#&gt; 
+#&gt; $alm_twitterCount
+#&gt; $alm_twitterCount$volume
+#&gt;    min  max count missing   sum sumOfSquares      mean     stddev volume
+#&gt; 1    0 1756   887       0 12295      4040629 13.861330  66.092178     11
+#&gt; 2    0 1045   105       0  6466      1885054 61.580952 119.569402     12
+#&gt; 3    0  283    69       0  3478       509732 50.405797  70.128101     13
+#&gt; 4    6  274     9       0   647       102391 71.888889  83.575482     14
+#&gt; 5    0   42    81       0   176         4996  2.172840   7.594060      1
+#&gt; 6    0   74   482       0   628        15812  1.302905   5.583197      2
+#&gt; 7    0   48   741       0   652        11036  0.879892   3.760087      3
+#&gt; 8    0  239  1010       0  1039        74993  1.028713   8.559485      4
+#&gt; 9    0  126  1539       0  1901        90297  1.235218   7.562004      5
+#&gt; 10   0  886  2948       0  4357      1245453  1.477951  20.504442      6
+#&gt; 11   0  822  4825       0 19646      2037596  4.071710  20.144602      7
+#&gt; 12   0 1503  6360       0 35938      6505618  5.650629  31.482092      8
+#&gt; 13   0 1539  6620       0 49837     12847207  7.528248  43.408246      9
+#&gt; 14   0  863  5791       0 31526      3307198  5.443965  23.271216     10
+#&gt; 
+#&gt; $alm_twitterCount$journal
+#&gt;   min  max count missing    sum sumOfSquares      mean   stddev
+#&gt; 1   0  777   243       0   4251      1028595 17.493827 62.79406
+#&gt; 2   0 1756   884       0  16405      6088729 18.557692 80.93655
+#&gt; 3   0    3     2       0      3            9  1.500000  2.12132
+#&gt; 4   0 1539 25915       0 123409     23521391  4.762068 29.74883
+#&gt; 5   0  122   595       0   4265       160581  7.168067 14.79428
+#&gt; 6   0  178   758       0   4277       148277  5.642480 12.80605
+#&gt; 7   0  886  1239       0   4972      1048908  4.012914 28.82956
+#&gt; 8   0  285   580       0   4166       265578  7.182759 20.17431
+#&gt;                            journal
+#&gt; 1                    plos medicine
+#&gt; 2                     plos biology
+#&gt; 3             plos clinical trials
+#&gt; 4                         plos one
+#&gt; 5                   plos pathogens
+#&gt; 6                    plos genetics
+#&gt; 7 plos neglected tropical diseases
+#&gt; 8       plos computational biology
+</code></pre>
+
+<h2>More like this</h2>
+
+<p><code>solr_mlt</code> is a function to return similar documents to the one</p>
+
+<pre><code class="r">out &lt;- solr_mlt(q = &#39;title:&quot;ecology&quot; AND body:&quot;cell&quot;&#39;, mlt.fl = &#39;title&#39;, mlt.mindf = 1, mlt.mintf = 1, fl = &#39;counter_total_all&#39;, rows = 5)
+out$docs
+#&gt; Source: local data frame [5 x 2]
+#&gt; 
+#&gt;                             id counter_total_all
+#&gt;                          (chr)             (int)
+#&gt; 1 10.1371/journal.pbio.1001805             17081
+#&gt; 2 10.1371/journal.pbio.0020440             23882
+#&gt; 3 10.1371/journal.pone.0087217              5935
+#&gt; 4 10.1371/journal.pbio.1002191             13036
+#&gt; 5 10.1371/journal.pone.0040117              4316
+</code></pre>
+
+<pre><code class="r">out$mlt
+#&gt; $`10.1371/journal.pbio.1001805`
+#&gt;                             id counter_total_all
+#&gt; 1 10.1371/journal.pone.0082578              2196
+#&gt; 2 10.1371/journal.pone.0098876              2448
+#&gt; 3 10.1371/journal.pone.0102159              1177
+#&gt; 4 10.1371/journal.pcbi.1002652              3102
+#&gt; 5 10.1371/journal.pcbi.1003408              6942
+#&gt; 
+#&gt; $`10.1371/journal.pbio.0020440`
+#&gt;                             id counter_total_all
+#&gt; 1 10.1371/journal.pone.0102679              3112
+#&gt; 2 10.1371/journal.pone.0035964              5571
+#&gt; 3 10.1371/journal.pone.0003259              2800
+#&gt; 4 10.1371/journal.pntd.0003377              3392
+#&gt; 5 10.1371/journal.pone.0068814              7522
+#&gt; 
+#&gt; $`10.1371/journal.pone.0087217`
+#&gt;                             id counter_total_all
+#&gt; 1 10.1371/journal.pone.0131665               409
+#&gt; 2 10.1371/journal.pcbi.0020092             19604
+#&gt; 3 10.1371/journal.pone.0133941               475
+#&gt; 4 10.1371/journal.pone.0123774               997
+#&gt; 5 10.1371/journal.pone.0140306               322
+#&gt; 
+#&gt; $`10.1371/journal.pbio.1002191`
+#&gt;                             id counter_total_all
+#&gt; 1 10.1371/journal.pbio.1002232              1950
+#&gt; 2 10.1371/journal.pone.0131700               979
+#&gt; 3 10.1371/journal.pone.0070448              1608
+#&gt; 4 10.1371/journal.pone.0028737              7481
+#&gt; 5 10.1371/journal.pone.0052330              5595
+#&gt; 
+#&gt; $`10.1371/journal.pone.0040117`
+#&gt;                             id counter_total_all
+#&gt; 1 10.1371/journal.pone.0069352              2763
+#&gt; 2 10.1371/journal.pone.0148280               467
+#&gt; 3 10.1371/journal.pone.0035502              4031
+#&gt; 4 10.1371/journal.pone.0014065              5764
+#&gt; 5 10.1371/journal.pone.0113280              1984
+</code></pre>
+
+<h2>Groups</h2>
+
+<p><code>solr_groups()</code> is a function to return similar documents to the one</p>
+
+<pre><code class="r">solr_group(q = &#39;ecology&#39;, group.field = &#39;journal&#39;, group.limit = 1, fl = c(&#39;id&#39;, &#39;alm_twitterCount&#39;))
+#&gt;                         groupValue numFound start
+#&gt; 1                         plos one    25915     0
+#&gt; 2       plos computational biology      580     0
+#&gt; 3                     plos biology      884     0
+#&gt; 4                             none     1251     0
+#&gt; 5                    plos medicine      243     0
+#&gt; 6 plos neglected tropical diseases     1239     0
+#&gt; 7                   plos pathogens      595     0
+#&gt; 8                    plos genetics      758     0
+#&gt; 9             plos clinical trials        2     0
+#&gt;                             id alm_twitterCount
+#&gt; 1 10.1371/journal.pone.0059813               56
+#&gt; 2 10.1371/journal.pcbi.1003594               21
+#&gt; 3 10.1371/journal.pbio.1002358               16
+#&gt; 4 10.1371/journal.pone.0046671                2
+#&gt; 5 10.1371/journal.pmed.1000303                0
+#&gt; 6 10.1371/journal.pntd.0002577                2
+#&gt; 7 10.1371/journal.ppat.1003372                2
+#&gt; 8 10.1371/journal.pgen.1001197                0
+#&gt; 9 10.1371/journal.pctr.0020010                0
+</code></pre>
+
+<h2>Parsing</h2>
+
+<p><code>solr_parse()</code> is a general purpose parser function with extension methods for parsing outputs from functions in <code>solr</code>. <code>solr_parse()</code> is used internally within functions to do parsing after retrieving data from the server. You can optionally get back raw <code>json</code>, <code>xml</code>, or <code>csv</code> with the <code>raw=TRUE</code>, and then parse afterwards with <code>solr_parse()</code>.</p>
+
+<p>For example:</p>
+
+<pre><code class="r">(out &lt;- solr_highlight(q = &#39;alcohol&#39;, hl.fl = &#39;abstract&#39;, rows = 2, raw = TRUE))
+#&gt; [1] &quot;{\&quot;response\&quot;:{\&quot;numFound\&quot;:20268,\&quot;start\&quot;:0,\&quot;docs\&quot;:[{},{}]},\&quot;highlighting\&quot;:{\&quot;10.1371/journal.pmed.0040151\&quot;:{\&quot;abstract\&quot;:[\&quot;Background: &lt;em&gt;Alcohol&lt;/em&gt; consumption causes an estimated 4% of the global disease burden, prompting\&quot;]},\&quot;10.1371/journal.pone.0027752\&quot;:{\&quot;abstract\&quot;:[\&quot;Background: The negative influences of &lt;em&gt;alcohol&lt;/em&gt; on TB management with regard to delays in seeking\&quot;]}}}\n&quot;
+#&gt; attr(,&quot;class&quot;)
+#&gt; [1] &quot;sr_high&quot;
+#&gt; attr(,&quot;wt&quot;)
+#&gt; [1] &quot;json&quot;
+</code></pre>
+
+<p>Then parse</p>
+
+<pre><code class="r">solr_parse(out, &#39;df&#39;)
+#&gt;                          names
+#&gt; 1 10.1371/journal.pmed.0040151
+#&gt; 2 10.1371/journal.pone.0027752
+#&gt;                                                                                                    abstract
+#&gt; 1   Background: &lt;em&gt;Alcohol&lt;/em&gt; consumption causes an estimated 4% of the global disease burden, prompting
+#&gt; 2 Background: The negative influences of &lt;em&gt;alcohol&lt;/em&gt; on TB management with regard to delays in seeking
+</code></pre>
+
+<p><a href="https://github.com/ropensci/solrium/issues">Please report any issues or bugs</a>.</p>
+
+</body>
+
+</html>

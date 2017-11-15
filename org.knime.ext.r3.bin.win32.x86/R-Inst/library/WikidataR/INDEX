@@ -1,0 +1,12 @@
+WikidataR               API client library for Wikidata
+extract_claims          Extract Claims from Returned Item Data
+find_item               Search for Wikidata items or properties that
+                        match a search term
+get_geo_box             Get geographic entities based on a bounding box
+get_geo_entity          Retrieve geographic information from Wikidata
+get_item                Retrieve specific Wikidata items or properties
+get_random_item         Retrieve randomly-selected Wikidata items or
+                        properties
+print.find_item         Print method for find_item
+print.find_property     Print method for find_property
+print.wikidata          Print method for Wikidata objects

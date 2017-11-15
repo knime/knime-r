@@ -1,0 +1,19 @@
+bibentry(bibtype = "Article",
+  title        = "Least-Squares Means: The {R} Package {lsmeans}",
+  author       = person(given = c("Russell", "V."),
+                        family = "Lenth"),
+  journal      = "Journal of Statistical Software",
+  year         = "2016",
+  volume       = "69",
+  number       = "1",
+  pages        = "1--33",
+  doi          = "10.18637/jss.v069.i01",
+
+  header       = "To cite lsmeans in publications use:",
+  textVersion  =
+  paste("Russell V. Lenth (2016).",
+        "Least-Squares Means: The R Package lsmeans.",
+        "Journal of Statistical Software, 69(1), 1-33.",
+        "doi:10.18637/jss.v069.i01")
+)
+

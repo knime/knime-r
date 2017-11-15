@@ -1,0 +1,4 @@
+importFrom("stats", ".getXlevels", "gaussian", "is.empty.model",
+             "lm.fit", "model.extract", "model.matrix", "model.offset",
+             "model.response", "model.weights")
+exportPattern("^[[:alpha:]]+")

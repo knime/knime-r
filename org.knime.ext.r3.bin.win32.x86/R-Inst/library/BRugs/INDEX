@@ -1,0 +1,54 @@
+BRugs                   Introduction to BRugs
+BRugsFit                BRugs' meta function
+bugsData                Writing input for OpenBUGS
+bugsInits               Writing input for OpenBUGS
+buildMCMC               Generating mcmc.list objects for package coda
+dicStats                DIC
+getNumChains            Number of chains
+help.WinBUGS            WinBUGS documentation
+infoMemory              Show memory usage
+infoModules             Loaded modules
+infoNodeValues          Node information
+infoUpdatersbyName      Information on MCMC updaters
+loadOpenBUGS            Load OpenBUGS from given directory
+modelAdaptivePhase      Getting length of adaptive phase
+modelCheck              Checking the model file
+modelCompile            Compiling the model
+modelData               Loading the data
+modelEnable             Enable and disable factories to create updaters
+modelGenInits           Generating initial values
+modelInits              Loading initial values
+modelIteration          Returns number of iterations
+modelNames              Get variable names in model
+modelPrecision          Setting precision for prec figures
+modelSaveState          Save the model's current state
+modelSetAP              Changing settings of updating algorithms
+modelSetRN              State of Random Number Generator
+modelSetWD              Set working directory
+modelUpdate             Updating the model
+plotAutoC               Plot autocorrelation function for a scalar
+                        variable
+plotBgr                 Plot the Gelman-Rubin convergence statistic for
+                        a scalar variable
+plotDensity             Plot density estimate or histogram of a scalar
+                        variable
+plotHistory             Trace of a scalar variable
+ranksSet                Calculation of ranks
+ratsdata                ratsdata example
+samplesAutoC            Plot autocorrelation function
+samplesBgr              Plot the Gelman-Rubin convergence statistic
+samplesClear            Clear recorded values
+samplesCoda             Writing files in CODA format
+samplesCorrel           Correlation
+samplesDensity          Plot density estimate or histogram
+samplesGetBeg           Get settings used for calculations
+samplesHistory          Trace of a variable
+samplesMonitors         Names of monitored scalar variables
+samplesSample           Stored values
+samplesSet              Start recording
+samplesSetBeg           Change settings used for calculations
+samplesSize             Size of the stored sample
+samplesStats            Calculate summary statistics
+setValues               Setting current values
+summarySet              Summary of MCMC simulation
+writeModel              Creating an OpenBUGS model file

@@ -1,0 +1,604 @@
+	CHANGES IN VERSION 2.0.x
+
+SIGNIFICANT USER-VISIBLE CHANGES
+  
+    o   With the addon of the package spam64, we have truly 64 bits 
+    	available!
+
+    o   Dependency on dotCall64.
+
+    o 	Different option handling, we use now the classical R setting.
+    	For the moment, the old functionality throws a message but in
+	upcoming versions we use `.Deprecated`.
+	  'spam.options' -> 'options', 'spam.getOption' -> 'getOption'
+
+    o   'validate_spam' superseeds 'validspamobject'.
+
+    o   Added the list of Fortran contributors.
+
+
+
+INTERNAL CHANGES
+
+    o	Many... many. More still to come.
+
+    o	Unit testing with testthat.
+
+
+
+
+	CHANGES IN VERSION 1.4-0 
+
+
+INTERNAL CHANGES
+
+    o	Fortran modification to address more pedantic compilations.  
+
+
+	CHANGES IN VERSION 1.3-0 
+
+BUG FIXES
+
+    o   Adding nonsparse to sparse matrices did not always dispatch
+    	properly and caused some errors. Thanks to Johan Lindström
+	for pointing out.
+ 
+
+SIGNIFICANT USER-VISIBLE CHANGES
+  
+    o   Help improvements
+
+    o   Added additional method dispatching for 'all.equal'. 
+
+ 
+ 
+  
+	CHANGES IN VERSION 1.2-0 and 1.2-1
+ 
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   Renaming of demos from JSS10 paper. 
+
+    o   Continuing to implement 'spam_xxx' function names:
+        Like 'spam_rdist' there is now 'spam_diag'.
+
+    o   'subset.rows.spam' deprecated. There is an internal function 
+    	'subset_rows.spam'.
+
+
+INTERNAL CHANGES
+
+    o   Ample minor modifications in 'DESCRIPTION' and 'NAMESPACE'
+    	for CRAN check conformity.
+
+
+    o   Elimination of a few unnecessary functions (not exported).
+
+
+    o   Minor modifications in tests.  
+
+
+
+
+	CHANGES IN VERSION 1.1-0 
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   Upload of vignette linked to JSS15 paper. Related demos 
+    	and tests.
+
+
+    o   "DUP=FALSE" is deprecated and will be disabled in future 
+    	versions of R. All "DUP" arguments have been eliminated.
+	You have to expect a slightly slower version of spam.
+
+
+
+ 
+	CHANGES IN VERSION 1.0 and 1.0-1
+ 
+    o   This version is up to 'DESCRIPTION' and its implied changes
+	identical to 0.90-1. With the upcoming JSS article "Pitfalls
+	in the implementation of Bayesian hierarchical modeling of
+	areal count data. An illustration using BYM and Leroux
+	models." a "major" version jump is adequate.
+
+
+    o   Referencing to spam data through spam::...
+
+
+    o	Implemented `1.1.3.1 Suggested packages` approach.
+
+
+
+
+	CHANGES IN VERSION 0.70/0.80/0.90/0.90-1
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o	Introduction of many as('spam','...') functions.
+
+    o   Coercion function `as.vector` for spam objects. 
+
+    o   Wrapper functions `spam_rdist` and 'spam_rdist.earth`
+	for smooth use in `fields`.
+
+    o   The use of `update(A, B)` without assignment has been 
+    	eliminated. This is one way to address the change in
+	memory handling changes from R 3.0.2 to R 3.1.0.
+
+   	There is a slight overhead in memory. If this causes 
+	problems, let me know.
+
+    o   Adjustment of the license.
+
+
+NEW FEATURES
+
+   o    Arguments `diag` and `eps` in `nearest.dist` cause now
+	an error.
+
+   o    Further augmented help pages.
+
+
+BUG FIXES
+
+   o    The demo now points to the new JSS article.
+
+
+INTERNAL CHANGES
+
+    o	Set 'structurebased=TRUE' for the demos.
+
+    o   Link to upcoming JSS article in one of the demos. 
+
+    o 	'update.spam.chol.NgPeyton' preserves the structure
+	(pointed out by Chris Paciorek), see above.
+
+    o   Using similar License approach as SparseM. New files
+	`README`, `inst/0LICENSE`.
+
+    o   File renaming (OChangeLog -> 0ChangeLog) 
+
+
+    o   Adjusted error messages for precmat.RW2
+
+
+	CHANGES IN VERSION 0.60-0
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+   o	Using the flag 'structurebased', the behavior 
+	of spam is now more consistent.
+
+   o    "Arith", "Compare", "Logic" (getGroupMembers("Ops")) 
+	have now a consistent behavior.
+
+
+
+NEW FEATURES
+
+   o    Few new S3 functions for simplicity: 
+	'var.spam', 'eigen.spam', ...
+
+   o 	New constructor functions 'colindices<-' etc.
+	Maybe additional tests may be required.
+
+   o 	Operators from 'Arith' obey now the 
+   	structure based calculation. 
+
+
+BUG FIXES
+
+   o    'inefficiencywarning' passes message correctly.
+
+
+INTERNAL CHANGES
+
+   o 	many more spam/tests/*.
+
+   o    Consistent use of 'spam' and 'vector' siglist for 'Ops'.
+
+   o    Minor cleaning of Fortran code.
+    
+   o    Renaming/restructuring/cleaning of files...
+
+   o    Fortran arguments are copied when updating the cholesky 
+	structure.
+
+ 
+
+
+	CHANGES IN VERSION 0.50-0
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+   o	Using the flag 'structurebased=FALSE', the behavior 
+	of spam is now much, much closer to regular matrix
+	calculations. This is illustrated when calculating
+	gamma of a sparse matrix.
+
+   o    Along the same lines, the flag 'NAOK=TRUE' allows the
+	use of the "not finite numbers" (NA, NaN, Inf).
+	We have tested many, many functions but full fledged
+	use is not yet guaranteed.
+
+   o    Currently, we can still guarantee backwards 
+	compatibility...
+
+
+NEW FEATURES
+
+   o    New functions 'crossprod' and 'tcrossprod' as well
+	as according method definitions.
+
+   o 	New constructor functions 'rowpointers<-' etc.
+
+   o 	Better option handling. The option 'safemode' is
+	now 'safemodevalidity'. Additionally, new option
+	'NAOK'.
+
+   o    Help pages have been improved.
+
+   o 	Operators from 'Summary' and 'Math' obey now the 
+   	structure based calculation. 
+	('Math2' inherently does).
+
+
+BUG FIXES
+
+   o    rmvnorm.[].const now work properly for any number of
+	constraints and n.
+
+   o	Assignment handles properly recycling.
+
+   o	todo() now works properly.
+
+
+INTERNAL CHANGES
+
+   o 	eliminated {d,i}check by equivalent coercion.
+
+   o    Consistent use of NAOK in Fortran calls.
+
+   o    Minor cleaning of Fortran code.
+    
+   o    Renaming/restructuring of files...
+
+ 
+
+
+
+	CHANGES IN VERSION 0.42-0
+
+NEW FEATURES
+
+   o    More consistent handling of subsetting. 
+   	Warning is issued if subsetting with NA
+
+
+BUG FIXES
+
+   o    Fixed several issues when rowsubsetting...
+
+
+INTERNAL CHANGES
+
+   o 	Additional tests for positive definiteness in 'chol'.
+
+
+
+
+	CHANGES IN VERSION 0.41-0
+
+
+NEW FEATURES
+
+   o    Functions grid_trace2() received more functionality.
+
+
+BUG FIXES
+
+   o    Eliminated bug in cov.mat(). Pointed out by Joshua French
+
+
+INTERNAL CHANGES
+
+   o 	Updated DESCRIPTION: added Florian Gerber [ctb]
+
+   o    Minor code and help cleanup. Additional testing files. 
+   	File header edits.
+
+   o	Addressed Rdevel CMD check --as-cran Notes, especially
+   	workaround for DUP=FALSE
+
+
+
+
+
+	CHANGES IN VERSION 0.40-0
+
+
+
+BUG FIXES
+   
+   o    A severe bug in subsetting a spam object with a nx2
+        matrix crept in spam in version 0.29-3.
+	Thanks to Andrew Hong and Beat Briner for pointing out.	
+
+	To simplify communication, we have switched increased
+	the tenth version number. 
+
+	All other changes are of cosmetic nature.
+
+
+
+
+	CHANGES IN VERSION 0.30-x
+
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+   o	Added several plots to visualize several MCMC chains
+   	('grid_trace2', 'grid_zoom', ...). 
+
+
+NEW FEATURES
+
+   o    New function 'germany.plot' to draw the landkreise.
+   	('map.landkreis' is now obsolete).
+
+   o	Switched from 'tim.colors' to 'colorRampPalette'
+   	in 'germany.plot'.
+
+   o 	Metadata in 'germany.info', polygon definitions in
+   	'germany.poly' ('germany' kept for backwards 
+	compatibility).
+
+
+INTERNAL CHANGES
+
+   o 	Switched to mercurial for maintaining the package.
+
+   o    Updated ChangeLog file (hg log).
+
+   o 	Increased dependency to >= R 2.15.
+
+   o    Minor code and help cleanup.
+
+
+
+
+
+	CHANGES IN VERSION 0.29-0, 0.29-1, 0.29-2, 0.29-3
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+   o	There is a generic conflict with 'backsolve' between spam
+   	and other packages (e.g., bdsmatrix). To avoid the issue,
+	we use the standard generic implemented in 'methods' which
+	requires an additional argument for version 0.29-0 (see 
+	also PR#14883). 
+	However to maintain backwards compatibility with packages
+	that depend on spam, this was reverted in 0.29-1. 
+
+	Currently, this conflict is not properly solved. I propose
+	to load 'spam' first then the other packages, followed by
+	manually calling:
+
+	  setMethod("backsolve","spam.chol.NgPeyton",backsolve.spam)
+	  setMethod("backsolve","spam",backsolve.spam)
+
+	Stay tuned...
+
+   o	Calls like:
+        
+	  mat <- diag.spam(4)
+	  diag( mat[-1,]) <- 3
+  	  diag.spam( mat[,-1]) <-2
+
+	now work. They are, however, somewhat inefficient. 
+	'toeplitz.spam' is to be prefered. Pointed out by
+	Florian Gerber.
+
+   o	The Gibbs sampler in the demo article-jss-example2 contains 
+   	several bugs, pointed out by Steve Geinitz and Andrea Riebler. 
+	I'll post an updated sampler in a future release.
+
+
+NEW FEATURES
+
+   o	New functions 'rmvnorm.const', 'rmvnorm.prec.const' and
+   	'rmvnorm.canonical.const' to draw constrained multivariate
+	normal variates.
+
+   o	New functions 'precmat' (wrapper to), 'precmat.RW1', 'precmat.RW2', 
+    	'precmat.season', 'precmat.IGMRFreglat' and 'precmat.IGMRFirreglat'
+   	to create precision matrices for IGMRF.
+
+   o	New methods 'rowSums', 'colSums' and  'rowMeans', 'colMeans' for
+   	'spam' objects.
+
+   o	New methods 'head' and 'tail' for 'spam' and 'spam.chol.NgPeyton' 
+   	objects.
+
+   o 	New method 'chol2inv' for 'spam' object.
+
+   o	New option 'inefficiencywarning': handling of warnings issued 
+   	in case of an inefficient calculation. 
+
+   o	New option 'structurebased': should operations be performed on
+   	the nonzero entries or on including the zeros. Classical example:
+	what should the cosine of a sparse matrix look like?
+	In the near future, all operations from Math and Ops will include
+	this option. Some loss of backwards compatibility might be 
+	lost in the future.  
+
+
+INTERNAL CHANGES
+
+   o	New much faster approach to extract rows. For not too sparse 
+   	large matrices improvements over two orders of magnitudes are
+	achieved.
+	
+   o 	Elininated '.Internal()' calls that induce a 'Note' on CRAN
+   	checks. This also implied a minor rewrite of 'image.spam'.	
+
+   o 	Minor code improvements. 
+
+   o	Eliminated non-API calls (29.1).
+
+   o	Rewritten .C("bincode",...) call as suggested by Brian Ripley
+   	(29.2).
+  
+
+BUG FIXES
+
+   o 	Bug fix that occures when multiplying elementwise matrices 
+   	that have non-intersecting structures (pointed out by 
+	Corentin Barbu).
+
+   o	Bug fix in triangular backsolves involving 'spam' objects 
+   	and rhs matrices.
+
+   o	Bug fix in triangular backsolve causing errors on some
+   	architectures.
+
+
+
+
+	CHANGES IN VERSION 0.28
+
+NEW FEATURES
+
+   o	New function 'cleanup' (suggested by Simon Barthelme). 
+
+   o 	Extending help files.
+
+   o 	Improved functionality of 'isSymmetric'.
+
+
+INTERNAL CHANGES
+
+   o	Proper storage of data files.
+
+   o 	Cleaning up argument names within spam functions.	 
+
+   o    Cleaning up old Fortran code, i.e., eliminating
+   	unnecessary subroutines and write calls.
+
+
+BUG FIXES
+
+   o 	Bug fix that may occure when extracting zero elements 
+        (pointed out by Corentin Barbu).
+
+
+
+
+	CHANGES IN VERSION 0.27
+
+NEW FEATURES
+
+    o	Requires now R2.10 and higher.
+
+    o	Functions to create Toeplitz and circulant matrices.
+
+    o 	Function to create precision matrices for gridded GMRF.
+
+    o	Improvements in the mle.* functions.
+
+    o	Method diff for sparse matrices (suggested by Paul Eilers).
+
+    o 	Improvement of help pages. 
+
+    o	Eliminated some help aliases to base functions 
+    	(for which no 'usage' is given). 
+
+
+INTERNAL CHANGES
+
+    o  	Change to iL coding.
+
+    o	Start to using 'identical'.
+
+    o 	Code cleaning due to requirement of R2.10 and higher.
+
+
+BUG FIXES
+
+    o   Bug fix in as.spam.list (thanks to Paul Eilers).
+
+    o 	Bug fix in demo(spam) (thanks to Thomas Gsponer).
+
+
+
+
+
+	CHANGES IN VERSION 0.24, 0.25 and 0.26
+	
+    o 	Devel versions, not released.	
+
+
+
+
+
+	CHANGES IN VERSION 0.23
+
+NEW FEATURES
+
+    o	Further improved versions of demos. 
+
+    o	Some improvements to meet Rd standards.
+        Adjustments for future R versions. 
+
+
+
+
+
+	CHANGES IN VERSION 0.22
+
+NEW FEATURES
+
+    o	Improved versions of demos. Synchronized with the JSS article.
+
+    o   Additional changes and improvements in the help files (thanks
+    	to Steve Geinitz).
+
+
+    
+
+
+
+
+	CHANGES IN VERSION 0.21
+
+	
+NEW FEATURES
+
+    o	New NEWS file, to work better with news() command.
+    	The previous is available under ONEWS.
+
+
+    o 	New functions bandwidth, permutation, mle[.nomean][.spam],
+    	neg2loglikelihood[.spam].
+   
+
+    o	Renamed adiag.spam to bdiag.spam.
+
+
+    o	Cleaned up argument naming with the rmvnorm.* 
+    	suite.
+
+
+INTERNAL CHANGES
+
+    o   Various Fortran code, R code and help file 
+    	improvements.
+
+
+BUG FIXES
+
+    o	Minor change in one of the demos (solves a 64bit issue). 	
+

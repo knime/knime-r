@@ -1,0 +1,359 @@
+%% 
+% @file  shortintro.Rnw
+% @brief sweave file for the vignette
+%
+% @author Christophe Dutang
+% @author Petr Savicky
+%
+%
+% Copyright (C) 2009, Christophe Dutang, 
+% Petr Savicky, Academy of Sciences of the Czech Republic,
+% All rights reserved.
+%
+%
+% The new BSD License is applied to this software.
+% Copyright (c) 2009 Christophe Dutang, Petr Savicky.
+% All rights reserved.
+%
+%      Redistribution and use in source and binary forms, with or without
+%      modification, are permitted provided that the following conditions are
+%      met:
+%      
+%          - Redistributions of source code must retain the above copyright
+%          notice, this list of conditions and the following disclaimer.
+%          - Redistributions in binary form must reproduce the above
+%          copyright notice, this list of conditions and the following
+%          disclaimer in the documentation and/or other materials provided
+%          with the distribution.
+%          - Neither the name of the ETH Zurich, nor the name of Czech academy 
+%	    of sciences nor the names of its contributors may be used to endorse or 
+%          promote products derived from this software without specific prior written
+%          permission.
+%     
+%      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+%      "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+%      LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+%      A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+%      OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+%      SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+%      LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+%      DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+%      THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+%      (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+%      OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%  
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Torus algorithm and other random number generators
+%%%
+%%%	Sweave vignette file, many sweave code ideas are taken from the 'expm' R-forge project
+%%% 
+
+
+\documentclass[11pt, twocolumn]{article}
+
+%\VignetteIndexEntry{Quick introduction of randtoolbox}
+%\VignettePackage{randtoolbox}
+%\VignetteKeyword{random}
+
+  
+% package
+
+%American Mathematical Society (AMS) math symbols
+\usepackage{amsfonts,amssymb,amsmath}
+%english typography
+\usepackage[english]{babel}
+\usepackage{courier,newlfont}
+
+% 8 bit accents 
+%\usepackage[applemac]{inputenc} %MAC encoding
+\usepackage[utf8]{inputenc} %UNIX encoding
+%\usepackage[ansinew]{inputenc} %WINDOWS encoding
+
+%graph
+\usepackage[dvips]{graphicx}
+\usepackage{color,graphics}
+
+%citation
+\usepackage{natbib}
+
+
+%reference hypertext
+\usepackage[pagebackref=true, hyperfootnotes=false]{hyperref}
+
+%footnote
+\usepackage[ stable]{footmisc}
+\usepackage{perpage}
+\MakePerPage[1]{footnote}
+
+%sweave package
+\usepackage[noae]{Sweave}
+\setkeys{Gin}{width=0.49\textwidth} %change size of figure
+
+%url
+\usepackage{url}
+
+%customized itemize
+\usepackage{mdwlist}
+
+%header
+\pagestyle{headings}
+
+
+% layout
+\normalsize\setlength{\parskip}{\baselineskip}
+\setlength{\oddsidemargin}{25mm}
+\setlength{\evensidemargin}{25mm}
+\setlength{\voffset}{-2.54cm}
+\setlength{\hoffset}{-3.8cm}
+\setlength{\textwidth}{180mm}
+\setlength{\topmargin}{0mm}
+\setlength{\headheight}{15mm}
+\setlength{\headsep}{11mm}
+\setlength{\topskip}{0mm}
+\setlength{\textheight}{230mm}
+
+% two column config from http://blog.robfelty.org/2007/03/20/latex-two-column-layouts-and-rubber-lengths/
+
+% don't hyphenate so much - default = 200, max (never hyphenate) = 10,000
+\hyphenpenalty=2000  
+
+%two column float page must be 90% full
+\renewcommand\dblfloatpagefraction{.90}
+%two column top float can cover up to 80% of page
+\renewcommand\dbltopfraction{.80}
+%float page must be 90% full
+\renewcommand\floatpagefraction{.90}
+%top float can cover up to 80% of page
+\renewcommand\topfraction{.80}
+%bottom float can cover up to 80% of page
+\renewcommand\bottomfraction{.80}
+%at least 10% of a normal page must contain text
+\renewcommand\textfraction{.1}
+
+%separation between floats and text
+\setlength\dbltextfloatsep{9pt plus 5pt minus 3pt }
+%separation between two column floats and text
+\setlength\textfloatsep{10pt plus 4pt minus 3pt}
+
+%space between columns
+\setlength{\columnsep}{1.5cm}
+
+
+% macros
+\newcommand\HRule{\noindent\rule{\linewidth}{1pt}}
+\newcommand{\II}{\mbox{\large 1\hskip -0,353em 1}}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\ligne}{\rule[2mm]{.3\textwidth}{0,5mm}\\}
+\newcommand{\pkg}{\textbf}
+\newcommand{\sigle}{\textsc}
+\newcommand{\code}{\texttt}
+\newcommand{\soft}{\textsf}
+\newcommand{\myskip}{\vspace{\parskip}}
+\newcommand{\txtm}[1]{\textrm{~~#1~~}}
+\newcommand{\expo}{\textsuperscript}
+\newcommand{\ind}{1\!\!1}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\blank}{ \clearpage{\pagestyle{empty}\cleardoublepage} }
+\newcommand{\card}{\textrm{Card}}
+
+% footnote in table or legend
+\newcounter{noteTabCap} 
+\newcommand{\initFmark}{\setcounter{noteTabCap}{0}} %init noteTabCap counter
+\newcommand{\fmark}{\footnotemark  \addtocounter{noteTabCap}{1}} %mark footnote
+\newcommand{\updateFtext}{\addtocounter{footnote}{-\value{noteTabCap}}} %update footnote counter
+\newcommand{\ftext}[1]{\addtocounter{footnote}{1}  \footnotetext{#1}} %set the footnote text
+
+
+\title{Quick introduction of \pkg{randtoolbox}}
+
+
+\author{Christophe Dutang and Petr Savicky}
+
+\date{September 2009}
+
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+
+\onecolumn
+
+
+Random simulation or Monte-Carlo methods rely on the fact we have access to random
+numbers. Even if nowadays having random sequence is no longer a problem, for many
+years producing random numbers was a big challenge. According to \cite{ripleybook},
+simulation started in 1940s with physical devices. Using physical phenomena to get
+random numbers is referred in the literature as true randomness.
+
+However, in our computers, we use more frequently pseudo-random numbers.
+These are defined as deterministic sequences, which mimic a sequence of
+i.i.d.~random numbers chosen from the uniform distribution on the interval
+$[0,1]$. Random number generators used for this purpose receive as input
+an initial information, which is called a user specified seed, and allow
+to obtain different output sequences of numbers from $[0,1]$ depending
+on the seed. If no seed is supplied by the user, we use the machine time
+to initiate the sequence.
+
+Since we use pseudo-random numbers as a proxy for random numbers, an important
+question is, which properties the RNG should have to work as a good replacement of
+the truly random numbers. Essentially, we need that the applications, which we
+have, produce the same results, or results from the same distribution, no matter,
+whether we use pseudo-random numbers or truly random numbers. Hence, the
+required properties may be formulated in terms of computational indistinguishability
+of the output of the generator from the truly random numbers, if the seed
+is not known. The corresponding mathematical theory is developed in complexity
+theory, see \url{http://www.wisdom.weizmann.ac.il/~oded/c-indist.html}.
+
+The best known random number generators are used for cryptographic purposes.
+These generators are chosen so that there is no known procedure, which could
+distinguish their output from truly random numbers within practically available
+computation time, if the seed is not known. For simulations, this requirement
+is usually relaxed. However, even for
+simulation purposes, considering the hardness of detecting the difference
+between the generated numbers and truly random ones is a good measure of the
+quality of the generator. In particular, the well-known empirical tests of random
+number generators such as Diehard\footnote{The Marsaglia Random Number CDROM
+including the Diehard Battery of Tests of Randomness, Research Sponsored by
+the National Science Foundation (Grants DMS-8807976 and DMS-9206972),
+copyright 1995 George Marsaglia.} or TestU01 \cite{lecuyer07} are based on
+relatively easy to compute statistics, which allow to distinguish the output of
+bad generators from truly random numbers. More about this may be found in section
+Examples of distinguishing from truly random numbers.
+
+A simple parameter of a generator is its period. Recent generators have
+huge periods, which cannot be exhausted by any practical computation.
+Another parameter, suitable mainly for linear generators, is so called
+equidistribution. This parameter measures the uniformity of several
+most significant bits of several consecutive numbers in the sequence
+over the whole period. If a generator has good equidistribution,
+then we have a reasonable guarantee of practical independence of several
+consecutive numbers in the sequence. For linear generators, determining
+equidistribution properties may be done by efficient algebraic algorithms
+and does not need to really generate the whole period.
+
+\cite{ripleybook} lists the following properties
+\begin{itemize}
+\item output numbers are almost uniformly distributed,
+\item output numbers are independent,
+\item the period between two identical numbers is sufficiently long,
+\item unless a seed is given, output numbers should be unpredictable.
+\end{itemize}
+
+The statistical software \soft{R} provides several random number generators described
+in '?RNGkind()'. The default generator is called Mersenne-Twister and achieves
+high quality, although it fails some tests based on XOR operation.
+Still, there are reasons to provide better and more recent RNGs as well as classic
+statistical tests to quantify their properties. The rest of this chapter is
+two-folded: first we present the use of RNGs through the \code{runif()} interface,
+second we present the same use with dedicated functions (not modifying base \soft{R}
+default RNGs). See the overall man page with the command \code{?randtoolbox}.
+
+
+\section{The \code{runif} interface}
+
+In \soft{R}, the default setting for random generation are (i) uniform numbers are
+produced by the Mersenne-Twister algorithm and (ii) normal numbers are computing
+through the numerical inversion of the standard normal distribution function. This
+can be checked by the following code
+%%% R code
+<<check, fig=FALSE, echo=TRUE, eval=TRUE>>=
+RNGkind()
+@
+%%%
+The function \code{RNGkind()} can also be used to set other RNGs, such as Wichmann-Hill,
+Marsaglia-Multicarry, Super-Duper, Knuth-TAOCP or Knuth-TAOCP-2002 plus a
+user-supplied RNG. See the help page for details. 
+
+Random number generators provided by R extension packages are set
+using \code{RNGkind("user-supplied")}.
+The package \pkg{randtoolbox} assumes that this function is not called by the user directly.
+Instead, it is called from the functions \code{set.generator()} and \code{put.description()} used
+for setting some of a larger collection of the supported generators.
+
+The function \code{set.generator()} eases the process to set a new RNG in \soft{R}.
+Here is one short example on how to use \code{set.generator()} (see the man page
+for detailed explanations).
+
+%%% R code
+<<example1, fig=FALSE, echo=TRUE, eval=TRUE>>=
+RNGkind()
+library(randtoolbox)
+paramParkMiller <- c(mod=2^31-1, mult=16807, incr=0)
+set.generator(name="congruRand", parameters=paramParkMiller, seed=1)
+get.description()
+RNGkind()
+runif(10)
+@
+%%%
+
+Random number generators in \pkg{randtoolbox} are represented at the R level by a list
+containing mandatory components \code{name, parameters, state} and possibly an
+optional component \code{authors}. The function \code{set.generator()} internally
+creates this list from the user supplied information and then runs \code{put.description()}
+on this list in order to really initialize the generator for the functions \code{runif()}
+and \code{set.seed()}. If \code{set.generator()} is called with the parameter
+\code{only.dsc=TRUE}, then the generator is not initialized and only
+its description is created. If the generator is initialized, then the function
+\code{get.description()} may be used to get the actual
+state of the generator, which may be stored and used later in \code{put.description()}
+to continue the sequence of the random numbers from the point, where \code{get.description()}
+was called. This may be used, for example, to alternate between the streams of random numbers
+generated by different generators.
+
+From the \code{runif()} interface, you can use any other linear congruential
+generator with modulus at most $2^{64}$ and multiplier, which is either
+a power of $2$ or the product of the modulus and the multiplier is at 
+most $2^{64}$. The current version of the package also allows to use
+Well-Equidistributed Long-period Linear generators (WELL).
+
+To get back to the original setting of RNGs in \soft{R}, we just need to
+call \code{set.generator} with \code{default} RNG. 
+%%% R code  
+<<undo, fig=FALSE, echo=TRUE, eval=TRUE>>=
+set.generator("default")
+RNGkind()
+@
+%%%
+
+\section{Dedicated functions}
+The other way to use RNGs is to directly use dedicated functions. For instance to
+get the previous example, we can simply use
+%%% R code
+<<example1, fig=FALSE, echo=TRUE, eval=TRUE>>=
+setSeed(1)
+congruRand(10, mod = 2^31-1, mult = 16807, incr = 0)
+@
+%%%
+where \code{setSeed} function initiates the seed for RNGs implemented in
+\pkg{randtoolbox} and \code{congruRand} calls the congruential generator.
+
+They are many other RNGs provided by RNGs in addition to linear congruential
+generator, WELL generators, SFMersenne-Twister generators and Knuth-TAOCP
+double version. See \code{?pseudo.randtoolbox} for details.
+
+This package also implements usual quasi random generators such as Sobol or
+Halton sequences (see \code{?quasi.randtoolbox}). See the second chapter
+for an explanation on quasi RNGs.
+
+
+
+
+\newpage
+\bibliographystyle{agsm}
+\bibliography{randtoolbox}
+
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% coding: utf-8
+%%% End:
+

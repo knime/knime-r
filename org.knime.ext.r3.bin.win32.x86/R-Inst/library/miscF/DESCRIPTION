@@ -1,0 +1,21 @@
+Package: miscF
+Title: Miscellaneous Functions
+Version: 0.1-3
+Author: Dai Feng
+Description: Various functions for random number generation, density 
+             estimation, classification, curve fitting, and spatial 
+             data analysis.
+Maintainer: Dai Feng <dai_feng@merck.com>
+Depends: R (>= 3.0.2), Rcpp (>= 0.10.3), MASS (>= 7.3-45), R2jags (>=
+        0.5-7), BRugs (>= 0.8-6)
+Imports: MCMCpack (>= 1.2-4), mvtnorm (>= 0.9-9992), BayesBridge (>=
+        0.6)
+Suggests: mixAK (>= 2.6)
+LinkingTo: Rcpp, RcppArmadillo (>= 0.3.810.2)
+License: GPL
+NeedsCompilation: yes
+Packaged: 2016-07-07 13:59:55 UTC; fengd
+Repository: CRAN
+Date/Publication: 2016-07-07 17:37:44
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-10 18:37:18 UTC; windows
+Archs: i386, x64

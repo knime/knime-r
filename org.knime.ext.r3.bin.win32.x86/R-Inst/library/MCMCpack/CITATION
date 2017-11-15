@@ -1,0 +1,21 @@
+citHeader("To cite MCMCpack in publications use:")
+
+citEntry(entry = "Article",
+  title        = "{MCMCpack}: Markov Chain Monte Carlo in {R}",
+  author       = personList(as.person("Andrew D. Martin"), 
+                   as.person("Kevin M. Quinn"), 
+                   as.person("Jong Hee Park")),
+  journal      = "Journal of Statistical Software",
+  year         = "2011",
+  volume       = {42},
+  number       = {9},
+  pages        = {1--21},
+  url          = {"http://www.jstatsoft.org/v42/i09/"},
+  textVersion  =
+  paste("Andrew D. Martin, Kevin M. Quinn, Jong Hee Park (2011).",
+        "MCMCpack: Markov Chain Monte Carlo in R.",
+        "Journal of Statistical Software. 42(9): 1-21.",
+        "URL http://www.jstatsoft.org/v42/i09/.")
+)
+
+

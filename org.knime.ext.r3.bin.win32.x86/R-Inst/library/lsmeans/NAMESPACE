@@ -1,0 +1,183 @@
+# Namespace for lsmeans package
+
+# Imports
+# From default packages (new req from CRAN, July 2015)
+importFrom("graphics", "pairs", "plot")
+importFrom("stats", "as.formula", "coef", "complete.cases", "confint", "cov", 
+           "cov2cor", "delete.response", "deriv", "family", "lm", "make.link", 
+           "model.frame", "model.matrix", "na.omit", "na.pass", "p.adjust", 
+           "p.adjust.methods", "pchisq", "pf", "poly", "predict", "pt", "ptukey", 
+           "qbeta", "qf", "qt", "qtukey", "reformulate", "terms", "uniroot", 
+           "update", "vcov")
+importFrom("utils", "head", "installed.packages", "str")
+importFrom("nlme", "fixef")
+
+# Others
+import(methods)
+import(mvtnorm)
+import(estimability)
+
+# 'requireNamespace' block below allows me to put multcomp in
+# Imports instead of Depends. 
+if (requireNamespace("multcomp", quietly = TRUE)) {
+    importFrom(multcomp, cld, glht, modelparm)
+    export(cld) # needed so that cld is visible even when multcomp not attached
+    S3method(cld, ref.grid)
+    S3method(cld, lsm.list)
+    S3method(glht, lsmlf)
+    S3method(glht, ref.grid)
+    S3method(modelparm, lsmwrap)
+}
+
+if (requireNamespace("plyr", quietly = TRUE)) {
+    importFrom(plyr, alply)
+}
+
+if (requireNamespace("coda", quietly = TRUE)) {
+    importFrom(coda, as.mcmc, as.mcmc.list)
+    S3method(as.mcmc, ref.grid)
+    S3method(as.mcmc.list, ref.grid)
+}
+
+### If rstan ever implements an as.stanfit generic, we need to move rstan
+### from Suggests to Imports and do something more like we do for coda::as.mcmc
+#if (requireNamespace("rstan", quietly = TRUE)) {
+    export(as.stanfit)
+#}
+
+
+if (requireNamespace("xtable", quietly = TRUE)) {
+    importFrom(xtable, xtable, xtableList)
+}
+
+# Visible exports
+exportPattern("*.lsmc")  #all contrast fcns
+export(
+    add_grouping,
+    as.glht,
+    contrast,
+    defaults.lsm,
+    get.lsm.option,
+    get.pmm.option,
+    lsm,
+    lsm.basis,
+    lsmeans, 
+    lsmeans.character,
+    lsmobj,
+    lsmip,
+    lsm.options,
+    lstrends,
+    make.tran,
+    pmm,
+    pmmeans,
+    pmmobj,
+    pmmip,
+    pmm.options,
+    pmtrends,
+    ###rbind, # my own version that overrides one in methods
+    recover.data,
+    ref.grid,
+    regrid,
+    test
+)
+
+# hidden functions of possible use to other package developers
+export(
+    .all.vars,
+    .aovlist.dffun,
+    .diag,
+    .get.offset,
+    .my.vcov
+)    
+
+
+# S3 methods for recover.data and lsm.basis that are needed by other packages
+S3method(recover.data, call)
+
+S3method(recover.data, aovlist)
+S3method(lsm.basis, aovlist)
+
+S3method(recover.data, lm)
+S3method(lsm.basis, lm)
+
+S3method(recover.data, lme)
+S3method(lsm.basis, lme)
+
+S3method(recover.data, merMod)
+S3method(lsm.basis, merMod)
+
+S3method(lsm.basis, mlm) # recover.data for mlm uses lm
+
+# S3 methods - 
+# For clarity, I'm showing them all 
+# but commenting out the ones used only interally
+
+S3method("[", ref.grid)
+
+S3method(as.glht, ref.grid)
+S3method(as.glht, lsm.list)
+
+S3method(coef, ref.grid)
+S3method(coef, lsm.list)
+
+S3method(confint, ref.grid)
+S3method(confint, lsm.list)
+
+S3method(contrast, ref.grid)
+S3method(contrast, lsm.list)
+
+#S3method(glht, lsmlf)   # in namespace block above
+#S3method(glht, ref.grid)
+
+S3method(lsmeans, character)
+S3method(lsmeans.character, default)
+S3method(lsmeans.character, ref.grid)
+S3method(lsmeans, default)
+S3method(lsmeans, formula)
+S3method(lsmeans, list)
+
+S3method(lsmip, default)
+
+#S3method(modelparm, lsmwrap) # in namespace block above
+
+S3method(pairs, ref.grid)
+S3method(pairs, lsm.list)
+
+S3method(plot, lsmobj)
+S3method(plot, summary.ref.grid)
+
+S3method(predict, ref.grid)
+
+S3method(print, ref.grid)
+S3method(print, summary.ref.grid)
+S3method(print, lsm.list)
+S3method(print, xtable.lsm)
+
+S3method(rbind, ref.grid)
+
+S3method(str, ref.grid)
+S3method(str, lsm.list)
+
+S3method(summary, ref.grid)
+S3method(summary, lsm.list)
+
+S3method(test, ref.grid)
+S3method(test, lsm.list)
+
+S3method(update, ref.grid)
+
+S3method(vcov, ref.grid)
+
+S3method(xtable, ref.grid)
+S3method(xtable, summary.ref.grid)
+
+
+# Support for my glht.list objects (cede to Torsten if he wants 'em in multcomp)
+# DOESN'T WORK: S3method(cld, glht.list)
+S3method(coef, glht.list)
+S3method(confint, glht.list)
+S3method(plot, glht.list)
+# NOT NEEDED: S3method(print, glht.list)
+S3method(summary, glht.list)
+S3method(vcov, glht.list)
+

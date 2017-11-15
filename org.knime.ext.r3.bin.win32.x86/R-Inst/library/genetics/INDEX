@@ -1,0 +1,35 @@
+HWE.chisq               Perform Chi-Square Test for Hardy-Weinberg
+                        Equilibrium
+HWE.exact               Exact Test of Hardy-Weinberg Equilibrium for
+                        2-Allele Markers
+HWE.test                Estimate Disequilibrium and Test for
+                        Hardy-Weinberg Equilibrium
+LD                      Pairwise linkage disequilibrium between genetic
+                        markers.
+as.factor               Undocumented functions
+ci.balance              Experimental Function to Correct Confidence
+                        Intervals At or Near Boundaries of the
+                        Parameter Space by 'Sliding' the Interval on
+                        the Quantile Scale.
+diseq                   Estimate or Compute Confidence Interval for the
+                        Single-Marker Disequilibrium
+expectedGenotypes       Construct expected genotypes/haplotypes
+                        according to known allele variants
+genotype                Genotype or Haplotype Objects.
+gregorius               Probability of Observing All Alleles with a
+                        Given Frequency in a Sample of a Specified
+                        Size.
+groupGenotype           Group genotype values
+homozygote              Extract Features of Genotype objects
+locus                   Create and Manipulate Locus, Gene, and Marker
+                        Objects
+makeGenotypes           Convert columns in a dataframe to genotypes or
+                        haplotypes
+order.genotype          Order/sort genotype/haplotype object
+plot.genotype           Plot genotype object
+power.casectrl          Depreciated functions
+print.LD                Textual and graphical display of linkage
+                        disequilibrium (LD) objects
+summary.genotype        Allele and Genotype Frequency from a Genotype
+                        or Haplotype Object
+write.pop.file          Create genetics data files

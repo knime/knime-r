@@ -1,0 +1,14 @@
+#NEXUS
+
+BEGIN TAXA;
+  DIMENSIONS NTAX=6;
+	TAXLABELS
+        cnidaria
+        porifera
+        ctenophora
+        protostomia
+        deuterostomia
+        xeno
+    ;
+END;
+

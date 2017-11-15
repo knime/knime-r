@@ -1,0 +1,101 @@
+#NEXUS
+[written Sat Oct 23 12:11:18 PDT 2010 by Mesquite  version 2.6 (build 486)
+at Macintosh-101.local/10.0.1.6]
+
+BEGIN TAXA;
+   TITLE Taxa;
+   DIMENSIONS NTAX=32;
+   TAXLABELS
+       S1FS3_S3FS1_&_S2LS4 Desulfodehalobacter_spongiphilus_strain_
+Desulfobacterium_indolicum_strain_DSM_33
+Desulfobacter_postgatei_strain_DSM_2034_ Geobacter_sulfurreducens_#U13928
+S2HS1_&_S3HS1 Geobacter_chapelleii_strain_172_#NR_0259 F2HS1b
+Shewanella_putrefaciens_strain_Hac334_#D Shewanella_aquimarina_#AY485225
+Pseudomonas_meridiana_strain_CMS_38T_AJ5 F2FS1_&_F3FS2 F2HS1_&_F2HS3
+Pseudomonas_stutzeri_strain_LS401_#U2641 F2FS2_&_F3HS2
+Marinobacter_hydrocarbonoclasticus_strai S3FS4_S3FS5_&_S3FS6
+Marinobacter_guineae_strain_LMG_24048_#A Marinobacter_lipolyticus_strain_SM
+S1HS1 Desulfopila_aestuarii_#AB110542 S3FS2
+S1HS2_S1HS3_S1HS4_S1HS5_S3HS4_&_F2HA2a F3FS1
+Desulfovibrio_putealis_#AY574979 Desulfovibrio_desulfuricans_subsp._desul
+S2LS1 Desulfovibrio_bizertensis_strain_MB3_#DQ S1FS1
+Desulfovibrio_marinisediminis_#AB353727 S2LS3_S3LS1_S3FS3_&_F2HA2b
+Acidobacterium_capsulatum_#D26171
+   ;
+
+END;
+
+
+BEGIN TREES;
+   Title Imported_trees;
+   LINK Taxa = Taxa;
+   TRANSLATE
+       1 S1FS3_S3FS1_&_S2LS4,
+       2 D_s_strain_,
+       3 D_i_strain_DSM_3,
+       4 D_p_strain_DSM_2_,
+       5 G_s_#,
+       6 S2HS1_&_S3HS1,
+       7 G_c_strain_1_#NR_0,
+       8 F2HS1b,
+       9 S_p_strain_H_#D,
+       10 S_a_#,
+       11 P_m_strain_C_3_A,
+       12 F2FS1_&_F3FS2,
+       13 F2HS1_&_F2HS3,
+       14 P_s_strain_L_#,
+       15 F2FS2_&_F3HS2,
+       16 M_h_s,
+       17 S3FS4_S3FS5_&_S3FS6,
+       18 M_g_s_L_2_#A,
+       19 M_l_s_S,
+       20 S1HS1,
+       21 D_a_#A,
+       22 S3FS2,
+       23 S1HS2_S1HS3_S1HS4_S1HS5_S3HS4_&_F2HA2a,
+       24 F3FS1,
+       25 D_p_#,
+       26 D_d_s._d,
+       27 S2LS1,
+       28 D_b_s_M_#D,
+       29 S1FS1,
+       30 D_m_#A,
+       31 S2LS3_S3LS1_S3FS3_&_F2HA2b,
+       32 A_c_#;
+   TREE Imported_tree_0 =
+(((1:0.014294865658239897,2:0.016346131753724284)100:0.04531876862101268,(3:0.07787046050007705,(4:0.1575116382471088,((((5:0.04822215084893891,(6:0.0271216303442505,7:0.02007948214228989)100:0.03528659400373911)99:0.05981681725589428,(((8:1.12919178858362E-6,9:1.12919178858362E-6)100:0.057530109591399765,10:0.037691124354788864)100:0.08304244998885398,((11:0.030702696010829537,((12:8.544451267088965E-4,13:1.12919178858362E-6)100:0.020184245020285173,(14:1.12919178858362E-6,15:0.0034181003601162514)85:0.012235337246177081)93:0.01895791066948832)100:0.047681348350900744,(16:0.020642180955472003,(17:0.0033048657512852178,(18:0.005988936129628456,(19:0.005010797883775309,20:0.01691780810184798)67:0.007663605184147101)74:0.006198749083268308)74:0.014460306032529943)100:0.06150881986749245)96:0.03607879771546074)100:0.1898411550405616)61:0.05839829698184673,((21:0.03207541431435525,22:0.03529636469585623)86:0.014049212961742451,23:0.015891647611896632)100:0.12157794121374672)43:
+ 
+ 0!
+.025419418511636843,((24:0.008361788925720447,25:8.737200748323158E-4)100:0.12954900469798472,(26:0.12890159096837994,((27:1.12919178858362E-6,28:0.004140667057671182)100:0.07459471196756032,(29:1.12919178858362E-6,(30:1.12919178858362E-6,31:0.0033956963116614446)89:0.002536358334238893)100:0.14144374970927193)77:0.030026874274203138)83:0.03329468873634148)98:0.09177164340960056)45:0.034517167840112765)51:0.04130953485123759)27:0.02140636921130952)100:0.21688189318012785,32:0.21688189318012785)100:0.23;
+
+END;
+
+
+Begin MESQUITE;
+       MESQUITESCRIPTVERSION 2;
+       TITLE AUTO;
+       tell ProjectCoordinator;
+       getEmployee #mesquite.minimal.ManageTaxa.ManageTaxa;
+       tell It;
+           setID 0 4448951287512167596;
+       endTell;
+       getWindow;
+       tell It;
+           suppress;
+           setResourcesState true false 100;
+           setPopoutState 400;
+           setExplanationSize 0;
+           setAnnotationSize 0;
+           setFontIncAnnot 0;
+           setFontIncExp 0;
+           setSize 700 464;
+           setLocation 8 8;
+           setFont SanSerif;
+           setFontSize 10;
+           getToolPalette;
+           tell It;
+           endTell;
+           desuppress;
+       endTell;
+       endTell;
+end;

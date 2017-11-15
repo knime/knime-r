@@ -1,0 +1,11 @@
+index	x	y	fac	char
+1	1	3	D	r
+2	2	2	A	b
+3	2	6	D	g
+4	1	7	B	q
+5	3	10	B	f
+6	1	2	B	a
+7	2	24	E	g
+8	1	4	E	d
+9	1	1	G	g
+10	1	2	A	j

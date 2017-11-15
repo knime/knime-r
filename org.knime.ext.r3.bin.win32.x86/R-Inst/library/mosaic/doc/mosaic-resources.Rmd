@@ -1,0 +1,179 @@
+---
+title: "Resources Related to the mosaic Package"
+author: "Randall Pruim, Daniel T. Kaplan, Nicholas J. Horton"
+date: "`r Sys.Date()`"
+
+  
+vignette: >
+  %\VignetteIndexEntry{Resources Related to the mosaic Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+This vignette describes related resources and materials useful for teaching
+statistics with a focus on modeling and computation.
+
+## Package Vignettes
+
+The `mosaic` package includes a number of vignettes. These are available 
+from within R or from 
+[cran.r-project.org/package=mosaic](https://cran.r-project.org/package=mosaic).
+
+ * *Minimal R* describes a minimal set of R commands for use in 
+	Introductory Statistics and discusses why it is important
+		to keep the set of commands small;
+		
+ * *Resampling methods in R* demonstrates how to use the `mosaic`
+	package to compute p-values for randomization tests and bootstrap confidence 
+	intervals in a number of common situations. The examples are based on the 
+	``resamping bake off'' at USCOTS 2013.
+
+ * *ggformula/lattice conversion examples* compares the lattice and ggformula formula interfaces for creating graphics. 
+
+## Web vignettes
+
+The following vignette-like documents are available via github
+
+ * [*Less Volume, More Creativity*](https://cdn.rawgit.com/ProjectMOSAIC/mosaic/27c09830/ExtraDocs/LessVolume-MoreCreativity.html), 
+   based on slides from an 
+	 ICOTS 2014 workshop, introduces the `mosaic` package and related tools 
+   and describes some of the philosophy behind the design choices made in the 
+	 `mosaic` package. 
+	
+ * [*Graphics with with the mosaic package*](https://cdn.rawgit.com/ProjectMOSAIC/mosaic/27c09830/ExtraDocs/GraphicsWithMosaic.html) 
+ is gallery of plots made using tools from the `mosaic` package.
+
+## Mosaic paper
+
+Pruim R, Kaplan DT and Horton NJ (2017). The mosaic Package: Helping
+Students to 'Think with Data' Using R. *The R Journal*, 9(1), pp.
+77-102.  https://journal.r-project.org/archive/2017/RJ-2017-024/index.html.
+
+Abstract: The mosaic package provides a simplified and systematic introduction to the core functional ity related to descriptive statistics, visualization, modeling, and simulation-based inference required in first and second courses in statistics. This introduction to the package describes some of the guiding principles behind the design of the package and provides illustrative examples of several of the most important functions it implements. These can be combined to help students 'think with data' using R in their early course work, starting with simple, yet powerful, declarative commands.
+
+## Project MOSAIC Little Books
+
+The following longer documents are available at 
+[github.com/ProjectMOSAIC/LittleBooks](https://github.com/ProjectMOSAIC/LittleBooks/blob/master/README.md).
+
+ * *Start Teaching Statistics Using R* includes 
+some strategies for teaching beginners, and introduction to the `mosaic` package,
+and some additional things that instructors should know about using R.
+
+ * *[A Student's Guide to R](http://project-mosaic-books.com/?page_id=24)* provides a brief introduction to 
+the R commands needed for all the basic statistical procedures in 
+an Intro Stats course.  A spanish language translation can be found at https://github.com/jarochoeltrocho/MOSAIC-LittleBooks-Spanish.
+
+
+ * *[Start R in Calculus](http://project-mosaic-books.com/?page_id=22)* highlights features 
+of R and the `mosaic` package that can be used to teach 
+calculus with R.
+
+ * *Start Modeling in R* (coming soon).
+ 
+## Textbook Related
+
+ * *Statistical Modeling: A Fresh Approach* (DT Kaplan, second edition)]
+is an introduction to statistics embracing a modeling approach and employing 
+resampling methods. 
+The `mosaic` package is used throughout.
+
+    * [www.mosaic-web.org/StatisticalModeling](http://www.mosaic-web.org/StatisticalModeling)
+
+ * *Foundations and Applications of Statistics: An Introduction Using R* (R Pruim) 
+is an R-infused probability and mathematical statistics text that emphasizes 
+connections between probability and statistics. The book predates the `mosaic` package, 
+but much of the code originally in the `fastR` package has been moved into the `mosaic` package.
+
+    * [www.ams.org/publications/authors/books/postpub/amstext-13](http://www.ams.org/publications/authors/books/postpub/amstext-13)
+
+ * *Modern Data Science with R* (BS Baumer, DT Kaplan, and NJ Horton)
+		is an R-infused data science text that emphasizes conceptual understanding and computation.
+
+    * [http://mdsr-book.github.io/](http://mdsr-book.github.io/)
+
+ * *The Statistical Sleuth in R* (NJ Horton)
+		describes how to undertake analyses in R for the
+		examples in the Third Edition of the
+		*Statistical Sleuth: A Course in Methods of Data Analysis* (2013),
+		by Fred Ramsey and Dan Schafer.
+
+    * [nhorton.people.amherst.edu/sleuth](http://nhorton.people.amherst.edu/sleuth)
+
+		
+ * *Introduction to the Practice of Statistics in R* (NJ Horton and BS Baumer)
+		describes how to undertake analyses in R that are introduced as examples in the first
+		chapters of the Sixth Edition of *Introduction to the Practice of
+		Statistics* (2007), by David Moore, George McCabe,
+		and Bruce Craig. 
+		
+    * [nhorton.people.amherst.edu/ips6e](http://nhorton.people.amherst.edu/ips6e) 
+
+ * *Statistics: Unlocking the Power of Data* (Lock, Lock, Lock, Lock, and Lock) 
+		is an introductory statistics textbook that embraces a resampling approach. 
+		
+    An annotated companion to the examples in the book implemented using R can be found at 
+		
+    * [github.com/rpruim/Lock5withR/](https://github.com/rpruim/Lock5withR/blob/master/README.md)
+    
+    and the `Lock5withR` R package provides all the data sets used in the text.
+		
+    Additional information about the book and the approach used there can be found at
+		
+    * [lock5stat.com](http://lock5stat.com) 
+		
+
+ * *Stats: Data and Models* (NJ Horton)
+		describes how to undertake analyses in R for the
+		examples in the Fourth Edition of the
+		*Stats: Data and Models* (2015),
+		by Dick De Veaux, Paul Velleman, and Dave Bock.
+
+    * [nhorton.people.amherst.edu/sdm4](http://nhorton.people.amherst.edu/sdm4)
+
+ * *Intro Stats* (P Frenett and NJ Horton)
+		describes how to undertake analyses in R for the
+		examples in the Fourth Edition of the
+		*Intro Stats* (2013),
+		by Dick De Veaux, Paul Velleman, and Dave Bock.
+
+    * [nhorton.people.amherst.edu/is4](http://nhorton.people.amherst.edu/is4)
+
+
+ * *Introduction to Statistical Investigations* (Tintle *et al*) 
+		is another introductory statistics textbook that embraces a resampling approach. 
+		
+    An annotated companion to the examples in the book implemented using R can be found at 
+		
+    * [github.com/rpruim/ISIwithR/](https://github.com/rpruim/ISIwithR/blob/master/README.md)
+    
+    and the `ISIwithR` R package provides all the data sets used in the text.
+    
+    Additional information about the book and the approach used there can be found at
+		
+    * [math.hope.edu/isi/](http://math.hope.edu/isi/)
+		
+  * [Open Intro Stats](https://www.openintro.org/stat/labs.php)
+  
+    OpenIntro Stats now has versions of their labs designed for 
+    use with the `mosaic` package.  
+    The `mosaic` labs were adapted by 
+    Ben Baumer and Galen Long of Smith College.
+
+## Articles
+ * GW Cobb, "The introductory statistics course: a Ptolemaic curriculum?", 
+   *Technology Innovations in Statistics Education*, 2007, 1(1), 
+   [escholarship.org/uc/item/6hb3k0nz](http://escholarship.org/uc/item/6hb3k0nz).
+
+ * NJ Horton, BS Baumer, and H Wickham, "Teaching precursors to data science in introductory and second courses in statistics," *CHANCE*, 2015, 28(2):40-50, 
+ [nhorton.people.amherst.edu/precursors](http://nhorton.people.amherst.edu/precursors)
+
+ * NJ Horton, and J Hardin, "Teaching the next generation of statistics students to "Think With Data": special issue on statistics and the undergraduate curriculum," *TAS*, 2015, 69(4):259-265, 
+ [http://amstat.tandfonline.com/doi/full/10.1080/00031305.2015.1094283](http://amstat.tandfonline.com/doi/full/10.1080/00031305.2015.1094283)
+ 
+ * D Nolan and D Temple Lang, "Computing in the statistics curricula", 
+*The American Statistician*, 2010, 64(2), 
+[www.stat.berkeley.edu/~statcur/Preprints/ComputingCurric3.pdf](http://www.stat.berkeley.edu/~statcur/Preprints/ComputingCurric3.pdf).
+

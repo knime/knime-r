@@ -1,0 +1,15 @@
+bold-package            bold: A programmatic interface to the Barcode
+                        of Life data.
+bold_filter             Get BOLD specimen + sequence data.
+bold_identify           Search for matches to sequences against the
+                        BOLD COI database.
+bold_identify_parents   Add taxonomic parent names to a data.frame
+bold_seq                Search BOLD for sequences.
+bold_seqspec            Get BOLD specimen + sequence data.
+bold_specimens          Search BOLD for specimens.
+bold_stats              Get BOLD stats
+bold_tax_id             Search BOLD for taxonomy data by BOLD ID.
+bold_tax_name           Search BOLD for taxonomy data by taxonomic name
+bold_trace              Get BOLD trace files
+sequences               List of 3 nucleotide sequences to use in
+                        examples for the 'bold_identify' function

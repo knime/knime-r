@@ -1,0 +1,42 @@
+>spam_0.41: moved definitively to GIT. ChangeLog will consist of 
+             `git log`
+
+
+spam_0.41-0    2014-02-26    (RF)
+	- addressed several Rdevel CMD check --as-cran Notes.
+	- minor changes in tests/mle (improving speed)
+	- minor code tiding
+	- file header edits
+
+spam_0.40-1    2014-02-20    (Florian Gerber)
+	- update grid_trace2() and grid_trace2.Rd
+	- eliminate bug in cov.mat() and correct typo in cov.Rd
+	  add tests/covmat.R tests/covmat.Rout.save
+
+
+changeset:   4:66173a00f913
+tag:         tip
+user:        Reinhard Furrer @ lappi <reinhard.furrer@math.uzh.ch>
+date:        Wed Aug 21 21:09:05 2013 +0200
+summary:     Adjusted DESCRIPTION, NEWS, ChangeLog for push to CRAN
+
+changeset:   3:412496cbb8b3
+user:        Florian Gerber <florian.gerber@math.uzh.ch>
+date:        Tue Aug 20 15:36:34 2013 +0200
+summary:     gridBase NOT in dependency. comment germany.Rd about 'fields'
+
+changeset:   2:2526f2c1d501
+user:        Florian Gerber <florian.gerber@math.uzh.ch>
+date:        Mon Aug 19 15:42:49 2013 +0200
+summary:     add plot grid_zoom() and grid_trace2() incl help files.
+
+changeset:   1:2929fe7a2799
+user:        Florian Gerber <florian.gerber@math.uzh.ch>
+date:        Tue Aug 06 14:31:11 2013 +0200
+summary:     Test hg, small changes in spam0.30-0/man/mcmczoomPlot.Rd
+
+changeset:   0:0029fc2741f4
+user:        Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+date:        Mon Aug 05 13:53:20 2013 +0200
+summary:     First Version that runs...
+

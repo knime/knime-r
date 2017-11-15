@@ -1,0 +1,10 @@
+expint-package	expint-package
+expint	expint
+expint_E1	expint
+expint_E2	expint
+expint_Ei	expint
+expint_En	expint
+ExponentialIntegral	expint
+gammainc	gammainc
+gamma_inc	gammainc
+IncompleteGammaFunction	gammainc

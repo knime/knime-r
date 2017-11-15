@@ -1,0 +1,14 @@
+citEntry(
+  entry = "Article",
+  title = "{glm2}: Fitting generalized linear models with convergence problems",
+  journal = "The R Journal",
+  volume = "3",
+  part = "2",
+  pages = "12-15",
+  year = "2011",
+  author = person("Ian C.", "Marschner"),
+  textVersion = "Marschner, I. C. (2011). glm2: Fitting generalized linear models with convergence problems. The R Journal 3(2): 12-15"
+)
+
+citFooter("Call citation(\"glm2\", auto = TRUE) to obtain a reference to the package itself,
+           and use toBibtex() to get the BibTeX entry for LaTeX users")

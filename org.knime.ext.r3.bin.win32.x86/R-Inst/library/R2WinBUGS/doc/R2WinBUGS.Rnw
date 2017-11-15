@@ -1,0 +1,506 @@
+%\VignetteIndexEntry{R2WinBUGS}
+\documentclass{Z}
+\usepackage{RdRW}
+\newcommand{\WinBUGS}{{\proglang{WinBUGS}}{}}
+\newcommand{\RW}{{\pkg{R2WinBUGS}}{}}
+\renewcommand{\R}{{\proglang{R}}{}}
+\setlength{\textheight}{23.5cm}
+
+\title{\RW{}:\protect\linebreak A Package for Running \WinBUGS{} from \R{}}
+\author{Sibylle Sturtz\thanks{\email{sturtz@statistik.tu-dortmund.de}}\\Fachbereich Statistik\\Universit\"at Dortmund\\Germany
+    \And
+        Uwe Ligges\thanks{\email{ligges@statistik.tu-dortmund.de}}\\Fachbereich Statistik\\Universit\"at Dortmund\\Germany
+    \And
+        Andrew Gelman\thanks{\email{gelman@stat.columbia.edu}}\\Department of Statistics\\Columbia University\\USA
+}
+\Plainauthor{Sibylle Sturtz, Uwe Ligges, Andrew Gelman}
+\Plaintitle{R2WinBUGS: A Package for Running WinBUGS from R}
+
+\Abstract{
+The \RW{} package provides convenient functions to call \WinBUGS{} from \R{}. It
+automatically writes the data and scripts in a format readable by \WinBUGS{} for processing in batch mode, which
+is possible since version 1.4. After the \WinBUGS{} process has finished, it is possible either to read the
+resulting data into \R{} by the package itself---which gives a compact graphical summary of inference and
+convergence diagnostics---or to use the facilities of the \pkg{coda} package for further analyses of the
+output. Examples are given to demonstrate the usage of this package.
+}
+
+\Keywords{\R{}, \WinBUGS{}, interface, MCMC}
+\Plainkeywords{R, WinBUGS, interface, MCMC}
+
+\begin{document}
+An earlier version of this vignette has been published by the Journal of Statistical Software:\\
+Sturtz S, Ligges U, Gelman A (2005):
+``\RW{}: A Package for Running \WinBUGS{} from \R{}.''
+{\em Journal of Statistical Software}, 12(3), 1--16.
+
+
+\section{Introduction}\label{Introduction}
+The usage of Markov chain Monte Carlo (MCMC) methods became very popular within the last decade. \WinBUGS{}
+\citep[\textbf{B}ayesian inference \textbf{U}sing \textbf{G}ibbs \textbf{S}ampling, ][]
+{Spiegelhalter;Thomas;Best:2003} is a popular software for analyzing complex statistical models using MCMC
+methods. This software uses Gibbs sampling \citep{Geman;Geman:1984,Gelfand;Smith:1990,Casella;George:1992} and the
+Metropolis algorithm \citep{Metropolis;Rosenbluth;Rosenbluth;Teller;Teller:1953}
+to generate a Markov chain by sampling from full conditional
+distributions.
+The \WinBUGS{} software is available for free
+at \url{http://www.mrc-bsu.cam.ac.uk/bugs/}.
+An introduction to MCMC methods is given in \cite{Gilks;Richardson;Spiegelhalter:1996}.
+
+Using \WinBUGS{}, the user must specify the model to run, and to load data and initial values for a specified
+number of Markov chains. Then it is possible to run the Markov chain(s) and to save the results for the parameters
+the user is interested in. Summary statistics of these data, convergence diagnostics, kernel estimates
+etc.\ are available as well.
+Nevertheless, some users of this software might be interested in saving the output and reading it into \R{}
+\citep{RCore:2004} for further analyses.
+\WinBUGS{} 1.4 comes with the ability to run the software in batch mode using scripts.
+
+The \RW{} package makes use of this feature and provides the tools to call \WinBUGS{}
+directly after data manipulation in \R{}. Furthermore, it is possible to
+work with the results after importing them back into \R{} again, for example to create posterior predictive simulations or, more generally, graphical displays of data and posterior simulations \citep{gelman:2004}.
+Embedding in R can also be useful for frequently changed data or processing a bunch of data sets,
+because it is much more convenient to use some \R{} functions (possibly within a loop)
+rather than using ``copy \& paste'' to update data in \WinBUGS{} each time; however difficulties have been encountered in this area because both \R{} and \WinBUGS{} can lock up RAM in the Windows operating system.
+
+\R{} is a ``language for data analysis and graphics'' and an open source and
+freely available statistical software package implementing that language, see \url{http://www.R-project.org/}.
+Historically, \R{} is an implementation of the award-winning \proglang{S}
+language and system \citep{becker:1984r,becker:1988r,chambers:1992,chambers:1998}.
+\R{} and \RW{} are available from \emph{CRAN} (Comprehensive \R{} Archive Network),
+i.e., \url{http://CRAN.R-Project.org} or one of its mirrors.
+\RW{} could be ported to the commercial \proglang{S} implementation
+\textsc{S-Plus}.  Minor adaptions would be needed since \textsc{S-Plus}
+lacks some of \R{}'s functions and capabilities.
+If an internet connection is available, \RW{} can be installed by typing
+\verb+install.packages("R2WinBUGS")+ at the \R{} command prompt.
+Do not forget to load the package with \verb+library("R2WinBUGS")+.
+
+The package \pkg{coda} by \cite{Plummer;Best;Cowles;Vines:2004} is very useful for the analysis of \WinBUGS{}'
+output, the reader might want to install this package as well. The CRAN package \pkg{boa} (Bayesian Output
+Analysis Program) by \cite{Smith:2004} has similar aims.
+\proglang{JAGS} (Just Another Gibbs Sampler)
+by \cite{Plummer:2003} is a program for analysis of Bayesian hierarchical models using Gibbs sampling that aims for
+the same functionality as classic \proglang{BUGS}. \proglang{JAGS} is developed to work closely together with \R{} and
+the \pkg{coda} package.
+
+%% Revision 2005-01-10 start
+A new and completely revised version of WinBUGS called \proglang{OpenBUGS} \citep{Spiegelhalter;Thomas;Best;Lunn:2004}
+was lately published under the terms of the GPL.
+\proglang{OpenBUGS} is also expected to run under Linux.
+It provides a much more flexible API on which ``BRugs'' is based including
+a dynamic link library, incorporating a component loader
+that allows \R{} to make use of \proglang{OpenBUGS} components.
+OpenBUGS is still in development and suffers frequent crashes.
+As OpenBUGS becomes more reliable,
+it is planned to merge ``BRugs'' and \RW{} into one \R{} package.
+%% Revision 2005-01-10 end
+
+For other packages and projects on spatial statistics
+related to \R{}, follow the link to ``\R{} spatial projects'' at CRAN.
+
+In this paper, we give two examples, involving educational testing experiments in schools (cf.~Section~\ref{School}),
+and incidence of childhood leukaemia depending on benzene emissions (cf.~Section~\ref{Leukaemia}). Details on the
+functions of \RW{} are given in Section~\ref{Programming}. These functions automatically write the data and a
+script in a format readable by \WinBUGS{} for processing in batch mode, and call \WinBUGS{} from \R{}. After the
+\WinBUGS{} process has finished, it is possible either to read the resulting data into \R{} by the package itself
+or to use the facilities of the \pkg{coda} package for further analyses of the output. In Section~\ref{Example2},
+we demonstrate how to apply the functions provided by \RW{} on the examples' data, and how to analyze the output
+both with package \pkg{coda} and with \RW{}'s methods to \verb+plot()+ and \verb+print()+ the output.
+
+
+\section{Examples}\label{Examples}
+In this Section, we introduce two examples which will be continued in Section~\ref{Example2}.
+
+\subsection{Schools data}\label{School}
+The Scholastic Aptitude Test (SAT) measures the aptitude of high-schoolers in order to help colleges to make
+admissions decisions. It is divided into two parts, verbal (SAT-V) and mathematical (SAT-M).
+Our data comes from the SAT-V (Scholastic Aptitude Test-Verbal) on eight different high schools, from an experiment conducted in the late 1970s.
+SAT-V is a standard multiple choice test administered by the Educational Testing Service.
+This Service was interested in the effects of coaching programs for each of the selected schools.
+
+The study included coached and uncoached pupils, about sixty in each of the eight different schools; see
+\cite{Rubin:1981}. All of them had already taken the PSAT (Preliminary SAT) which results were used as covariates.
+%Even if the test is constructed to be resistant to short-term
+%efforts directed specifically toward improving test performance, each of the schools is successful at increasing
+%SAT scores.
+For each school, the estimated treatment effect and the standard error of the effect estimate are given.
+These are calculated by an analysis of covariance adjustment appropriate for a completely randomized experiment
+\citep{Rubin:1981}. This example was analyzed using a hierarchical normal model in \cite{Rubin:1981} and
+\citeauthor{Gelman:2003} (\citeyear{Gelman:2003}, Section 5.5).
+
+\subsection{Leukaemia registration data}\label{Leukaemia}
+Spatial data usually arises on different, non-nesting spatial scales. One example is childhood leukaemia
+registration data analyzed by \cite{Best;Cockings;Bennett;Wakefield;Elliot:2001}
+using ecologic regression. Data are given for Greater London bounded by the M25 orbital motorway.
+%% Revision 2005-01-10 start
+The data are not available as an example in \RW{} but we use the example here
+to illustrate
+alternative calls to the \verb+bugs()+ function and output analysis using the \pkg{coda} package.
+%% Revision 2005-01-10 end
+
+The observed number of leukaemia cases among children under 15 years old is given at ward level. Census wards are
+administrative areas containing approximately 5000 to 10\,000 people. Central London is divided into 873 wards. The
+number of incident cases of leukaemia in children is available from 1985 until 1996 from the Office of National
+Statistics and the Thames Cancer Registry. A plot of these numbers is given in Figure~\ref{observed}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{countssw}
+\caption{\label{observed}Observed number of cases of childhood leukaemia in 1985--1996}
+\end{center}
+\end{figure}
+
+Additionally, the number of expected cases (cf.~Fig.~\ref{expected}) is calculated on the same
+resolution using population numbers for different age-sex-strata and the national leukaemia
+rate for the corresponding strata, for details see \cite{Best;Cockings;Bennett;Wakefield;Elliot:2001}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{expectedsw}
+\caption{\label{expected}Expected number of cases of childhood leukaemia in 1985--1996}%, as obtained from a simple demographic model}
+\end{center}
+\end{figure}
+
+It is assumed that benzene emissions have an effect on the incidence rate of leukaemia. Benzene emission rates are
+available in tonnes per year from an atmospheric emissions inventory for London
+\citep{Buckingham;Clewley;Hutchinson;Sadler;Shah:1997} produced by the London Research Centre. They are provided
+at 1km $\times$ 1km grid cells, giving 2132 grid cells in total.
+Their spatial distribution is shown in Figure~\ref{benzene}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{benzolsw}
+\caption{\label{benzene}Benzene emissions in tonnes per year}
+\end{center}
+\end{figure}
+
+For further details on the data see \cite{Best;Cockings;Bennett;Wakefield;Elliot:2001}.
+
+We model these data by Poisson-Gamma models introduced by \cite{Best;Ickstadt;Wolpert:2000} using \WinBUGS{}.
+A linking matrix containing information which grid cell belongs to which ward
+and to which amount is required. This matrix is calculated using \R{}.
+Unfortunately, \WinBUGS{} does not support a list format such as directly produced by \R{}.
+Therefore, the data must be provided as a matrix with 2132 rows and 873 columns (or vice versa).
+Most of the entries of this matrix are zeroes, but using \verb+dump()+ to export it from \R{}
+yields in a file size of 14.2~MB.
+Unfortunately, opening a file of such size really slows \WinBUGS{} down,
+and it was not even possible on some of our PCs.
+Importing data written by our \RW{} package does not make any problems using the batch mode,
+probably due to memory management issues in \WinBUGS{}.
+
+
+\section{Implementation}\label{Programming}
+The implementation of the \RW{} package is straightforward.
+The ``main'' function \verb+bugs()+ is intended to be called by the user.
+In principle, it is a wrapper for several other functions called therein step by step as follows:
+\begin{enumerate}
+    \item \verb+bugs.data.inits()+ writes the data files \file{data.txt}, and \file{inits1.txt}, \file{inits2.txt}, ...
+        into the working directory. These files will be used by \WinBUGS{} during batch processing.
+
+        In particular, input for \WinBUGS{} must not exceed a certain number of digits.
+        Moreover, it needs an \verb+E+ instead of an \verb+e+ in scientific notation.
+        Scientific notation is particularly desirable because of the ``number of digits'' limitation.
+        The default (\verb+digits = 5+) is to, e.g., reformat the number \verb+123456.789+ to \verb@1.23457E+05@.
+    \item \verb+bugs.script()+ writes the file \file{script.txt} that is used by \WinBUGS{} for batch processing.
+    \item \verb+bugs.run()+ updates the lengths of the adaptive phases in the \WinBUGS{} registry
+        (using a function \verb+bugs.update.settings()+),
+        calls \WinBUGS{}, and runs it in batch mode with \file{script.txt}.
+    \item \verb+bugs.sims()+ is only called if the argument \verb+codaPkg+ has been set to \verb+FALSE+ (the default).
+        Otherwise \verb+bugs()+ returns the filenames of stored data. These can, for example,
+        be imported by package \pkg{coda} (see the example in Section~\ref{Leukaemia2}, page~\pageref{codaexample}),
+        which provides functions for convergence diagnostics,
+        calculation of Monte Carlo estimates, trace plots, and so forth.
+
+        The function \verb+bugs.sims()+ reads simulations from \WinBUGS{} into \R{} (not necessarily called by \verb+bugs()+
+        itself), formats them,
+        monitors convergence, performs convergence checks, and computes medians and quantiles.
+        It also prepares the output for \verb+bugs()+ itself.
+\end{enumerate}
+These functions are not intended to be called by the user directly.
+Arguments are passed from \verb+bugs()+ to the other functions, if appropriate.
+A shortened help file of \verb+bugs()+ listing all arguments is given in Appendix~\ref{Doc};
+for the full version type \verb+?bugs+ in \R{} after having installed and loaded the package \RW{}
+(see Section~\ref{Introduction}).
+
+%\newpage
+As known from \WinBUGS{}, one must specify the \verb+data+ in form of a list, with list names equal to the names
+of data in the corresponding \WinBUGS{} model. Alternatively, it is possible to specify a vector or list of names
+(of mode \verb+character+). In that case objects of that names are looked for in the environment in which
+\verb+bugs()+ has been called (usually that is the user's Workspace, \verb+.GlobalEnv+).
+%% Revision 2005-01-10 start
+If data have already been written in a file called \file{data.txt} to the working directory,
+it is possible to specify \verb+data = "data.txt"+.
+%% Revision 2005-01-10 end
+One will usually want to supply initial values.
+This can be done either in the form of a function \verb+inits()+ that creates these values, so that
+different chains can be automatically initialized at different points (see Section \ref{School2}), or by specifying them
+directly (see Section \ref{Leukaemia2}).
+If \verb+inits()+ is not specified,
+\verb+bugs()+ just uses the starting values created by \WinBUGS{}; but in practice \WinBUGS{} can crash when
+reasonable initial values are not specified, and so we recommend constructing a simple \verb+inits()+ function to
+simulate reasonable starting points \cite[Section C.2]{Gelman:2003}. It is also necessary to specify which
+parameters should be saved for monitoring by specifying \verb+parameters.to.save+.
+
+The user might also want to change the defaults for the length of the burn-in (\verb+n.burnin+, which defaults to half the length of the chain)
+period for every MCMC run and the number of iterations (\verb+n.iter+, default value 3)
+that are used to calculate Monte Carlo estimates.
+%SS: Achtung: n.iter=n.burn.in + length of stored chain!
+The specification of a thinning parameter (\verb+n.thin+) is possible as well; this is useful when the number of parameters is large, to keep the saved output to a reasonably-sized R object.  In the default setting, the chains are thinned enough so that approximately 1000 simulation draws are saved.
+
+By setting the argument \verb+debug = TRUE+,
+\WinBUGS{} remains open after the run.
+This way it is possible to find errors in the code or the data structure,
+or even to work with that software as in a usual run.
+
+It is possible to run one or more Markov chains.
+The number of chains (\verb+n.chains+) must be specified together with the chains' initial values (\verb+inits+).
+If more than one Markov chain is requested and \verb+codaPkg+ is set to \verb+FALSE+, the convergence diagnostic
+$\hat{R}$ \citep{Brooks;Gelman:1998} is calculated by \verb+bugs.sims()+ for each of the saved parameters.
+
+%% Revision 2005-01-10 start
+Since the communication between \WinBUGS{} and \R{} is based on files,
+rather huge files will be saved in the working directory by the \verb+bugs()+ call,
+either files to be read in by \verb+bugs()+ itself, or by the \pkg{coda} package.
+The user might want to delete those files after the desired contents has been imported into \R{},
+and save those objects, e.g., as compressed \R{} data files.
+%% Revision 2005-01-10 end
+
+The function \verb+bugs()+ returns a rather complex object of class \verb+bugs+,
+if called with argument \verb+codaPkg = FALSE+.
+In order to look at the structure of such an object, type \verb+str(objectname)+.
+For convenience, \RW{} provides methods corresponding to class \verb+bugs+ for
+the generic functions \verb+print()+ and \verb+plot()+.
+
+So that user will not be overwhelmed with information; summaries of the output are provided by the
+\verb+print()+ method. That is, some parameters of the \verb+bugs()+ call are summarized, and mean,
+standard deviation, several quantiles of the parameters and convergence diagnostics based on \cite{Gelman;Rubin:1992}
+are printed. See the example in
+Section~\ref{School2}, page~\pageref{schoolssim}, for a typical output. As with \cite{Spiegelhalter;Best;Carlin;vdLinde:2002},
+%\pagebreak
+ the DIC computed by \verb+bugs.sims()+ is defined as the posterior mean
+of the deviance plus $p_D$, the estimated effective number of parameters in the posterior distribution. We define
+$p_D$ as half the posterior variance of the deviance and estimate it as half the average of the within-chain
+variances of the deviance.\footnote{In contrast, \cite{Spiegelhalter;Best;Carlin;vdLinde:2002},
+ and WinBUGS, define $p_D$ as the
+posterior mean of the deviance evaluated at the posterior mean of the parameter values.  We cannot use that
+definition because the deviance function is not available to our program, which calls \WinBUGS{} from the
+``outside''.  Both definitions of $p_D$---ours and that introduced by \cite{Spiegelhalter;Best;Carlin;vdLinde:2002}---can be
+derived from the asymptotic $\chi^2$ distribution of the deviance relative to its minimum \citep[Section 6.7]{Gelman:2003}.
+We make no claim that our measure of $p_D$ is superior to that of \cite{Spiegelhalter;Best;Carlin;vdLinde:2002};
+we choose this measure purely because it is computationally possible given what is available to us from the \WinBUGS{} output.}
+
+
+The \verb+plot()+ for objects of class \verb+bugs+
+provides information condensed in some plots conveniently arranged within the same graphics device.
+For an example, see Figure~\ref{plot} in Section~\ref{School2}.  It is intended to adapt this function to work with MCMC output in general, even if obtained from software other than WinBUGS.
+
+
+
+\section{Examples continued}\label{Example2}
+The Examples introduced in Section~\ref{Example2} are continued in this Section.
+We apply the functions provided by \RW{}
+to the examples' data and analyze the output.
+
+\subsection{Schools data}\label{School2}
+Schools example data (see Section~\ref{School}) are available with the \RW{} package:
+\begin{Code}
+    > data(schools)
+    > schools
+      school estimate    sd
+    1      A    28.39  14.9
+    2      B     7.94  10.2
+    3      C    -2.75  16.3
+    4      D     6.82  11.0
+    5      E    -0.64   9.4
+    6      F     0.63  11.4
+    7      G    18.01  10.4
+    8      H    12.16  17.6
+\end{Code}
+For modeling these data, we use a hierarchical model as proposed by \citeauthor{Gelman:2003} (\citeyear{Gelman:2003}, Section 5.5).
+We assume a normal distribution for the observed estimate for each school with
+mean \verb+theta+ and inverse-variance \verb+tau.y+.
+The inverse-variance is given as $1/\verb+sigma.y+^{2}$ and its prior distribution is uniform on (0,1000). For the mean
+\verb+theta+, we employ another normal distribution with mean \verb+mu.theta+ and inverse-variance \verb+tau.theta+. For
+their prior distributions, see the following \WinBUGS{} code:
+
+
+\begin{Code}
+ model {
+       for (j in 1:J)
+         {
+         y[j] ~ dnorm (theta[j], tau.y[j])
+         theta[j] ~ dnorm (mu.theta, tau.theta)
+         tau.y[j] <- pow(sigma.y[j], -2)
+         }
+       mu.theta ~ dnorm (0.0, 1.0E-6)
+       tau.theta <- pow(sigma.theta, -2)
+       sigma.theta ~ dunif (0, 1000)
+     }
+\end{Code}
+This model must be stored in a separate file, e.g.~\file{schools.bug}\footnote{Emacs Speaks Statistics (ESS)
+by \cite{rossini04}, a package available with Gnu Emacs \citep{stallmann99},
+recognizes and properly formats Bugs model files that have the .bug extension.},
+in an appropriate directory, say \path{c:/schools/}.
+In \R{} the user must prepare the data inputs the \verb+bugs()+ function needs.
+This can be a list containing the name of each data vector, e.g.
+\begin{Code}
+    > J <- nrow(schools)
+    > y <- schools$estimate
+    > sigma.y <- schools$sd
+    > data <- list ("J", "y", "sigma.y")
+\end{Code}
+Using these data and the model file, we can run an MCMC simulation to get estimates for \verb+theta+,
+\verb+mu.theta+ and \verb+sigma.theta+. Before running, the user must decide how many chains to be run
+(\verb+n.chain = 3+) for how many iterations (\verb+n.iter = 1000+).
+If the length of burn-in is not specified, \verb+n.burnin = floor(n.iter/2)+ is used, that is, 500 in this example.
+Additionally, the user must specify initial values for the chains, for example by writing a function. This can be done by
+\begin{Code}
+    > inits <- function(){
+    +     list(theta = rnorm(J, 0, 100), mu.theta = rnorm(1, 0, 100),
+    +          sigma.theta = runif(1, 0, 100))
+    + }
+\end{Code}
+Now, the user can start the MCMC simulation by typing
+\begin{Code}
+    > schools.sim <- bugs(data, inits, model.file = "c:/schools/schools.bug",
+    +                     parameters = c("theta", "mu.theta", "sigma.theta"),
+    +                     n.chains = 3, n.iter = 1000,
+    +                     bugs.directory = "c:/Program Files/WinBUGS14/")
+\end{Code}
+in \R{}.\label{schoolssim} The argument \verb+bugs.directory+ must point to the directory
+where \WinBUGS{} has been installed.
+For other available arguments, see Appendix \ref{Doc}.
+
+The results in objects \verb+schools.sim+ can conveniently be printed by \verb+print(schools.sim)+.
+The generic function \verb+print()+ calls the print method for an object of class \verb+bugs+
+provided by \RW{}.
+For this example, you will get something like
+
+\small
+\begin{Code}
+    > print(schools.sim)
+    Inference for Bugs model at "c:/schools/schools.bug"
+     3 chains, each with 1000 iterations (first 500 discarded)
+     n.sims = 1500 iterations saved
+                mean  sd  2.5%  25%  50%  75% 97.5% Rhat n.eff
+    theta[1]    11.1 9.1  -3.0  5.0 10.0 16.0  31.8  1.1    39
+    theta[2]     7.6 6.6  -4.7  3.3  7.8 11.6  21.1  1.1    42
+    theta[3]     5.7 8.4 -12.5  0.6  6.1 10.8  21.8  1.0   150
+    theta[4]     7.1 7.0  -6.6  2.7  7.2 11.5  21.0  1.1    42
+    theta[5]     5.1 6.8  -9.5  0.7  5.2  9.7  18.1  1.0    83
+    theta[6]     5.7 7.3  -9.7  1.0  6.2 10.2  20.0  1.0    56
+    theta[7]    10.4 7.3  -2.1  5.3  9.8 15.3  25.5  1.1    27
+    theta[8]     8.3 8.4  -6.6  2.8  8.1 12.7  26.2  1.0    64
+    mu.theta     7.6 5.9  -3.0  3.7  8.0 11.0  19.5  1.1    35
+    sigma.theta  6.7 5.6   0.3  2.8  5.1  9.2  21.2  1.1    46
+    deviance    60.8 2.5  57.0 59.1 60.2 62.1  66.6  1.0   170
+     pD = 3 and DIC = 63.8 (using the rule, pD = var(deviance)/2)
+
+     For each parameter, n.eff is a crude measure of effective sample size,
+     and Rhat is the potential scale reduction factor (at convergence, Rhat=1).
+    DIC is an estimate of expected predictive error (lower deviance is better).
+\end{Code}
+\normalsize
+Additionally, the user can generate a plot of the results by typing \verb+plot(schools.sim)+.
+The resulting plot is given in Figure~\ref{plot}.
+\begin{figure}[t]
+\begin{center}
+\fbox{
+\includegraphics[width=0.9\textwidth]{plot}
+} \caption{\label{plot}Plot produced by \RW{} package for the schools example. }
+\end{center}
+\end{figure}
+In this plot, the left column shows a quick
+summary of inference and convergence ($\widehat{R}$ is close to 1.0 for all parameters, indicating good mixing of
+the three chains and thus approximate convergence); and the right column shows inferences for each set of
+parameters.  As can be seen in the right column, \RW{} uses the parameter names in \WinBUGS{} to structure the
+output into scalar, vector, and arrays of parameters, in addition to storing the parameters as a long vector.
+
+For the interpretation of these results see \citeauthor{Gelman:2003} (\citeyear{Gelman:2003}, Section 5.5).
+
+\subsection{Leukaemia registration data}\label{Leukaemia2}
+The leukaemia registration data (see Section \ref{Leukaemia}) are used to show data modeling and output reading
+into \R{} using the \pkg{coda} package. A simple model for these data looks as follows:
+\begin{Code}
+model{
+    beta.0 ~ dgamma(a.0, tau.0)
+    beta.benz ~ dgamma(a.benz, tau.benz)
+    a.0    <- 0.575
+    tau.0  <- a.0*2
+    a.benz <- 0.575
+    tau.benz <- a.benz*2
+\end{Code}
+\clearpage
+\begin{Code}
+    for (i in 1:I)
+        {
+        count[i] ~ dpois(lambda[i])
+        lambda[i] <- p[i]*expect[i]
+        for (j in 1:J)
+            {
+            prop[j,i] <- gamma[j,i]*(benz[j] - benzbar)
+            }
+        p[i]<- beta.0 + beta.benz*sum(prop[,i])
+        }
+    }
+\end{Code}
+Here \verb+count+ denotes the number of observed incidences of childhood leukaemia in ward~\verb+i+. These are
+assumed to be Poisson distributed with mean \verb+lambda+ depending on the number of expected cases \verb+expect+
+in ward \verb+i+ and an area-specific risk rate \verb+p+. For calculation of this area specific risk rate we use
+an intercept \verb+beta.0+ and a term depending on the weighted sum of benzene emissions \verb+benz+ in each grid
+cell \verb+j+. The weights are chosen proportional to the amount of area that ward \verb+i+ and grid cell \verb+j+ have
+in common.
+
+In \R{} we can define all these data and then initialize the model. The data needed for this example are
+\begin{description}
+\item[\tt{benzbar}:]  arithmetic mean of all benzene values,
+\item[\tt{benz}:]     a vector containing benzene emissions of all 2132 grid cells,
+\item[\tt{expect}:]   expected number of cases of childhood leukaemia in each of the 873 wards,
+\item[\tt{count}:]    observed number of childhood leukaemia in these wards,
+\item[\tt{gamma}:]    a $2132\times 873$ matrix containing the amount of area each grid cell and each ward have in common,
+\item[\tt{J}:]        total number of grid cells, i.e.~2132, and
+\item[\tt{I}:]        total number of ward cells, i.e.~873.
+\end{description}
+The parameters we want to store are regression coefficients \verb+beta.0+ and \verb+beta.benz+ as well as
+\verb+p+, the area specific relative risk compared to the reference rate. This reference rate was used to
+calculate the expected number of cases in each ward.
+
+Since we want to use the \pkg{coda} package for reading the data into \WinBUGS{}, we specify \verb+codaPkg = TRUE+
+in the \verb+bugs()+ call:
+\begin{Code}
+    > data <- list(benzbar = mean(benz), benz = benz, expect = expect,
+    +     count = count, gamma = gamma, J = J, I = I)
+    > parameters <- c("beta.0", "beta.benz", "p")
+    > inits1 <- list(beta.0 = 1, beta.benz = 1)
+    > inits2 <- list(beta.0 = 0.5, beta.benz = 0.5)
+    > inits <- list(inits1, inits2)
+    > model <- bugs(data, inits, parameters, model.file = "c:/model.bug",
+    +     n.chains = 2, n.iter = 8000, n.burnin = 5000, n.thin = 1,
+    +     codaPkg = TRUE, bugs.directory = "c:/Program Files/WinBUGS14/")
+\end{Code}
+
+\clearpage
+Starting with, e.g.,\label{codaexample}
+\begin{Code}
+    > library("coda")
+    > codaobject <- read.bugs(model)
+    > plot(codaobject)
+\end{Code}
+it is now possible to use the \pkg{coda} package for output analyses.
+
+
+\section*{Acknowledgments}
+The work of Uwe Ligges has been supported by the Deutsche Forschungsgemeinschaft,
+Sonderforschungsbereich 475.
+The work of Andrew Gelman has been supported by the U.S. National Science Foundation.
+
+\bibliography{literatur}
+
+\clearpage
+\begin{appendix}
+\section[Help page for the function bugs()]{Help page for the function \code{bugs()}\label{Doc}}
+\small
+This help page has been shortened.
+\input{bugs}
+\end{appendix}
+\end{document}

@@ -1,0 +1,4 @@
+pattern	replacement
+fileA	sampleA
+fileB	sampleB
+(fileC)	sampleC,\1

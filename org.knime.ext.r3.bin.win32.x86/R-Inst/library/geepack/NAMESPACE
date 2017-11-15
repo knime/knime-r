@@ -1,0 +1,29 @@
+useDynLib(geepack)
+
+importFrom("graphics", "abline", "lines", "plot")
+importFrom("stats", "binomial", "coef", "fitted", "formula",
+           "gaussian", "glm.fit", "is.empty.model", "lm.fit", "lowess",
+           "model.extract", "model.matrix", "model.offset",
+           "model.response", "model.weights", "na.omit", "naresid",
+           "pchisq", "printCoefmat", "quasi", "residuals",
+           "summary.glm", "var")
+importFrom("utils", "head")
+
+# maintained by Soren
+export(geeglm, fixed2Zcor, anovageePrim2)
+S3method(anova, geeglm)
+S3method(print, geeglm)
+S3method(residuals, geeglm)
+S3method(summary, geeglm)
+S3method(print, summary.geeglm)
+
+
+# maintained by Jun
+export(geese, geese.fit, ordgee, geese.control)
+export(genZcor, genZodds)
+export(relRisk)
+export(compCoef)
+S3method(print, geese)
+S3method(summary, geese)
+S3method(print, summary.geese)
+

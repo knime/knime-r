@@ -1,0 +1,554 @@
+		CHANGES IN PEGAS VERSION 0.10
+
+
+NEW FEATURES
+
+    o The new function mjn computes the median-joining network
+      (Bandelt et al., 1999, Mol Biol Evol, 16:37).
+
+    o The new function msn computes the minimum spanning network
+      (Bandelt et al., 1999, Mol Biol Evol, 16:37).
+
+    o The new function rmst computes the randomized minimum spanning
+      tree (Paradis, in prep.)
+
+    o The new function plotNetMDS plots a network (class "haploNet")
+      using the coordinates of the haplotypes from an MDS done on the
+      distance matrix.
+
+    o The new function dist.hamming implements a general purpose
+      Hamming distance. It can be used for many types of data,
+      particularly the output of haplotype.character().
+
+    o There is a new haplotype.character() method.
+
+    o There is a new all.equal.haploNet() method to compare two
+      haplotype networks.
+
+    o haplotype.loci() has a new option (check.phase) to optionally
+      skip the check of genotype phasing. The code is also now 2-5
+      times faster.
+
+    o haploNet() has a new option, getProb = TRUE, to control whether
+      to calculate Templeton's probabilities (in case of difficulties
+      with very divergent sequences).
+
+    o The option 'show.mutation' of plot.haploNet() now takes an
+      integer between 0 and 3. The default (1) is to show the
+      mutations with small segments on the links.
+
+    o loci2genind() has the new option 'ploidy' which is by default
+      taken from the data with getPloidy().
+
+    o MMD() has a new option, bw, to specify the bandwidth of the
+      empirical density curve.
+
+
+BUG FIXES
+
+    o plot.haploNet() failed with two haplotypes.
+
+    o loci2genind() handles correctly missing alleles with a new
+      option na.alleles = c("0", "."). The default value of 'ploidy'
+      is now 2 (see explanation in the help page).
+
+    o haplotype.DNAbin() failed with too many missing data.
+
+    o A bug was fixed in na.omit.loci().
+
+
+OTHER CHANGES
+
+    o The arguments xlab and ylab in plot.haplotype can now be
+      modified from the plot() call.
+
+
+
+		CHANGES IN PEGAS VERSION 0.9
+
+
+NEW FEATURES
+
+    o The new functions LDscan and LDmap analyse linkage
+      disequilibrium with multiple loci and phased genotypes.
+
+    o The new function na.omit.loci drops observations with unclearly
+      identified genotypes. By default, "0" and "." are considered as
+      missing alleles.
+
+    o nuc.div() is now generic with methods for the classes "DNAbin"
+      and "haplotype".
+
+    o theta.s() is now generic with a default method (the previous
+      code; the argument 's' has been renamed 'x') and a method for
+      the class "DNAbin".
+
+    o haplotype.loci() has a new option (compress) to return all
+      observed haplotypes without checking their frequencies (mostly
+      for internal use).
+
+
+BUX FIXES
+
+    o read.vcf() and VCFlabels() failed when the VCF file has a large
+      header (> 1e5 bytes). The chunk read is now 1 Mb.
+
+    o read.vcf() made R crash when reading files with 1000s of loci
+      for a single individual.
+
+    o loci2genind() now treats '.' as a missing allele.
+
+    o amova() with three levels did not work correctly: several bugs
+      were fixed.
+
+    o read.vcf() failed to read correctly the last genotype in a row
+      if the previous one was different from all the others and if
+      only the genotypes are in the file.
+
+    o alleles2loci() now returns the 'population' column as a factor.
+
+
+OTHER CHANGES
+
+    o haplotype.loci() is 5 to 10 times faster.
+
+
+
+		CHANGES IN PEGAS VERSION 0.8-2
+
+
+NEW FEATURES
+
+    o There is now a print method for objects of class "haploNet".
+
+    o as.igraph.haploNet() and as.network.haploNet() gains a new
+      option, altlinks, to output the alternative links in the
+      converted object (TRUE by default).
+
+
+BUX FIXES
+
+    o haplotype.DNAbin() ignored alignment gaps so that identical
+      sequences were considered as different if they contained gaps.
+
+    o haplotype.DNAbin() failed with very short sequences (1 or 2
+      nucleotides).
+
+    o alleles2loci() did not handle correctly its 'population' option.
+
+    o amova() could not be called within a function. This is fixed.
+
+
+OTHER CHANGES
+
+    o Updated NAMESPACE file for r-devel.
+
+    o haplotype.loci() is now 2-8 times faster and gains a new option
+      (quiet = FALSE) to display or not a message of the progress of
+      the analysis.
+
+
+
+		CHANGES IN PEGAS VERSION 0.8-1
+
+
+OTHER CHANGES
+
+    o Minor correction in Fst.Rd.
+
+
+
+		CHANGES IN PEGAS VERSION 0.8
+
+
+NEW FEATURES
+
+    o Seven new functions (VCFloci, VCFheader, VCFlabels, rangePOS,
+      is.snp.VCFinfo, selectQUAL, getINFO) are provided to read
+      information from VCF files.
+
+    o The new function alleles2loci transforms a matrix of alleles
+      (typical for microsatellites) into an object of class "loci".
+
+    o read.vcf() has been completely rewritten with new options.
+
+    o hw.test() is now generic with methods for classes "loci" and
+      "genind" (contributed by Thibaut Jombart).
+
+    o is.snp() is now generic with methods for classes "loci" and
+      "VCFinfo".
+
+    o There is now a subset method for objects of class "haplotype"
+      giving the possibility to select haplotypes with respect to
+      their absolute frequency and/or frequency of missing data.
+
+    o There is a new data set (jaguar) with microsatellites from four
+      populations of jaguars.
+
+
+BUG FIXES
+
+    o Subsetting "loci" objects failed when some column names were the
+      same (often when reading VCF files).
+
+    o haploNet() failed when no alternative links were found.
+
+    o amova() failed when the factors in the rhs of the formula were
+      in a data frame. Thanks to Zhian Kamvar for the fix.
+
+
+OTHER CHANGES
+
+    o The vignette "ReadingFiles" has been revised and extended.
+
+
+
+		CHANGES IN PEGAS VERSION 0.7
+
+
+NEW FEATURES
+
+    o The new function geod calculates geodesic (aka great-circle)
+      distances from coordinates in (decimal) degrees.
+
+    o The new function geoTrans transforms strings such as
+      43°12'34" into a numerical value.
+
+    o The new function replot edits the layout of a haplotype network
+      interactively or with specified coordinates (typically from a
+      previous call to replot).
+
+    o The new function diffHaplo outputs details of the differences
+      between two haplotypes.
+
+    o haploNet() now outputs alternative links of a haplotype network.
+
+    o plot.haploNet() has been improved (a bit faster) and has a new
+      option 'threshold' to control how alternative links of the
+      network are displayed.
+
+    o The option 'show.mutation' of plot.haploNet() has been extended.
+
+
+OTHER CHANGES
+
+    o haplotype() now takes base ambiguities into account when
+      comparing sequences. For consistency, haploNet() now uses
+      pairwise deletion when comparing sequences of haplotypes.
+
+    o The attribute "CHR" returned by read.vcf() is now character (was
+      integer before).
+
+
+
+		CHANGES IN PEGAS VERSION 0.6
+
+
+NEW FEATURES
+
+    o The new function read.vcf reads VCF files.
+
+    o The new function is.snp tests whether a locus is a SNP.
+
+    o The new function is.phased tests whether a genotype is phased.
+
+    o The new function proba.genotype computes expected genotype
+      probabilities under Hardy-Weinberg equilibrium for all levels
+      of ploidy and any number of alleles.
+
+    o The new function haplotype.loci extracts haplotypes from phased
+      genotypic data.
+
+    o The new function dist.haplotype.loci computes distances among
+      haplotypes extracted from loci data.
+
+    o Two new functions, LD and LD2, test for linkage disequilibrium
+      with phased and unphased genotypes, respectively.
+
+    o haplotype() is now generic with methods for "DNAbin" and "loci"
+      objects.
+
+    o There is a sort() method for objects of class "haplotype".
+
+    o expand.genotype() now works with all levels of ploidy and any
+      number of alleles.
+
+
+BUG FIXES
+
+    o site.spectrum( , folded = FALSE) dit not work correctly.
+
+    o Genotypes with alleles not separated by the default slash (e.g.,
+      a|A) were not read correctly.
+
+    o Reordering of alleles has been improved: alleles are now always
+      sorted alphabetically within an unphased genotype, e.g., a/A is
+      changed to A/a even if A/a was not observed (this was not the
+      case before).
+
+    o hw.test() now checks more carefully for ploidy level and accepts
+      data with mixed levels of ploidy.
+
+
+OTHER CHANGES
+
+    o amova() now checks that the term(s) in the rhs of the formula is
+      (are) factor(s).
+
+    o Plotting haplotype networks with pies can now be done with
+      user-chosen colours for the slices (thanks to Marius Wenzel for
+      pointing this out).
+
+    o tajima.test() now returns a warning with less than 4
+      observations as this test cannot be done in this situation (an
+      error occured before).
+
+
+
+		CHANGES IN PEGAS VERSION 0.5-1
+
+
+NEW FEATURES
+
+    o MMD() now plots the expected distribution of mismatches under
+      the assumption of a stable population together with the
+      empirical curve (contribution by David Winter). The new option
+      'lty' can specify the types of lines. The legend is now at the
+      top of the plot.
+
+
+BUG FIXES
+
+    o theta.tree() returned estimates of Theta divided by 2 (scaled on
+      Nu). The estimates are now correct (ie, scaled on 2Nu).
+
+
+
+		CHANGES IN PEGAS VERSION 0.5
+
+
+NEW FEATURES
+
+    o The new function theta.msat computes THETA from micro-satellite
+      data using three different estimators.
+
+    o The new function haploFreq extracts the haplotype frequencies,
+      possibly using the labels of the original sequences; see
+      ?haploFreq for details.
+
+    o plot.haploNet() has the new option 'show.mutation' to display
+      the mutations on the links of the network.
+
+
+OTHER CHANGES
+
+    o Improved DESCRIPTION and NAMESPACE files.
+
+    o The packages igraph and network are no more required.
+
+
+
+		CHANGES IN PEGAS VERSION 0.4-5
+
+
+OTHER CHANGES
+
+    o Improved NAMESPACE file.
+
+
+
+		CHANGES IN PEGAS VERSION 0.4-4
+
+
+NEW FEATURES
+
+    o theta.tree() has a new option, analytical = TRUE, to compute
+      THETA and its standard-error with analytical formulae. If FALSE,
+      a numerical optimisation is done (as in previous versions).
+
+    o The function mst (minimum spanning tree) has been moved from ape
+      to pegas with a new code.
+
+
+BUG FIXES
+
+    o hw.test() should have one less ddl to its chi2 tests (thanks to
+      Gabriel Terraz for the fix).
+
+    o Extracting sequence(s) from an object of class "haplotype" could
+      not be printed correctly: this is fixed with a new '[' method
+      for this class.
+
+    o The reference to Chakraborty and Weiss (1991) was corrected
+      thanks to Kari Vepsäläinen.
+
+
+
+		CHANGES IN PEGAS VERSION 0.4-3
+
+
+OTHER CHANGES
+
+    o Changed some coding in summary.loci().
+
+
+
+		CHANGES IN PEGAS VERSION 0.4-2
+
+
+BUG FIXES
+
+    o amova() did not randomize correctly at the highest level,
+      resulting in P-values that were always equal to 1.
+
+
+
+		CHANGES IN PEGAS VERSION 0.4-1
+
+
+BUG FIXES
+
+    o site.spectrum(, folded = FALSE) failed.
+
+    o The variances returned by nuc.div() were inflated (thanks to
+      Paulina Ossa for the report).
+
+
+
+		CHANGES IN PEGAS VERSION 0.4
+
+
+NEW FEATURES
+
+    o The new function rr.test by Alastair Potts performs Tajima's test
+      of a molecular clock (Genetics, 1993, 135:599).
+
+    o haploNet() has a new argument 'd = NULL' to specify an
+      alternative distance matrix among haplotypes.
+
+    o There are two new functions, as.network.haploNet() and
+      as.igraph.haploNet() for converting networks of class
+      "haploNet" towards other packages.
+
+
+BUG FIXES
+
+    o plot.haploNet() has now by default asp = 1.
+
+
+
+		CHANGES IN PEGAS VERSION 0.3-4
+
+
+OTHER CHANGES
+
+    o The help command ?loci now points to the man page of read.loci()
+      where this class is described.
+
+
+
+		CHANGES IN PEGAS VERSION 0.3-3
+
+
+BUG FIXES
+
+    o read.loci() failed with haploid data. It also failed in some
+      situations with the population column. The default behaviour is now
+      more flexible and more reliable.
+
+    o Variance components were not correctly computed by amova() in the
+      single-level case.
+
+    o print.amova() did not work correctly when amova() was called with
+      'nperm = 0'.
+
+
+
+		CHANGES IN PEGAS VERSION 0.3-2
+
+
+BUG FIXES
+
+    o A bug was fixed in Fst().
+
+
+
+		CHANGES IN PEGAS VERSION 0.3-1
+
+
+OTHER CHANGES
+
+    o The default of 'loci.sep' in read.loci() is now "".
+
+
+
+		CHANGES IN PEGAS VERSION 0.3
+
+
+NEW FEATURES
+
+    o The new function edit.loci allows to edit allelic data frame while
+      keeping the attributes correct (which edit.data.frame doesn't).
+
+    o There are new rbind() and cbind() methods for objects of class
+      "loci".
+
+    o There is a print 'method' for the class "haplotype".
+
+    o `[.loci` has now an option 'drop = TRUE'.
+
+    o There is a vignette detailing how to read allelic data files of
+      various formats into R: type vignette("ReadingFiles") in R.
+
+
+BUG FIXES
+
+    o amova() did not compute SSD correctly with a single level.
+
+    o getAlleles() did not work correctly.
+
+    o read.loci() did not work when 'col.pop' was used.
+
+    o Checking for ordered alleles did not work (i.e, A/a and a/A were
+      treated as different genotypes: they are now pooled).
+
+    o The display of haplotype labels by plot.haploNet() was not
+      effective.
+
+
+OTHER CHANGES
+
+    o read.loci() loses the 'skip' option which is replaced by '...'.
+
+
+
+		CHANGES IN PEGAS VERSION 0.2
+
+
+NEW FEATURES
+
+    o The new function site.spectrum computes the (un)folded site
+      frequency spectrum of a set of DNA sequences.
+
+    o The new function theta.tree estimates THETA from a phylogenetic tree
+      under a simple coalescent model by maximum likelihood.
+
+    o There is now a "[" method for the class "loci".
+
+    o haplotype() has now an option 'labels' to give as rownames of
+      the returned object.
+
+    o amova() has a new option 'is.squared' to specify whether the
+      distance matrix has been squared beforefand (FALSE by default).
+
+    o write.loci() has a new argument '...' passed to write.table().
+
+    o The functions heterozygosity, nuc.div, theta.h, theta.k and
+      theta.s have been moved from ape to pegas.
+
+
+BUG FIXES
+
+    o amova() did not compute SSD correctly.
+
+    o summary.loci() failed in the presence of NA's.

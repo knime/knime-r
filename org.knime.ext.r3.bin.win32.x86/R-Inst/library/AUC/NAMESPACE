@@ -1,0 +1,7 @@
+export(sensitivity)
+export(specificity)
+export(accuracy)
+export(roc)
+export(auc)
+export(AUCNews)
+S3method(plot, AUC)

@@ -1,0 +1,17 @@
+Package: shinyBS
+Type: Package
+Title: Twitter Bootstrap Components for Shiny
+Version: 0.61
+Date: 2015-03-30
+Author: Eric Bailey
+Maintainer: Eric Bailey <ebailey@idem.in.gov>
+Description: Adds additional Twitter Bootstrap components to Shiny. 
+Imports: shiny (>= 0.11), htmltools
+URL: https://ebailey78.github.io/shinyBS
+BugReports: https://github.com/ebailey78/shinyBS/issues
+License: GPL-3
+Packaged: 2015-03-30 12:16:24 UTC; ebailey
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2015-03-31 07:52:38
+Built: R 3.4.2; ; 2017-11-10 16:30:24 UTC; windows

@@ -1,0 +1,16 @@
+Example data            Times of 'capture' of large mammals
+bootCI                  Confidence interval calculation from bootstrap
+                        samples.
+bootEst                 Functions to generate bootstrap estimates of
+                        overlap
+densityFit              Fits von Mises kernel density to time-of-day
+                        data.
+densityPlot             Plot fitted kernel densities
+getBandWidth            Optimal bandwidth calculation
+overlap-package         Functions to estimate overlap of temporal
+                        activity patterns of animals
+overlapEst              Estimates of coefficient of overlapping
+overlapPlot             Plot overlapping kernel densities
+overlapTrue             Calculates the true coefficient of overlapping
+                        between two distributions.
+simulatedData           Simulated data for diurnal activity patterns

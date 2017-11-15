@@ -1,0 +1,86 @@
+body { 
+  margin: 0px;
+  padding: 0.5em;
+  padding-top: 0em;
+}
+
+#statusImage { 
+  visibility: visible;
+}
+
+#nav2d {
+  float: right;
+  margin: 0px;
+  padding: 1px; 
+  border: 1px solid #000000;
+  width: 80px;
+  cursor: crosshair;
+}
+
+#nav2dImage {
+  margin: 0px;
+  padding: 0px; 
+  border: 1px solid #000000;
+  width: 100%;
+  filter: alpha(opacity=50);
+  opacity: 0.50;
+  cursor: crosshair;
+}
+
+#nav2dMarker {
+  position: absolute; 
+  margin: 0px;
+  padding: 0px; 
+  border: 0px;
+  background: #000066;
+  filter: alpha(opacity=30);
+  opacity: 0.30;
+  cursor: default;
+}
+
+#image2d {
+  margin: 0px; 
+  padding: 0px; 
+  border: none;
+  overflow: hidden;
+  cursor: default;
+}
+
+#image2dImage {
+  padding: 0px; 
+  border: none;
+  cursor: default;
+  filter: alpha(opacity=50);
+  opacity: 0.50;
+}
+
+
+#image2dInfoTL {
+  position: absolute; 
+  padding: 0px; 
+  border: none;
+  background: #000060;
+  color: #ffffff;
+  font-size: x-small;
+  cursor: default;
+  filter: alpha(opacity=70);
+  opacity: 0.70;
+  visibility: hidden;
+}
+
+#image2dInfoBR {
+  position: absolute; 
+  padding: 0px; 
+  border: none;
+  background: #000060;
+  color: #ffffff;
+  font-size: x-small;
+  cursor: default;
+  filter: alpha(opacity=70);
+  opacity: 0.70;
+  visibility: hidden;
+}
+
+#sampleLabel {
+  font-size: 150%;
+}

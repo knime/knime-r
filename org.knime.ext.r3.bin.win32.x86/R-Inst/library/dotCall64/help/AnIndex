@@ -1,0 +1,5 @@
+.C64	dotCall64
+dotCall64	dotCall64
+integer_dc	vector_dc
+numeric_dc	vector_dc
+vector_dc	vector_dc

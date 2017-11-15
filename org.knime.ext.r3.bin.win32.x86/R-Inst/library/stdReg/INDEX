@@ -1,0 +1,26 @@
+CI                      Confidence interval
+delmet                  Delta method
+parfrailty              Fits shared frailty gamma-Weibull models
+plot.stdCoxph           Plots Cox regression standardization fit
+plot.stdGlm             Plots GLM regression standardization fit
+plot.stdParfrailty      Plots parfrailty standardization fit
+print.summary.parfrailty
+                        Prints summary of parfrailty fit
+print.summary.stdCoxph
+                        Prints summary of Cox regression
+                        standardization fit
+print.summary.stdGlm    Prints summary of GLM regression
+                        standardization fit
+print.summary.stdParfrailty
+                        Prints summary of Frailty standardization fit
+stdCoxph                Regression standardization in Cox proportional
+                        hazards models
+stdGlm                  Regression standardization in generalized
+                        linear models
+stdParfrailty           Regression standardization in shared frailty
+                        gamma-Weibull models
+stdReg-package          Regression Standardization
+summary.parfrailty      Summarizes parfrailty fit
+summary.stdCoxph        Summarizes Cox regression standardization fit
+summary.stdGlm          Summarizes GLM regression standardization fit
+summary.stdParfrailty   Summarizes Frailty standardization fit

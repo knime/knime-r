@@ -1,0 +1,31 @@
+.tipToRoot              Low-level auxiliary functions for adephylo
+abouheif.moran          Abouheif's test based on Moran's I
+adephylo-package        The adephylo package
+bullseye                Fan-like phylogeny with possible representation
+                        of traits on tips
+carni19                 Phylogeny and quantative trait of carnivora
+carni70                 Phylogeny and quantitative traits of carnivora
+dibas                   DIstance-Based Assignment
+distRoot                Compute the distance of tips to the root
+distTips                Compute some phylogenetic distance between tips
+listDD                  List direct descendants for all nodes of a tree
+listTips                List tips descendings from all nodes of a tree
+lizards                 Phylogeny and quantitative traits of lizards
+maples                  Phylogeny and quantitative traits of flowers
+mjrochet                Phylogeny and quantitative traits of teleos
+                        fishes
+moran.idx               Computes Moran's index for a variable
+orthobasis.phylo        Computes Moran's eigenvectors from a tree or a
+                        phylogenetic proximity matrix
+orthogram               Orthonormal decomposition of variance
+palm                    Phylogenetic and quantitative traits of
+                        amazonian palm trees
+ppca                    Phylogenetic principal component analysis
+procella                Phylogeny and quantitative traits of birds
+proxTips                Compute some phylogenetic proximities between
+                        tips
+sp.tips                 Find the shortest path between tips of a tree
+table.phylo4d           Graphical display of phylogeny and traits
+tithonia                Phylogeny and quantitative traits of flowers
+treePart                Define partitions of tips according from a tree
+ungulates               Phylogeny and quantitative traits of ungulates.

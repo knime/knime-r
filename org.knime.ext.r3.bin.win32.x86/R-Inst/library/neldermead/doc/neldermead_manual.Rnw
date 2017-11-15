@@ -1,0 +1,1447 @@
+\documentclass[letterpaper]{article}
+
+%\VignetteIndexEntry{Introduction to the neldermead package}
+%\VignettePackage{neldermead}
+
+% Load packages
+\usepackage{Sweave}
+\usepackage{Rd}
+\usepackage{ucs}
+\usepackage[latin1]{inputenc}
+\usepackage{fontenc}
+\usepackage{amsmath}    % need for subequations
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}   % need for figures
+\usepackage{verbatim}   % useful for program listings
+\usepackage{color}      % use if color is used in text
+\usepackage[pdfborder={0 0 0}]{hyperref}   % use for hypertext links, including
+                                           % those to external  documents and
+
+% Page layout
+\oddsidemargin 0.5in \evensidemargin 0.5in \textwidth 6in
+
+% Defines some custom commands
+\newcommand{\neldermead}{\pkg{neldermead}}
+
+\title{The neldermead Package - version 1.0-10}
+\author{S\'ebastien Bihorel}
+
+\begin{document}
+\maketitle
+
+\neldermead{} is a R port of a module originally developped for Scilab version
+5.2.1 by Michael Baudin (INRIA - DIGITEO). Information about this software can
+be found at \url{www.scilab.org}. The following documentation as well as the
+content of the functions .Rd files are adaptations of the documentation provided
+with the original Scilab neldermead module.
+
+\neldermead{} currently does not include any adaptation of the Scilab
+'nmplot' function series that is available in the original neldermead module.
+
+% Table of contents
+%\cleardoublepage
+%\tableofcontents
+
+% Some Sweave preamble
+<<echo=false>>=
+options(width=75)
+require(neldermead)
+@
+
+%\cleardoublepage
+\section{Overview}
+
+\subsection{Description}
+The goal of this toolbox is to provide several direct search optimization
+algorithms based on the simplex method. The optimization problem to solve is the
+minimization of a cost function, with bounds and nonlinear constraints.\\
+
+\begin{math}
+  \begin{array}{l l}
+    min f(x)\\
+    l_i \le{} x_i \le{} h_i, & i = 1,n \\
+    g_j(x) \ge{} 0, & j = 0,nbineq \\\\
+  \end{array}
+\end{math}
+ 
+where \(f\) is the cost function, \(x\) is the vector of parameter estimates,
+\(l\) and \(h\) are vectors of lower and upper bounds for the parameter
+estimates, \(n\) is the number of parameters and \(nbineq\) the number of
+inequality constraints \(g(x)\).
+
+The provided algorithms are direct search algorithms, i.e. algorithms which do
+not use the derivative of the cost function. They are based on the update of a
+simplex, which is a set of \(k \ge n+1\) vertices, where each vertex is
+associated with one point and one function value.
+
+The following algorithms are available: 
+\begin{itemize}
+  \item{The fixed shape simplex method of Spendley, Hext and Himsworth: this
+    algorithm solves an unconstrained optimization problem with a fixed shape
+    simplex made of \(k=n+1\) vertices.}
+  \item{The variable shape simplex method of Nelder and Mead: this algorithm
+    solves an unconstrained optimization problem with a variable shape simplex
+    made of \(k=n+1\) vertices \cite{neldermead.1965}.}
+  \item{Box's complex method: this algorithm solves an constrained optimization
+    problem with a variable shape simplex made of an arbitrary k number of
+    vertices (\(k=2n\) is recommended by Box).}
+\end{itemize}
+
+\subsection{Basic object}
+The basic object used by the \pkg{neldermead} package to store the configuration
+settings and the history of an optimization is a 'neldermead' object, i.e. a
+list typically created by \code{neldermead} and having a strictly defined
+structure (see \code{?neldermead} for more details).
+
+\subsection{The cost function}
+The \code{function} element of the neldermead object allows to configure the
+cost function. The cost function is used to compute the objective function
+value \code{f}. If the \code{nbineqconst} element of the neldermead object is
+configured to a non-zero value, the cost function must also compute the value
+of the nonlinear, positive, inequality constraints \code{c}. The cost function
+can also take as input/output an additional argument, if the
+\code{costfargument} element is configured. The function should be defined as
+described in \code{vignette('optimbase',package='optimbase')}:\\
+
+\begin{verbatim}
+  costf <- function(x, index, fmsfundata){
+    # Define f and c here #
+    return(list(f, g=NULL, c, gc=NULL, index=index,
+                this=list(costfargument = fmsfundata)))
+  }
+\end{verbatim}
+where
+\begin{description}
+  \item{\code{x}:}{ is the current point, as a column vector,}
+  \item{\code{index}:}{ (optional), an integer representing the value to
+    compute, and}
+  \item{\code{fmsfundata}:}{ an user-provided input/output argument.}
+  \item{\code{f}:}{ the value of the objective function (a scalar),}
+  \item{\code{g}:}{ typically the gradient of the objective function in the 
+    context of the \code{optimbase} functions; must be set to NULL as the
+    Nelder-Mead is not gradient-based,}
+  \item{\code{c}:}{ the vector of values of non-linear, positive, inequality 
+    constraints,}
+  \item{\code{gc}:}{ typically the gradient of the constraints in the 
+    context of the \code{optimbase} functions; must be set to NULL as the
+    Nelder-Mead is not gradient-based,}
+  \item{\code{this}:}{ must be set to \code{list(costfargument = fmsfundata)}.}
+\end{description}
+
+The index input parameter tells the cost function what to return as output
+arguments (as described in \code{vignette('optimbase',package='optimbase'}). It
+has the following meaning:
+\begin{description}
+  \item{index = 2:}{ compute \code{f},}
+  \item{index = 5:}{ compute \code{c},}
+  \item{index = 6:}{ compute \code{f} and \code{c}}
+\end{description}
+  
+The \code{fmsdata} argument is both input and output. This feature may be used
+in the situation where the cost function has to update its environment from call
+to call. Its simplest use is to count the number of calls to the cost function,
+but this feature is already available directly. Consider the more practical
+situation where the optimization requires the execution of an underlying Newton
+method (a chemical solver for example). This Newton method requires an initial
+guess \(x_0\). If the initial guess for this underlying Newton method is kept
+constant, the Newton method may have problems to converge when the current
+optimization point get far away from the its initial point. If a
+\code{costfargument} element is defined in the neldermead object, it can be
+passed to the cost function as the \code{fmsdata} argument. In this case, the
+initial guess for the Newton method can be updated so that it gets the value of
+the previous call. This way, the Newton method will have less problems to
+converge and the cost function evaluation may be faster.
+
+We now present how the feature works. Everytime the cost function is called
+back, the \code{costfargument} element is passed to the cost function
+as an input argument. If the cost function modifies its content in the output
+argument, the content of the \code{costfargument} element is updated
+accordingly. Once the optimization is performed, the user may call the
+\code{neldermead.get} function and get back an updated \code{costfargument}
+content.
+ 
+\subsection{The output function}
+
+The \code{outputcommand} element of the neldermead object allows to configure
+a command which is called back at the start of the optimization, at each
+iteration and at the end of the optimization. The output function must be
+defined as follows:\\
+
+\code{outputcmd <- function(state, data, myobj)}\\
+
+where
+\begin{description}
+  \item{\code{state}:}{ is a string representing the current state of the
+    algorithm. Available values are 'init', 'iter', and 'done',}
+  \item{\code{data}:}{ a list containing at least the following entries:
+    \begin{description}
+      \item{\code{x}:}{ the current optimum,}
+      \item{\code{fval}:}{ the current function value,}
+      \item{\code{iteration}:}{ the current iteration index,}
+      \item{\code{funccount}:}{ the number of function evaluations,}
+      \item{\code{simplex}:}{ the current simplex,}
+      \item{\code{step}:}{ the previous step in the algorithm. The following
+        values are available: 'init', 'done', 'reflection', 'expansion',
+        'insidecontraction', 'outsidecontraction', 'reflectionnext', and
+        'shrink',}
+    \end{description}
+  }
+  \item{\code{myobj}:}{ a user-defined parameter. This input parameter is
+    defined with the \code{outputcommandarg} element of the neldermead
+    object.}
+\end{description}
+
+The output function may be used when debugging the specialized optimization
+algorithm, so that a verbose logging is produced. It may also be used to write
+one or several report files in a specialized format (ASCII, \LaTeX{}, Excel,
+etc...). The user-defined parameter may be used in that case to store
+file names or logging options.
+
+The \code{data} list argument may contain more fields than the current
+presented ones. These additionnal fields may contain values which are specific
+to the specialized algorithm, such as the simplex in a Nelder-Mead method, the
+gradient of the cost function in a BFGS method, etc...
+
+\subsection{Termination}
+The current package takes into account several generic termination criteria. The
+following termination criteria are enabled by default:
+\begin{itemize}
+  \item{maxiter,}
+  \item{maxfunevals,}
+  \item{tolxmethod,}
+  \item{tolsimplexizemethod.}
+\end{itemize}
+
+The \code{neldermead.termination} function uses a set of rules to compute if
+the termination occurs and sets optimization status to one of the following:
+'continue', 'maxiter', 'maxfunevals', 'tolf', 'tolx', 'tolsize',
+'tolsizedeltafv', 'kelleystagnation', 'tolboxf' or 'tolvariance'. The
+value of the status may also be a user-defined string, in the case where a
+user-defined termination function has been set.
+
+The following set of rules is examined in this order.
+\begin{itemize}
+  \item{By default, the status is 'continue' and the terminate flag is FALSE.}
+  \item{The number of iterations is examined and compared to the
+    \code{maxiter} element of the neldermead object: if \code{iterations}
+    \(\ge\) \code{maxiter}, then the status is set to 'maxiter' and terminate is
+    set to TRUE.}
+  \item{The number of function evaluations is examined and compared to the
+    \code{maxfunevals} elements: if \code{funevals} \(\ge\) \code{maxfunevals},
+    then the status is set to 'maxfuneval' and terminate is set to TRUE.}
+  \item{The tolerance on function value is examined depending on the value of
+    the \code{tolfunmethod}.
+    \begin{description}
+      \item{FALSE:}{ then the criteria is just ignored,}
+      \item{TRUE:}{ if \code{|currentfopt| < tolfunrelative} \(\cdot\)
+        \code{|previousfopt| + tolfunabsolute}, then the status is set to 'tolf'
+        and terminate is set to TRUE.}
+    \end{description}
+    The relative termination criteria on the function value works well if the
+    function value at optimum is near zero. In that case, the function value
+    at initial guess fx0 may be used as previousfopt. This criteria is
+    sensitive to the \code{tolfunrelative} and \code{tolfunabsolute} elements.
+    The absolute termination criteria on the function value works if the user
+    has an accurate idea of the optimum function value.}
+  \item{The tolerance on x is examined depending on the value of the
+    \code{tolxmethod} element.
+    \begin{description}
+      \item{FALSE:}{ then the criteria is just ignored,}
+      \item{TRUE:}{ if \code{norm(currentxopt - previousxopt) < tolxrelative}
+        \(\cdot\) \code{norm(currentxopt) + tolxabsolute}, then the status is
+        set to 'tolx' and terminate is set to TRUE.}
+    \end{description}
+    This criteria is sensitive to the \code{tolxrelative} and    
+    \code{tolxabsolute} elements. 
+    The relative termination criteria on x works well if x at optimum is
+    different from zero. In that case, the condition measures the distance
+    between two iterates.
+    The absolute termination criteria on x works if the user has an accurate
+    idea of the scale of the optimum x. If the optimum x is near 0, the
+    relative tolerance will not work and the absolute tolerance is more
+    appropriate.}
+  \item{The tolerance on simplex size is examined depending on the value of
+    the \code{tolsimplexizemethod} element.
+    \begin{description}
+      \item{FALSE:}{ then the criteria is just ignored,}
+      \item{TRUE:}{ if \code{ssize < tolsimplexizerelative \(\cdot\)
+        simplexsize0 + tolsimplexizeabsolute}, where \code{simplexsize0} is the
+        size of the simplex at iteration 0, then the status is set to 'tolsize'
+        and terminate is set to TRUE.}
+    \end{description}
+    The size of the simplex is computed from the 'sigmaplus' method of the
+    \pkg{optimsimplex} package. This criteria is sensitive to the
+    \code{tolsimplexizeabsolute} and the \code{tolsimplexizerelative}
+    elements.}
+  \item{The absolute tolerance on simplex size and absolute difference of
+    function value is examined depending on the value of the 
+    \code{tolssizedeltafvmethod} element.
+    \begin{description}
+      \item{FALSE:}{ then the criteria is just ignored,}
+      \item{TRUE:}{ if both the following conditions \code{ssize <
+        tolsimplexizeabsolute} and \code{shiftfv < toldeltafv} are true where
+        \code{ssize} is the current simplex size and \code{shiftfv} is the
+        absolute value of the difference of function value between the highest
+        and lowest vertices, then the status is set to 'tolsizedeltafv' and
+        terminate is set to TRUE.}
+    \end{description}
+    }
+  \item{The stagnation condition based on Kelley sufficient decrease condition
+    is examined depending on the value of the \code{kelleystagnationflag}
+    element.
+    \begin{description}
+      \item{FALSE:}{ then the criteria is just ignored,}
+      \item{TRUE:}{ if \code{newfvmean} \(\le\) \code{oldfvmean - alpha}
+        \(\cdot\) \code{t(sg)} \(\cdot\) \code{sg} where \code{newfvmean} (resp.
+        \code{oldfvmean}) is the function value average in the current iteration
+        (resp. in the previous iteration), then the status is set to
+        'kelleystagnation' and terminate is set to TRUE. Here, \code{alpha} is
+        a non-dimensional coefficient and \code{sg} is the simplex gradient.}
+    \end{description}
+    }
+  \item{The termination condition suggested by Box is examined depending on
+    the value of the \code{boxtermination} element.
+    \begin{description}
+      \item{FALSE:}{ then the criteria is just ignored,}
+      \item{TRUE:}{ if both the following conditions \code{shiftfv < boxtolf}
+        and \code{boxkount == boxnbmatch} are true, where \code{shiftfv} is the
+        difference of function value between the best and worst vertices, and
+        \code{boxkount} is the number of consecutive iterations where this
+        criteria is met, then the status is set to 'tolboxf' and terminate is
+        set to TRUE. Here, the \code{boxtolf} parameter is the value
+        associated with the \code{boxtolf} element of the neldermead object and
+        is a user-defined absolute tolerance on the function value. The
+        \code{boxnbmatch} parameter is the value associated with the
+        \code{boxnbmatch} element and is the user-defined number of consecutive
+        match.}
+    \end{description}
+    }
+  \item{The termination condition based on the variance of the function values
+    in the simplex is examined depending on the value of the
+    \code{tolvarianceflag} element.
+    \begin{description}
+      \item{FALSE:}{ then the criteria is just ignored,}
+      \item{TRUE:}{ if \code{var < tolrelativevariance} \(\cdot\)
+        \code{variancesimplex0 + tolabsolutevariance}, where \code{var} is the
+        variance of the function values in the simplex, then the status is set
+        to 'tolvariance' and terminate is set to TRUE. Here, the
+        \code{tolrelativevariance} parameter is the value associated with the
+        \code{tolrelativevariance} element of the neldermead object and is a
+        user-defined relative tolerance on the variance of the function values.
+        The \code{tolabsolutevariance} parameter is the value associated with
+        the \code{tolabsolutevariance} element and is the user-defined absolute
+        tolerance of the variance of the function values.}
+    \end{description}
+    }
+  \item{The user-defined termination condition is examined depending on the
+    value of the \code{myterminateflag} element.
+    \begin{description}
+      \item{FALSE:}{ then the criteria is just ignored,}
+      \item{TRUE:}{ if the \code{term} boolean output argument returned by the
+        termination function is TRUE, then the status is set to the user-defined
+        status and terminate is set to TRUE.}
+    \end{description}
+  }
+\end{itemize}
+
+\subsection{Kelley's stagnation detection}
+The stagnation detection criteria suggested by Kelley is based on a sufficient
+decrease condition, which requires a parameter alpha > 0 to be defined
+\cite{kelley.1999}. The \code{kelleynormalizationflag} element of the neldermead
+object allows to configure the method to use to compute this alpha parameter.
+Two methods are available, where each method corresponds to a different paper by
+Kelley:
+\begin{description}
+  \item{constant: }{in 'Detection and Remediation of Stagnation in the
+    Nelder-Mead Algorithm Using a Sufficient Decrease Condition', Kelley uses a
+    constant alpha, with the suggested value 1.e-4, which is the typical choice
+    for line search method.}
+  \item{normalized: }{in 'Iterative Methods for Optimization', Kelley uses a
+    normalized alpha, computed from the following formula: \code{alpha = alpha0}
+    \(\cdot\) \code{sigma0 / nsg}, where \code{sigma0} is the size of the
+    initial simplex and \code{nsg} is the norm of the simplex gradient for the
+    initial guess point.}
+\end{description}
+
+\subsection{O'Neill's factorial optimality test}
+In 'Algorithm AS47 - Function minimization using a simplex procedure', O'Neill
+presents a fortran 77 implementation of the simplex method \cite{oneill.1971}. A
+factorial test is used to check if the computed optimum point is a local
+minimum. If the \code{restartdetection} element of the neldermead object is set
+to 'oneill', that factorial test is used to see if a restart should be
+performed.
+
+\subsection{Implementation notes of the method of Spendley \emph{et al.}}
+The original paper may be implemented with several variations, which might lead
+to different results \cite{spendley.1962}. This section defines what algorithmic
+choices have been used in the present package.
+
+The paper states the following rules.
+\begin{itemize}
+  \item{'Rule 1. Ascertain the lowest reading y, of yi ... yk+1 Complete a new
+    simplex Sp by excluding the point Vp corresponding to y, and replacing it by
+    V* defined as above.'}
+  \item{'Rule 2. If a result has occurred in (k + 1) successive simplexes, and
+    is not then eliminated by application of Rule 1, do not move in the
+    direction indicated by Rule 1, or at all, but discard the result and replace
+    it by a new observation at the same point.'}
+  \item{'Rule 3. If y is the lowest reading in So , and if the next observation
+    made, y* , is the lowest reading in the new simplex S , do not apply Rule 1
+    and return to So from Sp . Move out of S, by rejecting the second lowest
+    reading (which is also the second lowest reading in So).'}
+\end{itemize}
+
+We implement the following 'rules' of the Spendley \emph{et al.} method:
+\begin{itemize}
+  \item{Rule 1 is strictly applied, but the reflection is done by reflection
+    of the high point, since we minimize a function instead of maximizing it,
+    like Spendley.}
+  \item{Rule 2 is NOT implemented, as we expect that the function evaluation is
+    not subject to errors.}
+  \item{Rule 3 is applied, i.e. reflection with respect to next to the high
+    point. The original paper does not mention any shrink step. When the
+    original algorithm cannot improve the function value with reflection steps,
+    the basic algorithm stops. In order to make the current implementation of
+    practical value, a shrink step is included, with shrinkage factor sigma.
+    This perfectly fits into to the spirit of the original paper. Notice that
+    the shrink step makes the rule \#3 (reflection with respect to next-to-worst
+    vertex) unnecessary. Indeed, the minimum required steps are the reflection
+    and shrinkage. Nevertheless, the rule \#3 has been kept in order to make
+    the algorithm as close as it can be to the original.}
+\end{itemize}
+
+\subsection{Implementation notes on the method of Nelder and Mead}
+The purpose of this section is to analyse the current implementation of
+Nelder-Mead's algorithm. The algorithm that we use is described in 'Iterative
+Methods for Optimization' by Kelley.
+
+The original paper uses a 'greedy' expansion, in which the expansion point is
+accepted whatever its function value. The current implementation, as most
+implementations, uses the expansion point only if it improves over the
+reflection point, that is,
+\begin{itemize}
+  \item{if fe<fr, then the expansion point is accepted,}
+  \item{if not, the reflection point is accepted.}
+\end{itemize}
+The termination criteria suggested by Nelder and Mead is based on an absolute
+tolerance on the standard deviation of the function values in the simplex. We
+provide this original termination criteria with the \code{tolvarianceflag}
+element of the neldermead object, which is disabled by default.
+
+\subsection{Box's complex algorithm implementation notes}
+In this section, we analyse the current implementation of Box's complex method
+\cite{box.1965}.
+The initial simplex can be computed as in Box's paper, but this may not be safe.
+In his paper, Box suggests that if a vertex of the initial simplex does not
+satisfy the non linear constraints, then it should be 'moved halfway toward the
+centroid of those points already selected'. This behaviour is available when the
+\code{scalingsimplex0} element of the neldermead object is set to 'tocenter'. It
+may happen, as suggested by Guin \cite{guin.1968}, that the centroid is not
+feasible if the constraints are not convex. In this case, the initial simplex
+cannot be computed. This is why we provide the 'tox0' option, which allows to
+compute the initial simplex by scaling toward the initial guess, which is always
+feasible.
+
+In Box's paper, the scaling into the non linear constraints is performed
+'toward' the centroid, that is, by using a scaling factor equal to 0.5. This
+default scaling factor might be sub-optimal in certain situations. This is why
+we provide the \code{boxineqscaling} element, which allows to configure
+the scaling factor.
+
+In Box's paper, whether we are concerned with the initial simplex or with the
+simplex at a given iteration, the scaling for the non linear constraints is
+performed without end. This is because Box's hypothesis is that 'ultimately, a
+satisfactory point will be found'. As suggested by Guin, if the process fails,
+the algorithm goes into an infinite loop. In order to avoid this, we perform the
+scaling until a minimum scaling value is reached, as defined by the
+\code{guinalphamin} element.
+
+We have taken into account the comments by Guin, but it should be emphasized
+that the current implementation is still as close as possible to Box's algorithm
+and is not Guin's algorithm. More precisely, during the iterations, the scaling
+for the non linear constraints is still performed toward the centroid, be it
+feasible or not.
+
+\subsection{User-defined algorithm}
+The \code{mymethod} element of the neldemead object allows to configure a
+user-defined simplex-based algorithm. The reason for this option is that many
+simplex-based variants of Nelder-Mead's algorithm have been developped over the
+years, with specific goals. While it is not possible to provide them all, it is
+very convenient to use the current structure without being forced to make many
+developments.
+
+The value of the \code{mymethod} element is expected to be a R function with the
+following structure:
+<<eval=FALSE>>=
+  myalgorithm <- function( this ){
+    ...
+    return(this)
+  }
+@
+where \code{this} is the current neldermead object.
+
+In order to use the user-defined algorithm, the \code{method} element must be
+set to 'mine'. In this case, the component performs the optimization exactly as
+if the user-defined algorithm was provided by the component.
+
+The user interested in that feature may use the internal scripts provided in the
+distribution as templates and tune his own algorithm from that point. There is
+of course no warranty that the user-defined algorithm improves on the standard
+algorithm, so that users use this feature at their own risks.
+
+\subsection{User-defined termination}
+Many termination criteria are found in the literature. Users who aim at
+reproducing the results exhibited in a particular paper may find that that none
+of the provided termination criteria match the one which is used in the paper.
+It may also happen that the provided termination criteria are not suitable for
+the specific test case. In those situation the \code{myterminate} element of
+the neldermead object allows to configure a user-defined termination
+function. The value of the \code{myterminate} element is expected to be a R
+function with the following structure:
+<<eval=FALSE>>= 
+  mystoppingrule <- function( this , simplex ){
+  ...
+  return(list(this=this,terminate=terminate,status=status))
+  }
+@
+where \code{this} is the current neldermead object and \code{simplex} is the
+current simplex. The \code{terminate} output argument is a logical flag which is
+FALSE if the algorithm must continue and TRUE if the algorithm must stop.
+The \code{status} output argument is a string which is associated with the
+current termination criteria.
+
+In order to enable the use of the user-defined termination function, the value
+of the \code{myterminateflag} element must be set to TRUE in the neldermead
+object. At each iteration, if the \code{myterminateflag} element has been set to
+TRUE, the user-defined termination is called. If the terminate output argument
+is TRUE, then the algorithm is stopped. In that case, the value of the
+\code{status} element of the \code{neldermead.get} function output is the value
+of the \code{status} output argument of the user-defined termination function.
+
+\section{Specialized functions}
+\subsection{fminsearch}
+The \code{fminsearch} function is based on a specialized use of the more general
+\code{neldermead} function bundle and searches for the unconstrained minimum of 
+a given cost function. This function corresponds to the Matlab (or Scilab) 
+fminsearch function. In the context of \code{fminsearch}, the function to be 
+minimized is not a cost function as described in Section 1.3 but an objective 
+function (returning a numeric scalar). Additional information and examples are 
+available in \code{?fminsearch} from a R environment.
+
+\subsection{Direct grid search}
+Direct grid search, performed by \code{fmin.gridsearch}, is a functionality 
+added to the original Scilab \code{neldermead} module and constitutes another 
+specialized use of the \code{neldermead} package. This function allows to 
+explore the search space of an optimization problem around the initial point 
+\(x_0\). This optimization problem is defined by an objective function, like
+for \code{fminsearch}, and not a cost function. \code{fmin.gridsearch}
+automatically creates a grid of search points selected around the initial point 
+and evaluates the objective function at each point. The boundaries of the grid 
+are set either by a vector of parameter-specific lower and upper limits, or by 
+a vector of factors \(\alpha\) as follows:\([x_{0}/\alpha,x_{0}\times\alpha]\). 
+The number \(npts\) of points evaluated for each parameter (or dimension of the 
+optimization problem) can also be defined. The total number of points in the 
+grid is therefore \(npts^n\). At the end of the search, \code{fmin.gridsearch} 
+returns a table sorted by value of the objective function. The feasibility of 
+the objective function is also determined at each point, as 
+\code{fmin.gridsearch} is a wrapper around \code{optimbase.gridsearch} which 
+assesses the feasbility of a cost function in addition to calculating its value 
+at each particular search point. Because \code{fmin.gridsearch} does not accept 
+constraints, the objective function should always be feasible. Additional 
+information is available in \code{?fmin.gridsearch} from a R environment.
+
+\section{Examples}
+We present in this section basic examples illustrating the use of \neldermead{}
+functions to optimize unconstrained or constrained systems. More complex
+examples are described in a Scilab-based document written by Michael Baudin and
+available at \url{http://forge.scilab.org/index.php/p/docneldermead/}. Because
+the R port of the Scilab \pkg{neldermead} module is almost literal, the user
+should be able to reproduce the described examples in R with minimal
+adaptations.
+
+\subsection{Example 1: Basic use}
+In the following example, we solve a simple quadratic test case. We begin by
+defining the cost function, which takes 3 input arguments and returns the value
+of the objective function as the \code{f} element of a list. The standard 
+starting point [-1.2 1.0] is used. \code{neldermead} creates a new
+neldermead object. Then we use \code{neldermead.set} to configure the 
+parameters of the problem. We use all default settings and perform the search
+for the optimum. \code{neldermead.get} is finally used to retrieve the optimum 
+parameters.
+<<include=FALSE>>=
+  quadratic <- function(x=NULL,index=NULL,fmsfundata=NULL){
+    return(list(f=x[1]^2 + x[2]^2,
+                g=c(),
+                c=c(), 
+                gc=c(),
+                index=index,
+                this=list(costfargument=fmsfundata)))
+  }
+
+  x0 <- transpose( c(1.0,1.0) )
+  nm <- neldermead()
+  nm <- neldermead.set(nm,'numberofvariables',2)
+  nm <- neldermead.set(nm,'function',quadratic)
+  nm <- neldermead.set(nm,'x0',x0)
+  nm <- neldermead.search(nm)
+  summary(nm)
+@
+
+\subsection{Example 2: Customized use}
+In the following example, we solve the Rosenbrock test case. We begin by
+defining the Rosenbrock function, which takes 3 input arguments and returns the
+value of the objective function. The standard starting point [-1.2 1.0] is
+used. \code{neldermead} creates a new neldermead object. Then we use
+\code{neldermead.set} to configure the parameters of the problem.
+The initial simplex is computed from the axes and the single length 1.0 (this is
+the default, but is explicitely written here as an example). The variable
+simplex algorithm by Nelder and Mead is used, which corresponds to the -method
+'variable' option. \code{neldermead.search} performs the search for
+the minimum. Once the minimum is found, we represent part of the search space
+using the \code{contour} function (this is possible since our problem involves
+only 2 parameters) and we superimpose the starting point (in red), the
+optimisation path (in bleu), and the optimum (in green) to the plot. The history
+of the optimisation can be retrieved (using \code{neldermead.get}) because the
+'storehistory' option was set to TRUE.
+<<fig=TRUE>>=
+  rosenbrock <- function(x=NULL,index=NULL,fmsfundata=NULL){
+    return(list(f=100*(x[2]-x[1]^2)^2+(1-x[1])^2,
+                g=c(),
+                c=c(),
+                gc=c(),
+                index=index,
+                this=list(costfargument=fmsfundata)))
+  }
+  x0 <- transpose(c(-1.2,1.0))
+  nm <- neldermead()
+  nm <- neldermead.set(nm,'numberofvariables',2)
+  nm <- neldermead.set(nm,'function',rosenbrock)
+  nm <- neldermead.set(nm,'x0',x0)
+  nm <- neldermead.set(nm,'maxiter',200)
+  nm <- neldermead.set(nm,'maxfunevals',300)
+  nm <- neldermead.set(nm,'tolfunrelative',10*.Machine$double.eps)
+  nm <- neldermead.set(nm,'tolxrelative',10*.Machine$double.eps)
+  nm <- neldermead.set(nm,'simplex0method','axes')
+  nm <- neldermead.set(nm,'simplex0length',1.0)
+  nm <- neldermead.set(nm,'method','variable')
+  nm <- neldermead.set(nm,'verbose',FALSE)
+  nm <- neldermead.set(nm,'storehistory',TRUE)
+  nm <- neldermead.set(nm,'verbosetermination',FALSE)
+  nm <- neldermead.search(nm)
+  
+  xmin <- ymin <- -2.0 
+  xmax <- ymax <- 2.0 
+  nx <- ny <- 100
+  stepy <- stepx <- (xmax - xmin)/nx
+  ydata <- xdata <- seq(xmin,xmax,stepx)
+  zdata <- apply(expand.grid(xdata,ydata),1,
+                 function(x) neldermead.function(nm,transpose(x)))
+  zdata <- matrix(zdata,ncol=length(ydata))
+  optimpath <- matrix(unlist((neldermead.get(nm,'historyxopt'))),
+                      nrow=2)
+  optimpath <- data.frame(x=optimpath[1,],y=optimpath[2,])
+
+  contour(xdata,ydata,zdata,levels=c(1,10,100,500,1000,2000))
+  par(new=TRUE,ann=TRUE)
+  plot(c(x0[1],optimpath$x[158]), c(x0[2],optimpath$y[158]),
+       col=c('red','green'),pch=16,xlab='x[1]',ylab='x[2]',
+       xlim=c(xmin,xmax),ylim=c(ymin,ymax))
+  par(new=TRUE,ann=FALSE)  
+  plot(optimpath$x,optimpath$y,col='blue',type='l',
+       xlim=c(xmin,xmax),ylim=c(ymin,ymax))
+@
+
+Setting the 'verbose' element of the neldermead object to 1 allows to get
+detailed information about the current optimization process. The following is a
+sample output for an optimization based on the Nelder and Mead variable-shape
+simplex algorithm. Only the output corresponding to the iteration \#156 is
+displayed. In order to display specific outputs (or to create specific output
+files and graphics), the 'outputcommand' option should be used.
+
+\begin{verbatim}
+=================================================================
+Iteration \#156 (total = 156)
+Function Eval \#298                                                             
+Xopt: 0.99999999999991 0.999999999999816                                        
+Fopt: 8.997809e-27                                                              
+DeltaFv: 4.492261e-26                                                           
+Center: 1.00000000000003 1.00000000000007                                       
+Size: 4.814034e-13                                                              
+Vertex \#2/3 : fv=2.649074e-26, x=1.000000e+00 1.000000e+00               
+Vertex \#3/3 : fv=5.392042e-26, x=1.000000e+00 1.000000e+00
+Reflect                     
+xbar=1.00000000000001 1.00000000000003                                          
+Function Evaluation \#299 at [0.99999999999996  ]
+Function Evaluation \#299 at [0.999999999999907  ]    
+xr=[0.99999999999996 0.999999999999907], f(xr)=0.000000                         
+  > Perform reflection                                                          
+Sort 
+\end{verbatim}
+
+\subsection{Example 3: Optimization with bound constraints}
+In the following example, we solve a simple quadratic test case used in Example
+1 but in the case where bounds are set for parameter estimates. We begin by
+defining the cost function, which takes 3 input arguments and returns the value
+of the objective function as the \code{f} element of a list. The 
+starting point [1.2 1.9] is used. \code{neldermead} creates a new
+neldermead object. Then we use \code{neldermead.set} to configure the 
+parameters of the problem including the lower \code{-boundsmin} and upper 
+\code{-boundsmax} bounds. The initial simplex is computed from \code{boxnbpoints} 
+random points within the bounds. The variable simplex algorithm by Box is used, 
+which corresponds to the -method 'box' option. \code{neldermead.search} finally 
+performs the search for the minimum.
+<<include=FALSE>>=
+  quadratic <- function(x=NULL,index=NULL,fmsfundata=NULL){
+    return(list(f=x[1]^2 + x[2]^2,
+                g=c(),
+                c=c(), 
+                gc=c(),
+                index=index,
+                this=list(costfargument=fmsfundata)))
+  }
+  set.seed(0)
+  x0 <- transpose(c(1.2,1.9))
+  nm <- neldermead()
+  nm <- neldermead.set(nm,'numberofvariables',2)
+  nm <- neldermead.set(nm,'function',quadratic)
+  nm <- neldermead.set(nm,'x0',x0)
+  nm <- neldermead.set(nm,'verbose',FALSE)
+  nm <- neldermead.set(nm,'storehistory',TRUE)
+  nm <- neldermead.set(nm,'verbosetermination',FALSE)
+  nm <- neldermead.set(nm,'method','box')
+  nm <- neldermead.set(nm,'boundsmin',c(1,1))
+  nm <- neldermead.set(nm,'boundsmax',c(2,2))
+  nm <- neldermead.search(nm)
+  summary(nm)
+@
+
+\subsection{Example 4: Optimization with nonlinear inequality constraints}
+In the following example, we solve Michalewicz's \(G_6\) test problem using
+Box's methods \cite{Michalewicz.2004} \footnote{Example suggested by Pascal 
+Grandeau}. This problem consists in minimizing: 
+\(G_{6}(x)=(x_{1}-10)^3+(x_{2}-20)^3\), given the nonlinear constraints:
+
+\begin{math}
+  \begin{array}{l l}
+    c1: & (x_{1}-5)^2+(x_{2}-5)^2-100 \ge{} 0 \\
+    c2: & -(x_{1}-6)^2-(x_{2}-5)^2+82.81 \ge{} 0 \\
+  \end{array}
+\end{math}
+
+and bounds: \(13 \le{} x_{1} \le{} 100,\: 0 \le{} x_{2} \le{} 100\).
+
+We begin by defining the \code{michalewicz} function, which takes 3 input
+arguments and return the value of the objective function and the constraint 
+evaluations as the \code{f} and \code{c} elements of a list.
+\code{neldermead} creates a new neldermead object. Then we use 
+\code{neldermead.set} to configure the parameters of the problem, 
+including the lower \code{-boundsmin} and upper \code{-boundsmax} bounds. The initial 
+simplex is computed from \code{boxnbpoints} random points within the bounds. The
+variable simplex algorithm by Box is used, which corresponds to the -method 
+'box' option. \code{neldermead.search} finally performs the search for the 
+minimum. The starting point ([15 4.99]) like all the vertices of the 
+optimization simplex must be feasible, i.e. they must satisfy all constraints 
+and bounds. Constraints are enforced by ensuring that all arguments of \code{c}
+in the cost function output are positive or null. Note that the boundaries were
+set to stricter ranges to limit the sensitivity of the solution to the initial
+guesses. 
+
+<<>>=
+  michalewicz <- function(x=NULL,index=NULL,fmsfundata=NULL){
+    f <- c()
+    c <- c()
+    if (index == 2 | index ==6) 
+      f <- (x[1]-10)^3+(x[2]-20)^3
+    
+    if (index == 5 | index ==6)
+      c <- c((x[1]-5)^2+(x[2]-5)^2 -100, 
+          82.81-((x[1]-6)^2+(x[2]-5)^2))
+    varargout <- list(f=f,
+        g=c(),
+        c=c, 
+        gc=c(),
+        index=index,
+        this=list(costfargument=fmsfundata))
+    return(varargout)
+  }
+  set.seed(0)
+  x0 <- transpose(c(15,4.99))
+  nm <- neldermead()
+  nm <- neldermead.set(nm,'numberofvariables',2)
+  nm <- neldermead.set(nm,'nbineqconst',2)
+  nm <- neldermead.set(nm,'function',michalewicz)
+  nm <- neldermead.set(nm,'x0',x0)
+  nm <- neldermead.set(nm,'maxiter',300)
+  nm <- neldermead.set(nm,'maxfunevals',1000)
+  nm <- neldermead.set(nm,'simplex0method','randbounds')
+  nm <- neldermead.set(nm,'boxnbpoints',3)
+  nm <- neldermead.set(nm,'storehistory',TRUE)
+  nm <- neldermead.set(nm,'method','box')
+  nm <- neldermead.set(nm,'boundsmin',c(13,0))
+  nm <- neldermead.set(nm,'boundsmax',c(20,10))
+  nm <- neldermead.search(nm)
+  summary(nm)
+@
+
+\subsection{Example 5: Passing data to the cost function}
+In the following example, we use a simple example to illustrate how to pass 
+user-defined arguments to a user-defined cost function. We try to find the mean 
+and standard deviation of some normally distributed data using maximum 
+likelihood (actually a modifed negative log-likelihood approach) 
+\footnote{Example suggested by Mark Taper}.
+
+We begin by defining the \code{negLL} function, which takes 3 input
+arguments and return the value of the objective function. The random dataset is 
+then generated and stored in the list \code{fmsdundata}. \code{neldermead} 
+creates a new neldermead object. Then we use \code{neldermead.set} to 
+configure the parameters of the problem, including \code{costfargument}, set to
+\code{fmsdundata}, and the lower \code{-boundsmin} and upper \code{-boundsmax} 
+bounds (the standard deviations has to be positive). The variable simplex
+algorithm by Box is used. \code{neldermead.search} finally performs the search 
+for the minimum.
+
+<<>>=
+  negLL <- function(x=NULL, index=NULL, fmsfundata=NULL){
+    mn <- x[1]
+    sdv <- x[2]
+    out <- -sum(dnorm(fmsfundata$data, mean=mn, sd=sdv, log=TRUE))
+  
+    return(list(f = out, 
+           index = index,
+           this=list(costfargument=fmsfundata)))
+  }
+
+  set.seed(12345)
+  fmsfundata <- structure(
+    list(data=rnorm(500,mean=50,sd=2)),
+    class='optimbase.functionargs')
+
+  x0 <- transpose(c(45,3))
+  nm <- neldermead()
+  nm <- neldermead.set(nm,'numberofvariables',2)
+  nm <- neldermead.set(nm,'function',negLL)
+  nm <- neldermead.set(nm,'x0',x0)
+  nm <- neldermead.set(nm,'costfargument',fmsfundata)
+  nm <- neldermead.set(nm,'maxiter',500)
+  nm <- neldermead.set(nm,'maxfunevals',1500)
+  nm <- neldermead.set(nm,'method','box')
+  nm <- neldermead.set(nm,'storehistory',TRUE)
+  nm <- neldermead.set(nm,'boundsmin',c(-100, 0))
+  nm <- neldermead.set(nm,'boundsmax',c(100, 100))
+  nm <- neldermead.search(this=nm)
+  summary(nm)
+@
+
+\subsection{Example 6: Direct grid search}
+In the following example, we use the Rosenbrock test case introduced as Example 
+2 to illustrate the direct grid search capacity of \code{neldermead}. We begin
+by defining the Rosenbrock function, which takes only one input argument and 
+returns the value of the objective function. We request 6 points per dimension 
+of the problem and set the range of search around the standard starting point
+[-1.2 1.0] by providing limits. \code{fmin.gridsearch} performs the search and 
+return a table sorted by value of the cost function.
+
+<<>>=
+  rosenbrock <- function(x=NULL){
+    f <- 100*(x[2]-x[1]^2)^2+(1-x[1])^2
+  }
+  x0 <- c(-1.2,1.0)
+  npts <- 6
+  xmin <- c(-2,-2)
+  xmax <- c(2,2)
+  grid <- fmin.gridsearch(fun=rosenbrock,x0=x0,xmin=xmin,xmax=xmax,npts=npts,alpha=alpha)
+  grid
+@
+
+\section{References}
+% Bibliography
+\bibliographystyle{plain}
+\renewcommand*{\refname}{}
+\bibliography{neldermead_manual}
+
+\section{Dependencies of fminsearch}
+We illustrate in the figures below the network of functions of the
+\neldermead{}, \pkg{optimbase}, and \pkg{optimsimplex} packages that are called
+from the \code{fminsearch} functions. This large network is broken down in 6 
+plots, which are shown in the order functions are called. Green boxes represent
+functions that are not expanded on a given plot but on a previous or later one.
+
+\begin{figure}[h!]
+  \begin{center}  
+  \includegraphics[angle=90,height=0.85\textheight]{fminsearch.pdf}
+    \label{fminsearch}
+    \caption{fminsearch function network (1/6)}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{center}  
+  \includegraphics[height=0.85\textheight]{neldermeadsearch1.pdf}
+    \label{neldermeadsearch1}
+    \caption{fminsearch function network (2/6)}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{center}  
+  \includegraphics[angle=90,height=0.85\textheight]{neldermeadsearch2.pdf}
+    \label{neldermeadsearch2}
+    \caption{fminsearch function network (3/6)}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{center}  
+  \includegraphics[angle=90,height=0.85\textheight]{neldermeadalgo1.pdf}
+    \label{neldermeadalgo1}
+    \caption{fminsearch function network (4/6)}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{center}  
+  \includegraphics[angle=90,height=0.85\textheight]{neldermeadalgo2.pdf}
+    \label{neldermeadalgo2}
+    \caption{fminsearch function network (5/6)}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+  \begin{center}  
+  \includegraphics[angle=90,height=0.85\textheight]{neldermeadalgo3.pdf}
+    \label{neldermeadalgo3}
+    \caption{fminsearch function network (6/6)}
+  \end{center}
+\end{figure}
+
+\cleardoublepage
+\section{Help on \neldermead{} functions}
+\input{neldermead-package}
+\input{costf.transposex}
+\input{fmin.gridsearch}
+\input{fminsearch.function}
+\input{fminsearch.outputfun}
+\input{fminsearch}
+\input{neldermead.algo}
+\input{neldermead.destroy}
+\input{neldermead.get}
+\input{neldermead}
+\input{neldermead.restart}
+\input{neldermead.search}
+\input{neldermead.set}
+\input{neldermead.startup}
+\input{optimget}
+\input{optimset.method}
+\input{optimset}
+
+\section{CeCILL FREE SOFTWARE LICENSE AGREEMENT}
+
+\begin{verbatim}
+
+    Notice
+
+This Agreement is a Free Software license agreement that is the result
+of discussions between its authors in order to ensure compliance with
+the two main principles guiding its drafting:
+
+    * firstly, compliance with the principles governing the distribution
+      of Free Software: access to source code, broad rights granted to
+      users,
+    * secondly, the election of a governing law, French law, with which
+      it is conformant, both as regards the law of torts and
+      intellectual property law, and the protection that it offers to
+      both authors and holders of the economic rights over software.
+
+The authors of the CeCILL (for Ce[a] C[nrs] I[nria] L[ogiciel] L[ibre])
+license are:
+
+Commissariat a l'Energie Atomique - CEA, a public scientific, technical
+and industrial research establishment, having its principal place of
+business at 25 rue Leblanc, immeuble Le Ponant D, 75015 Paris, France.
+
+Centre National de la Recherche Scientifique - CNRS, a public scientific
+and technological establishment, having its principal place of business
+at 3 rue Michel-Ange, 75794 Paris cedex 16, France.
+
+Institut National de Recherche en Informatique et en Automatique -
+INRIA, a public scientific and technological establishment, having its
+principal place of business at Domaine de Voluceau, Rocquencourt, BP
+105, 78153 Le Chesnay cedex, France.
+
+
+    Preamble
+
+The purpose of this Free Software license agreement is to grant users
+the right to modify and redistribute the software governed by this
+license within the framework of an open source distribution model.
+
+The exercising of these rights is conditional upon certain obligations
+for users so as to preserve this status for all subsequent redistributions.
+
+In consideration of access to the source code and the rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty and the software's author, the holder of the
+economic rights, and the successive licensors only have limited liability.
+
+In this respect, the risks associated with loading, using, modifying
+and/or developing or reproducing the software by the user are brought to
+the user's attention, given its Free Software status, which may make it
+complicated to use, with the result that its use is reserved for
+developers and experienced professionals having in-depth computer
+knowledge. Users are therefore encouraged to load and test the
+suitability of the software as regards their requirements in conditions
+enabling the security of their systems and/or data to be ensured and,
+more generally, to use and operate it in the same conditions of
+security. This Agreement may be freely reproduced and published,
+provided it is not altered, and that no provisions are either added or
+removed herefrom.
+
+This Agreement may apply to any or all software for which the holder of
+the economic rights decides to submit the use thereof to its provisions.
+
+
+    Article 1 - DEFINITIONS
+
+For the purpose of this Agreement, when the following expressions
+commence with a capital letter, they shall have the following meaning:
+
+Agreement: means this license agreement, and its possible subsequent
+versions and annexes.
+
+Software: means the software in its Object Code and/or Source Code form
+and, where applicable, its documentation, "as is" when the Licensee
+accepts the Agreement.
+
+Initial Software: means the Software in its Source Code and possibly its
+Object Code form and, where applicable, its documentation, "as is" when
+it is first distributed under the terms and conditions of the Agreement.
+
+Modified Software: means the Software modified by at least one
+Contribution.
+
+Source Code: means all the Software's instructions and program lines to
+which access is required so as to modify the Software.
+
+Object Code: means the binary files originating from the compilation of
+the Source Code.
+
+Holder: means the holder(s) of the economic rights over the Initial
+Software.
+
+Licensee: means the Software user(s) having accepted the Agreement.
+
+Contributor: means a Licensee having made at least one Contribution.
+
+Licensor: means the Holder, or any other individual or legal entity, who
+distributes the Software under the Agreement.
+
+Contribution: means any or all modifications, corrections, translations,
+adaptations and/or new functions integrated into the Software by any or
+all Contributors, as well as any or all Internal Modules.
+
+Module: means a set of sources files including their documentation that
+enables supplementary functions or services in addition to those offered
+by the Software.
+
+External Module: means any or all Modules, not derived from the
+Software, so that this Module and the Software run in separate address
+spaces, with one calling the other when they are run.
+
+Internal Module: means any or all Module, connected to the Software so
+that they both execute in the same address space.
+
+GNU GPL: means the GNU General Public License version 2 or any
+subsequent version, as published by the Free Software Foundation Inc.
+
+Parties: mean both the Licensee and the Licensor.
+
+These expressions may be used both in singular and plural form.
+
+
+    Article 2 - PURPOSE
+
+The purpose of the Agreement is the grant by the Licensor to the
+Licensee of a non-exclusive, transferable and worldwide license for the
+Software as set forth in Article 5 hereinafter for the whole term of the
+protection granted by the rights over said Software. 
+
+
+    Article 3 - ACCEPTANCE
+
+3.1 The Licensee shall be deemed as having accepted the terms and
+conditions of this Agreement upon the occurrence of the first of the
+following events:
+
+    * (i) loading the Software by any or all means, notably, by
+      downloading from a remote server, or by loading from a physical
+      medium;
+    * (ii) the first time the Licensee exercises any of the rights
+      granted hereunder.
+
+3.2 One copy of the Agreement, containing a notice relating to the
+characteristics of the Software, to the limited warranty, and to the
+fact that its use is restricted to experienced users has been provided
+to the Licensee prior to its acceptance as set forth in Article 3.1
+hereinabove, and the Licensee hereby acknowledges that it has read and
+understood it.
+
+
+    Article 4 - EFFECTIVE DATE AND TERM
+
+
+      4.1 EFFECTIVE DATE
+
+The Agreement shall become effective on the date when it is accepted by
+the Licensee as set forth in Article 3.1.
+
+
+      4.2 TERM
+
+The Agreement shall remain in force for the entire legal term of
+protection of the economic rights over the Software.
+
+
+    Article 5 - SCOPE OF RIGHTS GRANTED
+
+The Licensor hereby grants to the Licensee, who accepts, the following
+rights over the Software for any or all use, and for the term of the
+Agreement, on the basis of the terms and conditions set forth hereinafter.
+
+Besides, if the Licensor owns or comes to own one or more patents
+protecting all or part of the functions of the Software or of its
+components, the Licensor undertakes not to enforce the rights granted by
+these patents against successive Licensees using, exploiting or
+modifying the Software. If these patents are transferred, the Licensor
+undertakes to have the transferees subscribe to the obligations set
+forth in this paragraph.
+
+
+      5.1 RIGHT OF USE
+
+The Licensee is authorized to use the Software, without any limitation
+as to its fields of application, with it being hereinafter specified
+that this comprises:
+
+   1. permanent or temporary reproduction of all or part of the Software
+      by any or all means and in any or all form.
+
+   2. loading, displaying, running, or storing the Software on any or
+      all medium.
+
+   3. entitlement to observe, study or test its operation so as to
+      determine the ideas and principles behind any or all constituent
+      elements of said Software. This shall apply when the Licensee
+      carries out any or all loading, displaying, running, transmission
+      or storage operation as regards the Software, that it is entitled
+      to carry out hereunder.
+
+
+      5.2 ENTITLEMENT TO MAKE CONTRIBUTIONS
+
+The right to make Contributions includes the right to translate, adapt,
+arrange, or make any or all modifications to the Software, and the right
+to reproduce the resulting software.
+
+The Licensee is authorized to make any or all Contributions to the
+Software provided that it includes an explicit notice that it is the
+author of said Contribution and indicates the date of the creation thereof.
+
+
+      5.3 RIGHT OF DISTRIBUTION
+
+In particular, the right of distribution includes the right to publish,
+transmit and communicate the Software to the general public on any or
+all medium, and by any or all means, and the right to market, either in
+consideration of a fee, or free of charge, one or more copies of the
+Software by any means.
+
+The Licensee is further authorized to distribute copies of the modified
+or unmodified Software to third parties according to the terms and
+conditions set forth hereinafter.
+
+
+        5.3.1 DISTRIBUTION OF SOFTWARE WITHOUT MODIFICATION
+
+The Licensee is authorized to distribute true copies of the Software in
+Source Code or Object Code form, provided that said distribution
+complies with all the provisions of the Agreement and is accompanied by:
+
+   1. a copy of the Agreement,
+
+   2. a notice relating to the limitation of both the Licensor's
+      warranty and liability as set forth in Articles 8 and 9,
+
+and that, in the event that only the Object Code of the Software is
+redistributed, the Licensee allows future Licensees unhindered access to
+the full Source Code of the Software by indicating how to access it, it
+being understood that the additional cost of acquiring the Source Code
+shall not exceed the cost of transferring the data.
+
+
+        5.3.2 DISTRIBUTION OF MODIFIED SOFTWARE
+
+When the Licensee makes a Contribution to the Software, the terms and
+conditions for the distribution of the resulting Modified Software
+become subject to all the provisions of this Agreement.
+
+The Licensee is authorized to distribute the Modified Software, in
+source code or object code form, provided that said distribution
+complies with all the provisions of the Agreement and is accompanied by:
+
+   1. a copy of the Agreement,
+
+   2. a notice relating to the limitation of both the Licensor's
+      warranty and liability as set forth in Articles 8 and 9,
+
+and that, in the event that only the object code of the Modified
+Software is redistributed, the Licensee allows future Licensees
+unhindered access to the full source code of the Modified Software by
+indicating how to access it, it being understood that the additional
+cost of acquiring the source code shall not exceed the cost of
+transferring the data.
+
+
+        5.3.3 DISTRIBUTION OF EXTERNAL MODULES
+
+When the Licensee has developed an External Module, the terms and
+conditions of this Agreement do not apply to said External Module, that
+may be distributed under a separate license agreement.
+
+
+        5.3.4 COMPATIBILITY WITH THE GNU GPL
+
+The Licensee can include a code that is subject to the provisions of one
+of the versions of the GNU GPL in the Modified or unmodified Software,
+and distribute that entire code under the terms of the same version of
+the GNU GPL.
+
+The Licensee can include the Modified or unmodified Software in a code
+that is subject to the provisions of one of the versions of the GNU GPL,
+and distribute that entire code under the terms of the same version of
+the GNU GPL.
+
+
+    Article 6 - INTELLECTUAL PROPERTY
+
+
+      6.1 OVER THE INITIAL SOFTWARE
+
+The Holder owns the economic rights over the Initial Software. Any or
+all use of the Initial Software is subject to compliance with the terms
+and conditions under which the Holder has elected to distribute its work
+and no one shall be entitled to modify the terms and conditions for the
+distribution of said Initial Software.
+
+The Holder undertakes that the Initial Software will remain ruled at
+least by this Agreement, for the duration set forth in Article 4.2.
+
+
+      6.2 OVER THE CONTRIBUTIONS
+
+The Licensee who develops a Contribution is the owner of the
+intellectual property rights over this Contribution as defined by
+applicable law.
+
+
+      6.3 OVER THE EXTERNAL MODULES
+
+The Licensee who develops an External Module is the owner of the
+intellectual property rights over this External Module as defined by
+applicable law and is free to choose the type of agreement that shall
+govern its distribution.
+
+
+      6.4 JOINT PROVISIONS
+
+The Licensee expressly undertakes:
+
+   1. not to remove, or modify, in any manner, the intellectual property
+      notices attached to the Software;
+
+   2. to reproduce said notices, in an identical manner, in the copies
+      of the Software modified or not.
+
+The Licensee undertakes not to directly or indirectly infringe the
+intellectual property rights of the Holder and/or Contributors on the
+Software and to take, where applicable, vis-a-vis its staff, any and all
+measures required to ensure respect of said intellectual property rights
+of the Holder and/or Contributors.
+
+
+    Article 7 - RELATED SERVICES
+
+7.1 Under no circumstances shall the Agreement oblige the Licensor to
+provide technical assistance or maintenance services for the Software.
+
+However, the Licensor is entitled to offer this type of services. The
+terms and conditions of such technical assistance, and/or such
+maintenance, shall be set forth in a separate instrument. Only the
+Licensor offering said maintenance and/or technical assistance services
+shall incur liability therefor.
+
+7.2 Similarly, any Licensor is entitled to offer to its licensees, under
+its sole responsibility, a warranty, that shall only be binding upon
+itself, for the redistribution of the Software and/or the Modified
+Software, under terms and conditions that it is free to decide. Said
+warranty, and the financial terms and conditions of its application,
+shall be subject of a separate instrument executed between the Licensor
+and the Licensee.
+
+
+    Article 8 - LIABILITY
+
+8.1 Subject to the provisions of Article 8.2, the Licensee shall be
+entitled to claim compensation for any direct loss it may have suffered
+from the Software as a result of a fault on the part of the relevant
+Licensor, subject to providing evidence thereof.
+
+8.2 The Licensor's liability is limited to the commitments made under
+this Agreement and shall not be incurred as a result of in particular:
+(i) loss due the Licensee's total or partial failure to fulfill its
+obligations, (ii) direct or consequential loss that is suffered by the
+Licensee due to the use or performance of the Software, and (iii) more
+generally, any consequential loss. In particular the Parties expressly
+agree that any or all pecuniary or business loss (i.e. loss of data,
+loss of profits, operating loss, loss of customers or orders,
+opportunity cost, any disturbance to business activities) or any or all
+legal proceedings instituted against the Licensee by a third party,
+shall constitute consequential loss and shall not provide entitlement to
+any or all compensation from the Licensor.
+
+
+    Article 9 - WARRANTY
+
+9.1 The Licensee acknowledges that the scientific and technical
+state-of-the-art when the Software was distributed did not enable all
+possible uses to be tested and verified, nor for the presence of
+possible defects to be detected. In this respect, the Licensee's
+attention has been drawn to the risks associated with loading, using,
+modifying and/or developing and reproducing the Software which are
+reserved for experienced users.
+
+The Licensee shall be responsible for verifying, by any or all means,
+the suitability of the product for its requirements, its good working
+order, and for ensuring that it shall not cause damage to either persons
+or properties.
+
+9.2 The Licensor hereby represents, in good faith, that it is entitled
+to grant all the rights over the Software (including in particular the
+rights set forth in Article 5).
+
+9.3 The Licensee acknowledges that the Software is supplied "as is" by
+the Licensor without any other express or tacit warranty, other than
+that provided for in Article 9.2 and, in particular, without any warranty 
+as to its commercial value, its secured, safe, innovative or relevant
+nature.
+
+Specifically, the Licensor does not warrant that the Software is free
+from any error, that it will operate without interruption, that it will
+be compatible with the Licensee's own equipment and software
+configuration, nor that it will meet the Licensee's requirements.
+
+9.4 The Licensor does not either expressly or tacitly warrant that the
+Software does not infringe any third party intellectual property right
+relating to a patent, software or any other property right. Therefore,
+the Licensor disclaims any and all liability towards the Licensee
+arising out of any or all proceedings for infringement that may be
+instituted in respect of the use, modification and redistribution of the
+Software. Nevertheless, should such proceedings be instituted against
+the Licensee, the Licensor shall provide it with technical and legal
+assistance for its defense. Such technical and legal assistance shall be
+decided on a case-by-case basis between the relevant Licensor and the
+Licensee pursuant to a memorandum of understanding. The Licensor
+disclaims any and all liability as regards the Licensee's use of the
+name of the Software. No warranty is given as regards the existence of
+prior rights over the name of the Software or as regards the existence
+of a trademark.
+
+
+    Article 10 - TERMINATION
+
+10.1 In the event of a breach by the Licensee of its obligations
+hereunder, the Licensor may automatically terminate this Agreement
+thirty (30) days after notice has been sent to the Licensee and has
+remained ineffective.
+
+10.2 A Licensee whose Agreement is terminated shall no longer be
+authorized to use, modify or distribute the Software. However, any
+licenses that it may have granted prior to termination of the Agreement
+shall remain valid subject to their having been granted in compliance
+with the terms and conditions hereof.
+
+
+    Article 11 - MISCELLANEOUS
+
+
+      11.1 EXCUSABLE EVENTS
+
+Neither Party shall be liable for any or all delay, or failure to
+perform the Agreement, that may be attributable to an event of force
+majeure, an act of God or an outside cause, such as defective
+functioning or interruptions of the electricity or telecommunications
+networks, network paralysis following a virus attack, intervention by
+government authorities, natural disasters, water damage, earthquakes,
+fire, explosions, strikes and labor unrest, war, etc.
+
+11.2 Any failure by either Party, on one or more occasions, to invoke
+one or more of the provisions hereof, shall under no circumstances be
+interpreted as being a waiver by the interested Party of its right to
+invoke said provision(s) subsequently.
+
+11.3 The Agreement cancels and replaces any or all previous agreements,
+whether written or oral, between the Parties and having the same
+purpose, and constitutes the entirety of the agreement between said
+Parties concerning said purpose. No supplement or modification to the
+terms and conditions hereof shall be effective as between the Parties
+unless it is made in writing and signed by their duly authorized
+representatives.
+
+11.4 In the event that one or more of the provisions hereof were to
+conflict with a current or future applicable act or legislative text,
+said act or legislative text shall prevail, and the Parties shall make
+the necessary amendments so as to comply with said act or legislative
+text. All other provisions shall remain effective. Similarly, invalidity
+of a provision of the Agreement, for any reason whatsoever, shall not
+cause the Agreement as a whole to be invalid.
+
+
+      11.5 LANGUAGE
+
+The Agreement is drafted in both French and English and both versions
+are deemed authentic.
+
+
+    Article 12 - NEW VERSIONS OF THE AGREEMENT
+
+12.1 Any person is authorized to duplicate and distribute copies of this
+Agreement.
+
+12.2 So as to ensure coherence, the wording of this Agreement is
+protected and may only be modified by the authors of the License, who
+reserve the right to periodically publish updates or new versions of the
+Agreement, each with a separate number. These subsequent versions may
+address new issues encountered by Free Software.
+
+12.3 Any Software distributed under a given version of the Agreement may
+only be subsequently distributed under the same version of the Agreement
+or a subsequent version, subject to the provisions of Article 5.3.4.
+
+
+    Article 13 - GOVERNING LAW AND JURISDICTION
+
+13.1 The Agreement is governed by French law. The Parties agree to
+endeavor to seek an amicable solution to any disagreements or disputes
+that may arise during the performance of the Agreement.
+
+13.2 Failing an amicable solution within two (2) months as from their
+occurrence, and unless emergency proceedings are necessary, the
+disagreements or disputes shall be referred to the Paris Courts having
+jurisdiction, by the more diligent Party.
+
+
+Version 2.0 dated 2006-09-05.
+\end{verbatim}
+
+
+\end{document}

@@ -1,0 +1,13 @@
+citHeader("To cite randtoolbox in publications use:")
+
+
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Manual",
+         title = "randtoolbox: Generating and Testing Random Numbers",
+         author = c(person("Dutang", "Christophe"), person("Savicky","Petr")),
+         year = year,
+         note = note)
+
+

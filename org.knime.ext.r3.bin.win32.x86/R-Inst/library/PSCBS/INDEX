@@ -1,0 +1,19 @@
+CBS                     The CBS class
+NonPairedPSCBS          The NonPairedPSCBS class
+PSCBS                   The PSCBS class
+PSCBS-package           Package PSCBS
+PairedPSCBS             The PairedPSCBS class
+callSegmentationOutliers
+                        Calls/drops single-locus outliers along the
+                        genome
+findLargeGaps           Identifies gaps of a genome where there exist
+                        no observations
+gapsToSegments.data.frame
+                        Gets the genomic segments that are
+                        complementary to the gaps
+segmentByCBS            Segment genomic signals using the CBS method
+segmentByNonPairedPSCBS
+                        Segment total copy numbers and allele B
+                        fractions using the Non-paired PSCBS method
+segmentByPairedPSCBS    Segment total copy numbers and allele B
+                        fractions using the Paired PSCBS method

@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Interface to the 'Open Tree of Life' API</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Interface to the 'Open Tree of Life' API
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;rotl&rsquo; version 3.0.3</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="rotl.html">rotl-package</a></td>
+<td>An Interface to the Open Tree of Life API</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_meta.html">candidate_for_synth</a></td>
+<td>Study Metadata</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_meta.html">candidate_for_synth.study_meta</a></td>
+<td>Study Metadata</td></tr>
+<tr><td style="width: 25%;"><a href="match_names-methods.html">flags</a></td>
+<td>'ott_id' and 'flags' for taxonomic names matched by 'tnrs_match_names'</td></tr>
+<tr><td style="width: 25%;"><a href="match_names-methods.html">flags.match_names</a></td>
+<td>'ott_id' and 'flags' for taxonomic names matched by 'tnrs_match_names'</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_taxon_info.html">flags.taxon_info</a></td>
+<td>Taxon information</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_mrca.html">flags.taxon_mrca</a></td>
+<td>Taxonomic MRCA</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_meta.html">get_publication</a></td>
+<td>Study Metadata</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_meta.html">get_publication.study_meta</a></td>
+<td>Study Metadata</td></tr>
+<tr><td style="width: 25%;"><a href="get_study.html">get_study</a></td>
+<td>Get all the trees associated with a particular study</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_meta.html">get_study_meta</a></td>
+<td>Study Metadata</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_subtree.html">get_study_subtree</a></td>
+<td>Study Subtree</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_tree.html">get_study_tree</a></td>
+<td>Study Tree</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_meta.html">get_study_year</a></td>
+<td>Study Metadata</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_meta.html">get_study_year.study_meta</a></td>
+<td>Study Metadata</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_meta.html">get_tree_ids</a></td>
+<td>Study Metadata</td></tr>
+<tr><td style="width: 25%;"><a href="get_study_meta.html">get_tree_ids.study_meta</a></td>
+<td>Study Metadata</td></tr>
+<tr><td style="width: 25%;"><a href="match_names.html">inspect</a></td>
+<td>Inspect and Update alternative matches for a name returned by tnrs_match_names</td></tr>
+<tr><td style="width: 25%;"><a href="match_names.html">inspect.match_names</a></td>
+<td>Inspect and Update alternative matches for a name returned by tnrs_match_names</td></tr>
+<tr><td style="width: 25%;"><a href="is_in_tree.html">is_in_tree</a></td>
+<td>Check that OTT ids occur in the Synthetic Tree</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy-methods.html">is_suppressed</a></td>
+<td>Methods for Taxonomy</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_taxon_info.html">is_suppressed.taxon_info</a></td>
+<td>Taxon information</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_mrca.html">is_suppressed.taxon_mrca</a></td>
+<td>Taxonomic MRCA</td></tr>
+<tr><td style="width: 25%;"><a href="list_trees.html">list_trees</a></td>
+<td>List trees ids in objects returned by 'studies_find_studies' and 'studies_find_trees'.</td></tr>
+<tr><td style="width: 25%;"><a href="list_trees.html">list_trees.matched_studies</a></td>
+<td>List trees ids in objects returned by 'studies_find_studies' and 'studies_find_trees'.</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy-methods.html">ott_id</a></td>
+<td>Methods for Taxonomy</td></tr>
+<tr><td style="width: 25%;"><a href="match_names-methods.html">ott_id.match_names</a></td>
+<td>'ott_id' and 'flags' for taxonomic names matched by 'tnrs_match_names'</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_taxon_info.html">ott_id.taxon_info</a></td>
+<td>Taxon information</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_mrca.html">ott_id.taxon_mrca</a></td>
+<td>Taxonomic MRCA</td></tr>
+<tr><td style="width: 25%;"><a href="tol_mrca.html">ott_id.tol_mrca</a></td>
+<td>MRCA of taxa from the synthetic tree</td></tr>
+<tr><td style="width: 25%;"><a href="tol_node_info.html">ott_id.tol_node</a></td>
+<td>Node info</td></tr>
+<tr><td style="width: 25%;"><a href="tol_about.html">ott_id.tol_summary</a></td>
+<td>Information about the Tree of Life</td></tr>
+<tr><td style="width: 25%;"><a href="rotl.html">rotl</a></td>
+<td>An Interface to the Open Tree of Life API</td></tr>
+<tr><td style="width: 25%;"><a href="source_list.html">source_list</a></td>
+<td>List of studies used in the Tree of Life</td></tr>
+<tr><td style="width: 25%;"><a href="tol_mrca.html">source_list.tol_mrca</a></td>
+<td>MRCA of taxa from the synthetic tree</td></tr>
+<tr><td style="width: 25%;"><a href="tol_node_info.html">source_list.tol_node</a></td>
+<td>Node info</td></tr>
+<tr><td style="width: 25%;"><a href="source_list.html">source_list.tol_summary</a></td>
+<td>List of studies used in the Tree of Life</td></tr>
+<tr><td style="width: 25%;"><a href="strip_ott_ids.html">strip_ott_ids</a></td>
+<td>Strip OTT ids from tip labels</td></tr>
+<tr><td style="width: 25%;"><a href="studies_find_studies.html">studies_find_studies</a></td>
+<td>Find a Study</td></tr>
+<tr><td style="width: 25%;"><a href="studies_find_trees.html">studies_find_trees</a></td>
+<td>Find Trees</td></tr>
+<tr><td style="width: 25%;"><a href="studies_properties.html">studies_properties</a></td>
+<td>Properties of the Studies</td></tr>
+<tr><td style="width: 25%;"><a href="study_external_IDs.html">study_external_IDs</a></td>
+<td>Get external identifiers for data associated with an Open Tree study</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy-methods.html">synonyms</a></td>
+<td>Methods for Taxonomy</td></tr>
+<tr><td style="width: 25%;"><a href="synonyms.match_names.html">synonyms.match_names</a></td>
+<td>List the synonyms for a given name</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_taxon_info.html">synonyms.taxon_info</a></td>
+<td>Taxon information</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_about.html">taxonomy_about</a></td>
+<td>Information about the Open Tree Taxonomy</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_mrca.html">taxonomy_mrca</a></td>
+<td>Taxonomic MRCA</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_subtree.html">taxonomy_subtree</a></td>
+<td>Taxonomy subtree</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_taxon_info.html">taxonomy_taxon_info</a></td>
+<td>Taxon information</td></tr>
+<tr><td style="width: 25%;"><a href="taxon_external_IDs.html">taxon_external_IDs</a></td>
+<td>Get external identifiers for data associated with an Open Tree taxon</td></tr>
+<tr><td style="width: 25%;"><a href="tax_lineage.html">tax_lineage</a></td>
+<td>Lineage of a taxon</td></tr>
+<tr><td style="width: 25%;"><a href="tax_lineage.html">tax_lineage.taxon_info</a></td>
+<td>Lineage of a taxon</td></tr>
+<tr><td style="width: 25%;"><a href="tol_node_info.html">tax_lineage.tol_node</a></td>
+<td>Node info</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy-methods.html">tax_name</a></td>
+<td>Methods for Taxonomy</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_taxon_info.html">tax_name.taxon_info</a></td>
+<td>Taxon information</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_mrca.html">tax_name.taxon_mrca</a></td>
+<td>Taxonomic MRCA</td></tr>
+<tr><td style="width: 25%;"><a href="tol_mrca.html">tax_name.tol_mrca</a></td>
+<td>MRCA of taxa from the synthetic tree</td></tr>
+<tr><td style="width: 25%;"><a href="tol_node_info.html">tax_name.tol_node</a></td>
+<td>Node info</td></tr>
+<tr><td style="width: 25%;"><a href="tol_about.html">tax_name.tol_summary</a></td>
+<td>Information about the Tree of Life</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy-methods.html">tax_rank</a></td>
+<td>Methods for Taxonomy</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_taxon_info.html">tax_rank.taxon_info</a></td>
+<td>Taxon information</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_mrca.html">tax_rank.taxon_mrca</a></td>
+<td>Taxonomic MRCA</td></tr>
+<tr><td style="width: 25%;"><a href="tol_mrca.html">tax_rank.tol_mrca</a></td>
+<td>MRCA of taxa from the synthetic tree</td></tr>
+<tr><td style="width: 25%;"><a href="tol_node_info.html">tax_rank.tol_node</a></td>
+<td>Node info</td></tr>
+<tr><td style="width: 25%;"><a href="tol_about.html">tax_rank.tol_summary</a></td>
+<td>Information about the Tree of Life</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy-methods.html">tax_sources</a></td>
+<td>Methods for Taxonomy</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_taxon_info.html">tax_sources.taxon_info</a></td>
+<td>Taxon information</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_mrca.html">tax_sources.taxon_mrca</a></td>
+<td>Taxonomic MRCA</td></tr>
+<tr><td style="width: 25%;"><a href="tol_mrca.html">tax_sources.tol_mrca</a></td>
+<td>MRCA of taxa from the synthetic tree</td></tr>
+<tr><td style="width: 25%;"><a href="tol_node_info.html">tax_sources.tol_node</a></td>
+<td>Node info</td></tr>
+<tr><td style="width: 25%;"><a href="tol_about.html">tax_sources.tol_summary</a></td>
+<td>Information about the Tree of Life</td></tr>
+<tr><td style="width: 25%;"><a href="tnrs_contexts.html">tnrs_contexts</a></td>
+<td>TNRS contexts</td></tr>
+<tr><td style="width: 25%;"><a href="tnrs_infer_context.html">tnrs_infer_context</a></td>
+<td>Infer the taxonomic context from a list of names</td></tr>
+<tr><td style="width: 25%;"><a href="tnrs_match_names.html">tnrs_match_names</a></td>
+<td>Match names to the Open Tree Taxonomy</td></tr>
+<tr><td style="width: 25%;"><a href="tol_about.html">tol_about</a></td>
+<td>Information about the Tree of Life</td></tr>
+<tr><td style="width: 25%;"><a href="tol_induced_subtree.html">tol_induced_subtree</a></td>
+<td>Subtree from the Open Tree of Life</td></tr>
+<tr><td style="width: 25%;"><a href="tol_node_info.html">tol_lineage</a></td>
+<td>Node info</td></tr>
+<tr><td style="width: 25%;"><a href="tol_node_info.html">tol_lineage.tol_node</a></td>
+<td>Node info</td></tr>
+<tr><td style="width: 25%;"><a href="tol_mrca.html">tol_mrca</a></td>
+<td>MRCA of taxa from the synthetic tree</td></tr>
+<tr><td style="width: 25%;"><a href="tol_node_info.html">tol_node_info</a></td>
+<td>Node info</td></tr>
+<tr><td style="width: 25%;"><a href="tol_subtree.html">tol_subtree</a></td>
+<td>Extract a subtree from the synthetic tree</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy-methods.html">unique_name</a></td>
+<td>Methods for Taxonomy</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_taxon_info.html">unique_name.taxon_info</a></td>
+<td>Taxon information</td></tr>
+<tr><td style="width: 25%;"><a href="taxonomy_mrca.html">unique_name.taxon_mrca</a></td>
+<td>Taxonomic MRCA</td></tr>
+<tr><td style="width: 25%;"><a href="tol_mrca.html">unique_name.tol_mrca</a></td>
+<td>MRCA of taxa from the synthetic tree</td></tr>
+<tr><td style="width: 25%;"><a href="tol_node_info.html">unique_name.tol_node</a></td>
+<td>Node info</td></tr>
+<tr><td style="width: 25%;"><a href="tol_about.html">unique_name.tol_summary</a></td>
+<td>Information about the Tree of Life</td></tr>
+<tr><td style="width: 25%;"><a href="match_names.html">update.match_names</a></td>
+<td>Inspect and Update alternative matches for a name returned by tnrs_match_names</td></tr>
+</table>
+</body></html>

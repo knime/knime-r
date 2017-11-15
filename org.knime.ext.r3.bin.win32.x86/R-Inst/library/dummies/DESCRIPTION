@@ -1,0 +1,17 @@
+Package: dummies
+Type: Package
+Title: Create dummy/indicator variables flexibly and efficiently
+Version: 1.5.6
+Date: 2012-06-14
+Author: Christopher Brown
+Maintainer: Christopher Brown <chris.brown@decisionpatterns.com>
+Depends: utils
+Description: Expands factors, characters and other eligible classes
+        into dummy/indicator variables.
+URL: http://www.decisionpatterns.com
+License: GPL (>= 2)
+LazyLoad: no
+Packaged: 2012-06-13 20:29:53 UTC; cbrown
+Repository: CRAN
+Date/Publication: 2012-06-14 18:17:00
+Built: R 3.4.1; ; 2017-08-16 01:10:20 UTC; windows

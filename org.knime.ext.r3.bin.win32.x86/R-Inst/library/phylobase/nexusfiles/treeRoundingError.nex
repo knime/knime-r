@@ -1,0 +1,35 @@
+#NEXUS
+
+BEGIN TAXA;
+	DIMENSIONS NTAX=4;
+	TAXLABELS
+		spA spB spC spD
+	;
+
+END;
+
+
+BEGIN CHARACTERS;
+	TITLE  'Morphology';
+	DIMENSIONS NCHAR=1;
+	FORMAT DATATYPE = CONTINUOUS;
+CHARSTATELABELS 
+		1 testTest;
+MATRIX
+	spA 0.6263965
+	spB 0.7741235
+	spC 1.0180075
+	spD 1.0856245
+;
+
+END;
+
+BEGIN TREES;
+	TRANSLATE
+	1 spA,
+	2 spB,
+	3 spC,
+	4 spD;
+   TREE testTree = (1,(2,(3,4)));
+END;
+

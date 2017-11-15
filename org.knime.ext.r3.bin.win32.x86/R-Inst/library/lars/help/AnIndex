@@ -1,0 +1,17 @@
+backsolvet	lars-internal
+betabreaker	lars-internal
+coef.lars	predict.lars
+cv.folds	lars-internal
+cv.lars	cv.lars
+delcol	lars-internal
+diabetes	diabetes
+downdateR	lars-internal
+error.bars	lars-internal
+lars	lars
+nnls.lars	lars-internal
+plot.lars	plot.lars
+plotCVLars	lars-internal
+predict.lars	predict.lars
+print.lars	lars-internal
+summary.lars	summary.lars
+updateR	lars-internal

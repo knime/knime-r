@@ -1,0 +1,52 @@
+importFrom(methods, "setOldClass")
+
+
+importFrom(graphics, "axis", "lines", "matplot", "par", "plot", "title")
+importFrom(grDevices, rainbow)
+importFrom(stats, "lowess", "quantile", "runif", "sd", "time", "update", "var")
+importFrom(utils, "read.table")
+
+
+importFrom(rjags, "jags.model",
+                  "coda.samples",
+                  "load.module",
+                  "adapt")
+
+importFrom(abind, "abind")
+
+importFrom(coda, "as.mcmc", "mcmc", "nvar", "varnames", "nchain", "as.mcmc.list", "traceplot")
+
+import(parallel)
+
+importFrom(R2WinBUGS, "attach.bugs",
+                      "detach.bugs",
+                      "write.model",
+                      "monitor")
+
+exportClasses(
+              "rjags",
+              "rjags.parallel"
+              )
+
+exportMethods(
+      "traceplot"
+)
+
+export(
+       "attach.jags",
+       "autojags",
+       "detach.jags",
+       "jags",
+       "jags.parallel",
+       "jags2",
+       "jags2bugs",
+       "recompile"
+)
+
+S3method("recompile", "rjags")
+S3method("recompile", "rjags.parallel")
+S3method("plot", "rjags")
+S3method("print", "rjags")
+S3method("update", "rjags")
+S3method("update", "rjags.parallel")
+S3method("as.mcmc", "rjags")

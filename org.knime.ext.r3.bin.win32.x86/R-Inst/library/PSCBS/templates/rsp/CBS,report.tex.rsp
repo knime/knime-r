@@ -1,0 +1,491 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Authors: Henrik Bengtsson
+% Created on: 2011-09-30
+% Last updated: 2012-02-27
+%
+% Usage: (compiles *.tex.rsp => tex.rsp.R => *.tex => *.dvi)
+%  R.rsp::rsp("CBS.tex.rsp", path="reports,rsp/");
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+<%
+library("PSCBS");
+library("R.devices");
+library("R.cache");
+library("R.utils"); # setOption()
+stopifnot(exists("rspArgs", mode="list"));
+%>
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LATEX STARTUP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[twoside,12pt]{report}
+\usepackage{fancyvrb}
+\usepackage{xspace}
+\usepackage{subfigure}  % \subfigure[<title>]{}
+\usepackage[round]{natbib}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-0.8in}
+\addtolength{\textheight}{1.3in}
+
+\renewcommand{\topfraction}{1.00}   % max fraction of floats at top
+\renewcommand{\bottomfraction}{1.0} % max fraction of floats at bottom
+\renewcommand{\textfraction}{0.00}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+%% \fancyhead{} % clear all header fields
+%% \fancyfoot{} % clear all footer fields
+%% \fancyhead[LE,RO]{\slshape \rightmark}
+%% \fancyfoot[C]{\thepage}
+
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\textit{\nouppercase{\leftmark}}}
+\fancyhead[LO]{\textit{\nouppercase{\rightmark}}}
+
+\newcommand{\code}[1]{\texttt{#1}\xspace}
+
+
+\newcommand{\TCN}{TCN\xspace}
+\newcommand{\BAF}{\BAF\xspace}
+\newcommand{\BAFN}{BAF$_{N}$\xspace}
+\newcommand{\BAFT}{BAF$_{T}$\xspace}
+\newcommand{\BAFTN}{BAF$^*_{T}$\xspace}
+
+
+<% cbsReport <- function(fit, sampleName=NULL, dataSet=NULL, studyName="CBS", Clim=c(0,4), reportPath=file.path("reports", studyName), figPath=file.path(reportPath, "figures"), ..., figForce=FALSE) { %>
+<%
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Validate arguments
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Argument 'fit':
+fit <- Arguments$getInstanceOf(fit, "CBS");
+
+# Argument 'sampleName':
+if (is.null(sampleName)) {
+  sampleName <- sampleName(fit);
+}
+sampleName <- Arguments$getCharacter(sampleName);
+
+# Argument 'dataSet':
+if (!is.null(dataSet)) {
+  dataSet <- Arguments$getCharacter(dataSet);
+}
+
+# Argument 'studyName':
+studyName <- Arguments$getCharacter(studyName);
+
+# Argument 'reportPath':
+reportPath <- Arguments$getWritablePath(reportPath);
+
+# Argument 'figPath':
+figPath <- Arguments$getWritablePath(figPath);
+
+# Argument 'figForce':
+figForce <- Arguments$getLogical(figForce);
+%>
+
+<%
+oFigPath <- setOption("devEval/args/path", figPath);
+on.exit({
+  setOption("devEval/args/path", oFigPath);
+}, add=TRUE);
+
+oPar <- setOption("devNew/args/par", list(lwd=2));
+on.exit({
+  setOption("devNew/args/par", oPar);
+}, add=TRUE);
+%>
+
+<%
+studyLbl <- sprintf("Study: %s\\\\", toLatex(studyName));
+if (!is.null(dataSet)) {
+  dataSetLbl <- sprintf("Data set: %s\\\\", toLatex(dataSet));
+} else {
+  dataSetLbl <- "";
+}
+%>
+
+\title{CBS Report:\\<%=studyLbl%><%=dataSetLbl%>Sample: <%=toLatex(sampleName)%>}
+\author{Report template by Henrik Bengtsson}
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% GRAPHICS SETTINGS
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<%
+setOption("devEval/args/force", figForce);
+%>
+\usepackage{graphicx}
+\graphicspath{{<%=figPath%>/} {../<%=figPath%>/}} 
+
+<%
+# GGPLOT2 SETTINGS
+ClimX <- Clim + c(-1,1)*diff(Clim)*0.08;
+
+muNCols <- c("#999999", "#000000", "#999999");
+
+require("ggplot2") || throw("Package not loaded: ggplot2");
+xnbrOpts <- element_text(colour="grey50", size=20, hjust=1, lineheight=0.9);
+ynbrOpts <- element_text(colour="grey50", size=20, vjust=1, lineheight=0.9);
+xlabOpts <- element_text(colour="black", size=28, hjust=0.5);
+ylabOpts <- element_text(colour="black", size=28, vjust=0.5, angle=90);
+
+labList <- list(
+  CT    = expression(C[T]),
+  betaN = expression(beta[N]),
+  betaT = expression(beta[T]),
+  betaTN = expression(tilde(beta)[T]),
+  rho = expression(rho),
+  rhoN = expression(tilde(rho)),
+  c1 = expression(C[1]),
+  c2 = expression(C[2]),
+  c1N = expression(tilde(C)[1]),
+  c2N = expression(tilde(C)[2])
+);
+
+symbolList <- list(
+  CT    = "$C_{T}$",
+  betaN = "$\\beta_{N}$",
+  betaT = "$\\beta_{T}$",
+  betaTN = "$\\tilde{\\beta}_{T}$",
+  rho = "$\\rho$",
+  rhoN = "$\\tilde{\\rho}$",
+  c1 = "$C_{1}$",
+  c2 = "$C_{2}$",
+  c1N = "$\\tilde{C}_{1}$",
+  c2N = "$\\tilde{C}_{2}$"
+);
+%>
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+This is a quality control (QC) report on the sample '<%=toLatex(sampleName)%>' in data set '<%=toLatex(dataSet)%>'.
+\end{abstract}
+
+\tableofcontents
+
+\clearpage
+
+
+%>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DATA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction}
+
+\chapter{Data}
+\label{ch:Data}
+
+\section{Samples}
+
+\section{Microarray data}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% METHODS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Methods}
+\label{ch:Methods}
+
+\section{Segmentation}
+\label{sec:Segmentation}
+We use the CBS segmentation method~\citep{OlshenA_etal_2007} to partion the genome into segments such that all signals in a particular segment are likely to originate from the same underlying total copy-number state.
+
+
+<%--
+\section{Post-segmentation pruning}
+\label{sec:PostSegmentationPruning}
+<%
+fitP <- pruneByHClust(fit, h=0.25);
+#print(fitP);
+%>
+--%>
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% RESULTS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+% WHOLE-GENOME RESULTS
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+\chapter{Whole-Genome Results}
+\label{ch:WholeGenomeResults}
+
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% SUMMARY ANNOTATION
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<% summaryOfAnnotation <- function(fit, ...) { %>
+\section{Summary of annotation}
+<%
+data <- getLocusData(fit, fields="full");
+nbrOfLoci <- nrow(data);
+
+chromosomes <- getChromosomes(fit);
+nbrOfChromosomes <- length(chromosomes);
+chromosomesH <- seqToHumanReadable(chromosomes);
+chromosomesH <- if (nbrOfChromosomes == 1) {
+  sprintf("Chr %s", chromosomesH);
+} else {
+  sprintf("Chrs %s", chromosomesH);
+}
+chrsTags <- if (nbrOfChromosomes == 1) {
+  sprintf("chr%02d", chromosomes[1]);
+} else {
+  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
+}
+%>
+
+\begin{table}[htbp]
+ \begin{center}
+  \begin{tabular}{lrr}
+   Description & Count & Fraction \\
+   \hline
+   Number of loci & <%=nbrOfLoci%> & 100.00\% \\
+   Number of chromosomes & <%=nbrOfChromosomes%> & - \\
+  \end{tabular}
+  \caption{
+  Summary of the locus-level data on <%=chromosomesH%>.
+  }
+  \label{tbl:LocusStats}
+ \end{center}
+\end{table}
+
+<% } # summaryOfAnnotation() %>
+
+
+<%=summaryOfAnnotation(fit)%>
+
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% SIGNAL DENSITIES
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<% signalDensities <- function(fit, ...) { %>
+\clearpage
+\section{Signal densities}
+\label{sec:SignalDensities}
+<%
+require("ggplot2") || throw("Package not loaded: ggplot2");
+data <- getLocusData(fit, fields="full");
+chromosomes <- getChromosomes(fit);
+nbrOfChromosomes <- length(chromosomes);
+chromosomesH <- seqToHumanReadable(chromosomes);
+chromosomesH <- if (nbrOfChromosomes == 1) {
+  sprintf("Chr %s", chromosomesH);
+} else {
+  sprintf("Chrs %s", chromosomesH);
+}
+chrsTags <- if (nbrOfChromosomes == 1) {
+  sprintf("chr%02d", chromosomes[1]);
+} else {
+  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
+}
+%>
+\begin{figure}[htbp]
+ \begin{center}
+<%
+ fields <- c("y");
+%>
+<% for (ff in fields) { %>
+<%
+  symbol <- symbolList[[ff]];
+  panelTitle <- switch(ff, y="\\TCN", CT="\\TCN", betaN="\\BAFN", betaT="\\BAFT", betaTN="\\BAFTN", "NNN");
+  lim <- switch(ff, y=ClimX, CT=ClimX, c1=ClimX, c2=ClimX, c1N=ClimX, c2N=ClimX);
+%>
+\raisebox{4ex}{<%=symbol%>}
+<% for (by in c("all")) { %>
+<%
+  tags <- c(chrsTags, by, ff);
+%>
+    \resizebox{0.33\textwidth}{!}{%
+      \includegraphics{<%={
+        toPNG(name=sampleName, tags=tags, width=640, aspectRatio=0.3, {
+          gg <- ggplot(data, aes_string(x=ff, y="..count.."));
+          if (by == "all") {
+            if (ff == "CT" && any(!data$isSNP, na.rm=TRUE)) {
+              gg <- gg + aes(group=type, colour=type);
+            }
+          }
+ 
+          # See https://github.com/hadley/ggplot2/wiki/Legend-Attributes
+          gg <- gg + theme(legend.position=c(0.97, 0.75),
+                           legend.justification = 1,
+                           legend.direction="vertical",
+                           legend.title=element_text(size=0),
+                           legend.text=element_text(size=16));
+ 
+          gg <- gg + geom_density(size=2, na.rm=TRUE);
+          gg <- gg + xlab(NULL);
+          gg <- gg + ylab(NULL);
+          gg <- gg + xlim(lim);
+          gg <- gg + theme(axis.text.x=xnbrOpts, axis.text.y=ynbrOpts);
+          gg <- gg + theme(axis.title.x=xlabOpts, axis.title.y=ylabOpts);
+          suppressWarnings({
+            print(gg);
+          });
+        }, force=FALSE);
+      }%>}%
+    }%
+<% } # for (by ...) %>
+\\ %
+<% } # for (ff ...) %>
+ \end{center}
+ \caption{
+   Density estimates of locus-level signals on <%=chromosomesH%>.
+ }
+ \label{fig:SignalDensity}
+\end{figure}
+<% } # signalDensities() %>
+
+<%=signalDensities(fit)%>
+
+
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% TOTAL COPY-NUMBER SEGMENTATION TRACKS
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<% tcnSegmentationTracks <- function(fit, ...) { %>
+\clearpage
+\section{Total copy-number segmentation tracks}
+\label{sec:TCNSegmentationTracks}
+<%
+chromosomes <- getChromosomes(fit);
+nbrOfChromosomes <- length(chromosomes);
+chromosomesH <- seqToHumanReadable(chromosomes);
+chromosomesH <- if (nbrOfChromosomes == 1) {
+  sprintf("Chr %s", chromosomesH);
+} else {
+  sprintf("Chrs %s", chromosomesH);
+}
+chrsTags <- if (nbrOfChromosomes == 1) {
+  sprintf("chr%02d", chromosomes[1]);
+} else {
+  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
+}
+%>
+\begin{figure}[htbp]
+ \begin{center}
+  <% for (track in c("tcn")) { %>
+  \resizebox{\textwidth}{!}{%
+    \includegraphics{<%={
+      tags <- c(chrsTags, "CBS", gsub("[*-]", "", track), getChecksum(fit));
+      toPNG(name=sampleName, tags=tags, width=1024, aspectRatio=0.25, par=list(mar=c(2.8,4,1,1)+0.1, cex=1.5), {
+        plotTracks(fit, tracks=track, lwd=5, Clim=Clim);
+      }, force=FALSE);
+    }%>}%
+  }%
+  \\
+  <% } # for (track ...) %>
+ \end{center}
+ \caption{
+   Results of CBS segmentation on <%=chromosomesH%> projected onto TCN.
+   There are in total $S=<%=nbrOfSegments(fit, splitters=FALSE)%>$ segments. 
+ }
+ \label{fig:CBS}
+\end{figure}
+<% } # tcnSegmentationTracks() %>
+
+<%=tcnSegmentationTracks(fit)%>
+
+
+
+
+
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+% PER CHROMOSOME SEGMENTATION
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+<% if (nbrOfChromosomes(fit) > 1) { %>
+<% for (chr in getChromosomes(fit)) { %>
+\chapter{Chromosome <%=chr%> Results}
+\label{sec:Chromosome<%=chr%>Results}
+<%
+fitT <- extractChromosome(fit, chromosome=chr);
+%>
+<%=summaryOfAnnotation(fitT)%>
+<%=signalDensities(fitT)%>
+<%=tcnSegmentationTracks(fitT)%>
+<% } # for (chr ...) %>
+<% } # if (nbrOfChromosomes(fit) > 1) %>
+
+
+<%--
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+% PRUNED: WHOLE-GENOME SEGMENTATION
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+\section{Hierarchical pruning}
+\label{sec:HierarchicalPruning}
+
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+% PRUNED: PER CHROMOSOME SEGMENTATION
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+--%>
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% REFERENCES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \clearpage
+\bibliography{bioinformatics-journals-abbr,PSCBS}
+%\bibliographystyle{plain}
+\bibliographystyle{natbib}
+
+
+\appendix
+\chapter{Appendix}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Session information
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \clearpage
+\section*{Session information}
+<%=toLatex(sessionInfo())%>
+This report was automatically generated using the R.rsp package.
+The template for this report was created by Henrik Bengtsson.
+\end{document}
+
+<% } # cbsReport() %>
+
+<%=do.call("cbsReport", args=rspArgs)%>
+
+
+
+<%
+######################################################################
+# RSP CLOSEUP
+######################################################################
+# Function for renaming report afterwards
+assign("renamePDF", function() {
+  filename <- sprintf("%s,report.pdf", studyName);
+  pathname <- file.path(reportPath, filename);
+  file.rename("report.pdf", pathname);
+}, envir=globalenv());
+%>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HISTORY:
+% 2013-10-18
+% o BUG FIX: Report template assumed that R.utils was attached.
+% 2012-11-03
+% o Replaced deprecated ggplot2 functions.
+% 2012-02-28
+% o Now it is possible to turn off usage of the alpha channel in
+%   plots, e.g. setOption("PSCBS::report/useAlphaChannel", FALSE).
+%   This is useful for if the alpha channel is not supported.
+% 2012-02-27
+% o First successful run with real data.
+% o Now all of the report uses a PairedPSCBS object.
+% o Now making more use of templates.
+% o Now passing a data frame to segmentByPairedCBS().
+% 2011-09-30
+% o Created.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 

@@ -1,0 +1,24 @@
+Package: wavethresh
+Type: Package
+Title: Wavelets Statistics and Transforms
+Version: 4.6.8
+Date: 2016-10-18
+Authors@R: c(person("Guy", "Nason", role=c("aut", "cre"),
+        email="G.P.Nason@bristol.ac.uk"))
+Depends: R (>= 2.10), MASS
+Description: Performs 1, 2 and 3D real and complex-valued wavelet transforms,
+	nondecimated transforms, wavelet packet transforms, nondecimated
+	wavelet packet transforms, multiple wavelet transforms,
+	complex-valued wavelet transforms, wavelet shrinkage for
+	various kinds of data, locally stationary wavelet time series,
+	nonstationary multiscale transfer function modeling, density
+	estimation.
+License: GPL (>= 2)
+NeedsCompilation: yes
+Packaged: 2016-10-19 19:10:24 UTC; magpn
+Author: Guy Nason [aut, cre]
+Maintainer: Guy Nason <G.P.Nason@bristol.ac.uk>
+Repository: CRAN
+Date/Publication: 2016-10-20 15:33:30
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-10 14:12:17 UTC; windows
+Archs: i386, x64

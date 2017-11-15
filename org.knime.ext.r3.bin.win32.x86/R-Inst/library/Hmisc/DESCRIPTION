@@ -1,0 +1,29 @@
+Package: Hmisc
+Version: 4.0-3
+Date: 2017-04-30
+Title: Harrell Miscellaneous
+Author: Frank E Harrell Jr <f.harrell@vanderbilt.edu>, with
+  contributions from Charles Dupont and many others.
+Maintainer: Frank E Harrell Jr <f.harrell@vanderbilt.edu>
+Depends: lattice, survival (>= 2.40-1), Formula, ggplot2 (>= 2.2)
+Imports: methods, latticeExtra, cluster, rpart, nnet, acepack, foreign,
+        gtable, grid, gridExtra, data.table, htmlTable, viridis,
+        htmltools, base64enc
+Suggests: chron, rms, mice, tables, knitr, ff, ffbase, plotly (>=
+        4.5.6)
+Description: Contains many functions useful for data
+	analysis, high-level graphics, utility operations, functions for
+	computing sample size and power, importing and annotating datasets,
+	imputing missing values, advanced table making, variable clustering,
+	character string manipulation, conversion of R objects to LaTeX and html code,
+	and recoding variables.
+License: GPL (>= 2)
+LazyLoad: Yes
+URL: http://biostat.mc.vanderbilt.edu/Hmisc,
+        https://github.com/harrelfe/Hmisc
+NeedsCompilation: yes
+Packaged: 2017-05-01 18:00:23 UTC; harrelfe
+Repository: CRAN
+Date/Publication: 2017-05-02 06:31:42 UTC
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-10 18:43:52 UTC; windows
+Archs: i386, x64

@@ -1,0 +1,28 @@
+citHeader("To cite package gstat in publications use:")
+
+citEntry(entry="Article",
+	title = "Multivariable geostatistics in S: the gstat package",
+	author = personList(as.person("Edzer J. Pebesma")),
+	journal = "Computers & Geosciences",
+	year	 = 2004,
+	volume = 30,
+	pages	= "683-691",
+	 
+	textVersion = 
+	paste("Pebesma, E.J., 2004. Multivariable geostatistics in S: the gstat package.",
+	"Computers & Geosciences, 30: 683-691.")
+)
+citEntry(entry="Article",
+	title = "Spatio-Temporal Interpolation using gstat",
+	author = personList(as.person("Benedikt Gräler"), as.person("Edzer Pebesma"),
+		as.person("Gerard Heuvelink")),
+	year = 2016,
+	journal = "The R Journal",
+	volume = 8,
+	issue = 1,
+	pages = "204-218",
+	url = "https://journal.r-project.org/archive/2016-1/na-pebesma-heuvelink.pdf",
+	textVersion = 
+	paste("Benedikt Gräler, Edzer Pebesma and Gerard Heuvelink, 2016.",
+		"Spatio-Temporal Interpolation using gstat.  The R Journal 8(1), 204-218")
+)

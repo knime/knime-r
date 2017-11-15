@@ -1,0 +1,17 @@
+attach.jags	attach.jags
+autojags	autojags
+detach.jags	attach.jags
+jags	jags
+jags.parallel	jags
+jags2	jags
+jags2bugs	jags2bugs
+recompile	recompile
+recompile.rjags	recompile
+rjags-class	jags
+rjags.parallel-class	jags
+traceplot	traceplot
+traceplot,bugs-method	traceplot
+traceplot,mcmc.list-method	traceplot
+traceplot,rjags-method	traceplot
+traceplot.default	traceplot
+update.rjags	autojags

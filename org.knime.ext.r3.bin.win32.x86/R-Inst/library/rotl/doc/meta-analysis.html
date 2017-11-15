@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="David Winter" />
+
+<meta name="date" content="2017-03-03" />
+
+<title>Using the Open Tree synthesis in a comparative analysis</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Using the Open Tree synthesis in a comparative analysis</h1>
+<h4 class="author"><em>David Winter</em></h4>
+<h4 class="date"><em>2017-03-03</em></h4>
+
+
+
+<div id="phylogenetic-comparative-methods" class="section level2">
+<h2>Phylogenetic Comparative Methods</h2>
+<p>The development of phylogenetic comparative methods has made phylogenies and important source of data in fields as diverse as ecology, genomic and medicine. Comparative methods can be used to investigate patterns in the evolution of traits or the diversification of lineages. In other cases a phylogeny is treated as a “nuisance parameter”, allowing with the autocorrelation created by the shared evolutionary history of the different species included to be controlled for.</p>
+<p>In many cases finding a tree that relates the species for which trait data are available is a rate-limiting step in such comparative analyses. Here we show how the synthetic tree provided by Open Tree of Life (and made available in R via <code>rotl</code>) can help to fill this gap.</p>
+</div>
+<div id="a-phylogenetic-meta-analysis" class="section level2">
+<h2>A phylogenetic meta-analysis</h2>
+<p>To demonstrate the use of <code>rotl</code> in a comparative analysis, we will partially reproduce the results of <a href="dx.doi.org/10.1111/jeb.12282">Rutkowska <em>et al</em> 2014</a>. Very briefly, this study is a meta-analysis summarising the results of multiple studies testing for systematic differences in the size of eggs which contain male and female offspring. Such a difference might mean that birds invest more heavily in one sex than the other.</p>
+<p>Because this study involves data from 51 different species, Rutkowska <em>et al</em> used a phylogenetic comparative approach to account for the shared evolutionary history among some of the studied-species.</p>
+<div id="gather-the-data" class="section level3">
+<h3>Gather the data</h3>
+<p>If we are going to reproduce this analysis, we will first need to gather the data. Thankfully, the data is available as supplementary material from the publisher’s website. We can collect the data from using <code>fulltext</code> (with the papers DOI as input) and read it into memory with <code>gdata</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rotl)
+
+if (<span class="kw">require</span>(readxl) &amp;&amp;<span class="st"> </span><span class="kw">require</span>(fulltext)) {
+    doi &lt;-<span class="st"> &quot;10.1111/jeb.12282&quot;</span>
+    xl_file &lt;-<span class="st"> </span><span class="kw">ft_get_si</span>(doi, <span class="dv">1</span>, <span class="dt">save.name=</span><span class="st">&quot;egg.xls&quot;</span>)
+    egg_data &lt;-<span class="st"> </span><span class="kw">read_excel</span>(xl_file)
+} else {
+    egg_data &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;egg.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;rotl&quot;</span>))
+}</code></pre></div>
+<pre><code>## Loading required package: readxl</code></pre>
+<pre><code>## Loading required package: fulltext</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(egg_data)</code></pre></div>
+<pre><code>## # A tibble: 6 × 14
+##                   animal                   Spp       Lndim Measure Neggs
+##                    &lt;chr&gt;                 &lt;chr&gt;       &lt;dbl&gt;   &lt;chr&gt; &lt;dbl&gt;
+## 1 Zonotrichia_leucophrys White-crowned sparrow 0.000000000  volume   294
+## 2      Passer_domesticus         House sparrow 0.009407469  volume   149
+## 3        Serinus_canaria                Canary 0.000000000  volume    52
+## 4          Turdus_merula    European blackbird 0.021189299  volume    82
+## 5    Agelaius_phoeniceus  Red-winged blackbird 0.218316086  volume   394
+## 6    Quiscalus_mexicanus  Great-tailed grackle 0.281894985    mass   822
+## # ... with 9 more variables: Nclutches &lt;dbl&gt;, ESr &lt;dbl&gt;, Type &lt;chr&gt;,
+## #   StudyID &lt;chr&gt;, Year &lt;dbl&gt;, D &lt;dbl&gt;, EN &lt;dbl&gt;, Zr &lt;dbl&gt;, VZr &lt;dbl&gt;</code></pre>
+<p>The most important variable in this dataset is <code>Zr</code>, which is a <a href="https://en.wikipedia.org/wiki/Fisher_transformation">normalized effect size</a> for difference in size between eggs that contain males and females. Values close to zero come from studies that found the sex of an egg’s inhabitant had little effect in its size, while large positive or negative values correspond to studies with substantial sex biases (towards males and females respectively). Since this is a meta-analysis we should produce the classic <a href="https://en.wikipedia.org/wiki/Funnel_plot">funnel plot</a> with effects-size on the y-axis and precision (the inverse of the sample standard error) on the x-axis. Here we calculate precision from the sample variance (<code>Vzr</code>):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="dv">1</span>/<span class="kw">sqrt</span>(egg_data$VZr), egg_data$Zr, <span class="dt">pch=</span><span class="dv">16</span>,
+     <span class="dt">ylab=</span><span class="st">&quot;Effect size (Zr)&quot;</span>,
+     <span class="dt">xlab=</span><span class="st">&quot;Precision (1/SE)&quot;</span>,
+     <span class="dt">main=</span><span class="st">&quot;Effect sizes for sex bias in egg size among 51 brid species&quot;</span> )</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>In order to use this data later on we need to first convert it to a standard <code>data.frame</code>. We can also convert the <code>animal</code> column (the species names) to lower case which will make it easier to match names later on:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">egg_data &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(egg_data)
+egg_data$animal &lt;-<span class="st"> </span><span class="kw">tolower</span>(egg_data$animal)</code></pre></div>
+</div>
+<div id="find-the-species-in-ott" class="section level3">
+<h3>Find the species in OTT</h3>
+<p>We can use the OTL synthesis tree to relate these species. To do so we first need to find Open Tree Taxonomy (OTT) IDs for each species. We can do that with the Taxonomic Name Resolution Service function <code>tnrs_match_names</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">taxa &lt;-<span class="st"> </span><span class="kw">tnrs_match_names</span>(<span class="kw">unique</span>(egg_data$animal), <span class="dt">context=</span><span class="st">&quot;Animals&quot;</span>)
+<span class="kw">head</span>(taxa)</code></pre></div>
+<pre><code>##            search_string            unique_name approximate_match ott_id
+## 1 zonotrichia_leucophrys Zonotrichia leucophrys              TRUE 265553
+## 2      passer_domesticus      Passer domesticus              TRUE 745175
+## 3        serinus_canaria        Serinus canaria              TRUE 464865
+## 4          turdus_merula          Turdus merula              TRUE 568572
+## 5    agelaius_phoeniceus    Agelaius phoeniceus              TRUE 226605
+## 6    quiscalus_mexicanus    Quiscalus mexicanus              TRUE 743411
+##   is_synonym          flags number_matches
+## 1      FALSE                             1
+## 2      FALSE                             1
+## 3      FALSE SIBLING_HIGHER              2
+## 4      FALSE                             1
+## 5      FALSE                             2
+## 6      FALSE                             1</code></pre>
+<p>All of these species are in OTT, but a few of them go by different names in the Open Tree than we have in our data set. Because the tree <code>rotl</code> fetches will have Open Tree names, we need to create a named vector that maps the names we have for each species to the names Open Tree uses for them:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">taxon_map &lt;-<span class="st"> </span><span class="kw">structure</span>(taxa$search_string, <span class="dt">names=</span>taxa$unique_name)</code></pre></div>
+<p>Now we can use this map to retrieve “data set names” from “OTT names”:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">taxon_map[<span class="st">&quot;Anser caerulescens&quot;</span>]</code></pre></div>
+<pre><code>##  Anser caerulescens 
+## &quot;chen_caerulescens&quot;</code></pre>
+</div>
+<div id="get-a-tree" class="section level3">
+<h3>Get a tree</h3>
+<p>Now we can get the tree. There are really too many tips here to show nicely, so we will leave them out of this plot</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr &lt;-<span class="st"> </span><span class="kw">tol_induced_subtree</span>(taxa$ott_id)
+<span class="kw">plot</span>(tr, <span class="dt">show.tip.label=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" style="display: block; margin: auto;" /></p>
+<p>There are a few things to note here. First, the tree has not branch lengths. At present this is true for the whole of the Open Tree synthetic tree. Some comparative methods require either branch lengths or an ultrametric tree. Before you can use one of those methods you will need to get a tree with branch lengths. You could try looking for published trees made available by the Open Tree with <code>studies_find_trees</code>. Alternatively, you could estimate branch lengths from the toplogy of a phylogeny returned by <code>tol_induced_subtree</code>, perhaps by downloading DNA sequences from the NCBI with <code>rentrez</code> or “hanging” the tree on nodes of known-age using penalized likelihood method in <code>ape::chronos</code>. In this case, we will use only the topology of the tree as input to our comparative analysis, so we can skip these steps.</p>
+<p>Second, the tip labels contain OTT IDs, which means they will not perfectly match the species names in our dataset or the taxon map that we created earlier:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr$tip.label[<span class="dv">1</span>:<span class="dv">4</span>]</code></pre></div>
+<pre><code>## [1] &quot;Erythrura_gouldiae_ott465909&quot;    &quot;Taeniopygia_guttata_ott708327&quot;  
+## [3] &quot;Lonchura_striata_ott306760&quot;      &quot;Molothrus_bonariensis_ott213451&quot;</code></pre>
+<p>Finally, the tree contains node labels for those nodes that match a higher taxonomic group, and empty character vectors (<code>&quot;&quot;</code>) for all other nodes. Some comparative methods either do no expect node labels at all, or require all labeled nodes to have a unique name (meaning multiple “empty” labels will cause and error).</p>
+<p>We can deal with all these details easily. <code>rotl</code> provides the convenience function <code>strip_ott_ids</code> to remove the extra information from the tip labels. With the IDs removed, we can use our taxon map to replace the tip labels in the tree with the species names from dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">otl_tips &lt;-<span class="st"> </span><span class="kw">strip_ott_ids</span>(tr$tip.label, <span class="dt">remove_underscores=</span><span class="ot">TRUE</span>)
+tr$tip.label &lt;-<span class="st"> </span>taxon_map[ otl_tips ]</code></pre></div>
+<p>Finally, we can remove the node labels by setting the <code>node.label</code> attribute of the tree to <code>NULL</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr$node.label &lt;-<span class="st"> </span><span class="ot">NULL</span></code></pre></div>
+</div>
+<div id="perform-the-meta-analysis" class="section level3">
+<h3>Perform the meta-analysis</h3>
+<p>Now we have data and a tree, and we know the names in the tree match the ones in the data. It’s time to do the comparative analysis. Rutkowska <em>et al</em>. used <code>MCMCglmm</code>, a Bayesian MCMC approach to fitting multi-level models,to perform their meta-analysis, and we will do the same. Of course, to properly analyse these data you would take some care in deciding on the appropriate priors to use and inspect the results carefully. In this case, we are really interested in using this as a demonstration, so we will just run a simple model.</p>
+<p>Specifically we sill fit a model where the only variable that might explain the values of <code>Zr</code> is the random factor <code>animal</code>, which corresponds to the phylogenetic relationships among species. We also provide <code>Zvr</code> as the measurement error variance, effectively adding extra weight to the results of more powerful studies. Here’s how we specify and fit that model with <code>MCMCglmm</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MCMCglmm, <span class="dt">quiet=</span><span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## 
+## Attaching package: 'ape'</code></pre>
+<pre><code>## The following object is masked from 'package:phylobase':
+## 
+##     edges</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+
+pr&lt;-<span class="kw">list</span>(<span class="dt">R=</span><span class="kw">list</span>(<span class="dt">V=</span><span class="dv">1</span>,<span class="dt">nu=</span><span class="fl">0.002</span>),
+             <span class="dt">G=</span><span class="kw">list</span>(<span class="dt">G1=</span><span class="kw">list</span>(<span class="dt">V=</span><span class="dv">1</span>,<span class="dt">nu=</span><span class="fl">0.002</span>))
+)
+
+model &lt;-<span class="st"> </span><span class="kw">MCMCglmm</span>(Zr~<span class="dv">1</span>,<span class="dt">random=</span>~animal,
+                       <span class="dt">pedigree=</span>tr,
+                       <span class="dt">mev=</span>egg_data$VZr,
+                       <span class="dt">prior=</span>pr,
+                       <span class="dt">data=</span>egg_data,
+                       <span class="dt">verbose=</span><span class="ot">FALSE</span>)</code></pre></div>
+<pre><code>## Warning in inverseA(pedigree = pedigree, scale = scale, nodes = nodes): no
+## branch lengths: compute.brlen from ape has been used</code></pre>
+<p>Now that we have a result we can find out how much phylogenetic signal exists for sex-biased differences in egg-size. In a multi-level model we can use variance components to look at this, specifically the proportion of the total variance that can be explained by phylogeny is called the phylogenetic reliability, <em>H</em>. Let’s calculate the <em>H</em> for this model:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">var_comps &lt;-<span class="st"> </span><span class="kw">colMeans</span>(model$VCV )
+var_comps[<span class="st">&quot;animal&quot;</span>] /<span class="st"> </span><span class="kw">sum</span>(var_comps)</code></pre></div>
+<pre><code>##      animal 
+## 0.003066892</code></pre>
+<p>It appears there is almost no phylogenetic signal to the data. The relationships among species explain much less that one percent of the total variance in the data. If you were wondering, Rutkowska <em>et al</em>. report a similar result, even after adding more predictors to their model most of the variance in <code>Zr</code> was left unexplained.</p>
+</div>
+</div>
+<div id="what-other-comparative-methods-can-i-use-in-r" class="section level2">
+<h2>What other comparative methods can I use in R?</h2>
+<p>Here we have demonstrated just one comparative analysis that you might do in R. There are an ever-growing number of packages that allow an ever-growing number of analysis to performed in R. Some “classics” like ancestral state reconstruction, phylogenetic independent contrasts and lineage through time plots are implemented in <code>ape</code>. Packages like <code>phytools</code>, <code>caper</code> and <code>diversitree</code> provide extensions to these methods. The <a href="https://CRAN.R-project.org/view=Phylogenetics">CRAN Phylogenetics Taskview</a> gives a good idea of the diversity of packages and analyses that can be completed in R.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

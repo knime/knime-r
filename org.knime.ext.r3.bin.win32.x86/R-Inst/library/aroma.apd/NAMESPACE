@@ -1,0 +1,54 @@
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# IMPORTS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+importFrom("R.methodsS3", "setMethodS3")
+importFrom("R.methodsS3", "throw")
+
+importFrom("R.oo", "Package")
+importFrom("R.oo", "startupMessage")
+importFrom("R.oo", "trim")
+
+importFrom("R.utils", "Arguments")
+importFrom("R.utils", "enter")
+importFrom("R.utils", "exit")
+importFrom("R.utils", "findFiles")
+importFrom("R.utils", "pushTemporaryFile")
+importFrom("R.utils", "popTemporaryFile")
+
+importFrom("R.huge", "FileVector")
+importFrom("R.huge", "readAllValues")
+importFrom("R.huge", "readContiguousValues")
+importFrom("R.huge", "getComments")
+importFrom("R.huge", "writeValues")
+importFrom("R.huge", "setComments")
+importFrom("R.huge", "writeAllValues")
+importFrom("R.huge", "AbstractFileArray")
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# EXPORTS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Export all public methods, that is, those without a preceeding dot
+# in their names.
+exportPattern("^[^\\.]")
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# DECLARATIONS
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# default
+S3method("cdfToApdMap", "default")
+S3method("celToApd", "default")
+S3method("createApd", "default")
+S3method("findApdMap", "default")
+S3method("gtypeCelToPQ", "default")
+S3method("readApd", "default")
+S3method("readApdHeader", "default")
+S3method("readApdMap", "default")
+S3method("readApdRectangle", "default")
+S3method("readApdUnits", "default")
+S3method("updateApd", "default")
+S3method("updateApdHeader", "default")
+S3method("updateApdUnits", "default")
+S3method("writeApd", "default")
+S3method("writeApdMap", "default")

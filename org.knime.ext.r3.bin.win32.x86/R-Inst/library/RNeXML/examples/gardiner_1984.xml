@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nexml xmlns="http://www.nexml.org/2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:phen="http://www.bioontologies.org/obd/schema/pheno" generator="Phenex 1.10" version="0.9">
+  <meta xmlns:nex="http://www.nexml.org/2009" xmlns:ter="http://purl.org/dc/terms/" xsi:type="nex:LiteralMeta" property="ter:references">PSPUB:0000103</meta>
+  <meta xmlns:ter="http://purl.org/dc/terms/" xsi:type="LiteralMeta" property="ter:description">Gardiner, B. G. (1984). The relationships of the palaeoniscid fishes, a review based on new specimens of Mimia and Moythomasia from the Upper Devonian of Western Australia. Bulletin of the British Museum of Natural History, Geology, 37, 173–428.</meta>
+  <meta xmlns:ter="http://purl.org/dc/terms/" xsi:type="LiteralMeta" property="ter:creator"/>
+  <otus id="e2d7828b-7f7a-4afc-ad09-98f33093ecfc">
+    <otu id="977aa877-94f9-4da7-8b64-3ea625b86e3c" label="" about="#977aa877-94f9-4da7-8b64-3ea625b86e3c">
+      <meta xmlns:ns="http://www.nexml.org/2009" xmlns:ter="http://rs.tdwg.org/dwc/terms/" xsi:type="nex:ResourceMeta" rel="ter:taxonID" href="http://purl.obolibrary.org/obo/VTO_0001463"/>
+    </otu>
+  </otus>
+  <characters xmlns:ns="http://www.nexml.org/2009" id="2aacffad-1cfb-483a-9ade-3619aae2592e" xsi:type="nex:StandardCells" otus="e2d7828b-7f7a-4afc-ad09-98f33093ecfc">
+    <format>
+      <states id="f920014b-ff18-469c-8ca6-36f16a946090">
+        <state id="22858b72-c453-4d62-b861-cbe7ad1390c0" label="present" symbol="0" about="#22858b72-c453-4d62-b861-cbe7ad1390c0">
+          <meta xmlns:voc="http://vocab.phenoscape.org/" xsi:type="nex:LiteralMeta" property="voc:describesPhenotype">
+            <phen:phenotype>
+              <phen:phenotype_character>
+                <phen:bearer>
+                  <phen:typeref about="UBERON:0011615"/>
+                </phen:bearer>
+                <phen:quality>
+                  <phen:typeref about="PATO:0000467"/>
+                </phen:quality>
+              </phen:phenotype_character>
+              <phen:phenotype_character>
+                <phen:bearer>
+                  <phen:typeref about="UBERON:0011618"/>
+                </phen:bearer>
+                <phen:quality>
+                  <phen:typeref about="PATO:0000467"/>
+                </phen:quality>
+              </phen:phenotype_character>
+            </phen:phenotype>
+          </meta>
+        </state>
+      </states>
+      <char id="b09c44a7-9c30-43cd-8fa4-25d67680daf3" label="Basihyal bone and cartilage present" states="f920014b-ff18-469c-8ca6-36f16a946090"/>
+    </format>
+    <matrix>
+      <row id="66212c04-6a93-4590-b14c-4ae8c055b742" otu="977aa877-94f9-4da7-8b64-3ea625b86e3c">
+        <cell char="b09c44a7-9c30-43cd-8fa4-25d67680daf3" state="22858b72-c453-4d62-b861-cbe7ad1390c0"/>
+      </row>
+    </matrix>
+  </characters>
+</nexml>

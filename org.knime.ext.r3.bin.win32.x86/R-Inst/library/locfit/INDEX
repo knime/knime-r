@@ -1,0 +1,121 @@
+aic                     Compute Akaike's Information Criterion.
+aicplot                 Compute an AIC plot.
+ais                     Australian Institute of Sport Dataset
+ang                     Angular Term for a Locfit model.
+bad                     Example dataset for bandwidth selection
+border                  Cricket Batting Dataset
+chemdiab                Chemical Diabetes Dataset
+claw54                  Claw Dataset
+cldem                   Example data set for classification
+cltest                  Test dataset for classification
+cltrain                 Training dataset for classification
+co2                     Carbon Dioxide Dataset
+cp                      Compute Mallows' Cp for local regression
+                        models.
+cpar                    Conditionally parametric term for a Locfit
+                        model.
+cpplot                  Compute a Cp plot.
+crit                    Compute critical values for confidence
+                        intervals.
+dat                     Locfit - data evaluation structure.
+density.lf              Density estimation using Locfit
+diab                    Exhaust emissions
+ethanol                 Exhaust emissions
+expit                   Inverse logistic link function
+fitted.locfit           Fitted values for a '"locfit"' object.
+formula.locfit          Formula from a Locfit object.
+gam.lf                  Locfit call for Generalized Additive Models
+gam.slist               Vector of GAM special terms
+gcv                     Compute generalized cross-validation statistic.
+gcvplot                 Compute a generalized cross-validation plot.
+geyser                  Old Faithful Geyser Dataset
+geyser.round            Discrete Old Faithful Geyser Dataset
+hatmatrix               Weight diagrams and the hat matrix for a local
+                        regression model.
+heart                   Survival Times of Heart Transplant Recipients
+insect                  Insect Dataset
+iris                    Fisher's Iris Data (subset)
+kangaroo                Kangaroo skull measurements dataset
+kappa0                  Critical Values for Simultaneous Confidence
+                        Bands.
+kdeb                    Bandwidth selectors for kernel density
+                        estimation.
+km.mrl                  Mean Residual Life using Kaplan-Meier estimate
+lcv                     Compute Likelihood Cross Validation Statistic.
+lcvplot                 Compute the likelihood cross-validation plot.
+left                    One-sided left smooth for a Locfit model.
+lf                      Locfit term in Additive Model formula
+lfeval                  Extract Locfit Evaluation Structure.
+lfgrid                  Locfit - grid evaluation structure.
+lfknots                 Extraction of fit-point information from a
+                        Locfit object.
+lflim                   Construct Limit Vectors for Locfit fits.
+lfmarg                  Generate grid margins.
+lines.locfit            Add locfit line to existing plot
+livmet                  liver Metastases dataset
+locfit                  Local Regression, Likelihood and Density
+                        Estimation.
+locfit.censor           Censored Local Regression
+locfit.matrix           Reconstruct a Locfit model matrix.
+locfit.quasi            Local Quasi-Likelihood with global reweighting.
+locfit.raw              Local Regression, Likelihood and Density
+                        Estimation.
+locfit.robust           Robust Local Regression
+lp                      Local Polynomial Model Term
+lscv                    Least Squares Cross Validation Statistic.
+lscv.exact              Exact LSCV Calculation
+lscvplot                Compute the LSCV plot.
+mcyc                    Acc(De?)celeration of a Motorcycle Hitting a
+                        Wall
+mine                    Fracture Counts in Coal Mines
+mmsamp                  Test dataset for minimax Local Regression
+morths                  Henderson and Sheppard Mortality Dataset
+none                    Locfit Evaluation Structure
+penny                   Penny Thickness Dataset
+plot.eval               Plot evaluation points from a 2-d locfit
+                        object.
+plot.gcvplot            Produce a cross-validation plot.
+plot.lfeval             Plot a Locfit Evaluation Structure.
+plot.locfit             Plot an object of class locfit.
+plot.locfit.1d          Plot a one dimensional preplot.locfit object.
+plot.locfit.2d          Plot a two-dimensional "preplot.locfit" object.
+plot.locfit.3d          Plot a high-dimensional "preplot.locfit" object
+                        using trellis displays.
+plot.preplot.locfit     Plot a "preplot.locfit" object.
+plot.scb                Plot method for simultaneous confidence bands
+plotbyfactor            x-y scatterplot, colored by levels of a factor.
+points.locfit           Add 'locfit' points to existing plot
+predict.locfit          Prediction from a Locfit object.
+preplot.locfit          Prediction from a Locfit object.
+preplot.locfit.raw      Prediction from a Locfit object.
+print.gcvplot           Print method for gcvplot objects
+print.lfeval            Print the Locfit Evaluation Points.
+print.locfit            Print method for "locfit" object.
+print.preplot.locfit    Print method for preplot.locfit objects.
+print.scb               Print method for simultaneous confidence bands
+print.summary.locfit    Print a Locfit summary object.
+rbox                    Local Regression, Likelihood and Density
+                        Estimation.
+regband                 Bandwidth selectors for local regression.
+residuals.locfit        Fitted values and residuals for a Locfit
+                        object.
+right                   One-sided right smooth for a Locfit model.
+rv                      Residual variance from a locfit object.
+rv<-                    Substitute variance estimate on a locfit
+                        object.
+scb                     Simultaneous Confidence Bands
+sjpi                    Sheather-Jones Plug-in bandwidth criterion.
+smooth.lf               Local Regression, Likelihood and Density
+                        Estimation.
+spence.15               Spencer's 15 point graduation rule.
+spence.21               Spencer's 21 point graduation rule.
+spencer                 Spencer's Mortality Dataset
+stamp                   Stamp Thickness Dataset
+store                   Save S functions.
+summary.gcvplot         Summary method for a gcvplot structure.
+summary.locfit          Print method for a locfit object.
+summary.preplot.locfit
+                        Summary method for a preplot.locfit object.
+trimod                  Generated sample from a bivariate trimodal
+                        normal mixture
+xbar                    Locfit Evaluation Structure

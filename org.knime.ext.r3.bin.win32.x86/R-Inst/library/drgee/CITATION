@@ -1,0 +1,42 @@
+citHeader("To cite package 'drgee' in publications use:")
+
+# Grab the version and date from the DESCRIPTION file
+if(!exists("meta") || is.null(meta)) meta <- packageDescription("drgee")
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+note <- paste("version", meta$Version)
+
+citEntry(entry = "Article",
+         title        = "Doubly robust estimation with the R package drgee",
+         author       = personList(as.person("Johan Zetterqvist"),
+                                   as.person("Arvid Sj{\"o}lander")),
+         journal      = "Epidemiologic Methods",
+         volume       = "4",
+         number       = "1",
+         pages        = "69--86",
+         year         = "2015", 
+
+         textVersion  =
+             paste("Zetterqvist, J., Sjölander, A., 2015",
+                   "Doubly robust estimation with the R package drgee.",
+                   "Epidemiologic Methods, 4(1), pp.69-86"),
+
+         )
+
+citEntry(entry = "Article",
+         title        = "Doubly robust methods for handling confounding by cluster",
+         author       = personList(as.person("Johan Zetterqvist"),
+                                   as.person("Stijn Vansteelandt"),
+                                   as.person("Yudi Pawitan"),
+                                   as.person("Arvid Sj{\\\"o}lander")),
+         journal      = "Biostatistics",
+         pages        = "kxv041",
+         year         = "2015", 
+         
+         textVersion  =
+             paste("Zetterqvist, J., Vansteelandt, S., Pawitan, Y., Sjölander, A., 2015",
+                   "Doubly robust methods for handling confounding by cluster",
+                   "Biostatistics, p. kxv041"),
+  
+         header =
+             "If you use conditional G-estimation or doubly robust conditional estimation (using cond=TRUE) please also cite:"
+         )

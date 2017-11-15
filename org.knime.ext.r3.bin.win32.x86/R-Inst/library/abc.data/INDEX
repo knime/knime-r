@@ -1,0 +1,17 @@
+human                   A set of R objects containing observed data
+                        from three human populations, and simulated
+                        data under three different demographic models.
+                        The data set is used to illustrate model
+                        selection and parameter inference in an ABC
+                        framework (see the vignette of the 'abc'
+                        package for more details).
+musigma2                A set of objects used to estimate the
+                        population mean and variance in a Gaussian
+                        model with ABC (see the vignette of the 'abc'
+                        package for more details).
+ppc                     Data to illustrate the posterior predictive
+                        checks for the data 'human'. 'ppc' and 'human'
+                        are used to illustrate model selection and
+                        parameter inference in an ABC framework (see
+                        the vignette of the 'abc' package for more
+                        details).

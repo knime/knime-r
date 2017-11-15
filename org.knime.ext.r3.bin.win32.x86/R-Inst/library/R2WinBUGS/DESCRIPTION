@@ -1,0 +1,27 @@
+Package: R2WinBUGS
+Title: Running 'WinBUGS' and 'OpenBUGS' from 'R' / 'S-PLUS'
+Date: 2015-07-29
+Version: 2.1-21
+Author: originally written by Andrew Gelman <gelman@stat.columbia.edu>;
+ changes and packaged by Sibylle Sturtz <sturtz@statistik.tu-dortmund.de>
+ and Uwe Ligges <ligges@statistik.tu-dortmund.de>.
+ With considerable contributions by Gregor Gorjanc <gregor.gorjanc@bfro.uni-lj.si>
+ and Jouni Kerman <kerman@stat.columbia.edu>.
+ Ported to S-PLUS by Insightful Corp.
+Description: Invoke a 'BUGS' model in 'OpenBUGS' or 'WinBUGS', a class "bugs" for 'BUGS' 
+  results and functions to work with that class.
+  Function write.model() allows a 'BUGS' model file to be written.  
+  The class and auxiliary functions could be used with other MCMC programs, including 'JAGS'.
+Depends: R (>= 2.13.0), coda (>= 0.11-0), boot
+Imports: utils, stats, graphics
+Suggests: BRugs (>= 0.3-2)
+SystemRequirements: OpenBugs for functions bugs() and openbugs() or
+        WinBUGS 1.4 for function bugs()
+Maintainer: Uwe Ligges <ligges@statistik.tu-dortmund.de>
+License: GPL-2
+Dialect: R, S-PLUS
+Packaged: 2015-07-29 21:06:15 UTC; ligges
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2015-07-30 00:15:56
+Built: R 3.4.2; ; 2017-11-10 14:15:01 UTC; windows
