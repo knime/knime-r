@@ -14,8 +14,7 @@
 			<h4>JDBC Driver</h4>
 
 			This node requires the <b>Microsoft JDBC driver</b> to be used in the Microsoft SQL Server connector.
-			Please download it from <a href="https://docs.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server">here</a>
-			and add <i>sqljdbc_6.0\enu\jre8\sqljdbc42.jar</i> in the "Preferences -> Databases" panel.
+			You can install the driver extension from the KNIME Update Site (KNIME Microsoft JDBC Driver For SQL Server).
 		</intro>
 		<tab name="R Snippet">
 			<option name="SQL Input">
