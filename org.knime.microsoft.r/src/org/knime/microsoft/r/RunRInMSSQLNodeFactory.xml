@@ -24,6 +24,9 @@
 			<option name="SQL Output Table Name">
 				Name of the SQL table which <b>knime.out</b> will be written to.
 			</option>
+			<option name="Overwrite">
+				Whether to overwrite when a table with the output table name already exists (failure otherwise).
+			</option>
 			<option name="R Script">
 				The code being executed in R. Input data is available as a data frame named <i>knime.in</i>.
 			</option>
