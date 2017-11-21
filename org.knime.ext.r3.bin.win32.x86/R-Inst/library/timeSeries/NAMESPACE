@@ -1,0 +1,306 @@
+
+################################################
+## import name space
+################################################
+
+import("graphics")
+import("grDevices")
+import("methods")
+import("stats")
+import("utils")
+import("timeDate")
+
+################################################
+## S4 classes
+################################################
+
+exportClasses("index_timeSeries",
+              "timeSeries",
+              "time_timeSeries" )
+
+export("colCummaxs",
+        "colCummins",
+        "colCumprods",
+        "colCumreturns",
+        "colCumsums",
+        "outlier",
+        "returns",
+        "rowCumsums",
+        "series",
+        "series<-",
+        "timeSeries" )
+
+exportMethods("$",
+              "$<-",
+              "+",
+              "-",
+              "Ops",
+              "[",
+              "[<-",
+              "aggregate",
+              "align",
+              "apply",
+              "as.data.frame",
+              "as.list",
+              "as.matrix",
+              "as.ts",
+              "attach",
+              "cbind2",
+              "coerce",
+              "colMeans",
+              "colSums",
+              "colnames",
+              "colnames<-",
+              "comment",
+              "comment<-",
+              "cummax",
+              "cummin",
+              "cumprod",
+              "cumsum",
+              "cut",
+              "diff",
+              "dim",
+              "dim<-",
+              "dimnames",
+              "dimnames<-",
+              "end",
+              "filter",
+              "finCenter",
+              "finCenter<-",
+              "frequency",
+              "getDataPart",
+              "head",
+              "initialize",
+              "is.na",
+              "is.unsorted",
+              "isDaily",
+              "isMonthly",
+              "isQuarterly",
+              "isRegular",
+              "lag",
+              "lines",
+              "merge",
+              "na.contiguous",
+              "na.omit",
+              "names",
+              "names<-",
+              "plot",
+              "points",
+              "print",
+              "quantile",
+			  "median",
+              "rank",
+              "rbind2",
+              "rev",
+              "rownames",
+              "rownames<-",
+              "sample",
+             #"scale",
+              "setDataPart",
+              "show",
+              "sort",
+              "start",
+              "str",
+              "t",
+              "tail",
+              "time",
+              "window" )
+
+################################################
+## S3 classes
+################################################
+
+S3method(".DollarNames", "timeSeries")
+S3method("aggregate", "timeSeries")
+S3method("as.data.frame", "timeSeries")
+S3method("as.list", "timeSeries")
+S3method("as.matrix", "timeSeries")
+S3method("as.timeSeries", "character")
+S3method("as.timeSeries", "data.frame")
+S3method("as.timeSeries", "default")
+S3method("as.timeSeries", "ts")
+S3method("as.timeSeries", "zoo")
+S3method("as.ts", "timeSeries")
+S3method("cbind", "timeSeries")
+S3method("cumulated", "default")
+S3method("cut", "timeSeries")
+S3method("diff", "timeSeries")
+S3method("end", "timeSeries")
+S3method("getUnits", "default")
+S3method("head", "timeSeries")
+S3method("lag", "timeSeries")
+S3method("lines", "timeSeries")
+S3method("merge", "timeSeries")
+S3method("na.omit", "timeSeries")
+S3method("plot", "timeSeries")
+S3method("points", "timeSeries")
+S3method("pretty", "timeSeries")
+S3method("rbind", "timeSeries")
+S3method("rev", "timeSeries")
+S3method("scale", "timeSeries")
+S3method("sort", "timeSeries")
+S3method("start", "timeSeries")
+S3method("str", "timeSeries")
+S3method("tail", "timeSeries")
+S3method("time", "timeSeries")
+S3method("time<-", "timeSeries")
+S3method("window", "timeSeries")
+
+################################################
+## functions
+################################################
+
+export(
+    # MODIFY - DELETE/ADD:
+      # "plotOHLC",
+      ".plotOHLC",
+      # .endOfPeriod*,
+      "endOfPeriodBenchmarks",
+      "endOfPeriodSeries",
+      "endOfPeriodStats",
+    # ADD:
+      "returns0",
+      "index2wealth",
+      "daily2monthly",
+      "daily2weekly",
+      "splits",
+    # DELETE
+      # ".plotTimeSeries",
+    # ADD
+      ".xtplot.timeSeries",
+      ".xtsPlot",
+      ".axTicksByTime2",
+      ".endpoints2",
+      ".periodicity2",
+      ".colorwheelPalette",
+    # ADD:
+      "getAttributes",      "setAttributes<-",      ".appendList"
+)
+
+
+export(
+    ".DollarNames.timeSeries",
+    ".aggregate.timeSeries",
+    ".align.timeSeries",
+    ".applySeries",
+    ".as.data.frame.timeSeries",
+    ".as.list.timeSeries",
+    ".as.matrix.timeSeries",
+    ".as.ts.timeSeries",
+    ".cut.timeSeries",
+    ".description",
+    #".diff.timeSeries",
+    ".dollar_assign",
+    ".end.timeSeries",
+    ".extract.turnpointsPastecs",
+    ".fapply",
+    ".findIndex",
+    ".head.timeSeries",
+    ".isOHLC",
+    ".isOHLCV",
+    ".lines.timeSeries",
+    ".lowessSmoother",
+    ".merge.timeSeries",
+    ".na.omit.timeSeries",
+    ".naOmitMatrix",
+    ".old2newRda",
+    ".old2newTimeSeries",
+    ".plot.timeSeries",
+    ".plot.turnpointsPastecs",
+    ".points.timeSeries",
+    ".print.timeSeries",
+    ".rev.timeSeries",
+    ".rollmax.timeSeries",
+    ".rollmean.timeSeries",
+    ".rollmedian.timeSeries",
+    ".rollmin.timeSeries",
+    ".scale.timeSeries",
+    ".signalCounts",
+    ".signalSeries",
+    ".sort.timeSeries",
+    ".splineSmoother",
+    ".start.timeSeries",
+    ".str.timeSeries",
+    ".subset_timeSeries",
+    ".summary.turnpointsPastecs",
+    ".supsmuSmoother",
+    ".tail.timeSeries",
+    ".time.timeSeries",
+    ".timeSeries",
+    ".turnpoints2",
+    ".turnpointsPastecs",
+    ".turnpointsSeries",
+    ".turnpointsStats",
+    ".validity_timeSeries",
+    ".window.timeSeries",
+    "alignDailySeries",
+    "applySeries",
+    "as.timeSeries",
+    "colAvgs",
+    "colKurtosis",
+    "colMaxs",
+    "colMins",
+    "colProds",
+    "colQuantiles",
+    "colSds",
+    "colSkewness",
+    "colStats",
+    "colStdevs",
+    "colVars",
+    "countMonthlyRecords",
+    "cumulated",
+    "description",
+    "drawdowns",
+    "drawdownsStats",
+    "dummyDailySeries",
+    "dummySeries",
+    "durationSeries",
+    "durations",
+    "fapply",
+    "getFinCenter",
+    "getReturns",
+    "getTime",
+    "getUnits",
+	"getUnits.default",
+    "hclustColnames",
+    "interpNA",
+    "is.signalSeries",
+    "is.timeSeries",
+    "isMultivariate",
+    "isUnivariate",
+    "midquoteSeries",
+    "midquotes",
+    "newPositions<-",
+        ".ohlcDailyPlot",
+    "orderColnames",
+    "orderStatistics",
+    "pcaColnames",
+    "readSeries",
+    "removeNA",
+    "returnSeries",
+    "rollDailySeries",
+    "rollMax",
+    "rollMean",
+    "rollMedian",
+    "rollMin",
+    "rollMonthlySeries",
+    "rollMonthlyWindows",
+    "rollStats",
+    "runlengths",
+    "sampleColnames",
+    "seriesData",
+    "seriesPositions",
+    "setFinCenter<-",
+    "setTime<-",
+    "setUnits<-",
+    "smoothLowess",
+    "smoothSpline",
+    "smoothSupsmu",
+    "sortColnames",
+    "spreadSeries",
+    "spreads",
+    "statsColnames",
+    "substituteNA",
+    "time<-",
+    "turns",
+    "turnsStats" )

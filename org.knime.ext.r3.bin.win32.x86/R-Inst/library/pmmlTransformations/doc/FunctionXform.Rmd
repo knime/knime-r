@@ -1,0 +1,320 @@
+---
+title: "Introduction to FunctionXform in PmmlTransformations"
+author: "Dmitriy Bolotov"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to FunctionXform}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Introduction
+
+This vignette provides examples of how to use the `FunctionXform` transformation to create new data features for PMML models.
+
+Given a `WrapData` object and a transformation expression, `FunctionXform` calculates data for a new feature and creates a new `WrapData` object. When PMML is produced with `pmml::pmml()`, the transformation is inserted into the `LocalTransformations` node as a `DerivedField`.
+
+`FunctionXform` makes it possible to use multiple data fields and functions to produce a new feature.
+
+While `FunctionXform` is part of the `pmmlTransformations` package, the code to produce pmml from R is in the `pmml` package. The following examples assume that both these packages are installed and loaded. The `kable` function is part of `knitr`, and is used to make tables more readable.
+
+```{r, echo=FALSE,warning=FALSE,message=FALSE,results="hide"}
+library(pmml)
+library(pmmlTransformations)
+library(knitr)
+```
+
+## Single numeric field
+Using the `iris` dataset as an example, let's construct a new feature by transforming one variable. Load the dataset and show the first few lines:
+```{r}
+data(iris)
+kable(head(iris,3))
+```
+
+Create the `irisBox` object with `WrapData`:
+```{r}
+irisBox <- WrapData(iris)
+```
+
+`irisBox` contains the data and transform information that will be used to produce PMML later.
+The original data is in `irisBox$data`. Any new features created with a transformation are added as columns to this data frame.
+```{r}
+kable(head(irisBox$data,3))
+```
+
+Transform and field information is in `irisBox$fieldData`. The fieldData data frame contains 
+information on every field in the dataset, as well as every transform used. The `functionXform` column contains expressions used in 
+the `FunctionXform` transform.
+```{r}
+kable(irisBox$fieldData)
+```
+
+Now add a new feature, `Sepal.Length.Sqrt`, using `FunctionXform`:
+```{r}
+irisBox <- FunctionXform(irisBox,origFieldName="Sepal.Length",
+                         newFieldName="Sepal.Length.Sqrt",
+                         formulaText="sqrt(Sepal.Length)")
+```
+
+The new feature is calculated and added as a column to the `irisBox$data` data frame:
+```{r}
+kable(head(irisBox$data,3))
+```
+
+`irisBox$fieldData` now contains a new row with the transformation expression:
+```{r}
+kable(irisBox$fieldData[6,c(1:3,14)])
+```
+
+
+Construct a linear model for `Petal.Width` using this new feature, and convert it to PMML:
+```{r}
+fit <- lm(Petal.Width ~ Sepal.Length.Sqrt, data=irisBox$data)
+fit_pmml <- pmml(fit, transform=irisBox)
+```
+
+Since the model predicts `Petal.Width` using a variable based on `Sepal.Length`, the PMML will contain 
+these two fields in the `DataDictionary` and `MiningSchema`:
+```{r}
+fit_pmml[[2]] #Data Dictionary node
+fit_pmml[[3]][[1]] #Mining Schema node
+```
+
+The `LocalTransformations` node contains `Sepal.Length.Sqrt` as a derived field:
+```{r}
+fit_pmml[[3]][[3]]
+```
+
+## Single categorical field
+`FunctionXform` can also operate on categorical data. In this example, let's create a boolean feature that equals 1 only when `Species` is `setosa`:
+```{r}
+irisBox <- WrapData(iris)
+irisBox <- FunctionXform(irisBox,origFieldName="Species",
+                         newFieldName="Species.Setosa",
+                         formulaText="if (Species == 'setosa') {1} else {0}")
+kable(head(irisBox$data,3))
+```
+
+Create a linear model and check the `LocalTransformations` node:
+```{r}
+fit <- lm(Petal.Width ~ Species.Setosa, data=irisBox$data)
+fit_pmml <- pmml(fit, transform=irisBox)
+fit_pmml[[3]][[3]]
+```
+
+## Multiple input fields
+
+It is possible to create new features by combining several fields. Let's create a new field from the ratio of sepal and petal lengths:
+```{r}
+irisBox <- WrapData(iris)
+irisBox <- FunctionXform(irisBox,origFieldName="Sepal.Length,Petal.Length",
+                         newFieldName="Length.Ratio",
+                         formulaText="Sepal.Length / Petal.Length")
+```
+
+As before, the new field is added as a column to the `irisBox$data` data frame:
+```{r}
+kable(head(irisBox$data,3))
+```
+
+Fit a linear model using this new feature, and convert it to pmml:
+```{r}
+fit <- lm(Petal.Width ~ Length.Ratio, data=irisBox$data)
+fit_pmml <- pmml(fit, transform=irisBox)
+```
+
+The pmml will contain `Sepal.Length` and `Petal.Length` in the `DataDictionary` and `MiningSchema`, since these were used in `FormulaXform`:
+```{r}
+fit_pmml[[2]] #Data Dictionary node
+fit_pmml[[3]][[1]] #Mining Schema node
+```
+
+The `Local.Transformations` node contains `Length.Ratio` as a derived field:
+```{r}
+fit_pmml[[3]][[3]]
+```
+
+## Using a previously derived feature
+It is possible to pass a feature derived with `FunctionXform` to another `FunctionXform` call. To do this, the second call to `FunctionXform` must use the original data field names (instead of the derived field) in the `origFieldName` argument.
+
+```{r}
+irisBox <- WrapData(iris)
+irisBox <- FunctionXform(irisBox,origFieldName="Sepal.Length,Petal.Length",
+                         newFieldName="Length.Ratio",
+                         formulaText="Sepal.Length / Petal.Length")
+
+irisBox <- FunctionXform(irisBox,origFieldName="Sepal.Length,Petal.Length,Sepal.Width",
+                         newFieldName="Length.R.Times.S.Width",
+                         formulaText="Length.Ratio * Sepal.Width")
+kable(irisBox$fieldData[6:7,c(1:3,14)])
+```
+
+```{r}
+fit <- lm(Petal.Width ~ Length.R.Times.S.Width, data=irisBox$data)
+fit_pmml <- pmml(fit, transform=irisBox)
+
+```
+
+The pmml will contain `Sepal.Length`, `Petal.Length`, and `Sepal.Width` in the `DataDictionary` and `MiningSchema`, since these were used in `FormulaXform`:
+```{r}
+fit_pmml[[2]] #Data Dictionary node
+fit_pmml[[3]][[1]] #Mining Schema node
+```
+
+The `Local.Transformations` node contains `Length.Ratio` and `Length.R.Times.S.Width` as derived fields:
+```{r}
+fit_pmml[[3]][[3]]
+```
+
+
+## PMML functions supported by `FunctionXform`
+
+The following R functions and operators are directly supported by `FunctionXform`. Their PMML equivalents are listed on the second line:
+```{r,echo=FALSE}
+
+funcs <- rbind(c("+","-","/","*","^","<","<=",">",">=","&&","&","|","||","==","!=","!","ceiling","prod","log"),
+c("+","-","/","*","pow","lessThan","lessOrEqual","greaterThan","greaterOrEqual","and","and","or","or","equal","notEqual","not","ceil","product","ln"))
+colnames(funcs) <- funcs[1,]
+
+kable(funcs,col.names=colnames(funcs))
+```
+
+For these functions, no extra code is required for translation.
+
+The R function `prod` can be used as long as only numeric arguments are specified. That is, `prod` can take an `na.rm` argument, but specifying this in `FunctionXform` directly will not produce PMML equivalent to the R expression.
+
+Similarly, the R function `log` can be used directly as long as the second argument (the base) is not specified.
+
+
+## PMML functions not supported by `FunctionXform`
+
+There are built-in functions defined in PMML that cannot be directly translated to PMML using `FunctionXform` as described above.
+
+In this case, an error will be thrown when R tries to calculate a new feature using the function passed to `FunctionXform`, but does not see that function in the environment.
+
+It is still possible to make `FunctionXform` work, but the PMML function must be defined in the R environment first.
+
+Let's use `isIn`, a PMML function, as an example. The function returns a boolean indicating whether the first argument is contained in a list of values. Detailed specification for this function is available on [this DMG page](http://dmg.org/pmml/v4-3/BuiltinFunctions.html#boolean5). 
+
+One way to implement this in R is by using `%in%`, with the list of values being represented by `...`:
+```{r}
+isIn <- function(x, ...) {
+  dots <- c(...)
+  if (x %in% dots) {
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
+
+isIn(1,2,1,4)
+```
+
+This function can now be passed to `FunctionXform`. The following code creates a feature that indicates whether `Species` is 
+either `setosa` or `versicolor`:
+```{r}
+irisBox <- WrapData(iris)
+irisBox <- FunctionXform(irisBox,origFieldName="Species",
+                         newFieldName="Species.Setosa.or.Versicolor",
+                         formulaText="isIn(Species,'setosa','versicolor')")
+```
+
+The `data` data frame now contains the new feature:
+```{r}
+kable(head(irisBox$data,3))
+```
+
+Create a linear model and view the corresponding PMML for the function:
+```{r}
+fit <- lm(Petal.Width ~ Species.Setosa.or.Versicolor, data=irisBox$data)
+fit_pmml <- pmml(fit, transform=irisBox)
+fit_pmml[[3]][[3]]
+```
+
+## PMML Function not supported by `FunctionXform` - another example
+As another example, let's use R's `mean` function to create a new feature. PMML has a built-in `avg`, so we will define an R function with this name.
+```{r}
+avg <- function(...) {
+  dots <- c(...)
+  return(mean(dots))
+}
+```
+Now use this function to take an average of several other features and combine with another field:
+```{r}
+irisBox <- WrapData(iris)
+irisBox <- FunctionXform(irisBox,origFieldName="Sepal.Length,Petal.Length,Sepal.Width",
+                         newFieldName="Length.Average.Ratio",
+                         formulaText="avg(Sepal.Length,Petal.Length)/Sepal.Width")
+```
+The `data` data frame now contains the new feature:
+```{r}
+kable(head(irisBox$data,3))
+```
+
+Create a simple linear model and view the corresponding PMML for the function:
+```{r}
+fit <- lm(Petal.Width ~ Length.Average.Ratio, data=irisBox$data)
+fit_pmml <- pmml(fit, transform=irisBox)
+fit_pmml[[3]][[3]]
+```
+
+In the PMML, `avg` will be recognized as a valid function.
+
+
+
+## PMML for arbitrary functions
+The function `functionToPMML` (part of the `pmml` package) makes it possible to convert an R expression into PMML directly, without creating a model or calculating values.
+
+As long as the expression passed to the function is a valid R expression (e.g., no unbalanced parentheses), it can contain arbitrary function names not defined in R. Variables in the expression passed to `FunctionXform` are always assumed to be field names, and not substituted. That is, even if `x` has a value in the R environment, the resulting expression will still use `x`.
+
+```{r}
+functionToPMML("1 + 2")
+
+x <- 3
+functionToPMML("foo(bar(x * y))")
+```
+
+
+## More notes on functions
+There are several limitations to parsing expressions in `FunctionXform`.
+
+Each transformation operates on one data row at a time. For example, it is not possible to compute the mean of an entire feature column in `FunctionXform`.
+
+An expression such as `foo(x)` is treated as a function `foo` with argument `x`. Consequently, passing in an R vector `c(1,2,3)` will produce PMML where `c` is a function and `1,2,3` are the arguments:
+```{r}
+functionToPMML("c(1,2,3)")
+```
+
+We can also see what happens when passing an `na.rm` argument to `prod`, as mentioned in an above example:
+```{r}
+functionToPMML("prod(1,2,na.rm=FALSE)") #produces incorrect PMML
+functionToPMML("prod(1,2)") #produces correct PMML
+```
+Additionally, passing in a vector to `prod` produces incorrect PMML:
+```{r}
+prod(c(1,2,3))
+functionToPMML("prod(c(1,2,3))")
+```
+
+
+## More examples of functions
+The following are additional examples of pmml produced from R expressions.
+
+Extra parentheses:
+```{r}
+functionToPMML("pmmlT(((1+2))*(x))")
+```
+
+If-else expressions:
+```{r}
+functionToPMML("if(a<2) {x+3} else if (a>4) {4} else {5}")
+```
+
+
+## References
+- [PMML 4.3 official specification](http://dmg.org/pmml/v4-3/GeneralStructure.html)

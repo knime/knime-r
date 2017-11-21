@@ -1,0 +1,70 @@
+<!DOCTYPE rkpluginmap >
+<document 
+	base_prefix=""
+	namespace="ComparingCronbachalphas"
+	id="ComparingCronbachalphas_rkward"
+	po_id="ComparingCronbachalphas_rkward"
+	priority="medium"
+>
+	<!-- 
+		this code was generated using the rkwarddev package.
+		perhaps don't make changes here, but in the rkwarddev script instead! 
+	-->
+	<dependencies 
+		rkward_min_version="0.6.1"
+		R_min_version="2.15"
+	>
+	</dependencies>
+	<about 
+		name="cocron"
+		shortinfo="Compare two or more alpha coefficients based on either dependent or independent groups of individuals"
+		longinfo="Compare two or more alpha coefficients based on either dependent or independent groups of individuals"
+		version="1.0-1"
+		releasedate="2016-03-11"
+		url="http://comparingcronbachalphas.org"
+		license="GPL"
+	>
+		<author 
+			given="Birk"
+			family="Diedenhofen"
+			email="mail@birkdiedenhofen.de"
+			role="aut, cre"
+		 />
+	</about>
+	<require 
+		map="rkward::menu"
+	 />
+	<require 
+		map="rkward::embedded"
+	 />
+	<components>
+		<component 
+			id="cmp_CmprngCrnbchlphsCmprngCrn"
+			label="Comparing Cronbach alphas"
+			type="standard"
+			file="plugins/ComparingCronbachalphas.xml"
+		>
+		</component>
+	</components>
+	<hierarchy>
+		<menu 
+			id="analysis"
+			label="Analysis"
+		>
+			<menu 
+				id="Classicaltesttheory"
+				label="Classical test theory"
+			>
+				<entry component="cmp_CmprngCrnbchlphsCmprngCrn" />
+			</menu>
+		</menu>
+	</hierarchy>
+	<!-- 
+		<context id="x11">
+			</context> 
+	-->
+	<!-- 
+		<context id="import">
+			</context> 
+	-->
+</document>

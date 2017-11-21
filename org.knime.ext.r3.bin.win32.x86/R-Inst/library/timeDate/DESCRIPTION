@@ -1,27 +1,30 @@
 Package: timeDate
 Title: Rmetrics - Chronological and Calendar Objects
-Date: 2015-01-22
-Version: 3012.100
-Author: Rmetrics Core Team,
-	Diethelm Wuertz [aut],
+Date: 2017-11-12
+Version: 3042.101
+Author: Diethelm Wuertz [aut],
 	Tobias Setz [cre],
 	Yohan Chalabi [ctb],
 	Martin Maechler [ctb],
 	Joe W. Byers [ctb]
-Maintainer: Tobias Setz <tobias.setz@rmetrics.org>
-Description: Environment for teaching 
-	"Financial Engineering and Computational Finance".
-	Managing chronological and calendar objects.
+Maintainer: Tobias Setz <tobias.setz@live.com>
+Description: The 'timeDate' class fulfils the conventions of the ISO 8601 
+	standard as well as of the ANSI C and POSIX standards. Beyond
+	these standards it provides the "Financial Center" concept
+	which allows to handle data records collected in different time 
+	zones and mix them up to have always the proper time stamps with 
+	respect to your personal financial center, or alternatively to the GMT
+	reference time. It can thus also handle time stamps from historical 
+	data records from the same time zone, even if the financial 
+	centers changed day light saving times at different calendar
+	dates.
 Depends: R (>= 2.15.1), graphics, utils, stats, methods
 Suggests: date, RUnit
-Note: SEVERAL PARTS ARE STILL PRELIMINARY AND MAY BE CHANGED IN THE
-        FUTURE. THIS TYPICALLY INCLUDES FUNCTION AND ARGUMENT NAMES, AS
-        WELL AS DEFAULTS FOR ARGUMENTS AND RETURN VALUES.
 LazyData: yes
 License: GPL (>= 2)
 URL: https://www.rmetrics.org
-Packaged: 2015-01-23 00:36:51 UTC; Tobi
 NeedsCompilation: no
+Packaged: 2017-11-16 17:28:04 UTC; Tobias Setz
 Repository: CRAN
-Date/Publication: 2015-01-23 09:30:30
-Built: R 3.4.1; ; 2017-08-16 00:38:16 UTC; windows
+Date/Publication: 2017-11-16 22:08:03 UTC
+Built: R 3.4.2; ; 2017-11-19 08:25:04 UTC; windows

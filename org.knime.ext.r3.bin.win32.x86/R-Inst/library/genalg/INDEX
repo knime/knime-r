@@ -1,5 +1,0 @@
-plot.rbga               R Based Genetic Algorithm Plot Function
-rbga                    R Based Genetic Algorithm (floating point
-                        chromosome)
-rbga.bin                R Based Genetic Algorithm (binary chromosome)
-summary.rbga            R Based Genetic Algorithm Summary Function

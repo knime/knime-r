@@ -1,0 +1,1740 @@
+%\VignetteIndexEntry{Plotting 'timeSeries' Objects}
+\documentclass[10pt,a4paper]{article}
+\usepackage{hyperref}
+\hypersetup{colorlinks,%
+            citecolor=black,%
+            linkcolor=blue,%
+            urlcolor=darkgreen,%
+            }
+
+\title{\bf Plotting 'timeSeries' Objects}
+\author{Diethelm W\"urtz and Tobias Setz\\ETH Zurich and Rmetrics Association Zurich}
+\date{May 12, 2014}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+\tableofcontents
+
+\setlength{\parskip}{20pt}
+%\SweaveOpts{strip.white=FALSE}
+\setkeys{Gin}{width=0.9\textwidth}
+
+
+% plot.ts <- function (
+%    x, y = NULL, plot.type = c("multiple", "single"), 
+%    xy.labels, xy.lines, panel = lines, nc, 
+%    yax.flip = FALSE, 
+%    mar.multi = c(0, 5.1, 0, if (yax.flip) 5.1 else 2.1), 
+%    oma.multi = c(6, 0, 5, 0), axes = TRUE, ...) 
+
+% plot.zoo <- function (
+%    x, y = NULL, screens, plot.type, panel = lines, 
+%    xlab = "Index", ylab = NULL, main = NULL, 
+%    xlim = NULL, ylim = NULL, 
+%    xy.labels = FALSE, xy.lines = NULL, 
+%    yax.flip = FALSE, 
+%    oma = c(6, 0, 5, 0), 
+%    mar = c(0, 5.1, 0, if (yax.flip) 5.1 else 2.1), 
+%    col = 1, lty = 1, lwd = 1, pch = 1, type = "l", log = "", 
+%    nc, widths = 1, heights = 1, ...) 
+
+% plot.xts <- function (
+%   x, y = NULL, type = "l", auto.grid = TRUE, 
+%   major.ticks = "auto", minor.ticks = TRUE, major.format = TRUE, 
+%   bar.col = "grey", candle.col = "white", 
+%   ann = TRUE, axes = TRUE, ...) 
+
+% .plot.timeSeries <-function(
+%    x, y, FinCenter = NULL, type = NULL, plot.type = c("multiple", "single"),
+%    format = "auto", at = c("chic", "pretty"),
+%    col, pch, cex, lty, lwd, 
+%    grid = FALSE, frame.plot = TRUE, panel = lines,
+%    axes = TRUE, ann = TRUE, cex.axis = 1, cex.lab = 1,
+%    yax.flip = FALSE, 
+%    mar.multi = c(0, 5.1, 0, if (yax.flip) 5.1 else 2.1), 
+%    oma.multi = c(7.75, 1.1, 6.1, 1.1),
+%    ...)
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 1
+
+
+\newpage\thispagestyle{empty}\mbox{}
+\pagebreak
+\section{Introduction}
+
+
+The Rmetrics \texttt{timeDate} and \texttt{timeSeries} packages are
+workhorses to deal with chronological objects. Since their inception 
+2009 under their original names \texttt{fCalendar} and \texttt{fSeries}
+they have been only slightly modified. With version R 3.1. we have
+essentially improved the \texttt{plot} function, but we also took
+care that the functionality is almost upward compatible.
+
+In this vignette we show how to work with the recently updated S4 generic 
+plot function \texttt{plot}. The function is written to display Rmetrics 
+S4 \texttt{timeSeries} objects.
+The basic functionality of the \texttt{plot} function is to display single
+and multiple views on univariae and multivariate \texttt{timeSeries} objects.
+The function \texttt{plot.ts} from R's base environment, which displays basic
+\texttt{ts} time series objects, served as a model for our design of the
+generic S4 \texttt{plot} function for \texttt{timeSeries} objects. 
+Similarily, \texttt{plot.ts} can be considered as the prototype for
+the S3 \texttt{plot.zoo} method. The \texttt{xts} plot function was build
+to display univariate \texttt{xts} time series objects which inherit from
+\texttt{zoo}'s objects for ordered time series objects.
+
+
+The generic S4 time series plotting function can dispay \emph{univariate} 
+and \emph{multivariate} time series in \emph{single} and \emph{multiple} 
+frames. The plots can be tailored with respect to several viewing 
+components: colors (col), line types (lty), plot symbols (pch), line 
+widths (lwd), symbol sizes (cex), axis layout (pretty, chic, tailored), 
+minor tick mark appearence, font styles and font sizes, frame positioning 
+(mar, oma), as well as tailored panel functions (panel).
+
+
+\noindent\emph{General Plot Settings and Design Apects}:
+
+
+\noindent\emph{Plot Type}: 
+Univariate time series are displayed by default in \texttt{plot.type="single"}
+frames, multivariate time series are displayed by default in 
+\texttt{plot.type="multiple"} frames. The default line style for a plot
+is \texttt{type ="l"} is drawn with "lines".
+
+
+\noindent\emph{Time Axis Layout}:
+For the time axis layout the function \texttt{pretty} determines in
+an automative way the \texttt{at="pretty"} positions of the ticks. The 
+\texttt{format="auto"} is extracted from the time stamps of the time 
+series object or can be overwritten by the user with a POSIX format 
+string. Alternatively, one can select \texttt{"chic"} to generate time
+axis styles. We called this method "chic" to give reference to the 
+underlying function \texttt{axTicksByTime} from the Chicago \texttt{xts} 
+package which generates tick positions and axis labels. Furthermore,
+a "tailored" method can be applied which allows for fully arbitrary
+user defined positions and formatted labels. Minor ticks can be added
+in several fashions.
+
+
+\noindent\emph{Annotations}:
+The annotations of the plots are reduced to the y-label. These are 
+taken by default from the column names of the time series object.
+This gives the user the freedom to have full control about his views 
+how the plot should be look like. Note, multivariate time series in 
+single plots show the string \texttt{"Values"} as label on the y-axis. 
+Main title, sub title, and the x-label on the time axis are not 
+shown by default. We prefer and recommend to add these decorations
+calling the function \texttt{title}. This allows also much more
+flexibility compared to passing the arguments through the plot 
+functions. All default annotations (including the y-label) can be 
+suppressed setting the plot function argument to \texttt{ann=FALSE}.
+The argument \texttt{axes=FALSE} suppresses to draw both axes on 
+the plot frame.
+
+
+\noindent\emph{Decorations}:
+There are several options to decorate the plot: These include 
+colors (col), plotting symbols (pch), scaling factor of plotting
+characters and symbols (cex), line types (lty), and lindwidths (lwd).
+Note, all these parameters may be vectors of the same length as the
+number of time series, so that each series can be addressed to its
+own individual style, color, and size. A grid and the plot frame (box)
+can be added or suppresse specifying the arguments \texttt{grid} and 
+\texttt{frame.plot} in the argument list of the \texttt{plot}
+function.
+
+
+\noindent\emph{Panel Function}:
+In the case of multiple plots the plot frames, are also called 
+\emph{panels}. By default in each panel the appropriate curve is 
+drawn calling R's \texttt{lines} function \texttt{panel=lines}. 
+This function can be replaced by a user defined function. This 
+offers a wide range of new views on your time series. So for example 
+yo can show zero or any other reference lines on the panels, or 
+you can add rugs to (return) charts, or you can add for an example
+an EMA indicator (or any other kind of indicator) to curves 
+shown in individual panels. 
+
+
+\noindent\emph{Example "timeSeries" Objects}:
+To demonstrate the wide range of options to dispaly S4 \texttt{timeSeries}
+objects, we use the the daily index values from the Swiss Pension Fund 
+Benchmark \emph{LPP2005}. The time series is part of the \texttt{timeSeries}
+package. For this we have introduced some abbreviations:
+
+<<environment, include=FALSE>>=
+Sys.setlocale("LC_ALL", "C")
+@
+
+<<library>>=
+require(timeSeries)
+require(xts)
+require(PerformanceAnalytics)
+require(fTrading)
+tS1 <- 100 * cumulated(LPP2005REC[, 1])     # SBI (univariate)
+tS2 <- 100 * cumulated(LPP2005REC[, 1:2])   # SBI & SPI (bivariate)
+tS3 <- 100 * cumulated(LPP2005REC[, 1:3])   # SBI, SPI, SWIIT (Swiss Market)
+tS6 <- 100 * cumulated(LPP2005REC[, 1:6])   # Swiss and Foreign Market Indexes
+@
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 2
+
+
+\newpage\thispagestyle{empty}\mbox{}
+\newpage\thispagestyle{empty}\mbox{}
+\pagebreak
+\section{Standard Time Series Plots}
+
+
+The \texttt{plot} function from the \texttt{timeSeries} package allows for 
+five different views on standard plot layouts. These include
+
+
+\begin{itemize}
+    \item Univeriate single plots
+    \item Multivariate single plots
+    \item One column multiple plots
+    \item Two column multiple plots
+    \item Scatter plots
+\end{itemize}
+
+
+\noindent
+The only argument we have to set is the \texttt{plot.type} parameter to
+determine the layout of the plot.
+The default value is \texttt{"multiple"}, and the alternative value
+is \texttt{"single"}. The arguments can be abbreviated as \texttt{"m"} 
+or \texttt{"s"}, respectively.
+
+
+\noindent
+\emph{Univariate Single Plots} were designed to plot univariate 
+\texttt{timeSeries} objects in one single graph frame. Nothing then 
+the \texttt{timeSeries} object has to be specified, the \texttt{plot.type}
+is forced to \texttt{"s"}.
+
+
+\noindent
+\emph{Multivariate Single Plots} will be used when a set of multivariate 
+\texttt{timeSeries} objects should be drawn in one common data frame.
+For this argument the vlue \texttt{plot.type="s"} has to be specified.
+
+
+\noindent
+\emph{One Column Multiple Plots} display multivariate \texttt{timeSeries} 
+objects, such that each series is plotted in its own frame. Up to four 
+series, the frames are displayed in one column, for more series the 
+frames are arranged in a two colum column display.
+
+
+\noindent
+\emph{Two Column Multiple Plots} handel the case of more than four 
+\texttt{timeSeries} objects. Then the the series are displayed 
+in two colums. In total, the number of rows is not restricted.
+
+
+% ----------------------------------------------------------------------------
+\pagebreak
+\subsection{Univariate Single Plots}
+
+ 
+The most simple time series plot shows an univariate curve in a single
+plot. The axis is designed from "pretty" positions calculated from R's
+base function \texttt{pretty}. The labels are printed in the ISO 8601 
+standard date/time format.
+
+
+<<univariateSingle,keep.source=TRUE>>=
+par(mfrow=c(1, 1))
+plot(tS1) 
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<univariateSinglePlot, fig=TRUE, echo=FALSE>>=
+<<univariateSingle>>
+@
+\caption{The chart shows an univariate time series (here the Swiss Bond 
+Index) in a single frame. For all plot options default values have been 
+chosen. You can decorate the plot, making it more conveniant to your needs, 
+e.g.: change the color (col), add a main title and x-label calling the 
+function \texttt{title}, or remove the grid lines setting the argument 
+\texttt{grid=FALSE}. You can also design the minor tick marks, setting
+instead of the value \texttt{"auto"} oe of the following spreads: 
+\texttt{"day"}, the default, \texttt{"week"}, or \texttt{"month"}. }
+\end{figure}
+\end{center}
+
+
+% ----------------------------------------------------------------------------
+\pagebreak
+\subsection*{}
+
+
+Tow other plot function implementations for \texttt{xts} time series 
+objects can be found in the contributesd R packages \texttt{xts} and
+\texttt{PerformanceAnalytics}. Let us compare how they generate plot
+positions and time label formats.
+\vspace{-0.3cm}
+
+ 
+<<univariateSingle2,keep.source=TRUE>>=
+require(PerformanceAnalytics)
+par(mfrow=c(3, 1))
+xts::plot.xts(as.xts(tS1)) 
+PerformanceAnalytics::chart.TimeSeries(as.xts(tS1)) 
+plot(tS1) 
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<univariateSingle2Plot, fig=TRUE, echo=FALSE>>=
+<<univariateSingle2>>
+@
+\caption{The group of the three charts shows an univariate time series 
+in a single frame for the plot functions as implemented in the packages 
+\texttt{xts}, \texttt{PerformanceAnalytics}, and \texttt{timeSeries}.
+For example in the case of daily time series records \texttt{xts} uses 
+U.S. style labels whereas \texttt{PerformanceAnalytics} and 
+\texttt{timeSeries} use ISO standard date labels \texttt{YYYY-mm-dd}. The plot
+decorations are those from default settings.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Multivariate Single Plots}
+
+
+Multivariate time series plots in a single panel are constructed by
+default in the way that the first curve is plotted calling the function 
+\texttt{plot} and the remaining curves by calling the function \texttt{lines}.
+ 
+ 
+<<multivariateSingle>>=
+par(mfrow=c(1, 1))             
+plot(tS3, plot.type="s")   
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<multivariateSinglePlot, fig=TRUE, echo=FALSE>>=
+<<multivariateSingle>>
+@
+\caption{This chart shows a multivariate time series in a single 
+frame. Note, we have to set the argument \texttt{plot.type="s"}. Again, 
+for all plot options the default settings have been used. You can 
+decorate the plot, making it more conveniant to your needs, e.g.: 
+change the color vector (col), add a main title and x-label calling the 
+function \texttt{title}, or remove grid lines setting the argument 
+\texttt{grid=FALSE}. Note, to change the color settings you can set the
+argument \texttt{col=1:3} which would result in "black", "red", "green"
+for the three curves, or you can just set the colors by name, or selecting
+them from a color palette.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection*{}
+
+
+Now let us compare the plot function from the \texttt{timeSeries} 
+package with the \texttt{chart.TimeSeries} plotting function from
+the \texttt{PerformanceAnalytics} function. (Note, the \texttt(xts)
+has no multivariate plot function implemented.)
+ 
+ 
+<<multivariateSingle2>>=
+par(mfrow=c(2, 1))       
+require(PerformanceAnalytics)
+PerformanceAnalytics::chart.TimeSeries(as.xts(tS3))   
+plot(tS3, plot.type="s")   
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<multivariateSingle2Plot, fig=TRUE, echo=FALSE>>=
+<<multivariateSingle2>>
+@
+\caption{The two charts show a multivariate time series plotted in a 
+single frame. We use for the plot the functions as implemented in the 
+packages \texttt{PerformanceAnalytics}, and \texttt{timeSeries}.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Multiple Plots}
+
+
+Multiple plots enormously simplify the display of different curves 
+in multiple panels. These are the ideal plots when it comes to the task
+to create a quick overview over several time series. Multiple plotting
+is exclusive to \texttt{timeSeries} objects, \texttt(xts) and 
+\texttt{PerformanceAnalytics} offer no multiple plotting tool.
+
+ 
+<<oneColMultiple>>=
+par(mfrow=c(1, 1))                
+plot(tS3, plot.type="m")  
+@
+
+
+\begin{center}
+\begin{figure}[h]
+<<oneColMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<oneColMultiple>>
+@
+\caption{As long as we plot less than 4 time series in a multivariate
+frame, we get a one column layout. Annotations show by default only the
+y-labels which are taken from the colmun names of the time series to be
+drawn. Feel free to add main title, sub title, and x-label calling the
+function \texttt{title}}.
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection*{}
+
+
+For more than four curves the frames of the plot design are
+arranged in two columns. 
+
+
+<<twoColMultiple>>=
+par(mfrow=c(1, 1))
+plot(tS6, plot.type="m")  
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<twoColMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<twoColMultiple>>
+@
+\caption{The graph shows the layout how it is created for six
+curves. There are two columns with three panels to the left and
+also three panels to the right. Note, it is easily possible to 
+adapt the margin sizes and the gap between the two columns of 
+plots calling the function \texttt{mar} and \texttt{oma}.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection*{}
+
+
+If you like a design with a small gap between the panel rows, you can
+modify the \texttt{mar} parameter to introduce a small gap, here with 
+a width of 0.3. Feel free to modify it.
+
+
+<<gapMultiple>>=
+par(mfrow=c(1, 1))
+plot(tS3, plot.type="m", mar=c(gap=0.3, 5.1, gap=0.3, 2.1)) 
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<gapMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<gapMultiple>>
+@
+\caption{One can use in a multiple plot the \texttt{mar} parameter setting 
+to create a small gap between the rows of the individual charts. This lets
+a plot look more elegant.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Combining Single Plots}
+
+
+You can also create your own multiple panel plots. Just combine single
+panels in an array of rows and columns using the parameter settings
+for \texttt{mfrow}, \texttt{mfcol}, and \texttt{mar}.
+
+
+<<combineSingle>>=
+par(mfrow=c(2, 1))
+par(mar = c(bottom=1.5, 5.1, top=4, 2.1))
+plot(tS2[, 1])
+par(mar = c(bottom=4, 5.1, top=1.5, 2.1))
+plot(tS2[, 2])
+@
+
+
+\begin{center}
+\begin{figure}[h]
+<<combineSinglePlot, fig=TRUE, echo=FALSE>>=
+<<combineSingle>>
+@
+\caption{One can use in single plots the \texttt{mfrow} and \texttt{mar}
+parameter settings to place single plots either row by row or column by
+column. Here, \texttt{mfrow} and \texttt{mfcol} to the job. In this case
+a vector of the form \texttt{c(nr, nc)} draws subsequent figures in an 
+nr-by-nc array on the device by columns (mfcol) or rows (mfrow), 
+respectively.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Layout of Single Plots}
+
+
+There is another option in R to create panel layouts, not necessarilly
+in an rectangular array. Have a look to the help page of the function
+\texttt{layout}, her comes a simple example.
+
+
+<<layoutSingle>>=
+nf <- layout(mat=matrix(c(1, 1, 2, 3), byrow = TRUE, nrow=2))
+par(mar = c(bottom=2, 5.1, top=3, 2.1))
+plot(tS3[, 1])
+par(mar = c(bottom=3, 5.1, top=2, 1.1))
+plot(tS3[, 2])
+par(mar = c(bottom=3, 4.1, top=2, 2.1))
+plot(tS3[, 3])
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<layoutSinglePlot, fig=TRUE, echo=FALSE>>=
+<<layoutSingle>>
+@
+\caption{With the function \texttt{layout} you can devide the plot
+device in rows and columns expressed in matrix form defined by the
+argument \texttt{mat}. }
+\end{figure}
+\end{center}
+
+
+%To be more specific, the graph \texttt{i} is allocated a region composed 
+%from a subset of these rows and columns, based on the rows and columns 
+%in which \texttt{i} occurs in the matrix \texttt{mat}.
+
+%The argument \texttt{layout.show(n)} plots (part of) the current layout, 
+%namely the outlines of the next \texttt{n} figures.
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection*{}
+
+
+In addition widths and heights of the layout can be different from row
+to row, and/or from column to column. The sizes are expressed by the
+arguments \texttt{widths} and \texttt{heights} of the function
+\texttt{layout}.
+
+
+<<layout2Single>>=
+nf <- layout(mat=matrix(c(1, 1, 2, 3), byrow=TRUE, nrow=2), heights=c(2.5,1))
+par(mar = c(bottom=2, 5.1, top=3, 2.1))
+plot(tS3[, 1])
+par(mar = c(bottom=3, 5.1, top=1.5, 1.1))
+plot(tS3[, 2])
+par(mar = c(bottom=3, 4.1, top=1.5, 2.1))
+plot(tS3[, 3])
+@
+
+
+\begin{center}
+\begin{figure}[h]
+<<layout2SinglePlot, fig=TRUE, echo=FALSE>>=
+<<layout2Single>>
+@
+\caption{With the function \texttt{layout} one can also define the 
+widths and heights of the columns and rows.}
+\end{figure}
+\end{center}
+
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Bivariate Scatter Plots}
+
+
+For historical reasons, like in the function \texttt{plot.ts}, there is
+also the option to create an scatter plot from two univariaye time series.
+Since this is not a "true" time series plot, we will not go in further
+detail for this display.
+
+
+<<scatter>>=
+par(mfrow=c(1,1))
+plot(tS2[, 1], tS2[, 2])
+@
+
+\begin{center}
+\begin{figure}[h]
+<<scatterPlot, fig=TRUE, echo=FALSE>>=
+<<scatter>>
+@
+\caption{If \texttt(x) and \texttt(y) are univariate time series, then
+the plot function will display a scatter plot.}
+\end{figure}
+\end{center}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3
+
+
+\newpage\thispagestyle{empty}\mbox{}
+\newpage\thispagestyle{empty}\mbox{}
+\pagebreak
+\section{Time Axis Layout}
+
+
+The function \texttt{plot} comes with three options to design the time axis
+layout: \texttt{"pretty"}, \texttt{"chic"}, and \emph{<tailored>} (note 
+this not a string argument. \emph{<tailored>} should just abbreviate
+that we have to input character strings of fully arbitray \texttt{at}
+positions. For the first two options the style of the axis annotation
+is generated in a fully automated way, whereas in the tailored case each 
+tick on the axis to be user defined.
+
+
+\noindent
+The \emph{"pretty"} time axis layout is the default setting for the 
+argument \texttt{at}. Internally the function \texttt{pretty} is used 
+to compute a sequence of about \texttt{n+1} equally spaced round values 
+which cover the range of the values in the time stamps \texttt{time(x)} 
+of the series \texttt{x}. The values are chosen so that they are 1, 2 or 
+5 times a power of 10.
+
+
+\noindent
+The \emph{"chic"} time axis layout is the alternative setting for the 
+argument \texttt{at}. Internally the function \texttt{axTicksByTime}
+from the package \texttt{xts} is used to compute the sequence of
+axis positions and the format labels.
+
+
+\noindent
+The \emph{<tailored>} time axis layout leaves it to the user to specify
+by himself the positions (at), the time label formatting (format), and the
+minor tick marks (minor.ticks).
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Time Axis: "pretty" or "chic"?}
+
+
+Our plotting function comes with two axis-styles. The first is called 
+\texttt{"pretty"}, which is the default style, and calculates positions
+from R's base function \texttt{pretty}. The other is called \texttt{"chic"} 
+to remember its origin, arising from the "Chicago" \texttt{xts} package.
+\vspace{-0.7cm}
+
+
+<<pretty>>=
+par(mfcol = c(2, 1))
+plot(tS1, at = "pretty")
+plot(tS1, at = "chic")  
+@
+\vspace{-0.3cm}
+
+
+\begin{center}
+\begin{figure}[h]
+<<prettyPlot, fig=TRUE, echo=FALSE>>=
+<<pretty>>
+@
+\caption{The graph shows the two flavours from the \texttt{at="pretty"} and
+the \texttt{"chic"} axis designs. The first style uses the function 
+\texttt{pretty} from R's \texttt{base} environment to compute the positions
+for the major ticks. The second style uses the function \texttt{axTicksByTime}
+from the \texttt{xts} package to compute x-axis tick mark locations by time.
+In the upper graph the minor ticks are calendar days, whereas in the
+lower graph weekdays are drawn (therefore the small gaps between the minor
+ticks become visible). Note, the time series is in both cases an object of 
+class \texttt{timeSeries}.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection*{}
+
+
+Now let us plot a multivariate 3-column time series in a single panel.
+Again we compare the outcome of the \texttt{"pretty"} and the \texttt{"chic"}
+axis style.
+
+
+<<chicUnivariateSingle>>=
+par(mfcol=c(2, 1))
+plot(tS3, plot.type="s", at="pretty")
+plot(tS3, plot.type="s", at="chic")
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<chicUnivariateSinglePlot, fig=TRUE, echo=FALSE>>=
+<<chicUnivariateSingle>>
+@
+\caption{The only difference of this graph compared to the previous is
+the fact that we consider here a multivariate time series. Three curves
+are shown in a common plot. Note, when using the \texttt{"chic"} style, 
+then the vertical gridlines are narrower compared to the \texttt{"pretty"} 
+style.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Time Axis - Selecting Minor Tick Marks}
+
+
+The \texttt{"pretty"} style allows to draw the minor tick marks on different
+time scales. These are: \texttt{"day"}, \texttt{"week"}, and \texttt{"month"}.
+
+
+<<minorTicks>>=
+par(mfrow=c(3, 1))                
+plot(tS1, minor.ticks="day", at="pretty")
+plot(tS1, minor.ticks="week", at="pretty")
+plot(tS1, minor.ticks="month", at="pretty")
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<minorTicksPlot, fig=TRUE, echo=FALSE>>=
+<<minorTicks>>
+@
+\caption{It is worth to note that a good selection of minor tick marks makes 
+a plot much better readable.}
+\end{figure}
+\end{center}
+
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Time Axis - One Column Multiple Plot Layout}
+
+
+In the multiple plot layout the axis are drawn along the same principles
+as they are drawn in the case of the single plot layout.
+
+
+<<chicOneColMultiple>>=
+par(mfrow=c(1, 1))                
+plot(tS3, plot.type="m", at="pretty")
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<chicOneColMultiplePlot,fig=TRUE,echo=FALSE>>=
+<<chicOneColMultiple>>
+@
+\caption{This graph shows a one column multiple plot layout. The one column
+layout is generated for up to four time series. When the multivariate time
+series has more then four time series then a two column layout is displayed.
+It is up to you which axis style you prefer, \texttt{at="pretty"} or 
+\texttt{at="chic".}}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Time Axis - Two Column Multiple Plot Layout}
+
+
+Concerning the style of the axis, there is now difference between the
+one and two column plot designs.
+
+
+<<chicTwoColMultiple>>=
+par(mfrow=c(1, 1)) 
+plot(tS6, plot.type="m", at="chic")  
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<chicTwoColMultiplePlot,fig=TRUE,echo=FALSE>>=
+<<chicTwoColMultiple>>
+@
+\caption{When we have more then four time series, then the display will be
+generated in two columns. Note, it is possible to modify the width of the
+gap between the two columns.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Tick and Format Layout: The <tailored> axis style}
+
+
+The third alternative to style the axis offers the users to define format
+positions according to his preferences. Here comes an example:
+
+
+<<tailoredAxis>>=
+par(mfrow=c(2, 1))
+at <- paste0("200", c("6-01", "6-04", "6-07", "6-10", "7-01", "7-04"), "-01")
+plot(tS3, plot.type="s", format="%B\n%Y", at=at)
+plot(tS3, plot.type="s", format="%b/%y", at=at)
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<tailoredAxisPlot, fig=TRUE, echo=FALSE>>=
+<<tailoredAxis>>
+@
+\caption{This graph shows plots with user tailored positions and formatted
+axis labels.}
+\end{figure}
+\end{center}
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 4
+
+
+\newpage\thispagestyle{empty}\mbox{}
+%\newpage\thispagestyle{empty}\mbox{}
+\pagebreak
+\section{Annotations}
+
+
+Plot annotations are elelents which can be added to plots or completely
+discarded. To discard all annotations you have to set \texttt{ann=FALSE}
+in the argument list of the timSeries \texttt{plot} function. To display
+annotation you can call the function \texttt{title}. This allows to add
+the main title, the sub title, and the x- and y-labels to a plot. Together 
+with the appropriate character strings, you can also specify the placement 
+of these annotations by the arguments \texttt{line} and \texttt{outer}.
+
+There are additional functions to add annotations to a plot. These are
+\texttt{text} and \texttt{mtext}.
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Discarding all Annotations}
+
+
+In a default plot we display only the value-label(s) which are taken from 
+the units or column names of the time time series object. Title, sub title,
+and time-label are not shown. To discard the appearance of all annotations
+on a plot you have to set the plot argument \texttt{ann=FALSE}.
+
+
+<<annSingle>>=
+par(mfrow=c(2, 2))
+plot(tS1, ann=FALSE)                
+plot(tS3, plot.type="s", ann=FALSE, at="pretty")                                   
+plot(tS6, plot.type="s", ann=FALSE, at="pretty")
+@
+
+\begin{center}
+\begin{figure}[h]
+<<annSinglePlot, fig=TRUE, echo=FALSE>>=
+<<annSingle>>
+@
+\caption{This graph shows a plot where all annotations have been
+discarded. Now feel free to add your own annotations.}
+\end{figure}
+\end{center}
+
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Adding Title and Labels}
+
+
+To add a main title, a sub, title, and x- and y-labels you can call the
+function \texttt{title}.
+
+
+<<titleSingle>>= 
+par(mfrow=c(2, 2))
+plot(tS1); title(main = "Index") 
+plot(tS3, plot.type="s"); title(main = "Index") 
+plot(tS3, plot.type="s"); title(main = "Index", xlab = "Date")                              
+plot(tS6, plot.type="s"); title(main = "Index", xlab = "Date")  
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<titleSinglePlot, fig=TRUE, echo=FALSE>>=
+<<titleSingle>>
+@
+\caption{This graph displays in a two by two array four single plots.
+We have added title and x-lable annotations.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Changing Axis Font Size}
+
+
+Sometimes the axis font size may be considered as too small or too large.
+Then you can use the plot argument \texttt{cex.axis} to upsize or downsize
+the font.
+
+
+<<axisFontSize>>=
+par(mfrow=c(3, 1))
+plot(tS3, at="chic", plot.type="s", cex.axis=0.75)                            
+plot(tS3, at="chic", plot.type="s", cex.axis=1.00)                                   
+plot(tS3, at="chic", plot.type="s", cex.axis=1.25)
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<axisFontSizePlot, fig=TRUE, echo=FALSE>>=
+<<axisFontSize>>
+@
+\caption{This is an example how to change the size of the axis labels
+relatively to its default value. The upper graph shows a font size
+decreased by 20\%, the lower graph a font size increased by 25\%.
+You can proceed in the same way when using the \texttt{"pretty"}
+axis style.}
+\end{figure}
+\end{center}
+
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Flipping Value Axes}
+
+
+Flipping every second axis label in a multiple plot from left to 
+rigth might be meaningful in the case when axis labels overwrite themselves.
+
+
+<<flipAxisOne>>=
+par(mfrow=c(1, 1))                
+plot(tS3, plot.type="m", yax.flip = TRUE)                                    
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<flipAxisOnePlot, fig=TRUE, echo=FALSE>>=
+<<flipAxisOne>>
+@
+\caption{The graph shows an one column multiple plot, where the axis
+of the middle panel is flipped from the left to the right. Note, the 
+same procedure can also be applied two two column multiple plots.}
+\end{figure}
+\end{center}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 5
+
+
+\newpage\thispagestyle{empty}\mbox{}
+%\newpage\thispagestyle{empty}\mbox{}
+\pagebreak
+\section{Decorations}
+
+
+There exist several options to decorate plots in different ways. Plot
+types (lines, points, horizontal bars, etc.) can be modified, colors
+can be changed, lines can be modified by style and seize, points can
+be selected by symbol and size.
+
+
+\noindent
+In the following we will give some examples 
+
+
+\begin{itemize}
+  \item Modifying Types
+  \item Changing Colors by Names
+  \item Changing Colors by Color Palettes
+  \item Changing Line Styles
+  \item Modifying Line Widths
+  \item Changing Plot Symbols
+  \item Modifying Plot Symbol Sizes
+  \item Discarding Grid Lines
+  \item Drawing a Box
+\end{itemize}
+
+
+\noindent
+to show a few of the many
+types of cdecorations. Play around to achieve your perfect layout.
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Modifying Types}
+
+
+<<typeMultiple>>=
+par(mfrow=c(1, 1))                                                
+plot(tS3, plot.type="m", type=c("l", "p", "h"), at="pretty")
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<typeMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<typeMultiple>>
+@
+\caption{If we like to consider in a multiple plot for each panel its own
+plot style then we can set the parameter \texttt{type}.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Changing Colors by Names}
+
+
+Colors can be changed in several ways. Just by their numbers, 
+e.g. 1 (black), 2 (red), 3 (green) etc., or by name, e.g.
+"black", "red", "green", etc. or by using well designed color
+palettes.
+
+
+<<colorNamesMultiple>>=
+par(mfrow=c(1, 1))                                                
+plot(tS3, plot.type="m", col=c("blue", "orange", "darkgreen"))
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<colorNamesMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<colorNamesMultiple>>
+@
+\caption{This graph shows how to assign colors by name in the case of a
+multiple plot. You can do it in the same way setting \texttt{plot.type="s"}
+if you like to display all three curves in a common single plot.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Changing Colors by Color Palettes}
+
+
+When the number of curves increases, then it can become quite difficult
+to find a set of nice colors. In such cases it is convenient
+to select the colors from color palettes.
+
+
+<<palettesMultiple>>=
+par(mfrow=c(1, 1))                                                
+plot(tS6, plot.type="s", col=heat.colors(n=6, alpha = 1), 
+  at="chic", format = "%B\n%Y")
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<palettesMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<palettesMultiple>>
+@
+\caption{This graph shows an example of six curves diplayed in a sequence
+of reds. For this we called the function \texttt{seqPalette}.}
+\end{figure}
+\end{center}
+
+\pagebreak
+\begin{verbatim}
+FUNCTION:        COLOUR PALETTE
+
+ rainbowPalette   Contiguous rainbow colour palette
+ heatPalette      Contiguous heat colour palette
+ terrainPalette   Contiguous terrain colour palette
+ topoPalette      Contiguous topo colour palette
+ cmPalette        Contiguous cm colour palette
+ greyPalette      R's gamma-corrected gray palette
+ timPalette       Tim's MATLAB-like colour palette
+ rampPalette      Colour ramp palettes
+ seqPalette       Sequential colour brewer palettes
+ divPalette       Diverging colour brewer palettes
+ qualiPalette     Qualified colour brewer palettes
+ focusPalette     Red, green and blue focus palettes
+ monoPalette      Red, green and blue mono palettes
+\end{verbatim}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Changing Line Styles}
+
+
+In multiple plot to each curve an own line style \texttt{lty} can be 
+assigned: 0 "blank", 1 "solid", 2 "dashed", 3 "dotted", 4 "dotdash", 
+5 "longdash", or 6 "twodash".
+
+
+<<ltyMultiple>>=
+par(mfrow=c(1, 1))                                                
+plot(tS3, plot.type="m", col=1, lty=1:3, at="chic")
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<ltyMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<ltyMultiple>>
+@
+\caption{When we like to print plots in black and white, then its makes
+much sense to use different line types so that we can distinguish the 
+curves one from each other.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Modifying Line Widths}
+
+
+Not only the line type, but also the line width can be modified for each
+curve in an individual kind.
+
+<<lwdMultiple>>=
+par(mfrow=c(1, 1))                                                
+plot(tS3, plot.type="m", col=1, lwd=3:1, at="chic")
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<lwdMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<lwdMultiple>>
+@
+\caption{The graph shows three line widths, the upper's curve width is
+thick, the middle's curve width is medium, and the lowest's curve width
+is the thinnest one.}
+\end{figure}
+\end{center}
+
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Changing Plot Symbols}
+
+To use different plot symbols we can assign them by the parameter 
+\texttt{pch}. Don't forget also to set \texttt{type="p"}.
+
+
+%<<symbolsMultiple>>=
+%par(mfrow=c(1, 1))   
+%tS3weekly <- align(tS3, by="1w")
+%plot(tS3weekly, plot.type="s", type="p", col=1:3, pch=21:23, at="chic")
+%@
+\medskip
+
+
+%\begin{center}
+%\begin{figure}[h]
+%<<symbolsMultiplePlot,fig=TRUE,echo=FALSE>>=
+%<<symbolsMultiple>>
+%@
+%\caption{This plot shows how to assign different plot symbols to the curves
+%in a single plot.}
+%\end{figure}
+%\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Modifying Plot Symbol Sizes}
+
+
+The argument \texttt{cex.pch} allows to increase or decrease plot symbol
+sizes with respect to the current plot symbol size.
+
+
+<<symbolsSizeMultiple>>=
+par(mfrow=c(1, 1))    
+plot(tS3, plot.type="s", type="p", 
+  col=1:3, pch=21:23, cex.pch=c(0.2, 0.2, 0.2), at="pretty")
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<symbolsSizeMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<symbolsSizeMultiple>>
+@
+\caption{This plot show how to change the size of plot symbols in a single
+plot setting the argument \texttt{cex.pch}. Note, for each curve its own
+size can be set. The same approach can be used also for multiple plots.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Discarding Grid Lines}
+
+
+By default grid lines are displayed. To discard the grid lines from
+the plot set the arguments \texttt{grid=FALSE}.
+
+
+<<gridSingle>>=
+par(mfrow=c(1, 1))    
+plot(tS3, plot.type="s", grid=FALSE)
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<gridSinglePlot, fig=TRUE, echo=FALSE>>=
+<<gridSingle>>
+@
+\caption{By default a grid is drawn on top of the plot. You can remove it
+by setting the argument \texttt{grid=FALSE}}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Drawing a Box}
+
+
+<<noBoxSingle>>=
+par(mfrow=c(1, 1))    
+plot(tS3, plot.type="s", frame.plot=FALSE, grid=FALSE)
+box()
+box(bty = "7", col = "white") # boxL
+grid(NA, NULL, col = "darkgrey") # hgrid
+@
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+<<gridSinglePlot, fig=TRUE, echo=FALSE>>=
+<<gridSingle>>
+@
+\caption{By default the plots are displayed as frame plots. This means
+that the graphs are surrounded by a box. This box can be discarded setting
+the plot argument \texttt{frame.plot=FALSE}.}
+\end{figure}
+\end{center}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6
+
+
+\newpage\thispagestyle{empty}\mbox{}
+%\newpage\thispagestyle{empty}\mbox{}
+\pagebreak
+\section{The Panel Function}
+
+
+Multiple plots are very powerful plotting designs. Each panel in a graph
+can individually tailored by the user. By default each curve in a panel
+is generated by the function \texttt{lines}. You can define your own
+panel function(s) by setting the plot argument \texttt{panel} to a user
+dfined functions.
+
+In the following we will show three examples.
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Adding a Horizental Zero Line}
+
+
+In this example we show how to write a panel function which allows to
+add a horizontal zero line to each plot panel.
+
+
+<<horizMultiple>>=
+par(mfrow=c(1, 1))
+lines2 <- function(X, Y, type, xlab, ylab, col, pch, lty, lwd, cex) {
+  lines(x=X, y=Y, col=col)
+  abline(h=0, col = "brown", lwd=2)}
+plot(returns(tS3), plot.type="m", col = .colorwheelPalette(3),
+  panel=lines2, at="pretty")
+@
+
+
+\begin{center}
+\begin{figure}[h]
+<<horizMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<horizMultiple>>
+@
+\caption{This multiple plot shows panels with curves having a horizontal
+zero reference line.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Adding an Rug to Multiple Return Plots}
+
+
+This example shows how to add in each panel rugs to the righ Y-axis.
+
+<<rugMultiple>>=
+par(mfrow=c(1, 1))
+lines2 <- function(X, Y, type, xlab, ylab, col, pch, lty, lwd, cex) {
+  lines(x=X, y=Y, type="h", col=col)
+  rug(Y, side=4, col="steelblue") }
+plot(returns(tS6), plot.type="m", col = .colorwheelPalette(6), 
+  panel=lines2, at="pretty")
+@
+
+
+\begin{center}
+\begin{figure}[h]
+<<rugMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<rugMultiple>>
+@
+\caption{This multiple plot shows panels with rugs on the right Y-axis.}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Adding an EMA to Multiple Index Plots}
+
+
+This example shows how to add an EMA indicator to each plot panel. The
+\texttt{emaTA()} function is provided by the \texttt{fTrading} package.
+
+<<emaMultiple>>=
+par(mfrow=c(1, 1))
+lines2 <- function(X, Y, type, xlab, ylab, col, pch, lty, lwd, cex) {
+  lines(x=X, y=Y, type="l", col=col)
+  lines(x=X, y=emaTA(Y), col="black") }
+plot(tS3, plot.type="m", col = .colorwheelPalette(3), panel=lines2, 
+  grid=TRUE, at="pretty")
+@
+
+
+\begin{center}
+\begin{figure}[h]
+<<emaMultiplePlot, fig=TRUE, echo=FALSE>>=
+<<emaMultiple>>
+@
+\caption{A multiple graph with EMA indicators in each panel.}
+\end{figure}
+\end{center}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 7
+\newpage\thispagestyle{empty}\mbox{}
+\newpage\thispagestyle{empty}\mbox{}
+\pagebreak
+\section{Conclusions}
+
+
+The \texttt{plot} function in the \texttt{timeSeries} package is a very 
+powerful tool to create plots from time series objects. This includes 
+to display univariate and multivariate time series in single and multiple 
+panels, to select from two styles for the time-axis or even to tailor 
+positions and formats according to his own needs, and to modifiy annotations 
+and decorations of plots.
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 8
+\newpage\thispagestyle{empty}\mbox{}
+\pagebreak
+\section{Appendix}
+
+
+In the appendix we have summarized graphs and tables which are useful 
+tools to create plots. We have reprinted the default color table from R, 
+we have summarized several color palettes as available in the 
+\texttt{fBasics} package and other contributed R packages, and two tables 
+with font characters and plot symbols.
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Margins: mar and oma}
+
+
+<<margins,keep.source=TRUE>>=
+# Plot:
+# - oma stands for 'Outer Margin Area'
+# - mar represents the 'figure Margins'  
+# - The default size is c(5,4,4,2) + 0.1
+# - The axes tick marks will go in the first lines 
+par(mfrow=c(1, 1))
+par(oma=c(3,3,3,3))  # all sides have 3 lines of space  
+par(mar=c(5,4,4,2) + 0.1)    
+plot(x=1:10, y=1:10, type="n", xlab="X", ylab="Y")   
+  
+# Add Text tot the Plot Part - red
+text(5,5, "Plot", col="red", cex=2)  
+text(5,4, "text(5,5, \"Plot\", col=\"red\", cex=2)", col="red", cex=1)  
+box("plot", col="red", lwd=2) 
+
+# Add text to thebThe Figure Part - grey
+mtext("Margins", side=3, line=2, cex=1.5, col="grey")  
+mtext("par(mar=c(5,4,4,2) + 0.1)", side=3, line=1, cex=1, col="grey")  
+mtext("Line 0", side=3, line=0, adj=1.0, cex=1, col="grey")  
+mtext("     1", side=3, line=1, adj=1.0, cex=1, col="grey")  
+mtext("Line 2", side=3, line=2, adj=1.0, cex=1, col="grey")  
+mtext("Line 3", side=3, line=3, adj=1.0, cex=1, col="grey")  
+mtext("Line 0", side=2, line=0, adj=1.0, cex=1, col="grey")  
+mtext("Line 1", side=2, line=1, adj=1.0, cex=1, col="grey")  
+mtext("Line 2", side=2, line=2, adj=1.0, cex=1, col="grey")  
+mtext("Line 3", side=2, line=3, adj=1.0, cex=1, col="grey")  
+box("figure", col="grey")  
+
+# The title will fit in the third line on the top of the graph.   
+title("Ttitle - Third Line") 
+   
+# Note 'outer=TRUE' moves us from the figure to the outer margins.  
+mtext("Outer Margin Area", side=1, line=1, cex=1.8, col="brown", outer=TRUE)  
+mtext("par(oma=c(3,3,3,3))", side=1, line=2, cex=1, col="orange", outer=TRUE)  
+mtext("Line 0", side=1, line=0, adj=0.0, cex=0.8, col="orange", outer=TRUE)  
+mtext("Line 1", side=1, line=1, adj=0.0, cex=1, col="orange", outer=TRUE)  
+mtext("Line 2", side=1, line=2, adj=0.0, cex=1, col="orange", outer=TRUE)  
+box("outer", col="orange") 
+@
+
+
+\pagebreak
+\subsection*{}
+
+
+\begin{center}
+<<marginsPlot, fig=TRUE, echo=FALSE>>=
+<<margins>>
+@
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Character Table}
+
+\begin{center}
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{characterTableFig.pdf}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Color Table}
+
+\begin{center}
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{colorTableFig.pdf}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Color Palettes I}
+
+\medskip
+
+\begin{center}
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{colorPalettes1Fig.pdf}
+\end{figure}
+\end{center}
+
+
+\pagebreak
+\subsection{Color Palettes II}
+
+\medskip
+
+
+\begin{center}
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{colorPalettes2Fig.pdf}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Symbol Table}
+
+\begin{center}
+\begin{figure}[h]
+\includegraphics[width=\textwidth]{symbolTableFig.pdf}
+\end{figure}
+\end{center}
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Axis Style "pretty"}
+
+
+<<prettyAppendix>>=
+FORMAT <- tS1@format
+FORMAT
+POSITIONS <- pretty(tS1)
+POSITIONS
+LABELS <- pretty(tS1)
+LABELS
+@
+
+
+% -----------------------------------------------------------------------------
+\pagebreak
+\subsection{Axis Style "chic"}
+
+
+<<axTicks>>=
+axTicksByTime <-
+function (x, ticks.on = "auto", k = 1, labels = TRUE, format.labels = TRUE, 
+    ends = TRUE, gt = 2, lt = 30) 
+{
+    if (timeBased(x)) x <- xts(rep(1, length(x)), x)
+    tick.opts <- c("years", "months", "weeks", "days", "hours", "minutes", "seconds")
+    tick.k.opts <- c(10, 5, 2, 1, 6, 1, 1, 1, 4, 2, 1, 30, 15, 1, 1)
+    if (ticks.on %in% tick.opts) {
+        cl <- ticks.on[1]
+        ck <- k
+    } else {
+        tick.opts <- paste(rep(tick.opts, c(4, 2, 1, 1, 3, 3, 1)), tick.k.opts)
+        is <- structure(rep(0, length(tick.opts)), .Names = tick.opts)
+        for (i in 1:length(tick.opts)) 
+        {
+            y <- strsplit(tick.opts[i], " ")[[1]]
+            ep <- endpoints(x, y[1], as.numeric(y[2]))
+            is[i] <- length(ep) - 1
+            if (is[i] > lt) break
+        }
+        nms <- rev(names(is)[which(is > gt & is < lt)])[1]
+        cl <- strsplit(nms, " ")[[1]][1]
+        ck <- as.numeric(strsplit(nms, " ")[[1]][2])
+    }
+    if (is.null(cl)) ep <- NULL else ep <- endpoints(x, cl, ck)
+    if (ends) ep <- ep + c(rep(1, length(ep) - 1), 0)
+    if (labels) 
+    {
+        if (is.logical(format.labels) || is.character(format.labels)) 
+        {
+            unix <- ifelse(.Platform$OS.type == "unix", TRUE, FALSE)
+            time.scale <- periodicity(x)$scale
+            fmt <- ifelse(unix, "%n%b%n%Y", "%b %Y")
+            if (time.scale == "weekly" | time.scale == "daily") 
+                fmt <- ifelse(unix, "%b %d%n%Y", "%b %d %Y")
+            if (time.scale == "minute" | time.scale == "hourly") 
+                fmt <- ifelse(unix, "%b %d%n%H:%M", "%b %d %H:%M")
+            if (time.scale == "seconds") 
+                fmt <- ifelse(unix, "%b %d%n%H:%M:%S", "%b %d %H:%M:%S")
+            if (is.character(format.labels)) 
+                fmt <- format.labels
+            names(ep) <- format(index(x)[ep], fmt)
+        } else {
+           names(ep) <- as.character(index(x)[ep])
+        }
+      ep
+   }
+}
+@
+
+<<axTicks2>>=
+ticks <- axTicksByTime(as.xts(tS1))
+ticks
+@
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\section*{About the Authors}
+
+
+% -----------------------------------------------------------------------------
+% Diethelm Wuertz
+
+
+\noindent\textbf{Diethelm W\"urtz} 
+is professor at the Institute for Theoretical Physics, ITP, and for 
+the Curriculum Computational Science and Engineering, 
+CSE, at the Swiss Federal Institute of Technology in Zurich. He teaches 
+Econophysics at ITP and supervises seminars in Financial Engineering. 
+Diethelm is senior partner of Finance Online, an ETH spin-off company in 
+Zurich, and co-founder of the Rmetrics Association in Zurich.\\
+
+
+% -----------------------------------------------------------------------------
+% Tobias Setz
+
+
+\noindent \textbf{Tobias Setz} 
+has a Bachelor and Master in Computational Science 
+from ETH in Zurich and has contributed with his Thesis projects on wavelet 
+analytics and Bayesian change point analytics to this handbook. He is now a 
+PhD student in the Econophysics group at ETH Zurich at the Institute for 
+Theoretical Physics.\\
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\section*{About Rmetrics}
+
+
+\noindent\emph{Rmetrics Open Source Project}
+
+With hundreds of functions built on modern methods, the Rmetrics open 
+source software combines exploratory data analysis, statistical modelling 
+and rapid model prototyping. The R/Rmetrics packages are embedded in R, 
+building an environment which creates a first class system for applications 
+in teaching statistics and finance. Rmetrics covers Time Series Econometrics, 
+Hypothesis Testing, GARCH Modelling and Volatility Forecasting, Extreme 
+Value Theory and Copulae, Pricing of Derivatives, Portfolio Analysis, Design 
+and Optimization, and much more.
+
+
+\noindent\emph{The Rmetrics Association}\\
+is a non-profit taking association working in the public interest. The 
+Rmetrics Association provides support for innovations in financial 
+computing. We believe that the Rmetrics Open Source software has become 
+a valuable educational tool and that it is worth ensuring its continued 
+development and the development of future innovations in software for 
+statistical and computational research in finance. Rmetrics provides a 
+reference point for individuals and institutions that want to support or 
+interact with the Rmetrics development community. Rmetrics encourages 
+students to participate in Rmetrics' activities in the context of Student 
+Internships.
+
+
+\noindent\emph{Rmetrics Software Evalution}\\
+If you like to get an impression of the size and quality of the Open 
+Source Rmetrics Program have a look on the Ohloh Rmetrics Software 
+Evaluation. The Evalutions gives an overview about the Software Development 
+(Code Analysis, Estimated Cost), the people behind it, and its community.
+
+
+\noindent\emph{Contributions to Rmetrics}\\
+are coming from several educuational institutions world wide. These include
+the Rmetrics web site and documentation project supported by ITP/CSE ETH 
+Zurich, the organization of Summerschools and Workshops supported by ITP/CSE 
+ETH Zurich, the R-sig-Finance Help and Mailing List, supported by SfS ETH 
+Zurich, the R-forge development server, supported by University of Economics 
+in Vienna, CRAN Test and Distribution Server for R software, supported by 
+University of Economics Vienna, the Debian Linux integration supported by
+the Debian Association. Many thanks to all behind these projects who gave 
+us continuous support over the last years.\\
+
+
+\noindent
+Rmetrics Association\\
+www.rmetrics.org
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+% References
+
+
+\begin{thebibliography}{99}
+\bibitem{zoo} Achim Zeileis and Gabor Grothendieck (2005):
+\emph{ zoo: S3 Infrastructure for Regular and Irregular Time Series.}
+Journal of Statistical Software, 14(6), 1-27. URL http://www.jstatsoft.org/v14/i06/
+
+\bibitem{tseries} Adrian Trapletti and Kurt Hornik (2007):
+\emph{tseries: Time Series Analysis and Computational Finance.} R package version 0.10-11.
+
+\bibitem{rmetrics} Diethelm W\"urtz et al. (2007):
+\emph{Rmetrics: Rmetrics - Financial Engineering and Computational Finance.}
+R package version 260.72. http://www.rmetrics.org
+
+\bibitem{ISO} International Organization for Standardization (2004):
+\emph{ISO 8601: Data elements and interchage formats ---
+      Information interchange --- Representation of dates and time}
+URL http://www.iso.org
+
+\bibitem{R} R Development Core Team:
+\emph{R: A Language and Environment for Statistical Computing},
+R Foundation for Statistical Computing, Vienna, Austria.
+ISBN 3-900051-07-0, URL http://www.R-project.org
+
+\bibitem{quantmod} Jeffrey A. Ryan (2008):
+\emph{quantmod: Quantitative Financial Modelling Framework.}
+R package version 0.3-5. URL http://www.quantmod.com
+URL http://r-forge.r-project.org/projects/quantmod
+
+\end{thebibliography}
+\end{document}
+
+        
+ 

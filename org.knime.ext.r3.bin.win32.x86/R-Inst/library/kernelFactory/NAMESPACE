@@ -1,6 +1,0 @@
-import(randomForest,AUC,genalg,kernlab)
-importFrom("stats", "na.omit", "runif")
-
-export(kernelFactory)
-export(kFNews)
-S3method(predict, kernelFactory)

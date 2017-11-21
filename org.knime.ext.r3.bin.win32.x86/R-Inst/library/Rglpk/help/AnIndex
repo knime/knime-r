@@ -1,3 +1,0 @@
-print.MP_data_from_file	Rglpk_read_file
-Rglpk_read_file	Rglpk_read_file
-Rglpk_solve_LP	Rglpk_solve

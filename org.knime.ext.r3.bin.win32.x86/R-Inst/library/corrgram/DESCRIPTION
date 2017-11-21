@@ -1,0 +1,24 @@
+Package: corrgram
+Title: Plot a Correlogram
+Version: 1.12
+Authors@R: person("Kevin","Wright", email="kw.stat@gmail.com", role=c("aut","cre"))
+Date: 2017-05-03
+Type: Package
+Description: Calculates correlation of variables and displays the results
+    graphically. Included panel functions can display points, shading, ellipses, and
+    correlation values with confidence intervals.
+Imports: graphics, grDevices, seriation, stats
+Suggests: gridBase, knitr, Matrix, psych, rmarkdown, sfsmisc, testthat
+License: GPL-3
+LazyData: yes
+URL: https://github.com/kwstat/corrgram
+BugReports: https://github.com/kwstat/corrgram/issues/
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
+NeedsCompilation: no
+Packaged: 2017-05-06 13:58:47 UTC; wrightkevi
+Author: Kevin Wright [aut, cre]
+Maintainer: Kevin Wright <kw.stat@gmail.com>
+Repository: CRAN
+Date/Publication: 2017-05-07 05:18:16 UTC
+Built: R 3.4.2; ; 2017-11-19 13:34:14 UTC; windows

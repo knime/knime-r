@@ -1,0 +1,6 @@
+useDynLib(CompQuadForm, .registration = TRUE)
+
+# Export all names
+exportPattern(".")
+
+importFrom("stats", "pchisq")

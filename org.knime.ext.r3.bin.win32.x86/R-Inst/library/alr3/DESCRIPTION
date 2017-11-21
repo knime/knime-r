@@ -1,0 +1,21 @@
+Package: alr3
+Version: 2.0.5
+Date: 2011/10/27
+Title: Data to accompany Applied Linear Regression 3rd edition
+Author: Sanford Weisberg <sandy@umn.edu>
+Maintainer: Sanford Weisberg <sandy@umn.edu>
+Depends: R (>= 2.1.1), car
+LazyData: yes
+Description: This package is a companion to the textbook S. Weisberg (2005), 
+ "Applied Linear Regression," 3rd edition, Wiley. It includes all the
+ data sets discussed in the book (except one), and a few functions that 
+ are tailored to the methods discussed in the book.  As of version 2.0.0,
+ this package depends on the car package. Many functions formerly 
+ in alr3 have been renamed and now reside in car.  
+ Data files have beeen lightly modified to make some data columns row labels.
+License: GPL (>= 2)
+URL: http://www.r-project.org, http://www.stat.umn.edu/alr
+Packaged: 2011-10-27 18:09:45 UTC; sandy
+Repository: CRAN
+Date/Publication: 2011-10-27 19:35:19
+Built: R 3.4.2; ; 2017-11-19 13:20:04 UTC; windows

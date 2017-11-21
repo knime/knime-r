@@ -1,0 +1,18 @@
+pmmlTransformations 1.3.1
+	- Speed up FunctionXform()
+	- Fix issue in DiscretizeXform where left interval was always "open"
+	- Updated references to PMML spec to 4.3
+
+pmmlTransformations 1.3.0
+	- Add FunctionXform
+	- Add FunctionXform vignette
+	- Edit to work with FunctionXform: DiscretizeXform, Initialize, MapXform, MinMaxXform, NormDiscreteXform, WrapData, ZscoreXform
+	- DiscretizeXform: fix left interval issue and improve examples
+
+pmmlTransformations 1.2.1
+   - improve code structures
+   - bug fixes: defaultValue should only be used for MapValues and DiscretizeBin expressions
+   - new more informative error messages in MinMaxXform and ZScoreXform
+
+pmmlTransformations 1.2.0.1
+   - patch to optimize row data calculations

@@ -1,0 +1,192 @@
+Changes in Version 1.32
+
+  o tisPlot() and scatterPlot() parameters xExpandBy, leftExpandBy,
+    rightExpandBy and yExpandBy can now be a vector of two numbers to expand the
+    data range asymmetrically.
+
+  o tisFromCsv() was bombing when dateFormat = "excel" was given.
+
+  o created a non-exported is.numeric.ti() that returns FALSE and explicitly
+    exported as.Date.jul and as.Date.ti to prevent the zoo package's 
+    reimplementation of the generic as.Date from incorrectly sending ti
+    arguments to zoo::as.Date.numeric(). 
+
+Changes in Version 1.31
+
+  o Added 'offset' arg to as.Date.ti, and 'origin' arg to as.Date.jul. Request
+    of Andre Mikulec.
+
+  o Fixed minor bug in barplot.tis()
+
+Changes in Version 1.30
+
+  o Added tis methods for head() and tail().
+
+Changes in Version 1.29
+
+  o Removed aggregate.ts() function, which was a modified version of the same-named function
+    in package:stats. Also modified aggregate.tis() to prefer a local version of
+    aggregate.ts to the one in package:stats.
+
+  o Registered S3 method t.tis()
+
+Changes in Version 1.28
+
+  o Added tz argument to tisFromCsv() and added logic to handle date strings that can't be
+    turned into valid dates. Thanks again to Ying Leung for reporting the problem that led
+    to the discovery of a bug.
+
+  o Added naLoses argument to mergeSeries(), with default value of FALSE for backward compatibility.
+
+Changes in Version 1.27
+
+  o Fixed bug in tisFromCsv() reported by Ying Leung. Also added chopNAs parameter to that
+    function.
+
+  o Changed name of ymd.xy() to ymdXy() to keep the CRAN checker happy.
+
+Changes in Version 1.26
+
+  o now exports the barplot2() function called by barplot.tis
+
+Changes in Version 1.25
+
+  o new capitalize() function moved here from the another package.
+
+  o new functions ymd.xy() and ymdShade() generalize the old nber.xy() (now defunct) and
+    nberShade() functions to shade arbitrary date ranges on tisPlots, not just NBER
+    recessions.
+
+  o changed names of "nber" arguments to tisPlot() to reflect the more general date range
+    shading functionality.
+
+Changes in Version 1.24
+
+  o freq2tif() gave wrong answer for frequency = 261, business day freq.
+
+  o tierChart(vlines.month) now draws vertical line after the last day of the month, rather
+    than after the first day of the month.
+
+Changes in Version 1.23
+
+  o added some support for IDate objects from the data.table package.
+
+  o added isBusinessDay() function at the suggestion of Adam Hogan.
+
+  o fixed a bug in inferDate() that was causing tisFromCsv() to misbehave
+
+Changes in Version 1.22
+
+  o defined some variables locally in nberShade.ggplot() to avoid spurious R
+    CMD check warnings.
+
+Changes in Version 1.21
+
+  o changed name of as.list.keepClass() to asClassyList() to placate CRAN
+
+Changes in Version 1.20
+
+  o fixed bug in assignList()
+
+Changes in Version 1.19
+
+  o added xOffset argument to tisPlot()
+
+  o fixed a bug in nberShade.ggplot() found by Matthew McCormick. Thanks, Matt.
+
+Changes in Version 1.18
+
+  o added a tis method for the generic barplot() function
+
+  o moved tierChart functions from local frb package to tis package
+
+Changes in Version 1.17
+
+  o ymdToTi() (an internal function in ti.R) for frequencies bmnovember,
+    qoctober and qnovember was giving results that were off by one period,
+    causing convert() to give wrong results when aggregating to those
+    frequencies. Thanks again to Abiel Reinhart for reporting the problem.
+
+  o changed "env = envir" to "envir = envir" in several places to avoid
+    package check complaints about partial matches
+
+Changes in Version 1.16
+
+  o more bugs in convert() reported by Abiel Reinhart
+
+Changes in Version 1.15
+
+  o fixed bug in convert() reported by Abiel Reinhart
+
+Changes in Version 1.14
+
+  o added as.POSIXct.jul and as.POSIXct.ti methods
+
+Changes in Version 1.13
+
+  o make "[<-.tis" a bit smarter when only a single index is supplied
+
+Changes in Version 1.12
+
+  o fixed bugs in "[.tis" and "[<-.tis" reported by Abiel Reinhart.
+
+Changes in Version 1.11
+
+  o added 'zero' argument to naWindow
+
+Changes in Version 1.10
+
+  o added methods for generic function xtfrm for classes jul, ssDate, ti and
+    tis.
+
+  o print.ti() and print.tis() can now suppress the 'class:  ti' and 'class:
+    tis' strings, respectively, at the end.
+
+Changes in Version 1.9
+
+  o convert() uses tapply() which calls as.factor() on a ti object. For some
+    reason, this results in NA's in R 2.10.0.  Unclassing the ti before using
+    it as a parameter to tapply fixed it.  Why factor() gives NA's for ti
+    objects is a subject for further investigation.
+
+Changes in Version 1.8
+
+  o Allow fortify.tis to handle proper naming when a univariate array is 
+    converted into a tis object.  Contributed by Trevor Davis.
+
+Changes in Version 1.7
+
+  o Tweaked nberShade.ggplot to work with a greater range of ggplot objects,
+    and improved examples for nberShade and fortify.tis documentation.
+    Contributed by Trevor Davis.
+
+Changes in Version 1.6 (contributed by Trevor Davis)
+
+  o made nberShade() generic and added a method for ggplot objects
+
+  o added fortify.tis(), a tis-specific method for the fortify() generic in ggplot2
+
+Changes in Version 1.5
+
+  o added options to how nberDates() and nber.xy() handle an ongoing recession
+
+Changes in Version 1.4
+
+  o fixed nberDates() to show latest recession
+
+Changes in Version 1.3
+
+  o cleaned up some documentation to incorrect package references and
+    references to Fed-specific stuff.
+
+  o added "tif" parameter to today() with default value "daily"
+
+Changes in Version 1.2
+
+  o better handling of ti objects with some NA values.  Thanks to Chuck
+    Mikolajczak for pointing out the problem.
+
+  o the observed attribute of a tis can now be one of "beginning", "ending",
+    "summed", "averaged", "annualized", "high", or "low".  The last two are new,
+    and denote series for which only the high or low value over a period is
+    recorded. The convert() function can work with the new attributes.

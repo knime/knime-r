@@ -1,3 +1,7 @@
+Changes to Version 2.1-6
+
+  o Made several functions compatible with vcov() in R-devel (3.5.0).
+
 Changes to Version 2.1-5
 
   o Fixed bug in boot.hist, and made Boot.default more general.  Added a vcov method for boot objects

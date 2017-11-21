@@ -1,5 +1,5 @@
 9162881b7d318756c63a28e52b41c2d7 *CITATION
-67dc119e132a0fa8f10824dfb898d0ad *DESCRIPTION
+4661713d0f2c9d163bf7c41f8adede02 *DESCRIPTION
 911b2aa6e58d8c52aa2955420fa96fec *INDEX
 e78c1fe80223a19541368c59d30ddcda *Meta/Rd.rds
 8dc46e674b5ec14594edf46ab621b4e8 *Meta/data.rds
@@ -7,7 +7,7 @@ a46f1debdc1f45796be2b2a0e6b3b378 *Meta/features.rds
 3dc3bcc00390d22fd43bee6be36523d5 *Meta/hsearch.rds
 e06ea393cf906d625e7fed29b791c175 *Meta/links.rds
 79a9780ce002c9b620db46119a10e64d *Meta/nsInfo.rds
-ebde80b4cb431e339d9091e4ec4a58ea *Meta/package.rds
+703878590ce658a913af4df96acac2d7 *Meta/package.rds
 a4f04128c819a5f49d0843e171eb2db8 *NAMESPACE
 ee525249ee43164f8ee1f9e10de540ef *NEWS
 ebf0fc819595d631b8bf280c4b049940 *R/randomForest
@@ -16,12 +16,12 @@ b039b48b6c31c53f961a34abf4b5c992 *R/randomForest.rdx
 6d430e97b1da9c1b19eabda685c248b3 *data/imports85.rda
 8fd3e495cf98db0a5eaa3d9d660600ec *help/AnIndex
 84ecccf80a7cc8e6e5466f9c5cebd982 *help/aliases.rds
-0e19eee0a534e1c1474b9eae748edad7 *help/paths.rds
-50aa85f9b2948745a2255de9b63339e7 *help/randomForest.rdb
-345ec765025d76e1e06333080f4c9fdd *help/randomForest.rdx
+0423ecdbd352d89a1b62a71f9e937a7d *help/paths.rds
+a9b57a269cdf52026f3b671cda00add0 *help/randomForest.rdb
+fc49ed260fb5bff6a6a270d08591ef96 *help/randomForest.rdx
 19184b05596dfa25e2564139a8f59b38 *html/00Index.html
 b6763e6916890c631fdc3f2643803b1a *html/R.css
-b58a4227c3078ddc1af02c75779fc63c *libs/i386/randomForest.dll
+3220e71c4015c1918bce30a3b7558291 *libs/i386/randomForest.dll
 250656abedde2118abb490ebd518d320 *libs/i386/symbols.rds
-f255971de28af4f288465616353f9dc4 *libs/x64/randomForest.dll
+9af5b6bf712a83082feee617c0c044c6 *libs/x64/randomForest.dll
 e9046d859e14b253cd2a01800912f778 *libs/x64/symbols.rds

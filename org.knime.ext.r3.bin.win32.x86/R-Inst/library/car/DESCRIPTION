@@ -1,6 +1,6 @@
 Package: car
-Version: 2.1-5
-Date: 2017-06-25
+Version: 2.1-6
+Date: 2017-11-14
 Title: Companion to Applied Regression
 Authors@R: c(person("John", "Fox", role = c("aut", "cre"), email = "jfox@mcmaster.ca"),
 	person("Sanford", "Weisberg", role = "aut", email = "sandy@umn.edu"),
@@ -27,8 +27,7 @@ Depends: R (>= 3.2.0)
 Imports: MASS, mgcv, nnet, pbkrtest (>= 0.4-4), quantreg, grDevices,
         utils, stats, graphics
 Suggests: alr4, boot, coxme, leaps, lme4, lmtest, Matrix, MatrixModels,
-        nlme, rgl (>= 0.93.960), sandwich, SparseM, survival, survey,
-        nloptr
+        nlme, rgl (>= 0.93.960), sandwich, SparseM, survival, survey
 ByteCompile: yes
 LazyLoad: yes
 LazyData: yes
@@ -63,9 +62,9 @@ Author: John Fox [aut, cre],
 Maintainer: John Fox <jfox@mcmaster.ca>
 Repository: CRAN
 Repository/R-Forge/Project: car
-Repository/R-Forge/Revision: 481
-Repository/R-Forge/DateTimeStamp: 2017-07-03 14:10:10
-Date/Publication: 2017-07-04 08:00:39 UTC
+Repository/R-Forge/Revision: 486
+Repository/R-Forge/DateTimeStamp: 2017-11-14 15:40:15
+Date/Publication: 2017-11-19 17:27:37 UTC
 NeedsCompilation: no
-Packaged: 2017-07-03 14:25:35 UTC; rforge
-Built: R 3.4.2; ; 2017-11-10 18:43:39 UTC; windows
+Packaged: 2017-11-14 15:45:34 UTC; rforge
+Built: R 3.4.2; ; 2017-11-21 10:33:16 UTC; windows

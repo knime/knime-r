@@ -1,8 +1,0 @@
-bounds	bounds
-drift	drift
-plot.bounds	plot.drift
-plot.drift	plot.drift
-print.summary.bounds	summary.bounds
-print.summary.drift	summary.drift
-summary.bounds	summary.bounds
-summary.drift	summary.drift

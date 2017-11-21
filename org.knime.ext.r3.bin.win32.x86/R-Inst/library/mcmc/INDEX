@@ -1,8 +1,0 @@
-foo                     Simulated logistic regression data.
-initseq                 Initial Sequence Estimators
-logit                   Simulated logistic regression data.
-metrop                  Metropolis Algorithm
-morph                   Variable Transformation
-morph.metrop            Morphometric Metropolis Algorithm
-olbm                    Overlapping Batch Means
-temper                  Simulated Tempering and Umbrella Sampling

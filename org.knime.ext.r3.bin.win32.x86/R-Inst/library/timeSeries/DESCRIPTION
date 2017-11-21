@@ -1,0 +1,22 @@
+Package: timeSeries
+Title: Rmetrics - Financial Time Series Objects
+Date: 2017-11-12
+Version: 3042.102
+Author: Diethelm Wuertz [aut],
+	Tobias Setz [cre],
+	Yohan Chalabi [ctb]
+Maintainer: Tobias Setz <tobias.setz@live.com>
+Description: Provides a class and various tools for financial time series.
+	This includes basic functions such as scaling and sorting, subsetting,
+	mathematical operations and statistical functions.
+Depends: R (>= 2.10), graphics, grDevices, stats, methods, utils,
+        timeDate (>= 2150.95)
+Suggests: RUnit, robustbase, xts, PerformanceAnalytics, fTrading
+LazyData: yes
+License: GPL (>= 2)
+URL: http://www.rmetrics.org
+NeedsCompilation: no
+Packaged: 2017-11-16 17:28:23 UTC; Tobias Setz
+Repository: CRAN
+Date/Publication: 2017-11-17 12:55:49 UTC
+Built: R 3.4.2; ; 2017-11-19 08:29:31 UTC; windows

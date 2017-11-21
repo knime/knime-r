@@ -1,4 +1,4 @@
-d21e768841071d14d62e6abbe3920fb5 *DESCRIPTION
+bb67e3ee8826a96e2045fb100c4b632c *DESCRIPTION
 55a7c82c23cd19986361fd3658e99d6d *INDEX
 deaec875cbd9544c7616fdf39275e19d *Meta/Rd.rds
 a90c45f6afc015c99ec388bdff68350c *Meta/data.rds
@@ -7,7 +7,7 @@ a46f1debdc1f45796be2b2a0e6b3b378 *Meta/features.rds
 8063097890aaa29030cc96360424b60d *Meta/hsearch.rds
 8c70ae6b91686c4a1bb1c2a9883fbce4 *Meta/links.rds
 0b1a1dba9c64bf5cebf28b95f85da543 *Meta/nsInfo.rds
-6519fbd6cae141e9257d3432c4c055c6 *Meta/package.rds
+1d0b7d9eba1c576e8260828c9a51ceea *Meta/package.rds
 869f932056bdfd7ec4d81cb1f6cef61d *NAMESPACE
 41f86dd1ab533027b0c56fc493fad5ee *PSGLMM_MEE/R/makeData.R
 8514bdffdad985e2d102b8dc3b7b7cee *PSGLMM_MEE/R/makeEnvir.R
@@ -39,10 +39,10 @@ c17da9d51a8bb211a9212adcab69c935 *PSGLMM_MEE/simulationStudy/simModel23bin.R
 eee312788a35ffa0e6618cb6e4072611 *data/Rdata.rdx
 3e00b4cc43e17f10ae0743ef320f3239 *demo/PROACT.R
 94b46f49941fb0998de2114c678364e9 *help/AnIndex
-8988747392da6d78e8988c107dcee9f8 *help/TH.data.rdb
-f90d71cf27ff305e7006bdd9766a109f *help/TH.data.rdx
+17a278949e64dbae0c413f7af30dc75c *help/TH.data.rdb
+3a597be343769ed59c5df20b457d8c29 *help/TH.data.rdx
 9dedebc1e3188fb172b5d959fb420030 *help/aliases.rds
-8c72ffee907ae177e7d32e0a28271465 *help/paths.rds
+bc3b49c87462e837f27625fb4300ae6a *help/paths.rds
 901f41e9dffc209c03177d2f3b0a646e *html/00Index.html
 b6763e6916890c631fdc3f2643803b1a *html/R.css
 be537283578e005adfc63556cf98409d *rda/AML_Bullinger.rda

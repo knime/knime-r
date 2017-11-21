@@ -1,0 +1,649 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Time Indexes and Time Indexed Series</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Time Indexes and Time Indexed Series
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;tis&rsquo; version 1.32</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="# "> </a>
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#G">G</a>
+<a href="#H">H</a>
+<a href="#I">I</a>
+<a href="#J">J</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#O">O</a>
+<a href="#P">P</a>
+<a href="#Q">Q</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#U">U</a>
+<a href="#W">W</a>
+<a href="#Y">Y</a>
+</p>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="tis-package.html">tis-package</a></td>
+<td>Time Indices and Time Indexed Series</td></tr>
+</table>
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="tierChart.html">adjustableTierChart</a></td>
+<td>Create tier charts</td></tr>
+<tr><td style="width: 25%;"><a href="aggregate.tis.html">aggregate.tis</a></td>
+<td>Compute Summary Statistics of Time Series Subsets</td></tr>
+<tr><td style="width: 25%;"><a href="format.ti.html">as.character.jul</a></td>
+<td>Convert Time Index or Jul to Character</td></tr>
+<tr><td style="width: 25%;"><a href="format.ti.html">as.character.ti</a></td>
+<td>Convert Time Index or Jul to Character</td></tr>
+<tr><td style="width: 25%;"><a href="as.data.frame.tis.html">as.data.frame.tis</a></td>
+<td>Coerce to a Data Frame</td></tr>
+<tr><td style="width: 25%;"><a href="as.Date.jul.html">as.Date.jul</a></td>
+<td>Convert ti or jul objects to Dates</td></tr>
+<tr><td style="width: 25%;"><a href="as.Date.jul.html">as.Date.ti</a></td>
+<td>Convert ti or jul objects to Dates</td></tr>
+<tr><td style="width: 25%;"><a href="jul.html">as.jul</a></td>
+<td>Julian Date Objects</td></tr>
+<tr><td style="width: 25%;"><a href="as.list.ti.html">as.list.jul</a></td>
+<td>Construct a List from a Time Index or Jul Object</td></tr>
+<tr><td style="width: 25%;"><a href="as.list.ti.html">as.list.ti</a></td>
+<td>Construct a List from a Time Index or Jul Object</td></tr>
+<tr><td style="width: 25%;"><a href="as.matrix.tis.html">as.matrix.tis</a></td>
+<td>Create a Matrix from a Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">as.POSIXct.jul</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">as.POSIXct.ti</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="ssDate.html">as.ssDate</a></td>
+<td>ssDate Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">as.ti</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="tis.html">as.tis</a></td>
+<td>Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="tis.html">as.tis.default</a></td>
+<td>Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="tis.html">as.tis.tis</a></td>
+<td>Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="tis.html">as.tis.ts</a></td>
+<td>Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="tis.html">as.tis.zoo</a></td>
+<td>Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="as.ts.tis.html">as.ts.tis</a></td>
+<td>Convert a Time Indexed Series to a Time Series</td></tr>
+<tr><td style="width: 25%;"><a href="asClassyList.html">asClassyList</a></td>
+<td>Convert a vector into a list of objects with the same class</td></tr>
+<tr><td style="width: 25%;"><a href="jul.html">asJul</a></td>
+<td>Julian Date Objects</td></tr>
+<tr><td style="width: 25%;"><a href="assignList.html">assignList</a></td>
+<td>Assign Values In a List to Names</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">asTi</a></td>
+<td>Time Index Objects</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="barplot.tis.html">barplot.tis</a></td>
+<td>Barplot for Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="barplot2.html">barplot2</a></td>
+<td>Horizontally Shifted Bar Plots</td></tr>
+<tr><td style="width: 25%;"><a href="tif.html">basePeriod</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="basis.html">basis</a></td>
+<td>Optional tis attributes</td></tr>
+<tr><td style="width: 25%;"><a href="basis.html">basis&lt;-</a></td>
+<td>Optional tis attributes</td></tr>
+<tr><td style="width: 25%;"><a href="between.html">between</a></td>
+<td>Check for Inclusion in a Closed Interval</td></tr>
+<tr><td style="width: 25%;"><a href="blanks.html">blanks</a></td>
+<td>Blanks</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="capitalize.html">capitalize</a></td>
+<td>Capitalize strings</td></tr>
+<tr><td style="width: 25%;"><a href="cbind.tis.html">cbind.tis</a></td>
+<td>Combine Series Into a Multivariate (Matrix) Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="columns.html">columns</a></td>
+<td>Rows and Columns of a Matrix</td></tr>
+<tr><td style="width: 25%;"><a href="convert.html">convert</a></td>
+<td>Time scale conversions for time series</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">couldBeTi</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="csv.html">csv</a></td>
+<td>Writes a CSV (comma separated values) file.</td></tr>
+<tr><td style="width: 25%;"><a href="cumsum.html">cummax.tis</a></td>
+<td>Cumulative Sums, Products, and Extremes</td></tr>
+<tr><td style="width: 25%;"><a href="cumsum.html">cummin.tis</a></td>
+<td>Cumulative Sums, Products, and Extremes</td></tr>
+<tr><td style="width: 25%;"><a href="cumsum.html">cumprod.tis</a></td>
+<td>Cumulative Sums, Products, and Extremes</td></tr>
+<tr><td style="width: 25%;"><a href="cumsum.html">cumsum.tis</a></td>
+<td>Cumulative Sums, Products, and Extremes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentApril</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentAugust</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentDecember</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentFebruary</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">currentFriday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentHalf</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentJanuary</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentJuly</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentJune</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentMarch</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentMay</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">currentMonday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentMonth</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">currentMonthDay</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentNovember</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentOctober</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentQ4</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentQMonth</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentQuarter</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">currentSaturday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentSeptember</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">currentSunday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">currentThursday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">currentTuesday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">currentWednesday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentWeek</a></td>
+<td>Current Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentPeriod.html">currentYear</a></td>
+<td>Current Period Time Indexes</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="dateRange.html">dateRange</a></td>
+<td>Start and End Time Indices for a Series</td></tr>
+<tr><td style="width: 25%;"><a href="ymd.html">day</a></td>
+<td>Extract parts of various Date-Time Objects</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">dayOfMonth</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">dayOfPeriod</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">dayOfWeek</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">dayOfYear</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="description.html">description</a></td>
+<td>Description and Documentation Attributes</td></tr>
+<tr><td style="width: 25%;"><a href="description.html">description&lt;-</a></td>
+<td>Description and Documentation Attributes</td></tr>
+<tr><td style="width: 25%;"><a href="description.html">documentation</a></td>
+<td>Description and Documentation Attributes</td></tr>
+<tr><td style="width: 25%;"><a href="description.html">documentation&lt;-</a></td>
+<td>Description and Documentation Attributes</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="holidays.html">easter</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="start.tis.html">end.tis</a></td>
+<td>Starting and ending time indexes</td></tr>
+<tr><td style="width: 25%;"><a href="evalOrEcho.html">evalOrEcho</a></td>
+<td>Evaluate an Argument If Possible</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="constantGrowthSeries.html">fanSeries</a></td>
+<td>Constant Growth Series</td></tr>
+<tr><td style="width: 25%;"><a href="holidays.html">federalHolidays</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">firstBusinessDayOf</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">firstBusinessDayOfMonth</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">firstDayOf</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="format.ti.html">format.jul</a></td>
+<td>Convert Time Index or Jul to Character</td></tr>
+<tr><td style="width: 25%;"><a href="format.ti.html">format.ti</a></td>
+<td>Convert Time Index or Jul to Character</td></tr>
+<tr><td style="width: 25%;"><a href="fortify.tis.html">fortify.tis</a></td>
+<td>Fortify a tis object</td></tr>
+<tr><td style="width: 25%;"><a href="frColors.html">frColors</a></td>
+<td>FRB Color Palettes</td></tr>
+</table>
+
+<h2><a name="G">-- G --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="holidays.html">goodFriday</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="growth.rate.html">growth.rate</a></td>
+<td>Growth Rates of Time Series</td></tr>
+<tr><td style="width: 25%;"><a href="growth.rate.html">growth.rate&lt;-</a></td>
+<td>Growth Rates of Time Series</td></tr>
+</table>
+
+<h2><a name="H">-- H --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="hms.html">hms</a></td>
+<td>Hours, Minutes and Seconds from a Time Index or Jul</td></tr>
+<tr><td style="width: 25%;"><a href="holidays.html">holidays</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="holidays.html">holidaysBetween</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="intradayFrequencies.html">hourly</a></td>
+<td>R support for Intraday frequencies</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="linearSplineIntegration.html">ilspline</a></td>
+<td>Linear Spline Integration</td></tr>
+<tr><td style="width: 25%;"><a href="holidays.html">inaugurationDay</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="inferTi.html">inferTi</a></td>
+<td>Create a Time Index to Match a Vector of DateTimes</td></tr>
+<tr><td style="width: 25%;"><a href="interpNA.html">interpNA</a></td>
+<td>Interpolate missing values in a Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="jul.html">is.jul</a></td>
+<td>Julian Date Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ssDate.html">is.ssDate</a></td>
+<td>ssDate Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">is.ti</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="tis.html">is.tis</a></td>
+<td>Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="holidays.html">isBusinessDay</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="holidays.html">isEaster</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="holidays.html">isGoodFriday</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="holidays.html">isHoliday</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="isIntradayTif.html">isIntradayTif</a></td>
+<td>Check for Intraday Time Index Frequency</td></tr>
+<tr><td style="width: 25%;"><a href="isLeapYear.html">isLeapYear</a></td>
+<td>Check Leap Year</td></tr>
+</table>
+
+<h2><a name="J">-- J --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="jul.html">jul</a></td>
+<td>Julian Date Objects</td></tr>
+<tr><td style="width: 25%;"><a href="jul.html">jul.Date</a></td>
+<td>Julian Date Objects</td></tr>
+<tr><td style="width: 25%;"><a href="jul.html">jul.default</a></td>
+<td>Julian Date Objects</td></tr>
+<tr><td style="width: 25%;"><a href="jul.html">jul.IDate</a></td>
+<td>Julian Date Objects</td></tr>
+<tr><td style="width: 25%;"><a href="jul.html">jul.ti</a></td>
+<td>Julian Date Objects</td></tr>
+<tr><td style="width: 25%;"><a href="jul.html">jul.yearmon</a></td>
+<td>Julian Date Objects</td></tr>
+<tr><td style="width: 25%;"><a href="jul.html">jul.yearqtr</a></td>
+<td>Julian Date Objects</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="lags.html">Lag</a></td>
+<td>Lag a Time Series</td></tr>
+<tr><td style="width: 25%;"><a href="lags.html">lag.tis</a></td>
+<td>Lag a Time Series</td></tr>
+<tr><td style="width: 25%;"><a href="lags.html">Lags</a></td>
+<td>Lag a Time Series</td></tr>
+<tr><td style="width: 25%;"><a href="lags.html">lags</a></td>
+<td>Lag a Time Series</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">lastBusinessDayOf</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">lastBusinessDayOfMonth</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">lastDayOf</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestApril</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestAugust</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestDecember</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestFebruary</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">latestFriday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestHalf</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestJanuary</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestJuly</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestJune</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestMarch</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestMay</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">latestMonday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestMonth</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="dayOfPeriod.html">latestMonthDay</a></td>
+<td>Day positions in Time Index Periods</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestNovember</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestOctober</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestQ4</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestQuarter</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">latestSaturday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestSeptember</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">latestSunday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">latestThursday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">latestTuesday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="currentMonday.html">latestWednesday</a></td>
+<td>Day of Week Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestWeek</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="latestPeriod.html">latestYear</a></td>
+<td>Most Recent Period Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="lines.tis.html">lines.tis</a></td>
+<td>Plotting Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="linearSplineIntegration.html">lintegrate</a></td>
+<td>Linear Spline Integration</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="mergeSeries.html">mergeSeries</a></td>
+<td>Merge Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="intradayFrequencies.html">minutely</a></td>
+<td>R support for Intraday frequencies</td></tr>
+<tr><td style="width: 25%;"><a href="ymd.html">month</a></td>
+<td>Extract parts of various Date-Time Objects</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="naWindow.html">naWindow</a></td>
+<td>Exclude NA and Zero Observations</td></tr>
+<tr><td style="width: 25%;"><a href="nberShade.html">nberDates</a></td>
+<td>Plotting NBER Recesssions</td></tr>
+<tr><td style="width: 25%;"><a href="nberShade.html">nberShade</a></td>
+<td>Plotting NBER Recesssions</td></tr>
+<tr><td style="width: 25%;"><a href="nberShade.html">nberShade.default</a></td>
+<td>Plotting NBER Recesssions</td></tr>
+<tr><td style="width: 25%;"><a href="nberShade.ggplot.html">nberShade.ggplot</a></td>
+<td>Plotting NBER Recesssions in the ggplot graphics system</td></tr>
+<tr><td style="width: 25%;"><a href="holidays.html">nextBusinessDay</a></td>
+<td>Holidays</td></tr>
+</table>
+
+<h2><a name="O">-- O --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="basis.html">observed</a></td>
+<td>Optional tis attributes</td></tr>
+<tr><td style="width: 25%;"><a href="basis.html">observed&lt;-</a></td>
+<td>Optional tis attributes</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="tif.html">period</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="plotWindow.html">plotWindow</a></td>
+<td>Set up Coordinates for Graphics Window</td></tr>
+<tr><td style="width: 25%;"><a href="lines.tis.html">points.tis</a></td>
+<td>Plotting Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">POSIXct</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">POSIXct.default</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">POSIXct.jul</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">POSIXct.numeric</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">POSIXct.ti</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">POSIXlt</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">POSIXlt.default</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">POSIXlt.jul</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="POSIXct.html">POSIXlt.ti</a></td>
+<td>Date-time Constructor Functions</td></tr>
+<tr><td style="width: 25%;"><a href="holidays.html">previousBusinessDay</a></td>
+<td>Holidays</td></tr>
+<tr><td style="width: 25%;"><a href="print.ti.html">print.ti</a></td>
+<td>Print a Time Index</td></tr>
+<tr><td style="width: 25%;"><a href="print.tis.html">print.tis</a></td>
+<td>Printing Time Indexed Series</td></tr>
+</table>
+
+<h2><a name="Q">-- Q --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="ymd.html">quarter</a></td>
+<td>Extract parts of various Date-Time Objects</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="nberShade.html">romerLines</a></td>
+<td>Plotting NBER Recesssions</td></tr>
+<tr><td style="width: 25%;"><a href="RowMeans.html">RowMeans</a></td>
+<td>Form Row Sums and Means</td></tr>
+<tr><td style="width: 25%;"><a href="RowMeans.html">RowMeans.default</a></td>
+<td>Form Row Sums and Means</td></tr>
+<tr><td style="width: 25%;"><a href="RowMeans.html">RowMeans.tis</a></td>
+<td>Form Row Sums and Means</td></tr>
+<tr><td style="width: 25%;"><a href="columns.html">rows</a></td>
+<td>Rows and Columns of a Matrix</td></tr>
+<tr><td style="width: 25%;"><a href="RowMeans.html">RowSums</a></td>
+<td>Form Row Sums and Means</td></tr>
+<tr><td style="width: 25%;"><a href="RowMeans.html">RowSums.default</a></td>
+<td>Form Row Sums and Means</td></tr>
+<tr><td style="width: 25%;"><a href="RowMeans.html">RowSums.tis</a></td>
+<td>Form Row Sums and Means</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="scatterPlot.html">scatterPlot</a></td>
+<td>Produce high-quality scatter plots</td></tr>
+<tr><td style="width: 25%;"><a href="screenPage.html">screenPage</a></td>
+<td>Page Setup for Plots</td></tr>
+<tr><td style="width: 25%;"><a href="intradayFrequencies.html">secondly</a></td>
+<td>R support for Intraday frequencies</td></tr>
+<tr><td style="width: 25%;"><a href="setColors.html">setColors</a></td>
+<td>Set the Graphics Palette and Default Colors</td></tr>
+<tr><td style="width: 25%;"><a href="setDefaultFrequencies.html">setDefaultFrequencies</a></td>
+<td>Return Known Time Index Frequencies, Change Default Frequencies</td></tr>
+<tr><td style="width: 25%;"><a href="solve.tridiag.html">solve.tridiag</a></td>
+<td>Solve a Tridiagonal System of Equations</td></tr>
+<tr><td style="width: 25%;"><a href="ssDate.html">ssDate</a></td>
+<td>ssDate Objects</td></tr>
+<tr><td style="width: 25%;"><a href="start.tis.html">start.tis</a></td>
+<td>Starting and ending time indexes</td></tr>
+<tr><td style="width: 25%;"><a href="start.tis.html">start&lt;-</a></td>
+<td>Starting and ending time indexes</td></tr>
+<tr><td style="width: 25%;"><a href="stripBlanks.html">stripBlanks</a></td>
+<td>Strip Blanks</td></tr>
+<tr><td style="width: 25%;"><a href="stripClass.html">stripClass</a></td>
+<td>Remove part of a class attribute</td></tr>
+<tr><td style="width: 25%;"><a href="stripClass.html">stripTis</a></td>
+<td>Remove part of a class attribute</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="t.tis.html">t.tis</a></td>
+<td>Matrix Transpose</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">ti</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">ti.Date</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">ti.default</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">ti.jul</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">ti.ssDate</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">ti.ti</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">ti.tis</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">ti.yearmon</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ti.html">ti.yearqtr</a></td>
+<td>Time Index Objects</td></tr>
+<tr><td style="width: 25%;"><a href="tiDaily.html">tiBusiness</a></td>
+<td>Daily and Business Day Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="tiDaily.html">tiDaily</a></td>
+<td>Daily and Business Day Time Indexes</td></tr>
+<tr><td style="width: 25%;"><a href="tierChart.html">tierChart</a></td>
+<td>Create tier charts</td></tr>
+<tr><td style="width: 25%;"><a href="tif.html">tif</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="tif.html">tif.default</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="tif.html">tif.ti</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="tif.html">tif.tis</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="tif.html">tif.ts</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="tif2freq.html">tif2freq</a></td>
+<td>Periods Per Year for Time Index Frequencies</td></tr>
+<tr><td style="width: 25%;"><a href="setDefaultFrequencies.html">tifList</a></td>
+<td>Return Known Time Index Frequencies, Change Default Frequencies</td></tr>
+<tr><td style="width: 25%;"><a href="tif.html">tifName</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="tif.html">tifName.default</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="tif.html">tifName.ti</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="tif.html">tifName.tis</a></td>
+<td>Time Index Frequencies and Periods</td></tr>
+<tr><td style="width: 25%;"><a href="tis.html">tis</a></td>
+<td>Time Indexed Series</td></tr>
+<tr><td style="width: 25%;"><a href="tisFilter.html">tisFilter</a></td>
+<td>Linear Filtering on a Time Series</td></tr>
+<tr><td style="width: 25%;"><a href="tisFromCsv.html">tisFromCsv</a></td>
+<td>Read time series from Comma Separated Values (.csv) file</td></tr>
+<tr><td style="width: 25%;"><a href="tisLegend.html">tisLegend</a></td>
+<td>Add a legend to a tisPlot or scatterPlot</td></tr>
+<tr><td style="width: 25%;"><a href="tisPlot.html">tisPlot</a></td>
+<td>Plot time indexed series (tis objects)</td></tr>
+<tr><td style="width: 25%;"><a href="today.html">today</a></td>
+<td>Time Index for the Current Date</td></tr>
+<tr><td style="width: 25%;"><a href="constantGrowthSeries.html">tunnelSeries</a></td>
+<td>Constant Growth Series</td></tr>
+</table>
+
+<h2><a name="U">-- U --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="updateColumns.html">updateColumns</a></td>
+<td>Update lists and time series</td></tr>
+<tr><td style="width: 25%;"><a href="updateColumns.html">updateList</a></td>
+<td>Update lists and time series</td></tr>
+</table>
+
+<h2><a name="W">-- W --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="window.tis.html">window.tis</a></td>
+<td>Time windows for Time Indexed Series</td></tr>
+</table>
+
+<h2><a name="Y">-- Y --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="ymd.html">year</a></td>
+<td>Extract parts of various Date-Time Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ymd.html">ymd</a></td>
+<td>Extract parts of various Date-Time Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ymd.html">ymd.default</a></td>
+<td>Extract parts of various Date-Time Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ymd.html">ymd.jul</a></td>
+<td>Extract parts of various Date-Time Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ymd.html">ymd.ssDate</a></td>
+<td>Extract parts of various Date-Time Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ymd.html">ymd.ti</a></td>
+<td>Extract parts of various Date-Time Objects</td></tr>
+<tr><td style="width: 25%;"><a href="ymdShade.html">ymdShade</a></td>
+<td>Shading Date Ranges</td></tr>
+<tr><td style="width: 25%;"><a href="ymdShade.html">ymdXy</a></td>
+<td>Shading Date Ranges</td></tr>
+</table>
+</body></html>

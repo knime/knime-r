@@ -1,0 +1,22 @@
+Package: epitools
+Version: 0.5-10
+Date: 2017-10-26
+Title: Epidemiology Tools
+Authors@R: c(person("Tomas J.", "Aragon", role = "aut",
+        email = "aragon@berkeley.edu"), person("Michael P.",
+        "Fay", role = "ctb", email = "mfay@niaid.nih.gov"),
+        person("Daniel", "Wollschlaeger", role = "ctb", email =
+        "dwoll@psychologie.uni-kiel.de"),
+        person("Adam", "Omidpanah", role = c("cre", "ctb"), email =
+        "adam.omidpanah@wsu.edu"))
+Depends: R (>= 2.1.0)
+Description: Tools for training and practicing epidemiologists including methods for two-way and multi-way contingency tables.
+License: GPL (>= 2)
+Packaged: 2017-10-26 18:25:13 UTC; adam.omidpanah
+Author: Tomas J. Aragon [aut], Michael P. Fay
+        [ctb], Daniel Wollschlaeger [ctb], Adam Omidpanah [cre, ctb]
+Maintainer: Adam Omidpanah <adam.omidpanah@wsu.edu>
+Repository: CRAN
+Date/Publication: 2017-10-26 20:33:21 UTC
+NeedsCompilation: no
+Built: R 3.4.2; ; 2017-10-28 22:00:17 UTC; windows

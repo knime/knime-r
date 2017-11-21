@@ -1,5 +1,0 @@
-fftw                    Compute fft using fftw3
-fftw2d                  Compute a two-dimensional FFT on a matrix using
-                        FFTW3
-mvfftw                  Compute the FFT on each column of a matrix
-                        using FFTW3

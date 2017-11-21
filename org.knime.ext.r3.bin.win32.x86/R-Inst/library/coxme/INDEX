@@ -1,0 +1,22 @@
+VarCorr                 Import from package 'nlme'
+anova.coxme             Analysis of Deviance for a Cox model.
+coxme                   Fit a mixed effects Cox model
+coxme.control           Auxillary parameters for controlling coxme
+                        fits.
+coxme.object            Coxme regression output object
+coxmeFull               Variance family function for coxme fits.
+coxmeMlist              Coxme variance function
+eortc                   Simulated data set based on an EORTC trial
+expand.nested           Expand nested factors
+fixed.effects           Import from package 'nlme'
+fixef.coxme             Extraction functions for Coxme
+fixef.lmekin            Extraction functions for Lmekin
+lmekin                  Fit a linear mixed effects model
+lmekin.control          Auxillary parameters for controlling lmekin
+                        fits.
+lmekin.object           lmekin object
+logLik.coxme            The logLik method for coxme objects
+predict.coxme           Predictions for a coxme object.
+print.coxme             Print method for a coxme fit.
+print.lmekin            Print function for lmekin
+ranef                   Import from package 'nlme'

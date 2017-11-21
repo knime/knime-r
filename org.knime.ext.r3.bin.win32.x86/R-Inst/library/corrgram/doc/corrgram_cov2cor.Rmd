@@ -1,0 +1,68 @@
+---
+title: "cov2cor() may not give a valid correlation matrix"
+author: "Kevin Wright"
+date: "`r Sys.Date()`"
+bibliography: corrgram.bib
+output:
+  html_document:
+    theme: cerulean
+    highlight: tango
+vignette: >
+  % \VignetteIndexEntry{cov2cor() may not give a valid correlation matrix}
+  % \VignetteEncoding{UTF-8}
+  % \VignetteEngine{knitr::rmarkdown}
+---
+<style type="text/css">
+body, td { font-size: 14pt; color: #000; padding:1em; }
+code, pre, #ws, #message {border: 0px; font-size: 12pt;
+  color: #000; background-color: #f5f5f5; }
+code {border: 0px solid #e0e0e0; padding: 0 5px;}
+pre > code { border: 0; }
+</style>
+
+An example is given in which a matrix that was created by `cov2cor` is not actually a valid correlation matrix.
+
+Consider the following, ostensibly covariance matrix.
+```{r}
+vv <- matrix(c(100.511, 159.266, 3.888, 59.964, 37.231, 32.944, 68.845,
+               159.266, 277.723, 6.161, 95.017, 58.995, 52.203, 109.09, 3.888,
+               6.161, 99.831, 2.32, 1.44, 1.274, 2.663, 59.964, 95.017, 2.32,
+               35.774, 22.212, 19.655, 41.073, 37.231, 58.995, 1.44, 22.212,
+               40.432, 12.203, 25.502, 32.944, 52.203, 1.274, 19.655, 12.203,
+               10.798, 22.566, 68.845, 109.09, 2.663, 41.073, 25.502, 22.566,
+               96.217), nrow=7, byrow=TRUE)
+print(vv)
+```
+
+If we attempt to use the `cov2cor()` function to convert the covariance matrix to a correlation matrix, we find the largest correlation values are slightly larger than 1.0.
+If this is passed to the `corrgram` function, it will issue a warning that the input data is not a correlation matrix and then calculate pairwise correlations of the columns, resulting in a non-sensical graph.
+```{r}
+cc <- cov2cor(vv)
+max(cc) # 1.000041
+```
+
+There are several packages with functions that can be used to force the correlation matrix to be an actual, positive-definite correlation matrix.  Two are given here.  First, using the `psych` package.
+```{r}
+require(psych)
+cc2 <- cor.smooth(cc)
+max(cc2)
+```
+Next, with the slighly more tricky `sfsmisc` package.
+```{r}
+library(sfsmisc)
+# nearcor uses 'identical' and says the matrix is not symmetric
+isSymmetric(cc) # TRUE
+identical(cc, t(cc)) # FALSE
+# round slightly to make it symmetric
+cc3 <- nearcor(round(cc,12))$cor
+max(cc3)
+
+```
+After converting the matrix to a valid correlation matrix, an accurate corrgram can be created
+```{r, fig.width=6, fig.height=6, fig.align="center"}
+require(corrgram)
+corrgram(cc2, lower=panel.cor)
+
+```
+
+	

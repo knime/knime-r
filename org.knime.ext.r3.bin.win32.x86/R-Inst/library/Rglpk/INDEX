@@ -1,3 +1,0 @@
-Rglpk_read_file         Interface to GLPK's file reader
-Rglpk_solve_LP          Linear and Mixed Integer Programming Solver
-                        Using GLPK

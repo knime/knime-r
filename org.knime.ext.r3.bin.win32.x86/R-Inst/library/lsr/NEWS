@@ -1,0 +1,66 @@
+NEWS file for the lsr package
+
+Version 0.5
+
+- version number advanced to match next iteration of the book
+- maxFreq and modeOf argument checking is more permissive
+- correlate allows the user to input two numeric vectors instead of data frames / matrices
+
+Version 0.3.2
+
+- convenience functions goodnessOfFitTest, associationTest added
+- fixed a couple of bugs in the t-test functions
+- pairedSamplesTTest now supports long-form and wide-form data
+
+Version 0.3.1
+
+- cohensD argument checking is more permissive
+- convenience functions oneSampleTTest, pairedSamplesTTest and independentSamplesTTest added
+
+Version 0.3
+
+- bars function added
+- correlate function added
+- in general, there is a lot more checking of the user input
+- pooledSD moved to a sub-function of cohensD.
+- formula argument to cohensD is now handled using model.frame
+- expandFactors now returns a data frame rather than a matrix (and does so correctly for data frames with only one row)
+- expandFactors no longer drops cases with NA
+- fixed bug in wideToLong in which the reshape function tries to create non-unique row names
+- fixed bug in quantileCut when missing data are present
+- ciMean now handles data frames and matrices
+
+Version 0.2.4
+
+- Fixed a bug in etaSquared that prevented it from correctly determining marginal terms in Type II sum of squares, and another one in which the residual sum of squares was being calculated incorrectly
+- Fixed a bug in wideToLong that stopped it working if between-subject variables did not uniquely identify the cases
+- cohensD function now includes a 'formula' argument in order to more closely mimic the syntax of t.test
+
+Version 0.2.3
+
+- Fixed a bug in which cramersV was incorrectly calculated when used as a measure of effect size in a goodness of fit test.
+
+Version 0.2.2
+
+- Fixed a bug with longToWide and wideToLong in which variable names were being treated as regular expressions
+
+Version 0.2.1
+
+- Warning statements in the help files are more explicit regarding (lack of) backwards compatibility for pre-1.0 versions of the package
+- xfun removed from package (duplicates existing functionality). 
+
+Version 0.2
+
+- New functions: rowCopy, colCopy, permuteLevels, expandFactors, xfun
+- The etaSquared function now supports Type II and Type III sum of squares
+- Clean up of the repeated measures reshaping functions. 
+
+Version 0.1.1
+
+- The who function now has expand = FALSE as the default.
+- The sortFrame function now correctly returns the original data frame when no sort terms are included.
+
+Version 0.1
+
+- Initial release of the package contains the following functions: aad, ciMean, cohensD, cramersV, etaSquared, importList, longRM, longToWide, maxFreq, modeOf, posthocPairwiseT, quantileCut, rmAll, sortFrame, standardCoefs, tFrame, unlibrary, who, wideRM, wideToLong, wideToMV
+

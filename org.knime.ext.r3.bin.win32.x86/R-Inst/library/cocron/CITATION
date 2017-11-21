@@ -1,0 +1,14 @@
+bibentry("Manual",
+    title="cocron: Statistical Comparisons of Two or more Alpha Coefficients",
+    author="Birk Diedenhofen",
+    year="2016",
+    note="(Version 1.0-1)",
+    url="http://comparingcronbachalphas.org",
+
+    textVersion =
+    paste("Diedenhofen, B. (2016). ",
+        "cocron: Statistical Comparisons of Two or more Alpha Coefficients (Version 1.0-1). ",
+        "Available from http://comparingcronbachalphas.org",
+        sep=""),
+
+    mheader = "To cite cocron in publications use:")

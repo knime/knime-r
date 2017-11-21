@@ -20,5 +20,5 @@ NeedsCompilation: yes
 Packaged: 2017-09-21 22:42:34 UTC; hastie
 Repository: CRAN
 Date/Publication: 2017-09-22 05:43:14 UTC
-Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-10 16:23:01 UTC; windows
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-19 11:01:52 UTC; windows
 Archs: i386, x64

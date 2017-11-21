@@ -1,6 +1,0 @@
-export('$.GlobalOptionsFun')
-export('$<-.GlobalOptionsFun')
-export(setGlobalOptions)
-
-import("methods")
-

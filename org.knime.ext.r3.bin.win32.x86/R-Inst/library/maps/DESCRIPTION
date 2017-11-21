@@ -17,5 +17,5 @@ NeedsCompilation: yes
 Repository: CRAN
 Packaged: 2017-06-07 21:50:04 UTC; alex
 Date/Publication: 2017-06-08 05:00:14 UTC
-Built: R 3.4.2; i386-w64-mingw32; 2017-11-10 14:07:05 UTC; windows
+Built: R 3.4.2; i386-w64-mingw32; 2017-11-19 09:58:43 UTC; windows
 Archs: i386, x64

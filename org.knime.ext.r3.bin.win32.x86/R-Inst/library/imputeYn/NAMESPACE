@@ -1,6 +1,0 @@
-exportPattern("^[[:alpha:]]+")
-import(emplik, mvtnorm, quadprog, survival, boot)
-importFrom("graphics", "par", "abline", "legend", "plot", "points")
-importFrom("stats", "coef", "lm", "median","model.extract", "model.matrix", "na.exclude","pnorm","rnorm", "predict", "runif", "rexp", "var")
-S3method(print,imputeYn)
-

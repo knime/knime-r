@@ -1,0 +1,133 @@
+<!DOCTYPE rkplugin >
+<document>
+	<!-- this code was generated using the rkwarddev package.
+		perhaps don't make changes here, but in the rkwarddev script instead! -->
+	<code file="ComparingCronbachalphas.js" />
+	<help file="ComparingCronbachalphas.rkh" />
+	<!-- <dependencies>
+			</dependencies> -->
+	<logic>
+		<convert id="raw_data_input_convert" sources="data_input.string" mode="equals" standard="raw.data" />
+		<convert id="manual_input_convert" sources="data_input.string" mode="equals" standard="manual" />
+		<convert id="indep_groups_convert" sources="groups.string" mode="equals" standard="indep" />
+		<convert id="dep_groups_convert" sources="groups.string" mode="equals" standard="dep" />
+		<convert id="raw_data_and_indep_groups_convert" sources="raw_data_input_convert;indep_groups_convert" mode="and" />
+		<convert id="raw_data_and_dep_groups_convert" sources="raw_data_input_convert;dep_groups_convert" mode="and" />
+		<convert id="manual_and_indep_groups_convert" sources="manual_input_convert;indep_groups_convert" mode="and" />
+		<convert id="manual_and_dep_groups_convert" sources="manual_input_convert;dep_groups_convert" mode="and" />
+		<connect governor="raw_data_input_convert" client="pag_rwPCDDS2S2.visible" />
+		<connect governor="manual_input_convert" client="pag_rPCN227S10.visible" />
+		<connect governor="manual_and_dep_groups_convert" client="pag_txtdPCPC11.visible" />
+		<connect governor="manual_and_indep_groups_convert" client="manual_and_indep_groups_alpha.visible" />
+		<connect governor="manual_and_indep_groups_convert" client="manual_and_indep_groups_n.visible" />
+		<connect governor="manual_and_indep_groups_convert" client="manual_and_indep_groups_i.visible" />
+		<connect governor="manual_and_dep_groups_convert" client="manual_and_dep_groups_alpha.visible" />
+		<connect governor="manual_and_dep_groups_convert" client="manual_and_dep_groups_n.visible" />
+		<connect governor="manual_and_dep_groups_convert" client="manual_and_dep_groups_i.visible" />
+		<connect governor="raw_data_input_convert" client="frm_Shldthsc.visible" />
+		<connect governor="alpha_count.int.state" client="manual_and_dep_groups_r.rows" />
+		<connect governor="alpha_count.int.state" client="manual_and_dep_groups_r.columns" />
+		<connect governor="alpha_count.int.state" client="manual_and_indep_groups_alpha.rows" />
+		<connect governor="alpha_count.int.state" client="manual_and_indep_groups_n.rows" />
+		<connect governor="alpha_count.int.state" client="manual_and_indep_groups_i.rows" />
+		<connect governor="alpha_count.int.state" client="manual_and_dep_groups_alpha.rows" />
+		<connect governor="raw_data_input_convert" client="raw_data_alpha.required" />
+		<connect governor="manual_and_indep_groups_convert" client="manual_and_indep_groups_alpha.required" />
+		<connect governor="manual_and_indep_groups_convert" client="manual_and_indep_groups_n.required" />
+		<connect governor="manual_and_indep_groups_convert" client="manual_and_indep_groups_i.required" />
+		<connect governor="manual_and_dep_groups_convert" client="manual_and_dep_groups_alpha.required" />
+		<connect governor="manual_and_dep_groups_convert" client="manual_and_dep_groups_n.required" />
+		<connect governor="manual_and_dep_groups_convert" client="manual_and_dep_groups_i.required" />
+		<connect governor="manual_and_dep_groups_convert" client="manual_and_dep_groups_r.required" />
+	</logic>
+	<wizard label="Comparing Cronbach alphas">
+		<page id="pag_txACIACITC">
+			<text id="txt_ArthCrnI">
+				Are the Cronbach alphas based on independent or on dependent groups? (If the data were taken from measurements of the same individuals, the groups are dependent.) 				<br />
+			</text>
+			<radio id="groups" label="The Cronbach alphas are based on">
+				<option label="two independent groups" value="indep" />
+				<option label="two dependent groups (e.g., same group)" value="dep" />
+			</radio>
+			<stretch />
+		</page>
+		<page id="pag_txtdDDDCCE">
+			<text id="txt_Dywnttcl">
+				Do you want to calculate and compare alpha coefficients from raw data or do you want to type the alpha coefficients in manually?
+			</text>
+			<radio id="data_input" label="Data input">
+				<option label="Calculate and compare Cronbach alphas from raw data" value="raw.data" />
+				<option label="Enter alpha coefficients manually" value="manual" />
+			</radio>
+			<stretch />
+		</page>
+		<page id="pag_rwPCDDS2S2">
+			<row id="row_instruction_to_provide_raw_data">
+				<text id="please_provide_the_raw_data">
+					Please provide the raw data the Cronbach alphas should be calculated from: 					<br />
+				</text>
+			</row>
+			<row id="row_input_raw_data">
+				<column id="clm_vrslctrdvD">
+					<varselector id="vars" label="Data" />
+				</column>
+				<column id="clm_vrsltdrwS2">
+					<varslot id="raw_data_alpha" label="Select at least two data.frames/matrices" source="vars" classes="data.frame matrix" multi="true" min_vars="2" />
+				</column>
+			</row>
+		</page>
+		<page id="pag_rPCN227S10">
+			<row id="row_instruction_to_input_cronbach_alpha_and_sample_size">
+				<text id="please_provide_the_cronbach_alphas">
+					Please provide the Cronbach alphas you want to compare and the sample sizes and number of items they are based on: 					<br />
+				</text>
+			</row>
+			<row id="row_input_cronbach_alpha_count">
+				<spinbox label="Number of alpha coefficients to be compared:" id="alpha_count" initial="2" min="2" max="7" type="integer" />
+			</row>
+			<row id="row_input_dep_groups_n_and_i">
+				<column id="clm_spnbxS1000">
+					<spinbox label="Sample size:" id="manual_and_dep_groups_n" initial="100" min="0" type="integer" />
+				</column>
+				<column id="clm_spnbxlI100">
+					<spinbox label="Item count:" id="manual_and_dep_groups_i" initial="10" min="0" type="integer" />
+				</column>
+			</row>
+			<row id="row_r011A01S01">
+				<row id="row_input_indep_groups_alphas">
+					<matrix id="manual_and_indep_groups_alpha" label=" " mode="real" min="0" max="1" allow_user_resize_rows="false" allow_user_resize_columns="false" columns="1" fixed_width="true" horiz_headers="Alpha" />
+				</row>
+				<row id="row_input_indep_groups_n_and_i">
+					<column id="clm_mtrxdmn01S">
+						<matrix id="manual_and_indep_groups_n" label=" " mode="integer" min="0" allow_user_resize_rows="false" allow_user_resize_columns="false" columns="1" fixed_width="true" horiz_headers="Sample size" />
+					</column>
+					<column id="clm_mtrxdmn01I">
+						<matrix id="manual_and_indep_groups_i" label=" " mode="integer" min="0" allow_user_resize_rows="false" allow_user_resize_columns="false" columns="1" fixed_width="true" horiz_headers="Item count" />
+					</column>
+				</row>
+				<row id="row_input_dep_groups_alphas">
+					<matrix id="manual_and_dep_groups_alpha" label=" " mode="real" min="0" max="1" allow_user_resize_rows="false" allow_user_resize_columns="false" columns="1" fixed_width="true" horiz_headers="Alpha" />
+				</row>
+				<stretch />
+			</row>
+		</page>
+		<page id="pag_txtdPCPC11">
+			<text id="txt_PlsprvdC">
+				Please provide the correlations between the underlying scores of the Cronbach alphas: 				<br />
+			</text>
+			<matrix id="manual_and_dep_groups_r" label=" " mode="real" min="-1" max="1" allow_user_resize_rows="false" allow_user_resize_columns="false" />
+		</page>
+		<page id="pag_fSSCCPPL00">
+			<frame label="Should the scores be standardized before calculating the alpha coefficients?" id="frm_Shldthsc">
+				<checkbox id="standardized_alpha" label="Calculate standardized Cronbach's alpha" value="true" value_unchecked="false" />
+			</frame>
+			<frame label="Please choose a level of significance for the test of significance:" id="frm_Plschslv">
+				<spinbox label="Level of significance:" id="los" initial="0.05" min="0" max="1" />
+			</frame>
+			<frame label="Please choose a confidence level for the confidence intervals:" id="frm_Plschscn">
+				<spinbox label="Level of confidence" id="conf_int" initial="0.95" min="0" max="1" />
+			</frame>
+			<stretch />
+		</page>
+	</wizard>
+</document>

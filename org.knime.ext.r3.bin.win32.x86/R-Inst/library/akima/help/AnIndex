@@ -1,0 +1,17 @@
+akima	akima
+akima760	akima760
+aspline	aspline
+bicubic	bicubic
+bicubic.grid	bicubic.grid
+bilinear	bilinear
+bilinear.grid	bilinear.grid
+franke	franke.data
+franke.data	franke.data
+franke.fn	franke.data
+interp	interp
+interp.new	interp.old
+interp.old	interp.old
+interp2xyz	interp2xyz
+interpp	interpp
+interpp.new	interpp.old
+interpp.old	interpp.old

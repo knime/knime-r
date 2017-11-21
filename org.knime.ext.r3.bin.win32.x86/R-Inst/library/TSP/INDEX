@@ -1,0 +1,18 @@
+ATSP                    Class ATSP - Asymmetric traveling salesperson
+                        problem
+Concorde                Using the Concorde TSP Solver
+ETSP                    Class ETSP - Euclidean traveling salesperson
+                        problem
+TOUR                    Class TOUR - Solution to a traveling
+                        salesperson problem
+TSP                     Class TSP - Symmetric traveling salesperson
+                        problem
+TSPLIB                  Read and write TSPLIB files
+USCA312                 USCA312/USCA50 - 312/50 cities in the US and
+                        Canada
+cut_tour                Cut a tour to form a path
+insert_dummy            Insert dummy cities into a distance matrix
+reformulate_ATSP_as_TSP
+                        Reformulate a ATSP as a symmetric TSP
+solve_TSP               TSP solver interface
+tour_length             Calculate the length of a tour

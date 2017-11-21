@@ -1,0 +1,87 @@
+POSIXct                 Date-time Constructor Functions
+RowMeans                Form Row Sums and Means
+aggregate.tis           Compute Summary Statistics of Time Series
+                        Subsets
+as.Date.jul             Convert ti or jul objects to Dates
+as.data.frame.tis       Coerce to a Data Frame
+as.list.ti              Construct a List from a Time Index or Jul
+                        Object
+as.matrix.tis           Create a Matrix from a Time Indexed Series
+as.ts.tis               Convert a Time Indexed Series to a Time Series
+asClassyList            Convert a vector into a list of objects with
+                        the same class
+assignList              Assign Values In a List to Names
+barplot.tis             Barplot for Time Indexed Series
+barplot2                Horizontally Shifted Bar Plots
+basis                   Optional tis attributes
+between                 Check for Inclusion in a Closed Interval
+blanks                  Blanks
+capitalize              Capitalize strings
+cbind.tis               Combine Series Into a Multivariate (Matrix)
+                        Time Indexed Series
+columns                 Rows and Columns of a Matrix
+convert                 Time scale conversions for time series
+csv                     Writes a CSV (comma separated values) file.
+cumsum.tis              Cumulative Sums, Products, and Extremes
+currentMonday           Day of Week Time Indexes
+currentWeek             Current Period Time Indexes
+dateRange               Start and End Time Indices for a Series
+dayOfPeriod             Day positions in Time Index Periods
+description             Description and Documentation Attributes
+evalOrEcho              Evaluate an Argument If Possible
+fanSeries               Constant Growth Series
+format.ti               Convert Time Index or Jul to Character
+fortify.tis             Fortify a tis object
+frColors                FRB Color Palettes
+growth.rate             Growth Rates of Time Series
+hms                     Hours, Minutes and Seconds from a Time Index or
+                        Jul
+holidays                Holidays
+hourly                  R support for Intraday frequencies
+ilspline                Linear Spline Integration
+inferTi                 Create a Time Index to Match a Vector of
+                        DateTimes
+interpNA                Interpolate missing values in a Time Indexed
+                        Series
+isIntradayTif           Check for Intraday Time Index Frequency
+isLeapYear              Check Leap Year
+jul                     Julian Date Objects
+lags                    Lag a Time Series
+latestWeek              Most Recent Period Time Indexes
+lines.tis               Plotting Time Indexed Series
+mergeSeries             Merge Time Indexed Series
+naWindow                Exclude NA and Zero Observations
+nberShade               Plotting NBER Recesssions
+nberShade.ggplot        Plotting NBER Recesssions in the ggplot
+                        graphics system
+plotWindow              Set up Coordinates for Graphics Window
+print.ti                Print a Time Index
+print.tis               Printing Time Indexed Series
+scatterPlot             Produce high-quality scatter plots
+screenPage              Page Setup for Plots
+setColors               Set the Graphics Palette and Default Colors
+setDefaultFrequencies   Return Known Time Index Frequencies, Change
+                        Default Frequencies
+solve.tridiag           Solve a Tridiagonal System of Equations
+ssDate                  ssDate Objects
+start.tis               Starting and ending time indexes
+stripBlanks             Strip Blanks
+stripClass              Remove part of a class attribute
+t.tis                   Matrix Transpose
+ti                      Time Index Objects
+tiDaily                 Daily and Business Day Time Indexes
+tierChart               Create tier charts
+tif                     Time Index Frequencies and Periods
+tif2freq                Periods Per Year for Time Index Frequencies
+tis                     Time Indexed Series
+tis-package             Time Indices and Time Indexed Series
+tisFilter               Linear Filtering on a Time Series
+tisFromCsv              Read time series from Comma Separated Values
+                        (.csv) file
+tisLegend               Add a legend to a tisPlot or scatterPlot
+tisPlot                 Plot time indexed series (tis objects)
+today                   Time Index for the Current Date
+updateColumns           Update lists and time series
+window.tis              Time windows for Time Indexed Series
+ymd                     Extract parts of various Date-Time Objects
+ymdShade                Shading Date Ranges

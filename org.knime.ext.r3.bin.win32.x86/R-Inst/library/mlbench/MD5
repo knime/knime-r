@@ -1,5 +1,5 @@
 e90f25e177787d2fc29a5a05ac44a009 *CITATION
-c4e8ade515c8f940918067c673bb4366 *DESCRIPTION
+75e13bec3e52b7dc68398d33baf9d0ec *DESCRIPTION
 15a7541206fc15146d868b72e275df82 *INDEX
 8e4da5701ce5a9faac56ec29db1f6b97 *Meta/Rd.rds
 c40c4f5a0976da2fd37506fd1ca1f37d *Meta/data.rds
@@ -7,7 +7,7 @@ a46f1debdc1f45796be2b2a0e6b3b378 *Meta/features.rds
 80be2740b20cb9b5774584d3fae5a58a *Meta/hsearch.rds
 8f86835cfa427f784fcd598b4cdb869f *Meta/links.rds
 b452a477a05fdc5456dd3fb624b58df9 *Meta/nsInfo.rds
-d28f01308cb229c6757043d6d3ed8d45 *Meta/package.rds
+5611d3bbb4fcc6a9ea635f759b01a8d9 *Meta/package.rds
 8ee1257469e0ad8511789428c5d466c2 *NAMESPACE
 a7f407e416bcd81e0e2697cfb6eeb714 *NEWS
 ebf0fc819595d631b8bf280c4b049940 *R/mlbench
@@ -34,12 +34,12 @@ a6824b09d2afe54c3aebd8594797edd8 *data/Soybean.rda
 2a152427c8e223a7bd47395246f829a3 *data/Zoo.rda
 1185dacc574e305b13ea6f2619dcf94e *help/AnIndex
 00db088737b8629d16bed3fa47765da6 *help/aliases.rds
-c8e0948b396fd9eee21c4254c76ec0fb *help/mlbench.rdb
-8d04264b5d7f20c02c7d8770743eb27e *help/mlbench.rdx
-680b9e2a311c8aebcff1d4fb87a74581 *help/paths.rds
+4f94b19d57e637dcbf5bd6f933a3c4fa *help/mlbench.rdb
+1f991fc5d559d4041b018bdc25637aad *help/mlbench.rdx
+3a5538a9e69f14cdf8f9597efd06d022 *help/paths.rds
 1c06edca3e5b3228ee9fdef770a73d87 *html/00Index.html
 b6763e6916890c631fdc3f2643803b1a *html/R.css
-7924677bdab13ffec8f93b70aa83dcbd *libs/i386/mlbench.dll
+5475a8a7d252a2bde9fb58f7280cd9fe *libs/i386/mlbench.dll
 68a44b69887924834cdeaad2c72cd04e *libs/i386/symbols.rds
-16559a2b1439936d3fc35056fd1fe1b8 *libs/x64/mlbench.dll
+072055492ad4cd87d204d9e6e9d27a02 *libs/x64/mlbench.dll
 838bf4dbc07bcab8446bc02550191560 *libs/x64/symbols.rds

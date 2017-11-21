@@ -1,4 +1,0 @@
-nls.lm                  Addresses NLS problems with the
-                        Levenberg-Marquardt algorithm
-nls.lm.control          Control various aspects of the
-                        Levenberg-Marquardt algorithm

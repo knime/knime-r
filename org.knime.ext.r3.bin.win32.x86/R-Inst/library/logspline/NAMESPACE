@@ -1,0 +1,15 @@
+# Remove the previous line if you edit this file
+
+useDynLib(logspline)
+
+# Export all names
+exportPattern(".")
+
+S3method(plot, logspline)
+S3method(plot, oldlogspline)
+S3method(print, logspline)
+S3method(print, oldlogspline)
+S3method(summary, logspline)
+S3method(summary, oldlogspline)
+importFrom("graphics", "lines", "par", "plot")
+importFrom("stats", "runif")

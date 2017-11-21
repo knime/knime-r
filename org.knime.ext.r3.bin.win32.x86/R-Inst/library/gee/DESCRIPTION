@@ -1,0 +1,20 @@
+Package: gee
+Title: Generalized Estimation Equation Solver
+Version: 4.13-19
+Depends: stats
+Suggests: MASS
+Date: 2015-06-29
+DateNote: Gee version 1998-01-27
+Author: Vincent J Carey. Ported to R by Thomas Lumley (versions 3.13 and 4.4) 
+        and Brian Ripley <ripley@stats.ox.ac.uk> (version 4.13).
+	Note that maintainers are not available to give advice on using a
+	package they did not author.
+Maintainer: Brian Ripley <ripley@stats.ox.ac.uk>
+Description: Generalized Estimation Equation solver.
+License: GPL-2
+NeedsCompilation: yes
+Packaged: 2015-06-29 10:15:45 UTC; ripley
+Repository: CRAN
+Date/Publication: 2015-06-29 12:42:25
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-19 10:08:50 UTC; windows
+Archs: i386, x64

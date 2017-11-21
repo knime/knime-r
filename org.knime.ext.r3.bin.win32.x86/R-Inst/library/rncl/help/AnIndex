@@ -1,5 +1,0 @@
-rncl-package	rncl
-make_phylo	read_nexus_phylo
-read_newick_phylo	read_nexus_phylo
-read_nexus_phylo	read_nexus_phylo
-rncl	rncl

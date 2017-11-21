@@ -1,0 +1,44 @@
+Chameleon               2D Data Sets used for the CHAMELEON Clustering
+                        Algorithm
+Irish                   Irish Referendum Data Set
+Munsingen               Hodson's Munsingen Data Set
+Psych24                 Results of 24 Psychological Test for 8th Grade
+                        Students
+Robinson                Create and Recognize Robinson and Pre-Robinson
+                        Matrices
+SupremeCourt            Voting Patterns in the Second Rehnquist U.S.
+                        Supreme Court
+Townships               Bertin's Characteristics of Townships
+VAT                     Visual Analysis for Cluster Tendency Assessment
+                        (VAT/iVAT)
+Wood                    Gene Expression Data for Wood Formation in
+                        Poplar Trees
+Zoo                     Zoo Data Set
+bertinplot              Plot a Bertin Matrix
+create_lines_data       Create Simulated Data for Seriation Evaluation
+criterion               Criterion for a Loss/Merit Function for Data
+                        Given a Permutation
+dissplot                Dissimilarity Plot
+dist                    Dissimilarities and Correlations Between
+                        Seriation Orders
+get_order               Extracting Order Information from a Permutation
+                        Object
+greenred                Different Useful Color Palettes
+hmap                    Plot Heat Map Reordered Using Seriation
+permutation             Class ser_permutation - A Collection of
+                        Permutation Vectors for Seriation
+permutation_matrix2vector
+                        Conversion Between Permutation Vector and
+                        Permutation Matrix
+permutation_vector      Class ser_permutation_vector - A Single
+                        Permutation Vector for Seriation
+permute                 Permute the Order in Various Objects
+pimage                  Permutation Image Plot
+register_DendSer        Register Seriation Methods from Package DendSer
+register_GA             Register a Genetic Algorithm Seriation Method
+registry_criterion      Registry for Criterion Methods
+registry_seriate        Registry for Seriation Methods
+reorder.hclust          Reorder Dendrograms using Optimal Leaf Ordering
+seriate                 Seriate Dissimilarity Matrices, Matrices or
+                        Arrays
+uniscale                Unidimensional Scaling from Seriation Results

@@ -1,0 +1,646 @@
+\documentclass[12pt]{article}
+\usepackage{Sweave}
+\usepackage{myVignette}
+\usepackage[authoryear,round]{natbib}
+\bibliographystyle{plainnat}
+\DefineVerbatimEnvironment{Sinput}{Verbatim}
+{formatcom={\vspace{-1.5ex}},fontshape=sl,
+  fontfamily=courier,fontseries=b, fontsize=\scriptsize}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}
+{formatcom={\vspace{-2.5ex}},fontfamily=courier,fontseries=b,%
+  fontsize=\scriptsize}
+%%\VignetteIndexEntry{Examples from Multilevel Software Reviews}
+%%\VignetteDepends{lme4}
+%%\VignetteDepends{lattice}
+\begin{document}
+\SweaveOpts{engine=R,eps=FALSE,pdf=TRUE,width=5,height=3,strip.white=true,keep.source=TRUE}
+\SweaveOpts{prefix=TRUE,prefix.string=SoftRev,include=TRUE}%             ^^^^^^^^^^^^^^^^
+\setkeys{Gin}{width=\textwidth}
+\title{Examples from Multilevel Software Comparative Reviews}
+\author{Douglas Bates\\R Development Core Team\\\email{Douglas.Bates@R-project.org}}
+\date{February 2005, {\small with updates up to \today}}
+\maketitle
+\begin{abstract}
+   The Center for Multilevel Modelling at the Institute of Education,
+   London maintains a web site of ``Software reviews of multilevel
+   modeling packages''.  The data sets discussed in the reviews are
+   available at this web site.  We have incorporated these data sets
+   in the \code{mlmRev} package for \RR{} and, in this vignette, provide
+   the results of fitting several models to these data sets.
+\end{abstract}
+<<preliminaries,echo=FALSE,print=FALSE,results=hide>>=
+options(width=80, show.signif.stars = FALSE,
+        lattice.theme = function() canonical.theme("pdf", color = FALSE))
+library(mlmRev)
+library(lme4)
+library(lattice)
+set.seed(1234321)
+@
+
+\section{Introduction}
+\label{sec:Intro}
+
+\RR{} is an Open Source implementation of John Chambers' \Slang{}
+language for data analysis and graphics.  \RR{} was initially developed
+by Ross Ihaka and Robert Gentleman of the University of Auckland and
+now is developed and maintained by an international group of
+statistical computing experts.
+
+In addition to being Open Source software, which means that anyone can
+examine the source code to see exactly how the computations are being
+carried out, \RR{} is freely available from a network of archive sites
+on the Internet.  There are precompiled versions for installation on
+the Windows operating system, Mac OS X and several distributions of
+the Linux operating system.  Because the source code is available
+those interested in doing so can compile their own version if they wish.
+
+\RR{} provides an environment for interactive computing with data and for
+graphical display of data.  Users and developers can extend the
+capabilities of \RR{} by writing their own functions in the language
+and by creating packages of functions and data sets.  Many such
+packages are available on the archive network called CRAN
+(Comprehensive R Archive Network) for which the parent site is
+\url{http://cran.r-project.org}. One such package called \code{lme4}
+(along with a companion package called \code{Matrix}) provides
+functions to fit and display linear mixed models and generalized
+linear mixed models, which are the statisticians' names for the models
+called multilevel models or hierarchical linear models in other
+disciplines.  The \code{lattice} package provides functions to
+generate several high level graphics plots that help with the
+visualization of the types of data to which such models are fit.
+Finally, the \code{mlmRev} package provides the data sets used in the
+``Software Reviews of Multilevel Modeling Packages'' from the
+Multilevel Modeling Group at the Institute of Education in the UK.
+This package also contains several other data sets from the multilevel
+modeling literature.
+
+The software reviews mentioned above were intended to provide
+comparison of the speed and accuracy of many different packages for
+fitting multilevel models.  As such, there is a standard set of
+models that fit to each of the data sets in each of the packages that
+were capable of doing the fit.  We will fit these models for
+comparative purposes but we will also do some graphical exploration of
+the data and, in some cases, discuss alternative models.
+
+We follow the general outline of the previous reviews, beginning with
+simpler structures and moving to the more complex structures.  Because
+the previous reviews were performed on older and considerably slower
+computers than the ones on which this vignette will be compiled, the
+timings produced by the \code{system.time} function and shown in the
+text should not be compared with previous timings given on the web
+site.  They are an indication of the times required to fit such models
+to these data sets on recent computers with processors running at
+around 2 GHz or faster.
+
+\section{Two-level normal models}
+\label{sec:TwoLevelNormal}
+
+In the multilevel modeling literature a two-level model is one with
+two levels of random variation; the per-observation noise term and
+random effects which are grouped according to the levels of a factor.
+We call this factor a \textit{grouping factor}. If the response is
+measured on a continuous scale (more or less) our initial models are
+based on a normal distribution for the per-observation noise and for
+the random effects.  Thus such a model is called a ``two-level normal
+model'' even though it has only one grouping factor for the random effects.
+
+
+\subsection{The Exam data}
+\label{sec:Examdata}
+<<Examprep,results=hide,echo=FALSE>>=
+lmer(normexam ~ standLRT + sex + schgend + (1|school), Exam)
+@
+
+The data set called \code{Exam} provides the normalized exam scores
+attained by 4,059 students from 65 schools in inner London.  Some of
+the covariates available with this exam score are the school the
+student attended, the sex of the student, the school gender (boys,
+girls, or mixed) and the student's result on the Standardised London
+Reading test.
+
+The \RR{} functions \code{str} and \code{summary} can be used to
+examine the structure of a data set (or, in general, any \RR{} object)
+and to provide a summary of an object.
+<<ExamData>>=
+str(Exam)
+summary(Exam)
+@
+
+
+\subsection{Model fits and timings}
+\label{sec:ExamFits}
+
+The first model to fit to the Exam data incorporates fixed-effects
+terms for the pretest score, the student's sex and the school gender.
+The only random-effects term is an additive shift associated with the
+school.
+
+<<ExamFit>>=
+(Em1 <- lmer(normexam ~ standLRT + sex + schgend + (1|school), Exam))
+@
+
+The \code{system.time} function can be used to time the execution of
+an \RR{} expression.  It returns a vector of five numbers giving the
+user time (time spend executing applications code), the system time
+(time spent executing system functions called by the applications
+code), the elapsed time, and the user and system time for any child
+processes.  The first number is what is commonly viewed as the time
+required to do the model fit.  (The elapsed time is unsuitable because
+it can be affected by other processes running on the computer.)  These
+times are in seconds.  On modern computers this fit takes only a
+fraction of a second.
+
+<<Examtime>>=
+system.time(lmer(normexam ~ standLRT + sex + schgend + (1|school), Exam))
+@
+
+
+
+\subsection{Interpreting the fit}
+\label{sec:ExamInterpret}
+
+As can be seen from the output, the default method of fitting a linear
+mixed model is restricted maximum likelihood (REML).  The estimates of
+the variance components correspond to those reported by other packages
+as given on the Multilevel Modelling Group's web site.  Note that the
+estimates of the variance components are given on the scale of the
+variance and on the scale of the standard deviation.  That is, the
+values in the column headed \code{Std.Dev.} are simply the square
+roots of the corresponding entry in the \code{Variance} column.  They
+are \textbf{not} standard errors of the estimate of the variance.
+
+The estimates of the fixed-effects are different from those quoted on
+the web site because the terms for \code{sex} and \code{schgend} use a
+different parameterization than in the reviews.  Here the reference
+level of \code{sex} is female (\code{F}) and the coefficient labelled
+\code{sexM} represents the difference for males compared to females.
+Similarly the reference level of \code{schgend} is \code{mixed} and
+the two coefficients represent the change from mixed to boys only and
+the change from mixed to girls only.  The value of the coefficient
+labelled \code{Intercept} is affected by both these changes as is the
+value of the REML criterion.
+
+To reproduce the results obtained from other packages, we must change
+the reference level for each of these factors.
+
+<<ExamRelevel>>=
+Exam$sex     <- relevel(Exam$sex, "M")
+Exam$schgend <- relevel(Exam$schgend, "girls")
+(Em2 <- lmer(normexam ~ standLRT + sex + schgend + (1|school), Exam))
+@
+
+The coefficients now correspond to those in the tables on the web
+site.  It happens that the REML criterion at the optimum in this fit
+is the same as in the previous fit, but you cannot depend on this
+occuring.  In general the value of the REML criterion at the optimum
+depends on the parameterization used for the fixed effects.
+
+\subsection{Further exploration}
+\label{sec:ExamExplore}
+
+
+\subsubsection{Checking consistency of the data}
+\label{sec:consistency}
+
+It is important to check the consistency of data before trying to fit
+sophisticated models.  One should plot the data in many different ways
+to see if it looks reasonableand also check relationships between
+variables.
+
+For example, each observation in these data is associated with a
+particular student.  The variable \code{student} is not a unique
+identifier of the student as it only has 650 unique values.  It is
+intended to be a unique identifier within a school but it is not.  To
+show this we create a factor that is the interaction of school and
+student then drop unused levels.
+
+<<ExamIds>>=
+Exam <- within(Exam, ids <- factor(school:student))
+str(Exam)
+@
+
+Notice that there are 4059 observations but only 4055 unique levels of
+student within school.  We can check the ones that are duplicated
+
+<<dupExamIds>>=
+as.character(Exam$ids[which(duplicated(Exam$ids))])
+@
+
+One of these cases
+<<OnlyBoy>>=
+subset(Exam, ids == '43:86')
+xtabs(~ sex + school, Exam, subset = school %in% c(43, 50, 52), drop = TRUE)
+@
+is particularly interesting.  Notice that one of the students
+numbered 86 in school 43 is the only male student out of 61 students
+from this school who took the exam.  It is quite likely that this
+student's score was attributed to the wrong school and that the school
+is in fact a girls-only school, not a mixed-sex school.
+
+The causes of the other three cases of duplicate student numbers
+within a school are not as clear.  It would be necessary to go back
+to the original data records to check these.
+
+The cross-tabulation of the students by sex and school for the
+mixed-sex schools
+<<ExamXtabs>>=
+xtabs(~ sex + school, Exam, subset = type == "Mxd", drop = TRUE)
+@
+shows another anomaly.  School 47 is similar to school 43 in that,
+although it is classified as a mixed-sex school, 81 male students
+and only one female student took the exam.  It is likely that the
+school was misrecorded for this one female student and the school is a
+male-only school.
+
+Another school is worth noting. There were only eight students from
+school 54 who took the exam so any within-school estimates from this
+school will be unreliable.
+
+A mosaic plot (Figure~\ref{fig:ExamMosaic}) produced with
+<<ExamMosaicshow, eval = FALSE>>=
+ExamMxd <- within(subset(Exam, type == "Mxd"), school <- factor(school))
+mosaicplot(~ school + sex, ExamMxd)
+@
+helps to detect mixed-sex schools with unusually large or unusually small ratios
+of females to males taking the exam.
+\begin{figure}[tbp]
+  \centering
+<<ExamMosaic,fig=TRUE,echo=FALSE,width=8,height=8>>=
+ExamMxd <- within(subset(Exam, type == "Mxd"), school <- factor(school))
+mosaicplot(~ school + sex, ExamMxd)
+@
+  \caption{A mosaic plot of the sex distribution by school.  The areas
+    of the rectangles are proportional to the number of students of
+    that sex from that school who took the exam.  Schools with an
+    unusally large or unusually small ratio or females to males are
+    highlighted.}
+  \label{fig:ExamMosaic}
+\end{figure}
+
+\subsubsection{Preliminary graphical displays}
+\label{sec:Graphical}
+
+In addition to the pretest score (\code{standLRT}), the predictor
+variables used in this model are the student's sex and the school
+gender, which is coded as having three levels.  There is some
+redundancy in these two variables in that all the students in a
+boys-only school must be male.  For graphical exploration we convert
+from \code{schgend} to \code{type}, an indicator of whether the school
+is a mixed-sex school or a single-sex school, and plot the response
+versus the pretest score for each combination of sex and school type.
+\begin{figure}[tbp]
+  \centering
+<<Examplot1,fig=TRUE,echo=FALSE,width=8,height=8>>=
+print(xyplot(normexam ~ standLRT | sex * type, Exam,
+             type = c("g", "p", "smooth"), layout = c(2,2),
+             xlab = "Standardized London Reading Test score",
+             ylab = "Normalized exam score", aspect = 1.2))
+@
+  \caption{Normalized exam score versus pretest
+    (Standardized London Reading Test) score for 4095 students from 65 schools
+    in inner London. The panels on the left show the male students'
+    scores; those on the right show the females' scores.  The top row
+    of panels shows the scores of students in single-sex schools and
+    the bottom row shows the scores of students in mixed-sex
+    schools. A scatterplot smoother line for each panel has been added
+    to help visualize the trend.}
+  \label{fig:Examplot1}
+\end{figure}
+
+This plot is created with the \code{xyplot} from the \code{lattice}
+package as (essentially)
+<<Examplot1show, eval = FALSE>>=
+xyplot(normexam ~ standLRT | sex * type, Exam, type = c("g", "p", "smooth"))
+@
+The formula would be read as ``plot \code{normexam} by \code{standLRT}
+given \code{sex} by (school) \code{type}''.  A few other arguments were
+added in the actual call to make the axis annotations more readable.
+
+Figure~\ref{fig:Examplot1} shows the even after accounting for a
+student's sex, pretest score and school type, there is considerable
+variation in the response.  We may attribute some of this variation to
+differences in schools but the fitted model indicates that most of the
+variation is unaccounted or ``residual'' variation.
+
+In some ways the high level of residual variation obscures the pattern
+in the data.  By removing the data points and overlaying the
+scatterplot smoothers we can concentrate on the relationships between
+the covariates.
+\begin{figure}[tbp]
+  \centering
+<<Examplot2,fig=TRUE,echo=FALSE,width=8,height=4>>=
+print(xyplot(normexam ~ standLRT, Exam, groups = sex:type,
+             type = c("g", "smooth"), xlim = c(-3,3), ylim = c(-2,2),
+             xlab = "Standardized London Reading Test score",
+             ylab = "Normalized exam score",
+             auto.key = list(space = 'right', points = FALSE, lines = TRUE),
+             aspect = 1))
+@
+  \caption{Overlaid scatterplot smoother lines of the normalized test
+    scores versus the pretest (Standardized London Reading Test) score
+    for female (F) and male (M) students in single-sex (Sngl) and
+    mixed-sex (Mxd) schools.}
+  \label{fig:Examplot2}
+\end{figure}
+The call to \code{xyplot} is essentially
+<<Examplot2show,eval=FALSE>>=
+xyplot(normexam ~ standLRT, Exam, groups = sex:type, type = c("g", "smooth"))
+@
+
+Figure~\ref{fig:Examplot2} is a remarkable plot in that it shows
+nearly a perfect ``main effects'' relationship of the response with
+the three covariates and almost no interaction.  It is rare to see
+real data follow a simple theoretical relationship so closely.
+
+To elaborate, we can see that for each of the four groups the smoothed
+relationship between the exam score and the pretest score is close to
+a straight line and that the lines are close to being parallel.  The
+only substantial deviation is in the smoothed relationship for the
+males in single-sex schools and this is the group with the fewest
+observations and hence the least precision in the estimated
+relationship.  The lack of parallelism for this group is most apparent
+in the region of extremely low pretest scores where there are few
+observations and a single student who had a low pretest score and a
+moderate post-test score can substantially influence the curve.  Five
+or six such points can be seen in the upper left panel of
+Figure~\ref{fig:Examplot1}.
+
+We should also notice the ordering of the lines and the spacing
+between the lines.  The smoothed relationships for students in
+single-sex schools are consistently above those in the mixed-sex
+schools and, except for the region of low pretest scores described
+above, the relationship for the females in a given type of school is
+consistently above that for the males.  Furthermore the distance
+between the female and male lines in the single-sex schools is
+approximately the same as the corresponding distance in the mixed-sex
+schools.  We would summarize this by saying that there is a positive
+effect for females versus males and a positive effect for single-sex
+versus mixed-sex and no indication of interaction between these
+factors.
+
+
+\subsubsection{The effect of schools}
+\label{sec:schoolEffects}
+
+We can check for patterns within and between schools by plotting the
+response versus the pretest by school.  Because there appear to be
+differences in this relationship for single-sex versus mixed-sex
+schools and for females versus males we consider these separately.
+\begin{figure}[tbp]
+  \centering
+<<Examplot3,fig=TRUE,echo=FALSE,width=8,height=8>>=
+print(xyplot(normexam ~ standLRT | school, Exam,
+             type = c("g", "p", "r"),
+             xlab = "Standardized London Reading Test score",
+             ylab = "Normalized exam score",
+             subset = sex == "F" & type == "Sngl"))
+@
+  \caption{Normalized exam scores versus pretest (Standardized London
+    Reading Test) score by school for female students in single-sex
+    schools.}
+  \label{fig:Examplot3}
+\end{figure}
+
+In Figure~\ref{fig:Examplot3} we plot the normalized exam scores
+versus the pretest score by school for female students in single-sex
+schools.  The plot is produced as
+<<Examplot3show>>=
+xyplot(normexam ~ standLRT | school, Exam,
+             type = c("g", "p", "r"),
+             subset = sex == "F" & type == "Sngl")
+@
+The \code{"r"} in the \code{type} argument adds a simple linear
+regression line to each panel.
+
+The first thing we notice in Figure~\ref{fig:Examplot3} is that
+school 48 is an anomaly because only two students in this school took
+the exam.  Because within-school results based on only two students
+are unreliable, we will exclude this school from further plots (but we
+do include these data when fitting comprehensive models).
+
+Although the regression lines on the panels can help us to look for
+variation in the schools, the ordering of the panels is, for our
+purposes, random.  We recreate this plot in Figure~\ref{fig:Examplot4} using
+<<Examplot4show,eval=FALSE>>=
+xyplot(normexam ~ standLRT | school, Exam, type = c("g", "p", "r"),
+             subset = sex == "F" & type == "Sngl" & school != 48,
+             index.cond = function(x, y) coef(lm(y ~ x))[1])
+@
+\begin{figure}[tbp]
+  \centering
+<<Examplot4,fig=TRUE,echo=FALSE,width=8,height=8>>=
+print(xyplot(normexam ~ standLRT | school, Exam,
+             type = c("g", "p", "r"),
+             xlab = "Standardized London Reading Test score",
+             ylab = "Normalized exam score",
+             subset = sex == "F" & type == "Sngl" & school != 48,
+             index.cond = function(x, y) coef(lm(y ~ x))[1]))
+@
+  \caption{Normalized exam scores versus pretest (Standardized London
+    Reading Test) score by school for female students in single-sex
+    schools. School 48 where only two students took the exam has been
+    eliminated and the panels have been ordered by increasing
+    intercept (predicted normalized score for a pretest score of 0) of
+    the regression line.}
+  \label{fig:Examplot4}
+\end{figure}
+so that the panels are ordered (from left to right starting at the
+bottom row) by increasing intercept for the regression line (i.e.{} by
+increasing predicted exam score for a student with a pretest score of 0).
+
+Alternatively, we could order the panels by increasing slope of the
+within-school regression lines, as in Figure~\ref{fig:Examplot4a}.
+\begin{figure}[tbp]
+  \centering
+<<Examplot4a,fig=TRUE,echo=FALSE,width=8,height=8>>=
+print(xyplot(normexam ~ standLRT | school, Exam,
+             type = c("g", "p", "r"),
+             xlab = "Standardized London Reading Test score",
+             ylab = "Normalized exam score",
+             subset = sex == "F" & type == "Sngl" & school != 48,
+             index.cond = function(x, y) coef(lm(y ~ x))[2]))
+@
+  \caption{Normalized exam scores versus pretest (Standardized London
+    Reading Test) score by school for female students in single-sex
+    schools. School 48 has been eliminated and the panels have been
+    ordered by increasing slope of the within-school regression
+    lines.}
+  \label{fig:Examplot4a}
+\end{figure}
+
+Although it is informative to plot the within-school regression lines
+we need to assess the variability in the estimates of the coefficients
+before concluding if there is ``significant'' variability between
+schools.  We can obtain the individual regression fits with the
+\code{lmList} function
+<<ExamLmListFS>>=
+show(ExamFS <- lmList(normexam ~ standLRT | school, Exam,
+                      subset = sex == "F" & type == "Sngl" & school != 48))
+@
+and compare the confidence intervals on these coefficients.
+<<Examplot4cshow>>=
+plot(confint(ExamFS, pool = TRUE), order = 1)
+@
+\begin{figure}[tbp]
+  \centering
+<<Examplot4c,fig=TRUE,echo=FALSE,width=8,height=3>>=
+print(plot(confint(ExamFS, pool = TRUE), order = 1))
+@
+  \caption{Confidence intervals on the coefficients of the
+    within-school regression lines for female students in single-sex
+    schools. School 48 has been eliminated and the schools have been
+    ordered by increasing estimated intercept.}
+  \label{fig:Examplot4c}
+\end{figure}
+
+
+\begin{figure}[tbp]
+  \centering
+<<Examplot5,fig=TRUE,echo=FALSE,width=8,height=4>>=
+print(xyplot(normexam ~ standLRT | school, Exam,
+             type = c("g", "p", "r"),
+             xlab = "Standardized London Reading Test score",
+             ylab = "Normalized exam score",
+             subset = sex == "M" & type == "Sngl", layout = c(5,2),
+             index.cond = function(x, y) coef(lm(y ~ x))[1]))
+@
+  \caption{Normalized exam scores versus pretest (Standardized London
+    Reading Test) score by school for male students in single-sex
+    schools.}
+  \label{fig:Examplot5}
+\end{figure}
+
+<<ExamLmListMS>>=
+show(ExamMS <- lmList(normexam ~ standLRT | school, Exam,
+                      subset = sex == "M" & type == "Sngl"))
+@
+The corresponding plot of the confidence intervals is shown in
+Figure~\ref{fig:Examplot5b}.
+\begin{figure}[tbp]
+  \centering
+<<Examplot5b,fig=TRUE,echo=FALSE,width=8,height=2.5>>=
+print(plot(confint(ExamMS, pool = TRUE), order = 1))
+@
+  \caption{Confidence intervals on the coefficients of the
+    within-school regression lines for female students in single-sex
+    schools. School 48 has been eliminated and the schools have been
+    ordered by increasing estimated intercept.}
+  \label{fig:Examplot5b}
+\end{figure}
+
+For the mixed-sex schools we can consider the effect of the pretest
+score and sex in the plot (Figure~\ref{fig:Examplot6}) and in the
+\begin{figure}[tbp]
+  \centering
+<<Examplot6,fig=TRUE,echo=FALSE,width=8,height=9>>=
+print(xyplot(normexam ~ standLRT | school, Exam, groups = sex,
+             type = c("g", "p", "r"),
+             xlab = "Standardized London Reading Test score",
+             ylab = "Normalized exam score",
+             subset = !school %in% c(43, 47) & type == "Mxd",
+             index.cond = function(x, y) coef(lm(y ~ x))[1],
+             auto.key = list(space = 'top', lines = TRUE,
+             columns = 2), layout = c(7,5),
+             aspect = 1.2))
+@
+  \caption{Normalized exam scores versus pretest
+    score by school and sex for students in mixed-sex
+    schools.}
+  \label{fig:Examplot6}
+\end{figure}
+separate model fits for each school.
+<<ExamLmListM>>=
+show(ExamM <- lmList(normexam ~ standLRT + sex| school, Exam,
+                     subset = type == "Mxd" & !school %in% c(43,47,54)))
+@
+The confidence intervals for these separately fitted models,
+\begin{figure}[tbp]
+  \centering
+<<Examplot6b,fig=TRUE,echo=FALSE,width=8,height=4>>=
+print(plot(confint(ExamM, pool = TRUE), order = 1))
+@
+  \caption{Confidence intervals on the coefficients of the
+    within-school regression lines for female students in single-sex
+    schools. School 48 has been eliminated and the schools have been
+    ordered by increasing estimated intercept.}
+  \label{fig:Examplot6b}
+\end{figure}
+shown in Figure~\ref{fig:Examplot6b} indicate differences in the
+intercepts and possibly differences in the slopes with respect to the
+pretest scores.  However, there is not a strong indication of
+variation by school in the effect of sex.
+
+
+\subsection{Multilevel models for the exam data}
+\label{sec:ExamModels}
+
+We begin with a model that has a random effects for the intercept by
+school plus additive fixed effects for the pretest score, the
+student's sex and the school type.
+<<Em3>>=
+(Em3 <- lmer(normexam ~ standLRT + sex + type + (1|school), Exam))
+@
+Our data exploration indicated that the slope with respect to the
+pretest score may vary by school.  We can fit a model with random
+effects by school for both the slope and the intercept as
+<<Em4>>=
+(Em4 <- lmer(normexam ~ standLRT + sex + type + (standLRT|school), Exam))
+@
+and compare this fit to the previous fit with
+<<EmAnova>>=
+anova(Em3, Em4)
+@
+There is a strong evidence of a significant random effect for the
+slope by school, whether judged by AIC, BIC or the p-value for the
+likelihood ratio test.
+
+The p-value for the likelihood ratio test is based on a $\chi^2$ distribution
+with degrees of freedom calculated as the difference in the number of
+parameters in the two models.  Because one of the parameters
+eliminated from the full model in the submodel is at its boundary the
+usual asymptotics for the likelihood ratio test do not apply.
+However, it can be shown that the p-value quoted for the test is
+conservative in the sense that it is an upper bound on the
+p-value that would be calculated say from a parametric bootstrap.
+
+Having an upper bound of $1.9\times 10^{-10}$ on the p-value can be
+regarded as ``highly significant'' evidence of the utility of the
+random effect for the slope by school.
+
+We could also add a random effect for the student's sex by school
+<<Em5>>=
+(Em5 <- lmer(normexam ~ standLRT + sex + type + (standLRT + sex|school), Exam))
+@
+Notice that the estimate of the variance of the \code{sexM} term is
+essentially zero so there is no need to test the significance of this
+variance component.  We proceed with the analysis of \code{Em4}.
+
+\section{Growth curve model for repeated measures data}
+\label{sec:GrowthCurve}
+
+<<Oxboys>>=
+str(Oxboys)
+system.time(mX1 <- lmer(height ~ age + I(age^2) + I(age^3) + I(age^4) + (age + I(age^2)|Subject),
+                       Oxboys))
+summary(mX1)
+system.time(mX2 <- lmer(height ~ poly(age,4) + (age + I(age^2)|Subject), Oxboys))
+summary(mX2)
+@
+
+\section{Cross-classification model}
+\label{sec:CrossClassified}
+
+<<ScotsSec>>=
+str(ScotsSec)
+system.time(mS1 <- lmer(attain ~ sex + (1|primary) + (1|second), ScotsSec))
+summary(mS1)
+@
+
+\section{Session Info}
+
+<<sessionInfo, results=tex>>=
+toLatex(sessionInfo())
+@
+
+%\bibliography{MlmSoftRev}
+\end{document}

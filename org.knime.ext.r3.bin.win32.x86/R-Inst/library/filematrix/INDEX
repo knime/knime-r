@@ -1,5 +1,0 @@
-filematrix-class        Manipulating file matrices (class
-                        '"filematrix"')
-filematrix-package      File-backed numeric matrix.
-fm.create               Functions to create a new, or open an existing,
-                        filematrix

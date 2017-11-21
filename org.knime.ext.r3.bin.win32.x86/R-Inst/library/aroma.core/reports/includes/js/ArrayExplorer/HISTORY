@@ -1,7 +1,0 @@
-ArrayExplorer
-=============
-
-2012-10-18 [v3.5]
-o ROBUSTNESS: Now ArrayExplorer asserts that inferred height
-   of 'image2d' and height of the client are valid.  If not,
-   an informative alert() error is reported.

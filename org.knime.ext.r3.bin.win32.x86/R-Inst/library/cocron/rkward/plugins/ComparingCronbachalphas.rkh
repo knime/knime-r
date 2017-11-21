@@ -1,0 +1,76 @@
+<!DOCTYPE rkhelp >
+<document>
+	<!-- this code was generated using the rkwarddev package.
+		perhaps don't make changes here, but in the rkwarddev script instead! -->
+	<title>
+		Comparing Cronbach alphas
+	</title>
+	<summary>
+		Compare two or more alpha coefficients based on either dependent or independent groups of individuals.
+	</summary>
+	<usage>
+	</usage>
+	<section id="sct_Step1" title="Step 1">
+		Indicate if the alpha coefficients are based on independent or dependent groups.
+	</section>
+	<section id="sct_Step2" title="Step 2">
+		Choose whether you want to calculate the alpha coefficients from raw data or type them in manually.
+	</section>
+	<section id="sct_Step3" title="Step 3">
+		Enter the data.
+	</section>
+	<section id="sct_Step4" title="Step 4">
+		If the alpha coefficients are calculated from raw data, choose whether the item scores should be standardized. Select a level of significance for the significance test and a level of confidence for the confidence intervals.
+	</section>
+	<section id="sct_Step5" title="Step 5">
+		Copy and paste the generated code to your R script or directly run the code.
+	</section>
+	<!--<settings>
+		<caption id="pag_txACIACITC" />
+		<setting id="groups">
+		</setting>
+		<caption id="pag_txtdDDDCCE" />
+		<setting id="data_input">
+		</setting>
+		<caption id="pag_rwPCDDS2S2" />
+		<setting id="raw_data_alpha">
+		</setting>
+		<caption id="pag_rPCN227S10" />
+		<setting id="alpha_count">
+		</setting>
+		<setting id="manual_and_dep_groups_n">
+		</setting>
+		<setting id="manual_and_dep_groups_i">
+		</setting>
+		<setting id="manual_and_indep_groups_alpha">
+		</setting>
+		<setting id="manual_and_indep_groups_n">
+		</setting>
+		<setting id="manual_and_indep_groups_i">
+		</setting>
+		<setting id="manual_and_dep_groups_alpha">
+		</setting>
+		<caption id="pag_txtdPCPC11" />
+		<setting id="manual_and_dep_groups_r">
+		</setting>
+		<caption id="pag_fSSCCPPL00" />
+		<caption id="frm_Shldthsc" />
+		<setting id="standardized_alpha">
+		</setting>
+		<caption id="frm_Plschslv" />
+		<setting id="los">
+		</setting>
+		<caption id="frm_Plschscn" />
+		<setting id="conf_int">
+		</setting>
+	</settings>
+	<related>
+				<ul>
+					<li>
+						<link href="rkward://rhelp/..." />
+					</li>
+				</ul>
+			</related>
+	<technical>
+	</technical> -->
+</document>

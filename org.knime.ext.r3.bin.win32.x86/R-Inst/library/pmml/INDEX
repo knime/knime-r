@@ -1,0 +1,50 @@
+AddAttributes           adds attribute values to an existing element in
+                        a given PMML file
+addDDAttributes         adds attribute values to an existing DataField
+                        element in a given PMML file
+addDFChildren           adds 'Interval' and 'Value' child elements to a
+                        given DataField element in a given PMML file
+addLT                   adds a LocalTransformations element to a given
+                        PMML file.
+addMSAttributes         adds attribute values to an existing
+                        MiningField element in a given PMML file
+addOutputField          Add Output nodes to a PMML object.
+audit                   Artificially constructed dataset
+fileToXMLNode           Reads in a file and tries to parse it into an
+                        object of type XMLNode
+functionToPMML          Convert an R expression to PMML.
+houseVotes84            Modified 1984 United States Congressional
+                        Voting Records Database
+makeIntervals           Create Interval elements, most likely to add to
+                        a DataDictionary element
+makeOutputNodes         Add Output nodes to a PMML object.
+makeValues              Create Values element, most likely to add to a
+                        DataDictionary element
+pmml                    Generate PMML for R objects
+pmml.ada                Generate PMML for ada objects
+pmml.coxph              Generate PMML for coxph objects
+pmml.cv.glmnet          Generate PMML for glmnet objects
+pmml.gbm                Generate PMML for genralized boosting tree
+                        objects
+pmml.glm                Generate PMML for glm objects
+pmml.hclust             Generate PMML for hclust objects
+pmml.kmeans             Generate PMML for kmeans objects
+pmml.ksvm               Generate PMML for ksvm objects
+pmml.lm                 Generate PMML for lm objects
+pmml.multinom           Generate PMML for multinom objects
+pmml.naiveBayes         Generate PMML for naiveBayes objects
+pmml.neighbr            Generate PMML for a neighbr object from the
+                        *neighbr* package.
+pmml.nnet               Generate PMML for nnet objects
+pmml.randomForest       Generate PMML for randomForest objects
+pmml.rfsrc              Generate PMML for rsf objects
+pmml.rpart              Generate PMML for rpart objects
+pmml.rules              Generate PMML for arules objects
+pmml.svm                Generate PMML for svm objects
+pmml.xgb.Booster        Generate PMML for a xgb.Booster object from the
+                        xgboost package
+pmmlCanExport           Can this installation export PMML variables
+                        (particularly transforms).
+pmmltoc                 Generate C code from a PMML object - dummy
+                        function
+savePMML                saves a xml object as an external PMML file.

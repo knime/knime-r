@@ -1,4 +1,0 @@
-useDynLib(awsMethods)
-import("methods")
-exportMethods("extract","risk")
-export("setCores")

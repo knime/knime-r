@@ -1,0 +1,48 @@
+ageadjust.direct        Age standardization by direct method, with
+                        exact confidence intervals
+ageadjust.indirect      Age standardization by indirect method, with
+                        exact confidence intervals
+as.hour                 Convert date-time object into hour units
+as.month                Convert dates into months of the year for
+                        plotting epidemic curves
+as.week                 Convert dates object in 'disease week' for
+                        plotting epidemic curves
+binom.exact             Confidence intervals for binomial counts or
+                        proportions
+colorbrewer.display     Display and create ColorBrewer palettes
+colors.plot             Plots R's 657 named colors for selection
+epicurve.hours          Construct an epidemic curve
+epidate                 Convert dates into multiple legible formats
+epitab                  Epidemiologic tabulation for a cohort or
+                        case-control study
+epitable                Create r x c contigency table (exposure levels
+                        vs. binary outcome)
+expand.table            Expand contingency table into individual-level
+                        data set
+expected                Expected values in a table
+julian2date             Convert a julian date into standard a date
+                        format
+kapmeier                Implements product-limit (Kaplan-Meier) method
+oddsratio               Odds ratio estimation and confidence intervals
+or.midp                 Odds ratio estimation and confidence intervals
+                        using mid-p method
+ormidp.test             odds ratio test for independence (p value) for
+                        a 2x2 table
+oswego                  Outbreak of Gastrointestinal Illness in Oswego
+                        County, 1940
+pois.exact              Confidence intervals for Poisson counts or
+                        rates
+probratio               Obtain unbiased probability ratios from
+                        logistic regression models
+rate2by2.test           Comparative tests of independence in rx2 rate
+                        tables
+rateratio               Rate ratio estimation and confidence intervals
+ratetable               Create r x 2 count and person-time table for
+                        calculating rates
+riskratio               Risk ratio estimation and confidence intervals
+tab2by2.test            Comparative tests of independence in rx2
+                        contigency tables
+table.margins           Marginal totals of a table
+wcgs                    Western Collaborative Group Study data
+wnv                     West Nile Virus human cases reported in
+                        California, USA, as of December 14, 2004

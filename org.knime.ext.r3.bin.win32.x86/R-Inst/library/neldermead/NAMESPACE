@@ -1,7 +1,0 @@
-exportPattern("^[^\\.]")
-import(methods)
-import(optimbase)
-import(optimsimplex)
-S3method(print,neldermead)
-S3method(is,neldermead)
-S3method(summary,neldermead)

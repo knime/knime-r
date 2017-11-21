@@ -1,0 +1,21 @@
+Package: tripack
+Version: 1.3-8
+Title: Triangulation of Irregularly Spaced Data
+Author: Fortran code by R. J. Renka.
+        R functions by Albrecht Gebhardt <albrecht.gebhardt@aau.at>.
+        With contributions from Stephen Eglen <stephen@anc.ed.ac.uk>,
+        Sergei Zuyev <sergei@stams.strath.ac.uk> and
+	Denis White <white.denis@epamail.epa.gov>
+Maintainer: Albrecht Gebhardt <albrecht.gebhardt@aau.at>
+Description: A constrained two-dimensional Delaunay triangulation package
+  providing both triangulation and generation of voronoi mosaics of 
+  irregular spaced data.
+License: ACM | file LICENSE
+Date: 2016-12-16
+NeedsCompilation: yes
+Packaged: 2016-12-16 12:30:28 UTC; alge
+License_restricts_use: yes
+Repository: CRAN
+Date/Publication: 2016-12-16 19:50:06
+Built: R 3.4.1; x86_64-w64-mingw32; 2017-08-16 01:11:01 UTC; windows
+Archs: i386, x64

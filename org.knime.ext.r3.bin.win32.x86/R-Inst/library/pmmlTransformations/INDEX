@@ -1,0 +1,21 @@
+DiscretizeXform         Discretizes a continuous variable to a discrete
+                        one as indicated by interval mappings. This is
+                        in accordance to the PMML element: *Discretize*
+FunctionXform           Add a function transformation to a WrapData
+                        object.
+Initialize              Initialize internal variables in a WrapData
+                        object
+MapXform                Implements a map between discrete values in
+                        accordance to the PMML element: *MapValues*
+MinMaxXform             Normalizes continuous values in accordance to
+                        the PMML element: *NormContinuous*
+NormDiscreteXform       Normalize discrete values in accordance to the
+                        PMML element: *NormDiscrete*
+RenameVar               Renames a variable in the WrapData transform
+                        object
+WrapData                Wrap raw data in an R object
+ZScoreXform             Performs a z-score normalization on continuous
+                        values in accordance to the PMML element:
+                        *NormContinuous*
+pmmlTransformations-package
+                        Data Transformations for PMML output

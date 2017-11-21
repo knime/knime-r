@@ -1,0 +1,28 @@
+Package: cocron
+Type: Package
+Title: Statistical Comparisons of Two or more Alpha Coefficients
+Author: Birk Diedenhofen [aut, cre]
+Maintainer: Birk Diedenhofen <mail@birkdiedenhofen.de>
+Depends: methods
+Suggests: testthat
+Enhances: rkward
+Imports: stats
+Description: Statistical tests for the comparison between two or more alpha
+    coefficients based on either dependent or independent groups of individuals.
+    A web interface is available at http://comparingcronbachalphas.org. A plugin
+    for the R GUI and IDE RKWard is included. Please install RKWard from https://
+    rkward.kde.org to use this feature. The respective R package 'rkward' cannot be
+    installed directly from a repository, as it is a part of RKWard.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyLoad: yes
+URL: http://comparingcronbachalphas.org
+Authors@R: c(person(given="Birk", family="Diedenhofen", email="mail@birkdiedenhofen.de", role=c("aut", "cre")))
+Version: 1.0-1
+Date: 2016-03-11
+RoxygenNote: 5.0.1
+NeedsCompilation: no
+Packaged: 2016-03-11 14:10:42 UTC; birk
+Repository: CRAN
+Date/Publication: 2016-03-12 00:33:28
+Built: R 3.4.2; ; 2017-11-19 10:53:07 UTC; windows

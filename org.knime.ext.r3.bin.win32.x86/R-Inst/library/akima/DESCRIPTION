@@ -1,0 +1,41 @@
+Package: akima
+Version: 0.6-2
+Date: 2016-12-16
+Title: Interpolation of Irregularly and Regularly Spaced Data
+Authors@R: c(person("Hiroshi", "Akima", role = c("aut", "cph"),
+		     comment = "Fortran code (TOMS 760, 761, 697 and 433)"),
+	      person("Albrecht", "Gebhardt", role = c("aut", "cre", "cph"),
+                     email = "albrecht.gebhardt@aau.at",
+                     comment = "R port (interp* functions), bicubic* functions"),
+	      person("Thomas", "Petzold", role = c("ctb", "cph"),
+                     comment = "aspline function"),
+              person("Martin", "Maechler", email="maechler@stat.math.ethz.ch",
+                      role = c("ctb", "cph"), comment = "interp2xyz function + enhancements"),
+              person("YYYY Association for Computing Machinery, Inc.",
+                      role = c("cph"), comment = "covers code from TOMS 760, 761, 697 and 433")
+            )
+Maintainer: Albrecht Gebhardt <albrecht.gebhardt@aau.at>
+Description: Several cubic spline interpolation methods of H. Akima for irregular and
+  regular gridded data are available through this package, both for the bivariate case
+  (irregular data: ACM 761, regular data: ACM 760) and univariate case (ACM 433 and ACM 697).
+  Linear interpolation of irregular gridded data is also covered by reusing D. J. Renkas
+  triangulation code which is part of Akimas Fortran code. A bilinear interpolator
+  for regular grids was also added for comparison with the bicubic interpolator on
+  regular grids.
+License: ACM | file LICENSE
+Depends: R (>= 2.0.0)
+Imports: sp
+NeedsCompilation: yes
+Packaged: 2016-12-20 00:14:46 UTC; alge
+Author: Hiroshi Akima [aut, cph] (Fortran code (TOMS 760, 761, 697 and 433)),
+  Albrecht Gebhardt [aut, cre, cph] (R port (interp* functions), bicubic*
+    functions),
+  Thomas Petzold [ctb, cph] (aspline function),
+  Martin Maechler [ctb, cph] (interp2xyz function + enhancements),
+  YYYY Association for Computing Machinery, Inc. [cph] (covers code from
+    TOMS 760, 761, 697 and 433)
+License_restricts_use: yes
+Repository: CRAN
+Date/Publication: 2016-12-20 01:40:25
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-19 11:20:25 UTC; windows
+Archs: i386, x64

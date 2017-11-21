@@ -1,1 +1,0 @@
-export(sumVct, wearingMarking, markingTime, readCountsData, dataCollapser, summaryData, plotData)

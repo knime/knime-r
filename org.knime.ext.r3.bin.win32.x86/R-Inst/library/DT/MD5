@@ -1,4 +1,4 @@
-4ddd5ca82b33f002034be9307907c146 *DESCRIPTION
+3fb66c6c56651fcbe29a03a190bfe0c0 *DESCRIPTION
 5e752a284fb230e1244484d110ac159b *INDEX
 4f067e6ecc298741e67bfcf099364593 *LICENSE
 4f0016480ab8be3152b4e52ceee8047f *Meta/Rd.rds
@@ -6,7 +6,7 @@ a46f1debdc1f45796be2b2a0e6b3b378 *Meta/features.rds
 a822992a4d202c894db748b4f5806c49 *Meta/hsearch.rds
 e416edd774ac7a3a568f75894a0fca7b *Meta/links.rds
 6cc6c34b6308983fadf1cdb391e911a8 *Meta/nsInfo.rds
-0297fa27535824853605e546e436241b *Meta/package.rds
+5d9a3cdd437c48c48d08d0211e6f40cd *Meta/package.rds
 63dc2a6d8bcec1cfc22811565b62ee6d *Meta/vignette.rds
 39bc4f7a3a4e540ee302b8a17b1b5b93 *NAMESPACE
 aacaa7df3b2f5a176ec02e41067f019e *NEWS.md
@@ -62,10 +62,10 @@ b45bee37de59858ac17cb854ae8b4b93 *examples/DT-selection/DESCRIPTION
 494610fe3e185694e51f5f1c5c30da84 *examples/ajax-shiny.R
 25c4baab4bb7785952879618ee15cde5 *examples/datatable.R
 ac019dbd5e0b5c92122d17a64471a6ae *help/AnIndex
-63dc13617e399be2fe4f455b66a3740e *help/DT.rdb
-a9f1d24feb7d13c182e42cbfc2c70b57 *help/DT.rdx
+82cd6dc45110b13a34444e19384a9521 *help/DT.rdb
+1ec1e1fd15171183a15865bfecee058a *help/DT.rdx
 c495af609ca7f8110321f8dfb83c4545 *help/aliases.rds
-8c50fcecb9d85cf44293e99f37c3bd2c *help/paths.rds
+f23e2bc472e68d9740cab621b35cda3f *help/paths.rds
 2fbe8ac7cb898ffa64906627e1e1249c *html/00Index.html
 b6763e6916890c631fdc3f2643803b1a *html/R.css
 1a19926fa4eab5fd79034f1add682420 *htmlwidgets/datatables.js

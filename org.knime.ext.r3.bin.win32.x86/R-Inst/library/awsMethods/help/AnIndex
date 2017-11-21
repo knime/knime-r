@@ -1,7 +1,0 @@
-extract	extract-methods
-extract,ANY-method	extract-methods
-extract-methods	extract-methods
-risk	risk-methods
-risk,ANY-method	risk-methods
-risk-methods	risk-methods
-setCores	setCores

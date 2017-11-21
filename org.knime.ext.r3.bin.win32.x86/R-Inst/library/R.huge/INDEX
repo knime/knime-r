@@ -1,7 +1,0 @@
-AbstractFileArray       Class representing a persistent array stored in
-                        a file
-FileMatrix              Class representing a persistent matrix stored
-                        in a file
-FileVector              Class representing a persistent vector stored
-                        on file
-R.huge-package          Package R.huge

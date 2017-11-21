@@ -1,6 +1,0 @@
-<%--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==
-  REFERENCES
-==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--==--%> 
-\bibliography{bioinformatics-journals-abbr,PSCBS}
-%\bibliographystyle{plain}
-\bibliographystyle{natbib}

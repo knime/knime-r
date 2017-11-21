@@ -1,0 +1,43 @@
+BostonHomicide          Youth Homicides in Boston
+DJIA                    Dow Jones Industrial Average
+Fstats                  F Statistics
+GermanM1                German M1 Money Demand
+Grossarl                Marriages, Births and Deaths in Grossarl
+PhillipsCurve           UK Phillips Curve Equation Data
+RealInt                 US Ex-post Real Interest Rate
+SP2001                  S&P 500 Stock Prices
+USIncExp                Income and Expenditures in the US
+boundary                Boundary Function for Structural Change Tests
+boundary.Fstats         Boundary for F Statistics
+boundary.efp            Boundary for Empirical Fluctuation Processes
+boundary.mefp           Boundary Function for Monitoring of Structural
+                        Changes
+breakdates              Breakdates Corresponding to Breakpoints
+breakfactor             Factor Coding of Segmentations
+breakpoints             Dating Breaks
+catL2BB                 Generators for efpFunctionals along Categorical
+                        Variables
+confint.breakpointsfull
+                        Confidence Intervals for Breakpoints
+durab                   US Labor Productivity
+efp                     Empirical Fluctuation Processes
+efpFunctional           Functionals for Fluctuation Processes
+gefp                    Generalized Empirical M-Fluctuation Processes
+logLik.breakpoints      Log Likelihood and Information Criteria for
+                        Breakpoints
+mefp                    Monitoring of Empirical Fluctuation Processes
+plot.Fstats             Plot F Statistics
+plot.efp                Plot Empirical Fluctuation Process
+plot.mefp               Plot Methods for mefp Objects
+recresid                Recursive Residuals
+root.matrix             Root of a Matrix
+scPublications          Structural Change Publications
+sctest                  Structural Change Tests
+sctest.Fstats           supF-, aveF- and expF-Test
+sctest.default          Structural Change Tests in Parametric Models
+sctest.efp              Generalized Fluctuation Tests
+sctest.formula          Structural Change Tests in Linear Regression
+                        Models
+solveCrossprod          Inversion of X'X
+supLM                   Generators for efpFunctionals along Continuous
+                        Variables

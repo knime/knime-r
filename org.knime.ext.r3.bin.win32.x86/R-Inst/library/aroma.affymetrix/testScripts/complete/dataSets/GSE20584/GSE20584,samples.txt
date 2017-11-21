@@ -1,8 +1,0 @@
-# createdOn: 2012-09-15 11:32:57 PDT
-# nbrOfRows: 2
-# nbrOfColumns: 3
-# columnNames: id	fullname	comment
-# columnClasses: character	character	character
-id	fullname	comment
-GSM517071	Patient1,T,lung	HF-23896-(1), Affymetrix SNP6.0 array
-GSM517072	Patient1,N,adjacent	HF-23897-(1), Affymetrix SNP6.0 array

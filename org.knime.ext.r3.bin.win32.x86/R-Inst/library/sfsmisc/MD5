@@ -1,5 +1,5 @@
 4d314a8c0c266297365a8fa808c12e30 *ChangeLog
-14c423678fe7428efd26b57acfe21156 *DESCRIPTION
+fdb945d6cb88a81a9bd0702f591bbf94 *DESCRIPTION
 27f6a2abcea75d94d857e14c487196e1 *INDEX
 0ddf6fe67476db3dbb9f1c80400eb82e *Meta/Rd.rds
 bca6a617b3258af23c1910a3a15deeb7 *Meta/data.rds
@@ -8,7 +8,7 @@ a46f1debdc1f45796be2b2a0e6b3b378 *Meta/features.rds
 b5c9a53b33a094577c0b791231b46931 *Meta/hsearch.rds
 61ec89b16570f95a15f6f0a01a9d410b *Meta/links.rds
 5e9bc4f3c155c0e4df72a1eb26ef3189 *Meta/nsInfo.rds
-4166eb4c98a8589fab71f221a3761b1a *Meta/package.rds
+877d2b3bbfa0b43d1c42f1dff69d4a5d *Meta/package.rds
 7e6256b16d1f741e3f7e9e77cdccc75b *NAMESPACE
 4d8efd52a096a3bf143333e3610ab534 *NEWS.Rd
 ebf0fc819595d631b8bf280c4b049940 *R/sfsmisc
@@ -20,8 +20,8 @@ c90bddd957b7fd59ad0ec2fbc069ed5b *demo/pretty-lab.R
 1cfe5644e4ebaf2f16906018b6a9be8d *demo/prime-numbers.R
 e8d1b008c3eae30df683e4d1a1786c1a *help/AnIndex
 a96a0241de6073a43729d553439fdc1f *help/aliases.rds
-f8859e552522cf268a227ebe86bb32eb *help/paths.rds
-fdf2f0a92b73bbf12377bed84bdfe59f *help/sfsmisc.rdb
-ff9690d12809cf00cd246a5ec1420ba9 *help/sfsmisc.rdx
+f273272f0309c9a620e8709dda7b2a86 *help/paths.rds
+dcab5d8d5c33504afc66b62e261fb7f8 *help/sfsmisc.rdb
+63da397545820efb20caac175733e273 *help/sfsmisc.rdx
 aed03bcdc3ccc3e3df49eb0c8d2acdb4 *html/00Index.html
 b6763e6916890c631fdc3f2643803b1a *html/R.css

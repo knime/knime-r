@@ -1,0 +1,19 @@
+Package: logspline
+Version: 2.1.9
+Date: 2016-02-01
+Title: Logspline Density Estimation Routines
+Author: Charles Kooperberg <clk@fredhutch.org>
+Maintainer: Charles Kooperberg <clk@fredhutch.org>
+Description: Routines for the logspline density estimation. oldlogspline()
+  uses the same algorithm as the logspline 1.0.x package - the Kooperberg
+  and Stone (1992) <DOI: 10.2307/1390786> algorithm (with an improved interface).
+  The recommended routine logspline() uses an algorithm from Stone et al (1997). 
+  <DOI: 10.1214/aos/1031594728>
+Imports: stats, graphics
+License: Apache License 2.0
+Packaged: 2016-02-02 17:55:13 UTC; clk
+NeedsCompilation: yes
+Repository: CRAN
+Date/Publication: 2016-02-03 01:15:45
+Built: R 3.4.1; x86_64-w64-mingw32; 2017-08-16 00:51:38 UTC; windows
+Archs: i386, x64

@@ -1,3 +1,0 @@
-extract-methods         Generic function 'extract'
-risk-methods            Generic function 'risk'
-setCores                Set the number of cores to use for openMP.

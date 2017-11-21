@@ -1,0 +1,90 @@
+
+		Changes in version 1.3-9
+
+    o remove longtable.sty
+
+		Changes in version 1.3-8
+
+    o use logrank_test instead of surv_test (for coin 1.2-0)
+
+		Changes in version 1.3-7
+
+    o    update NAMESPACE
+
+		Changes in version 1.3-6
+
+    o    make clear that this package is for the 1st edition
+
+    o    remove defunct publisher URL
+
+		Changes in version 1.3-5
+
+    o    don't ship Makefiles
+
+		Changes in version 1.3-4
+
+    o    tools::delimMatch
+
+		Changes in version 1.3-3
+
+    o    clean-up depends
+
+
+		Changes in version 1.3-2
+
+    o    mh_test required the scores argument to be a 
+         _named_ list (spotted by coin 1.1-0)
+
+		Changes in version 1.3-1
+
+    o    .find.package() -> system.file()
+
+		Changes in version 1.3-0
+
+    o    put vignettes in HSAUR/vignettes together
+         with *.Rout.save files. R CMD check is now
+         ~50% faster.
+
+		Changes in version 1.2-6
+
+    o     further size reductions 
+
+		Changes in version 1.2-5
+
+    o     reduce package size a bit
+
+		Changes in version 1.2-4
+
+    o    fix dependencies
+
+		Changes in version 1.2-3
+
+    o    Rd parser fixes
+
+		Changes in version 1.2-2
+
+    o    update errata list
+
+		Changes in version 1.2-1
+
+    o    fix typo in Chapter 7 and make sure all R code from Chapter 7 is
+         contained in the vignette
+
+		Changes in version 1.2-0
+
+    o    some silent fixed for the second reprint
+
+		Changes in version 1.0-4
+
+    o    add import(utils) to NAMESPACE
+
+		Changes in version 1.0-3
+
+    o    fix some typos
+
+		Changes in version 1.0-1
+
+    o    add `Errata' vignette
+
+    o    fix file name typo: Ch_introduction_to_R
+

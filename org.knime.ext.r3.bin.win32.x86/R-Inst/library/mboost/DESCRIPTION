@@ -1,0 +1,43 @@
+Package: mboost
+Title: Model-Based Boosting
+Version: 2.8-1
+Date: 2017-07-19
+Authors@R: c(person("Torsten", "Hothorn", role = "aut"),
+             person("Peter", "Buehlmann", role = "aut"),
+             person("Thomas", "Kneib", role = "aut"),
+             person("Matthias", "Schmid", role = "aut"),
+             person("Benjamin", "Hofner", role = c("aut", "cre"),
+	            email = "benjamin.hofner@pei.de"),
+             person("Fabian", "Sobotka", role = "ctb"),
+             person("Fabian", "Scheipl", role = "ctb"),
+	           person("Andreas", "Mayr", role = "ctb"))
+Description: Functional gradient descent algorithm
+  (boosting) for optimizing general risk functions utilizing
+  component-wise (penalised) least squares estimates or regression
+  trees as base-learners for fitting generalized linear, additive
+  and interaction models to potentially high-dimensional data.
+Depends: R (>= 2.14.0), methods, stats, parallel, stabs (>= 0.5-0)
+Imports: Matrix, survival, splines, lattice, nnls, quadprog, utils,
+        graphics, grDevices, party (>= 1.1-0)
+Suggests: TH.data, MASS, fields, BayesX, gbm, mlbench, RColorBrewer,
+        rpart (>= 4.0-3), randomForest, nnet, testthat (>= 0.10.0),
+        kangar00
+LazyData: yes
+License: GPL-2
+BugReports: https://github.com/boost-R/mboost/issues
+URL: https://github.com/boost-R/mboost
+NeedsCompilation: yes
+Packaged: 2017-07-19 09:27:23 UTC; hofbe
+Author: Torsten Hothorn [aut],
+  Peter Buehlmann [aut],
+  Thomas Kneib [aut],
+  Matthias Schmid [aut],
+  Benjamin Hofner [aut, cre],
+  Fabian Sobotka [ctb],
+  Fabian Scheipl [ctb],
+  Andreas Mayr [ctb]
+Maintainer: Benjamin Hofner <benjamin.hofner@pei.de>
+Repository: CRAN
+Date/Publication: 2017-07-23 17:34:31 UTC
+Built: R 3.4.2; x86_64-w64-mingw32; 2017-11-19 13:33:15 UTC; windows
+Archs: i386, x64

@@ -1,4 +1,4 @@
-077a0acfb7f64bdf5a1a1d62fb91b1d8 *DESCRIPTION
+e32cc59c3f38b5e3cb75b1dc96c63d3c *DESCRIPTION
 b1c463d05786830686a6b00bc953ac93 *INDEX
 33df9c544e24fce34daa94f1763b5283 *LICENSE
 ae17ec7912213469e63b775727fba8d3 *Meta/Rd.rds
@@ -6,7 +6,7 @@ a46f1debdc1f45796be2b2a0e6b3b378 *Meta/features.rds
 8a50eab68ceeb15aa48ff3fc503d54d6 *Meta/hsearch.rds
 e40c92fe170d7e3c7a3f1c2ab0b9d8ab *Meta/links.rds
 2ca54c41139268f300b1542b84202b4e *Meta/nsInfo.rds
-e86d3401884a8829a1a08c81318216c2 *Meta/package.rds
+b9efcb82550bfae342a040832a54026c *Meta/package.rds
 1f02f171a97f8de646e171572475d4db *Meta/vignette.rds
 28c7e6234322a705cdbcaa0c938cb947 *NAMESPACE
 0fc6c870c1ffee486212701bfc07a76f *NEWS
@@ -70,9 +70,9 @@ c0971404ba43e09c15c241ae78804445 *doc/network/manipulation.html
 830c90f67c2576ca9b2b42ac715683f6 *examples/all_examples.R
 5ea56d7af7dfa37f420a63489cd1f62f *help/AnIndex
 cc6a2832be43c3b3c57716130cc3ed3c *help/aliases.rds
-fad61792a7e8593ea306ce3bfddaa9fb *help/paths.rds
-322bf14cfcd1bb04f866fe11231d21a7 *help/visNetwork.rdb
-15d67ed6c6f34447d1e441bf6762b63c *help/visNetwork.rdx
+795ebdec1f2c7e98b1d5b19123e677ae *help/paths.rds
+7dbce682d8be552d64fe7c40f34400af *help/visNetwork.rdb
+67ff1986706d1f92367e66f3f6d4060e *help/visNetwork.rdx
 f2f5192b3bcefa61fa64f2d201641e36 *html/00Index.html
 b6763e6916890c631fdc3f2643803b1a *html/R.css
 be5a91640458397d1c0c66a541b28459 *htmlwidgets/lib/css/dataManipulation.css

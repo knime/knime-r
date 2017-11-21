@@ -1,5 +1,5 @@
 828290996b613493f96e0fab024beebb *CITATION
-806a0d8b8c796ace2acdcc72b5051bc7 *DESCRIPTION
+1b6193085c176a36affe02ce77b52824 *DESCRIPTION
 dcb30c7093e0e244b457c39e866632cc *INDEX
 8ac5c86afa9cc9364149070d3a243fa5 *Meta/Rd.rds
 119885fad815a6276bc99c48a83eadec *Meta/data.rds
@@ -7,7 +7,7 @@ a46f1debdc1f45796be2b2a0e6b3b378 *Meta/features.rds
 10341ff64746723a98c9217f9df79737 *Meta/hsearch.rds
 3ee7c532d39587e51f4aaaee5ef39897 *Meta/links.rds
 f77c10ad5cfe8cfd21e4723730a46498 *Meta/nsInfo.rds
-fbecfe9b90798d40a9f99e6b10bf0e8e *Meta/package.rds
+3b1f597b0f9a21507f1c6eb5a6260108 *Meta/package.rds
 7d368ccc5a36581c137df6a29e026834 *Meta/vignette.rds
 2e58df81a51bcdbee42627eee3e18275 *NAMESPACE
 854a025cb7e5da3e4fe230c0be950d08 *NEWS
@@ -36,12 +36,12 @@ a90e67c794ebb6f7fb4964e3980ab89c *doc/MoranI.pdf
 a31f4caddef14270a10c3e1f633ac057 *doc/index.html
 fa3db901772d8ff87d13f0035f4bdf5c *help/AnIndex
 723e2fe74cb42b385ffa6f6f13937c54 *help/aliases.rds
-b7b4f1abba9dc3522045cc4db27234b2 *help/ape.rdb
-94946a4298be938b8b7b61ef0aa58b3a *help/ape.rdx
-ee9567a5185cd32c192036b29314bf8e *help/paths.rds
+7449f70a11677d2fa006764743372754 *help/ape.rdb
+bce633be68d6e32f6a82d43bf998d4e8 *help/ape.rdx
+e6c8b7eaa1e3bcbe15ab242f6c7cc902 *help/paths.rds
 9612c0f944ad7e8b878627fa709754ec *html/00Index.html
 b6763e6916890c631fdc3f2643803b1a *html/R.css
-c41951dc8ee5661a8bc9ff122f8ca01d *libs/i386/ape.dll
+52e41ad9f7d7b3666a7cb722e47141fc *libs/i386/ape.dll
 1f372ffbe7232b33d4386e69aea1430c *libs/i386/symbols.rds
-850d8fa75fd12a950fe1c355f163e8f0 *libs/x64/ape.dll
+2e21f8c33c8cb08ca597635345014049 *libs/x64/ape.dll
 77788eb544b4252171af1536552d7f5a *libs/x64/symbols.rds

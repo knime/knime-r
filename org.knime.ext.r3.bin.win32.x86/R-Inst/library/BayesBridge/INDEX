@@ -1,7 +1,0 @@
-bridge.EM               Bridge Regression - Expectation Maximization
-bridge.reg              Bayesian Bridge Regression
-diabetes                Blood and other measurements in diabetics
-retstable.ld            Sampling exponentially tilted stable
-                        distributions
-rtnorm                  Truncated Normal Random Variates
-trace.beta              Trace Plot

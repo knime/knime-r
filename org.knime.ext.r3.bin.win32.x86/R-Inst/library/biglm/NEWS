@@ -1,0 +1,43 @@
+0.9 fix ODBC and DBI interfaces for bigglm to not use LIMIT, and just not allow
+    variables to be floating free in the workspace (which really couldn't work
+    anyway)
+
+    fix arguably-false-positive from Fortran bounds checking, by incorporating
+    the fix in the published AS274
+
+0.8 allow offsets in model formulas for both biglm and bigglm.
+
+0.7 Proper S4 inheritance for DBIConnection method. There's still something
+    wrong with the set-up, since we have to export all the S3 methods for it
+    to work.
+  
+    summary.biglm object now has $nullrss, $rsq components
+
+
+
+0.6 bigglm() now warns clearly when it runs out of iterations
+    before convergence. (problem reported by Francisco J. Zagmutt)
+
+0.5 SQLiteConnection method (RSQLite package) for bigglm.
+
+    biglm() no longer gives an error message when used on 
+    data of storage mode 'integer'
+
+    [The leaps package now has a regsubsets() method for biglm
+    objects (for Tal Galili).]
+
+    Sandwich variance estimates were wrong when weights were
+    specified. 
+
+    predict() method and extractors for AIC, deviance, based
+    on code from Christophe Dutang
+
+    RODBC method (RODBC package) for bigglm
+
+0.4 bigglm for glms.
+
+0.3 Added sandwich estimator
+
+0.2 Added weights
+
+0.1 Initial version

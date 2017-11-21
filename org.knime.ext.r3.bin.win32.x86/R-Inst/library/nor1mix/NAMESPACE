@@ -1,0 +1,42 @@
+
+
+importFrom("graphics"
+	   ## S3 "generics" for which we define S3 methods
+	   , plot, lines
+	   ## and what we call:
+	   , abline, par)
+
+importFrom("stats",
+           dnorm, pnorm, qnorm, rnorm,
+           plogis, qlogis, rmultinom,
+           optim,
+           quantile,
+           splinefun, uniroot)
+
+export(
+       "norMix",
+       "dnorMix",
+       "dnorMixL", "dpnorMix", ## < ?
+       "pnorMix", "qnorMix", "rnorMix",
+       "is.norMix",
+       "llnorMix", "m.norMix", "var.norMix",
+       "MW.nm1", "MW.nm2", "MW.nm2.old", "MW.nm3", "MW.nm4", "MW.nm5",
+       "MW.nm6", "MW.nm7", "MW.nm8", "MW.nm9", "MW.nm10", "MW.nm11",
+       "MW.nm12", "MW.nm13", "MW.nm14", "MW.nm15", "MW.nm16",
+       "clus2norMix", "nM2par", "par2norMix",
+       "r.norMix"
+    , "norMixEM"
+    , "norMixMLE"
+    , "estep.nm", "mstep.nm", "emstep.nm"
+       )
+
+S3method(`[`, norMix)
+S3method(sort, norMix)
+
+S3method(mean, norMix)
+##N Rather not: var() is not generic!
+##N S3method(var, norMix)
+
+S3method(print, norMix)
+S3method(plot, norMix)
+S3method(lines, norMix)
