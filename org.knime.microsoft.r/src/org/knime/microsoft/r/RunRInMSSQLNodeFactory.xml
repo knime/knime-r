@@ -47,7 +47,7 @@
 	</fullDescription>
 
 	<ports>
-		<inPort name="R Workspace" index="0">R Workspace which contains the model.</inPort>
+		<inPort name="R Workspace" index="0" optional="true">R Workspace which contains the model.</inPort>
 		<inPort name="Database Connection" index="1">Connection to a Microsoft SQL Database.</inPort>
 		<outPort name="Database Connection" index="0">Output Database Connection.</outPort>
 	</ports>

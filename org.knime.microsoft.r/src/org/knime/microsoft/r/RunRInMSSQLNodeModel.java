@@ -52,6 +52,9 @@ import java.io.InputStreamReader;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -68,8 +71,6 @@ import org.knime.core.node.port.database.DatabasePortObject;
 import org.knime.core.node.port.database.DatabasePortObjectSpec;
 import org.knime.core.node.port.database.DatabaseQueryConnectionSettings;
 import org.knime.core.node.port.database.DatabaseUtility;
-import org.knime.ext.r.node.local.port.RPortObject;
-import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.knime.r.FlowVariableRepository;
 import org.knime.r.RSnippetNodeConfig;
 import org.knime.r.RSnippetNodeModel;
@@ -101,7 +102,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
     static final RSnippetNodeConfig RSNIPPET_NODE_CONFIG = new RSnippetNodeConfig() {
         @Override
         public Collection<PortType> getInPortTypes() {
-            return Arrays.asList(RPortObject.TYPE, DatabasePortObject.TYPE);
+            return Arrays.asList(PortObject.TYPE_OPTIONAL, DatabasePortObject.TYPE);
         }
 
         @Override
@@ -145,9 +146,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         super.configure(inSpecs);
 
-        assert inSpecs[PORT_INDEX_R] instanceof RPortObjectSpec;
         assert inSpecs[PORT_INDEX_DB] instanceof DatabasePortObjectSpec;
-
         final DatabasePortObjectSpec databasePort = (DatabasePortObjectSpec)inSpecs[PORT_INDEX_DB];
 
         /* Check if we are connected to a MSSQL database, since we require support for sq_execute_external_script */
@@ -190,13 +189,15 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         final Blob blob = connection.createBlob();
         try {
             exec.checkCanceled();
-            final String serializeScript = "conn<-rawConnection(raw(0),open='w');" //
-                + "saveRDS(list(knime.model=knime.model,knime.flow.in=knime.flow.in),file=conn);"
-                + "knime.model.serialized<-rawConnectionValue(conn);" //
-                + "close(conn);rm(conn)";
+            final String serializeScript = "conn<-rawConnection(raw(0),open='w')\n" //
+                + "knime.varstosend<-list(knime.flow.in=knime.flow.in)\n" // Always send knime.flow.in
+                + "if(exists('knime.model')){knime.varstosend$knime.model<-knime.model}\n" // Send knime.model only if it exists
+                + "saveRDS(knime.varstosend,file=conn)\n"
+                + "knime.serialized<-rawConnectionValue(conn)\n" //
+                + "close(conn);rm(conn,knime.varstosend)";
             executeSnippet(controller, serializeScript, inData, flowVarRepo, exec);
 
-            final REXP serializedModelREXP = controller.eval("knime.model.serialized", true);
+            final REXP serializedModelREXP = controller.eval("knime.serialized", true);
 
             final byte[] serializedModel = serializedModelREXP.asBytes();
 

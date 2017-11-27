@@ -6,12 +6,14 @@ declare @instance_name nvarchar(100) = @@SERVERNAME, @database_name nvarchar(128
 EXEC sp_execute_external_script
 @language=N'R',
 @script=N'
-    knime.db.server<-knimedbserver
-    knime.db.name<-knimedbname
-    rm(knimedbserver,knimedbname)
+	knime.db.server<-knimedbserver
+	knime.db.name<-knimedbname
+	rm(knimedbserver,knimedbname)
 
 	knime.tmp<-readRDS(rawConnection(knimeserialized,open="r"))
-	knime.model<-knime.tmp$knime.model
+	if ("knime.model" %in% colnames(knime.tmp)) {
+		knime.model<-knime.tmp$knime.model
+	}
 	knime.flow.in<-knime.tmp$knime.flow.in
 	rm(knime.tmp,knimeserialized)
 	knime.db.connection<-paste("Driver=SQL Server;Server=", knime.db.server, ";Database=", knime.db.name, ";uid=${usr};pwd=${pwd}", sep="")
