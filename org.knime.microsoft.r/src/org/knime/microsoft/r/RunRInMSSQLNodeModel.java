@@ -180,7 +180,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         if (!m_settings.getOverwriteOutputTable()) {
             /* Check if output table already exists */
             final DatabaseUtility utility = DatabaseUtility.getUtility(connectionSettings.getDatabaseIdentifier());
-            if(utility.tableExists(connection, m_settings.getOutputTableName())) {
+            if (utility.tableExists(connection, m_settings.getOutputTableName())) {
                 throw new RuntimeException("Output table already exists.");
             }
         }
@@ -190,9 +190,10 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         final Blob blob = connection.createBlob();
         try {
             exec.checkCanceled();
-            final String serializeScript =
-                "conn<-rawConnection(raw(0),open='w');saveRDS(list(knime.model=knime.model,knime.flow.in=knime.flow.in),file=conn);"
-                    + "knime.model.serialized<-rawConnectionValue(conn);close(conn);rm(conn)";
+            final String serializeScript = "conn<-rawConnection(raw(0),open='w');" //
+                + "saveRDS(list(knime.model=knime.model,knime.flow.in=knime.flow.in),file=conn);"
+                + "knime.model.serialized<-rawConnectionValue(conn);" //
+                + "close(conn);rm(conn)";
             executeSnippet(controller, serializeScript, inData, flowVarRepo, exec);
 
             final REXP serializedModelREXP = controller.eval("knime.model.serialized", true);
@@ -227,8 +228,8 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             .replace("${pwd}", connectionSettings.getPassword(getCredentialsProvider()))
             .replace("${inputQuery}", inputQuery).replace("${outTableName}", outTable);
 
-       getLogger().debugWithFormat(
-           "Running SQL R query with input query \"%s\" and output table \"%s\".", inputQuery, outTable);
+        getLogger().debugWithFormat("Running SQL R query with input query \"%s\" and output table \"%s\".", inputQuery,
+            outTable);
 
         try {
             if (!connection.createStatement().execute(query)) {
