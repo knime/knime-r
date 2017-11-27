@@ -49,6 +49,7 @@
 package org.knime.ext.r.bin.preferences;
 
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -122,9 +123,14 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
     }
 
     private boolean checkRVersion(final String rHome) {
-        final Path rHomePath = Paths.get(rHome);
-        if (!Files.isDirectory(rHomePath)) {
-            setMessage("The selected path is not a directory.", ERROR);
+        try {
+            final Path rHomePath = Paths.get(rHome);
+            if (!Files.isDirectory(rHomePath)) {
+                setMessage("The selected path is not a directory.", ERROR);
+                return false;
+            }
+        } catch (InvalidPathException e) {
+            setMessage("Path to RHome is not a valid path: " + e.getMessage(), ERROR);
             return false;
         }
 
