@@ -115,7 +115,7 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
         addField(new RHomeDirectoryFieldEditor(RPreferenceInitializer.PREF_R_HOME, "Path to R Home",
             getFieldEditorParent()));
         final IntegerFieldEditor field = new IntegerFieldEditor(RPreferenceInitializer.PREF_RSERVE_MAXINBUF,
-            "Rserve receiving buffer size limit (in MB -- 0 for unlimited)", getFieldEditorParent());
+            "Rserve receiving buffer size limit\n(in MB -- 0 for unlimited)", getFieldEditorParent());
         field.setValidRange(0, MAX_RECEIVE_BUFFER_SIZE);
         addField(field);
 
