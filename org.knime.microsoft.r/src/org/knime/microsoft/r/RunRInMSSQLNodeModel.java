@@ -47,7 +47,6 @@ package org.knime.microsoft.r;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Blob;
 import java.sql.Connection;
@@ -59,10 +58,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -100,8 +100,6 @@ import org.rosuda.REngine.REXP;
  *
  */
 final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
-
-    private static final NodeLogger LOGGER = NodeLogger.getLogger(RunRInMSSQLNodeModel.class);
 
     static final RSnippetNodeConfig RSNIPPET_NODE_CONFIG = new RSnippetNodeConfig() {
         @Override
@@ -195,8 +193,9 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             exec.checkCanceled();
             final String serializeScript = "conn<-rawConnection(raw(0),open='w')\n" //
                 + "knime.varstosend<-list(knime.flow.in=knime.flow.in)\n" // Always send knime.flow.in
-                + "if(exists('knime.model')){knime.varstosend$knime.model<-knime.model}\n" // Send knime.model only if it exists
-                + "saveRDS(knime.varstosend,file=conn)\n" + "knime.serialized<-rawConnectionValue(conn)\n" //
+                + "if(exists('knime.model')){knime.varstosend$knime.model<-knime.model}\n" // only if it exists
+                + "saveRDS(knime.varstosend,file=conn)\n" //
+                + "knime.serialized<-rawConnectionValue(conn)\n" //
                 + "close(conn);rm(conn,knime.varstosend)";
             executeSnippet(controller, serializeScript, inData, flowVarRepo, exec);
 
@@ -236,13 +235,15 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             outTable);
 
         final Statement stmt = connection.createStatement();
+        // the result set is not the new table but just an empty result set that is returned by running the R code
         try (final ResultSet result = stmt.executeQuery(query)) {
             while (result.next()) {
                 /* Iterating merely for the sake of producing a SQL Exception if the query failed. */
             }
         }
 
-        /* Build output query and get table its spec */
+        /* Build output query and get table spec */
+        /* On MSSQL we can use [ ] to specify an identifier */
         final String outputQuery = "SELECT * FROM [" + outTable + "]";
         final DatabaseQueryConnectionSettings querySettings =
             new DatabaseQueryConnectionSettings(connectionSettings, outputQuery);
@@ -252,13 +253,10 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             final DBReader conn = utility.getReader(querySettings);
             final DataTableSpec dbSpec = conn.getDataTableSpec(getCredentialsProvider());
 
-            /* On MSSQL we can use [ ] to specify an identifier */
             return new PortObject[]{new DatabasePortObject(new DatabasePortObjectSpec(dbSpec, connectionSettings))};
         } catch (SQLException ex) {
-            Throwable cause = org.apache.commons.lang3.exception.ExceptionUtils.getRootCause(ex);
-            if (cause == null) {
-                cause = ex;
-            }
+            Throwable cause = ExceptionUtils.getRootCause(ex);
+            cause = ObjectUtils.defaultIfNull(cause, ex);
             throw new InvalidSettingsException("Error while validating SQL query: " + cause.getMessage(), ex);
         }
     }
@@ -267,8 +265,8 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
      * @return Code loaded from resource to execute R code in an SQL query.
      */
     private String getRunRCodeQuery() {
-        try (final InputStream stream = getClass().getResource("RunRCode.sql").openStream()) {
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        try (final BufferedReader reader =
+            new BufferedReader(new InputStreamReader(getClass().getResource("RunRCode.sql").openStream()))) {
             return String.join("\n", reader.lines().collect(Collectors.toList()));
         } catch (final IOException e) {
             throw new RuntimeException("CODING ERROR: Could not read RCodeQuery.sql", e);

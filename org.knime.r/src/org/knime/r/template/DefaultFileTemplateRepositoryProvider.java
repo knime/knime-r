@@ -76,7 +76,7 @@ public class DefaultFileTemplateRepositoryProvider implements TemplateRepository
                 try {
                     defaultRepo = FileTemplateRepository.create(file);
                 } catch (final IOException e) {
-                    logger.error("Cannot create the default template " + "provider for the R nodes", e);
+                    logger.error("Cannot create the default template provider for the R nodes", e);
                 }
             }
         }
