@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -85,7 +86,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
      */
     static final String ALL_CATEGORY = "All";
 
-    private final Map<Class, Map<String, Collection<RSnippetTemplate>>> m_templates;
+    private final Map<String, Map<String, Collection<RSnippetTemplate>>> m_templates;
 
     private final List<TemplateRepository> m_repos;
 
@@ -116,7 +117,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
                 LOGGER.error("Error while reading rsnippet template " + "repositories.", ex);
             }
         }
-        m_templates = new HashMap<Class, Map<String, Collection<RSnippetTemplate>>>();
+        m_templates = new HashMap<String, Map<String, Collection<RSnippetTemplate>>>();
     }
 
     /**
@@ -143,8 +144,8 @@ public final class TemplateProvider extends TemplateRepository implements Change
         initTemplates(m_metaCategories);
         final Set<String> categories = new LinkedHashSet<String>();
         for (final Class c : m_metaCategories) {
-            if (m_templates.containsKey(c)) {
-                categories.addAll(m_templates.get(c).keySet());
+            if (containsKey(c)) {
+                categories.addAll(get(c).keySet());
             }
         }
         return categories;
@@ -158,8 +159,8 @@ public final class TemplateProvider extends TemplateRepository implements Change
         initTemplates(metaCategories);
         final Set<RSnippetTemplate> templates = new LinkedHashSet<RSnippetTemplate>();
         for (final Class c : metaCategories) {
-            if (m_templates.containsKey(c)) {
-                templates.addAll(m_templates.get(c).get(ALL_CATEGORY));
+            if (containsKey(c)) {
+                templates.addAll(get(c).get(ALL_CATEGORY));
             }
         }
         return templates;
@@ -176,8 +177,8 @@ public final class TemplateProvider extends TemplateRepository implements Change
         initTemplates(metaCategories);
         final Set<RSnippetTemplate> templates = new LinkedHashSet<RSnippetTemplate>();
         for (final Class c : metaCategories) {
-            if (m_templates.containsKey(c)) {
-                templates.addAll(m_templates.get(c).get(category));
+            if (containsKey(c)) {
+                templates.addAll(get(c).get(category));
             }
         }
         return templates;
@@ -185,14 +186,14 @@ public final class TemplateProvider extends TemplateRepository implements Change
 
     /**
      * Load templates for the given meta categories.
-     * 
-     * @param m_metaCategories the meta categories
+     *
+     * @param metaCategories the meta categories
      */
-    private void initTemplates(final Collection<Class<?>> m_metaCategories) {
+    private void initTemplates(final Collection<Class<?>> metaCategories) {
         // reset data
-        for (final Class key : m_metaCategories) {
-            if (m_templates.containsKey(key)) {
-                m_templates.remove(key);
+        for (final String key : metaCategories.stream().map(Class<?>::getName).collect(Collectors.toSet())) {
+            if (containsKey(key)) {
+                remove(key);
             }
             final Map<String, Collection<RSnippetTemplate>> templates =
                 new LinkedHashMap<String, Collection<RSnippetTemplate>>();
@@ -200,7 +201,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
             m_templates.put(key, templates);
         }
         for (final TemplateRepository repo : m_repos) {
-            appendTemplates(repo.getTemplates(m_metaCategories));
+            appendTemplates(repo.getTemplates(metaCategories));
         }
     }
 
@@ -228,8 +229,8 @@ public final class TemplateProvider extends TemplateRepository implements Change
             return;
         }
         for (final RSnippetTemplate template : templates) {
-            final Class key = template.getMetaCategory();
-            appendTemplateTo(m_templates.get(key), template);
+            final String key = template.getMetaCategory();
+            appendTemplateTo(get(key), template);
         }
     }
 
@@ -346,4 +347,30 @@ public final class TemplateProvider extends TemplateRepository implements Change
         return null;
     }
 
+
+    /* Typesafe map lookups */
+
+    private Map<String, Collection<RSnippetTemplate>> get(final Class<?> key) {
+        return m_templates.get(key.getName());
+    }
+
+    private Map<String, Collection<RSnippetTemplate>> get(final String key) {
+        return m_templates.get(key);
+    }
+
+    private boolean containsKey(final Class<?> key) {
+        return m_templates.containsKey(key.getName());
+    }
+
+    private boolean containsKey(final String key) {
+        return m_templates.containsKey(key);
+    }
+
+    private Map<String, Collection<RSnippetTemplate>> remove(final Class<?> key) {
+        return m_templates.remove(key.getName());
+    }
+
+    private Map<String, Collection<RSnippetTemplate>> remove(final String key) {
+        return m_templates.remove(key);
+    }
 }

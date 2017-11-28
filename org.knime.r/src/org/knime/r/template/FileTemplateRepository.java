@@ -76,7 +76,7 @@ public final class FileTemplateRepository extends TemplateRepository {
     private final boolean m_readonly;
 
     /** Templates grouped by meta category. */
-    private final Map<Class<?>, Collection<RSnippetTemplate>> m_templates;
+    private final Map<String, Collection<RSnippetTemplate>> m_templates;
 
     /**
      * Create a new file base template repository.
@@ -133,8 +133,8 @@ public final class FileTemplateRepository extends TemplateRepository {
      */
     private void appendTemplates(final Collection<RSnippetTemplate> templates) {
         for (final RSnippetTemplate template : templates) {
-            final Class<?> key = template.getMetaCategory();
-            Collection<RSnippetTemplate> collection = m_templates.get(key);
+            final String key = template.getMetaCategory();
+            Collection<RSnippetTemplate> collection = get(key);
             if (null == collection) {
                 collection = new ArrayList<RSnippetTemplate>();
             }
@@ -174,12 +174,12 @@ public final class FileTemplateRepository extends TemplateRepository {
     @Override
     public Collection<RSnippetTemplate> getTemplates(final Collection<Class<?>> metaCategories) {
         if (metaCategories.size() == 1) {
-            return m_templates.get(metaCategories.iterator().next());
+            return get(metaCategories.iterator().next());
         } else {
             final Collection<RSnippetTemplate> templates = new ArrayList<RSnippetTemplate>();
             for (final Class<?> c : metaCategories) {
-                if (m_templates.containsKey(c)) {
-                    templates.addAll(m_templates.get(c));
+                if (containsKey(c)) {
+                    templates.addAll(get(c));
                 }
             }
             return templates;
@@ -200,7 +200,7 @@ public final class FileTemplateRepository extends TemplateRepository {
 
     /** Returns true when the given template is in this repository. */
     private boolean isInRepository(final RSnippetTemplate template) {
-        final Collection<RSnippetTemplate> templates = m_templates.get(template.getMetaCategory());
+        final Collection<RSnippetTemplate> templates = get(template.getMetaCategory());
         return null != templates ? templates.contains(template) : false;
     }
 
@@ -212,7 +212,7 @@ public final class FileTemplateRepository extends TemplateRepository {
         if (m_readonly) {
             return false;
         }
-        final Collection<RSnippetTemplate> templates = m_templates.get(template.getMetaCategory());
+        final Collection<RSnippetTemplate> templates = get(template.getMetaCategory());
         final boolean removed = templates.remove(template);
         if (removed) {
             final File file = getFile(template);
@@ -262,7 +262,7 @@ public final class FileTemplateRepository extends TemplateRepository {
      * @param template the file
      */
     private File getFile(final RSnippetTemplate template) {
-        final String meta = template.getMetaCategory().getName();
+        final String meta = template.getMetaCategory();
         final File metaFile = new File(m_folder, meta);
         metaFile.mkdir();
         final String name = template.getName().replaceAll("[^a-zA-Z0-9 ]", "_") + "_" + template.getUUID() + ".xml";
@@ -292,5 +292,22 @@ public final class FileTemplateRepository extends TemplateRepository {
     @Override
     public String getDisplayLocation(final RSnippetTemplate template) {
         return isInRepository(template) ? getFile(template).getPath() : null;
+    }
+
+    /* Typesafe map lookup */
+    private Collection<RSnippetTemplate> get(final String key) {
+        return m_templates.get(key);
+    }
+
+    private Collection<RSnippetTemplate> get(final Class<?> key) {
+        return m_templates.get(key.getName());
+    }
+
+    private boolean containsKey(final String key) {
+        return m_templates.containsKey(key);
+    }
+
+    private boolean containsKey(final Class<?> key) {
+        return m_templates.containsKey(key.getName());
     }
 }

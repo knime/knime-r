@@ -78,9 +78,9 @@ public class RSnippetTemplate {
     private RSnippetSettings m_snippetSettings;
 
     /**
-     * The meta category which typically is the dialog class this template comes from.
+     * The meta category which typically is name of the node factory class this template comes from.
      */
-    private Class m_metaCategory;
+    private String m_metaCategory;
 
     /** The category this template falls into. */
     private String m_category;
@@ -117,7 +117,17 @@ public class RSnippetTemplate {
      * @param metaCategory the meta category of the template
      * @param snippetSettings the settings
      */
-    public RSnippetTemplate(final Class metaCategory, final RSnippetSettings snippetSettings) {
+    public RSnippetTemplate(final Class<?> metaCategory, final RSnippetSettings snippetSettings) {
+        this(metaCategory.getName(), snippetSettings);
+    }
+
+    /**
+     * Create instance with default values.
+     *
+     * @param metaCategory the meta category of the template
+     * @param snippetSettings the settings
+     */
+    public RSnippetTemplate(final String metaCategory, final RSnippetSettings snippetSettings) {
         m_metaCategory = metaCategory;
         m_category = "default";
         m_description = "";
@@ -186,7 +196,7 @@ public class RSnippetTemplate {
     /**
      * @return the metaCategory
      */
-    public Class getMetaCategory() {
+    public String getMetaCategory() {
         return m_metaCategory;
     }
 
@@ -203,7 +213,7 @@ public class RSnippetTemplate {
      * @param settings To save to.
      */
     public void saveSettings(final NodeSettingsWO settings) {
-        settings.addString(META_CATEGORY, m_metaCategory.getName());
+        settings.addString(META_CATEGORY, m_metaCategory);
         settings.addString(CATEGORY, m_category);
         settings.addString(NAME, m_name);
         settings.addString(DESCRIPTION, m_description);
@@ -220,7 +230,7 @@ public class RSnippetTemplate {
     public void loadSettings(final NodeSettingsRO settings) {
         try {
             final String metaCategory = settings.getString(META_CATEGORY, null);
-            m_metaCategory = metaCategory != null ? Class.forName(metaCategory) : RSnippetTemplate.class;
+            m_metaCategory = metaCategory != null ? metaCategory : RSnippetTemplate.class.getName();
             m_category = settings.getString(CATEGORY, "default");
             m_name = settings.getString(NAME, "?");
             m_description = settings.getString(DESCRIPTION, "");
@@ -229,8 +239,6 @@ public class RSnippetTemplate {
             m_snippetSettings = new RSnippetSettings();
             m_snippetSettings.loadSettingsForDialog(snippet);
             m_uuid = m_snippetSettings.getTemplateUUID();
-        } catch (final ClassNotFoundException e) {
-            throw new IllegalStateException(e);
         } catch (final InvalidSettingsException e) {
             throw new IllegalStateException(e);
         }

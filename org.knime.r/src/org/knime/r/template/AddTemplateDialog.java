@@ -99,13 +99,13 @@ public final class AddTemplateDialog extends JDialog {
      *
      * @param parent frame who owns this dialog
      * @param snippet the snippet to create the template
-     * @param metaCategories the meta category
+     * @param metaCategory the meta category
      */
-    private AddTemplateDialog(final Frame parent, final RSnippet snippet, final Class<?> metaCategories) {
+    private AddTemplateDialog(final Frame parent, final RSnippet snippet, final Class<?> metaCategory) {
         super(parent, true);
 
         m_settings = snippet;
-        m_metaCategory = metaCategories;
+        m_metaCategory = metaCategory;
 
         setTitle("Add a R snippet template.");
         // instantiate the components of the dialog
@@ -246,12 +246,12 @@ public final class AddTemplateDialog extends JDialog {
      *
      * @param parent frame who owns this dialog
      * @param snippet the snippet to creat the template
-     * @param metaCategories the meta category
+     * @param metaCategory the meta category
      * @return new template are null in case of cancellation
      */
     public static RSnippetTemplate openUserDialog(final Frame parent, final RSnippet snippet,
-        final Class<?> metaCategories) {
-        final AddTemplateDialog dialog = new AddTemplateDialog(parent, snippet, metaCategories);
+        final Class<?> metaCategory) {
+        final AddTemplateDialog dialog = new AddTemplateDialog(parent, snippet, metaCategory);
         return dialog.showDialog();
     }
 
