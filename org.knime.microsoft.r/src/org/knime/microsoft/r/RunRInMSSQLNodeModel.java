@@ -233,10 +233,12 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             outTable);
 
         try {
-            if (!connection.createStatement().execute(query)) {
-                throw new RuntimeException("SQL Query failed.");
+            final Statement stmt = connection.createStatement();
+            final ResultSet result = stmt.executeQuery(query);
+            while (result.next()) {
+                /* Iterating merely for the sake of producing a SQL Exception if the query failed. */
             }
-        } catch (final Exception e) {
+        } catch (final SQLException e) {
             throw new RuntimeException("SQL Query failed.", e);
         }
 
