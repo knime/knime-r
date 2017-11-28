@@ -48,14 +48,14 @@
 package org.knime.r.template;
 
 /**
- * Factory to create and access template repositories for the java snippet node.
+ * Factory to create and access template repositories for the R snippet node.
  *
  * @author Heiko Hofer
  */
 public interface TemplateRepositoryProvider {
     /**
      * Get the repository.
-     * 
+     *
      * @return the repository
      */
     public TemplateRepository getRepository();
