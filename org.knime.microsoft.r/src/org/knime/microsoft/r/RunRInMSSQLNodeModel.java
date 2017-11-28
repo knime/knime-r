@@ -62,6 +62,7 @@ import java.util.stream.Collectors;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.port.PortObject;
@@ -71,6 +72,7 @@ import org.knime.core.node.port.database.DatabasePortObject;
 import org.knime.core.node.port.database.DatabasePortObjectSpec;
 import org.knime.core.node.port.database.DatabaseQueryConnectionSettings;
 import org.knime.core.node.port.database.DatabaseUtility;
+import org.knime.core.node.port.database.reader.DBReader;
 import org.knime.r.FlowVariableRepository;
 import org.knime.r.RSnippetNodeConfig;
 import org.knime.r.RSnippetNodeModel;
@@ -98,6 +100,8 @@ import org.rosuda.REngine.REXP;
  *
  */
 final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
+
+    private static final NodeLogger LOGGER = NodeLogger.getLogger(RunRInMSSQLNodeModel.class);
 
     static final RSnippetNodeConfig RSNIPPET_NODE_CONFIG = new RSnippetNodeConfig() {
         @Override
@@ -176,9 +180,9 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
 
         final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
 
+        final DatabaseUtility utility = DatabaseUtility.getUtility(connectionSettings.getDatabaseIdentifier());
         if (!m_settings.getOverwriteOutputTable()) {
             /* Check if output table already exists */
-            final DatabaseUtility utility = DatabaseUtility.getUtility(connectionSettings.getDatabaseIdentifier());
             if (utility.tableExists(connection, m_settings.getOutputTableName())) {
                 throw new RuntimeException("Output table already exists.");
             }
@@ -192,8 +196,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             final String serializeScript = "conn<-rawConnection(raw(0),open='w')\n" //
                 + "knime.varstosend<-list(knime.flow.in=knime.flow.in)\n" // Always send knime.flow.in
                 + "if(exists('knime.model')){knime.varstosend$knime.model<-knime.model}\n" // Send knime.model only if it exists
-                + "saveRDS(knime.varstosend,file=conn)\n"
-                + "knime.serialized<-rawConnectionValue(conn)\n" //
+                + "saveRDS(knime.varstosend,file=conn)\n" + "knime.serialized<-rawConnectionValue(conn)\n" //
                 + "close(conn);rm(conn,knime.varstosend)";
             executeSnippet(controller, serializeScript, inData, flowVarRepo, exec);
 
@@ -232,19 +235,32 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         getLogger().debugWithFormat("Running SQL R query with input query \"%s\" and output table \"%s\".", inputQuery,
             outTable);
 
-        try {
-            final Statement stmt = connection.createStatement();
-            final ResultSet result = stmt.executeQuery(query);
+        final Statement stmt = connection.createStatement();
+        try (final ResultSet result = stmt.executeQuery(query)) {
             while (result.next()) {
                 /* Iterating merely for the sake of producing a SQL Exception if the query failed. */
             }
-        } catch (final SQLException e) {
-            throw new RuntimeException("SQL Query failed.", e);
         }
 
-        /* On MSSQL we can use [ ] to specify an identifier */
-        return new PortObject[]{new DatabasePortObject(new DatabasePortObjectSpec(new DataTableSpec(),
-            new DatabaseQueryConnectionSettings(connectionSettings, "SELECT * FROM [" + outTable + "]")))};
+        /* Build output query and get table its spec */
+        final String outputQuery = "SELECT * FROM [" + outTable + "]";
+        final DatabaseQueryConnectionSettings querySettings =
+            new DatabaseQueryConnectionSettings(connectionSettings, outputQuery);
+
+        final Statement outputStatement = connection.createStatement();
+        try (final ResultSet result = outputStatement.executeQuery(outputQuery)) {
+            final DBReader conn = utility.getReader(querySettings);
+            final DataTableSpec dbSpec = conn.getDataTableSpec(getCredentialsProvider());
+
+            /* On MSSQL we can use [ ] to specify an identifier */
+            return new PortObject[]{new DatabasePortObject(new DatabasePortObjectSpec(dbSpec, connectionSettings))};
+        } catch (SQLException ex) {
+            Throwable cause = org.apache.commons.lang3.exception.ExceptionUtils.getRootCause(ex);
+            if (cause == null) {
+                cause = ex;
+            }
+            throw new InvalidSettingsException("Error while validating SQL query: " + cause.getMessage(), ex);
+        }
     }
 
     /**

@@ -12,6 +12,7 @@ Require-Bundle: org.knime.r;bundle-version="[3.4.0,4.0.0)",
  org.knime.ext.r.type;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.ui;bundle-version="[3.108.0,4.0.0)",
  org.knime.base;bundle-version="[3.4.0,4.0.0)",
- com.fifesoft.rsyntaxtextarea;bundle-version="[2.5.8,3.0.0)"
+ com.fifesoft.rsyntaxtextarea;bundle-version="[2.5.8,3.0.0)",
+ org.apache.commons.lang3;bundle-version="3.2.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Eclipse-RegisterBuddy: org.knime.base
