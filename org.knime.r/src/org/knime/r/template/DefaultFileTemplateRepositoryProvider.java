@@ -55,7 +55,7 @@ import org.knime.core.node.NodeLogger;
 
 /**
  * A provider to the default template repository.
- * 
+ *
  * @author Heiko Hofer
  */
 public class DefaultFileTemplateRepositoryProvider implements TemplateRepositoryProvider {
@@ -76,7 +76,7 @@ public class DefaultFileTemplateRepositoryProvider implements TemplateRepository
                 try {
                     defaultRepo = FileTemplateRepository.create(file);
                 } catch (final IOException e) {
-                    logger.error("Cannot create the default template " + "provider for the java snippet nodes", e);
+                    logger.error("Cannot create the default template " + "provider for the R nodes", e);
                 }
             }
         }
@@ -85,7 +85,7 @@ public class DefaultFileTemplateRepositoryProvider implements TemplateRepository
 
     /**
      * Get the default location for snippet templates.
-     * 
+     *
      * @return the default directory for snippet templates.
      */
     private File getDefaultLocation() {

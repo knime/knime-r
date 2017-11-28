@@ -110,7 +110,7 @@ public final class FileTemplateRepository extends TemplateRepository {
 
     /**
      * Adds the template to the give collection o a successful read. The template file is supposed to end with ".xml".
-     * 
+     *
      * @param templates the templates to add to
      * @param file the file to read
      */
@@ -128,7 +128,7 @@ public final class FileTemplateRepository extends TemplateRepository {
 
     /**
      * Append given templates to the list of templates.
-     * 
+     *
      * @param templates the templates to append.
      */
     private void appendTemplates(final Collection<RSnippetTemplate> templates) {
@@ -147,7 +147,7 @@ public final class FileTemplateRepository extends TemplateRepository {
     /**
      * Create a repository from the templates in the given folder. Templates in this repository cannot be removed or
      * replaced.
-     * 
+     *
      * @param folder the folder with the repositories
      * @return the template repository
      * @throws IOException if a template cannot be read
@@ -159,7 +159,7 @@ public final class FileTemplateRepository extends TemplateRepository {
     /**
      * Create a repository from the templates in the given folder. Templates may be removed or replaced. Use
      * <code>createProtected</code> for a repository that is read only.
-     * 
+     *
      * @param folder the folder with the repositories
      * @return the template repository
      * @throws IOException if a template cannot be read
@@ -226,7 +226,7 @@ public final class FileTemplateRepository extends TemplateRepository {
 
     /**
      * Add a template to the default location.
-     * 
+     *
      * @param template the template
      */
     void addTemplate(final RSnippetTemplate template) {
@@ -258,7 +258,7 @@ public final class FileTemplateRepository extends TemplateRepository {
 
     /**
      * Get the templates file.
-     * 
+     *
      * @param template the file
      */
     private File getFile(final RSnippetTemplate template) {

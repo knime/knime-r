@@ -107,7 +107,7 @@ public final class AddTemplateDialog extends JDialog {
         m_settings = snippet;
         m_metaCategory = metaCategories;
 
-        setTitle("Add a Java snippet template.");
+        setTitle("Add a R snippet template.");
         // instantiate the components of the dialog
         final JPanel p = createPanel();
 

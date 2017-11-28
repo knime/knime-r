@@ -68,7 +68,7 @@ import org.knime.core.node.NodeLogger;
 import org.knime.r.RSnippetTemplate;
 
 /**
- * A central provider for Java Snippet templates.
+ * A central provider for R Snippet templates.
  *
  * @author Heiko Hofer
  */
@@ -121,7 +121,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
 
     /**
      * Get default shared instance.
-     * 
+     *
      * @return default TemplateProvider
      */
     public static TemplateProvider getDefault() {
@@ -135,7 +135,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
 
     /**
      * Get all categories.
-     * 
+     *
      * @param m_metaCategories only categories that hold templates in this meta categories will be displayed.
      * @return the categories
      */
@@ -167,7 +167,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
 
     /**
      * Get the {@link RSnippetTemplate}s in the given category.
-     * 
+     *
      * @param metaCategories only templates from these meta categories will be returned.
      * @param category a category as given by getCategories()
      * @return the {@link RSnippetTemplate}s in the given category
@@ -206,7 +206,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
 
     /**
      * Add a template to the default location.
-     * 
+     *
      * @param template the template
      */
     public void addTemplate(final RSnippetTemplate template) {
@@ -220,7 +220,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
 
     /**
      * Append to given list of templates.
-     * 
+     *
      * @param templates the templates
      */
     private void appendTemplates(final Collection<RSnippetTemplate> templates) {
@@ -235,7 +235,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
 
     /**
      * Append the template to the given map.
-     * 
+     *
      * @param map the map
      * @param template the template
      */
@@ -251,7 +251,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
 
     /**
      * Test if a template can be removed.
-     * 
+     *
      * @param template the template
      * @return true when removeTemplate(template) could be successful
      */
@@ -267,7 +267,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
 
     /**
      * Remove the given template.
-     * 
+     *
      * @param template the template to be removed
      * @return when the template is successfully removed
      */
@@ -304,7 +304,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
 
     /**
      * Get the template with the given id.
-     * 
+     *
      * @param id the id
      * @return the template or null if a template with the id does not exist.
      * @throws NullPointerException if id is null.
@@ -327,7 +327,7 @@ public final class TemplateProvider extends TemplateRepository implements Change
      * Get a short descriptive string about the location of the template. This should give the user an idea where the
      * template comes from. It can be a path to a file, or the name of a company with a template name like "Fibonacci
      * (KNIME)" for a template from KNIME that generates the Fibonacci numbers.
-     * 
+     *
      * @param template the template
      * @return the string describing the location of the template or null if no string could be generated.
      * @throws NullPointerException if template is null.
