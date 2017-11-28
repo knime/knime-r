@@ -11,6 +11,8 @@
 			Input and output data to the R script are SQL tables. In addition the <b>knime.model</b> and
 			<b>knime.flow.in</b> variables from a R port can be used in the R script.
 
+			To output data from the R script to the output SQL table, assign a R <b>data.frame</b> to <b>knime.out</b>.
+
 			<h4>JDBC Driver</h4>
 
 			This node requires the <b>Microsoft JDBC driver</b> to be used in the Microsoft SQL Server connector.
