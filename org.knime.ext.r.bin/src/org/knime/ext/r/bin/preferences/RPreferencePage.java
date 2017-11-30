@@ -130,7 +130,17 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
                 return false;
             }
         } catch (InvalidPathException e) {
-            setMessage("Path to RHome is not a valid path: " + e.getMessage(), ERROR);
+            final StringBuilder message = new StringBuilder("Path to RHome is not a valid path: ");
+
+            if (rHome.trim().startsWith("'")) {
+                // Workaround for misleading error message on Windows, where a <'> char preceding an
+                // absolute path will generate the error message for the <:> char of the drive specifier
+                message.append("Illegal char <'> preceding absolute path");
+            } else {
+                message.append(e.getMessage());
+            }
+
+            setMessage(message.toString(), ERROR);
             return false;
         }
 
