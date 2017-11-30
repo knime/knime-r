@@ -1,6 +1,18 @@
+pmml (1.5.3)
+  * fix bug due to 1- vs 0-based indexing in gbm converter
+  * change default pmml version to 4.3 in gbm converter
+  * fix comment added at top of XML doc by savePMML()
+  * fix bug in xgboost regression end element
+  * fix bug in xgboost when feature names are substrings of each other
+  * fix bug in xgboost binomial model
+  * add check for xgboost objectives
+  * add support for multi:softmax objective in xgboost
+  * update pmml.rfsrc.R doc to state dependency on version 2.5.0 or earlier
+
+
 pmml (1.5.2)
   * Add converter for xgboost models
-  * Add convertor for gbm models
+  * Add converter for gbm models
   * Add converter for neighbr model
   * Output error on detecting an unsupported kernel in kernlab::ksvm() models
   * Add examples and note to pmml.glm.Rd

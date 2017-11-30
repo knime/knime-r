@@ -37,7 +37,7 @@ pmml.neighbr            Generate PMML for a neighbr object from the
                         *neighbr* package.
 pmml.nnet               Generate PMML for nnet objects
 pmml.randomForest       Generate PMML for randomForest objects
-pmml.rfsrc              Generate PMML for rsf objects
+pmml.rfsrc              Generate PMML for rfsrc objects
 pmml.rpart              Generate PMML for rpart objects
 pmml.rules              Generate PMML for arules objects
 pmml.svm                Generate PMML for svm objects
