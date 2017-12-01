@@ -325,7 +325,11 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
 
                 /* First returned row is captured errors */
                 result.next();
-                getLogger().debug("MSSQL R Errors: " + result.getString(1));
+                final String errors = result.getString(1);
+                if(errors != null) {
+                    getLogger().error("MSSQL R Errors: " + errors);
+                    throw new RuntimeException("Errors during R code execution: " + errors);
+                }
 
                 /* Ignore all other rows (should be none) */
                 while (result.next()) {
