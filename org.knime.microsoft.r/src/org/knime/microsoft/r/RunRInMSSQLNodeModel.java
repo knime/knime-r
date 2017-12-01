@@ -77,6 +77,7 @@ import org.knime.r.FlowVariableRepository;
 import org.knime.r.RSnippetNodeConfig;
 import org.knime.r.RSnippetNodeModel;
 import org.knime.r.RSnippetSettings;
+import org.knime.r.controller.ConsoleLikeRExecutor;
 import org.knime.r.controller.RController;
 import org.rosuda.REngine.REXP;
 
@@ -100,6 +101,31 @@ import org.rosuda.REngine.REXP;
  *
  */
 final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
+
+    private final static String DESERIALIZE_KNIME_VARS = //
+        "knime.tmp<-readRDS(rawConnection(knimeserialized,open=\"r\"))\n" //
+            + "if (!is.null(knime.tmp$knime.model)) {\n" //
+            + "    knime.model<-knime.tmp$knime.model\n" //
+            + "}\n" //
+            + "knime.tmp.script<-knime.tmp$knime.tmp.script\n" //
+            + "knime.flow.in<-knime.tmp$knime.flow.in\n" //
+            + "rm(knime.tmp,knimeserialized)\n";
+
+    private static StringBuilder getRCodePrefix(final String user, final String pwd) {
+        return new StringBuilder() //
+            .append("knime.db.server<-knimedbserver\n" //
+                + "knime.db.name<-knimedbname\n" //
+                + "rm(knimedbserver,knimedbname)\n" //
+                + "knime.db.connection<-paste('Driver=SQL Server;Server=', knime.db.server, ';Database=', knime.db.name, ';uid=")
+            .append(user).append(";pwd=").append(pwd).append("\", sep='')\n");
+    }
+
+    private static StringBuilder getRCodeSuffix(final String outTableName) {
+        return new StringBuilder() //
+            .append("outputTable <- RxOdbcData(connectionString=knime.db.connection, table='").append(outTableName)
+            .append("')\n") //
+            .append("rxDataStep(inData=knime.out, outFile=outputTable, overwrite=TRUE)\n");
+    }
 
     static final RSnippetNodeConfig RSNIPPET_NODE_CONFIG = new RSnippetNodeConfig() {
         @Override
@@ -186,17 +212,31 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             }
         }
 
+        /* Generate R code to be run as SQL statement */
+        final String rCode = getRSnippet().getDocument().getText(0, getRSnippet().getDocument().getLength()).trim();
+        final String inputQuery = connectionSettings.getQuery();
+        final String outTable = m_settings.getOutputTableName();
+
+        StringBuilder b = new StringBuilder();
+        b.append(rCode);
+        b.append("\n");
+        b.append(getRCodeSuffix(outTable));
+
         final RController controller = new RController();
         controller.setUseNodeContext(true);
         final Blob blob = connection.createBlob();
+
+        String uniqueTableIdentifier = "KNIME_R_WORKSPACE";
         try {
             exec.checkCanceled();
             final String serializeScript = "conn<-rawConnection(raw(0),open='w')\n" //
-                + "knime.varstosend<-list(knime.flow.in=knime.flow.in)\n" // Always send knime.flow.in
+                + "knime.varstosend<-list(knime.flow.in=knime.flow.in,knime.tmp.script=knime.r.code)\n" // Always send knime.flow.in
                 + "if(exists('knime.model')){knime.varstosend$knime.model<-knime.model}\n" // only if it exists
                 + "saveRDS(knime.varstosend,file=conn)\n" //
                 + "knime.serialized<-rawConnectionValue(conn)\n" //
-                + "close(conn);rm(conn,knime.varstosend)";
+                + "close(conn);rm(conn,knime.varstosend)\n";
+
+            controller.assign("knime.r.code", b.toString());
             executeSnippet(controller, serializeScript, inData, flowVarRepo, exec);
 
             final REXP serializedModelREXP = controller.eval("knime.serialized", true);
@@ -204,42 +244,69 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             final byte[] serializedModel = serializedModelREXP.asBytes();
 
             /* Put the serialized Model into a new "KNIME_R_WORKSPACE" table */
-            connection.createStatement()
-                .execute("IF OBJECT_ID('KNIME_R_WORKSPACE', 'U') IS NOT NULL DROP TABLE KNIME_R_WORKSPACE");
-            connection.createStatement().execute("CREATE TABLE KNIME_R_WORKSPACE (workspace varbinary(MAX))");
+            synchronized (RunRInMSSQLNodeModel.class) {
+                int i = 0; // never allowed to be negative, otherwise invalid identifier
+                while (utility.tableExists(connection, uniqueTableIdentifier)) {
+                    uniqueTableIdentifier = "KNIME_R_WORKSPACE" + (i++);
+                }
+                connection.createStatement()
+                    .execute("CREATE TABLE [" + uniqueTableIdentifier + "] (workspace varbinary(MAX))");
+            }
 
             /* Send the serialized model as BLOB */
-            final PreparedStatement stmt = connection.prepareStatement("INSERT INTO KNIME_R_WORKSPACE VALUES (?)");
+            final PreparedStatement stmt =
+                connection.prepareStatement("INSERT INTO [" + uniqueTableIdentifier + "] VALUES (?)");
             blob.setBytes(1, serializedModel);
             stmt.setBlob(1, blob);
             stmt.execute();
 
             pushFlowVariables(flowVarRepo);
+            /* Resolve variables in SQL query template. */
+            b = new StringBuilder();
+            b.append(getRCodePrefix(connectionSettings.getUserName(getCredentialsProvider()),
+                connectionSettings.getPassword(getCredentialsProvider())));
+            b.append(ConsoleLikeRExecutor.CAPTURE_OUTPUT_PREFIX);
+            b.append("\n");
+            b.append(DESERIALIZE_KNIME_VARS);
+            b.append("\n");
+            b.append(ConsoleLikeRExecutor.CODE_EXECUTION);
+            b.append("\n");
+            b.append(ConsoleLikeRExecutor.CAPTURE_OUTPUT_POSTFIX);
+            b.append(";knime.out<-data.frame(knime.output.ret)");
+
+            final String query = getRunRCodeQuery() //
+                .replace("${RCode}", b.toString().replaceAll("'", "\"")) //
+                .replace("${KnimeRWorkspaceTable}", uniqueTableIdentifier) //
+                .replace("${inputQuery}", inputQuery) //
+                .replace("${outTableName}", outTable);
+
+            getLogger().debugWithFormat("Running SQL R query with input query \"%s\" and output table \"%s\".",
+                inputQuery, outTable);
+
+            try (final ResultSet result = connection.createStatement().executeQuery(query)) {
+                /* First returned row is captured output */
+                result.next();
+                getLogger().debug("MSSQL R Output: " + result.getString(1));
+
+                /* First returned row is captured errors */
+                result.next();
+                getLogger().debug("MSSQL R Errors: " + result.getString(1));
+
+                /* Ignore all other rows (should be none) */
+                while (result.next()) {
+                }
+            }
         } finally {
+            try {
+                connection.createStatement().execute("IF OBJECT_ID('" + uniqueTableIdentifier
+                    + "', 'U') IS NOT NULL DROP TABLE [" + uniqueTableIdentifier + "]");
+            } catch (SQLException e) {
+                throw new RuntimeException(
+                    "Unable to remove temporary table '" + uniqueTableIdentifier + "'. Please manually remove it.", e);
+            }
+
             controller.close();
             blob.free();
-        }
-
-        /* Execute R code via SQL statement */
-        final String rCode = getRSnippet().getDocument().getText(0, getRSnippet().getDocument().getLength()).trim();
-        final String inputQuery = connectionSettings.getQuery();
-        final String outTable = m_settings.getOutputTableName();
-
-        /* Resolve variables in SQL query template. */
-        final String query = getRunRCodeQuery().replace("${userRCode}", rCode.replace("'", "\""))
-            .replace("${usr}", connectionSettings.getUserName(getCredentialsProvider()))
-            .replace("${pwd}", connectionSettings.getPassword(getCredentialsProvider()))
-            .replace("${inputQuery}", inputQuery).replace("${outTableName}", outTable);
-
-        getLogger().debugWithFormat("Running SQL R query with input query \"%s\" and output table \"%s\".", inputQuery,
-            outTable);
-
-        final Statement stmt = connection.createStatement();
-        // the result set is not the new table but just an empty result set that is returned by running the R code
-        try (final ResultSet result = stmt.executeQuery(query)) {
-            while (result.next()) {
-                /* Iterating merely for the sake of producing a SQL Exception if the query failed. */
-            }
         }
 
         /* Build output query and get table spec */
