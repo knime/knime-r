@@ -104,7 +104,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
 
     private final static String DESERIALIZE_KNIME_VARS = //
         "knime.tmp<-readRDS(rawConnection(knimeserialized,open=\"r\"))\n" //
-            + "if (!is.null(knime.tmp$knime.model)) {\n" //
+            + "if ('knime.model' %in% names(knime.tmp)) {\n" //
             + "    knime.model<-knime.tmp$knime.model\n" //
             + "}\n" //
             + "knime.tmp.script<-knime.tmp$knime.tmp.script\n" //
@@ -326,7 +326,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
                 /* First returned row is captured errors */
                 result.next();
                 final String errors = result.getString(1);
-                if(errors != null) {
+                if (errors != null) {
                     getLogger().error("MSSQL R Errors: " + errors);
                     throw new RuntimeException("Errors during R code execution: " + errors);
                 }

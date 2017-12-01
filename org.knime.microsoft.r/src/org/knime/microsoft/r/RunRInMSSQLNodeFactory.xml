@@ -8,8 +8,8 @@
 	<fullDescription>
 		<intro>
 			This node allows running R code on a Microsoft SQL Server (using a SQL query behind the scenes).
-			Input and output data to the R script are SQL tables. In addition the <b>knime.model</b> and
-			<b>knime.flow.in</b> variables from a R port can be used in the R script.
+			Input and output data to the R script are SQL tables. In addition the <b>knime.model</b> (cannot be <b>NULL</b>,
+			or will not be transfered to R otherwise) and <b>knime.flow.in</b> variables from a R port can be used in the R script.
 
 			To output data from the R script to the output SQL table, assign a R <b>data.frame</b> to <b>knime.out</b>.
 
