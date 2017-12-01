@@ -81,6 +81,12 @@ public class RToPMMLNodeModel extends RSnippetNodeModel {
 
     private PortObject[] postExecuteInternal() throws Exception {
         if (getConfig().getImageFile().length() > 0) {
+            // (2017-12, BW): The current version of the 'pmml' package writes version 4.3 but KNIME needs 4.2
+            // The changes between 4.2 and 4.3 http://dmg.org/pmml/v4-3/Changes.html are minimal:
+            //  - new model types (Gaussian Process & Bayesian Networks) are not supported by KNIME anyway
+            //  - other changes affect details of individual models, which KNIME will refuse to read anyway
+            //    (KNIME can only read the minimal PMML it also produces and new density functions and
+            //     such aren't supported anyway)
             final PMMLImport importer = new PMMLImport(getConfig().getImageFile(), true);
             return new PortObject[]{importer.getPortObject()};
         } else {
