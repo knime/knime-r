@@ -366,7 +366,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             final DBReader conn = utility.getReader(querySettings);
             final DataTableSpec dbSpec = conn.getDataTableSpec(getCredentialsProvider());
 
-            return new PortObject[]{new DatabasePortObject(new DatabasePortObjectSpec(dbSpec, connectionSettings))};
+            return new PortObject[]{new DatabasePortObject(new DatabasePortObjectSpec(dbSpec, querySettings))};
         } catch (SQLException ex) {
             Throwable cause = ExceptionUtils.getRootCause(ex);
             cause = ObjectUtils.defaultIfNull(cause, ex);
