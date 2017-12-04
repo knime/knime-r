@@ -182,8 +182,15 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
             }
         });
 
+        // Change the setting value according to checkbox changes
         m_overwriteCheckBox.addChangeListener(e -> {
             settings.setOverwriteOutputTable(m_overwriteCheckBox.isSelected());
+        });
+        // Change the check box according to settings changes.
+        // This is not an infinite loop thanks to this event only being fired on
+        // effective changes.
+        settings.overwriteOutputTableModel().addChangeListener(e -> {
+            m_overwriteCheckBox.setSelected(settings.getOverwriteOutputTable());
         });
 
         m_dbColumnsList.install(m_snippetTextArea);
