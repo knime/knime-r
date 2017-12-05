@@ -136,15 +136,17 @@ final class RunRInMSSQLNodeDialog extends DataAwareNodeDialogPane {
     @Override
     protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObjectSpec[] specs)
         throws NotConfigurableException {
-        // loads settings internally with same settings object (m_settings)
         m_panel.updateData(settings, specs, getAvailableFlowVariables().values());
+        m_settings.loadSettingsForDialog(settings);
+        m_panel.getSnippetSettings().loadSettingsForDialog(settings);
     }
 
     @Override
     protected void loadSettingsFrom(final NodeSettingsRO settings, final PortObject[] input)
         throws NotConfigurableException {
-        // loads settings internally with same settings object (m_settings)
         m_panel.updateData(settings, input, getAvailableFlowVariables().values());
+        m_settings.loadSettingsForDialog(settings);
+        m_panel.getSnippetSettings().loadSettingsForDialog(settings);
     }
 
     @Override
@@ -159,6 +161,7 @@ final class RunRInMSSQLNodeDialog extends DataAwareNodeDialogPane {
     @Override
     protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
         m_settings.saveSettingsTo(settings);
+        m_panel.getSnippetSettings().saveSettings(settings);
     }
 
 }
