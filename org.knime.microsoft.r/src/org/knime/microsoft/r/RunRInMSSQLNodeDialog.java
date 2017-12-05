@@ -112,7 +112,7 @@ final class RunRInMSSQLNodeDialog extends DataAwareNodeDialogPane {
         };
 
         addTab(SNIPPET_TAB, m_panel);
-        addTab("Templates", createTemplatesPanel());
+        //addTab("Templates", createTemplatesPanel());
 
         m_panel.setPreferredSize(new Dimension(800, 600));
     }

@@ -306,7 +306,7 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
             m_sqlOutTableNameTextField.setPreferredSize(d);
 
             templateInfoPanel.add(tableNamePanel, BorderLayout.LINE_START);
-            templateInfoPanel.add(ViewUtils.getInFlowLayout(addTemplateButton), BorderLayout.LINE_END);
+            //templateInfoPanel.add(ViewUtils.getInFlowLayout(addTemplateButton), BorderLayout.LINE_END);
         }
         templateInfoPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         return templateInfoPanel;
