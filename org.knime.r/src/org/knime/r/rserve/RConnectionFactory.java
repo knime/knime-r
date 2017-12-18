@@ -35,6 +35,12 @@ import com.sun.jna.Platform;
  */
 public class RConnectionFactory {
 
+    /**
+     * For KNIME's R extension: Timeout for the socket to connect to R. Value is integral and in milliseconds (default
+     * 30000).
+     */
+    private static final String PROPERTY_R_RSERVE_CONNECT_TIMEOUT = "knime.r.rserve.connecttimeout";
+
 	private static final NodeLogger LOGGER = NodeLogger.getLogger(RController.class);
 
 	private static final boolean DEBUG_RSERVE = Boolean.getBoolean(KNIMEConstants.PROPERTY_R_RSERVE_DEBUG);
@@ -242,27 +248,41 @@ public class RConnectionFactory {
 			new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")",
 					(line) -> LOGGER.debug(line)).start();
 
-			// try connecting up to 5 times over the course of 500ms. Attempts
+			// try connecting up to 5 times over the course of `timeout` ms. Attempts
 			// may fail if Rserve is currently starting up.
-			for (int i = 1; i <= 4; i++) {
+			final Integer timeout = Integer.getInteger(PROPERTY_R_RSERVE_CONNECT_TIMEOUT, 30000);
+			int totalTime = 0; // total time waited
+			int attempts = 0; // number of attempts
+
+			while (totalTime < timeout) {
 				try {
-					RConnection connection = rInstance.createConnection();
+					attempts += 1;
+					final RConnection connection = rInstance.createConnection();
 					if (connection != null) {
-						LOGGER.debug("Connected to Rserve in " + i + " attempts.");
+					    LOGGER.debugWithFormat("Connected to Rserve in %d attempt(s) (%dms).", attempts, totalTime);
 						break;
 					}
 				} catch (RserveException e) {
-					LOGGER.debug("An attempt (" + i + "/5) to connect to Rserve failed.", e);
-					Thread.sleep(2 ^ i * 100);
+					LOGGER.debug(String.format("Attempt #%d to connect to Rserve failed (waited %dms, timeout %dms)",
+                        attempts, totalTime, timeout), e);
+					// produces 200, 400, 800, 1600, 3200 until the diff to`timeout` is smaller.
+					final int delay = (int)Math.min(Math.pow(2, attempts) * 100, timeout - totalTime);
+					Thread.sleep(delay);
+					totalTime += delay;
 				}
 			}
 			try {
 				if (rInstance.getLastConnection() == null) {
-					// try one last (5th) time.
-					rInstance.createConnection();
+					attempts += 1;
+					// try one last time.
+					final RConnection connection = rInstance.createConnection();
+					if (connection != null) {
+						LOGGER.debugWithFormat("Connected to Rserve in %d attempt(s) (%dms).", attempts, totalTime);
+					}
 				}
 			} catch (RserveException e) {
-				LOGGER.debug("Last attempt (5/5) to connect to Rserve failed.", e);
+			    LOGGER.debug(String.format("Last attempt to connect to Rserve failed (waited %dms, timeout %dms)",
+			        totalTime, timeout), e);
 				throw new IOException("Could not connect to RServe (host: " + host + ", port: " + port + ").");
 			}
 
