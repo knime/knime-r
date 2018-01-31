@@ -1,8 +1,0 @@
-digraph G {
-graph [rankdir = BT];
-"oo.res" -> "oo" ;
-"oos" -> "oo" ;
-"oos.res" -> "oos" ;
-"oos.res" -> "oo.res" [style=dashed] ;
-}
-

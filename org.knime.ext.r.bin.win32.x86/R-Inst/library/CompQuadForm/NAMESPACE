@@ -1,4 +1,0 @@
-useDynLib(CompQuadForm)
-
-# Export all names
-exportPattern(".")
