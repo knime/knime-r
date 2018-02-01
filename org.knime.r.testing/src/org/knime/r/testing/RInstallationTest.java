@@ -45,7 +45,6 @@
  */
 package org.knime.r.testing;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -74,8 +73,8 @@ public class RInstallationTest {
 
 	@Before
 	public void before() throws RException {
+	    m_controller = null;
 		m_controller = new RController();
-		assertNotNull(m_controller);
 	}
 
 	@After
