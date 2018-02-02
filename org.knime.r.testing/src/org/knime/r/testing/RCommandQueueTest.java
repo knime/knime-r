@@ -90,7 +90,7 @@ public class RCommandQueueTest {
 	}
 
 	@After
-	public void after() {
+	public void after() throws RException {
 		if (m_controller == null) {
 			return;
 		}
@@ -99,8 +99,6 @@ public class RCommandQueueTest {
 		// leaked.
 		try {
 			m_controller.close();
-		} catch (RException e) {
-			fail(e.getMessage());
 		} finally {
 			m_controller.terminateRProcess();
 		}

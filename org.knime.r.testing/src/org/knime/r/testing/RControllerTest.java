@@ -80,13 +80,11 @@ public class RControllerTest {
 	}
 
 	@After
-	public void after() {
+	public void after() throws RException {
 		// terminate the R process used by the controller, otherwise it will be
 		// leaked.
 		try {
 			m_controller.close();
-		} catch (RException e) {
-			fail(e.getMessage());
 		} finally {
 			m_controller.terminateRProcess();
 		}
