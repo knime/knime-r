@@ -45,6 +45,7 @@
  */
 package org.knime.r.testing;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -97,6 +98,21 @@ public class RInstallationTest {
         } finally {
             m_controller.terminateRProcess();
         }
+    }
+
+    /** Check R executable and R home paths */
+    @Test
+    public void checkPath() {
+        final String homePath = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
+        final File home = new File(homePath);
+
+        assertNotNull(home);
+        assertTrue(home.exists());
+        assertTrue(home.isDirectory());
+
+        /* Output for easier debugging on CIs */
+        final NodeLogger log = NodeLogger.getLogger(RInstallationTest.class);
+        log.info("Absolute path to R Home: " + home.getAbsolutePath());
     }
 
     /**
