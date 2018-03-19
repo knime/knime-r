@@ -46,8 +46,8 @@
 package org.knime.r.testing;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -55,6 +55,7 @@ import java.util.stream.Collectors;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.knime.core.node.NodeLogger;
 import org.knime.r.controller.IRController.RException;
 import org.knime.r.controller.RController;
 import org.rosuda.REngine.REXP;
@@ -69,60 +70,78 @@ import org.rosuda.REngine.RList;
  */
 public class RInstallationTest {
 
-	private RController m_controller;
+    private RController m_controller;
 
-	@Before
-	public void before() throws RException {
-	    m_controller = null;
-		m_controller = new RController();
-	}
+    /**
+     * @throws RException
+     */
+    @Before
+    public void before() throws RException {
+        m_controller = null;
+        m_controller = new RController();
+    }
 
-	@After
-	public void after() throws RException {
-		if (m_controller == null) {
-			return;
-		}
+    /**
+     * @throws RException
+     */
+    @After
+    public void after() throws RException {
+        if (m_controller == null) {
+            return;
+        }
 
-		// terminate the R process used by the controller, otherwise it will be
-		// leaked.
-		try {
-			m_controller.close();
-		} finally {
-			m_controller.terminateRProcess();
-		}
-	}
+        // terminate the R process used by the controller, otherwise it will be
+        // leaked.
+        try {
+            m_controller.close();
+        } finally {
+            m_controller.terminateRProcess();
+        }
+    }
 
-	@Test
-	public void checkVersion() throws REXPMismatchException, RException {
-		final REXP versionRexp = m_controller.eval("R.version", true);
-		final RList version = versionRexp.asList();
+    /**
+     * Check R installation version
+     *
+     * @throws REXPMismatchException
+     * @throws RException
+     */
+    @Test
+    public void checkVersion() throws REXPMismatchException, RException {
+        final REXP versionRexp = m_controller.eval("R.version", true);
+        final RList version = versionRexp.asList();
 
-		final String versionString = ((REXP) version.get("version.string")).asString();
+        final String versionString = ((REXP)version.get("version.string")).asString();
 
-		final String versionMajor = ((REXP) version.get("major")).asString();
-		assertTrue("Expected R major version to be at least 3, but was " + versionString,
-				Float.parseFloat(versionMajor) >= 3.0);
-	}
+        final String versionMajor = ((REXP)version.get("major")).asString();
+        assertTrue("Expected R major version to be at least 3, but was " + versionString,
+            Float.parseFloat(versionMajor) >= 3.0);
+    }
 
-	@Test
-	public void checkImportantPackages() throws REXPMismatchException, RException {
-		final ArrayList<String> packages = new ArrayList<>(Arrays.asList("Rserve", "ggplot2", "data.table"));
+    /**
+     * Check R installation for packages that are essential for running R nodes
+     *
+     * @throws REXPMismatchException
+     * @throws RException
+     */
+    @Test
+    public void checkImportantPackages() throws REXPMismatchException, RException {
+        final ArrayList<String> packages = new ArrayList<>(Arrays.asList("Rserve", "ggplot2", "data.table"));
 
-		final REXP isInstalled = m_controller
-				.eval("c(" + (String.join(",", packages.stream().map(s -> "'" + s + "'").collect(Collectors.toList())))
-						+ ") %in% installed.packages()", true);
+        final REXP isInstalled = m_controller
+            .eval("c(" + (String.join(",", packages.stream().map(s -> "'" + s + "'").collect(Collectors.toList())))
+                + ") %in% installed.packages()", true);
 
-		assertTrue("Bad test: R code should have returned vector of logicals.", isInstalled.isLogical());
-		final byte[] installed = isInstalled.asBytes();
+        assertTrue("Bad test: R code should have returned vector of logicals.", isInstalled.isLogical());
+        final byte[] installed = isInstalled.asBytes();
 
-		final ArrayList<String> missingPackages = new ArrayList<>();
-		for (int i = 0; i < packages.size(); ++i) {
-			if (installed[i] != REXPLogical.TRUE) {
-				missingPackages.add(packages.get(i));
-			}
-		}
+        final ArrayList<String> missingPackages = new ArrayList<>();
+        for (int i = 0; i < packages.size(); ++i) {
+            if (installed[i] != REXPLogical.TRUE) {
+                missingPackages.add(packages.get(i));
+            }
+        }
 
-		assertTrue("R binaries are missing some important packages: " + String.join(", ", missingPackages),
-				missingPackages.isEmpty());
-	}
+        assertTrue("R binaries are missing some important packages: " + String.join(", ", missingPackages),
+            missingPackages.isEmpty());
+    }
 }
