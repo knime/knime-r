@@ -52,6 +52,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
@@ -134,6 +135,14 @@ public final class RPathUtil {
     }
 
     private static void findSystemRUnix() {
+        /* Try to get R Home from Rscript executable on path. */
+        final Properties rProperties = RBinUtil.retrieveRProperties("Rscript");
+
+        if(rProperties.containsKey("rhome")) {
+            systemRHome = new File(rProperties.getProperty("rhome"));
+            return;
+        } // else: no Rscript on path
+
         String[] searchPaths = {"/usr/bin/R", "/usr/local/bin/R"};
         for (final String s : searchPaths) {
             final File f = new File(s);

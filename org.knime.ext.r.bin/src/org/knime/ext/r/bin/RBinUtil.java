@@ -130,6 +130,16 @@ public final class RBinUtil {
      * @return properties about use R
      */
     public static Properties retrieveRProperties(final RPreferenceProvider rpref) {
+        return retrieveRProperties(rpref.getRBinPath("Rscript"));
+    }
+
+    /**
+     * Get properties about the used R installation.
+     *
+     * @param pathToRScriptExecutable Path to Rscript executable
+     * @return properties about use R
+     */
+    public static Properties retrieveRProperties(final String pathToRScriptExecutable) {
         final File tmpPath = new File(TEMP_PATH);
         File propsFile = null;
         File rOutFile = null;
@@ -158,7 +168,7 @@ public final class RBinUtil {
             return new Properties();
         }
         final ProcessBuilder builder = new ProcessBuilder();
-        builder.command(rpref.getRBinPath("Rscript"), "--vanilla", rCommandFile.getName(), rOutFile.getName());
+        builder.command(pathToRScriptExecutable, "--vanilla", rCommandFile.getName(), rOutFile.getName());
         builder.directory(rCommandFile.getParentFile());
 
         /* Run R on the script to get properties */
