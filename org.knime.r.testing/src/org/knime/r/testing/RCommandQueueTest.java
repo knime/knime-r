@@ -274,6 +274,55 @@ public class RCommandQueueTest {
 	}
 
 	/**
+	 * Test that errors in implicit prints are being caught correctly.
+	 *
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws TimeoutException
+	 * @throws REXPMismatchException
+	 */
+	@Test
+	public void testErrorInPrint() throws InterruptedException, ExecutionException, TimeoutException, REXPMismatchException {
+		final RCommandQueue queue = new RCommandQueue(m_controller);
+
+		final RConsole console = new RConsole();
+		final RConsoleController consoleController = new RConsoleController(m_controller, queue);
+		consoleController.attachOutput(console);
+
+		queue.startExecutionThread();
+
+		/*
+		 * Errors are language dependent, so we set the language to English to
+		 * be able to assertEquals on the output. Not saved, so no need to
+		 * reset.
+		 * LANGUAGE environment variable has precedence over the LC_MESSAGES locale
+		 */
+		final REXP ret = queue.putRScript("Sys.setenv(LANGUAGE='en')", false).get(500, TimeUnit.MILLISECONDS);
+		assertTrue("Failed to set language of R errors.", ret.isLogical() && ret.asBytes()[0] == REXPLogical.TRUE);
+
+		/*
+		 * Create "a" with custom class "knime".
+		 * Define "print.knime" (which is called by print() for knime class) to throw and error.
+		 * Print a implicitly.
+		 */
+		queue.putRScript("a <- list(foo=42); class(a) <- append(class(a), 'knime'); print.knime <- function(x) {stop('Kaboom!')}", false).get(1, TimeUnit.SECONDS);;
+		Thread.sleep(10); // wait for console to update
+		consoleController.clear();
+
+		queue.putRScript("a", true).get(1, TimeUnit.SECONDS);
+		Thread.sleep(10); // wait for console to update
+
+		assertEquals("Incorrect output for \"a\"",
+				// use String.format for platform dependent newlines
+				String.format("> a%n" //
+						+ "Error: Kaboom!%n"),
+				console.getText());
+
+		queue.stopExecutionThread();
+		consoleController.detach(console);
+	}
+
+	/**
 	 * Test whether the RCommandQueue handles invalid R code correctly.
 	 *
 	 * @throws InterruptedException

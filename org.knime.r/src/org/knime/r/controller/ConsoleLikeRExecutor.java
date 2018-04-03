@@ -113,19 +113,20 @@ public class ConsoleLikeRExecutor {
      * 	# $visible is only useful, if there is actually a return value
      * 	if(!is.null(knime.tmp.ret)) {
      * 		# print for example would return an invisible value, which would not be printed again.
-     * 		if(knime.tmp.ret$visible) print(knime.tmp.ret$value)
+     * 		# the print function may itself cause an error, so we need to tryCatch that aswell.
+     * 		if(knime.tmp.ret$visible) tryCatch(print(knime.tmp.ret$value), error=printError)
      * 	}
      * }
      * rm(knime.tmp.script,exp,printError) # remove temporary script variable
-     * knime.tmp.ret$value # return the value of the evaluation
+     * knime.tmp.ret$value # return the value of the evaluation, not printed here.
      * </code>
-     * 
+     *
      * <pre>
      */
     public static final String CODE_EXECUTION = //
         "knime.tmp.ret<-NULL;printError<-function(e) message(paste('" + ERROR_PREFIX
             + "',conditionMessage(e)));for(exp in tryCatch(parse(text=knime.tmp.script),error=printError)){tryCatch(knime.tmp.ret<-withVisible(eval(exp)),error=printError)\n"
-            + "if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) print(knime.tmp.ret$value)}};rm(knime.tmp.script,exp,printError);knime.tmp.ret$value";
+            + "if(!is.null(knime.tmp.ret)) {if(knime.tmp.ret$visible) tryCatch(print(knime.tmp.ret$value),error=printError)}};rm(knime.tmp.script,exp,printError);knime.tmp.ret$value";
 
     /**
      * R Code to finish up capturing output and error messages of R code after execution of the code to capture output
