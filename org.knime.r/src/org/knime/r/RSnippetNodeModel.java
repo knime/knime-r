@@ -257,9 +257,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
             + "\")\n" + m_config.getScriptPrefix() + "\n" + script, exec);
         // run postfix in a separate evaluation to make sure we are not preventing the return value of the script being printed, which is
         // important for ggplot2 graphs, which would otherwise not be drawn onto the graphics (png) device.
-        controller.monitoredEval(
-            m_config.getScriptSuffix() + "\n" + RController.R_LOADED_LIBRARIES_VARIABLE + "<-(.packages())", exec,
-            false);
+        executor.executeIgnoreResult(m_config.getScriptSuffix() + "\n" + RController.R_LOADED_LIBRARIES_VARIABLE + "<-(.packages())", exec);
 
         exec.setMessage("Collecting captured output");
         executor.finishOutputCapturing(exec);
@@ -273,12 +271,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
         if (!executor.getStdErr().isEmpty()) {
             final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
             setExternalErrorOutput(output);
-
-            for (final String line : output) {
-                if (line.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)) {
-                    throw new RException("Error in R code: \"" + line + "\"", null);
-                }
-            }
+            throw new RException("Error in R code: \n" + String.join("\n", output), null);
         }
 
         // cleanup temporary variables of output capturing and
