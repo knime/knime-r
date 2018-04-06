@@ -271,7 +271,12 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
         if (!executor.getStdErr().isEmpty()) {
             final LinkedList<String> output = getLinkedListFromOutput(executor.getStdErr());
             setExternalErrorOutput(output);
-            throw new RException("Error in R code: \n" + String.join("\n", output), null);
+            /* Only fail node if one of the lines starts with "Error:", as some functions (like require() ) output
+             * to stderr on success. */
+            boolean isError = output.stream().filter(s -> s.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)).findAny().isPresent();
+            if(isError) {
+                throw new RException("Error in R code: \n" + String.join("\n", output), null);
+            }
         }
 
         // cleanup temporary variables of output capturing and
