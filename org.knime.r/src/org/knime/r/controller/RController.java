@@ -327,6 +327,25 @@ public class RController implements IRController {
         } else if (Platform.isMac()) {
             checkCairoOnMac();
         }
+
+        final int major = Integer.parseInt((String)m_rProps.get("major")); // e.g. 3
+        final String minorVersionString = ((String)m_rProps.get("minor")); // e.g. 5.1
+        final int minor = Integer.parseInt(minorVersionString.split("\\.")[0]); // only 5
+
+        if ((major == 3) && (minor >= 5) && m_rProps.containsKey("Rserve.version")) {
+            final String rserveVersionString = (String)m_rProps.get("Rserve.version");
+            final String[] rserveVersionSplit = rserveVersionString.split("[\\.-]"); //split by "." and "-"
+
+            final int[] rserveVersion = Stream.of(rserveVersionSplit).mapToInt(Integer::parseInt).toArray();
+
+            if ((rserveVersion[0] <= 1) && (rserveVersion[1] < 8) && (rserveVersion.length > 2)
+                && (rserveVersion[2] <= 6)) {
+                // Rserve 1.7 may not have a third version identifier
+                LOGGER.warn(
+                    "R Version 3.5.0 and Rserve <= 1.8-6 currently have issues preventing their full use in KNIME. "
+                        + "A future release of R and/or Rserve may fix these issues.");
+            }
+        }
     }
 
     private void checkCairoOnMac() throws RException {
@@ -670,7 +689,7 @@ public class RController implements IRController {
                     final int rIndex = i + 1; // R starts indices at 1
                     final String expr = varName + ((isDataTable) ? "[[" + rIndex + "]][" + rowRangeExpr + "]"
                         : "[" + rowRangeExpr + "," + rIndex + "]");
-                    final REXP column = getREngine().eval(expr);
+                    final REXP column = eval(expr, true);
 
                     if (outSpec == null) {
                         // Create column spec for this column
