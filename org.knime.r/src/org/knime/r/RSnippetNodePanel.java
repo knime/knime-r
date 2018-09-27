@@ -242,11 +242,9 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
             m_evalScriptButton.addActionListener(e -> evalScriptFragment(m_snippetTextArea.getText()));
             runPanel.add(m_evalScriptButton);
             m_evalSelButton = new JButton("Eval Selection");
+            m_evalSelButton.setToolTipText("Evaluate selected script or current line");
             m_evalSelButton.addActionListener(e -> {
-                final String selected = m_snippetTextArea.getSelectedText();
-                if (selected != null) {
-                    evalScriptFragment(selected);
-                }
+                evalSelectedScript();
             });
             runPanel.add(m_evalSelButton);
             snippetPanel.add(runPanel, BorderLayout.SOUTH);
@@ -328,6 +326,34 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
         final JPanel templateInfoPanel = createTemplateInfoPanel(isPreview);
         add(templateInfoPanel, BorderLayout.NORTH);
         return this;
+    }
+
+    private void evalSelectedScript() {
+        final String selected = m_snippetTextArea.getSelectedText();
+        if (selected != null) {
+            evalScriptFragment(selected);
+        } else {
+            /* Emulate behaviour of R studio: evaluate current line the caret is on and move to next line */
+            int currentLine = m_snippetTextArea.getCaretLineNumber();
+            try {
+                final int start = m_snippetTextArea.getLineStartOffset(currentLine);
+                final int end = m_snippetTextArea.getLineEndOffset(currentLine);
+
+                final String line = m_snippet.getDocument().getText(start, end - start);
+                evalScriptFragment(line);
+
+                /* Move to next line if not already */
+                if (currentLine < m_snippetTextArea.getLineCount() - 1) {
+                    final int nextLineStart = m_snippetTextArea.getLineStartOffset(currentLine + 1);
+                    m_snippetTextArea.setCaretPosition(nextLineStart);
+                }
+                /* Focus text area again, so that button can be clicked repeatedly */
+                m_snippetTextArea.requestFocus();
+            } catch (BadLocationException e1) {
+                // will never happen
+                LOGGER.error("Bad location while trying to execute current line.", e1);
+            }
+        }
     }
 
     private JPanel createConsoleButtons() {
@@ -853,7 +879,9 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
                         SwingUtilities.invokeLater(this);
                         return;
                     }
-                    workspaceChanged();
+                    if(m_commandQueue.isEmpty()) {
+                        workspaceChanged();
+                    }
                 } catch (final Exception e) {
                 }
             }
@@ -866,17 +894,16 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
      * Update the Panel according to changes in the R workspace.
      */
     public void workspaceChanged() {
-        final String[] objectNames = rGetObjectNames();
-        if ((objectNames != null) && (objectNames.length > 0)) {
-            final String[] objectClasses = rGetObjectClasses();
-            ViewUtils.runOrInvokeLaterInEDT(() -> {
-                m_objectBrowser.updateData(objectNames, objectClasses);
-                if ((m_previewFrame != null) && m_previewFrame.isVisible()) {
-                    showPlot();
-                }
-            });
-
-        }
+        ViewUtils.runOrInvokeLaterInEDT(() -> {
+            final String[] objectNames = rGetObjectNames();
+            if ((objectNames != null) && (objectNames.length > 0)) {
+                final String[] objectClasses = rGetObjectClasses();
+                    m_objectBrowser.updateData(objectNames, objectClasses);
+                    if ((m_previewFrame != null) && m_previewFrame.isVisible()) {
+                        showPlot();
+                    }
+            }
+        });
     }
 
 }
