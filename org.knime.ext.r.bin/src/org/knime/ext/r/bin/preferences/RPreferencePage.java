@@ -149,6 +149,12 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
 
             final DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
             final Properties props = prefProvider.getProperties();
+
+            // if the version properties are null, the properties could not be read correctly
+            if (props.getProperty("major") == null) {
+                throw new InvalidRHomeException(rHome + " contains an invalid R executable!");
+            }
+
             final String version = (props.getProperty("major") + "." + props.getProperty("minor"))
                     // the version numbers may contain spaces
                     .replace(" ", "");
