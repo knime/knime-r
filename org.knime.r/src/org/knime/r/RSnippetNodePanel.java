@@ -398,7 +398,8 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
 
             @Override
             protected void processWithContext(final List<Boolean> chunks) {
-                m_resetWorkspace.setEnabled(chunks.get(chunks.size() - 1));
+                // disable dialog components
+                enableComponents(chunks.get(chunks.size() - 1));
             }
 
             @Override
@@ -858,11 +859,18 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
         m_templateLocation.setText(loc);
     }
 
+    /**
+     * Returns the RSnippet.
+     *
+     * @return the RSnippet
+     */
     public RSnippet getRSnippet() {
         return m_snippet;
     }
 
     private void evalScriptFragment(final String script) {
+        // disable dialog compoments
+        enableComponents(false);
         final String setupPlotInitCommand = setupPlotInitCommand();
         m_commandQueue.putRScript(setupPlotInitCommand, false);
         m_commandQueue.putRScript(script, true);
@@ -879,7 +887,7 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
                         SwingUtilities.invokeLater(this);
                         return;
                     }
-                    if(m_commandQueue.isEmpty()) {
+                    if (m_commandQueue.isEmpty()) {
                         workspaceChanged();
                     }
                 } catch (final Exception e) {
@@ -894,15 +902,31 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
      * Update the Panel according to changes in the R workspace.
      */
     public void workspaceChanged() {
+        // enable dialog components
+        enableComponents(true);
         ViewUtils.runOrInvokeLaterInEDT(() -> {
             final String[] objectNames = rGetObjectNames();
             if ((objectNames != null) && (objectNames.length > 0)) {
                 final String[] objectClasses = rGetObjectClasses();
-                    m_objectBrowser.updateData(objectNames, objectClasses);
-                    if ((m_previewFrame != null) && m_previewFrame.isVisible()) {
-                        showPlot();
-                    }
+                m_objectBrowser.updateData(objectNames, objectClasses);
+                if ((m_previewFrame != null) && m_previewFrame.isVisible()) {
+                    showPlot();
+                }
             }
+        });
+    }
+
+    /**
+     * Enables or disables the snippet text area, the eval, and the reset workspace buttons.
+     *
+     * @param enabled <code>True/False</code> to enable/disable the components
+     */
+    private void enableComponents(final boolean enabled) {
+        ViewUtils.runOrInvokeLaterInEDT(() -> {
+            m_evalScriptButton.setEnabled(enabled);
+            m_evalSelButton.setEnabled(enabled);
+            m_resetWorkspace.setEnabled(enabled);
+            m_snippetTextArea.setEnabled(enabled);
         });
     }
 
