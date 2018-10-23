@@ -926,7 +926,6 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
             m_evalScriptButton.setEnabled(enabled);
             m_evalSelButton.setEnabled(enabled);
             m_resetWorkspace.setEnabled(enabled);
-            m_snippetTextArea.setEnabled(enabled);
         });
     }
 
