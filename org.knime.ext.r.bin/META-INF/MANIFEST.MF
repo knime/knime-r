@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: R Binaries
 Bundle-SymbolicName: org.knime.ext.r.bin;singleton:=true
-Bundle-Version: 3.6.1.qualifier
+Bundle-Version: 3.6.2.qualifier
 Bundle-Activator: org.knime.ext.r.bin.Activator
 Bundle-Vendor: KNIME AG, Zurich, Switzerland
 Export-Package: org.knime.ext.r.bin,
