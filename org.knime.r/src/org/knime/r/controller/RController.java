@@ -659,8 +659,7 @@ public class RController implements IRController {
             final int numRows = Math.abs(numRowsRexp.asInteger());
             int transferredRows = 0;
 
-            final List<DataColumnSpec> colSpecs = new ArrayList<DataColumnSpec>();
-            DataTableSpec outSpec = null;
+            final DataColumnSpec[] colSpecs = new DataColumnSpec[numColumns];
             BufferedDataContainer cont = null;
 
             final DataCell[][] columns = new DataCell[numColumns][];
@@ -671,11 +670,11 @@ public class RController implements IRController {
             while (transferredRows < numRows) {
                 // this is NOT the chunk size value as per config dialog as receiving data happens
                 // in chunks _and_ on columns
-                int rowsThisBatch = Math.min(50000, numRows - transferredRows);
-
-                if ((numRows - transferredRows - rowsThisBatch) < 10000) {
+                final int remRows = numRows - transferredRows;
+                int rowsThisBatch = Math.min(50000, remRows);
+                if ((remRows - rowsThisBatch) < 10000) {
                     // avoid final chunk being smaller than 10k rows
-                    rowsThisBatch = numRows - transferredRows;
+                    rowsThisBatch = remRows;
                 }
 
                 // Expression for range of rows to transfer e.g.: 1:10000
@@ -691,24 +690,16 @@ public class RController implements IRController {
                         : "[" + rowRangeExpr + "," + rIndex + "]");
                     final REXP column = eval(expr, true);
 
-                    if (outSpec == null) {
+                    if (transferredRows == 0) {
                         // Create column spec for this column
-                        DataType colType;
-                        if (column.isNull()) { // column is missing (in R), edge case
-                            colType = StringCell.TYPE;
-                        } else if (column.isList()) {
-                            colType = DataType.getType(ListCell.class, DataType.getType(DataCell.class));
-                        } else {
-                            colType = importDataType(column);
-                        }
-                        colSpecs.add(new DataColumnSpecCreator(columnNames[i], colType).createSpec());
+                       colSpecs[i] = new DataColumnSpecCreator(columnNames[i], getColType(column)).createSpec();
                     }
 
                     if (addRowsFuture != null) {
                         try {
                             addRowsFuture.get();
                         } catch (InterruptedException | ExecutionException e) {
-                            new RuntimeException("Error while adding rows to table.", e);
+                            throw new RuntimeException("Error while adding rows to table.", e);
                         }
                     }
 
@@ -754,10 +745,9 @@ public class RController implements IRController {
                     }
                 }
 
-                if ((outSpec == null) || (cont == null)) {
+                if (cont == null) {
                     // create container and outspec for the first batch of rows
-                    outSpec = new DataTableSpec(colSpecs.toArray(new DataColumnSpec[colSpecs.size()]));
-                    cont = exec.createDataContainer(outSpec);
+                    cont = exec.createDataContainer(new DataTableSpec(colSpecs));
                 }
 
                 Stream.of(futures).filter(o -> o != null).forEach(f -> {
@@ -802,23 +792,53 @@ public class RController implements IRController {
                 try {
                     addRowsFuture.get();
                 } catch (InterruptedException | ExecutionException e) {
-                    new RuntimeException("Error while adding rows to table.", e);
+                    throw new RuntimeException("Error while adding rows to table.", e);
                 }
             }
 
-            if ((outSpec == null) || (cont == null)) {
+            // can only happen if knime.out is an empty data.frame/table
+            if (cont == null) {
+                assert transferredRows == 0 : "No output container was initialized, although knime.out contained data";
                 // create container and outspec for the first batch of rows
-                outSpec = new DataTableSpec(colSpecs.toArray(new DataColumnSpec[colSpecs.size()]));
-                cont = exec.createDataContainer(outSpec);
+                final RList data = getREngine().get(varName, null, true).asList();
+                cont = exec.createDataContainer(createSpecFromEmptyDataFrame(columnNames, data));
             }
             cont.close();
-
             return cont.getTable();
         } catch (final REXPMismatchException e) {
             throw new RException("Could not parse REXP.", e);
         } catch (final REngineException e) {
             throw new RException("Could not get value of " + varName + " from workspace.", e);
         }
+    }
+
+    /**
+     * Creates the proper data table spec from an empty input data.frame/table.
+     *
+     * @param cNames the column names
+     * @param data the empty data.frame/table
+     * @return the output data table spec
+     */
+    private static DataTableSpec createSpecFromEmptyDataFrame(final String[] cNames, final RList data) {
+        assert data.size() == cNames.length : "The number of column names differs from the actual number of columns";
+        final DataColumnSpec[] cSpecs = new DataColumnSpec[cNames.length];
+        for (int i = 0; i < cNames.length; i++) {
+            cSpecs[i] = new DataColumnSpecCreator(cNames[i], getColType(data.at(i))).createSpec();
+        }
+        return new DataTableSpec(cSpecs);
+    }
+
+    /**
+     * Returns the proper type for the given column.
+     *
+     * @param c the column whose type has to be determined
+     * @return the type of the column
+     */
+    private static DataType getColType(final REXP c) {
+        if (!c.isList()) {
+            return importDataType(c);
+        }
+        return DataType.getType(ListCell.class, DataType.getType(DataCell.class));
     }
 
     /**
