@@ -303,7 +303,8 @@ public class RController implements IRController {
             if ((rserveProp == null) || rserveProp.isEmpty()) {
                 org.knime.ext.r.bin.preferences.RPreferenceInitializer.invalidatePreferenceProviderCache();
                 throw new RException(
-                    "Could not find Rserve package. Please install it in your R installation by running \"install.packages('Rserve')\".",
+                    "Could not find Rserve package. Please install it in your R installation by running "
+                        + "\"install.packages('Rserve',,'http://rforge.net/',type='source')\".",
                     null);
             }
             m_connection = initRConnection();
