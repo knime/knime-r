@@ -168,7 +168,7 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
             final String rservePath = props.getProperty("Rserve.path");
             if ((rservePath == null) || props.getProperty("Rserve.path").isEmpty()) {
                 setMessage("The package 'Rserve' needs to be installed in your R installation. "
-                    + "Please install it in R using \"install.packages('Rserve')\".", WARNING);
+                    + "Please install it in R using: \"install.packages('Rserve',,'http://rforge.net/',type='source')\"", WARNING);
                 // Return true anyway, to allow the user to install Rserve later without having
                 // to select the path via the annoying path dialog again.
                 return true;
