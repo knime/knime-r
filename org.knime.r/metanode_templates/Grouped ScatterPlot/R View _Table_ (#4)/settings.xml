@@ -16,33 +16,36 @@
 <entry key="templateUUID" type="xstring" value="64af685c-b86f-4ec5-8cd2-e6b5d1cd8794"/>
 <entry key="version" type="xstring" value="version 1.x"/>
 <entry key="Output non numbers (NaN, Inf, -Inf) as missing cells" type="xboolean" value="true"/>
+<entry key="sendRowNames" type="xboolean" value="true"/>
+<entry key="sendBatchSize" type="xint" value="10000"/>
+<entry key="knimeInType" type="xstring" value="data.frame"/>
 </config>
+<entry key="Image type" type="xstring" value="PNG"/>
 </config>
 <entry key="customDescription" type="xstring" isnull="true" value=""/>
-<entry key="state" type="xstring" value="EXECUTED"/>
+<entry key="state" type="xstring" value="IDLE"/>
 <entry key="factory" type="xstring" value="org.knime.r.RViewNodeFactory"/>
 <entry key="node-name" type="xstring" value="R View (Table)"/>
 <entry key="node-bundle-name" type="xstring" value="KNIME R-Project nodes"/>
 <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.r"/>
-<entry key="node-bundle-vendor" type="xstring" value="KNIME GmbH, Konstanz, Germany"/>
-<entry key="node-bundle-version" type="xstring" value="2.10.0.0043148"/>
+<entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+<entry key="node-bundle-version" type="xstring" value="3.7.0.v201810230750"/>
+<entry key="node-feature-name" type="xstring" value="KNIME Interactive R Statistics Integration"/>
+<entry key="node-feature-symbolic-name" type="xstring" value="org.knime.features.r.feature.group"/>
+<entry key="node-feature-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
+<entry key="node-feature-version" type="xstring" value="3.7.0.v201810230750"/>
 <config key="factory_settings"/>
 <entry key="name" type="xstring" value="R View (Table)"/>
-<entry key="hasContent" type="xboolean" value="true"/>
+<entry key="hasContent" type="xboolean" value="false"/>
 <entry key="isInactive" type="xboolean" value="false"/>
 <config key="ports">
 <config key="port_1">
 <entry key="index" type="xint" value="1"/>
-<entry key="port_spec_class" type="xstring" value="org.knime.core.node.port.image.ImagePortObjectSpec"/>
-<entry key="port_object_class" type="xstring" value="org.knime.core.node.port.image.ImagePortObject"/>
-<entry key="port_object_summary" type="xstring" value="PNG Image 800 x 600 with 82 KB"/>
-<entry key="port_spec_location" type="xstring" value="spec/spec.zip"/>
-<entry key="port_object_location" type="xstring" value="object/portobject.zip"/>
-<entry key="port_dir_location" type="xstring" value="port_1"/>
+<entry key="port_dir_location" type="xstring" isnull="true" value=""/>
 </config>
 </config>
 <config key="filestores">
 <entry key="file_store_location" type="xstring" isnull="true" value=""/>
-<entry key="file_store_id" type="xstring" value="928904ae-2cb5-4df2-a314-5f94458e081f"/>
+<entry key="file_store_id" type="xstring" isnull="true" value=""/>
 </config>
 </config>
