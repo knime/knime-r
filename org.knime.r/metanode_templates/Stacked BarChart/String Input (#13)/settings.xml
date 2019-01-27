@@ -14,16 +14,16 @@
 </config>
 <config key="model">
 <config key="defaultValue">
-<entry key="string" type="xstring" value=""/>
+<entry key="string" type="xstring" value="My Plot"/>
 </config>
-<entry key="label" type="xstring" value="Label"/>
-<entry key="description" type="xstring" value="Enter Description"/>
+<entry key="label" type="xstring" value="Plot Title"/>
+<entry key="description" type="xstring" value="Choose a title for your plot.%%00009"/>
 <entry key="hideInWizard" type="xboolean" value="false"/>
 <entry key="hideInDialog" type="xboolean" value="false"/>
 <entry key="required" type="xboolean" value="true"/>
-<entry key="parameterName" type="xstring" value="string-input"/>
+<entry key="parameterName" type="xstring" value="title-input"/>
 <entry key="customCSS" type="xstring" value=""/>
-<entry key="flowvariablename" type="xstring" value="new variable"/>
+<entry key="flowvariablename" type="xstring" value="title"/>
 <entry key="regex" type="xstring" value=""/>
 <entry key="error_message" type="xstring" value=""/>
 <entry key="editorType" type="xstring" value="Single-line"/>
@@ -36,7 +36,7 @@
 <entry key="x-coordinate" type="xint" value="333"/>
 <entry key="y-coordinate" type="xint" value="239"/>
 <entry key="width" type="xint" value="134"/>
-<entry key="height" type="xint" value="20"/>
+<entry key="height" type="xint" value="19"/>
 <entry key="alignment" type="xstring" value="CENTER"/>
 <entry key="borderSize" type="xint" value="0"/>
 <entry key="borderColor" type="xint" value="16777215"/>
@@ -51,11 +51,11 @@
 <entry key="node-bundle-name" type="xstring" value="KNIME Quick Form Nodes"/>
 <entry key="node-bundle-symbolic-name" type="xstring" value="org.knime.js.quickforms"/>
 <entry key="node-bundle-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
-<entry key="node-bundle-version" type="xstring" value="3.7.0.v201812040932"/>
+<entry key="node-bundle-version" type="xstring" value="3.7.0.v201901161749"/>
 <entry key="node-feature-name" type="xstring" value="KNIME Quick Forms"/>
 <entry key="node-feature-symbolic-name" type="xstring" value="org.knime.features.js.quickforms.feature.group"/>
 <entry key="node-feature-vendor" type="xstring" value="KNIME AG, Zurich, Switzerland"/>
-<entry key="node-feature-version" type="xstring" value="3.7.0.v201812040932"/>
+<entry key="node-feature-version" type="xstring" value="3.7.0.v201901161749"/>
 <config key="factory_settings"/>
 <entry key="name" type="xstring" value="String Input"/>
 <entry key="hasContent" type="xboolean" value="false"/>
