@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE knimeNode PUBLIC "-//UNIKN//DTD KNIME Node 2.0//EN" "http://www.knime.org/Node.dtd">
-<knimeNode type="Manipulator" icon="rview-table.png">
-	<name>Run R Model in Microsoft SQL Server</name>
+<knimeNode type="Manipulator" icon="rview-table.png" xmlns="http://knime.org/node/v3.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://knime.org/node/v3.6 http://knime.org/node/v3.6.xsd">
+	<name>Run R Model in Microsoft SQL Server (legacy)</name>
 	<shortDescription>
 		Run R code with a pre-trained R model on a Microsoft SQL Server in a database.
 	</shortDescription>
 	<fullDescription>
 		<intro>
+		<p>
+            <b>This node is part of the legacy database framework.</b>
+            For more information on how to migrate to the new database framework see the
+            <a href="!@!TOBIS_DB_MIGRATION_DOCUMENTATION_LINK!@!">migration section</a> of the 
+            <a href="!@!TOBIS_DB_DOCUMENTATION_LINK!@!">database documentation</a>.
+        </p>
+        <p>
 			This node allows running R code on a Microsoft SQL Server (using a SQL query behind the scenes).
 			Input and output data to the R script are SQL tables. In addition the <b>knime.model</b> (cannot be <b>NULL</b>,
 			or will not be transfered to R otherwise) and <b>knime.flow.in</b> variables from a R port can be used in the R script.
@@ -16,7 +22,8 @@
 			<h4>JDBC Driver</h4>
 
 			This node requires the <b>Microsoft JDBC driver</b> to be used in the Microsoft SQL Server connector.
-			You can install the driver extension from the KNIME Update Site (KNIME Microsoft JDBC Driver For SQL Server).
+			You can install the driver extension from the KNIME Update Site (KNIME Microsoft JDBC Driver For SQL Server (legacy)).
+        </p>
 		</intro>
 		<tab name="R Snippet">
 			<option name="SQL Input">
