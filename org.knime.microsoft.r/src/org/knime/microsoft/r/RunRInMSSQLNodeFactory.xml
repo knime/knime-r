@@ -9,8 +9,8 @@
 		<p>
             <b>This node is part of the legacy database framework.</b>
             For more information on how to migrate to the new database framework see the
-            <a href="!@!TOBIS_DB_MIGRATION_DOCUMENTATION_LINK!@!">migration section</a> of the 
-            <a href="!@!TOBIS_DB_DOCUMENTATION_LINK!@!">database documentation</a>.
+            <a href="https://docs.knime.com/latest/db_extension_guide/index.html#migration">migration section</a> of the 
+            <a href="https://docs.knime.com/latest/db_extension_guide/index.html">database documentation</a>.
         </p>
         <p>
 			This node allows running R code on a Microsoft SQL Server (using a SQL query behind the scenes).
@@ -18,12 +18,10 @@
 			or will not be transfered to R otherwise) and <b>knime.flow.in</b> variables from a R port can be used in the R script.
 
 			To output data from the R script to the output SQL table, assign a R <b>data.frame</b> to <b>knime.out</b>.
-
-			<h4>JDBC Driver</h4>
-
+        </p>
+        <h4>JDBC driver</h4>
 			This node requires the <b>Microsoft JDBC driver</b> to be used in the Microsoft SQL Server connector.
 			You can install the driver extension from the KNIME Update Site (KNIME Microsoft JDBC Driver For SQL Server (legacy)).
-        </p>
 		</intro>
 		<tab name="R Snippet">
 			<option name="SQL Input">
