@@ -1422,6 +1422,9 @@ public class RController implements IRController {
                     Thread.sleep(m_interval);
                     m_exec.checkCanceled();
                 }
+                // AP-11567: We need to wait for the other thread to die. If the thread lives until the
+                // finally block we would terminate the Rserve instance without a reason.
+                t.join();
 
                 return runningTask.get();
             } catch (final ExecutionException e) {
