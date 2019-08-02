@@ -57,7 +57,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
@@ -180,42 +179,42 @@ public final class RBinUtil {
 
         /* Run R on the script to get properties */
         Process process = null;
-        InputStream inputStream = null;
-        InputStream errorStream = null;
+
         try {
             process = builder.start();
-            inputStream = process.getInputStream();
-            errorStream = process.getErrorStream();
-            final BufferedReader outputReader = new BufferedReader(new InputStreamReader(inputStream));
-            final BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+            try (final InputStream inputStream = process.getInputStream();
+                    final InputStream errorStream = process.getErrorStream()) {
+                final BufferedReader outputReader = new BufferedReader(new InputStreamReader(inputStream));
+                final BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
 
-            // Consume the output produced by the R process, otherwise may block process on some operating systems
-            new Thread(() -> {
-                try {
-                    final StringBuilder b = new StringBuilder();
-                    String line;
-                    while ((line = outputReader.readLine()) != null) {
-                        b.append(line);
+                // Consume the output produced by the R process, otherwise may block process on some operating systems
+                new Thread(() -> {
+                    try {
+                        final StringBuilder b = new StringBuilder();
+                        String line;
+                        while ((line = outputReader.readLine()) != null) {
+                            b.append(line);
+                        }
+                        LOGGER.debug("External Rscript process output: " + b.toString());
+                    } catch (final IOException e) {
+                        LOGGER.error("Error reading output of external R process.", e);
                     }
-                    LOGGER.debug("External Rscript process output: " + b.toString());
-                } catch (final Exception e) {
-                    LOGGER.error("Error reading output of external R process.", e);
-                }
-            }, "R Output Reader").start();
-            new Thread(() -> {
-                try {
-                    final StringBuilder b = new StringBuilder();
-                    String line;
-                    while ((line = errorReader.readLine()) != null) {
-                        b.append(line);
+                }, "R Output Reader").start();
+                new Thread(() -> {
+                    try {
+                        final StringBuilder b = new StringBuilder();
+                        String line;
+                        while ((line = errorReader.readLine()) != null) {
+                            b.append(line);
+                        }
+                        LOGGER.debug("External Rscript process error output: " + b.toString());
+                    } catch (final IOException e) {
+                        LOGGER.error("Error reading error output of external R process.", e);
                     }
-                    LOGGER.debug("External Rscript process error output: " + b.toString());
-                } catch (final Exception e) {
-                    LOGGER.error("Error reading error output of external R process.", e);
-                }
-            }, "R Error Reader").start();
+                }, "R Error Reader").start();
 
-            process.waitFor();
+                process.waitFor();
+            }
         } catch (final Exception e) {
             LOGGER.debug(e.getMessage(), e);
             return new Properties();
@@ -223,8 +222,6 @@ public final class RBinUtil {
             if (process != null && process.isAlive()) {
                 process.destroy();
             }
-            IOUtils.closeQuietly(inputStream);
-            IOUtils.closeQuietly(errorStream);
         }
 
         // load properties from propsFile
