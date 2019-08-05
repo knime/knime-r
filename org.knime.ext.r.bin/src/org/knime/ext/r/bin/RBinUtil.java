@@ -188,7 +188,7 @@ public final class RBinUtil {
                 final BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
 
                 // Consume the output produced by the R process, otherwise may block process on some operating systems
-                new Thread(() -> {
+                final Thread outputReaderThread = new Thread(() -> {
                     try {
                         final StringBuilder b = new StringBuilder();
                         String line;
@@ -199,8 +199,9 @@ public final class RBinUtil {
                     } catch (final IOException e) {
                         LOGGER.error("Error reading output of external R process.", e);
                     }
-                }, "R Output Reader").start();
-                new Thread(() -> {
+                }, "R Output Reader");
+                outputReaderThread.start();
+                final Thread errorReaderThread = new Thread(() -> {
                     try {
                         final StringBuilder b = new StringBuilder();
                         String line;
@@ -211,9 +212,14 @@ public final class RBinUtil {
                     } catch (final IOException e) {
                         LOGGER.error("Error reading error output of external R process.", e);
                     }
-                }, "R Error Reader").start();
+                }, "R Error Reader");
+                errorReaderThread.start();
 
                 process.waitFor();
+
+                // Wait for the reader threads
+                outputReaderThread.join();
+                errorReaderThread.join();
             }
         } catch (final Exception e) {
             LOGGER.debug(e.getMessage(), e);
