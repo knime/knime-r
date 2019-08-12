@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KNIME Microsoft R-Project nodes
 Bundle-SymbolicName: org.knime.microsoft.r;singleton:=true
 Bundle-Version: 4.0.0.qualifier
-Bundle-ClassPath: org-knime-microsoft-r.jar
+Bundle-ClassPath: . 
 Bundle-Vendor: KNIME AG, Zurich, Switzerland
 Require-Bundle: org.knime.r;bundle-version="[4.0.0,5.0.0)",
   org.knime.core;bundle-version="[4.0.0,5.0.0)",

@@ -7,3 +7,4 @@ Bundle-Vendor: KNIME AG, Zurich, Switzerland
 Fragment-Host: org.knime.ext.r.bin;bundle-version="3.5.0"
 Eclipse-PlatformFilter: (osgi.os=win32)
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Eclipse-BundleShape: dir
