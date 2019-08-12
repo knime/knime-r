@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",
   com.sun.jna;bundle-version="[3.5.2,5.0.0)",
   org.knime.base;bundle-version="[4.0.0,5.0.0)",
   org.knime.workbench.ui;bundle-version="[4.0.0,5.0.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.eclipse.jface.util
 Bundle-ActivationPolicy: lazy
