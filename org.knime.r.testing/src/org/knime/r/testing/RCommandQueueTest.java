@@ -76,6 +76,8 @@ import org.rosuda.REngine.Rserve.protocol.RTalk;
  */
 public class RCommandQueueTest {
 
+    private static final long DEFAULT_TIMEOUT_SEC = 5;
+
 	private RController m_controller;
 	private RCommandQueue m_commandQueue;
 	private RConsoleController m_consoleController;
@@ -145,7 +147,7 @@ public class RCommandQueueTest {
 		}
 
 		/* check that the console read thread survives bad commands */
-		queue.putRScript("s<?hello.y!.�a", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript("s<?hello.y!.�a", true).get(DEFAULT_TIMEOUT_SEC, TimeUnit.SECONDS);
 
 		// wait for console to update
 		Thread.sleep(10);
@@ -157,7 +159,7 @@ public class RCommandQueueTest {
 		assertTrue("Clearing the console failed.", console.getText().isEmpty());
 
 		/* check multiline/valid R code execution, and it's output */
-		queue.putRScript("print(\"Hello World!\")\nprint(\"Hello World, again!\")", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript("print(\"Hello World!\")\nprint(\"Hello World, again!\")", true).get(DEFAULT_TIMEOUT_SEC, TimeUnit.SECONDS);
 		// wait for console to update
 		Thread.sleep(10);
 
@@ -194,7 +196,7 @@ public class RCommandQueueTest {
 		// clear console for next check.
 		consoleController.clear();
 
-		queue.putRScript("42", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript("42", true).get(DEFAULT_TIMEOUT_SEC, TimeUnit.SECONDS);
 		// wait for console to update
 		Thread.sleep(10);
 
@@ -305,11 +307,11 @@ public class RCommandQueueTest {
 		 * Define "print.knime" (which is called by print() for knime class) to throw and error.
 		 * Print a implicitly.
 		 */
-		queue.putRScript("a <- list(foo=42); class(a) <- append(class(a), 'knime'); print.knime <- function(x) {stop('Kaboom!')}", false).get(1, TimeUnit.SECONDS);;
+		queue.putRScript("a <- list(foo=42); class(a) <- append(class(a), 'knime'); print.knime <- function(x) {stop('Kaboom!')}", false).get(DEFAULT_TIMEOUT_SEC, TimeUnit.SECONDS);
 		Thread.sleep(10); // wait for console to update
 		consoleController.clear();
 
-		queue.putRScript("a", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript("a", true).get(DEFAULT_TIMEOUT_SEC, TimeUnit.SECONDS);
 		Thread.sleep(10); // wait for console to update
 
 		assertEquals("Incorrect output for \"a\"",
@@ -341,7 +343,7 @@ public class RCommandQueueTest {
 
 		queue.startExecutionThread();
 		assertTrue(queue.isExecutionThreadRunning());
-		queue.putRScript("print(\"sanity check\")", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript("print(\"sanity check\")", true).get(DEFAULT_TIMEOUT_SEC, TimeUnit.SECONDS);
 		Thread.sleep(10); // wait for console update
 
 		assertEquals("Sanity check for whether execution test is running failed.",
@@ -358,14 +360,14 @@ public class RCommandQueueTest {
 		assertTrue("Failed to set language of R errors.", ret.isLogical() && ret.asBytes()[0] == REXPLogical.TRUE);
 
 		// Name not found
-		queue.putRScript("IdoNotExistVar", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript("IdoNotExistVar", true).get(DEFAULT_TIMEOUT_SEC, TimeUnit.SECONDS);
 		Thread.sleep(10); // wait for console update
 		assertEquals("Expected and name not found error.",
 				String.format("> IdoNotExistVar%nError: object 'IdoNotExistVar' not found%n"), console.getText());
 		consoleController.clear();
 
 		// Bad syntax may lead to bad behavior
-		queue.putRScript("} print(\"Hello\")", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript("} print(\"Hello\")", true).get(DEFAULT_TIMEOUT_SEC, TimeUnit.SECONDS);
 		Thread.sleep(10); // wait for console update
 		assertEquals("Syntactically incorrect R code should print syntax error messages.",
 				String.format( //
@@ -376,7 +378,7 @@ public class RCommandQueueTest {
 				console.getText());
 		consoleController.clear();
 
-		queue.putRScript(") print(\"Hello\")", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript(") print(\"Hello\")", true).get(DEFAULT_TIMEOUT_SEC, TimeUnit.SECONDS);
 		Thread.sleep(10); // wait for console update
 		assertEquals("Syntactically incorrect R code should print syntax error messages.",
 				String.format( //
@@ -387,7 +389,7 @@ public class RCommandQueueTest {
 				console.getText());
 		consoleController.clear();
 
-		queue.putRScript("\" print(\"Hello\")", true).get(1, TimeUnit.SECONDS);
+		queue.putRScript("\" print(\"Hello\")", true).get(DEFAULT_TIMEOUT_SEC, TimeUnit.SECONDS);
 		Thread.sleep(10); // wait for console update
 		assertEquals("Syntactically incorrect R code should print syntax error messages.",
 				String.format( //
