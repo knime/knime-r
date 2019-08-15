@@ -144,11 +144,11 @@ public class RConnectionFactoryTest {
 		final RConnectionResource resource = RConnectionFactory.createConnection();
 		m_connection = resource.get();
 		resource.destroy(true);
-		Thread.sleep(50); // give the OS some time to react
+		Thread.sleep(100); // give the OS some time to react
 
 		final Collection<Process> runningRProcesses = RConnectionFactory.getRunningRProcesses();
 
-		assertTrue("FATAL, please check the code for more information.", runningRProcesses.isEmpty());
+		assertTrue("FATAL, the R process is listed running but it has been destroyed", runningRProcesses.isEmpty());
 		assertFalse("Connection has not been closed on resource destruction", m_connection.isConnected());
 	}
 
