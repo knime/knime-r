@@ -84,6 +84,7 @@ import org.knime.core.node.port.database.DatabasePortObject;
 import org.knime.core.node.port.database.DatabasePortObjectSpec;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.database.port.DBDataPortObject;
 import org.knime.r.RSnippet;
 import org.knime.r.RSnippetNodeConfig;
 import org.knime.r.RSnippetNodePanel;
@@ -413,7 +414,14 @@ class SimpleRSnippetNodePanel extends JPanel implements TemplateReceiver {
     public void updateData(final ConfigRO settings, final PortObject[] input,
         final Collection<FlowVariable> flowVariables) {
         m_snippet.getSettings().loadSettingsForDialog(settings);
-        final DataTableSpec spec = input[1] == null ? null : ((DatabasePortObject)input[1]).getSpec().getDataTableSpec();
+        final DataTableSpec spec;
+        if (input[1] instanceof DatabasePortObject) {
+            spec = ((DatabasePortObject)input[1]).getSpec().getDataTableSpec();
+        } else if (input[1] instanceof DBDataPortObject) {
+            spec = ((DBDataPortObject)input[1]).getSpec().getDataTableSpec();
+        } else {
+            spec = null;
+        }
         updateData(m_snippet.getSettings(), input, spec, flowVariables);
     }
 

@@ -100,8 +100,11 @@ import org.rosuda.REngine.REXP;
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
  */
-final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
+class RunRInMSSQLNodeModel extends RSnippetNodeModel {
 
+    interface TableChecker {
+        boolean tableExists(String tableName) throws Exception;
+    }
     private final static String DESERIALIZE_KNIME_VARS = //
         "knime.tmp<-readRDS(rawConnection(knimeserialized,open=\"r\"))\n" //
             + "if ('knime.model' %in% names(knime.tmp)) {\n" //
@@ -167,13 +170,28 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
      * Constructor
      */
     public RunRInMSSQLNodeModel() {
-        super(RSNIPPET_NODE_CONFIG);
+        this(RSNIPPET_NODE_CONFIG);
+    }
+
+    /**
+     * @param config R Snippet Node Config
+     */
+    protected RunRInMSSQLNodeModel(final RSnippetNodeConfig config) {
+        super(config);
     }
 
     @Override
     protected PortObjectSpec[] configure(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         super.configure(inSpecs);
+        checkInputSpec(inSpecs);
+        return new PortObjectSpec[]{null};
+    }
 
+    /**
+     * @param inSpecs The input {@link PortObjectSpec}s
+     * @throws InvalidSettingsException If the input spec is not valid
+     */
+    protected void checkInputSpec(final PortObjectSpec[] inSpecs) throws InvalidSettingsException {
         assert inSpecs[PORT_INDEX_DB] instanceof DatabasePortObjectSpec;
         final DatabasePortObjectSpec databasePort = (DatabasePortObjectSpec)inSpecs[PORT_INDEX_DB];
 
@@ -186,8 +204,6 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
                 + ".\nMake sure to use the Microsoft database connector and the Microsoft JDBC driver.");
             throw new InvalidSettingsException("This node only works with Microsoft SQL Server 2016+");
         }
-
-        return new PortObjectSpec[]{null};
     }
 
     @Override
@@ -197,6 +213,34 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         final DatabaseQueryConnectionSettings connectionSettings =
             databasePort.getConnectionSettings(getCredentialsProvider());
         final Connection connection = connectionSettings.createConnection(getCredentialsProvider());
+        final DatabaseUtility utility = DatabaseUtility.getUtility(connectionSettings.getDatabaseIdentifier());
+
+
+        final String outputQuery = runRScript(exec, connection, inData, connectionSettings.getQuery(),
+            connectionSettings.getUserName(getCredentialsProvider()),
+            connectionSettings.getPassword(getCredentialsProvider()),
+            tableName -> utility.tableExists(connection, tableName));
+
+
+        final DatabaseQueryConnectionSettings querySettings =
+            new DatabaseQueryConnectionSettings(connectionSettings, outputQuery);
+
+        final Statement outputStatement = connection.createStatement();
+        try (final ResultSet result = outputStatement.executeQuery(outputQuery)) {
+            final DBReader conn = utility.getReader(querySettings);
+            final DataTableSpec dbSpec = conn.getDataTableSpec(getCredentialsProvider());
+
+            return new PortObject[]{new DatabasePortObject(new DatabasePortObjectSpec(dbSpec, querySettings))};
+        } catch (SQLException ex) {
+            Throwable cause = ExceptionUtils.getRootCause(ex);
+            cause = ObjectUtils.defaultIfNull(cause, ex);
+            throw new InvalidSettingsException("Error while validating SQL query: " + cause.getMessage(), ex);
+        }
+    }
+
+    protected String runRScript(final ExecutionContext exec, final Connection connection, final PortObject[] inData,
+        final String inputQuery, final String user, final String pwd, final TableChecker checker)
+                throws Exception {
 
         /* Serialize R Model */
         final RSnippetSettings settings = getRSnippet().getSettings();
@@ -205,10 +249,9 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
 
         final String outputTable = m_settings.getOutputTableName();
-        final DatabaseUtility utility = DatabaseUtility.getUtility(connectionSettings.getDatabaseIdentifier());
         if (!m_settings.getOverwriteOutputTable()) {
             /* Check if output table already exists */
-            if (utility.tableExists(connection, outputTable)) {
+            if (checker.tableExists(outputTable)) {
                 throw new RuntimeException("Output table already exists.");
             }
         }
@@ -261,7 +304,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
                 int i = 0; // never allowed to be negative, otherwise invalid identifier
                 do {
                     uniqueTableIdentifier = "KNIME_R_WORKSPACE" + (i++);
-                } while (utility.tableExists(connection, uniqueTableIdentifier));
+                } while (checker.tableExists(uniqueTableIdentifier));
 
                 // Create the table with found identifier
                 connection.createStatement()
@@ -289,8 +332,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
              */
             exec.setProgress(0.6, "Executing R script on Microsoft SQL Server");
             final StringBuilder embeddedRScript = new StringBuilder();
-            embeddedRScript.append(getRCodePrefix(connectionSettings.getUserName(getCredentialsProvider()),
-                connectionSettings.getPassword(getCredentialsProvider())));
+            embeddedRScript.append(getRCodePrefix(user, pwd));
 
             // start output capturing
             embeddedRScript.append(ConsoleLikeRExecutor.CAPTURE_OUTPUT_PREFIX);
@@ -308,7 +350,6 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
             embeddedRScript.append(ConsoleLikeRExecutor.CAPTURE_OUTPUT_POSTFIX);
             embeddedRScript.append(";knime.out<-data.frame(knime.output.ret)");
 
-            final String inputQuery = connectionSettings.getQuery();
             final String query = getRunRCodeQuery() //
                 .replace("${RCode}", embeddedRScript.toString().replaceAll("'", "\"")) //
                 .replace("${KnimeRWorkspaceTable}", uniqueTableIdentifier) //
@@ -358,20 +399,7 @@ final class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         /* Build output query and get table spec */
         /* On MSSQL we can use [ ] to specify an identifier */
         final String outputQuery = "SELECT * FROM [" + outputTable + "]";
-        final DatabaseQueryConnectionSettings querySettings =
-            new DatabaseQueryConnectionSettings(connectionSettings, outputQuery);
-
-        final Statement outputStatement = connection.createStatement();
-        try (final ResultSet result = outputStatement.executeQuery(outputQuery)) {
-            final DBReader conn = utility.getReader(querySettings);
-            final DataTableSpec dbSpec = conn.getDataTableSpec(getCredentialsProvider());
-
-            return new PortObject[]{new DatabasePortObject(new DatabasePortObjectSpec(dbSpec, querySettings))};
-        } catch (SQLException ex) {
-            Throwable cause = ExceptionUtils.getRootCause(ex);
-            cause = ObjectUtils.defaultIfNull(cause, ex);
-            throw new InvalidSettingsException("Error while validating SQL query: " + cause.getMessage(), ex);
-        }
+        return outputQuery;
     }
 
     /**

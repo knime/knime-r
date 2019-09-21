@@ -7,5 +7,9 @@
             category-path="/labs/"
             factory-class="org.knime.microsoft.r.RunRInMSSQLNodeFactory">
       </node>
+      <node
+            category-path="/labs/"
+            factory-class="org.knime.microsoft.r.RunRInMSSQLNodeFactory2">
+      </node>
    </extension>
 </plugin>
