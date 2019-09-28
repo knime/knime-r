@@ -12,4 +12,10 @@
             factory-class="org.knime.microsoft.r.RunRInMSSQLNodeFactory2">
       </node>
    </extension>
+   <extension
+         point="org.knime.workflow.migration.NodeMigrationRule">
+      <Rule
+            class="org.knime.microsoft.r.RunRInMSSQLNodeMigrationRule">
+      </Rule>
+   </extension>
 </plugin>

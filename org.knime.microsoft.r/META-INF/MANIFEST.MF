@@ -16,6 +16,7 @@ Require-Bundle: org.knime.r;bundle-version="[4.0.0,5.0.0)",
  org.apache.commons.lang3;bundle-version="[3.2.1,4.0.0)",
  org.knime.database;bundle-version="[4.0.0,5.0.0)",
  org.knime.database.nodes;bundle-version="[4.0.0,5.0.0)",
- org.knime.database.extensions;bundle-version="[4.0.0,5.0.0)"
+ org.knime.database.extensions;bundle-version="[4.0.0,5.0.0)",
+ org.knime.workflow.migration;bundle-version="[4.1.0,5.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Eclipse-RegisterBuddy: org.knime.base
