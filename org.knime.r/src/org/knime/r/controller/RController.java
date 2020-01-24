@@ -1176,7 +1176,7 @@ public class RController implements IRController {
         if (useDataTable) {
             // Create data.table now, we will use set(table, column, row, newData) to set values in the table directly
             try {
-                monitoredEval("library(data.table);" + name + "<-as.data.table(cols, check.names=F);names(" + name
+                monitoredEval("library(data.table);" + name + "<-as.data.table(cols, check.names=FALSE);names(" + name
                     + ")<-knime.col.names", exec, false);
             } catch (final InterruptedException e) {
                 throw new RException("Interrupted while creating data.table and assigning column names.", e);
@@ -1326,10 +1326,10 @@ public class RController implements IRController {
             } else {
                 // Coerce columns to data.frame (rather than constructing a new one which would copy the entire data)
                 if (sendRowNames) {
-                    monitoredEval(name + "<-as.data.frame(cols,row.names=knime.row.names,check.names=F);names(" + name
-                        + ")<-knime.col.names", exec, false);
+                    monitoredEval(name + "<-as.data.frame(cols,row.names=knime.row.names,check.names=FALSE);names("
+                        + name + ")<-knime.col.names", exec, false);
                 } else {
-                    monitoredEval(name + "<-as.data.frame(cols,check.names=F);names(" + name + ")<-knime.col.names",
+                    monitoredEval(name + "<-as.data.frame(cols,check.names=FALSE);names(" + name + ")<-knime.col.names",
                         exec, false);
                 }
             }
