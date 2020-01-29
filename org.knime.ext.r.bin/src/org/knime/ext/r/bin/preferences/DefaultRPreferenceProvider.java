@@ -131,4 +131,18 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 
         return (Properties)m_properties.clone();
     }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof DefaultRPreferenceProvider)) {
+            return false;
+        }
+        final DefaultRPreferenceProvider o = (DefaultRPreferenceProvider)obj;
+        return m_rHome.equals(o.m_rHome);
+    }
+
+    @Override
+    public int hashCode() {
+        return m_rHome.hashCode();
+    }
 }
