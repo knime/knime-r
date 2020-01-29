@@ -9,16 +9,21 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.KNIMETimer;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
+import org.knime.ext.r.bin.preferences.RPreferenceProvider;
 import org.knime.r.controller.IRController.RException;
 import org.knime.r.controller.RController;
 import org.rosuda.REngine.Rserve.RConnection;
@@ -47,11 +52,11 @@ public class RConnectionFactory {
 
     private static final ReentrantLock RESOURCES_LOCK = new ReentrantLock();
 
-    private static final ArrayList<RConnectionResource> RESOURCES = new ArrayList<>();
+    private static final Map<RPreferenceProvider, List<RConnectionResource>> RESOURCES = new HashMap<>();
 
     /**
      * Class which allows locking a lock in a try-with-resource statement to be implicitly unlocked in finally.
-     * 
+     *
      * <pre>
      * <code>
      *    try(LockHolder lh = new LockHolder(myLock)) {
@@ -67,7 +72,7 @@ public class RConnectionFactory {
 
         /**
          * Constructor
-         * 
+         *
          * @param lock Lock to lock and unlock
          */
         public LockHolder(final Lock lock) {
@@ -107,7 +112,7 @@ public class RConnectionFactory {
     private static final AtomicBoolean m_initialized = new AtomicBoolean(false);
 
     /**
-     * For testing purposes.
+     * For testing purposes. All running R processes.
      *
      * @return Read only collection of currently running Rserve processes.
      */
@@ -115,7 +120,7 @@ public class RConnectionFactory {
         final ArrayList<Process> list = new ArrayList<>();
 
         try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
-            for (final RConnectionResource res : RESOURCES) {
+            for (final RConnectionResource res : getAllResources()) {
                 final Process p = res.getUnderlyingRInstance().getProcess();
 
                 if (p.isAlive()) {
@@ -127,6 +132,13 @@ public class RConnectionFactory {
         return list;
     }
 
+    /** Get all resources for all preferences. Lock the resources beforehand. */
+    private static List<RConnectionResource> getAllResources() {
+        return RESOURCES.values().stream() //
+            .flatMap(List<RConnectionResource>::stream) //
+            .collect(Collectors.toList());
+    }
+
     /**
      * @return Configuration file for Rserve
      */
@@ -134,8 +146,7 @@ public class RConnectionFactory {
         final File file = new File(tempDir, "Rserve.conf");
         try (FileWriter writer = new FileWriter(file)) {
             // convert preference from MB (more intuitive) to kB (required by Rserve)
-            final int bufferSizeInKB =
-                org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getMaxInfBuf() * 1024;
+            final int bufferSizeInKB = RPreferenceInitializer.getRProvider().getMaxInfBuf() * 1024;
             writer.write("maxinbuf " + bufferSizeInKB + "\n");
             writer.write("maxsendbuf " + bufferSizeInKB + "\n");
             writer.write("encoding utf8\n"); // encoding for java clients
@@ -161,19 +172,31 @@ public class RConnectionFactory {
     /**
      * Start an Rserve process with a given Rserve executable command.
      *
-     * @param command Rserve executable command
+     * @param preferences R preferences
      * @param host Host of the Rserve server
      * @param port Port to start the Rserve server on
      * @return the started Rserve process
      * @throws IOException
      */
-    private static Process launchRserveProcess(final String command, final String host, final Integer port)
+    private static Process launchRserveProcess(final RPreferenceProvider preferences, final String host, final Integer port)
         throws IOException {
-        final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
+        // if debugging, launch debug version of Rserve.
+        final String command = preferences.getRServeBinPath();
+        final String cmd =
+            (DEBUG_RSERVE) ? ((Platform.isWindows()) ? command.replace(".exe", "_d.exe") : command + ".dbg") : command;
+
+        final File commandFile = new File(cmd);
+        if (!commandFile.exists()) {
+            throw new IOException("Command not found: " + cmd);
+        }
+        if (!commandFile.canExecute()) {
+            throw new IOException("Command is not an executable: " + cmd);
+        }
+        final String rHome = preferences.getRHome();
 
         final File configFile = createRserveConfig();
         final ProcessBuilder builder = new ProcessBuilder();
-        builder.command(command, "--RS-port", port.toString(), "--RS-conf", configFile.getAbsolutePath(), "--vanilla");
+        builder.command(cmd, "--RS-port", port.toString(), "--RS-conf", configFile.getAbsolutePath(), "--vanilla");
 
         final Map<String, String> env = builder.environment();
         if (Platform.isWindows()) {
@@ -211,23 +234,11 @@ public class RConnectionFactory {
      * @throws IOException if Rserve could not be launched. This may be the case if R is either not found or does not
      *             have Rserve package installed.
      */
-    private static RInstance launchRserve(final String command, final String host, final Integer port)
+    private static RInstance launchRserve(final RPreferenceProvider preferences, final String host, final Integer port)
         throws IOException {
-        // if debugging, launch debug version of Rserve.
-        final String cmd =
-            (DEBUG_RSERVE) ? ((Platform.isWindows()) ? command.replace(".exe", "_d.exe") : command + ".dbg") : command;
-
-        final File commandFile = new File(cmd);
-        if (!commandFile.exists()) {
-            throw new IOException("Command not found: " + cmd);
-        }
-        if (!commandFile.canExecute()) {
-            throw new IOException("Command is not an executable: " + cmd);
-        }
-
         RInstance rInstance = null;
         try {
-            final Process p = launchRserveProcess(cmd, host, port);
+            final Process p = launchRserveProcess(preferences, host, port);
 
             // wrap the process, requires host and port to create RConnections
             // later.
@@ -243,8 +254,7 @@ public class RConnectionFactory {
                     LOGGER.debug(line);
                 } /* else discard */
             }).start();
-            new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")",
-                (line) -> LOGGER.debug(line)).start();
+            new StreamReaderThread(p.getErrorStream(), "R Error Reader (port:" + port + ")", LOGGER::debug).start();
 
 			// try connecting up to 5 times over the course of `timeout` ms. Attempts
 			// may fail if Rserve is currently starting up.
@@ -296,8 +306,8 @@ public class RConnectionFactory {
 
 
     /**
-     * Create a new {@link RConnection}, creating a new R instance beforehand, unless a connection of an existing
-     * instance has been closed in which case an R instance will be reused.
+     * Create a new {@link RConnection}. A new R instance with default settings is created beforehand if there is no
+     * existing R instance with default settings that can be reused.
      *
      * The method does not check {@link RConnection#isConnected()}.
      *
@@ -307,14 +317,33 @@ public class RConnectionFactory {
      *             have Rserve package installed. Or if there was no open port found.
      */
     public static RConnectionResource createConnection() throws RserveException, IOException {
+        // Create a connection with the default preferences
+        return createConnection(RPreferenceInitializer.getRProvider());
+    }
+
+    /**
+     * Create a new {@link RConnection}. A new R instance with given settings is created beforehand if there is no
+     * existing R instance with the same settings that can be reused.
+     *
+     * The method does not check {@link RConnection#isConnected()}.
+     *
+     * @param preferences the R preference for the R instance
+     * @return an RConnectionResource which has already been acquired, never <code>null</code>
+     * @throws RserveException
+     * @throws IOException if Rserve could not be launched. This may be the case if R is either not found or does not
+     *             have Rserve package installed. Or if there was no open port found.
+     */
+    public static RConnectionResource createConnection(final RPreferenceProvider preferences) throws RserveException, IOException {
         initializeShutdownHook(); // checks for re-initialization
 
         // synchronizing on the entire class would completely lag out KNIME for
         // some reason
         try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+            // The resources with the given preferences
+            final List<RConnectionResource> resources = RESOURCES.computeIfAbsent(preferences, p -> new ArrayList<>());
             // try to reuse an existing instance. Ensures there is max one R
             // instance per parallel executed node.
-            for (final RConnectionResource resource : RESOURCES) {
+            for (final RConnectionResource resource : resources) {
                 if (resource.acquireIfAvailable()) {
                     // connections are closed when released => we need to
                     // reconnect
@@ -326,14 +355,13 @@ public class RConnectionFactory {
             // no existing resource is available. Create a new one.
 
             final RInstance instance =
-                launchRserve(org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRServeBinPath(),
-                    "127.0.0.1", findFreePort());
-            final RConnectionResource resource = new RConnectionResource(instance);
+                launchRserve(preferences, "127.0.0.1", findFreePort());
+            final RConnectionResource resource = new RConnectionResource(instance, preferences);
             if (!resource.acquireIfAvailable()) {
                 // this could also be an assertion
                 throw new IllegalStateException("Newly created RConnectionResource was not available.");
             }
-            RESOURCES.add(resource);
+            resources.add(resource);
             return resource;
         }
     }
@@ -345,23 +373,50 @@ public class RConnectionFactory {
      */
     public static void clearExistingResources() {
         try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
-            LOGGER.debugWithFormat("Retiring RServe processes (%d instances)", RESOURCES.size());
-            final ArrayList<RConnectionResource> destroyedResources = new ArrayList<>();
-            for (final RConnectionResource res : RESOURCES) {
-                res.setDestroyOnAvailable();
-                if (res.getUnderlyingRInstance() == null) {
-                    // resource has been destroyed already and should be removed
-                    // from list.
-                    destroyedResources.add(res);
-                }
+            for (final List<RConnectionResource> resources : RESOURCES.values()) {
+                clearResources(resources);
             }
-
-            RESOURCES.removeAll(destroyedResources);
         }
     }
 
-    /*
+    /**
+     * Set all resources with the given preferences to be destroyed as soon as they become available. This is useful
+     * when settings or preferences changed and old Rserve processes (which still use the old settings) should not be
+     * used anymore. This is a better alternative to aborting running nodes.
+     *
+     * @param preferences the preferences of the resources which should be cleared
+     */
+    public static void clearExistingResources(final RPreferenceProvider preferences) {
+        try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
+            final List<RConnectionResource> resources = RESOURCES.get(preferences);
+            if (resources == null) {
+                // No resources with preferences: Nothing to do
+                return;
+            }
+            clearResources(resources);
+        }
+    }
+
+    /** Clear the given resources and remove them from the list of resources. */
+    private static void clearResources(final List<RConnectionResource> resources) {
+        LOGGER.debugWithFormat("Retiring RServe processes (%d instances)", resources.size());
+        final ArrayList<RConnectionResource> destroyedResources = new ArrayList<>();
+        for (final RConnectionResource res : resources) {
+            res.setDestroyOnAvailable();
+            if (res.getUnderlyingRInstance() == null) {
+                // resource has been destroyed already and should be removed
+                // from list.
+                destroyedResources.add(res);
+            }
+        }
+        resources.removeAll(destroyedResources);
+    }
+
+    /**
      * Find a free port to launch Rserve on
+     *
+     * @return a free port number
+     * @throws IOException if no port is available
      */
     public static int findFreePort() throws IOException {
         try (ServerSocket socket = new ServerSocket(0)) {
@@ -375,8 +430,6 @@ public class RConnectionFactory {
      * Add the Shutdown hook. Does nothing if already called once.
      */
     private static void initializeShutdownHook() {
-        // if (m_initialized != false) return;
-        // else m_initialized = true;
         if (!m_initialized.compareAndSet(false, true)) {
             /* already initialized */
             return;
@@ -392,7 +445,7 @@ public class RConnectionFactory {
             @Override
             public void run() {
                 try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
-                    for (final RConnectionResource resource : RESOURCES) {
+                    for (final RConnectionResource resource : getAllResources()) {
                         if ((resource != null) && (resource.getUnderlyingRInstance() != null)) {
                             resource.destroy(false);
                         }
@@ -536,6 +589,8 @@ public class RConnectionFactory {
      */
     public static class RConnectionResource {
 
+        private final RPreferenceProvider m_preferences;
+
         private final AtomicBoolean m_available = new AtomicBoolean(true);
 
         private boolean m_destroyOnAvailable = false;
@@ -550,8 +605,10 @@ public class RConnectionFactory {
          * Constructor
          *
          * @param inst RInstance which will provide the value of this resource.
+         * @param preferences the preferences
          */
-        public RConnectionResource(final RInstance inst) {
+        public RConnectionResource(final RInstance inst, final RPreferenceProvider preferences) {
+            m_preferences = preferences;
             if (inst == null) {
                 throw new NullPointerException("The RInstance provided to an RConnectionResource may not be null.");
             }
@@ -723,7 +780,7 @@ public class RConnectionFactory {
 
             if (remove) {
                 try (LockHolder lock = new LockHolder(RESOURCES_LOCK)) {
-                    RESOURCES.remove(this);
+                    RESOURCES.get(m_preferences).remove(this);
                 }
             }
             m_instance = null;

@@ -45,6 +45,7 @@
 package org.knime.r;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.r.rserve.RConnectionFactory;
 import org.osgi.framework.BundleContext;
@@ -81,8 +82,13 @@ public class Activator extends AbstractUIPlugin {
             // if Rserve properties change, we need to invalidate all the existing Rserve processes
             switch (event.getProperty()) {
                 case RPreferenceInitializer.PREF_RSERVE_MAXINBUF:
-                case RPreferenceInitializer.PREF_R_HOME:
+                    // Clear all resources
                     RConnectionFactory.clearExistingResources();
+                    break;
+                case RPreferenceInitializer.PREF_R_HOME:
+                    // Clear only the resources with the old R home path
+                    final DefaultRPreferenceProvider oldPref = new DefaultRPreferenceProvider((String)event.getOldValue());
+                    RConnectionFactory.clearExistingResources(oldPref);
                     break;
                 default:
             }
