@@ -69,6 +69,9 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.FlowVariable.Type;
 import org.knime.core.util.FileUtil;
+import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
+import org.knime.ext.r.bin.preferences.RPreferenceProvider;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.ext.r.node.local.port.RPortObjectSpec;
 import org.knime.r.controller.ConsoleLikeRExecutor;
@@ -142,7 +145,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
         final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
 
-        try(final RController controller = new RController(true)) {
+        try(final RController controller = new RController(true, getRPreferences())) {
             controller.initialize();
             exec.checkCanceled();
             final PortObject[] out = executeSnippet(controller, inData, flowVarRepo, exec);
@@ -150,6 +153,16 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
             pushFlowVariables(flowVarRepo);
 
             return out;
+        }
+    }
+
+    /** Get the R preference provider */
+    private RPreferenceProvider getRPreferences() {
+        final String rHomePath = m_snippet.getSettings().getRHomePath();
+        if (rHomePath != null) {
+            return new DefaultRPreferenceProvider(rHomePath);
+        } else {
+            return RPreferenceInitializer.getRProvider();
         }
     }
 
