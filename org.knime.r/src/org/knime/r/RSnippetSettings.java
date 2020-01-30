@@ -71,6 +71,8 @@ public class RSnippetSettings {
 
     private static final String SEND_BATCH_SIZE = "sendBatchSize";
 
+    private static final String R_HOME_PATH = "rHome";
+
     /** Custom script. */
     private String m_script;
 
@@ -94,6 +96,9 @@ public class RSnippetSettings {
     /** R type to use for the knime.in variable */
     private String m_knimeInType;
 
+    /**  Path to the R home */
+    private String m_rHomePath;
+
     /**
      * Create a new instance.
      */
@@ -105,6 +110,7 @@ public class RSnippetSettings {
         m_sendRowNames = true;
         m_sendBatchSize = 10000;
         m_knimeInType = "data.frame";
+        m_rHomePath = null;
     }
 
     /**
@@ -120,6 +126,7 @@ public class RSnippetSettings {
         settings.addBoolean(SEND_ROW_NAMES, m_sendRowNames);
         settings.addInt(SEND_BATCH_SIZE, getSendBatchSize());
         settings.addString(KNIME_IN_TYPE, getKnimeInType());
+        settings.addString(R_HOME_PATH, getRHomePath());
     }
 
     /**
@@ -151,6 +158,8 @@ public class RSnippetSettings {
             throw new InvalidSettingsException(
                 "Invalid type for knime.in: Can only be \"data.frame\" or \"data.table\".");
         }
+
+        m_rHomePath = settings.getString(R_HOME_PATH, null);
     }
 
     /**
@@ -189,6 +198,7 @@ public class RSnippetSettings {
         setSendRowNames(s.getSendRowNames());
         setSendBatchSize(s.getSendBatchSize());
         setKnimeInType(s.getKnimeInType());
+        m_rHomePath = s.getRHomePath();
     }
 
     /**
@@ -271,7 +281,7 @@ public class RSnippetSettings {
 
     /**
      * Set number of rows to send to R per batch.
-     * 
+     *
      * @param numRows number of rows.
      */
     public void setSendBatchSize(final int numRows) {
@@ -287,7 +297,7 @@ public class RSnippetSettings {
 
     /**
      * Set the R type in which to provide the data from KNIME.
-     * 
+     *
      * @param type either "data.frame" or "data.table".
      */
     public void setKnimeInType(final String type) {
@@ -303,5 +313,13 @@ public class RSnippetSettings {
      */
     public String getKnimeInType() {
         return m_knimeInType;
+    }
+
+    /**
+     * @return path to R home
+     * @since 4.2
+     */
+    public String getRHomePath() {
+        return m_rHomePath;
     }
 }
