@@ -113,7 +113,7 @@ public final class RBinUtil {
     }
 
     /**
-     * Get properties about the used R.
+     * Get properties about the used R configured in the preferences.
      *
      * @return properties about use R
      * @throws IOException in case that running R fails

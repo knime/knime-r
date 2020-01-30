@@ -44,10 +44,8 @@
  */
 package org.knime.r.controller;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -69,7 +67,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
 import org.knime.core.data.BooleanValue;
 import org.knime.core.data.DataCell;
 import org.knime.core.data.DataColumnSpec;
@@ -105,6 +102,9 @@ import org.knime.core.util.ThreadPool;
 import org.knime.core.util.ThreadUtils;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
+import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
+import org.knime.ext.r.bin.preferences.RPreferenceProvider;
 import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.r.rserve.RConnectionFactory;
 import org.knime.r.rserve.RConnectionFactory.RConnectionResource;
@@ -145,6 +145,8 @@ public class RController implements IRController {
     /** Name of the R variable which stores the names of loaded R libraries */
     public static final String R_LOADED_LIBRARIES_VARIABLE = "knime.loaded.libraries";
 
+    private final RPreferenceProvider m_preferences;
+
     private RConnectionResource m_connection;
 
     private Properties m_rProps;
@@ -153,27 +155,45 @@ public class RController implements IRController {
 
     private boolean m_useNodeContext = false;
 
-    private static boolean quartzFound;
-
-    private static boolean cairoFound;
-
     /**
      * Constructor. Calls {@link #initialize()}. To avoid initialization, use {@link #RController(boolean)}.
      *
+     * @deprecated use {@link #RController(boolean)} or {@link #RController(boolean, RPreferenceProvider)} with
+     *             <code>useNodeContext=false</code> and call {@link #initialize()}.
      * @throws RException
      */
+    @Deprecated
     public RController() throws RException {
+        // Deprecated to clean up the API. It is confusing if some constructors call initialize and some don't.
+        // Especially with the added preferences parameter.
         this(false);
         initialize();
     }
 
     /**
-     * Constructor
+     * Creates a new {@link RController} for the default R preferences. The controller is not yet initialized. Call
+     * {@link #initialize()} before using it.
      *
      * @param useNodeContext Whether to use the NodeContext for threads
      */
     public RController(final boolean useNodeContext) {
+        this(useNodeContext, getDefaultRPreferences());
+    }
+
+    /**
+     * Creates a new {@link RController} for the given R preferences. The controller is not yet initialized. Call
+     * {@link #initialize()} before using it.
+     *
+     * @param useNodeContext Whether to use the NodeContext for threads
+     * @param preferences the R preferences to use
+     */
+    public RController(final boolean useNodeContext, final RPreferenceProvider preferences) {
+        m_preferences = preferences;
         setUseNodeContext(useNodeContext);
+    }
+
+    private static RPreferenceProvider getDefaultRPreferences() {
+        return RPreferenceInitializer.getRProvider();
     }
 
     // --- NodeContext handling ---
@@ -232,7 +252,7 @@ public class RController implements IRController {
         terminateRProcess();
 
         try {
-            m_connection = initRConnection();
+            m_connection = initRConnection(m_preferences);
             m_initialized = ((m_connection != null) && m_connection.get().isConnected());
             LOGGER.debug("Recovered with a new R process");
         } catch (final Exception e) {
@@ -266,14 +286,9 @@ public class RController implements IRController {
         terminateAndRelaunch();
     }
 
-    /**
-     * Create and initialize a R connection
-     *
-     * @return the new RConnection
-     * @throws Exception
-     */
-    private RConnectionResource initRConnection() throws RserveException, IOException {
-        final RConnectionResource resource = RConnectionFactory.createConnection();
+    /** Create and initialize a R connection */
+    private static RConnectionResource initRConnection(final RPreferenceProvider preferences) throws RserveException, IOException {
+        final RConnectionResource resource = RConnectionFactory.createConnection(preferences);
 
         if (!resource.get().isConnected()) {
             throw new IOException("Could not initialize RController: Resource was not connected.");
@@ -288,10 +303,15 @@ public class RController implements IRController {
      */
     private void initR() throws RException {
         try {
-            final String rHome = org.knime.ext.r.bin.preferences.RPreferenceInitializer.getRProvider().getRHome();
+            final String rHome = m_preferences.getRHome();
             RBinUtil.checkRHome(rHome);
 
-            m_rProps = RBinUtil.retrieveRProperties();
+            // Use cached preferences if DefaultRPreferenceProvider
+            if (m_preferences instanceof DefaultRPreferenceProvider) {
+                m_rProps = ((DefaultRPreferenceProvider)m_preferences).getProperties();
+            } else {
+                m_rProps = RBinUtil.retrieveRProperties(m_preferences);
+            }
 
             if (!m_rProps.containsKey("major")) {
                 throw new RException(
@@ -301,13 +321,13 @@ public class RController implements IRController {
 
             final String rserveProp = m_rProps.getProperty("Rserve.path");
             if ((rserveProp == null) || rserveProp.isEmpty()) {
-                org.knime.ext.r.bin.preferences.RPreferenceInitializer.invalidatePreferenceProviderCache();
+                invalidatePrefCacheIfDefaultR();
                 throw new RException(
                     "Could not find Rserve package. Please install it in your R installation by running "
                         + "\"install.packages('Rserve',,'http://rforge.net/',type='source')\".",
                     null);
             }
-            m_connection = initRConnection();
+            m_connection = initRConnection(m_preferences);
         } catch (final InvalidRHomeException ex) {
             throw new RException("R Home is invalid.", ex);
         } catch (final RserveException | IOException e) {
@@ -326,7 +346,7 @@ public class RController implements IRController {
                 throw new RuntimeException(e);
             }
         } else if (Platform.isMac()) {
-            checkCairoOnMac();
+            RCairoChecker.checkCairoOnMac(m_preferences, this);
         }
 
         final int major = Integer.parseInt((String)m_rProps.get("major")); // e.g. 3
@@ -349,62 +369,10 @@ public class RController implements IRController {
         }
     }
 
-    private void checkCairoOnMac() throws RException {
-        if (cairoFound && quartzFound) {
-            return;
-        }
-
-        // produce a warning message if 'Cairo' package is not installed.
-        try {
-            final REXP ret = eval("find.package('Cairo')", true);
-            final String cairoPath = ret.asString();
-
-            if (!StringUtils.isEmpty(cairoPath)) {
-                // under Mac we need Cairo package to use png()/bmp() etc devices.
-                cairoFound = true;
-            }
-        } catch (RException | REXPMismatchException e) {
-            LOGGER.debug("Error while querying Cairo package version: " + e.getMessage(), e);
-        }
-
-        if (!cairoFound) {
-            LOGGER.warn("The package 'Cairo' needs to be installed in your R installation for bitmap graphics "
-                + "devices to work properly. Please install it in R using \"install.packages('Cairo')\".");
-            return;
-        }
-
-        // Cairo requires XQuartz to be installed. We make sure it is, since
-        // loading the Cairo library will crash Rserve otherwise.
-        final ProcessBuilder builder =
-            new ProcessBuilder("mdls", "-name", "kMDItemVersion", "/Applications/Utilities/XQuartz.app");
-
-        try {
-            final Process process = builder.start();
-
-            // check if output of process was a valid version
-            final BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = stdout.readLine()) != null) {
-                if (line.matches("kMDItemVersion = \"2(?:\\.[0-9]+)+\"")) {
-                    quartzFound = true;
-                }
-            }
-
-            try {
-                process.waitFor();
-            } catch (final InterruptedException e) {
-                // happens when user cancels node at this point for example
-                LOGGER.debug("Interrupted while waiting for mdls process to terminate.", e);
-            }
-        } catch (final IOException e) {
-            // should never happen, just in case, here is something for
-            // users to report if they accidentally deleted their mdls
-            LOGGER.error("Could not run mdls to check for XQuartz version: " + e.getMessage(), e);
-        }
-
-        if (!quartzFound) {
-            throw new RException("XQuartz is required for the Cairo library on MacOS. Please download "
-                + "and install XQuartz from http://www.xquartz.org/.", null);
+    /** If this RController uses the default prefs: Invalidate the cache to recompute properties */
+    private void invalidatePrefCacheIfDefaultR() {
+        if (m_preferences.equals(RPreferenceInitializer.getRProvider())) {
+            RPreferenceInitializer.invalidatePreferenceProviderCache();
         }
     }
 
