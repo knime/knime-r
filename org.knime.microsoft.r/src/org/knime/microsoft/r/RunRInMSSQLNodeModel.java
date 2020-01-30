@@ -266,8 +266,8 @@ class RunRInMSSQLNodeModel extends RSnippetNodeModel {
         // Append R code that uploads result data to output table using RevoScaleR
         userScript.append(getRCodeSuffix(outputTable));
 
-        final RController controller = new RController();
-        controller.setUseNodeContext(true);
+        final RController controller = new RController(true);
+        controller.initialize();
 
         String uniqueTableIdentifier = null;
         Blob blob = null;

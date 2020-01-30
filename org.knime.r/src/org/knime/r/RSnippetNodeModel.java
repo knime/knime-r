@@ -142,17 +142,14 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
         final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
 
-        final RController controller = new RController();
-        controller.setUseNodeContext(true);
-        try {
+        try(final RController controller = new RController(true)) {
+            controller.initialize();
             exec.checkCanceled();
             final PortObject[] out = executeSnippet(controller, inData, flowVarRepo, exec);
 
             pushFlowVariables(flowVarRepo);
 
             return out;
-        } finally {
-            controller.close();
         }
     }
 
