@@ -71,7 +71,7 @@ public class RSnippetSettings {
 
     private static final String SEND_BATCH_SIZE = "sendBatchSize";
 
-    private static final String R_HOME_PATH = "rHome";
+    static final String R_HOME_PATH = "rHome";
 
     /** Custom script. */
     private String m_script;

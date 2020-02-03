@@ -62,7 +62,7 @@ import org.knime.r.RSnippetTemplate;
  * @author Jontathan Hale, KNIME, Konstanz, Germany
  */
 public class DefaultTemplateController<T extends Component & TemplateReceiver> implements TemplateController {
-    private final T m_model;
+    private final TemplateReceiver m_model;
 
     private final T m_preview;
 
@@ -76,7 +76,7 @@ public class DefaultTemplateController<T extends Component & TemplateReceiver> i
      * @param model the dialog that serves as a model in the MVC principle
      * @param preview the dialog used for preview of the template
      */
-    public DefaultTemplateController(final T model, final T preview) {
+    public DefaultTemplateController(final TemplateReceiver model, final T preview) {
         super();
         m_model = model;
         m_preview = preview;

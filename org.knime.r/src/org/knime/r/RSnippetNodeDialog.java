@@ -54,6 +54,7 @@ import java.awt.Insets;
 import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -65,6 +66,7 @@ import javax.swing.text.NumberFormatter;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.DataAwareNodeDialogPane;
+import org.knime.core.node.FlowVariableModel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
@@ -75,6 +77,10 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.node.workflow.FlowVariable.Type;
+import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
+import org.knime.ext.r.bin.preferences.RPreferenceProvider;
 import org.knime.r.template.DefaultTemplateController;
 import org.knime.r.template.TemplatesPanel;
 
@@ -90,6 +96,12 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
     private static final String SNIPPET_TAB = "R Snippet";
 
     private final RSnippetNodePanel m_panel;
+
+    private final FlowVariableModel m_rHomeModel;
+
+    private RPreferenceProvider m_preferenceProvider;
+
+    private boolean m_open = false;
 
     private DefaultTemplateController m_templatesController;
 
@@ -136,7 +148,12 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
             ++i;
         }
 
-        m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, true) {
+        // Observe the flow variable for the R home path
+        m_rHomeModel = createFlowVariableModel(RSnippetSettings.R_HOME_PATH, Type.STRING);
+        m_rHomeModel.addChangeListener(e -> onRPreferenceChange());
+        m_preferenceProvider = getRPreferenceProvider();
+
+        m_panel = new RSnippetNodePanel(m_preferenceProvider, templateMetaCategory, m_config, false, true) {
             private static final long serialVersionUID = 6934850660800321248L;
 
             @Override
@@ -145,7 +162,6 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
                 super.applyTemplate(template, spec, flowVariables);
                 setSelected(SNIPPET_TAB);
             }
-
         };
 
         addTab(SNIPPET_TAB, m_panel);
@@ -158,11 +174,44 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         m_panel.setPreferredSize(new Dimension(1280, 720));
     }
 
+    /** Called if the flow variable for the R environment changes */
+    private void onRPreferenceChange() {
+        if (updateRPreferenceProvider()) {
+            ViewUtils.invokeAndWaitInEDT(() -> {
+                m_panel.updateRPreferences(m_preferenceProvider);
+                if (m_open) {
+                    // If dialog is open we need to call onOpen to reinitialize the interactive R snippet
+                    m_panel.onOpen();
+                }
+            });
+        }
+    }
+
+    /** Update the m_preferenceProvider if the flow var contains a new value. Returns if the value was changed */
+    private boolean updateRPreferenceProvider() {
+        final RPreferenceProvider preferences = getRPreferenceProvider();
+        if (!m_preferenceProvider.equals(preferences)) {
+            m_preferenceProvider = preferences;
+            return true;
+        }
+        return false;
+    }
+
+    /** Get the current R preferences. According to the flow variable if it is set */
+    private RPreferenceProvider getRPreferenceProvider() {
+        final Optional<FlowVariable> rHome = m_rHomeModel.getVariableValue();
+        if (rHome.isPresent()) {
+            return new DefaultRPreferenceProvider(rHome.get().getStringValue());
+        } else {
+            return RPreferenceInitializer.getRProvider();
+        }
+    }
+
     /** Create the templates tab. */
     private JPanel createTemplatesPanel() {
         final RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, m_config, true, false);
 
-        m_templatesController = new DefaultTemplateController(m_panel, preview);
+        m_templatesController = new DefaultTemplateController<>(m_panel::applyTemplate, preview);
         final TemplatesPanel templatesPanel =
             new TemplatesPanel(Collections.<Class<?>> singleton(m_templateMetaCategory), m_templatesController);
         return templatesPanel;
@@ -285,13 +334,18 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     public void onOpen() {
+        m_open = true;
         ViewUtils.invokeAndWaitInEDT(() -> {
+            if (updateRPreferenceProvider()) {
+                m_panel.updateRPreferences(m_preferenceProvider);
+            }
             m_panel.onOpen();
         });
     }
 
     @Override
     public void onClose() {
+        m_open = false;
         ViewUtils.invokeAndWaitInEDT(() -> {
             m_panel.onClose();
         });

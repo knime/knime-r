@@ -98,6 +98,8 @@ import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.SwingWorkerWithContext;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
+import org.knime.ext.r.bin.preferences.RPreferenceProvider;
 import org.knime.r.controller.IRController.RException;
 import org.knime.r.controller.RCommand;
 import org.knime.r.controller.RCommandQueue;
@@ -141,11 +143,11 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
 
     private RConsole m_console;
 
-    private final RCommandQueue m_commandQueue;
+    private RCommandQueue m_commandQueue;
 
-    private final RConsoleController m_consoleController;
+    private RConsoleController m_consoleController;
 
-    private final RController m_controller;
+    private RController m_controller;
 
     private RObjectBrowser m_objectBrowser;
 
@@ -176,6 +178,10 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
 
     private JButton m_showPlot;
 
+    private JButton m_consoleCancelButton;
+
+    private JButton m_consoleClearButton;
+
     private RPlotPreviewFrame m_previewFrame;
 
     private File m_tempDir;
@@ -195,6 +201,18 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
      */
     public RSnippetNodePanel(final Class<?> templateMetaCategory, final RSnippetNodeConfig config,
         final boolean isPreview, final boolean isInteractive) {
+        this(RPreferenceInitializer.getRProvider(), templateMetaCategory, config, isPreview, isInteractive);
+    }
+
+    /**
+     * @param preferences the R preferences to use
+     * @param templateMetaCategory the meta category used in the templates tab or to create templates
+     * @param config
+     * @param isPreview if this is a preview used for showing templates.
+     * @param isInteractive Whether the code should be interactively executable
+     */
+    public RSnippetNodePanel(final RPreferenceProvider preferences, final Class<?> templateMetaCategory,
+        final RSnippetNodeConfig config, final boolean isPreview, final boolean isInteractive) {
         super(new BorderLayout());
         m_config = config;
         m_tableInPort = -1;
@@ -212,9 +230,7 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
         m_isInteractive = isPreview ? false : isInteractive;
 
         if (m_isInteractive) {
-            m_controller = new RController(true);
-            m_commandQueue = new RCommandQueue(m_controller);
-            m_consoleController = new RConsoleController(m_controller, m_commandQueue);
+            createRController(preferences);
         } else {
             m_controller = null;
             m_consoleController = null;
@@ -229,6 +245,27 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
 
         setEnabled(!isPreview);
         panel.setPreferredSize(new Dimension(1280, 720));
+    }
+
+    /**
+     * Update the used preferences. The R controller gets created.
+     *
+     * @param preferences the new preferences
+     * @since 4.2
+     */
+    public void updateRPreferences(final RPreferenceProvider preferences) {
+        if (m_isInteractive) {
+            createRController(preferences);
+            m_consoleCancelButton.setAction(m_consoleController.getCancelAction());
+            m_consoleClearButton.setAction(m_consoleController.getClearAction());
+        }
+    }
+
+    /** Create the RController, RCommandQueue and RConsoleController */
+    private void createRController(final RPreferenceProvider preferences) {
+        m_controller = new RController(true, preferences);
+        m_commandQueue = new RCommandQueue(m_controller);
+        m_consoleController = new RConsoleController(m_controller, m_commandQueue);
     }
 
     private JPanel createPanel(final boolean isPreview, final boolean isInteractive) {
@@ -369,20 +406,20 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
         c.weightx = 1;
         c.weighty = 0;
 
-        final JButton consoleCancelButton = new JButton(m_consoleController.getCancelAction());
-        consoleCancelButton.setText("");
-        consoleCancelButton.setPreferredSize(new Dimension(consoleCancelButton.getPreferredSize().height,
-            consoleCancelButton.getPreferredSize().height));
+        m_consoleCancelButton = new JButton(m_consoleController.getCancelAction());
+        m_consoleCancelButton.setText("");
+        m_consoleCancelButton.setPreferredSize(new Dimension(m_consoleCancelButton.getPreferredSize().height,
+            m_consoleCancelButton.getPreferredSize().height));
 
-        p.add(consoleCancelButton, c);
+        p.add(m_consoleCancelButton, c);
 
-        final JButton consoleClearButton = new JButton(m_consoleController.getClearAction());
-        consoleClearButton.setText("");
-        consoleClearButton.setPreferredSize(
-            new Dimension(consoleClearButton.getPreferredSize().height, consoleClearButton.getPreferredSize().height));
+        m_consoleClearButton = new JButton(m_consoleController.getClearAction());
+        m_consoleClearButton.setText("");
+        m_consoleClearButton.setPreferredSize(
+            new Dimension(m_consoleClearButton.getPreferredSize().height, m_consoleClearButton.getPreferredSize().height));
 
         c.gridy++;
-        p.add(consoleClearButton, c);
+        p.add(m_consoleClearButton, c);
 
         c.gridy++;
         c.weighty = 1;
