@@ -67,7 +67,7 @@ public class RViewNodeSettings {
 
     private static final String TEXT_POINT_SIZE = "Text point size";
 
-    private static final String R_SETTINGS = "R settings";
+    static final String R_SETTINGS = "R settings";
 
     private static final String IMAGE_TYPE = "Image type";
 

@@ -53,6 +53,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -63,6 +64,7 @@ import javax.swing.JTextField;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.DataAwareNodeDialogPane;
+import org.knime.core.node.FlowVariableModel;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -73,6 +75,10 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.node.workflow.FlowVariable.Type;
+import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
+import org.knime.ext.r.bin.preferences.RPreferenceProvider;
 import org.knime.r.template.DefaultTemplateController;
 import org.knime.r.template.TemplatesPanel;
 
@@ -111,6 +117,12 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 
     private JComboBox<String> m_imgType = new JComboBox<String>(RViewNodeConfig.IMAGE_TYPES);
 
+    private final FlowVariableModel m_rHomeModel;
+
+    private RPreferenceProvider m_preferenceProvider;
+
+    private boolean m_open;
+
     /**
      * Create a new Dialog.
      *
@@ -130,7 +142,13 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
             i++;
         }
 
-        m_panel = new RSnippetNodePanel(templateMetaCategory, m_config, false, true) {
+        // Observe the flow variable for the R home path
+        m_rHomeModel = createFlowVariableModel(new String[]{RViewNodeSettings.R_SETTINGS, RSnippetSettings.R_HOME_PATH},
+            Type.STRING);
+        m_rHomeModel.addChangeListener(e -> onRPreferenceChange());
+        m_preferenceProvider = getRPreferenceProvider();
+
+        m_panel = new RSnippetNodePanel(m_preferenceProvider, templateMetaCategory, m_config, false, true) {
 
             /**
              *
@@ -157,6 +175,39 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
         addTab("Templates", createTemplatesPanel());
 
         m_panel.setPreferredSize(new Dimension(800, 600));
+    }
+
+    /** Called if the flow variable for the R environment changes */
+    private void onRPreferenceChange() {
+        if (updateRPreferenceProvider()) {
+            ViewUtils.invokeAndWaitInEDT(() -> {
+                m_panel.updateRPreferences(m_preferenceProvider);
+                if (m_open) {
+                    // If dialog is open we need to call onOpen to reinitialize the interactive R snippet
+                    m_panel.onOpen();
+                }
+            });
+        }
+    }
+
+    /** Update the m_preferenceProvider if the flow var contains a new value. Returns if the value was changed */
+    private boolean updateRPreferenceProvider() {
+        final RPreferenceProvider preferences = getRPreferenceProvider();
+        if (!m_preferenceProvider.equals(preferences)) {
+            m_preferenceProvider = preferences;
+            return true;
+        }
+        return false;
+    }
+
+    /** Get the current R preferences. According to the flow variable if it is set */
+    private RPreferenceProvider getRPreferenceProvider() {
+        final Optional<FlowVariable> rHome = m_rHomeModel.getVariableValue();
+        if (rHome.isPresent()) {
+            return new DefaultRPreferenceProvider(rHome.get().getStringValue());
+        } else {
+            return RPreferenceInitializer.getRProvider();
+        }
     }
 
     private JPanel createPNGSettingsPanel() {
@@ -345,11 +396,18 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 
     @Override
     public void onOpen() {
-        ViewUtils.invokeAndWaitInEDT(() -> m_panel.onOpen());
+        m_open = true;
+        ViewUtils.invokeAndWaitInEDT(() -> {
+            if (updateRPreferenceProvider()) {
+                m_panel.updateRPreferences(m_preferenceProvider);
+            }
+            m_panel.onOpen();
+        });
     }
 
     @Override
     public void onClose() {
+        m_open = false;
         ViewUtils.invokeAndWaitInEDT(() -> m_panel.onClose());
     }
 
