@@ -110,7 +110,7 @@ public class RSnippetSettings {
         m_sendRowNames = true;
         m_sendBatchSize = 10000;
         m_knimeInType = "data.frame";
-        m_rHomePath = null;
+        m_rHomePath = "";
     }
 
     /**
@@ -159,7 +159,7 @@ public class RSnippetSettings {
                 "Invalid type for knime.in: Can only be \"data.frame\" or \"data.table\".");
         }
 
-        m_rHomePath = settings.getString(R_HOME_PATH, null);
+        setRHomePath(settings.getString(R_HOME_PATH, ""));
     }
 
     /**
@@ -188,6 +188,8 @@ public class RSnippetSettings {
         } else {
             setKnimeInType("data.frame");
         }
+
+        setRHomePath(settings.getString(R_HOME_PATH, ""));
     }
 
     public void loadSettings(final RSnippetSettings s) {
@@ -198,7 +200,7 @@ public class RSnippetSettings {
         setSendRowNames(s.getSendRowNames());
         setSendBatchSize(s.getSendBatchSize());
         setKnimeInType(s.getKnimeInType());
-        m_rHomePath = s.getRHomePath();
+        setRHomePath(s.getRHomePath());
     }
 
     /**
@@ -313,6 +315,16 @@ public class RSnippetSettings {
      */
     public String getKnimeInType() {
         return m_knimeInType;
+    }
+
+    /**
+     * Set the path to R home. Empty for default.
+     *
+     * @param rHomePath the path to R home.
+     * @since 4.2
+     */
+    public void setRHomePath(final String rHomePath) {
+        m_rHomePath = rHomePath;
     }
 
     /**
