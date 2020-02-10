@@ -47,6 +47,8 @@
  */
 package org.knime.r;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -59,12 +61,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.DataAwareNodeDialogPane;
 import org.knime.core.node.FlowVariableModel;
+import org.knime.core.node.FlowVariableModelButton;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
@@ -123,6 +127,8 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 
     private boolean m_open;
 
+    private JTextField m_rHome;
+
     /**
      * Create a new Dialog.
      *
@@ -145,7 +151,7 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
         // Observe the flow variable for the R home path
         m_rHomeModel = createFlowVariableModel(new String[]{RViewNodeSettings.R_SETTINGS, RSnippetSettings.R_HOME_PATH},
             Type.STRING);
-        m_rHomeModel.addChangeListener(e -> onRPreferenceChange());
+        m_rHomeModel.addChangeListener(e -> updateRHomeTextField());
         m_preferenceProvider = getRPreferenceProvider();
 
         m_panel = new RSnippetNodePanel(m_preferenceProvider, templateMetaCategory, m_config, false, true) {
@@ -174,11 +180,20 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
         // The preview does not have the templates tab
         addTab("Templates", createTemplatesPanel());
 
+        addTab("R Home", createRHomePanel());
+
+        final JTabbedPane tabbedPane = getTabbedPane();
+        tabbedPane.addChangeListener(e -> {
+            if (tabbedPane.getSelectedIndex() == getTabIndex(SNIPPET_TAB)) {
+                reloadRIfHomeChanged();
+            }
+        });
+
         m_panel.setPreferredSize(new Dimension(800, 600));
     }
 
-    /** Called if the flow variable for the R environment changes */
-    private void onRPreferenceChange() {
+    /** Switch to the new R preferences if they changed */
+    private void reloadRIfHomeChanged() {
         if (updateRPreferenceProvider()) {
             ViewUtils.invokeAndWaitInEDT(() -> {
                 m_panel.updateRPreferences(m_preferenceProvider);
@@ -187,6 +202,15 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
                     m_panel.onOpen();
                 }
             });
+        }
+    }
+
+    /** Update the R home text field according to the flow var model */
+    private void updateRHomeTextField() {
+        final boolean replaceByVar = m_rHomeModel.isVariableReplacementEnabled();
+        m_rHome.setEnabled(!replaceByVar);
+        if (replaceByVar) {
+            m_rHome.setText(m_rHomeModel.getInputVariableName());
         }
     }
 
@@ -205,8 +229,29 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
         final Optional<FlowVariable> rHome = m_rHomeModel.getVariableValue();
         if (rHome.isPresent()) {
             return new DefaultRPreferenceProvider(rHome.get().getStringValue());
+        } else if (m_rHome != null && !m_rHome.getText().trim().isEmpty()) {
+            return new DefaultRPreferenceProvider(m_rHome.getText());
         } else {
             return RPreferenceInitializer.getRProvider();
+        }
+    }
+
+    /** Get the tab pane of this dialog. */
+    private JTabbedPane getTabbedPane() {
+        final Component comp = getTab(getTabTitles().get(0));
+        return getParentWithType(comp, JTabbedPane.class);
+    }
+
+    /** Find the parent of the component with the given type */
+    @SuppressWarnings("unchecked")
+    private <T> T getParentWithType(final Component comp, final Class<T> type) {
+        final Container parent = comp.getParent();
+        if (parent == null) {
+            return null;
+        } else if (type.isAssignableFrom(parent.getClass())) {
+            return (T)parent;
+        } else {
+            return getParentWithType(parent, type);
         }
     }
 
@@ -355,6 +400,37 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
         return templatesPanel;
     }
 
+    /** Create a panel for the R home configuration. */
+    private JPanel createRHomePanel() {
+        final JPanel panel = new JPanel(new GridBagLayout());
+        final GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1;
+
+        // The label
+        gbc.weightx = 1;
+        panel.add(new JLabel("Path to R home (empty for default)"), gbc);
+
+        // The text field
+        m_rHome = new JTextField();
+        gbc.gridx++;
+        gbc.weightx = 2;
+        panel.add(m_rHome, gbc);
+
+        // The flow variable button
+        final FlowVariableModelButton rHomeFVMButton = new FlowVariableModelButton(m_rHomeModel);
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.gridx++;
+        gbc.weightx = 0;
+        panel.add(rHomeFVMButton, gbc);
+
+        return panel;
+    }
+
     @Override
     public boolean closeOnESC() {
         // do not close on ESC, since ESC is used to close autocomplete popups
@@ -370,7 +446,11 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 
         m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getAvailableFlowVariables());
+
+        m_settings.loadSettingsForDialog(settings);
         loadImageSettingsFrom(settings);
+
+        m_rHome.setText(m_settings.getRSettings().getRHomePath());
     }
 
     @Override
@@ -381,11 +461,14 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 
         m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getAvailableFlowVariables());
+
+        m_settings.loadSettingsForDialog(settings);
         loadImageSettingsFrom(settings);
+
+        m_rHome.setText(m_settings.getRSettings().getRHomePath());
     }
 
     private void loadImageSettingsFrom(final NodeSettingsRO settings) {
-        m_settings.loadSettingsForDialog(settings);
         m_imgWidth.setText(Integer.toString(m_settings.getImageWidth()));
         m_imgHeight.setText(Integer.toString(m_settings.getImageHeight()));
         m_imgResolution.setText(m_settings.getImageResolution());
@@ -403,6 +486,7 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
             }
             m_panel.onOpen();
         });
+        updateRHomeTextField();
     }
 
     @Override
@@ -421,6 +505,8 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
         m_settings.setTextPointSize(Integer.valueOf(m_textPointSize.getText()));
         m_settings.setImageBackgroundColor(m_imgBackgroundColor.getText());
         m_settings.setImageType((String)m_imgType.getSelectedItem());
+
+        m_settings.getRSettings().setRHomePath(m_rHome.getText());
 
         m_settings.saveSettings(settings);
     }
