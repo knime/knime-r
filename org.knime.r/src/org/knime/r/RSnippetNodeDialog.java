@@ -47,6 +47,7 @@
  */
 package org.knime.r;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -64,7 +65,10 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.NumberFormatter;
 
 import org.knime.core.data.DataTableSpec;
@@ -83,6 +87,8 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.FlowVariable.Type;
+import org.knime.ext.r.bin.RBinUtil;
+import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
 import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.ext.r.bin.preferences.RPreferenceProvider;
@@ -127,6 +133,8 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
     private JFormattedTextField m_sendBatchSize;
 
     private JTextField m_rHome;
+
+    private JTextArea m_rHomeError;
 
     /**
      * Create a new Dialog.
@@ -207,8 +215,13 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
     /** Update the R home text field according to the flow var model */
     private void updateRHomeTextField() {
         final boolean replaceByVar = m_rHomeModel.isVariableReplacementEnabled();
+        if (!m_rHome.isEnabled() && !replaceByVar) {
+            // R home changed from the variable to the text field text: Set text to default
+            m_rHome.setText("");
+        }
         m_rHome.setEnabled(!replaceByVar);
         if (replaceByVar) {
+            // R home is replaced by the variable: Set text to variable name
             m_rHome.setText(m_rHomeModel.getInputVariableName());
         }
     }
@@ -233,6 +246,25 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         } else {
             return RPreferenceInitializer.getRProvider();
         }
+    }
+
+    /**
+     * Called if the R home has changed to check the new R home and display errors. Note that this does not trigger an
+     * update of the snippet.
+     */
+    private void rHomeChanged() {
+        final RPreferenceProvider pref = getRPreferenceProvider();
+        try {
+            RBinUtil.checkRHome(pref.getRHome());
+        } catch (final InvalidRHomeException e) {
+            // The R home is invalid: Display the message
+            m_rHomeError.setForeground(Color.RED);
+            m_rHomeError.setText(e.getMessage());
+            return;
+        }
+        // The R home is valid: Delete the old message
+        m_rHomeError.setForeground(Color.GREEN);
+        m_rHomeError.setText("R home is valid.");
     }
 
     /** Get the tab pane of this dialog. */
@@ -332,16 +364,32 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weighty = 1;
+        gbc.weighty = 0;
 
         // The label
-        gbc.weightx = 1;
+        gbc.weightx = 0;
         panel.add(new JLabel("Path to R home (empty for default)"), gbc);
 
         // The text field
         m_rHome = new JTextField();
+        m_rHome.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void removeUpdate(final DocumentEvent e) {
+                rHomeChanged();
+            }
+
+            @Override
+            public void insertUpdate(final DocumentEvent e) {
+                rHomeChanged();
+            }
+
+            @Override
+            public void changedUpdate(final DocumentEvent e) {
+                rHomeChanged();
+            }
+        });
         gbc.gridx++;
-        gbc.weightx = 2;
+        gbc.weightx = 1;
         panel.add(m_rHome, gbc);
 
         // The flow variable button
@@ -350,6 +398,23 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         gbc.gridx++;
         gbc.weightx = 0;
         panel.add(rHomeFVMButton, gbc);
+
+        // The error label
+        m_rHomeError = new JTextArea();
+        m_rHomeError.setEditable(false);
+        m_rHomeError.setRows(5);
+        m_rHomeError.setMargin(new Insets(5, 5, 5, 5));
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 3;
+        gbc.weightx = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(m_rHomeError, gbc);
+
+        // Add filler to move everything up
+        gbc.gridy++;
+        gbc.weighty = 1;
+        panel.add(new JPanel(), gbc);
 
         return panel;
     }
@@ -424,6 +489,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
             m_panel.onOpen();
         });
         updateRHomeTextField();
+        rHomeChanged();
     }
 
     @Override
