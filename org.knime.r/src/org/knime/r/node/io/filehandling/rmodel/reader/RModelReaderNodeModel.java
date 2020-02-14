@@ -54,6 +54,8 @@ import org.knime.core.node.ExecutionContext;
 import org.knime.core.node.context.NodeCreationConfiguration;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortUtil;
+import org.knime.core.node.util.CheckUtils;
+import org.knime.ext.r.node.local.port.RPortObject;
 import org.knime.filehandling.core.node.portobject.reader.PortObjectFromFileReaderNodeModel;
 
 /**
@@ -74,7 +76,9 @@ final class RModelReaderNodeModel extends PortObjectFromFileReaderNodeModel<RMod
 
     @Override
     protected PortObject[] read(final InputStream inputStream, final ExecutionContext exec) throws Exception {
-        return new PortObject[]{PortUtil.readObjectFromStream(inputStream, exec)};
+        PortObject portObject = PortUtil.readObjectFromStream(inputStream, exec);
+        CheckUtils.checkArgument(portObject instanceof RPortObject,  "The file provided is not a valid R Model.");
+        return new PortObject[]{portObject};
     }
 
 }
