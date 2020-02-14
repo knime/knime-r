@@ -3,6 +3,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src-deprecated"/>
 	<classpathentry exported="true" kind="lib" path="lib/rengine-1.8.4.jar" sourcepath="lib/rengine-1.8.4_Source.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/rserve-engine-1.8.4.jar" sourcepath="lib/rserve-engine-1.8.4_Source.zip"/>
 	<classpathentry kind="output" path="bin"/>

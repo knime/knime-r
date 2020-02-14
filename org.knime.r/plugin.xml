@@ -73,19 +73,26 @@
       <node
             after="org.knime.r.TableToRNodeFactory"
             category-path="/scripting/r"
-            factory-class="org.knime.r.RToRNodeFactory"
-            >
+            factory-class="org.knime.r.RToRNodeFactory">
       </node>         
       <node
             category-path="/scripting/r/io"
-            factory-class="org.knime.r.ionodes.RPortObjectReaderNodeFactory"
-            >
+            factory-class="org.knime.r.node.io.filehandling.rmodel.reader.RModelReaderNodeFactory" >
       </node>
       <node
-            after="org.knime.r.ionodes.RPortObjectReaderNodeFactory"
             category-path="/scripting/r/io"
-            factory-class="org.knime.r.ionodes.RPortObjectWriterNodeFactory"
-            >
+            after="org.knime.r.node.io.filehandling.rmodel.reader.RModelReaderNodeFactory"
+            factory-class="org.knime.r.node.io.filehandling.rmodel.writer.RModelWriterNodeFactory">
+      </node>
+      <node
+            deprecated="true"
+            category-path="/scripting/r/io"
+            factory-class="org.knime.r.ionodes.RPortObjectReaderNodeFactory" >
+      </node>
+      <node
+            deprecated="true"
+            category-path="/scripting/r/io"
+            factory-class="org.knime.r.ionodes.RPortObjectWriterNodeFactory">
       </node>
    </extension>
    <extension

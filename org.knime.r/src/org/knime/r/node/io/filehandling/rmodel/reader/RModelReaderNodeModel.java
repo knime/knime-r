@@ -1,5 +1,6 @@
 /*
  * ------------------------------------------------------------------------
+ *
  *  Copyright by KNIME AG, Zurich, Switzerland
  *  Website: http://www.knime.com; Email: contact@knime.com
  *
@@ -40,23 +41,40 @@
  *  propagated with or for interoperation with KNIME.  The owner of a Node
  *  may freely choose the license terms applicable to such Node, including
  *  when such Node is propagated with or for interoperation with KNIME.
- * ------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
+ *
+ * History
+ *   10 Feb 2020 (Temesgen H. Dadi, KNIME GmbH, Berlin, Germany): created
  */
-package org.knime.r.ionodes;
+package org.knime.r.node.io.filehandling.rmodel.reader;
 
-import org.knime.base.node.io.portobject.PortObjectWriterNodeFactory;
-import org.knime.ext.r.node.local.port.RPortObject;
+import java.io.InputStream;
+
+import org.knime.core.node.ExecutionContext;
+import org.knime.core.node.context.NodeCreationConfiguration;
+import org.knime.core.node.port.PortObject;
+import org.knime.core.node.port.PortUtil;
+import org.knime.filehandling.core.node.portobject.reader.PortObjectFromFileReaderNodeModel;
 
 /**
- * Factory for R port object writer
- * 
- * @author Bernd Wiswedel, University of Konstanz
+ * Node model of the R model reader node.
+ *
+ * @author Temesgen H. Dadi, KNIME GmbH, Berlin, Germany
  */
-public class RPortObjectWriterNodeFactory extends PortObjectWriterNodeFactory {
+final class RModelReaderNodeModel extends PortObjectFromFileReaderNodeModel<RModelReaderNodeConfig> {
 
-    /** defines input type. */
-    public RPortObjectWriterNodeFactory() {
-        super(RPortObject.TYPE);
+    /**
+     * Constructor.
+     *
+     * @param creationConfig the node creation config
+     */
+    RModelReaderNodeModel(final NodeCreationConfiguration creationConfig) {
+        super(creationConfig, new RModelReaderNodeConfig());
+    }
+
+    @Override
+    protected PortObject[] read(final InputStream inputStream, final ExecutionContext exec) throws Exception {
+        return new PortObject[]{PortUtil.readObjectFromStream(inputStream, exec)};
     }
 
 }

@@ -1,5 +1,6 @@
 /*
  * ------------------------------------------------------------------------
+ *
  *  Copyright by KNIME AG, Zurich, Switzerland
  *  Website: http://www.knime.com; Email: contact@knime.com
  *
@@ -40,23 +41,44 @@
  *  propagated with or for interoperation with KNIME.  The owner of a Node
  *  may freely choose the license terms applicable to such Node, including
  *  when such Node is propagated with or for interoperation with KNIME.
- * ------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
+ *
+ * History
+ *   10 Feb 2020 (Temesgen H. Dadi, KNIME GmbH, Berlin, Germany): created
  */
-package org.knime.r.ionodes;
+package org.knime.r.node.io.filehandling.rmodel.reader;
 
-import org.knime.base.node.io.portobject.PortObjectReaderNodeFactory;
+import javax.swing.JFileChooser;
+
+import org.knime.core.node.context.NodeCreationConfiguration;
+import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.local.port.RPortObject;
+import org.knime.filehandling.core.node.portobject.reader.PortObjectReaderNodeDialog;
+import org.knime.filehandling.core.node.portobject.reader.PortObjectReaderNodeFactory;
 
 /**
- * Factory for R port object reader.
- * 
- * @author Bernd Wiswedel, University of Konstanz
+ * Node factory of the R model reader node.
+ *
+ * @author Temesgen H. Dadi, KNIME GmbH, Berlin, Germany
  */
-public class RPortObjectReaderNodeFactory extends PortObjectReaderNodeFactory {
+public final class RModelReaderNodeFactory
+    extends PortObjectReaderNodeFactory<RModelReaderNodeModel, PortObjectReaderNodeDialog<RModelReaderNodeConfig>> {
 
-    /** Defines output port. */
-    public RPortObjectReaderNodeFactory() {
-        super(RPortObject.TYPE);
+    @Override
+    protected RModelReaderNodeModel createNodeModel(final NodeCreationConfiguration creationConfig) {
+        return new RModelReaderNodeModel(creationConfig);
+    }
+
+    @Override
+    protected PortType getOutputPortType() {
+        return RPortObject.TYPE;
+    }
+
+    @Override
+    protected PortObjectReaderNodeDialog<RModelReaderNodeConfig>
+        createDialog(final NodeCreationConfiguration creationConfig) {
+        return new PortObjectReaderNodeDialog<>(creationConfig.getPortConfig().get(), new RModelReaderNodeConfig(),
+            "r_model_reader", JFileChooser.FILES_ONLY);
     }
 
 }
