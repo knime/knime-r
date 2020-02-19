@@ -48,37 +48,33 @@
  */
 package org.knime.r.node.io.filehandling.rmodel.reader;
 
-import javax.swing.JFileChooser;
-
-import org.knime.core.node.context.NodeCreationConfiguration;
 import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.local.port.RPortObject;
-import org.knime.filehandling.core.node.portobject.reader.PortObjectReaderNodeDialog;
-import org.knime.filehandling.core.node.portobject.reader.PortObjectReaderNodeFactory;
+import org.knime.filehandling.core.node.portobject.reader.SimplePortObjectReaderNodeFactory;
 
 /**
  * Node factory of the R model reader node.
  *
  * @author Temesgen H. Dadi, KNIME GmbH, Berlin, Germany
  */
-public final class RModelReaderNodeFactory
-    extends PortObjectReaderNodeFactory<RModelReaderNodeModel, PortObjectReaderNodeDialog<RModelReaderNodeConfig>> {
+public final class RModelReaderNodeFactory extends SimplePortObjectReaderNodeFactory {
 
-    @Override
-    protected RModelReaderNodeModel createNodeModel(final NodeCreationConfiguration creationConfig) {
-        return new RModelReaderNodeModel(creationConfig);
+    /** File chooser history Id. */
+    private static final String HISTORY_ID = "r_model_reader_writer";
+
+    /** The R model file extension/suffix. */
+    private static final String[] MODEL_SUFFIX = new String[]{".zip"};
+
+    /**
+     * Constructor.
+     */
+    public RModelReaderNodeFactory() {
+        super(HISTORY_ID, MODEL_SUFFIX);
     }
 
     @Override
     protected PortType getOutputPortType() {
         return RPortObject.TYPE;
-    }
-
-    @Override
-    protected PortObjectReaderNodeDialog<RModelReaderNodeConfig>
-        createDialog(final NodeCreationConfiguration creationConfig) {
-        return new PortObjectReaderNodeDialog<>(creationConfig.getPortConfig().get(), new RModelReaderNodeConfig(),
-            "r_model_reader", JFileChooser.FILES_ONLY);
     }
 
 }

@@ -48,37 +48,33 @@
  */
 package org.knime.r.node.io.filehandling.rmodel.writer;
 
-import javax.swing.JFileChooser;
-
-import org.knime.core.node.context.NodeCreationConfiguration;
 import org.knime.core.node.port.PortType;
 import org.knime.ext.r.node.local.port.RPortObject;
-import org.knime.filehandling.core.node.portobject.writer.PortObjectWriterNodeDialog;
-import org.knime.filehandling.core.node.portobject.writer.PortObjectWriterNodeFactory;
+import org.knime.filehandling.core.node.portobject.writer.SimplePortObjectWriterNodeFactory;
 
 /**
  * Node factory of the R model reader node.
  *
  * @author Temesgen H. Dadi, KNIME GmbH, Berlin, Germany
  */
-public final class RModelWriterNodeFactory
-    extends PortObjectWriterNodeFactory<RModelWriterNodeModel, PortObjectWriterNodeDialog<RModelWriterNodeConfig>> {
+public final class RModelWriterNodeFactory extends SimplePortObjectWriterNodeFactory {
 
-    @Override
-    protected RModelWriterNodeModel createNodeModel(final NodeCreationConfiguration creationConfig) {
-        return new RModelWriterNodeModel(creationConfig);
+    /** File chooser history Id. */
+    private static final String HISTORY_ID = "r_model_reader_writer";
+
+    /** The R model file extension/suffix. */
+    private static final String[] MODEL_SUFFIX = new String[]{".zip"};
+
+    /**
+     * Constructor.
+     */
+    public RModelWriterNodeFactory() {
+        super(HISTORY_ID, MODEL_SUFFIX);
     }
 
     @Override
     protected PortType getInputPortType() {
         return RPortObject.TYPE;
-    }
-
-    @Override
-    protected PortObjectWriterNodeDialog<RModelWriterNodeConfig>
-        createDialog(final NodeCreationConfiguration creationConfig) {
-        return new PortObjectWriterNodeDialog<>(creationConfig.getPortConfig().get(), new RModelWriterNodeConfig(),
-            "r_model_writer", JFileChooser.FILES_ONLY);
     }
 
 }
