@@ -255,6 +255,8 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
      */
     public void updateRPreferences(final RPreferenceProvider preferences) {
         if (m_isInteractive) {
+            detachConsoleController();
+            closeRController();
             createRController(preferences);
             m_consoleCancelButton.setAction(m_consoleController.getCancelAction());
             m_consoleClearButton.setAction(m_consoleController.getClearAction());
@@ -834,16 +836,26 @@ public class RSnippetNodePanel extends JPanel implements TemplateReceiver {
                 m_exec.getProgressMonitor().setExecuteCanceled();
             }
 
-            if (m_consoleController.isAttached(m_console)) {
-                m_consoleController.cancel();
-                m_consoleController.detach(m_console);
-            }
+            detachConsoleController();
         }
 
-        try {
-            m_controller.close();
-        } catch (final RException e) {
-            LOGGER.error("Failed to close Rserve connection", e);
+        closeRController();
+    }
+
+    private void detachConsoleController() {
+        if (m_consoleController != null && m_consoleController.isAttached(m_console)) {
+            m_consoleController.cancel();
+            m_consoleController.detach(m_console);
+        }
+    }
+
+    private void closeRController() {
+        if (m_controller != null && m_controller.isInitialized()) {
+            try {
+                m_controller.close();
+            } catch (final RException e) {
+                LOGGER.error("Failed to close Rserve connection", e);
+            }
         }
     }
 
