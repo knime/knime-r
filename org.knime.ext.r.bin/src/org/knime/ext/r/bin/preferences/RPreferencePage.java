@@ -48,11 +48,7 @@
  */
 package org.knime.ext.r.bin.preferences;
 
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Properties;
+import java.util.Optional;
 
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -64,8 +60,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.knime.ext.r.bin.Activator;
 import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
-
-import com.sun.jna.Platform;
 
 /**
  * Preference page for settings the R installation directory.
@@ -124,65 +118,10 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
 
     private boolean checkRVersion(final String rHome) {
         try {
-            final Path rHomePath = Paths.get(rHome);
-            if (!Files.isDirectory(rHomePath)) {
-                setMessage("The selected path is not a directory.", ERROR);
-                return false;
+            final Optional<String> warning = RBinUtil.checkREnvionment(rHome, "Path to R Home", false);
+            if (warning.isPresent()) {
+                setMessage(warning.get(), WARNING);
             }
-        } catch (InvalidPathException e) {
-            final StringBuilder message = new StringBuilder("Path to RHome is not a valid path: ");
-
-            if (rHome.trim().startsWith("'")) {
-                // Workaround for misleading error message on Windows, where a <'> char preceding an
-                // absolute path will generate the error message for the <:> char of the drive specifier
-                message.append("Illegal char <'> preceding absolute path");
-            } else {
-                message.append(e.getMessage());
-            }
-
-            setMessage(message.toString(), ERROR);
-            return false;
-        }
-
-        try {
-            RBinUtil.checkRHome(rHome, true);
-
-            final DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHome);
-            final Properties props = prefProvider.getProperties();
-
-            // if the version properties are null, the properties could not be read correctly
-            if (props.getProperty("major") == null) {
-                throw new InvalidRHomeException(rHome + " contains an invalid R executable!");
-            }
-
-            final String version = (props.getProperty("major") + "." + props.getProperty("minor"))
-                    // the version numbers may contain spaces
-                    .replace(" ", "");
-
-            if ("3.1.0".equals(version)) {
-                setMessage("You have selected an R 3.1.0 installation. "
-                    + "Please see https://www.knime.com/faq#q26 for details.", WARNING);
-                return true;
-            }
-
-            final String rservePath = props.getProperty("Rserve.path");
-            if ((rservePath == null) || props.getProperty("Rserve.path").isEmpty()) {
-                setMessage("The package 'Rserve' needs to be installed in your R installation. "
-                    + "Please install it in R using: \"install.packages('Rserve',,'http://rforge.net/',type='source')\"", WARNING);
-                // Return true anyway, to allow the user to install Rserve later without having
-                // to select the path via the annoying path dialog again.
-                return true;
-            }
-
-            final String cairoPath = props.getProperty("Cairo.path");
-            if (Platform.isMac() && ((cairoPath == null) || cairoPath.isEmpty())) {
-                // under Mac we need Cairo package to use png()/bmp() etc devices.
-                setMessage("The package 'Cairo' needs to be installed in your R installation for bitmap graphics "
-                    + "devices to work properly. Please install it in R using \"install.packages('Cairo')\".",
-                    WARNING);
-                return true;
-            }
-
             setMessage(null, NONE);
             return true;
         } catch (final InvalidRHomeException e) {

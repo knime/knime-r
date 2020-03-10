@@ -55,6 +55,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.knime.core.node.KNIMEConstants;
@@ -261,7 +262,7 @@ public final class RBinUtil {
      * @throws InvalidRHomeException
      */
     public static void checkRHome(final String rHomePath) throws InvalidRHomeException {
-        checkRHome(rHomePath, false);
+        checkRHome(rHomePath, "R_HOME", true);
     }
 
     /**
@@ -270,38 +271,53 @@ public final class RBinUtil {
      * @param rHomePath path to R_HOME
      * @param fromPreferences Set to true if this function is called from the R preference page.
      * @throws InvalidRHomeException If the specified R_HOME path is invalid
+     * @deprecated Use {@link #checkRHome(String, String, boolean)} or {@link #checkRHome(String)}.
      */
+    @Deprecated
     public static void checkRHome(final String rHomePath, final boolean fromPreferences) throws InvalidRHomeException {
+        checkRHome(rHomePath, fromPreferences ? "Path to R Home" : "R_HOME", !fromPreferences);
+    }
+
+    /**
+     * Checks whether the given path is a valid R_HOME directory. It checks the presence of the bin and library folder.
+     *
+     * @param rHomePath path to R_HOME
+     * @param rHomeName the name of the R home which is used in the error message
+     * @param appendRHomeHelp if a message should be appended which explains what the R home is and how to change it
+     * @throws InvalidRHomeException If the specified R_HOME path is invalid
+     * @since 4.2.0
+     */
+    public static void checkRHome(final String rHomePath, final String rHomeName, final boolean appendRHomeHelp) throws InvalidRHomeException {
         final File rHome = new File(rHomePath);
-        final String msgSuffix = ((fromPreferences) ? ""
-            : " R_HOME ('" + rHomePath + "')" + " is meant to be the path to the folder which is the root of R's "
+        final String msgSuffix = appendRHomeHelp
+            ? " R_HOME ('" + rHomePath + "')" + " is meant to be the path to the folder which is the root of R's "
                 + "installation tree. \nIt contains a 'bin' folder which itself contains the R executable and a "
-                + "'library' folder. Please change the R settings in the preferences.");
-        final String R_HOME_NAME = (fromPreferences) ? "Path to R Home" : "R_HOME";
+                + "'library' folder. Please change the R settings in the preferences."
+            : "";
 
         /* check if the directory exists */
         if (!rHome.exists()) {
-            throw new InvalidRHomeException(R_HOME_NAME + " does not exist." + msgSuffix);
+            throw new InvalidRHomeException(rHomeName + " does not exist." + msgSuffix);
         }
         /* Make sure R home is not a file. */
         if (!rHome.isDirectory()) {
-            throw new InvalidRHomeException(R_HOME_NAME + " is not a directory." + msgSuffix);
+            throw new InvalidRHomeException(rHomeName + " is not a directory." + msgSuffix);
         }
         /* Check if there is a bin directory */
         final File binDir = new File(rHome, "bin");
         if (!binDir.isDirectory()) {
-            throw new InvalidRHomeException(R_HOME_NAME + " does not contain a folder with name 'bin'." + msgSuffix);
+            throw new InvalidRHomeException(rHomeName + " does not contain a folder with name 'bin'." + msgSuffix);
         }
         /* Check if there is an R Excecutable */
         final File rExecutable = new File(new DefaultRPreferenceProvider(rHomePath).getRBinPath("R"));
         if (!rExecutable.exists()) {
-            throw new InvalidRHomeException(R_HOME_NAME + " does not contain an R executable." + msgSuffix);
+            throw new InvalidRHomeException(rHomeName + " does not contain an R executable." + msgSuffix);
         }
         /* Make sure there is a library directory */
         final File libraryDir = new File(rHome, "library");
         if (!libraryDir.isDirectory()) {
             throw new InvalidRHomeException(
-                R_HOME_NAME + " does not contain a folder with name 'library'." + msgSuffix);
+                rHomeName + " does not contain a folder with name 'library'." + msgSuffix);
         }
         /* On windows, we expect the appropriate platform-specific folders corresponding to our Platform */
         if (Platform.isWindows()) {
@@ -311,9 +327,72 @@ public final class RBinUtil {
             final File expectedFolder = new File(binDir, folderName);
             if (!expectedFolder.isDirectory()) {
                 throw new InvalidRHomeException(
-                    R_HOME_NAME + " does not contain a folder with name 'bin\\" + folderName + "'. Please install R " + bits + "-bit files."
+                    rHomeName + " does not contain a folder with name 'bin\\" + folderName + "'. Please install R " + bits + "-bit files."
                         + msgSuffix);
             }
         }
+    }
+
+    /**
+     * Check the given R properties.
+     *
+     * @param rProperties the R properties which can be retrieved from an {@link RPreferenceProvider}.
+     * @param rHomeName the name of the R home which is used in the error message
+     * @return a warning message if something is wrong with the R environment but it can be used
+     * @throws InvalidRHomeException if the R environment is invalid and cannot be used
+     * @since 4.2.0
+     */
+    public static Optional<String> checkRProperties(final Properties rProperties, final String rHomeName)
+        throws InvalidRHomeException {
+        // if the version properties are null, the properties could not be read correctly
+        if (rProperties.getProperty("major") == null) {
+            throw new InvalidRHomeException(rHomeName + " contains an invalid R executable!");
+        }
+
+        final String version = (rProperties.getProperty("major") + "." + rProperties.getProperty("minor")) //
+            .replace(" ", ""); // the version numbers may contain spaces
+
+        if ("3.1.0".equals(version)) {
+            return Optional
+                .of(rHomeName + " contains an R 3.1.0 installation which can cause problems with some functions. "
+                    + "Please see https://www.knime.com/faq#q26 for details.");
+        }
+
+        final String rservePath = rProperties.getProperty("Rserve.path");
+        if ((rservePath == null) || rProperties.getProperty("Rserve.path").isEmpty()) {
+            return Optional.of(rHomeName + " does not contain the package 'Rserve'. "
+                + "Please install it in R using: \"install.packages('Rserve',,'http://rforge.net/',type='source')\"");
+        }
+
+        final String cairoPath = rProperties.getProperty("Cairo.path");
+        if (Platform.isMac() && ((cairoPath == null) || cairoPath.isEmpty())) {
+            // under Mac we need Cairo package to use png()/bmp() etc devices.
+            return Optional.of(rHomeName + " does not contain the package 'Cairo'. "
+                + "The package is needed for bitmap graphics devices to work properly. "
+                + "Please install it in R using \"install.packages('Cairo')\".");
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Checks the R environment at the given R home. Checks if the R home is a valid and if the properties of the R
+     * environment are valid.
+     *
+     * @param rHomePath path to R_HOME
+     * @param rHomeName the name of the R home which is used in the error message
+     * @param appendRHomeHelp if a message should be appended which explains what the R home is and how to change it
+     * @return a warning message if something is wrong with the R environment but it can be used
+     * @throws InvalidRHomeException if the R environment is invalid and cannot be used
+     * @since 4.2.0
+     */
+    public static Optional<String> checkREnvionment(final String rHomePath, final String rHomeName,
+        final boolean appendRHomeHelp) throws InvalidRHomeException {
+        // Check the R home directory
+        checkRHome(rHomePath, rHomeName, appendRHomeHelp);
+
+        // Check the properties of the R environment
+        final DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHomePath);
+        final Properties rProperties = prefProvider.getProperties();
+        return checkRProperties(rProperties, rHomeName);
     }
 }
