@@ -319,14 +319,15 @@ public class RController implements IRController {
                     null);
             }
 
-            final String rserveProp = m_rProps.getProperty("Rserve.path");
-            if ((rserveProp == null) || rserveProp.isEmpty()) {
+            if (!RBinUtil.checkRServeInstalled(m_rProps)) {
                 invalidatePrefCacheIfDefaultR();
                 throw new RException(
                     "Could not find Rserve package. Please install it in your R installation by running "
                         + "\"install.packages('Rserve',,'http://rforge.net/',type='source')\".",
                     null);
             }
+
+
             m_connection = initRConnection(m_preferences);
         } catch (final InvalidRHomeException ex) {
             throw new RException("R Home \"" + rHome + "\" is invalid.", ex);
@@ -349,23 +350,9 @@ public class RController implements IRController {
             RCairoChecker.checkCairoOnMac(m_preferences, this);
         }
 
-        final int major = Integer.parseInt((String)m_rProps.get("major")); // e.g. 3
-        final String minorVersionString = ((String)m_rProps.get("minor")); // e.g. 5.1
-        final int minor = Integer.parseInt(minorVersionString.split("\\.")[0]); // only 5
-
-        if ((major == 3) && (minor >= 5) && m_rProps.containsKey("Rserve.version")) {
-            final String rserveVersionString = (String)m_rProps.get("Rserve.version");
-            final String[] rserveVersionSplit = rserveVersionString.split("[\\.-]"); //split by "." and "-"
-
-            final int[] rserveVersion = Stream.of(rserveVersionSplit).mapToInt(Integer::parseInt).toArray();
-
-            if ((rserveVersion[0] <= 1) && (rserveVersion[1] < 8) && (rserveVersion.length > 2)
-                && (rserveVersion[2] <= 6)) {
-                // Rserve 1.7 may not have a third version identifier
-                LOGGER.warn(
-                    "R Version 3.5.0 and Rserve <= 1.8-6 currently have issues preventing their full use in KNIME. "
-                        + "A future release of R and/or Rserve may fix these issues.");
-            }
+        if (!RBinUtil.checkRServeAndRVersion(m_rProps)) {
+            LOGGER.warn("R Version >= 3.5.0 and Rserve < 1.8-6 currently have issues preventing their full use in KNIME. "
+                + "A future release of R and/or Rserve may fix these issues.");
         }
     }
 

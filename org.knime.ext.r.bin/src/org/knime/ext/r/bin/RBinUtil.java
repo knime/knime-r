@@ -57,6 +57,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
@@ -74,7 +75,8 @@ import com.sun.jna.Platform;
  */
 public final class RBinUtil {
 
-    private RBinUtil() {}
+    private RBinUtil() {
+    }
 
     /**
      * The temp directory used as a working directory for R.
@@ -233,7 +235,7 @@ public final class RBinUtil {
 
         // load properties from propsFile
         final Properties props = new Properties();
-        try(final FileInputStream is = new FileInputStream(propsFile)) {
+        try (final FileInputStream is = new FileInputStream(propsFile)) {
             props.load(is);
         } catch (final IOException e) {
             LOGGER.warn("Could not retrieve properties from R.", e);
@@ -287,7 +289,8 @@ public final class RBinUtil {
      * @throws InvalidRHomeException If the specified R_HOME path is invalid
      * @since 4.2.0
      */
-    public static void checkRHome(final String rHomePath, final String rHomeName, final boolean appendRHomeHelp) throws InvalidRHomeException {
+    public static void checkRHome(final String rHomePath, final String rHomeName, final boolean appendRHomeHelp)
+        throws InvalidRHomeException {
         final File rHome = new File(rHomePath);
         final String msgSuffix = appendRHomeHelp
             ? " R_HOME ('" + rHomePath + "')" + " is meant to be the path to the folder which is the root of R's "
@@ -316,8 +319,7 @@ public final class RBinUtil {
         /* Make sure there is a library directory */
         final File libraryDir = new File(rHome, "library");
         if (!libraryDir.isDirectory()) {
-            throw new InvalidRHomeException(
-                rHomeName + " does not contain a folder with name 'library'." + msgSuffix);
+            throw new InvalidRHomeException(rHomeName + " does not contain a folder with name 'library'." + msgSuffix);
         }
         /* On windows, we expect the appropriate platform-specific folders corresponding to our Platform */
         if (Platform.isWindows()) {
@@ -326,9 +328,8 @@ public final class RBinUtil {
 
             final File expectedFolder = new File(binDir, folderName);
             if (!expectedFolder.isDirectory()) {
-                throw new InvalidRHomeException(
-                    rHomeName + " does not contain a folder with name 'bin\\" + folderName + "'. Please install R " + bits + "-bit files."
-                        + msgSuffix);
+                throw new InvalidRHomeException(rHomeName + " does not contain a folder with name 'bin\\" + folderName
+                    + "'. Please install R " + bits + "-bit files." + msgSuffix);
             }
         }
     }
@@ -349,17 +350,16 @@ public final class RBinUtil {
             throw new InvalidRHomeException(rHomeName + " contains an invalid R executable!");
         }
 
-        final String version = (rProperties.getProperty("major") + "." + rProperties.getProperty("minor")) //
+        final String rVersion = (rProperties.getProperty("major") + "." + rProperties.getProperty("minor")) //
             .replace(" ", ""); // the version numbers may contain spaces
 
-        if ("3.1.0".equals(version)) {
+        if ("3.1.0".equals(rVersion)) {
             return Optional
                 .of(rHomeName + " contains an R 3.1.0 installation which can cause problems with some functions. "
                     + "Please see https://www.knime.com/faq#q26 for details.");
         }
 
-        final String rservePath = rProperties.getProperty("Rserve.path");
-        if ((rservePath == null) || rProperties.getProperty("Rserve.path").isEmpty()) {
+        if (!checkRServeInstalled(rProperties)) {
             return Optional.of(rHomeName + " does not contain the package 'Rserve'. "
                 + "Please install it in R using: \"install.packages('Rserve',,'http://rforge.net/',type='source')\"");
         }
@@ -371,6 +371,14 @@ public final class RBinUtil {
                 + "The package is needed for bitmap graphics devices to work properly. "
                 + "Please install it in R using \"install.packages('Cairo')\".");
         }
+
+        // Check if Rserve < 1.8.6 and R >= 3.5
+        if (!checkRServeAndRVersion(rProperties)) {
+            return Optional.of(rHomeName + " contains an R >= 3.5.0 and Rserve < 1.8.6."
+                + "These versions currently have issues preventing their full use in KNIME. "
+                + "A future release of R and/or Rserve may fix these issues.");
+        }
+
         return Optional.empty();
     }
 
@@ -394,5 +402,43 @@ public final class RBinUtil {
         final DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHomePath);
         final Properties rProperties = prefProvider.getProperties();
         return checkRProperties(rProperties, rHomeName);
+    }
+
+    /**
+     * Checks if Rserve is installed in the R environment with the given properties.
+     *
+     * @param rProperties the properties of the R environment
+     * @return <code>true</code> if Rserve is installed
+     */
+    public static boolean checkRServeInstalled(final Properties rProperties) {
+        final String rservePath = rProperties.getProperty("Rserve.path");
+        return rservePath != null && !rservePath.isEmpty();
+    }
+
+    /**
+     * Check if the installed Rserve version can cause problems with the installed R version:
+     * R >= 3.5.0 and Rserve < 1.8.6.
+     *
+     * @param rProperties the properties of the R environment
+     * @return <code>true</code> if there are no problems
+     */
+    public static boolean checkRServeAndRVersion(final Properties rProperties) {
+        final int major = Integer.parseInt((String)rProperties.get("major")); // e.g. 3
+        final String minorVersionString = ((String)rProperties.get("minor")); // e.g. 5.1
+        final int minor = Integer.parseInt(minorVersionString.split("\\.")[0]); // only 5
+
+        if ((major == 3) && (minor >= 5) && rProperties.containsKey("Rserve.version")) {
+            final String rserveVersionString = (String)rProperties.get("Rserve.version");
+            final String[] rserveVersionSplit = rserveVersionString.split("[\\.-]"); //split by "." and "-"
+
+            final int[] rserveVersion = Stream.of(rserveVersionSplit).mapToInt(Integer::parseInt).toArray();
+
+            if ((rserveVersion[0] <= 1) && (rserveVersion[1] < 8) && (rserveVersion.length > 2)
+                && (rserveVersion[2] <= 6)) {
+                // Rserve 1.7 may not have a third version identifier
+                return false;
+            }
+        }
+        return true;
     }
 }
