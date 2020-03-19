@@ -69,11 +69,11 @@
 	        Be aware, that R will likely keep all of the input table in memory and this only helps with memory during transmission
 	        of data to R.
 	      </option>
-	    </tab>
-	    <tab name="R Home">
-	      <option name="Path to R home (empty for default)">
-	        Path to the R home directory. Leave this field empty to use the R home configured on the R preference page.
-	      </option>
+			<option name="Overwrite default path to R home">
+				Check this option to select a path to the home of a R installation
+				that is different from the path configured on the R preference page.
+				The path must point to the root folder of the R installation tree.
+			</option>
 	    </tab>
         </fullDescription>
 	<ports>

@@ -65,6 +65,13 @@
 			The code to be applied to your expression editor.
 		  </option>
 	    </tab>
+	    <tab name="Advanced">
+			<option name="Overwrite default path to R home">
+				Check this option to select a path to the home of a R installation
+				that is different from the path configured on the R preference page.
+				The path must point to the root folder of the R installation tree.
+			</option>
+	    </tab>
 	</fullDescription>
 	<ports>
 		<inPort name="R Input" index="0">R Input</inPort>
