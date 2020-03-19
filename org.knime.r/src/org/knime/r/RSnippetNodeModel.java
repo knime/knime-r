@@ -158,9 +158,9 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
     /** Get the R preference provider */
     private RPreferenceProvider getRPreferences() {
-        final String rHomePath = m_snippet.getSettings().getRHomePath();
-        if (rHomePath != null && !rHomePath.trim().isEmpty()) {
-            return new DefaultRPreferenceProvider(rHomePath);
+        final RSnippetSettings snippetSettings = m_snippet.getSettings();
+        if (snippetSettings.isOverwriteRHome()) {
+            return new DefaultRPreferenceProvider(snippetSettings.getRHomePath());
         } else {
             return RPreferenceInitializer.getRProvider();
         }
