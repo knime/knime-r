@@ -47,7 +47,6 @@
  */
 package org.knime.r;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -57,7 +56,6 @@ import java.awt.Insets;
 import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -65,19 +63,12 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.NumberFormatter;
 
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.BufferedDataTable;
 import org.knime.core.node.DataAwareNodeDialogPane;
-import org.knime.core.node.FlowVariableModel;
-import org.knime.core.node.FlowVariableModelButton;
 import org.knime.core.node.InvalidSettingsException;
-import org.knime.core.node.NodeLogger;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
@@ -87,9 +78,6 @@ import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.FlowVariable.Type;
-import org.knime.ext.r.bin.RBinUtil;
-import org.knime.ext.r.bin.RBinUtil.InvalidRHomeException;
-import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.ext.r.bin.preferences.RPreferenceProvider;
 import org.knime.r.template.DefaultTemplateController;
@@ -102,13 +90,10 @@ import org.knime.r.template.TemplatesPanel;
  * @author Jonathan Hale
  */
 public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
-    private static final NodeLogger LOGGER = NodeLogger.getLogger(RSnippetNodeDialog.class);
 
     private static final String SNIPPET_TAB = "R Snippet";
 
     private final RSnippetNodePanel m_panel;
-
-    private final FlowVariableModel m_rHomeModel;
 
     private RPreferenceProvider m_preferenceProvider;
 
@@ -132,9 +117,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 
     private JFormattedTextField m_sendBatchSize;
 
-    private JTextField m_rHome;
-
-    private JTextArea m_rHomeError;
+    private RHomeSelectionPanel m_rHomePanel;
 
     /**
      * Create a new Dialog.
@@ -163,11 +146,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
             ++i;
         }
 
-        // Observe the flow variable for the R home path
-        m_rHomeModel = createFlowVariableModel(RSnippetSettings.R_HOME_PATH, Type.STRING);
-        m_rHomeModel.addChangeListener(e -> updateRHomeTextField());
-        m_preferenceProvider = getRPreferenceProvider();
-
+        m_preferenceProvider = RPreferenceInitializer.getRProvider();
         m_panel = new RSnippetNodePanel(m_preferenceProvider, templateMetaCategory, m_config, false, true) {
             private static final long serialVersionUID = 6934850660800321248L;
 
@@ -183,11 +162,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         // The preview does not have the templates tab
         addTab("Templates", createTemplatesPanel());
 
-        if ((m_tableInPort >= 0) || (m_tableOutPort >= 0)) {
-            addTab("Advanced", createAdvancedPanel());
-        }
-
-        addTab("R Home", createRHomePanel());
+        addTab("Advanced", createAdvancedPanel());
 
         final JTabbedPane tabbedPane = getTabbedPane();
         tabbedPane.addChangeListener(e -> {
@@ -212,23 +187,9 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         }
     }
 
-    /** Update the R home text field according to the flow var model */
-    private void updateRHomeTextField() {
-        final boolean replaceByVar = m_rHomeModel.isVariableReplacementEnabled();
-        if (!m_rHome.isEnabled() && !replaceByVar) {
-            // R home changed from the variable to the text field text: Set text to default
-            m_rHome.setText("");
-        }
-        m_rHome.setEnabled(!replaceByVar);
-        if (replaceByVar) {
-            // R home is replaced by the variable: Set text to variable name
-            m_rHome.setText(m_rHomeModel.getInputVariableName());
-        }
-    }
-
     /** Update the m_preferenceProvider if the flow var contains a new value. Returns if the value was changed */
     private boolean updateRPreferenceProvider() {
-        final RPreferenceProvider preferences = getRPreferenceProvider();
+        final RPreferenceProvider preferences = m_rHomePanel.getRPreferenceProvider();
         if (!m_preferenceProvider.equals(preferences)) {
             m_preferenceProvider = preferences;
             return true;
@@ -236,54 +197,10 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         return false;
     }
 
-    /** Get the current R preferences. According to the flow variable if it is set */
-    private RPreferenceProvider getRPreferenceProvider() {
-        final Optional<FlowVariable> rHome = m_rHomeModel.getVariableValue();
-        if (rHome.isPresent()) {
-            return new DefaultRPreferenceProvider(rHome.get().getStringValue());
-        } else if (m_rHome != null && !m_rHome.getText().trim().isEmpty()) {
-            return new DefaultRPreferenceProvider(m_rHome.getText());
-        } else {
-            return RPreferenceInitializer.getRProvider();
-        }
-    }
-
-    /**
-     * Called if the R home has changed to check the new R home and display errors. Note that this does not trigger an
-     * update of the snippet.
-     */
-    private void rHomeChanged() {
-        final RPreferenceProvider pref = getRPreferenceProvider();
-        try {
-            RBinUtil.checkRHome(pref.getRHome());
-        } catch (final InvalidRHomeException e) {
-            // The R home is invalid: Display the message
-            m_rHomeError.setForeground(Color.RED);
-            m_rHomeError.setText(e.getMessage());
-            return;
-        }
-        // The R home is valid: Delete the old message
-        m_rHomeError.setForeground(Color.GREEN);
-        m_rHomeError.setText("R home is valid.");
-    }
-
     /** Get the tab pane of this dialog. */
     private JTabbedPane getTabbedPane() {
         final Component comp = getTab(getTabTitles().get(0));
         return getParentWithType(comp, JTabbedPane.class);
-    }
-
-    /** Find the parent of the component with the given type */
-    @SuppressWarnings("unchecked")
-    private <T> T getParentWithType(final Component comp, final Class<T> type) {
-        final Container parent = comp.getParent();
-        if (parent == null) {
-            return null;
-        } else if (type.isAssignableFrom(parent.getClass())) {
-            return (T)parent;
-        } else {
-            return getParentWithType(parent, type);
-        }
     }
 
     /** Create the templates tab. */
@@ -298,125 +215,67 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
 
     private JPanel createAdvancedPanel() {
         final Insets insets = new Insets(5, 5, 0, 5);
-        int y = 0;
-        final GridBagConstraints gbc_nonNums = new GridBagConstraints(0, y, 1, 1, 1, 0, GridBagConstraints.BASELINE,
-            GridBagConstraints.HORIZONTAL, insets, 0, 0);
-        ++y;
-        final GridBagConstraints gbc_sendRowNames = new GridBagConstraints(0, y, 1, 1, 1, 0,
-            GridBagConstraints.BASELINE, GridBagConstraints.HORIZONTAL, insets, 0, 0);
-        ++y;
-        final GridBagConstraints gbc_knimeInTypeLbl = new GridBagConstraints(0, y, 1, 1, 1, 0,
-            GridBagConstraints.BASELINE, GridBagConstraints.HORIZONTAL, insets, 0, 0);
-        final GridBagConstraints gbc_knimeInType = new GridBagConstraints(1, y, 2, 1, 1, 0, GridBagConstraints.BASELINE,
-            GridBagConstraints.HORIZONTAL, insets, 0, 0);
-        ++y;
-        final GridBagConstraints gbc_sendBatchSizeLbl = new GridBagConstraints(0, y, 1, 1, 1, 0,
-            GridBagConstraints.BASELINE, GridBagConstraints.HORIZONTAL, insets, 0, 0);
-        final GridBagConstraints gbc_sendBatchSize = new GridBagConstraints(1, y, 1, 1, 1, 0,
-            GridBagConstraints.BASELINE, GridBagConstraints.HORIZONTAL, insets, 0, 0);
-        ++y;
-        final GridBagConstraints gbc_filler = new GridBagConstraints(0, y, 1, 1, 1, 1, GridBagConstraints.BASELINE,
-            GridBagConstraints.HORIZONTAL, insets, 0, 0);
-
-        m_outNonNumbersAsMissing = new JCheckBox("Treat NaN, Inf and -Inf as missing values in the output table.");
-        m_outNonNumbersAsMissing.setToolTipText("Check for backwards compatibility with pre 2.10 releases.");
-        m_outNonNumbersAsMissing.setEnabled(m_tableOutPort >= 0);
-
-        m_sendRowNames = new JCheckBox("Send row names of input table.");
-        m_sendRowNames.setToolTipText("Disabling sending row names can improve performance with very large tables.");
-        m_sendRowNames.setEnabled(m_tableInPort >= 0);
-
-        m_knimeInType = new JComboBox<>(new String[]{"data.frame", "data.table (experimental!)"});
-        m_knimeInType.setToolTipText("R type for knime.in. \"data.table\" requires the \"data.table\" package.");
-        m_knimeInType.setEnabled(m_tableInPort >= 0);
-
-        final NumberFormat fmt = NumberFormat.getNumberInstance();
-        final NumberFormatter formatter = new NumberFormatter(fmt);
-        formatter.setMinimum(1);
-        formatter.setMaximum(1000000);
-        formatter.setValueClass(Integer.class);
-        m_sendBatchSize = new JFormattedTextField(formatter);
-        m_sendBatchSize.setToolTipText(
-            "Number of rows to send to R per batch. This amount of rows will be kept in memory on KNIME side.");
-        m_sendBatchSize.setEnabled(m_tableInPort >= 0);
-
         final JPanel p = new JPanel(new GridBagLayout());
-        p.add(m_outNonNumbersAsMissing, gbc_nonNums);
+        final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.BASELINE,
+            GridBagConstraints.HORIZONTAL, insets, 0, 0);
+        if ((m_tableInPort >= 0) || (m_tableOutPort >= 0)) {
 
-        p.add(m_sendRowNames, gbc_sendRowNames);
+            // NaN as Missing
+            m_outNonNumbersAsMissing = new JCheckBox("Treat NaN, Inf and -Inf as missing values in the output table.");
+            m_outNonNumbersAsMissing.setToolTipText("Check for backwards compatibility with pre 2.10 releases.");
+            m_outNonNumbersAsMissing.setEnabled(m_tableOutPort >= 0);
+            p.add(m_outNonNumbersAsMissing, gbc);
+            gbc.gridy++;
 
-        p.add(new JLabel("Type of \"knime.in\" variable."), gbc_knimeInTypeLbl);
-        p.add(m_knimeInType, gbc_knimeInType);
+            // Send row names
+            m_sendRowNames = new JCheckBox("Send row names of input table.");
+            m_sendRowNames
+                .setToolTipText("Disabling sending row names can improve performance with very large tables.");
+            m_sendRowNames.setEnabled(m_tableInPort >= 0);
+            p.add(m_sendRowNames, gbc);
+            gbc.gridy++;
 
-        p.add(new JLabel("Number of rows to send to R per batch"), gbc_sendBatchSizeLbl);
-        p.add(m_sendBatchSize, gbc_sendBatchSize);
+            // knime.in type
+            m_knimeInType = new JComboBox<>(new String[]{"data.frame", "data.table (experimental!)"});
+            m_knimeInType.setToolTipText("R type for knime.in. \"data.table\" requires the \"data.table\" package.");
+            m_knimeInType.setEnabled(m_tableInPort >= 0);
+            p.add(new JLabel("Type of \"knime.in\" variable."), gbc);
+            gbc.gridx++;
+            gbc.gridwidth = 2;
+            p.add(m_knimeInType, gbc);
+            gbc.gridx = 0;
+            gbc.gridwidth = 1;
+            gbc.gridy++;
 
-        p.add(new JPanel(), gbc_filler); // Panel to fill up remaining space
-        return p;
-    }
+            // Number of rows send per batch
+            final NumberFormat fmt = NumberFormat.getNumberInstance();
+            final NumberFormatter formatter = new NumberFormatter(fmt);
+            formatter.setMinimum(1);
+            formatter.setMaximum(1000000);
+            formatter.setValueClass(Integer.class);
+            m_sendBatchSize = new JFormattedTextField(formatter);
+            m_sendBatchSize.setToolTipText(
+                "Number of rows to send to R per batch. This amount of rows will be kept in memory on KNIME side.");
+            m_sendBatchSize.setEnabled(m_tableInPort >= 0);
+            p.add(new JLabel("Number of rows to send to R per batch"), gbc);
+            gbc.gridx++;
+            p.add(m_sendBatchSize, gbc);
+            gbc.gridx = 0;
+            gbc.gridy++;
 
-    /** Create a panel for the R home configuration. */
-    private JPanel createRHomePanel() {
-        final JPanel panel = new JPanel(new GridBagLayout());
-        final GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.NORTHWEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weighty = 0;
+        }
 
-        // The label
-        gbc.weightx = 0;
-        panel.add(new JLabel("Path to R home (empty for default)"), gbc);
-
-        // The text field
-        m_rHome = new JTextField();
-        m_rHome.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void removeUpdate(final DocumentEvent e) {
-                rHomeChanged();
-            }
-
-            @Override
-            public void insertUpdate(final DocumentEvent e) {
-                rHomeChanged();
-            }
-
-            @Override
-            public void changedUpdate(final DocumentEvent e) {
-                rHomeChanged();
-            }
-        });
-        gbc.gridx++;
-        gbc.weightx = 1;
-        panel.add(m_rHome, gbc);
-
-        // The flow variable button
-        final FlowVariableModelButton rHomeFVMButton = new FlowVariableModelButton(m_rHomeModel);
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.gridx++;
-        gbc.weightx = 0;
-        panel.add(rHomeFVMButton, gbc);
-
-        // The error label
-        m_rHomeError = new JTextArea();
-        m_rHomeError.setEditable(false);
-        m_rHomeError.setRows(5);
-        m_rHomeError.setMargin(new Insets(5, 5, 5, 5));
-        gbc.gridx = 0;
+        // R home selection
+        m_rHomePanel = new RHomeSelectionPanel(800, createFlowVariableModel(RSnippetSettings.R_HOME_PATH, Type.STRING));
+        gbc.gridwidth = 2;
+        p.add(m_rHomePanel, gbc);
         gbc.gridy++;
-        gbc.gridwidth = 3;
-        gbc.weightx = 3;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(m_rHomeError, gbc);
 
-        // Add filler to move everything up
-        gbc.gridy++;
+        // Panel to fill up remaining space
         gbc.weighty = 1;
-        panel.add(new JPanel(), gbc);
+        p.add(new JPanel(), gbc);
 
-        return panel;
+        return p;
     }
 
     @Override
@@ -447,7 +306,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
             m_sendRowNames.setSelected(s.getSendRowNames());
         }
 
-        m_rHome.setText(s.getRHomePath());
+        m_rHomePanel.loadSettingsFrom(s);
 
         m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getAvailableFlowVariables());
@@ -473,7 +332,7 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
             m_knimeInType.setSelectedIndex(type.equals("data.table") ? 1 : 0);
         }
 
-        m_rHome.setText(s.getRHomePath());
+        m_rHomePanel.loadSettingsFrom(s);
 
         m_templatesController.setDataTableSpec(spec);
         m_templatesController.setFlowVariables(getAvailableFlowVariables());
@@ -488,8 +347,6 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
             }
             m_panel.onOpen();
         });
-        updateRHomeTextField();
-        rHomeChanged();
     }
 
     @Override
@@ -504,6 +361,8 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
     protected void saveSettingsTo(final NodeSettingsWO settings) throws InvalidSettingsException {
         final RSnippetSettings s = m_panel.getRSnippet().getSettings();
 
+        m_rHomePanel.checkSettings();
+
         if (m_tableOutPort >= 0) {
             s.setOutNonNumbersAsMissing(m_outNonNumbersAsMissing.isSelected());
         }
@@ -513,9 +372,21 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
             s.setKnimeInType(m_knimeInType.getSelectedIndex() == 0 ? "data.frame" : "data.table");
         }
 
-        s.setRHomePath(m_rHome.getText());
-
+        m_rHomePanel.saveSettingsTo(s);
         m_panel.saveSettingsTo(settings);
     }
 
+    /** Find the parent of the component with the given type */
+    static <T> T getParentWithType(final Component comp, final Class<T> type) {
+        final Container parent = comp.getParent();
+        if (parent == null) {
+            return null;
+        } else if (type.isAssignableFrom(parent.getClass())) {
+            @SuppressWarnings("unchecked")
+            final T p = (T)parent;
+            return p;
+        } else {
+            return getParentWithType(parent, type);
+        }
+    }
 }
