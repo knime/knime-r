@@ -71,6 +71,8 @@ public class RSnippetSettings {
 
     private static final String SEND_BATCH_SIZE = "sendBatchSize";
 
+    private static final String OVERWRITE_R_HOME = "overwriteRHome";
+
     static final String R_HOME_PATH = "rHome";
 
     /** Custom script. */
@@ -96,6 +98,9 @@ public class RSnippetSettings {
     /** R type to use for the knime.in variable */
     private String m_knimeInType;
 
+    /** If a R home separate from the default should be used */
+    private boolean m_overwriteRHome;
+
     /**  Path to the R home */
     private String m_rHomePath;
 
@@ -110,6 +115,7 @@ public class RSnippetSettings {
         m_sendRowNames = true;
         m_sendBatchSize = 10000;
         m_knimeInType = "data.frame";
+        setOverwriteRHome(false);
         m_rHomePath = "";
     }
 
@@ -126,6 +132,7 @@ public class RSnippetSettings {
         settings.addBoolean(SEND_ROW_NAMES, m_sendRowNames);
         settings.addInt(SEND_BATCH_SIZE, getSendBatchSize());
         settings.addString(KNIME_IN_TYPE, getKnimeInType());
+        settings.addBoolean(OVERWRITE_R_HOME, isOverwriteRHome());
         settings.addString(R_HOME_PATH, getRHomePath());
     }
 
@@ -159,6 +166,7 @@ public class RSnippetSettings {
                 "Invalid type for knime.in: Can only be \"data.frame\" or \"data.table\".");
         }
 
+        setOverwriteRHome(settings.getBoolean(OVERWRITE_R_HOME, false));
         setRHomePath(settings.getString(R_HOME_PATH, ""));
     }
 
@@ -189,6 +197,7 @@ public class RSnippetSettings {
             setKnimeInType("data.frame");
         }
 
+        setOverwriteRHome(settings.getBoolean(OVERWRITE_R_HOME, false));
         setRHomePath(settings.getString(R_HOME_PATH, ""));
     }
 
@@ -201,6 +210,7 @@ public class RSnippetSettings {
         setSendBatchSize(s.getSendBatchSize());
         setKnimeInType(s.getKnimeInType());
         setRHomePath(s.getRHomePath());
+        setOverwriteRHome(s.isOverwriteRHome());
     }
 
     /**
@@ -316,6 +326,22 @@ public class RSnippetSettings {
     public String getKnimeInType() {
         return m_knimeInType;
     }
+
+    /**
+     * @param overwriteRHome the separateRHome to set
+     * @since 4.2
+     */
+    public void setOverwriteRHome(final boolean overwriteRHome) {
+        m_overwriteRHome = overwriteRHome;
+    }
+    /**
+     * @return if a separate R home should be used
+     * @since 4.2
+     */
+    public boolean isOverwriteRHome() {
+        return m_overwriteRHome;
+    }
+
 
     /**
      * Set the path to R home. Empty for default.
