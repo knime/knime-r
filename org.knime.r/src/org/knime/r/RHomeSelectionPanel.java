@@ -114,7 +114,7 @@ final class RHomeSelectionPanel extends JPanel {
         // Use a separate R home
         m_overwriteRHome =
             new JCheckBox("Overwrite default path to R home (replaces the path in the application preferences)");
-        m_overwriteRHome.addChangeListener(e -> overwriteRHomeChanged());
+        m_overwriteRHome.addActionListener(e -> overwriteRHomeChanged());
         gbc.gridwidth = 2;
         add(m_overwriteRHome, gbc);
         gbc.gridy++;
@@ -137,7 +137,7 @@ final class RHomeSelectionPanel extends JPanel {
 
     /** Get the current R preferences. According to the flow variable if it is set */
     RPreferenceProvider getRPreferenceProvider() {
-        if (m_overwriteRHome != null && m_overwriteRHome.isSelected()) {
+        if (m_overwriteRHome.isSelected()) {
             final Optional<FlowVariable> rHome = m_rHomeModel.getVariableValue();
             if (rHome.isPresent()) {
                 return new DefaultRPreferenceProvider(rHome.get().getStringValue());
@@ -153,6 +153,7 @@ final class RHomeSelectionPanel extends JPanel {
     void loadSettingsFrom(final RSnippetSettings settings) {
         m_overwriteRHome.setSelected(settings.isOverwriteRHome());
         m_rHome.setSelectedFile(settings.getRHomePath());
+        overwriteRHomeChanged();
     }
 
     /** Save the configured R home to the snippet settings */
