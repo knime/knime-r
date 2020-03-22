@@ -5,59 +5,76 @@
          point="org.knime.workbench.repository.nodes">
       <node
             category-path="/scripting/r/remote"
+            deprecated="true"
+            factory-class="org.knime.ext.r.node.RPlotterNodeFactory"
+            />
+      <node
+            category-path="/scripting/r/remote"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.RPlotterNodeFactory2"
             />
       <node
             category-path="/scripting/r/remote"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.RConsoleFactory"
             />
       <node
             category-path="/scripting/r/local"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.local.RLocalScriptingNodeFactory"
             >
       </node>
       <node
             category-path="/scripting/r/local"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.local.RLocalR2TableNodeFactory"
             >
       </node>
       <node
             category-path="/scripting/r/local"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.local.RLocalRData2RNodeFactory"
             >
       </node>
       <node
             category-path="/scripting/r/local"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.local.RLocalTable2RNodeFactory"
             >
       </node>
       <node
             category-path="/scripting/r/local"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.local.RLocalViewsNodeFactory2"
             >
       </node>
       <node
             category-path="/scripting/r/local"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.local.RLocalRViewsNodeFactory2"
             >
       </node>
       <node
             category-path="/scripting/r/local"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.local.RLocalLearnerNodeFactory"
             >
       </node>
       <node
             category-path="/scripting/r/local"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.local.RLocalPredictorNodeFactory"
             >
       </node>
       <node
             category-path="/scripting/r/local"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.local.R2PMMLNodeFactory"
             >
       </node>
       <node
             category-path="/scripting/r/local"
+            deprecated="true"
             factory-class="org.knime.ext.r.node.local.RLocalSourceNodeFactory"
             >
       </node>
