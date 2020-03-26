@@ -78,6 +78,11 @@
             factory-class="org.knime.ext.r.node.local.RLocalSourceNodeFactory"
             >
       </node>
+      <node
+            category-path="/scripting/r/local"
+            deprecated="true"
+            factory-class="org.knime.ext.r.node.local.RLocalViewsNodeFactory">
+      </node>
    </extension>
    <extension
          point="org.knime.workbench.repository.categories">
