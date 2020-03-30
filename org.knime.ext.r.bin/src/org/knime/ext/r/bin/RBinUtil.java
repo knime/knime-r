@@ -353,15 +353,15 @@ public final class RBinUtil {
         final String rVersion = (rProperties.getProperty("major") + "." + rProperties.getProperty("minor")) //
             .replace(" ", ""); // the version numbers may contain spaces
 
+        if (!checkRServeInstalled(rProperties)) {
+            return Optional.of(rHomeName + " does not contain the package 'Rserve'. "
+                + "Please install it in R using: \"install.packages('Rserve')\"");
+        }
+
         if ("3.1.0".equals(rVersion)) {
             return Optional
                 .of(rHomeName + " contains an R 3.1.0 installation which can cause problems with some functions. "
                     + "Please see https://www.knime.com/faq#q26 for details.");
-        }
-
-        if (!checkRServeInstalled(rProperties)) {
-            return Optional.of(rHomeName + " does not contain the package 'Rserve'. "
-                + "Please install it in R using: \"install.packages('Rserve',,'http://rforge.net/',type='source')\"");
         }
 
         final String cairoPath = rProperties.getProperty("Cairo.path");
