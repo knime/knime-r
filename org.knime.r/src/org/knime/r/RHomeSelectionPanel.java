@@ -62,6 +62,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeListener;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.knime.core.node.FlowVariableModel;
@@ -99,6 +100,8 @@ final class RHomeSelectionPanel extends JPanel {
 
     private final FilesHistoryPanel m_rHome;
 
+    private final ChangeListener m_rHomeChangeListener;
+
     private final JLabel m_rHomeError;
 
     private boolean m_hasError;
@@ -128,7 +131,8 @@ final class RHomeSelectionPanel extends JPanel {
         m_rHome = new FilesHistoryPanel(m_rHomeModel, "r_home_path", LocationValidation.None);
         m_rHome.setSelectMode(JFileChooser.DIRECTORIES_ONLY);
         m_rHome.setDialogType(JFileChooser.OPEN_DIALOG);
-        m_rHome.addChangeListener(e -> rHomeChanged());
+        m_rHomeChangeListener = e -> rHomeChanged();
+        m_rHome.addChangeListener(m_rHomeChangeListener);
         add(m_rHome, gbc);
         gbc.gridy++;
 
@@ -156,9 +160,11 @@ final class RHomeSelectionPanel extends JPanel {
 
     /** Load the configured R home from the snippet settings */
     void loadSettingsFrom(final RSnippetSettings settings) {
+        m_rHome.removeChangeListener(m_rHomeChangeListener);
         m_overwriteRHome.setSelected(settings.isOverwriteRHome());
         m_rHome.setSelectedFile(settings.getRHomePath());
         overwriteRHomeChanged();
+        m_rHome.addChangeListener(m_rHomeChangeListener);
     }
 
     /** Save the configured R home to the snippet settings */
