@@ -121,8 +121,9 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
             final Optional<String> warning = RBinUtil.checkREnvionment(rHome, "Path to R Home", false);
             if (warning.isPresent()) {
                 setMessage(warning.get(), WARNING);
+            } else {
+                setMessage(null, NONE);
             }
-            setMessage(null, NONE);
             return true;
         } catch (final InvalidRHomeException e) {
             setMessage(e.getMessage(), ERROR);
