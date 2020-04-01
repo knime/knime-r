@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="org.knime.features.ext.r" version="0.0.0">
+       <category name="knime-r" />
+   </feature>
+   <feature id="org.knime.features.ext.r.source" version="0.0.0">
+       <category name="knime-r" />
+   </feature>
+
+   <feature id="org.knime.features.ext.r.bin" version="0.0.0">
+       <category name="knime-r" />
+   </feature>
+   <feature id="org.knime.features.ext.r.bin.source" version="0.0.0">
+       <category name="knime-r" />
+   </feature>
+
+   <feature id="org.knime.features.microsoft.r" version="0.0.0">
+       <category name="knime-r" />
+   </feature>
+   <feature id="org.knime.features.microsoft.r.source" version="0.0.0">
+       <category name="knime-r" />
+   </feature>
+
+   <feature id="org.knime.features.r" version="0.0.0">
+       <category name="knime-r" />
+   </feature>
+   <feature id="org.knime.features.r.source" version="0.0.0">
+       <category name="knime-r" />
+   </feature>
+
+   <category-def name="knime-r" label="Build artifacts from knime-r">
+       <description>Build artifacts from knime-r</description>
+   </category-def>
+</site>

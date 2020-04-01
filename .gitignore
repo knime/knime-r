@@ -1,3 +1,7 @@
 */bin/
-*/target/
+**/target/
 */build/
+
+.flattened-pom.xml
+org.knime.ext.r/knime-r.jar
+org.knime.r/org-knime-r.jar
