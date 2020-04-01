@@ -38,7 +38,6 @@
 		<module>org.knime.update.r</module>
 	</modules>
 
-	<!-- List all repositories required for compilation here. The variables are defined in knime-maven-parent/pom.xml. -->
 	<repositories>
 		<repository>
 			<id>p2-knime-core</id>
@@ -102,8 +101,6 @@
 		</repository>
 	</repositories>
 
-	<!-- This whole block is only needed if the repository contains plug-ins that don't have any sources. If it is omitted
-		 Tycho will complain. -->
 	<build>
 		<plugins>
 			<plugin>
@@ -128,3 +125,4 @@
 		</plugins>
 	</build>
 </project>
+<!-- vim: set shiftwidth=4 expandtab smarttab: -->

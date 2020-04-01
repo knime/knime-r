@@ -14,24 +14,11 @@ properties([
 ])
 
 try {
-    knimetools.defaultTychoBuild('org.knime.update.r')
-
-    // Specifying configurations is optional. If omitted, the default configurations will be used
-    // (see jenkins-pipeline-libraries/vars/workflowTests.groovy)
-    // def testConfigurations = [
-    //     "ubuntu18.04 && python-3",
-    //     "windows && python-3"
-    // ]
+	// Unit tests require an R installation, which is present in a workflow-tests node
+    knimetools.defaultTychoBuild('org.knime.update.r', "workflow-tests && maven")
 
     workflowTests.runTests(
-        dependencies: [
-            // All features (not plug-ins!) in the specified repositories will be installed.
-            repositories: ['knime-r', 'knime-datageneration'],
-            // an optional list of additional bundles/plug-ins from the repositories above that must be installed
-            // ius: ['org.knime.json.tests']
-        ],
-        // this is optional and defaults to false
-        withAssertions: true,
+        dependencies: [ repositories: ['knime-r', 'knime-datageneration'] ]
     )
 
     stage('Sonarqube analysis') {
@@ -44,5 +31,4 @@ try {
 } finally {
     notifications.notifyBuild(currentBuild.result);
 }
-
-/* vim: set ts=4: */
+/* vim: set shiftwidth=4 expandtab smarttab: */
