@@ -26,7 +26,7 @@ try {
     workflowTests.runTests(
         dependencies: [
             // All features (not plug-ins!) in the specified repositories will be installed.
-            repositories: ['knime-r'],
+            repositories: ['knime-r', 'knime-datageneration'],
             // an optional list of additional bundles/plug-ins from the repositories above that must be installed
             // ius: ['org.knime.json.tests']
         ],
