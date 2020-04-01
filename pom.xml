@@ -34,7 +34,7 @@
 		<module>org.knime.features.r</module>
 		<module>org.knime.microsoft.r</module>
 		<module>org.knime.r</module>
-		<module>org.knime.r.testing</module>
+		<module>org.knime.r.tests</module>
 		<module>org.knime.update.r</module>
 	</modules>
 
