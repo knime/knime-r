@@ -1,0 +1,33 @@
+The attached script "mac_10.14_or_higher.sh"
+installs Homebrew and The R Project for Statistical Computing,
+including a number of additional R packages, on MacOS X.
+Copyright (C) 2020  KNIME GmbH
+
+
+This script is released under GNU General Public License 2: 
+You can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this script.  If not, see <https://www.gnu.org/licenses/>.
+
+!!!!!!!!!!!!!!!!!!!
+! - INFORMATION - !
+!!!!!!!!!!!!!!!!!!!
+
+We need a package manager on Mac OS X to install additional system libraries.
+Installing the 'Homebrew' (https://brew.sh) package manager for that is the
+default settings. To disable the installation of 'Homebrew' set 
+MAC_INSTALL_HOMEBREW=false at the beginning of the script.
+
+Uninstalling 'Homebrew' (https://brew.sh) package manager at the end of the 
+script is not the default settings, i.e. by default 'Homebrew' is not 
+uninstalled. If you wish to uninstall 'Homebrew' set 
+MAC_UNINSTALL_HOMEBREW=true at the beginning of the script.
