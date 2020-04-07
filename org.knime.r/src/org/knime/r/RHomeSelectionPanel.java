@@ -52,6 +52,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.Optional;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.Icon;
@@ -233,7 +234,7 @@ final class RHomeSelectionPanel extends JPanel {
                 // Could not check
                 error = true;
                 message = Optional.of("Could not check the R Environment.");
-            } catch (final InterruptedException e) {
+            } catch (final InterruptedException | CancellationException e) {
                 // Nothing to do the check is not valid anymore
                 return;
             }
