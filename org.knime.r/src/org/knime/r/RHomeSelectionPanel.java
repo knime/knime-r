@@ -51,6 +51,7 @@ package org.knime.r;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -91,6 +92,8 @@ final class RHomeSelectionPanel extends JPanel {
     private static final Icon ERROR_ICON = new ImageIcon(ImageRepository.SharedImages.Error.getUrl());
 
     private static final Icon WARNING_ICON = new ImageIcon(ImageRepository.SharedImages.Warning.getUrl());
+
+    private static final Icon PROCESS_ICON = new ImageIcon(ImageRepository.SharedImages.Busy.getUrl());
 
     /** Width of the R home error label */
     private final int m_rHomeErrorWidth;
@@ -202,7 +205,7 @@ final class RHomeSelectionPanel extends JPanel {
         m_rEnvChecker.execute();
     }
 
-    private class REnvChecker extends SwingWorkerWithContext<Pair<Boolean, Optional<String>>, Void> {
+    private class REnvChecker extends SwingWorkerWithContext<Pair<Boolean, Optional<String>>, String> {
 
         private RPreferenceProvider m_rPrefs;
 
@@ -212,6 +215,11 @@ final class RHomeSelectionPanel extends JPanel {
 
         @Override
         protected Pair<Boolean, Optional<String>> doInBackgroundWithContext() throws Exception {
+            if (m_rPrefs.getRHome() == null || m_rPrefs.getRHome().trim().isEmpty()) {
+                return Pair.of(true, Optional.of("Please select the path to R home."));
+            }
+            publish("Checking R home...");
+            Thread.sleep(200);
             try {
                 final Optional<String> warning =
                     RBinUtil.checkREnvionment(m_rPrefs.getRHome(), "Path to R home", false);
@@ -240,27 +248,50 @@ final class RHomeSelectionPanel extends JPanel {
             }
 
             // Set or clean the error
-            if (message.isPresent()) {
-                setRHomeError(message.get(), error);
+            if (message.isPresent() && error) {
+                setError(message.get());
+            } else if (message.isPresent()) {
+                setWarning(message.get());
             } else {
-                clearRHomeError();
+                clearError();
             }
         }
 
+        @Override
+        protected void processWithContext(final List<String> chunks) {
+            final String message = chunks.get(chunks.size() - 1);
+            setProcess(message);
+        }
+
+        /** Set the given R home error */
+        private void setError(final String message) {
+            m_hasError = true;
+            setRHomeError(message, ERROR_ICON);
+        }
+
+        /** Set the given R home warning */
+        private void setWarning(final String message) {
+            m_hasError = false;
+            setRHomeError(message, WARNING_ICON);
+        }
+
+        /** Set the given process message */
+        private void setProcess(final String message) {
+            setRHomeError(message, PROCESS_ICON);
+        }
+
+        /** Deletes the R home error. Called if the environment was checked without warnings or errors. */
+        private void clearError() {
+            m_hasError = false;
+            setRHomeError("", null);
+        }
+
         /** Set the R home error */
-        private void setRHomeError(final String message, final boolean error) {
-            m_hasError = error;
-            final Icon icon = error ? ERROR_ICON : WARNING_ICON;
+        private void setRHomeError(final String message, final Icon icon) {
             m_rHomeError.setIcon(icon);
             m_rHomeError.setText(
                 String.format("<html><div style=\\\"width:%dpx;\\\">%s</div></html>", m_rHomeErrorWidth, message));
         }
 
-        /** Deletes the R home error. Called if the environment was checked without warnings or errors. */
-        private void clearRHomeError() {
-            m_hasError = false;
-            m_rHomeError.setIcon(null);
-            m_rHomeError.setText("");
-        }
     }
 }
