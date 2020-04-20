@@ -357,7 +357,7 @@ public final class RBinUtil {
 
         if (!checkRServeInstalled(rProperties)) {
             return Optional.of(rHomeName + " does not contain the package 'Rserve'. "
-                + "Please install it in R using: \"install.packages('Rserve')\"" + DOC_REF_TEXT);
+                + "Please install it in R using: \"install.packages('Rserve',,'http://rforge.net')\"" + DOC_REF_TEXT);
         }
 
         if ("3.1.0".equals(rVersion)) {
