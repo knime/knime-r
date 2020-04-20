@@ -75,6 +75,8 @@ import com.sun.jna.Platform;
  */
 public final class RBinUtil {
 
+    private static final String DOC_REF_TEXT = " (See the KNIME Documentation at https://docs.knime.com/)";
+
     private RBinUtil() {
     }
 
@@ -300,26 +302,26 @@ public final class RBinUtil {
 
         /* check if the directory exists */
         if (!rHome.exists()) {
-            throw new InvalidRHomeException(rHomeName + " does not exist." + msgSuffix);
+            throw new InvalidRHomeException(rHomeName + " does not exist." + msgSuffix + DOC_REF_TEXT);
         }
         /* Make sure R home is not a file. */
         if (!rHome.isDirectory()) {
-            throw new InvalidRHomeException(rHomeName + " is not a directory." + msgSuffix);
+            throw new InvalidRHomeException(rHomeName + " is not a directory." + msgSuffix + DOC_REF_TEXT);
         }
         /* Check if there is a bin directory */
         final File binDir = new File(rHome, "bin");
         if (!binDir.isDirectory()) {
-            throw new InvalidRHomeException(rHomeName + " does not contain a folder with name 'bin'." + msgSuffix);
+            throw new InvalidRHomeException(rHomeName + " does not contain a folder with name 'bin'." + msgSuffix + DOC_REF_TEXT);
         }
         /* Check if there is an R Excecutable */
         final File rExecutable = new File(new DefaultRPreferenceProvider(rHomePath).getRBinPath("R"));
         if (!rExecutable.exists()) {
-            throw new InvalidRHomeException(rHomeName + " does not contain an R executable." + msgSuffix);
+            throw new InvalidRHomeException(rHomeName + " does not contain an R executable." + msgSuffix + DOC_REF_TEXT);
         }
         /* Make sure there is a library directory */
         final File libraryDir = new File(rHome, "library");
         if (!libraryDir.isDirectory()) {
-            throw new InvalidRHomeException(rHomeName + " does not contain a folder with name 'library'." + msgSuffix);
+            throw new InvalidRHomeException(rHomeName + " does not contain a folder with name 'library'." + msgSuffix + DOC_REF_TEXT);
         }
         /* On windows, we expect the appropriate platform-specific folders corresponding to our Platform */
         if (Platform.isWindows()) {
@@ -329,7 +331,7 @@ public final class RBinUtil {
             final File expectedFolder = new File(binDir, folderName);
             if (!expectedFolder.isDirectory()) {
                 throw new InvalidRHomeException(rHomeName + " does not contain a folder with name 'bin\\" + folderName
-                    + "'. Please install R " + bits + "-bit files." + msgSuffix);
+                    + "'. Please install R " + bits + "-bit files." + msgSuffix + DOC_REF_TEXT);
             }
         }
     }
@@ -347,7 +349,7 @@ public final class RBinUtil {
         throws InvalidRHomeException {
         // if the version properties are null, the properties could not be read correctly
         if (rProperties.getProperty("major") == null) {
-            throw new InvalidRHomeException(rHomeName + " contains an invalid R executable!");
+            throw new InvalidRHomeException(rHomeName + " contains an invalid R executable!" + DOC_REF_TEXT);
         }
 
         final String rVersion = (rProperties.getProperty("major") + "." + rProperties.getProperty("minor")) //
@@ -355,13 +357,13 @@ public final class RBinUtil {
 
         if (!checkRServeInstalled(rProperties)) {
             return Optional.of(rHomeName + " does not contain the package 'Rserve'. "
-                + "Please install it in R using: \"install.packages('Rserve')\"");
+                + "Please install it in R using: \"install.packages('Rserve')\"" + DOC_REF_TEXT);
         }
 
         if ("3.1.0".equals(rVersion)) {
             return Optional
                 .of(rHomeName + " contains an R 3.1.0 installation which can cause problems with some functions. "
-                    + "Please see https://www.knime.com/faq#q26 for details.");
+                    + "Please see https://www.knime.com/faq#q26 for details." + DOC_REF_TEXT);
         }
 
         final String cairoPath = rProperties.getProperty("Cairo.path");
@@ -369,14 +371,14 @@ public final class RBinUtil {
             // under Mac we need Cairo package to use png()/bmp() etc devices.
             return Optional.of(rHomeName + " does not contain the package 'Cairo'. "
                 + "The package is needed for bitmap graphics devices to work properly. "
-                + "Please install it in R using \"install.packages('Cairo')\".");
+                + "Please install it in R using \"install.packages('Cairo')\"." + DOC_REF_TEXT);
         }
 
         // Check if Rserve < 1.8.6 and R >= 3.5
         if (!checkRServeAndRVersion(rProperties)) {
             return Optional.of(rHomeName + " contains an R >= 3.5.0 and Rserve &lt; 1.8.6."
                 + "These versions currently have issues preventing their full use in KNIME (on Linux and Mac OS). "
-                + "A future release of R and/or Rserve may fix these issues.");
+                + "A future release of R and/or Rserve may fix these issues." + DOC_REF_TEXT);
         }
 
         return Optional.empty();
