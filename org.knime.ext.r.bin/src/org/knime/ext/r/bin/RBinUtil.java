@@ -75,7 +75,8 @@ import com.sun.jna.Platform;
  */
 public final class RBinUtil {
 
-    private static final String DOC_REF_TEXT = " (See the KNIME Documentation at https://docs.knime.com/)";
+    private static final String DOC_REF_TEXT =
+            " (For additional help, consult the R Installation Guide at https://docs.knime.com/)";
 
     private RBinUtil() {
     }
