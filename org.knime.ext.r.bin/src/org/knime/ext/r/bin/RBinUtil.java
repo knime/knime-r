@@ -377,7 +377,7 @@ public final class RBinUtil {
 
         // Check if Rserve < 1.8.6 and R >= 3.5
         if (!checkRServeAndRVersion(rProperties)) {
-            return Optional.of(rHomeName + " contains an R >= 3.5.0 and Rserve &lt; 1.8.6."
+            return Optional.of(rHomeName + " contains an R >= 3.5.0 and Rserve < 1.8.6. "
                 + "These versions currently have issues preventing their full use in KNIME (on Linux and Mac OS). "
                 + "A future release of R and/or Rserve may fix these issues." + DOC_REF_TEXT);
         }

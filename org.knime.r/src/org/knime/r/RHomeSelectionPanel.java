@@ -289,8 +289,8 @@ final class RHomeSelectionPanel extends JPanel {
         /** Set the R home error */
         private void setRHomeError(final String message, final Icon icon) {
             m_rHomeError.setIcon(icon);
-            m_rHomeError.setText(
-                String.format("<html><div style=\\\"width:%dpx;\\\">%s</div></html>", m_rHomeErrorWidth, message));
+            m_rHomeError.setText(String.format("<html><div style=\\\"width:%dpx;\\\">%s</div></html>",
+                m_rHomeErrorWidth, message.replace("<", "&lt;")));
         }
 
     }
