@@ -358,7 +358,8 @@ public final class RBinUtil {
 
         if (!checkRServeInstalled(rProperties)) {
             return Optional.of(rHomeName + " does not contain the package 'Rserve'. "
-                + "Please install it in R using: \"install.packages('Rserve',,'http://rforge.net')\"" + DOC_REF_TEXT);
+                + "Please install it in R using: 'install.packages(\"Rserve\",,\"http://rforge.net\")'."
+                + DOC_REF_TEXT);
         }
 
         if ("3.1.0".equals(rVersion)) {
@@ -372,7 +373,7 @@ public final class RBinUtil {
             // under Mac we need Cairo package to use png()/bmp() etc devices.
             return Optional.of(rHomeName + " does not contain the package 'Cairo'. "
                 + "The package is needed for bitmap graphics devices to work properly. "
-                + "Please install it in R using \"install.packages('Cairo')\"." + DOC_REF_TEXT);
+                + "Please install it in R using 'install.packages(\"Cairo\")'." + DOC_REF_TEXT);
         }
 
         // Check if Rserve < 1.8.6 and R >= 3.5
