@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 R_VERSION=3.6.1
+INSTALL_R_DEFAULT="y"
 
 # R packages to install
 GGPLOT_2=true
@@ -38,9 +39,31 @@ function installR {
   R_EXISTS=$(command -v R || echo "")
 
   if [[ "${R_EXISTS}" == "" ]]; then
-    echo "INFO >>> |- R not installed. Installing R now!"
-    curl https://cran.r-project.org/bin/macosx/R-${R_VERSION}.pkg --output R-${R_VERSION}.pkg
+    echo ""
+    echo "INFO >>> |- No version of R was detected. Continuing with installation..."
+    echo ""
+    read -p "Do you want to install the R default version. Choosing 'no' allows you to specify a different version. Enter [y/n] : " INSTALL_R_DEFAULT
+    if [[ "${INSTALL_R_DEFAULT}" == "n" ]]; then
+      echo ""
+      read -p "Enter the R version you'd like to install (Example: ${R_VERSION}) : " R_VERSION
 
+      if [[ "${R_VERSION}" =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]; then
+        echo ""
+        echo "INFO >>> Attempting to install R version ${R_VERSION}"
+      else
+        echo ""
+        echo "Invalid version format. Please use the correct version format as shown in the example."
+        echo ""
+        exit 1
+      fi
+    elif [[ ! "${INSTALL_R_DEFAULT}" =~ ^[y|n]$ ]]; then
+      echo ""
+      echo "Unrecognized answer. Please start over."
+      echo ""
+      exit 1
+    fi
+
+    curl https://cran.r-project.org/bin/macosx/R-${R_VERSION}.pkg --output R-${R_VERSION}.pkg
     sudo installer -pkg ~/R-${R_VERSION}.pkg -target /
   else
     echo "INFO >>> |- R is already installed! Type 'R --version' to get more details."
