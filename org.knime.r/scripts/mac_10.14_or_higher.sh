@@ -42,7 +42,7 @@ function installR {
     echo ""
     echo "INFO >>> |- No version of R was detected. Continuing with installation..."
     echo ""
-    read -p "Do you want to install the R default version. Choosing 'no' allows you to specify a different version. Enter [y/n] : " INSTALL_R_DEFAULT
+    read -p "Do you want to install R ${R_VERSION}. Choosing 'no' allows you to specify a different version. Enter [y/n] : " INSTALL_R_DEFAULT
     if [[ "${INSTALL_R_DEFAULT}" == "n" ]]; then
       echo ""
       read -p "Enter the R version you'd like to install (Example: ${R_VERSION}) : " R_VERSION
