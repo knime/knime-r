@@ -17,7 +17,7 @@ try {
     knimetools.defaultTychoBuild('org.knime.update.r', "workflow-tests && maven")
 
     workflowTests.runTests(
-        dependencies: [ repositories: ['knime-r', 'knime-datageneration'] ]
+        dependencies: [ repositories: ['knime-r', 'knime-datageneration', 'knime-js-base'] ]
     )
 
     stage('Sonarqube analysis') {
