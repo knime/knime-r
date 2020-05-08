@@ -28,6 +28,13 @@
        <category name="knime-r" />
    </feature>
 
+   <bundle id="org.knime.ext.r.type" version="0.0.0">
+       <category name="knime-r" />
+   </bundle>
+   <bundle id="org.knime.ext.r.type.source" version="0.0.0">
+       <category name="knime-r" />
+   </bundle>
+
    <category-def name="knime-r" label="Build artifacts from knime-r">
        <description>Build artifacts from knime-r</description>
    </category-def>
