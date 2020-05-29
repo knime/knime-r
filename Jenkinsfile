@@ -12,12 +12,21 @@ properties([
     disableConcurrentBuilds()
 ])
 
+SSHD_IMAGE = "${dockerTools.ECR}/knime/sshd:alpine3.10"
+
 try {
 	// Unit tests require an R installation, which is present in a workflow-tests node
     knimetools.defaultTychoBuild('org.knime.update.r', "workflow-tests && maven")
 
     workflowTests.runTests(
-        dependencies: [ repositories: ['knime-r', 'knime-datageneration', 'knime-js-base', 'knime-database', 'knime-filehandling', 'knime-kerberos'] ]
+        dependencies: [
+            repositories: ['knime-r', 'knime-datageneration', 'knime-js-base',
+                'knime-database', 'knime-filehandling', 'knime-kerberos',
+                'knime-exttool', 'knime-chemistry', 'knime-distance']
+        ],
+        sidecarContainers: [
+            [ image: SSHD_IMAGE, namePrefix: "SSHD", port: 22 ]
+        ]
     )
 
     stage('Sonarqube analysis') {
