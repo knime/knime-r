@@ -80,7 +80,7 @@
             factory-class="org.knime.r.node.io.filehandling.rmodel.reader.RModelReaderNodeFactory" >
       </node>
       <node
-            category-path="/scripting/r/io"
+            category-path="/labs/file-handling-prototype/file-handling-IO/file-handling-Write"
             factory-class="org.knime.r.node.io.filehandling.rmodel.writer.RModelWriterNodeFactory">
       </node>
       <node
@@ -89,7 +89,8 @@
             factory-class="org.knime.r.ionodes.RPortObjectReaderNodeFactory" >
       </node>
       <node
-            deprecated="true"
+      		after="org.knime.r.ionodes.RPortObjectReaderNodeFactory"
+            deprecated="false"
             category-path="/scripting/r/io"
             factory-class="org.knime.r.ionodes.RPortObjectWriterNodeFactory">
       </node>
