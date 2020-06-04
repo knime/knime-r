@@ -76,16 +76,15 @@
             factory-class="org.knime.r.RToRNodeFactory">
       </node>         
       <node
-            category-path="/scripting/r/io"
+            category-path="/labs/file-handling-prototype/file-handling-IO/file-handling-Read"
             factory-class="org.knime.r.node.io.filehandling.rmodel.reader.RModelReaderNodeFactory" >
       </node>
       <node
             category-path="/scripting/r/io"
-            after="org.knime.r.node.io.filehandling.rmodel.reader.RModelReaderNodeFactory"
             factory-class="org.knime.r.node.io.filehandling.rmodel.writer.RModelWriterNodeFactory">
       </node>
       <node
-            deprecated="true"
+            deprecated="false"
             category-path="/scripting/r/io"
             factory-class="org.knime.r.ionodes.RPortObjectReaderNodeFactory" >
       </node>
