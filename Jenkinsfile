@@ -8,6 +8,7 @@ properties([
         upstream('knime-database/' + env.BRANCH_NAME.replaceAll('/', '%2F')),
         upstream('knime-js-base/' + env.BRANCH_NAME.replaceAll('/', '%2F'))
     ]),
+    parameters(workflowTests.getConfigurationsAsParameters()),
     buildDiscarder(logRotator(numToKeepStr: '5')),
     disableConcurrentBuilds()
 ])
