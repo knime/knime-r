@@ -119,11 +119,15 @@ fi
 
 if [[ "${PMML}" == "true" ]]; then
   echo "INFO >>> Installing R package \"pmml\""
+
+  # newer versions of the XML package require R > 4.0.0, so we install this older version
+  echo "install.packages(\"https://cran.r-project.org/src/contrib/Archive/XML/XML_3.98-1.20.tar.gz\", repos = NULL, type=\"source\")" | sudo R --no-save
   echo "install.packages(\"pmml\", repos = c(${REPOSITORIES}))" | sudo R --no-save
 fi
 
 if [[ "${CAIRO}" == "true" ]]; then
   echo "INFO >>> Installing R package \"Cairo\""
+  brew install cairo
   echo "install.packages(\"Cairo\", repos = c(${REPOSITORIES}))" | sudo R --no-save
 fi
 
