@@ -81,11 +81,6 @@
       </node>
       <node
             deprecated="true"
-            factory-class="org.knime.ext.r.node.local.RNodeFactory"
-            hidden="false">
-      </node>
-      <node
-            deprecated="true"
             factory-class="org.knime.ext.r.node.RPlotterNodeFactory"
             hidden="false">
       </node>
