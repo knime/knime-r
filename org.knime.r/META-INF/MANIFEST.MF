@@ -3,9 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KNIME R-Project nodes
 Bundle-SymbolicName: org.knime.r;singleton:=true
 Bundle-Version: 4.2.0.qualifier
-Bundle-ClassPath: org-knime-r.jar,
-  lib/rengine-1.8.4.jar,
-  lib/rserve-engine-1.8.4.jar
+Bundle-ClassPath: .,
+ lib/rengine-1.8.4.jar,
+ lib/rserve-engine-1.8.4.jar
 Bundle-Activator: org.knime.r.Activator
 Bundle-Vendor: KNIME AG, Zurich, Switzerland
 Export-Package: org.knime.r,
