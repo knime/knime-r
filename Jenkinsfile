@@ -1,7 +1,7 @@
 #!groovy
 def BN = BRANCH_NAME == "master" || BRANCH_NAME.startsWith("releases/") ? BRANCH_NAME : "master"
 
-library "knime-pipeline@$BN"
+library "knime-pipeline@$BRANCH_NAME"
 
 properties([
     pipelineTriggers([
@@ -17,7 +17,7 @@ SSHD_IMAGE = "${dockerTools.ECR}/knime/sshd:alpine3.11"
 
 try {
 	// Unit tests require an R installation, which is present in a workflow-tests node
-    knimetools.defaultTychoBuild('org.knime.update.r', "workflow-tests && maven")
+    knimetools.defaultTychoBuild('org.knime.update.r', "workflow-tests && maven && java11")
 
     testConfigs = [
         WorkflowTests: {
