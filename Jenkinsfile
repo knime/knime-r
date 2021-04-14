@@ -17,7 +17,7 @@ SSHD_IMAGE = "${dockerTools.ECR}/knime/sshd:alpine3.11"
 
 try {
 	// Unit tests require an R installation, which is present in a workflow-tests node
-    knimetools.defaultTychoBuild('org.knime.update.r', "workflow-tests && maven")
+    knimetools.defaultTychoBuild('org.knime.update.r', "workflow-tests && maven && java11")
 
     testConfigs = [
         WorkflowTests: {
