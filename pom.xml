@@ -99,27 +99,4 @@
 		</repository>
 	</repositories>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>tycho-source-feature-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>source-feature</id>
-						<phase>package</phase>
-						<goals>
-							<goal>source-feature</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<excludes>
-						<plugin id="org.knime.ext.r.nodes"/>
-						<plugin id="org.knime.ext.r3.bin.win32.x86"/>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project><!-- vim: set shiftwidth=4 expandtab smarttab: -->
