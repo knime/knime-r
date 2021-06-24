@@ -53,6 +53,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.swing.text.BadLocationException;
 
@@ -68,6 +71,8 @@ import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.node.workflow.FlowVariable.Type;
+import org.knime.core.node.workflow.VariableType;
+import org.knime.core.node.workflow.VariableTypeRegistry;
 import org.knime.core.util.FileUtil;
 import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
@@ -85,6 +90,9 @@ import org.knime.r.controller.RController;
  * @author Jonathan Hale
  */
 public class RSnippetNodeModel extends ExtToolOutputNodeModel {
+    private static final String CONDA_EVN_TYPE_CLASS_NAME =
+        "org.knime.python2.CondaEnvironmentPropagation.CondaEnvironmentType";
+
     private final RSnippet m_snippet;
 
     private final RSnippetNodeConfig m_config;
@@ -92,6 +100,13 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
     private boolean m_hasROutPorts = true;
 
     private List<String> m_librariesInR = null;
+
+    static Map<String, FlowVariable>
+        getCondaVariables(final Function<VariableType<?>[], Map<String, FlowVariable>> variableGetter) {
+        return variableGetter.apply(VariableTypeRegistry.getInstance().getAllTypes()).entrySet().stream()
+            .filter(e -> e.getValue().getVariableType().getClass().getCanonicalName().equals(CONDA_EVN_TYPE_CLASS_NAME))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
 
     /**
      * Creates new instance of <code>RSnippetNodeModel</code> with one data in and data one out port.
@@ -145,7 +160,7 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
 
         final FlowVariableRepository flowVarRepo = new FlowVariableRepository(getAvailableInputFlowVariables());
 
-        try(final RController controller = new RController(true, getRPreferences())) {
+        try (final RController controller = new RController(true, getRPreferences())) {
             controller.initialize();
             exec.checkCanceled();
             final PortObject[] out = executeSnippet(controller, inData, flowVarRepo, exec);
@@ -156,11 +171,24 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
         }
     }
 
-    /** Get the R preference provider */
-    private RPreferenceProvider getRPreferences() {
+    /**
+     * Get the R preference provider
+     * @throws InvalidSettingsException if the provider selected through a conda environment variable no longer exists
+     */
+    private RPreferenceProvider getRPreferences() throws InvalidSettingsException {
         final RSnippetSettings snippetSettings = m_snippet.getSettings();
         if (snippetSettings.isOverwriteRHome()) {
-            return new DefaultRPreferenceProvider(snippetSettings.getRHomePath());
+            if (snippetSettings.hasRHomePath()) {
+                return new DefaultRPreferenceProvider(snippetSettings.getRHomePath());
+            } else {
+                final var condaVar =
+                    getCondaVariables(this::getAvailableFlowVariables).get(snippetSettings.getRCondaVariableName());
+                if (condaVar != null) {
+                    return new DefaultRPreferenceProvider(condaVar);
+                } else {
+                    throw new InvalidSettingsException("Please select a valid conda environment flow variable");
+                }
+            }
         } else {
             return RPreferenceInitializer.getRProvider();
         }
@@ -267,7 +295,8 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
             + "\")\n" + m_config.getScriptPrefix() + "\n" + script, exec);
         // run postfix in a separate evaluation to make sure we are not preventing the return value of the script being printed, which is
         // important for ggplot2 graphs, which would otherwise not be drawn onto the graphics (png) device.
-        executor.executeIgnoreResult(m_config.getScriptSuffix() + "\n" + RController.R_LOADED_LIBRARIES_VARIABLE + "<-(.packages())", exec);
+        executor.executeIgnoreResult(
+            m_config.getScriptSuffix() + "\n" + RController.R_LOADED_LIBRARIES_VARIABLE + "<-(.packages())", exec);
 
         exec.setMessage("Collecting captured output");
         executor.finishOutputCapturing(exec);
@@ -283,8 +312,9 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
             setExternalErrorOutput(output);
             /* Only fail node if one of the lines starts with "Error:", as some functions (like require() ) output
              * to stderr on success. */
-            boolean isError = output.stream().filter(s -> s.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)).findAny().isPresent();
-            if(isError) {
+            boolean isError =
+                output.stream().filter(s -> s.startsWith(ConsoleLikeRExecutor.ERROR_PREFIX)).findAny().isPresent();
+            if (isError) {
                 throw new RException("Error in R code: \n" + String.join("\n", output), null);
             }
         }

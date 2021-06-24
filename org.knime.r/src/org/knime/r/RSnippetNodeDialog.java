@@ -72,12 +72,13 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
-import org.knime.core.node.workflow.FlowVariable.Type;
+import org.knime.core.node.workflow.VariableType;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.ext.r.bin.preferences.RPreferenceProvider;
 import org.knime.r.template.DefaultTemplateController;
@@ -266,7 +267,10 @@ public class RSnippetNodeDialog extends DataAwareNodeDialogPane {
         }
 
         // R home selection
-        m_rHomePanel = new RHomeSelectionPanel(800, createFlowVariableModel(RSnippetSettings.R_HOME_PATH, Type.STRING));
+        m_rHomePanel = new RHomeSelectionPanel(800,
+            createFlowVariableModel(RSnippetSettings.R_HOME_PATH, VariableType.StringType.INSTANCE),
+            new SettingsModelString(RSnippetSettings.R_HOME_VARIABLE, ""),
+            () -> RSnippetNodeModel.getCondaVariables(this::getAvailableFlowVariables));
         gbc.gridwidth = 2;
         p.add(m_rHomePanel, gbc);
         gbc.gridy++;

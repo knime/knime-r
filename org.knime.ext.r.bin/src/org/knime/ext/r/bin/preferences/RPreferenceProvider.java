@@ -45,6 +45,8 @@
  */
 package org.knime.ext.r.bin.preferences;
 
+import java.util.Map;
+
 /**
  * Class provides a path to an R home directory.
  *
@@ -73,5 +75,18 @@ public interface RPreferenceProvider {
      * @return path to an Rserve executable
      */
     public String getRServeBinPath();
+
+    /**
+     * Set up the environment for a process that is running R.<br>
+     * This may be used if the R home is derived from a conda environment to assure that
+     * the PATH contains the required DLLs on Windows.
+     *
+     * @param environment
+     *      the environment to be changed
+     * @return the changed environment
+     */
+    default Map<String, String> setUpEnvironment(final Map<String, String> environment) {
+        return environment;
+    }
 
 }

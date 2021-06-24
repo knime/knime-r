@@ -76,7 +76,7 @@ import com.sun.jna.Platform;
 public final class RBinUtil {
 
     private static final String DOC_REF_TEXT =
-            " (For additional help, consult the R Installation Guide at https://docs.knime.com/)";
+        " (For additional help, consult the R Installation Guide at https://docs.knime.com/)";
 
     private RBinUtil() {
     }
@@ -271,6 +271,19 @@ public final class RBinUtil {
     }
 
     /**
+     * Checks whether the given {@link RPreferenceProvider} provides a valid R_HOME directory. It checks the presence of
+     * the bin and library folder. R-Home help will always be appended.
+     *
+     * @param provider the provider that provides the R home to be tested
+     * @throws InvalidRHomeException If the provided R_HOME path is invalid
+     * @see RBinUtil#checkRHome(RPreferenceProvider, String, boolean)
+     * @since 4.4.0
+     */
+    public static void checkRHome(final RPreferenceProvider provider) throws InvalidRHomeException {
+        checkRHome(provider, "R_HOME", true);
+    }
+
+    /**
      * Checks whether the given path is a valid R_HOME directory. It checks the presence of the bin and library folder.
      *
      * @param rHomePath path to R_HOME
@@ -294,12 +307,26 @@ public final class RBinUtil {
      */
     public static void checkRHome(final String rHomePath, final String rHomeName, final boolean appendRHomeHelp)
         throws InvalidRHomeException {
-        final File rHome = new File(rHomePath);
-        final String msgSuffix = appendRHomeHelp
-            ? " R_HOME ('" + rHomePath + "')" + " is meant to be the path to the folder which is the root of R's "
-                + "installation tree. \nIt contains a 'bin' folder which itself contains the R executable and a "
-                + "'library' folder. Please change the R settings in the preferences."
-            : "";
+        checkRHome(new DefaultRPreferenceProvider(rHomePath), rHomeName, appendRHomeHelp);
+    }
+
+    /**
+     * Checks whether the given {@link RPreferenceProvider} provides a valid R_HOME directory. It checks the presence of
+     * the bin and library folder.
+     *
+     * @param provider the provider that provides the R home to be tested
+     * @param rHomeName the name of the R home which is used in the error message
+     * @param appendRHomeHelp if a message should be appended which explains what the R home is and how to change it
+     * @throws InvalidRHomeException If the provided R_HOME path is invalid
+     * @since 4.4.0
+     */
+    public static void checkRHome(final RPreferenceProvider provider, final String rHomeName,
+        final boolean appendRHomeHelp) throws InvalidRHomeException {
+        final File rHome = new File(provider.getRHome());
+        final String msgSuffix = appendRHomeHelp ? " R_HOME ('" + provider.getRHome() + "')"
+            + " is meant to be the path to the folder which is the root of R's "
+            + "installation tree. \nIt contains a 'bin' folder which itself contains the R executable and a "
+            + "'library' folder. Please change the R settings in the preferences." : "";
 
         /* check if the directory exists */
         if (!rHome.exists()) {
@@ -312,17 +339,20 @@ public final class RBinUtil {
         /* Check if there is a bin directory */
         final File binDir = new File(rHome, "bin");
         if (!binDir.isDirectory()) {
-            throw new InvalidRHomeException(rHomeName + " does not contain a folder with name 'bin'." + msgSuffix + DOC_REF_TEXT);
+            throw new InvalidRHomeException(
+                rHomeName + " does not contain a folder with name 'bin'." + msgSuffix + DOC_REF_TEXT);
         }
         /* Check if there is an R Excecutable */
-        final File rExecutable = new File(new DefaultRPreferenceProvider(rHomePath).getRBinPath("R"));
+        final File rExecutable = new File(provider.getRBinPath("R"));
         if (!rExecutable.exists()) {
-            throw new InvalidRHomeException(rHomeName + " does not contain an R executable." + msgSuffix + DOC_REF_TEXT);
+            throw new InvalidRHomeException(
+                rHomeName + " does not contain an R executable." + msgSuffix + DOC_REF_TEXT);
         }
         /* Make sure there is a library directory */
         final File libraryDir = new File(rHome, "library");
         if (!libraryDir.isDirectory()) {
-            throw new InvalidRHomeException(rHomeName + " does not contain a folder with name 'library'." + msgSuffix + DOC_REF_TEXT);
+            throw new InvalidRHomeException(
+                rHomeName + " does not contain a folder with name 'library'." + msgSuffix + DOC_REF_TEXT);
         }
         /* On windows, we expect the appropriate platform-specific folders corresponding to our Platform */
         if (Platform.isWindows()) {
@@ -399,11 +429,32 @@ public final class RBinUtil {
      */
     public static Optional<String> checkREnvionment(final String rHomePath, final String rHomeName,
         final boolean appendRHomeHelp) throws InvalidRHomeException {
-        // Check the R home directory
-        checkRHome(rHomePath, rHomeName, appendRHomeHelp);
+        return checkREnvionment(new DefaultRPreferenceProvider(rHomePath), rHomeName, appendRHomeHelp);
+    }
 
+    /**
+     * Checks the R environment at the given R home. Checks if the R home is a valid and if the properties of the R
+     * environment are valid.
+     *
+     * @param provider the provider that provides the R home to be tested
+     * @param rHomeName the name of the R home which is used in the error message
+     * @param appendRHomeHelp if a message should be appended which explains what the R home is and how to change it
+     * @return a warning message if something is wrong with the R environment but it can be used
+     * @throws InvalidRHomeException if the R environment is invalid and cannot be used
+     * @since 4.4.0
+     */
+    public static Optional<String> checkREnvionment(final RPreferenceProvider provider, final String rHomeName,
+        final boolean appendRHomeHelp) throws InvalidRHomeException {
+        // Check the R home directory
+        checkRHome(provider, rHomeName, appendRHomeHelp);
+
+        final DefaultRPreferenceProvider prefProvider;
         // Check the properties of the R environment
-        final DefaultRPreferenceProvider prefProvider = new DefaultRPreferenceProvider(rHomePath);
+        if (provider instanceof DefaultRPreferenceProvider) {
+            prefProvider = (DefaultRPreferenceProvider) provider;
+        } else {
+            prefProvider = new DefaultRPreferenceProvider(provider.getRHome());
+        }
         final Properties rProperties = prefProvider.getProperties();
         return checkRProperties(rProperties, rHomeName);
     }

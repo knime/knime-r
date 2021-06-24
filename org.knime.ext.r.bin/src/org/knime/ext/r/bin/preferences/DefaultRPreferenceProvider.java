@@ -49,8 +49,11 @@
 package org.knime.ext.r.bin.preferences;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Properties;
 
+import org.knime.core.node.util.CheckUtils;
+import org.knime.core.node.workflow.FlowVariable;
 import org.knime.ext.r.bin.RBinUtil;
 
 import com.sun.jna.Platform;
@@ -62,7 +65,12 @@ import com.sun.jna.Platform;
  * @author Jonathan Hale
  */
 public class DefaultRPreferenceProvider implements RPreferenceProvider {
+    private static final String CONDA_EVN_TYPE_CLASS_NAME =
+        "org.knime.python2.CondaEnvironmentPropagation.CondaEnvironmentType";
+
     private final String m_rHome;
+
+    private final String m_condaPrefix;
 
     private Properties m_properties = null;
 
@@ -72,7 +80,27 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
      * @param rHome R's home directory
      */
     public DefaultRPreferenceProvider(final String rHome) {
+        m_condaPrefix = null;
         m_rHome = rHome;
+    }
+
+    /**
+     * Creates a new preference provider using the given conda environment to derive the R home directory and binaries
+     * from.
+     *
+     * @param condaVar the conda environment variable to use
+     */
+    public DefaultRPreferenceProvider(final FlowVariable condaVar) {
+        CheckUtils.checkArgument(
+            condaVar.getVariableType().getClass().getCanonicalName().equals(CONDA_EVN_TYPE_CLASS_NAME),
+            "Variable is not a conda evironment variable.");
+        final var rawString = condaVar.getValueAsString();
+        // use the format of the string representation of the conda environment variable
+        // `{name: <name>, prefix: <prefix>}`
+        // and that a conda environment name may not contain a colon
+        m_condaPrefix =
+            rawString.substring(rawString.indexOf(':', rawString.indexOf(':') + 1) + 2, rawString.length() - 1);
+        m_rHome = m_condaPrefix + File.separator + "lib" + File.separator + "R";
     }
 
     @Override
@@ -88,6 +116,10 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
 
     @Override
     public String getRBinPath(final String command) {
+        if (m_condaPrefix != null && Platform.isWindows()) {
+            return m_condaPrefix + File.separator + "Scripts" + File.separator + command + ".exe";
+        }
+
         final String binPath = getRHome() + File.separator + "bin" + File.separator;
         if (Platform.isWindows()) {
             if (Platform.is64Bit()) {
@@ -116,6 +148,22 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
         } else {
             return rservePath + "Rserve";
         }
+    }
+
+    @Override
+    public Map<String, String> setUpEnvironment(final Map<String, String> environment) {
+        if (Platform.isWindows() && m_condaPrefix != null) {
+            final var pathVar = new StringBuilder();
+            pathVar.append(m_condaPrefix).append(File.pathSeparator);
+            pathVar.append(m_condaPrefix).append(File.separator).append("Library").append(File.separator).append("bin")
+                .append(File.pathSeparator);
+            pathVar.append(m_condaPrefix).append(File.separator).append("Library").append(File.separator)
+                .append("mingw-w64").append(File.separator).append("bin").append(File.pathSeparator);
+            pathVar.append(m_condaPrefix).append(File.separator).append("Scripts").append(File.pathSeparator);
+            pathVar.append(environment.getOrDefault("PATH", ""));
+            environment.put("PATH", pathVar.toString());
+        }
+        return environment;
     }
 
     /**

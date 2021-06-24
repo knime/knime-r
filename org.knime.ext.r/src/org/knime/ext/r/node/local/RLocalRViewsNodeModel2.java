@@ -137,7 +137,7 @@ public class RLocalRViewsNodeModel2 extends RAbstractLocalNodeModel {
 
     /**
      * Creates new instance of <code>RLocalRViewsNodeModel</code> with one data in port and no data out port.
-     * 
+     *
      * @param pref provider for R executable
      */
     public RLocalRViewsNodeModel2(final RPreferenceProvider pref) {

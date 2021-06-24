@@ -57,6 +57,10 @@ import org.knime.core.node.config.ConfigWO;
  * @author Heiko Hofer
  */
 public class RSnippetSettings {
+    private static final String DATA_FRAME = "data.frame";
+
+    private static final String DATA_TABLE = "data.table";
+
     private static final String SCRIPT = "script";
 
     private static final String TEMPLATE_UUID = "templateUUID";
@@ -74,6 +78,10 @@ public class RSnippetSettings {
     private static final String OVERWRITE_R_HOME = "overwriteRHome";
 
     static final String R_HOME_PATH = "rHome";
+
+    static final String R_HOME_VARIABLE = "condaVariableName";
+
+    private static final String USE_R_HOME_PATH = "useRPathHome";
 
     /** Custom script. */
     private String m_script;
@@ -101,8 +109,14 @@ public class RSnippetSettings {
     /** If a R home separate from the default should be used */
     private boolean m_overwriteRHome;
 
-    /**  Path to the R home */
+    /** Path to the R home */
     private String m_rHomePath;
+
+    /** Whether to use a path as R home (or derive it from a conda environment) */
+    private boolean m_useRHomePath;
+
+    /** The name of the conda environment variable that should be used */
+    private String m_rCondaVariableName;
 
     /**
      * Create a new instance.
@@ -114,9 +128,11 @@ public class RSnippetSettings {
         m_outNonNumbersAsMissing = false;
         m_sendRowNames = true;
         m_sendBatchSize = 10000;
-        m_knimeInType = "data.frame";
+        m_knimeInType = DATA_FRAME;
         setOverwriteRHome(false);
         m_rHomePath = "";
+        m_useRHomePath = true;
+        m_rCondaVariableName = null;
     }
 
     /**
@@ -134,6 +150,8 @@ public class RSnippetSettings {
         settings.addString(KNIME_IN_TYPE, getKnimeInType());
         settings.addBoolean(OVERWRITE_R_HOME, isOverwriteRHome());
         settings.addString(R_HOME_PATH, getRHomePath());
+        settings.addBoolean(USE_R_HOME_PATH, hasRHomePath());
+        settings.addString(R_HOME_VARIABLE, getRCondaVariableName());
     }
 
     /**
@@ -158,8 +176,8 @@ public class RSnippetSettings {
         setSendRowNames(settings.getBoolean(SEND_ROW_NAMES, true));
         setSendBatchSize(settings.getInt(SEND_BATCH_SIZE, 10000));
 
-        final String type = settings.getString(KNIME_IN_TYPE, "data.frame");
-        if ("data.frame".equals(type) || "data.table".equals(type)) {
+        final String type = settings.getString(KNIME_IN_TYPE, DATA_FRAME);
+        if (DATA_FRAME.equals(type) || DATA_TABLE.equals(type)) {
             setKnimeInType(type);
         } else {
             throw new InvalidSettingsException(
@@ -168,6 +186,8 @@ public class RSnippetSettings {
 
         setOverwriteRHome(settings.getBoolean(OVERWRITE_R_HOME, false));
         setRHomePath(settings.getString(R_HOME_PATH, ""));
+        setUseRHomePath(settings.getBoolean(USE_R_HOME_PATH, true));
+        setRCondaVariableName(settings.getString(R_HOME_VARIABLE, null));
     }
 
     /**
@@ -190,15 +210,17 @@ public class RSnippetSettings {
 
         setSendBatchSize(settings.getInt(SEND_BATCH_SIZE, 10000));
 
-        final String type = settings.getString(KNIME_IN_TYPE, "data.frame");
-        if ("data.frame".equals(type) || "data.table".equals(type)) {
+        final String type = settings.getString(KNIME_IN_TYPE, DATA_FRAME);
+        if (DATA_FRAME.equals(type) || DATA_TABLE.equals(type)) {
             setKnimeInType(type);
         } else {
-            setKnimeInType("data.frame");
+            setKnimeInType(DATA_FRAME);
         }
 
         setOverwriteRHome(settings.getBoolean(OVERWRITE_R_HOME, false));
         setRHomePath(settings.getString(R_HOME_PATH, ""));
+        setUseRHomePath(settings.getBoolean(USE_R_HOME_PATH, true));
+        setRCondaVariableName(settings.getString(R_HOME_VARIABLE, null));
     }
 
     public void loadSettings(final RSnippetSettings s) {
@@ -211,6 +233,8 @@ public class RSnippetSettings {
         setKnimeInType(s.getKnimeInType());
         setRHomePath(s.getRHomePath());
         setOverwriteRHome(s.isOverwriteRHome());
+        setRCondaVariableName(s.getRCondaVariableName());
+        setUseRHomePath(s.hasRHomePath());
     }
 
     /**
@@ -310,10 +334,10 @@ public class RSnippetSettings {
     /**
      * Set the R type in which to provide the data from KNIME.
      *
-     * @param type either "data.frame" or "data.table".
+     * @param type either DATA_FRAME or DATA_TABLE.
      */
     public void setKnimeInType(final String type) {
-        if ("data.frame".equals(type) || "data.table".equals(type)) {
+        if (DATA_FRAME.equals(type) || DATA_TABLE.equals(type)) {
             m_knimeInType = type;
             return;
         }
@@ -331,7 +355,7 @@ public class RSnippetSettings {
      * @param overwriteRHome the separateRHome to set
      * @since 4.2
      */
-    public void setOverwriteRHome(final boolean overwriteRHome) {
+    public final void setOverwriteRHome(final boolean overwriteRHome) {
         m_overwriteRHome = overwriteRHome;
     }
     /**
@@ -359,5 +383,40 @@ public class RSnippetSettings {
      */
     public String getRHomePath() {
         return m_rHomePath;
+    }
+
+    /**
+     * @param useRHomePath whether a path should be used for the R home.
+     * @since 4.4
+     */
+    public void setUseRHomePath(final boolean useRHomePath) {
+        m_useRHomePath = useRHomePath;
+    }
+
+    /**
+     * @return whether a home path should be used.
+     * @since 4.4
+     */
+    public boolean hasRHomePath() {
+        return m_useRHomePath;
+    }
+
+    /**
+     * @param rCondaVariableName
+     *      the name of the conda environment variable that should
+     * @since 4.4
+     */
+    public void setRCondaVariableName(final String rCondaVariableName) {
+        m_rCondaVariableName = rCondaVariableName;
+    }
+
+    /**
+     * @return
+     *      the name of the conda environment variable that should
+     *      be used to derive the R home.
+     * @since 4.4
+     */
+    public String getRCondaVariableName() {
+        return m_rCondaVariableName;
     }
 }

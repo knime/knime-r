@@ -213,6 +213,7 @@ public class RConnectionFactory {
                 rHome + File.separator + "lib" + File.pathSeparator + env.get("LD_LIBRARY_PATH"));
 
         }
+        preferences.setUpEnvironment(env);
         // R HOME is required for Rserve/R to know where default libraries
         // are located.
         env.put("R_HOME", rHome);

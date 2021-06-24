@@ -61,6 +61,10 @@
 				Check this option to select a path to the home of a R installation
 				that is different from the path configured on the R preference page.
 				The path must point to the root folder of the R installation tree.
+				You can either specify the path directly or use the R installation in
+				a conda environment. The conda environment can be specified using a conda
+				environment flow variable from e.g. a
+				<a href="https://kni.me/n/7HrPteTMsla4bZml">&#8220;Conda Environment Propagation&#8221; node.</a>
 			</option>
 	    </tab>
     </fullDescription>

@@ -302,9 +302,8 @@ public class RController implements IRController {
      * @throws RException
      */
     private void initR() throws RException {
-        final String rHome = m_preferences.getRHome();
         try {
-            RBinUtil.checkRHome(rHome);
+            RBinUtil.checkRHome(m_preferences);
 
             // Use cached preferences if DefaultRPreferenceProvider
             if (m_preferences instanceof DefaultRPreferenceProvider) {
@@ -330,7 +329,7 @@ public class RController implements IRController {
 
             m_connection = initRConnection(m_preferences);
         } catch (final InvalidRHomeException ex) {
-            throw new RException("R Home \"" + rHome + "\" is invalid.", ex);
+            throw new RException("R Home \"" + m_preferences.getRHome() + "\" is invalid.", ex);
         } catch (final RserveException | IOException e) {
             throw new RException("Exception occured during R initialization.", e);
         }

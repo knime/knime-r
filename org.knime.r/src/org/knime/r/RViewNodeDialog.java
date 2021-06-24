@@ -69,13 +69,14 @@ import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.NotConfigurableException;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.port.PortObject;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortType;
 import org.knime.core.node.util.CheckUtils;
 import org.knime.core.node.util.ViewUtils;
 import org.knime.core.node.workflow.FlowVariable;
-import org.knime.core.node.workflow.FlowVariable.Type;
+import org.knime.core.node.workflow.VariableType;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.ext.r.bin.preferences.RPreferenceProvider;
 import org.knime.r.template.DefaultTemplateController;
@@ -114,7 +115,7 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
 
     private JTextField m_imgBackgroundColor;
 
-    private JComboBox<String> m_imgType = new JComboBox<String>(RViewNodeConfig.IMAGE_TYPES);
+    private JComboBox<String> m_imgType = new JComboBox<>(RViewNodeConfig.IMAGE_TYPES);
 
     private RPreferenceProvider m_preferenceProvider;
 
@@ -346,10 +347,9 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
     private JPanel createTemplatesPanel() {
         final RSnippetNodePanel preview = new RSnippetNodePanel(m_templateMetaCategory, m_config, true, false);
 
-        m_templatesController = new DefaultTemplateController<RSnippetNodePanel>(m_panel, preview);
-        final TemplatesPanel templatesPanel =
+        m_templatesController = new DefaultTemplateController<>(m_panel, preview);
+        return
             new TemplatesPanel(Collections.<Class<?>> singleton(m_templateMetaCategory), m_templatesController);
-        return templatesPanel;
     }
 
     private JPanel createAdvancedPanel() {
@@ -359,8 +359,10 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
             GridBagConstraints.HORIZONTAL, insets, 0, 0);
 
         // R home selection
-        m_rHomePanel = new RHomeSelectionPanel(550, createFlowVariableModel(
-            new String[]{RViewNodeSettings.R_SETTINGS, RSnippetSettings.R_HOME_PATH}, Type.STRING));
+        m_rHomePanel = new RHomeSelectionPanel(550,
+            createFlowVariableModel(RSnippetSettings.R_HOME_PATH, VariableType.StringType.INSTANCE),
+            new SettingsModelString(RSnippetSettings.R_HOME_VARIABLE, ""),
+            () -> RSnippetNodeModel.getCondaVariables(this::getAvailableFlowVariables));
         gbc.gridwidth = 2;
         p.add(m_rHomePanel, gbc);
         gbc.gridy++;
@@ -432,7 +434,7 @@ public class RViewNodeDialog extends DataAwareNodeDialogPane {
     @Override
     public void onClose() {
         m_open = false;
-        ViewUtils.invokeAndWaitInEDT(() -> m_panel.onClose());
+        ViewUtils.invokeAndWaitInEDT(m_panel::onClose);
     }
 
     @Override

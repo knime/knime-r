@@ -52,16 +52,20 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
+import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeListener;
@@ -69,6 +73,10 @@ import javax.swing.event.ChangeListener;
 import org.apache.commons.lang3.tuple.Pair;
 import org.knime.core.node.FlowVariableModel;
 import org.knime.core.node.InvalidSettingsException;
+import org.knime.core.node.NodeLogger;
+import org.knime.core.node.NodeSettings;
+import org.knime.core.node.defaultnodesettings.DialogComponentFlowVariableNameSelection2;
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
 import org.knime.core.node.util.FilesHistoryPanel;
 import org.knime.core.node.util.FilesHistoryPanel.LocationValidation;
 import org.knime.core.node.workflow.FlowVariable;
@@ -98,11 +106,21 @@ final class RHomeSelectionPanel extends JPanel {
     /** Width of the R home error label */
     private final int m_rHomeErrorWidth;
 
-    private final FlowVariableModel m_rHomeModel;
+    private final FlowVariableModel m_rHomePathModel;
+
+    private final SettingsModelString m_rCondaVariableNameModel;
 
     private final JCheckBox m_overwriteRHome;
 
-    private final FilesHistoryPanel m_rHome;
+    private final FilesHistoryPanel m_rHomePath;
+
+    private final DialogComponentFlowVariableNameSelection2 m_rHomeConda;
+
+    private final Supplier<Map<String, FlowVariable>> m_condaVariablesSupplier;
+
+    private final JRadioButton m_pathSelection;
+
+    private final JRadioButton m_condaSelection;
 
     private final ChangeListener m_rHomeChangeListener;
 
@@ -112,15 +130,19 @@ final class RHomeSelectionPanel extends JPanel {
 
     private REnvChecker m_rEnvChecker = null;
 
-    RHomeSelectionPanel(final int rHomeErrorWidth, final FlowVariableModel rHomeModel) {
+    RHomeSelectionPanel(final int rHomeErrorWidth, final FlowVariableModel rHomeModel,
+        final SettingsModelString rCondaVariableName,
+        final Supplier<Map<String, FlowVariable>> condaVariablesSupplier) {
         super(new GridBagLayout());
         m_rHomeErrorWidth = rHomeErrorWidth;
-        m_rHomeModel = rHomeModel;
+        m_rHomePathModel = rHomeModel;
+        m_rCondaVariableNameModel = rCondaVariableName;
+        m_condaVariablesSupplier = condaVariablesSupplier;
 
         setBorder(new TitledBorder("Path to R home"));
 
         final Insets insets = new Insets(5, 5, 0, 5);
-        final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.BASELINE,
+        final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.BASELINE,
             GridBagConstraints.HORIZONTAL, insets, 0, 0);
 
         // Use a separate R home
@@ -131,14 +153,35 @@ final class RHomeSelectionPanel extends JPanel {
         add(m_overwriteRHome, gbc);
         gbc.gridy++;
 
-        // R home selection
-        m_rHome = new FilesHistoryPanel(m_rHomeModel, "r_home_path", LocationValidation.None);
-        m_rHome.setSelectMode(JFileChooser.DIRECTORIES_ONLY);
-        m_rHome.setDialogType(JFileChooser.OPEN_DIALOG);
-        m_rHomeChangeListener = e -> rHomeChanged();
-        m_rHome.addChangeListener(m_rHomeChangeListener);
-        add(m_rHome, gbc);
+        //
+        final var group = new ButtonGroup();
+        m_pathSelection = new JRadioButton("Specify path to R home");
+        m_condaSelection = new JRadioButton("Use conda environment to find R home");
+        group.add(m_pathSelection);
+        add(m_pathSelection, gbc);
         gbc.gridy++;
+
+        m_rHomeChangeListener = e -> rHomeChanged();
+        // R home selection
+        m_rHomePath = new FilesHistoryPanel(m_rHomePathModel, "r_home_path", LocationValidation.None);
+        m_rHomePath.setSelectMode(JFileChooser.DIRECTORIES_ONLY);
+        m_rHomePath.setDialogType(JFileChooser.OPEN_DIALOG);
+        m_rHomePath.addChangeListener(m_rHomeChangeListener);
+        add(m_rHomePath, gbc);
+        gbc.gridy++;
+
+        group.add(m_condaSelection);
+        add(m_condaSelection, gbc);
+        gbc.gridy++;
+
+        m_rHomeConda = new DialogComponentFlowVariableNameSelection2(m_rCondaVariableNameModel, "Conda environment flow variable:",
+            m_condaVariablesSupplier);
+        m_rCondaVariableNameModel.addChangeListener(m_rHomeChangeListener);
+        add(m_rHomeConda.getComponentPanel(), gbc);
+        gbc.gridy++;
+
+        m_pathSelection.addActionListener(l -> updateSelection());
+        m_condaSelection.addActionListener(l -> updateSelection());
 
         // R home error
         m_rHomeError = new JLabel();
@@ -148,33 +191,70 @@ final class RHomeSelectionPanel extends JPanel {
         gbc.gridy++;
     }
 
+
     /** Get the current R preferences. According to the flow variable if it is set */
     RPreferenceProvider getRPreferenceProvider() {
         if (m_overwriteRHome.isSelected()) {
-            final Optional<FlowVariable> rHome = m_rHomeModel.getVariableValue();
-            if (rHome.isPresent()) {
-                return new DefaultRPreferenceProvider(rHome.get().getStringValue());
+            if (m_pathSelection.isSelected()) {
+                final Optional<FlowVariable> rHome = m_rHomePathModel.getVariableValue();
+                if (rHome.isPresent()) {
+                    return new DefaultRPreferenceProvider(rHome.get().getStringValue());
+                } else {
+                    return new DefaultRPreferenceProvider(m_rHomePath.getSelectedFile());
+                }
             } else {
-                return new DefaultRPreferenceProvider(m_rHome.getSelectedFile());
+                final var condaVar = m_condaVariablesSupplier.get().get(m_rCondaVariableNameModel.getStringValue());
+                if (condaVar != null) {
+                    return new DefaultRPreferenceProvider(condaVar);
+                } else {
+                    return new DefaultRPreferenceProvider("");
+                }
             }
         } else {
             return RPreferenceInitializer.getRProvider();
         }
     }
 
+    private void updateSelection() {
+        if (m_pathSelection.isSelected()) {
+            m_rHomePath.setEnabled(true);
+            m_rCondaVariableNameModel.setEnabled(false);
+        } else {
+            m_rHomePath.setEnabled(false);
+            m_rCondaVariableNameModel.setEnabled(true);
+        }
+    }
+
     /** Load the configured R home from the snippet settings */
     void loadSettingsFrom(final RSnippetSettings settings) {
-        m_rHome.removeChangeListener(m_rHomeChangeListener);
+        m_rHomePath.removeChangeListener(m_rHomeChangeListener);
+        m_rCondaVariableNameModel.removeChangeListener(m_rHomeChangeListener);
         m_overwriteRHome.setSelected(settings.isOverwriteRHome());
-        m_rHome.setSelectedFile(settings.getRHomePath());
+        m_rHomePath.setSelectedFile(settings.getRHomePath());
         overwriteRHomeChanged();
-        m_rHome.addChangeListener(m_rHomeChangeListener);
+        try {
+            final var settingStranslation = new NodeSettings("");
+            settings.saveSettings(settingStranslation);
+            m_rCondaVariableNameModel.loadSettingsFrom(settingStranslation);
+        } catch (InvalidSettingsException e) {
+            NodeLogger.getLogger(getClass()).error(e);
+        }
+        m_rCondaVariableNameModel.addChangeListener(m_rHomeChangeListener);
+        m_rHomePath.addChangeListener(m_rHomeChangeListener);
+        if (settings.hasRHomePath()) {
+            m_pathSelection.setSelected(true);
+        } else {
+            m_condaSelection.setSelected(true);
+        }
+        updateSelection();
     }
 
     /** Save the configured R home to the snippet settings */
     void saveSettingsTo(final RSnippetSettings settings) {
         settings.setOverwriteRHome(m_overwriteRHome.isSelected());
-        settings.setRHomePath(m_rHome.getSelectedFile());
+        settings.setUseRHomePath(m_pathSelection.isSelected());
+        settings.setRHomePath(m_rHomePath.getSelectedFile());
+        settings.setRCondaVariableName(m_rCondaVariableNameModel.getStringValue());
     }
 
     /** Checks if the configured R home is valid and throws an exception if it is not valid */
@@ -188,7 +268,14 @@ final class RHomeSelectionPanel extends JPanel {
     /** Called when the separate R home checkbox is clicked. */
     private void overwriteRHomeChanged() {
         boolean enabled = m_overwriteRHome.isSelected();
-        m_rHome.setEnabled(enabled);
+        m_pathSelection.setEnabled(enabled);
+        m_condaSelection.setEnabled(enabled);
+        if (!enabled) {
+            m_rHomePath.setEnabled(false);
+            m_rCondaVariableNameModel.setEnabled(false);
+        } else {
+            updateSelection();
+        }
         m_rHomeError.setEnabled(enabled);
         rHomeChanged();
     }
@@ -205,7 +292,7 @@ final class RHomeSelectionPanel extends JPanel {
         m_rEnvChecker.execute();
     }
 
-    private class REnvChecker extends SwingWorkerWithContext<Pair<Boolean, Optional<String>>, String> {
+    private final class REnvChecker extends SwingWorkerWithContext<Pair<Boolean, Optional<String>>, String> {
 
         private RPreferenceProvider m_rPrefs;
 
@@ -216,13 +303,17 @@ final class RHomeSelectionPanel extends JPanel {
         @Override
         protected Pair<Boolean, Optional<String>> doInBackgroundWithContext() throws Exception {
             if (m_rPrefs.getRHome() == null || m_rPrefs.getRHome().trim().isEmpty()) {
-                return Pair.of(true, Optional.of("Please select the path to R home."));
+                if (m_pathSelection.isSelected()) {
+                    return Pair.of(true, Optional.of("Please select the path to R home."));
+                } else {
+                    return Pair.of(true, Optional.of("Please select the conda environment."));
+                }
             }
             publish("Checking R home...");
             Thread.sleep(200);
             try {
                 final Optional<String> warning =
-                    RBinUtil.checkREnvionment(m_rPrefs.getRHome(), "Path to R home", false);
+                    RBinUtil.checkREnvionment(m_rPrefs, "Path to R home", false);
                 return Pair.of(false, warning);
             } catch (final InvalidRHomeException e) {
                 return Pair.of(true, Optional.of(e.getMessage()));
