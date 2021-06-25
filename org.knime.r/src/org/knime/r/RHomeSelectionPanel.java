@@ -230,7 +230,11 @@ final class RHomeSelectionPanel extends JPanel {
         m_rCondaVariableNameModel.removeChangeListener(m_rHomeChangeListener);
         m_overwriteRHome.setSelected(settings.isOverwriteRHome());
         m_rHomePath.setSelectedFile(settings.getRHomePath());
-        overwriteRHomeChanged();
+        if (settings.hasRHomePath()) {
+            m_pathSelection.setSelected(true);
+        } else {
+            m_condaSelection.setSelected(true);
+        }
         try {
             final var settingStranslation = new NodeSettings("");
             settings.saveSettings(settingStranslation);
@@ -238,13 +242,9 @@ final class RHomeSelectionPanel extends JPanel {
         } catch (InvalidSettingsException e) {
             NodeLogger.getLogger(getClass()).error(e);
         }
+        overwriteRHomeChanged();
         m_rCondaVariableNameModel.addChangeListener(m_rHomeChangeListener);
         m_rHomePath.addChangeListener(m_rHomeChangeListener);
-        if (settings.hasRHomePath()) {
-            m_pathSelection.setSelected(true);
-        } else {
-            m_condaSelection.setSelected(true);
-        }
         updateSelection();
     }
 
