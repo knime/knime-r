@@ -174,8 +174,8 @@ final class RHomeSelectionPanel extends JPanel {
         add(m_condaSelection, gbc);
         gbc.gridy++;
 
-        m_rHomeConda = new DialogComponentFlowVariableNameSelection2(m_rCondaVariableNameModel, "Conda environment flow variable:",
-            m_condaVariablesSupplier);
+        m_rHomeConda = new DialogComponentFlowVariableNameSelection2(m_rCondaVariableNameModel,
+            "Conda environment flow variable:", m_condaVariablesSupplier);
         m_rCondaVariableNameModel.addChangeListener(m_rHomeChangeListener);
         add(m_rHomeConda.getComponentPanel(), gbc);
         gbc.gridy++;
@@ -190,7 +190,6 @@ final class RHomeSelectionPanel extends JPanel {
         add(m_rHomeError, gbc);
         gbc.gridy++;
     }
-
 
     /** Get the current R preferences. According to the flow variable if it is set */
     RPreferenceProvider getRPreferenceProvider() {
@@ -312,8 +311,7 @@ final class RHomeSelectionPanel extends JPanel {
             publish("Checking R home...");
             Thread.sleep(200);
             try {
-                final Optional<String> warning =
-                    RBinUtil.checkREnvionment(m_rPrefs, "Path to R home", false);
+                final Optional<String> warning = RBinUtil.checkREnvionment(m_rPrefs, "Path to R home", false);
                 return Pair.of(false, warning);
             } catch (final InvalidRHomeException e) {
                 return Pair.of(true, Optional.of(e.getMessage()));
