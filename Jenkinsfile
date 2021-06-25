@@ -25,7 +25,8 @@ try {
                 dependencies: [
                     repositories: ['knime-r', 'knime-datageneration', 'knime-js-base',
                         'knime-database', 'knime-filehandling', 'knime-kerberos',
-                        'knime-exttool', 'knime-chemistry', 'knime-distance']
+                        'knime-exttool', 'knime-chemistry', 'knime-distance',
+                        'knime-python']
                 ],
                 sidecarContainers: [
                     [ image: SSHD_IMAGE, namePrefix: "SSHD", port: 22 ]
