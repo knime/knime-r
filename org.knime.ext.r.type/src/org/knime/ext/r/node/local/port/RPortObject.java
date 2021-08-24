@@ -67,12 +67,13 @@ import org.knime.core.node.CanceledExecutionException;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.port.PortObject;
-import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.core.node.port.PortObjectZipInputStream;
 import org.knime.core.node.port.PortObjectZipOutputStream;
 import org.knime.core.node.port.PortType;
+import org.knime.core.node.port.PortTypeRegistry;
 import org.knime.core.util.FileUtil;
+
 
 /**
  * A port object for R model port providing a file containing a R model.
@@ -112,7 +113,7 @@ public class RPortObject implements PortObject {
 	public RPortObject(final File fileR, final List<String> libraries) {
 		m_fileR = fileR;
 		m_libraries = libraries.isEmpty() ? Collections.<String>emptyList()
-				: Collections.unmodifiableList(new ArrayList<String>(libraries));
+				: Collections.unmodifiableList(new ArrayList<>(libraries));
 	}
 
 	/**
@@ -162,9 +163,9 @@ public class RPortObject implements PortObject {
 		public void savePortObject(final RPortObject portObject, final PortObjectZipOutputStream out,
 				final ExecutionMonitor exec) throws IOException, CanceledExecutionException {
 			out.putNextEntry(new ZipEntry("knime.R"));
-			FileInputStream fis = new FileInputStream(portObject.m_fileR);
-			FileUtil.copy(fis, out);
-			fis.close();
+			try (FileInputStream fis = new FileInputStream(portObject.m_fileR)) {
+			    FileUtil.copy(fis, out);
+			}
 			out.putNextEntry(new ZipEntry("library.list"));
 			IOUtils.writeLines(portObject.m_libraries, "\n", out, "UTF-8");
 			out.closeEntry();
