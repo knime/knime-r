@@ -24,7 +24,7 @@ try {
             workflowTests.runTests(
                 dependencies: [
                     repositories: ['knime-r', 'knime-datageneration', 'knime-js-base',
-                        'knime-database', 'knime-filehandling', 'knime-kerberos',
+                        'knime-database', 'knime-office365', 'knime-filehandling', 'knime-kerberos',
                         'knime-exttool', 'knime-chemistry', 'knime-distance',
                         'knime-python']
                 ],
@@ -37,7 +37,7 @@ try {
             workflowTests.runFilehandlingTests (
                 dependencies: [
                     repositories: [
-                        "knime-r", 'knime-database', 'knime-kerberos', 'knime-js-base', 'knime-datageneration'
+                        "knime-r", 'knime-database', 'knime-office365', 'knime-kerberos', 'knime-js-base', 'knime-datageneration'
                     ]
                 ],
             )
