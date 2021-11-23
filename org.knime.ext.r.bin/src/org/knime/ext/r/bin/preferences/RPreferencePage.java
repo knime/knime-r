@@ -100,7 +100,9 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
 
         @Override
         protected boolean doCheckState() {
-            return checkRVersion(getStringValue());
+            checkRVersion(getStringValue());
+            // return true so we can leave the preference page despite an invalid value.
+            return true;
         }
     }
 
@@ -116,7 +118,7 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
         checkRVersion(Activator.getRHOME().getAbsolutePath());
     }
 
-    private boolean checkRVersion(final String rHome) {
+    private void checkRVersion(final String rHome) {
         try {
             final Optional<String> warning = RBinUtil.checkREnvionment(rHome, "Path to R Home", false);
             if (warning.isPresent()) {
@@ -124,10 +126,8 @@ public class RPreferencePage extends FieldEditorPreferencePage implements IWorkb
             } else {
                 setMessage(null, NONE);
             }
-            return true;
         } catch (final InvalidRHomeException e) {
             setMessage(e.getMessage(), ERROR);
-            return false;
         }
     }
 
