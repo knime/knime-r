@@ -153,6 +153,7 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
     @Override
     public Map<String, String> setUpEnvironment(final Map<String, String> environment) {
         if (Platform.isWindows() && m_condaPrefix != null) {
+            String path = findPathVariableName(environment);
             final var pathVar = new StringBuilder();
             pathVar.append(m_condaPrefix).append(File.pathSeparator);
             pathVar.append(m_condaPrefix).append(File.separator).append("Library").append(File.separator).append("bin")
@@ -160,10 +161,26 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
             pathVar.append(m_condaPrefix).append(File.separator).append("Library").append(File.separator)
                 .append("mingw-w64").append(File.separator).append("bin").append(File.pathSeparator);
             pathVar.append(m_condaPrefix).append(File.separator).append("Scripts").append(File.pathSeparator);
-            pathVar.append(environment.getOrDefault("PATH", ""));
-            environment.put("PATH", pathVar.toString());
+            pathVar.append(environment.getOrDefault(path, ""));
+            environment.put(path, pathVar.toString());
         }
         return environment;
+    }
+
+    /**
+     * Should only be called on windows.
+     * @param environment
+     * @return
+     */
+    private static String findPathVariableName(final Map<String, String> environment) {
+        String pathVariableName = "PATH";
+        for (final String variableName : environment.keySet()) {
+            if ("PATH".equalsIgnoreCase(variableName)) {
+                pathVariableName = variableName;
+                break;
+            }
+        }
+        return pathVariableName;
     }
 
     /**
