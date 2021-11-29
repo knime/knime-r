@@ -170,9 +170,10 @@ public class DefaultRPreferenceProvider implements RPreferenceProvider {
     /**
      * Should only be called on windows.
      * @param environment
-     * @return
+     * @return Pathvariable name
+     * @noreference
      */
-    private static String findPathVariableName(final Map<String, String> environment) {
+    public static String findPathVariableName(final Map<String, String> environment) {
         String pathVariableName = "PATH";
         for (final String variableName : environment.keySet()) {
             if ("PATH".equalsIgnoreCase(variableName)) {

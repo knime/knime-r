@@ -130,12 +130,11 @@ public final class RBinUtil {
 
     /**
      * Get properties about the used R installation.
-     *
-     * @param rpref provider for path to R executable
+     ** @param rpref provider for path to R executable
      * @return properties about use R
      */
     public static Properties retrieveRProperties(final RPreferenceProvider rpref) {
-        return retrieveRProperties(rpref.getRBinPath("Rscript"));
+        return retrieveRProperties(null, rpref);
     }
 
     /**
@@ -145,6 +144,17 @@ public final class RBinUtil {
      * @return properties about use R
      */
     public static Properties retrieveRProperties(final String pathToRScriptExecutable) {
+        return retrieveRProperties(pathToRScriptExecutable, null);
+    }
+
+    /**
+     * @param rpref
+     * @return
+     */
+    private static Properties retrieveRProperties(String pathToRScriptExecutable, final RPreferenceProvider rpref) {
+        if (pathToRScriptExecutable == null) {
+            pathToRScriptExecutable = rpref.getRBinPath("Rscript");
+        }
         final File tmpPath = new File(TEMP_PATH);
         File propsFile = null;
         File rOutFile = null;
@@ -180,6 +190,9 @@ public final class RBinUtil {
             return new Properties();
         }
         final ProcessBuilder builder = new ProcessBuilder();
+        if (rpref != null) {
+            rpref.setUpEnvironment(builder.environment());
+        }
         builder.command(pathToRScriptExecutable, "--vanilla", rCommandFile.getName(), rOutFile.getName());
         builder.directory(rCommandFile.getParentFile());
 
@@ -451,7 +464,7 @@ public final class RBinUtil {
         final DefaultRPreferenceProvider prefProvider;
         // Check the properties of the R environment
         if (provider instanceof DefaultRPreferenceProvider) {
-            prefProvider = (DefaultRPreferenceProvider) provider;
+            prefProvider = (DefaultRPreferenceProvider)provider;
         } else {
             prefProvider = new DefaultRPreferenceProvider(provider.getRHome());
         }
@@ -471,8 +484,8 @@ public final class RBinUtil {
     }
 
     /**
-     * Check if the installed Rserve version can cause problems with the installed R version:
-     * R >= 3.5.0 and Rserve < 1.8.6.
+     * Check if the installed Rserve version can cause problems with the installed R version: R >= 3.5.0 and Rserve <
+     * 1.8.6.
      *
      * @param rProperties the properties of the R environment
      * @return <code>true</code> if there are no problems

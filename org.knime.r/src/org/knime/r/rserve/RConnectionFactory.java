@@ -22,6 +22,7 @@ import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.KNIMETimer;
+import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.ext.r.bin.preferences.RPreferenceProvider;
 import org.knime.r.controller.IRController.RException;
@@ -200,11 +201,12 @@ public class RConnectionFactory {
 
         final Map<String, String> env = builder.environment();
         if (Platform.isWindows()) {
+            final String path = DefaultRPreferenceProvider.findPathVariableName(env);
             // on windows, the Rserve executable is not reside in the R bin
             // folder, but still requires the R.dll, so we need to put the R
             // bin folder on path
-            env.put("PATH", rHome + File.pathSeparator + rHome
-                + ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator + env.get("PATH"));
+            env.put(path, rHome + File.pathSeparator + rHome
+                + ((Platform.is64Bit()) ? "\\bin\\x64\\" : "\\bin\\i386\\") + File.pathSeparator + env.get(path));
         } else {
             // on Unix we need priorize the "R_HOME/lib" folder in the
             // LD_LIBRARY_PATH to ensure that the shared libraries of the
