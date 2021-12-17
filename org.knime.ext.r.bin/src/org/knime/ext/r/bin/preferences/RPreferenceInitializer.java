@@ -84,18 +84,22 @@ public class RPreferenceInitializer extends AbstractPreferenceInitializer {
         if ((rHomeV29 != null) && !rHomeV29.isEmpty()) {
             final File rHomeFile = new File(rHomeV29);
             if (rHomeFile.exists() && rHomeFile.isDirectory()) {
+                LOGGER.info("Using R installation at " + rHomeFile);
                 return rHomeFile;
             }
         }
         // Try R binary settings from KNIME 2.9
         final String rHomeV29FromRBin = determineRHomeFromRBinSetting();
         if ((rHomeV29FromRBin != null) && !rHomeV29FromRBin.isEmpty()) {
+            LOGGER.info("Using R installation at " + rHomeV29FromRBin);
             return new File(rHomeV29FromRBin);
         } else {
             final File packagedExecutable = RPathUtil.getPackagedRHome();
             if (packagedExecutable != null) {
+                LOGGER.info("Using packaged R installation at " + packagedExecutable);
                 return packagedExecutable;
             }
+            LOGGER.info("Using system R installation at " + RPathUtil.getSystemRHome());
             return RPathUtil.getSystemRHome();
         }
 
