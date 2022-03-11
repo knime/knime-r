@@ -91,7 +91,7 @@ import org.knime.r.controller.RController;
  */
 public class RSnippetNodeModel extends ExtToolOutputNodeModel {
     private static final String CONDA_EVN_TYPE_CLASS_NAME =
-        "org.knime.python2.CondaEnvironmentPropagation.CondaEnvironmentType";
+        "org.knime.conda.CondaEnvironmentPropagation.CondaEnvironmentType";
 
     private final RSnippet m_snippet;
 

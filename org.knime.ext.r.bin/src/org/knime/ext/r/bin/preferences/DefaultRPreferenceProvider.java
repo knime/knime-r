@@ -66,7 +66,7 @@ import com.sun.jna.Platform;
  */
 public class DefaultRPreferenceProvider implements RPreferenceProvider {
     private static final String CONDA_EVN_TYPE_CLASS_NAME =
-        "org.knime.python2.CondaEnvironmentPropagation.CondaEnvironmentType";
+        "org.knime.conda.CondaEnvironmentPropagation.CondaEnvironmentType";
 
     private final String m_rHome;
 
