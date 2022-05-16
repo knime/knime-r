@@ -55,6 +55,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Stream;
@@ -77,6 +80,9 @@ public final class RBinUtil {
 
     private static final String DOC_REF_TEXT =
         " (For additional help, consult the R Installation Guide at https://docs.knime.com/)";
+
+    /** Flags that are used to create a vanilla R session except for the flag "--no-environ" */
+    public static final String[] VANILLA_R_FLAGS = {"--no-save", "--no-restore", "--no-site-file", "--no-init-file"};
 
     private RBinUtil() {
     }
@@ -193,7 +199,11 @@ public final class RBinUtil {
         if (rpref != null) {
             rpref.setUpEnvironment(builder.environment());
         }
-        builder.command(pathToRScriptExecutable, "--vanilla", rCommandFile.getName(), rOutFile.getName());
+        final List<String> command =  new ArrayList<>();
+        command.add(pathToRScriptExecutable);
+        Collections.addAll(command, VANILLA_R_FLAGS);
+        Collections.addAll(command, rCommandFile.getName(), rOutFile.getName());
+        builder.command(command);
         builder.directory(rCommandFile.getParentFile());
 
         /* Run R on the script to get properties */

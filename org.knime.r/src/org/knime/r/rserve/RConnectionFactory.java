@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import org.knime.core.node.KNIMEConstants;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.util.FileUtil;
 import org.knime.core.util.KNIMETimer;
+import org.knime.ext.r.bin.RBinUtil;
 import org.knime.ext.r.bin.preferences.DefaultRPreferenceProvider;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.ext.r.bin.preferences.RPreferenceProvider;
@@ -197,7 +199,10 @@ public class RConnectionFactory {
 
         final File configFile = createRserveConfig();
         final ProcessBuilder builder = new ProcessBuilder();
-        builder.command(cmd, "--RS-port", port.toString(), "--RS-conf", configFile.getAbsolutePath(), "--vanilla");
+        final List<String> fullCommand = new ArrayList<>();
+        Collections.addAll(fullCommand, cmd, "--RS-port", port.toString(), "--RS-conf", configFile.getAbsolutePath());
+        Collections.addAll(fullCommand, RBinUtil.VANILLA_R_FLAGS);
+        builder.command(fullCommand);
 
         final Map<String, String> env = builder.environment();
         if (Platform.isWindows()) {
