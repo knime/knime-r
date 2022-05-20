@@ -38,4 +38,4 @@ Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.knime.base
 Eclipse-BundleShape: dir
 Automatic-Module-Name: org.knime.r
-Import-Package: org.w3c.dom.events;version="3.0.0"
+
