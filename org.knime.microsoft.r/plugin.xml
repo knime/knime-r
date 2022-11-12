@@ -3,10 +3,7 @@
 <plugin>
    <extension
          point="org.knime.workbench.repository.nodes">
-      <node
-            category-path="/labs/"
-            factory-class="org.knime.microsoft.r.RunRInMSSQLNodeFactory">
-      </node>
+      <node deprecated="true" factory-class="org.knime.microsoft.r.RunRInMSSQLNodeFactory"/>
       <node
             category-path="/labs/"
             factory-class="org.knime.microsoft.r.RunRInMSSQLNodeFactory2">

@@ -1,5 +1,5 @@
 /*
- * ------------------------------------------------------------------------
+ * ------------------------------------------------------------------
  *  Copyright by KNIME AG, Zurich, Switzerland
  *  Website: http://www.knime.com; Email: contact@knime.com
  *
@@ -40,51 +40,35 @@
  *  propagated with or for interoperation with KNIME.  The owner of a Node
  *  may freely choose the license terms applicable to such Node, including
  *  when such Node is propagated with or for interoperation with KNIME.
- * ------------------------------------------------------------------------
+ * ---------------------------------------------------------------------
+ *
  */
-
 package org.knime.microsoft.r;
 
-import org.knime.core.node.NodeFactory;
-import org.knime.workflow.migration.MigrationException;
-import org.knime.workflow.migration.MigrationNodeMatchResult;
-import org.knime.workflow.migration.NodeMigrationAction;
-import org.knime.workflow.migration.NodeMigrationRule;
-import org.knime.workflow.migration.NodeSettingsMigrationManager;
-import org.knime.workflow.migration.model.MigrationNode;
+import org.knime.core.node.NodeDialogPane;
+import org.knime.r.RSnippetNodeFactory;
 
 /**
- * Node migration rule for the <em>Run R in MS SQL Server</em> node.
+ * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
- * @author Tobias Koetter, KNIME GmbH, Konstanz, Germany
  */
-public class RunRInMSSQLNodeMigrationRule extends NodeMigrationRule {
+@Deprecated
+public final class RunRInMSSQLNodeFactory2 extends RSnippetNodeFactory {
 
-    @Override
-    protected Class<? extends NodeFactory<?>> getReplacementNodeFactoryClass(final MigrationNode migrationNode,
-        final MigrationNodeMatchResult matchResult) {
-        return RunRInMSSQLNodeFactory2.class;
+    /**
+     * Constructor
+     */
+    public RunRInMSSQLNodeFactory2() {
+        super(RunRInMSSQLNodeModel2.RSNIPPET_NODE_CONFIG2);
     }
 
     @Override
-    protected MigrationNodeMatchResult match(final MigrationNode migrationNode) {
-        return MigrationNodeMatchResult.of(migrationNode, RunRInMSSQLNodeFactory.class
-            .equals(migrationNode.getOriginalNodeFactoryClass()) ? NodeMigrationAction.REPLACE : null);
+    public RunRInMSSQLNodeModel2 createNodeModel() {
+        return new RunRInMSSQLNodeModel2();
     }
 
     @Override
-    protected void migrate(final MigrationNode migrationNode, final MigrationNodeMatchResult matchResult)
-        throws MigrationException {
-        // Ports
-        associateEveryOriginalPortWithNew(migrationNode);
-
-        // Settings
-        final NodeSettingsMigrationManager settingsManager = createSettingsManager(migrationNode);
-
-        // Model and variable settings
-        settingsManager.copyAllModelAndOptionalVariableSettings().toIdentical();
-
-        // Miscellaneous settings
-        settingsManager.copyAllMiscellaneousSettings().toIdentical();
+    protected NodeDialogPane createNodeDialogPane() {
+        return new RunRInMSSQLNodeDialog(this.getClass(), RunRInMSSQLNodeModel2.RSNIPPET_NODE_CONFIG2);
     }
 }

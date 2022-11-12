@@ -100,6 +100,7 @@ import org.rosuda.REngine.REXP;
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
  */
+@Deprecated
 class RunRInMSSQLNodeModel extends RSnippetNodeModel {
 
     interface TableChecker {
