@@ -2,7 +2,7 @@
 <feature
       id="org.knime.features.microsoft.r"
       label="KNIME Microsoft R Integration (Run R Model in Microsoft SQL Server)"
-      version="4.7.0.qualifier"
+      version="5.0.0.qualifier"
       provider-name="KNIME AG, Zurich, Switzerland"
       plugin="org.knime.microsoft.r">
 
