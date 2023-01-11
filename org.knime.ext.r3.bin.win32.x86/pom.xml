@@ -12,7 +12,7 @@
       <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>org.knime.ext.r3.bin.win32.x86</artifactId>
-  <version>3.4.2-SNAPSHOT</version>
+  <version>5.0.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
