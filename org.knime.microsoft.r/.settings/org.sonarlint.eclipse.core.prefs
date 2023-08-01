@@ -1,6 +1,7 @@
 autoEnabled=true
+bindingSuggestionsDisabled=false
 eclipse.preferences.version=1
 idePrefixKey=
-projectKey=org.knime\:knime-r
-serverId=sonar.knime.com
+projectKey=KNIME_knime-r
+serverId=SonarCloud
 sqPrefixKey=org.knime.microsoft.r
