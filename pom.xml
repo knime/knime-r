@@ -18,7 +18,7 @@
 		<changelist>-SNAPSHOT</changelist>
 		<feature-branch-extension.branchListProperty>git.branch</feature-branch-extension.branchListProperty>
 		<feature-branch-extension.appendArtifactoryProperties>false</feature-branch-extension.appendArtifactoryProperties>
-                <knime.sonar-env>Sonarcloud</knime.sonar-env>
+		<knime.sonar-env>Sonarcloud</knime.sonar-env>
 	</properties>
 
 	<modules>
@@ -77,6 +77,16 @@
 			<id>p2-knime-database</id>
 			<layout>p2</layout>
 			<url>${knime.database.p2}</url>
+		</repository>
+		<repository>
+			<id>p2-knime-credentials-base</id>
+			<layout>p2</layout>
+			<url>${knime.credentials.base.p2}</url>
+		</repository>
+		<repository>
+			<id>p2-knime-gateway</id>
+			<layout>p2</layout>
+			<url>${knime.gateway.p2}</url>
 		</repository>
 		<repository>
 			<id>p2-knime-office365</id>
