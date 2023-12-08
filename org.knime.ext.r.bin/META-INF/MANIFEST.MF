@@ -2,17 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: R Binaries
 Bundle-SymbolicName: org.knime.ext.r.bin;singleton:=true
-Bundle-Version: 5.2.0.qualifier
+Bundle-Version: 5.3.0.qualifier
 Bundle-Activator: org.knime.ext.r.bin.Activator
 Bundle-Vendor: KNIME AG, Zurich, Switzerland
 Export-Package: org.knime.ext.r.bin,
   org.knime.ext.r.bin.preferences
 Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",
   org.eclipse.core.runtime;bundle-version="[3.7.0,4.0.0)",
-  org.knime.core;bundle-version="[5.2.0,6.0.0)",
+  org.knime.core;bundle-version="[5.3.0,6.0.0)",
   com.sun.jna;bundle-version="[5.8.0,6.0.0)",
-  org.knime.base;bundle-version="[5.2.0,6.0.0)",
-  org.knime.workbench.ui;bundle-version="[5.2.0,6.0.0)"
+  org.knime.base;bundle-version="[5.3.0,6.0.0)",
+  org.knime.workbench.ui;bundle-version="[5.3.0,6.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: org.eclipse.jface.util
 Bundle-ActivationPolicy: lazy

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KNIME R-Project nodes
 Bundle-SymbolicName: org.knime.r;singleton:=true
-Bundle-Version: 5.2.0.qualifier
+Bundle-Version: 5.3.0.qualifier
 Bundle-ClassPath: .,
  lib/rengine-1.8.4.jar,
  lib/rserve-engine-1.8.4.jar
@@ -18,21 +18,21 @@ Export-Package: org.knime.r,
   org.rosuda.REngine.Rserve.protocol
 Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.6.0,4.0.0)",
- org.knime.workbench.repository;bundle-version="[5.2.0,6.0.0)",
- org.knime.base;bundle-version="[5.2.0,6.0.0)",
+ org.knime.workbench.repository;bundle-version="[5.3.0,6.0.0)",
+ org.knime.base;bundle-version="[5.3.0,6.0.0)",
  com.sun.jna;bundle-version="[5.8.0,6.0.0)",
- org.knime.ext.r.type;bundle-version="[5.2.0,6.0.0)",
- org.knime.ext.r.bin;bundle-version="[5.2.0,6.0.0)",
+ org.knime.ext.r.type;bundle-version="[5.3.0,6.0.0)",
+ org.knime.ext.r.bin;bundle-version="[5.3.0,6.0.0)",
  com.fifesoft.autocomplete;bundle-version="[2.5.7,3.0.0)",
  com.fifesoft.languagesupport;bundle-version="[2.5.7,3.0.0)",
  com.fifesoft.rstaui;bundle-version="[2.5.7,3.0.0)",
  com.fifesoft.rsyntaxtextarea;bundle-version="[2.5.7,3.0.0)",
  com.fifesoft.spellchecker;bundle-version="[2.5.7,3.0.0)",
  org.apache.commons.lang3;bundle-version="[3.2.1,4.0.0)",
- org.knime.ext.svg;bundle-version="[5.2.0,6.0.0)",
- org.knime.core.pmml;bundle-version="[5.2.0,6.0.0)",
- org.knime.filehandling.core;bundle-version="[5.2.0,6.0.0)",
- org.knime.workbench.core;bundle-version="[5.2.0,6.0.0)"
+ org.knime.ext.svg;bundle-version="[5.3.0,6.0.0)",
+ org.knime.core.pmml;bundle-version="[5.3.0,6.0.0)",
+ org.knime.filehandling.core;bundle-version="[5.3.0,6.0.0)",
+ org.knime.workbench.core;bundle-version="[5.3.0,6.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.knime.base
