@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: R3 Binaries Windows
-Bundle-SymbolicName: org.knime.ext.r3.bin.win32.x86
+Bundle-SymbolicName: org.knime.ext.r3.bin.win32.x86;singleton:=true
 Bundle-Version: 5.4.0.qualifier
 Bundle-Vendor: KNIME AG, Zurich, Switzerland
 Fragment-Host: org.knime.ext.r.bin;bundle-version="[5.3.0,6.0.0)"
