@@ -49,9 +49,7 @@ import java.io.File;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.knime.core.node.NodeFactory;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
-import org.knime.ext.r.node.RScriptingNodeFactory;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -73,20 +71,8 @@ public class RCorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * This method is called upon plug-in activation.
-     * 
-     * @param context The bundle context.
-     * @throws Exception If cause by super class.
-     */
-    @Override
-    public void start(final BundleContext context) throws Exception {
-        super.start(context);
-        NodeFactory.addLoadedFactory(RScriptingNodeFactory.class);
-    }
-
-    /**
      * This method is called when the plug-in is stopped.
-     * 
+     *
      * @param context The bundle context.
      * @throws Exception If cause by super class.
      */
