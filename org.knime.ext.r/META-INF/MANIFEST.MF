@@ -17,11 +17,11 @@ Export-Package: org.knime.ext.r,
   org.rosuda.REngine.Rserve.test
 Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",
   org.eclipse.core.runtime;bundle-version="[3.6.0,4.0.0)",
-  org.knime.workbench.repository;bundle-version="[5.4.0,6.0.0)",
-  org.knime.base;bundle-version="[5.4.0,6.0.0)",
-  org.knime.ext.r.type;bundle-version="[5.4.0,6.0.0)",
-  org.knime.ext.r.bin;bundle-version="[5.4.0,6.0.0)",
-  org.knime.r;bundle-version="[5.4.0,6.0.0)"
+  org.knime.workbench.repository;bundle-version="[5.5.0,6.0.0)",
+  org.knime.base;bundle-version="[5.5.0,6.0.0)",
+  org.knime.ext.r.type;bundle-version="[5.5.0,6.0.0)",
+  org.knime.ext.r.bin;bundle-version="[5.5.0,6.0.0)",
+  org.knime.r;bundle-version="[5.5.0,6.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.knime.base
