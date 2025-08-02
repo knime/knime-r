@@ -6,5 +6,5 @@ Bundle-Version: 5.5.0.qualifier
 Bundle-Vendor: KNIME AG, Zurich, Switzerland
 Fragment-Host: org.knime.ext.r.bin;bundle-version="[5.5.0,6.0.0)"
 Eclipse-PlatformFilter: (osgi.os=win32)
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Eclipse-BundleShape: dir

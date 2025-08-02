@@ -7,6 +7,6 @@ Bundle-Vendor: KNIME
 Fragment-Host: org.knime.r;bundle-version="[5.6.0,6.0.0)"
 Require-Bundle: org.junit;bundle-version="4.12.0",
   org.knime.testing;bundle-version="3.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Eclipse-BuddyPolicy: registered
 Automatic-Module-Name: org.knime.r.tests
