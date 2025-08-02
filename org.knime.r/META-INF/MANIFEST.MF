@@ -33,7 +33,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",
  org.knime.core.pmml;bundle-version="[5.6.0,6.0.0)",
  org.knime.filehandling.core;bundle-version="[5.6.0,6.0.0)",
  org.knime.workbench.core;bundle-version="[5.6.0,6.0.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.knime.base
 Eclipse-BundleShape: dir
