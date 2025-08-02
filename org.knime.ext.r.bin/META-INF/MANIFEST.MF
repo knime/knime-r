@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.6.1,4.0.0)",
   com.sun.jna;bundle-version="[5.8.0,6.0.0)",
   org.knime.base;bundle-version="[5.6.0,6.0.0)",
   org.knime.workbench.ui;bundle-version="[5.6.0,6.0.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: org.eclipse.jface.util
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.knime.ext.r.bin
