@@ -123,11 +123,6 @@
 			<layout>p2</layout>
 			<url>${knime.js.base.p2}</url>
 		</repository>
-		<repository>
-			<id>p2-knime-scripting-editor</id>
-			<layout>p2</layout>
-			<url>${knime.scripting.editor.p2}</url>
-		</repository>
 	</repositories>
 
 </project><!-- vim: set shiftwidth=4 expandtab smarttab: -->
