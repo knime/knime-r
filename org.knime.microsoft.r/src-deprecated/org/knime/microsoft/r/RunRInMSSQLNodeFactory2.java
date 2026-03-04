@@ -46,14 +46,14 @@
 package org.knime.microsoft.r;
 
 import org.knime.core.node.NodeDialogPane;
-import org.knime.r.RSnippetNodeFactory;
+import org.knime.r.AbstractRSnippetNodeFactory;
 
 /**
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
  */
 @Deprecated
-public final class RunRInMSSQLNodeFactory2 extends RSnippetNodeFactory {
+public final class RunRInMSSQLNodeFactory2 extends AbstractRSnippetNodeFactory {
 
     /**
      * Constructor

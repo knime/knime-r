@@ -46,27 +46,30 @@
 package org.knime.microsoft.r;
 
 import org.knime.core.node.NodeDialogPane;
-import org.knime.r.RSnippetNodeFactory;
+import org.knime.r.AbstractRSnippetNodeFactory;
 
 /**
  * @author Jonathan Hale, KNIME, Konstanz, Germany
  *
  */
 @Deprecated
-public final class RunRInMSSQLNodeFactory extends RSnippetNodeFactory {
+public final class RunRInMSSQLNodeFactory extends AbstractRSnippetNodeFactory {
 
     /**
      * Constructor
      */
+    @Deprecated
     public RunRInMSSQLNodeFactory() {
         super(RunRInMSSQLNodeModel.RSNIPPET_NODE_CONFIG);
     }
 
+    @Deprecated
     @Override
     public RunRInMSSQLNodeModel createNodeModel() {
         return new RunRInMSSQLNodeModel();
     }
 
+    @Deprecated
     @Override
     protected NodeDialogPane createNodeDialogPane() {
         return new RunRInMSSQLNodeDialog(this.getClass(), RunRInMSSQLNodeModel.RSNIPPET_NODE_CONFIG);
