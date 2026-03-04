@@ -57,7 +57,7 @@ import org.knime.ext.r.node.local.port.RPortObject;
  *
  * @author Thomas Gabriel, KNIME AG, Zurich, Switzerland
  */
-public class RToRNodeFactory extends RSnippetNodeFactory {
+public class RToRNodeFactory extends AbstractRSnippetNodeFactory {
 
     /**
      * Empty default constructor.

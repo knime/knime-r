@@ -58,7 +58,7 @@ import org.knime.ext.r.node.local.port.RPortObject;
  *
  * @author Heiko Hofer
  */
-public class AddTableToRNodeFactory extends RSnippetNodeFactory {
+public class AddTableToRNodeFactory extends AbstractRSnippetNodeFactory {
 
     /**
      * Empty default constructor.

@@ -45,62 +45,17 @@
  */
 package org.knime.r;
 
-import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
-import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
-import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
-import org.knime.core.node.NodeView;
-
 /**
  * Factory for the <code>RSnippetNodeFactory</code> node.
  *
  * @author Heiko Hofer
  */
-public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel> {
-    private RSnippetNodeConfig m_config = new RSnippetNodeConfig();
+public class RSnippetNodeFactory extends AbstractWebUIRSnippetNodeFactory {
 
     /**
      * Empty default constructor.
      */
     public RSnippetNodeFactory() {
-    }
-
-    /**
-     * Constructor with config
-     *
-     * @param rSnippetModelConfig Used to configure the RSnippet node
-     */
-    public RSnippetNodeFactory(final RSnippetNodeConfig rSnippetModelConfig) {
-        m_config = rSnippetModelConfig;
-    }
-
-    @Override
-    protected NodeDialogPane createNodeDialogPane() {
-        return new RSnippetNodeDialog(this.getClass(), m_config);
-    }
-
-    @Override
-    public RSnippetNodeModel createNodeModel() {
-        return new RSnippetNodeModel(m_config);
-    }
-
-    @Override
-    public int getNrNodeViews() {
-        return 2;
-    }
-
-    @Override
-    public NodeView<RSnippetNodeModel> createNodeView(final int viewIndex, final RSnippetNodeModel nodeModel) {
-        if (viewIndex == 0) {
-            return new ExtToolStdoutNodeView<RSnippetNodeModel>(nodeModel);
-        } else if (viewIndex == 1) {
-            return new ExtToolStderrNodeView<RSnippetNodeModel>(nodeModel);
-        }
-        return null;
-    }
-
-    @Override
-    protected boolean hasDialog() {
-        return true;
+        super(new RSnippetNodeConfig(), RSnippetNodeParameters.class);
     }
 }

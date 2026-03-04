@@ -45,39 +45,62 @@
  */
 package org.knime.r;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import org.knime.core.node.BufferedDataTable;
-import org.knime.core.node.port.PortType;
+import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
+import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
+import org.knime.core.node.NodeDialogPane;
+import org.knime.core.node.NodeFactory;
+import org.knime.core.node.NodeView;
 
 /**
- * Factory for the <code>RSource</code> node.
+ * Factory for the <code>RSnippetNodeFactory</code> node.
  *
  * @author Heiko Hofer
  */
-public class RReaderTableNodeFactory extends AbstractRSnippetNodeFactory {
+public class AbstractRSnippetNodeFactory extends NodeFactory<RSnippetNodeModel> {
+    private RSnippetNodeConfig m_config = new RSnippetNodeConfig();
 
     /**
      * Empty default constructor.
      */
-    public RReaderTableNodeFactory() {
-        super(new RSnippetNodeConfig() {
-            @Override
-            public Collection<PortType> getInPortTypes() {
-                return Collections.emptyList();
-            }
-
-            @Override
-            protected Collection<PortType> getOutPortTypes() {
-                return Collections.singleton(BufferedDataTable.TYPE);
-            }
-
-            @Override
-            protected String getDefaultScript() {
-                return "knime.out <- iris # assign your data frame here\n";
-            }
-        });
+    public AbstractRSnippetNodeFactory() {
     }
 
+    /**
+     * Constructor with config
+     *
+     * @param rSnippetModelConfig Used to configure the RSnippet node
+     */
+    public AbstractRSnippetNodeFactory(final RSnippetNodeConfig rSnippetModelConfig) {
+        m_config = rSnippetModelConfig;
+    }
+
+    @Override
+    protected NodeDialogPane createNodeDialogPane() {
+        return new RSnippetNodeDialog(this.getClass(), m_config);
+    }
+
+    @Override
+    public RSnippetNodeModel createNodeModel() {
+        return new RSnippetNodeModel(m_config);
+    }
+
+    @Override
+    public int getNrNodeViews() {
+        return 2;
+    }
+
+    @Override
+    public NodeView<RSnippetNodeModel> createNodeView(final int viewIndex, final RSnippetNodeModel nodeModel) {
+        if (viewIndex == 0) {
+            return new ExtToolStdoutNodeView<RSnippetNodeModel>(nodeModel);
+        } else if (viewIndex == 1) {
+            return new ExtToolStderrNodeView<RSnippetNodeModel>(nodeModel);
+        }
+        return null;
+    }
+
+    @Override
+    protected boolean hasDialog() {
+        return true;
+    }
 }

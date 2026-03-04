@@ -57,7 +57,7 @@ import org.knime.ext.r.node.local.port.RPortObject;
  *
  * @author Heiko Hofer
  */
-public class RLearnerNodeFactory extends RSnippetNodeFactory {
+public class RLearnerNodeFactory extends AbstractRSnippetNodeFactory {
 
     /**
      * Empty default constructor.
