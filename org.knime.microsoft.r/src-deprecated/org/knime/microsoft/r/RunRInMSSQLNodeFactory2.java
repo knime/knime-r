@@ -68,7 +68,7 @@ public final class RunRInMSSQLNodeFactory2 extends RSnippetNodeFactory {
     }
 
     @Override
-    protected NodeDialogPane createNodeDialogPane() {
+    public NodeDialogPane createLegacyNodeDialogPane() {
         return new RunRInMSSQLNodeDialog(this.getClass(), RunRInMSSQLNodeModel2.RSNIPPET_NODE_CONFIG2);
     }
 }

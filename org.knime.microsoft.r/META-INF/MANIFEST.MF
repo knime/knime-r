@@ -17,7 +17,8 @@ Require-Bundle: org.knime.r;bundle-version="[5.9.0,6.0.0)",
  org.knime.database;bundle-version="[5.9.0,6.0.0)",
  org.knime.database.nodes;bundle-version="[5.9.0,6.0.0)",
  org.knime.database.extensions;bundle-version="[5.9.0,6.0.0)",
- org.knime.workflow.migration;bundle-version="[5.9.0,6.0.0)"
+ org.knime.workflow.migration;bundle-version="[5.9.0,6.0.0)",
+ org.knime.core.ui;bundle-version="[5.11.0,6.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Eclipse-RegisterBuddy: org.knime.base
 Automatic-Module-Name: org.knime.microsoft.r

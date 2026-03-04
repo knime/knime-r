@@ -273,7 +273,12 @@ public class RSnippetNodeModel extends ExtToolOutputNodeModel {
      */
     protected String getScript() {
         try {
-            return m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength()).trim();
+            // Normalize line endings: the WebUI scripting editor may produce \r\n (Windows-style), which R cannot parse.
+            // The Swing-based legacy editor normalizes these automatically; we do it here for all code paths.
+            return m_snippet.getDocument().getText(0, m_snippet.getDocument().getLength())
+                .trim()
+                .replace("\r\n", "\n")
+                .replace("\r", "\n");
         } catch (final BadLocationException e) {
             // Will never happen
             throw new IllegalStateException(e);

@@ -48,15 +48,17 @@ package org.knime.r;
 import org.knime.base.node.util.exttool.ExtToolStderrNodeView;
 import org.knime.base.node.util.exttool.ExtToolStdoutNodeView;
 import org.knime.core.node.NodeDialogPane;
-import org.knime.core.node.NodeFactory;
 import org.knime.core.node.NodeView;
+import org.knime.core.webui.node.dialog.scripting.AbstractDefaultScriptingNodeDialog;
+import org.knime.core.webui.node.dialog.scripting.AbstractFallbackScriptingNodeFactory;
 
 /**
  * Factory for the <code>RSnippetNodeFactory</code> node.
  *
  * @author Heiko Hofer
  */
-public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel> {
+@SuppressWarnings("restriction")
+public class RSnippetNodeFactory extends AbstractFallbackScriptingNodeFactory<RSnippetNodeModel> {
     private RSnippetNodeConfig m_config = new RSnippetNodeConfig();
 
     /**
@@ -74,10 +76,6 @@ public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel> {
         m_config = rSnippetModelConfig;
     }
 
-    @Override
-    protected NodeDialogPane createNodeDialogPane() {
-        return new RSnippetNodeDialog(this.getClass(), m_config);
-    }
 
     @Override
     public RSnippetNodeModel createNodeModel() {
@@ -100,7 +98,13 @@ public class RSnippetNodeFactory extends NodeFactory<RSnippetNodeModel> {
     }
 
     @Override
-    protected boolean hasDialog() {
-        return true;
+    public AbstractDefaultScriptingNodeDialog createNodeDialog() {
+        return new RSnippetScriptingNodeDialog();
     }
+
+    @Override
+    public NodeDialogPane createLegacyNodeDialogPane() {
+        return new RSnippetNodeDialog(this.getClass(), m_config);
+    }
+
 }

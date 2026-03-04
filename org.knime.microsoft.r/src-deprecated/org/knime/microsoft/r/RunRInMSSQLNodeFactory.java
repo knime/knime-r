@@ -58,17 +58,20 @@ public final class RunRInMSSQLNodeFactory extends RSnippetNodeFactory {
     /**
      * Constructor
      */
+    @Deprecated
     public RunRInMSSQLNodeFactory() {
         super(RunRInMSSQLNodeModel.RSNIPPET_NODE_CONFIG);
     }
 
+    @Deprecated
     @Override
     public RunRInMSSQLNodeModel createNodeModel() {
         return new RunRInMSSQLNodeModel();
     }
 
+    @Deprecated
     @Override
-    protected NodeDialogPane createNodeDialogPane() {
+    public NodeDialogPane createLegacyNodeDialogPane() {
         return new RunRInMSSQLNodeDialog(this.getClass(), RunRInMSSQLNodeModel.RSNIPPET_NODE_CONFIG);
     }
 }
