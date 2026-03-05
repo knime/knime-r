@@ -53,19 +53,18 @@ import java.util.Set;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.VariableType;
-import org.knime.core.webui.node.dialog.scripting.AbstractDefaultScriptingNodeDialog;
 import org.knime.core.webui.node.dialog.scripting.GenericInitialDataBuilder;
 import org.knime.core.webui.node.dialog.scripting.InputOutputModel;
 import org.knime.core.webui.node.dialog.scripting.WorkflowControl;
 
 /**
- * WebUI scripting dialog for the R Snippet node. Provides the code editor and the side panel with input/output
- * information.
+ * WebUI scripting dialog for the R Snippet node. Serves out a custom interactive R frontend with a live console,
+ * "Run Script", "Run Selection", and "Reset Workspace" capabilities.
  *
  * @author KNIME GmbH
  */
 @SuppressWarnings("restriction")
-class RSnippetScriptingNodeDialog extends AbstractDefaultScriptingNodeDialog {
+class RSnippetScriptingNodeDialog extends AbstractRScriptingNodeDialog {
 
     /**
      * Column alias template for R: inserts column name as a data frame column access expression.
@@ -89,7 +88,7 @@ class RSnippetScriptingNodeDialog extends AbstractDefaultScriptingNodeDialog {
     );
 
     RSnippetScriptingNodeDialog() {
-        super(RSnippetNodeParameters.class);
+        super(RSnippetNodeParameters.class, new RScriptingService());
     }
 
     @Override

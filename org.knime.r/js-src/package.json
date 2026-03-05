@@ -1,0 +1,39 @@
+{
+  "name": "r-scripting-editor",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    "format": "prettier --cache --write .",
+    "format:check": "prettier --cache --check .",
+    "lint": "eslint . --cache --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
+    "postinstall": "license-check -c"
+  },
+  "dependencies": {
+    "@knime/components": "1.43.0",
+    "@knime/kds-components": "0.9.1",
+    "@knime/scripting-editor": "0.0.123",
+    "@knime/styles": "1.8.0",
+    "@knime/ui-extension-service": "2.6.0",
+    "consola": "3.4.2",
+    "vue": "3.5.18"
+  },
+  "devDependencies": {
+    "@knime/licenses": "^1.3.2",
+    "@tsconfig/node22": "22.0.2",
+    "@types/node": "22.16.0",
+    "@vitejs/plugin-vue": "5.2.4",
+    "@vue/tsconfig": "0.7.0",
+    "npm-run-all": "4.1.5",
+    "prettier": "3.7.4",
+    "typescript": "5.8.3",
+    "vite": "5.4.19",
+    "vite-plugin-monaco-editor": "1.1.0",
+    "vite-svg-loader": "5.1.0",
+    "vue-tsc": "2.2.12"
+  }
+}
