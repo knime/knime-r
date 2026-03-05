@@ -1,0 +1,142 @@
+name: JS CI
+
+on:
+  pull_request:
+    paths:
+      - "org.knime.r/js-src/**"
+  push:
+    branches:
+      - master
+      - "releases/**"
+    paths:
+      - "org.knime.r/js-src/**"
+
+jobs:
+  js-install:
+    name: JS Install dependencies
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: org.knime.r/js-src
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: org.knime.r/js-src/package.json
+          cache: npm
+          cache-dependency-path: org.knime.r/js-src/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+
+  js-type-check:
+    name: JS Type check
+    needs: js-install
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: org.knime.r/js-src
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: org.knime.r/js-src/package.json
+          cache: npm
+          cache-dependency-path: org.knime.r/js-src/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Type check
+        run: npm run type-check
+
+  js-lint:
+    name: JS Lint and format check
+    needs: js-install
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: org.knime.r/js-src
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: org.knime.r/js-src/package.json
+          cache: npm
+          cache-dependency-path: org.knime.r/js-src/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint and format check
+        run: npm run ci:lint-format
+
+  js-unit-tests:
+    name: JS Unit tests
+    needs: js-install
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: org.knime.r/js-src
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: org.knime.r/js-src/package.json
+          cache: npm
+          cache-dependency-path: org.knime.r/js-src/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Run coverage
+        run: npm run coverage
+
+  js-audit:
+    name: JS Audit
+    needs: js-install
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: org.knime.r/js-src
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: org.knime.r/js-src/package.json
+          cache: npm
+          cache-dependency-path: org.knime.r/js-src/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Audit
+        run: npm run audit
+
+  js-build:
+    name: JS Build
+    needs: js-install
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: org.knime.r/js-src
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: org.knime.r/js-src/package.json
+          cache: npm
+          cache-dependency-path: org.knime.r/js-src/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build

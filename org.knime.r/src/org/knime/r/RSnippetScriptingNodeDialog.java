@@ -53,33 +53,37 @@ import java.util.Set;
 import org.knime.core.data.DataTableSpec;
 import org.knime.core.node.workflow.NodeContext;
 import org.knime.core.node.workflow.VariableType;
+import org.knime.core.webui.data.RpcDataService;
+import org.knime.core.webui.data.RpcDataService.RpcDataServiceBuilder;
 import org.knime.core.webui.node.dialog.scripting.AbstractDefaultScriptingNodeDialog;
 import org.knime.core.webui.node.dialog.scripting.GenericInitialDataBuilder;
 import org.knime.core.webui.node.dialog.scripting.InputOutputModel;
 import org.knime.core.webui.node.dialog.scripting.WorkflowControl;
+import org.knime.core.webui.page.Page;
+import org.knime.node.parameters.NodeParameters;
 
 /**
- * WebUI scripting dialog for the R Snippet node. Provides the code editor and the side panel with input/output
- * information.
+ * WebUI scripting dialog for the R Snippet node. Serves out a custom interactive R frontend with a live console, "Run
+ * Script", "Run Selection", and "Reset Workspace" capabilities.
  *
  * @author KNIME GmbH
  */
 @SuppressWarnings("restriction")
 class RSnippetScriptingNodeDialog extends AbstractDefaultScriptingNodeDialog {
 
-    /**
-     * Column alias template for R: inserts column name as a data frame column access expression.
-     * Dragging a column from the side panel inserts e.g. {@code knime.in[["myColumn"]]}.
-     */
-    private static final String COLUMN_ALIAS_TEMPLATE =
-        "knime.in[[\"{{~{ subItems.[0].name }~}}\"]]";
+    private final RScriptingService m_scriptingService;
 
     /**
-     * Flow variable alias template for R: inserts flow variable name as a knime.flow.in access expression.
-     * Dragging a flow variable from the side panel inserts e.g. {@code knime.flow.in[["myVar"]]}.
+     * Column alias template for R: inserts column name as a data frame column access expression. Dragging a column from
+     * the side panel inserts e.g. {@code knime.in[["myColumn"]]}.
      */
-    private static final String FLOWVAR_ALIAS_TEMPLATE =
-        "knime.flow.in[[\"{{~{ subItems.[0].name }~}}\"]]";
+    private static final String COLUMN_ALIAS_TEMPLATE = "knime.in[[\"{{~{ subItems.[0].name }~}}\"]]";
+
+    /**
+     * Flow variable alias template for R: inserts flow variable name as a knime.flow.in access expression. Dragging a
+     * flow variable from the side panel inserts e.g. {@code knime.flow.in[["myVar"]]}.
+     */
+    private static final String FLOWVAR_ALIAS_TEMPLATE = "knime.flow.in[[\"{{~{ subItems.[0].name }~}}\"]]";
 
     /** All flow variable types supported by the R scripting engine. */
     private static final Set<VariableType<?>> SUPPORTED_VARIABLE_TYPES = Set.of( //
@@ -88,8 +92,9 @@ class RSnippetScriptingNodeDialog extends AbstractDefaultScriptingNodeDialog {
         VariableType.DoubleType.INSTANCE //
     );
 
-    RSnippetScriptingNodeDialog() {
-        super(RSnippetNodeParameters.class);
+    RSnippetScriptingNodeDialog(final Class<? extends NodeParameters> modelSettingsClass) {
+        super(modelSettingsClass);
+        m_scriptingService = new RScriptingService();
     }
 
     @Override
@@ -104,8 +109,35 @@ class RSnippetScriptingNodeDialog extends AbstractDefaultScriptingNodeDialog {
             .addDataSupplier("mainScriptConfigKey", () -> "script"); // must match @Persist(configKey = "script") in RSnippetNodeParameters
     }
 
+    /**
+     * Serves the custom R scripting frontend compiled into {@code js-src/dist/} of this bundle, replacing the default
+     * static scripting editor served by {@link AbstractDefaultScriptingNodeDialog}.
+     */
+    @Override
+    public Page getPage() {
+        return Page.create() //
+            .fromFile() //
+            .bundleClass(RSnippetScriptingNodeDialog.class) //
+            .basePath("js-src/dist") //
+            .relativeFilePath("index.html") //
+            .addResourceDirectory("assets") //
+            .addResourceDirectory("monacoeditorwork");
+    }
+
+    /**
+     * Registers the live {@link RScriptingService} as the {@code "ScriptingService"} RPC endpoint, replacing the no-op
+     * service used by {@link AbstractDefaultScriptingNodeDialog}.
+     */
+    @Override
+    protected RpcDataServiceBuilder getDataServiceBuilder(final NodeContext context) {
+        return RpcDataService.builder() //
+            .addService("ScriptingService", m_scriptingService.getJsonRpcService()) //
+            .onDeactivate(m_scriptingService::onDeactivate);
+    }
+
     private static List<InputOutputModel> getInputTableModel(final WorkflowControl workflowControl) {
-        var inputSpecs = Optional.ofNullable(workflowControl.getInputSpec()).orElse(new org.knime.core.node.port.PortObjectSpec[0]);
+        var inputSpecs =
+            Optional.ofNullable(workflowControl.getInputSpec()).orElse(new org.knime.core.node.port.PortObjectSpec[0]);
         if (inputSpecs.length > 0 && inputSpecs[0] instanceof DataTableSpec tableSpec) {
             var model = InputOutputModel.table() //
                 .name("knime.in") //
@@ -128,5 +160,4 @@ class RSnippetScriptingNodeDialog extends AbstractDefaultScriptingNodeDialog {
             .subItems(flowVariables, SUPPORTED_VARIABLE_TYPES::contains) //
             .build();
     }
-
 }

@@ -17,7 +17,10 @@ SSHD_IMAGE = "${dockerTools.ECR}/knime/sshd:alpine3.11"
 
 try {
 	// Unit tests require an R installation, which is present in a workflow-tests node
-    knimetools.defaultTychoBuild('org.knime.update.r', "workflow-tests && maven && java21")
+    node("workflow-tests && maven && java21") {
+        knimetools.defaultTychoBuild(updateSiteProject: 'org.knime.update.r')
+        owasp.sendNodeJSSBOMs(readMavenPom(file: 'pom.xml').properties['revision'])
+    }
 
     testConfigs = [
         WorkflowTests: {
