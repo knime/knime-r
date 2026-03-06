@@ -23,4 +23,8 @@ export const initR = (): void => {
 
   // Initialise session status
   sessionStatus.status = "IDLE";
+
+  // NOTE: Language server connection is initiated from App.vue via a watch() on the
+  // Monaco editor model. connectToLanguageServer() must not be called here because the
+  // editor model is not available until after the Vue app is mounted.
 };

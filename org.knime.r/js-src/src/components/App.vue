@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 import { FunctionButton } from "@knime/components";
 import {
@@ -9,7 +9,9 @@ import {
   OutputConsole,
   ScriptingEditor,
   consoleHandler,
+  editor,
   getInitialData,
+  getScriptingService,
   initConsoleEventHandler,
   joinSettings,
   setConsoleHandler,
@@ -22,6 +24,7 @@ import { useSessionStatusStore } from "@/store";
 
 const initialData = getInitialData();
 const sessionStore = useSessionStatusStore();
+const mainEditorState = editor.useMainCodeEditorStore();
 
 const inputOutputItems = [
   ...initialData.inputObjects,
@@ -37,6 +40,46 @@ const toSettings = (commonSettings: GenericNodeSettings) =>
     commonSettings as { script: string },
     nodeParametersPanel.value?.getDataAndFlowVariableSettings(),
   );
+
+// Connect to the R language server once the Monaco editor model is available.
+// We use watch() here (not initR()) because the editor model only exists after the
+// Vue component tree is mounted — calling connectToLanguageServer() before that
+// throws "Editor model has not yet been initialized".
+watch(
+  () => mainEditorState.value?.editorModel,
+  (editorModel) => {
+    if (typeof editorModel === "undefined") {
+      return;
+    }
+    // Print which R installation KNIME is using (diagnostic aid for the user).
+    getScriptingService()
+      .sendToService("getRInfo")
+      .then((info: string) => {
+        consoleHandler.writeln({ text: `Using ${info}\n` });
+      })
+      .catch(() => {
+        /* ignore */
+      });
+    // Connect to the language server for live autocompletion, hover, and diagnostics.
+    consoleHandler.writeln({ text: "Connecting to R language server…\n" });
+    getScriptingService()
+      .connectToLanguageServer()
+      .then(() => {
+        consoleHandler.writeln({
+          text: "R language server connected. Autocompletion, hover, and diagnostics are active.\n",
+        });
+      })
+      .catch((e: Error) => {
+        consoleHandler.writeln({
+          warning:
+            `R language server unavailable: ${e.message}\n` +
+            "Install the 'languageserver' package to enable live autocompletion:\n" +
+            "  install.packages('languageserver')\n",
+        });
+      });
+  },
+  { once: true },
+);
 </script>
 
 <template>

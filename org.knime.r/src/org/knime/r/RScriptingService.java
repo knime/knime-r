@@ -47,6 +47,7 @@ package org.knime.r;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Base64;
 import java.util.Collection;
@@ -62,6 +63,7 @@ import org.knime.core.util.FileUtil;
 import org.knime.core.node.workflow.FlowVariable;
 import org.knime.core.util.ThreadUtils;
 import org.knime.core.webui.node.dialog.scripting.ScriptingService;
+import org.knime.core.webui.node.dialog.scripting.lsp.LanguageServerProxy;
 import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.r.controller.ConsoleLikeRExecutor;
 import org.knime.r.controller.IRController.RException;
@@ -93,10 +95,32 @@ class RScriptingService extends ScriptingService {
     private RController m_controller;
 
     /**
-     * Creates a new service without a language server.
+     * A {@link LanguageServerStarter} that closes the previous R process before starting a new one.
+     * <p>
+     * {@code connectToLanguageServer()} is called on every dialog page load. Without this guard, each reload
+     * would start a second R languageserver process (the framework replaces {@code m_languageServer} but never
+     * closes the previous one). The synchronized {@code start()} method ensures atomic close-then-start.
+     */
+    private static final class ClosePreviousOnRestartStarter implements LanguageServerStarter {
+        private LanguageServerProxy m_proxy;
+
+        @Override
+        public synchronized LanguageServerProxy start() throws IOException {
+            if (m_proxy != null) {
+                m_proxy.close();
+                m_proxy = null;
+            }
+            m_proxy = RLanguageServer.startLanguageServer();
+            return m_proxy;
+        }
+    }
+
+    /**
+     * Creates a new service that starts the R language server ({@code languageserver::run()}) when the dialog
+     * connects. Falls back gracefully if the {@code languageserver} R package is not available.
      */
     RScriptingService() {
-        super();
+        super(new ClosePreviousOnRestartStarter(), x -> true);
     }
 
     @Override
@@ -104,9 +128,24 @@ class RScriptingService extends ScriptingService {
         return new RRpcService();
     }
 
+    /**
+     * Called when the dialog page is temporarily deactivated (e.g. when the UI framework re-requests initial
+     * data after a settings change). We intentionally do NOT close the language server here — it must survive
+     * page reloads. The R execution session is cleared because a fresh run-script cycle will start anyway.
+     */
     @Override
     public void onDeactivate() {
-        super.onDeactivate();
+        // Do NOT call super.onDeactivate() — that would close the language server proxy.
+        // The proxy's lifecycle is managed by ClosePreviousOnRestartStarter and onDialogClose().
+        clearSession();
+    }
+
+    /**
+     * Called when the dialog is conclusively disposed (registered as {@code onDispose} on the RPC data service).
+     * Unlike {@link #onDeactivate()}, this performs a full shutdown: language server, event queue, executor.
+     */
+    void onDialogClose() {
+        super.onDeactivate(); // closes language server proxy, clears event queue, shuts down executor
         clearSession();
     }
 
@@ -422,6 +461,28 @@ class RScriptingService extends ScriptingService {
                 addConsoleOutputEvent(new ConsoleText("R session stopped.\n", true));
                 sendExecutionFinishedEvent(ExecutionStatus.CANCELLED, "Session killed by user.");
             }, "r-kill-session").start();
+        }
+
+        /**
+         * Returns a human-readable string describing the configured R installation (path and version). Intended for
+         * display in the script console as a diagnostic aid.
+         *
+         * @return e.g. {@code "R version 4.5.2 (2025-10-31) — C:/Program Files/R/R-4.5.2/bin/Rscript.exe"}
+         */
+        public String getRInfo() {
+            final String rscriptPath = RPreferenceInitializer.getRProvider().getRBinPath("Rscript");
+            if (rscriptPath == null || rscriptPath.isBlank()) {
+                return "R not configured — set the path in KNIME Preferences → KNIME → R.";
+            }
+            try {
+                final Process p = new ProcessBuilder(rscriptPath, "--no-save", "--no-restore", "--slave",
+                    "-e", "writeLines(R.version.string)").start();
+                final String version = new String(p.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                p.waitFor();
+                return version + " — " + rscriptPath;
+            } catch (final Exception e) {
+                return rscriptPath + " (could not determine version: " + e.getMessage() + ")";
+            }
         }
 
         @Override

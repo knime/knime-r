@@ -104,6 +104,9 @@ abstract class AbstractRScriptingNodeDialog extends AbstractDefaultScriptingNode
     protected RpcDataServiceBuilder getDataServiceBuilder(final NodeContext context) {
         return RpcDataService.builder() //
             .addService("ScriptingService", m_scriptingService.getJsonRpcService()) //
-            .onDeactivate(m_scriptingService::onDeactivate);
+            // Use onDispose (not onDeactivate) so the language server is NOT killed when the KNIME UI
+            // framework temporarily deactivates the RPC service on dialog refreshes. It is only shut
+            // down when the dialog is conclusively closed.
+            .onDispose(m_scriptingService::onDialogClose);
     }
 }
