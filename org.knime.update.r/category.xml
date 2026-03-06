@@ -7,13 +7,6 @@
        <category name="knime-r" />
    </feature>
 
-   <feature id="org.knime.features.ext.r.bin" version="0.0.0">
-       <category name="knime-r" />
-   </feature>
-   <feature id="org.knime.features.ext.r.bin.source" version="0.0.0">
-       <category name="knime-r" />
-   </feature>
-
    <feature id="org.knime.features.microsoft.r" version="0.0.0">
        <category name="knime-r" />
    </feature>
