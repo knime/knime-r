@@ -1,9 +1,0 @@
-cocron                  Statistical comparisons of n alpha coefficients
-cocron-package          The cocron Package
-cocron.n.coefficients   Statistical comparisons of n alpha coefficients
-cocron.two.coefficients
-                        Statistical comparisons of two alpha
-                        coefficients
-cronbach.alpha          Cronbach's Alpha
-cronbach.alpha.CI       Confidence interval for Cronbach's Alpha
-knowledge               Sample dataset: knowledge

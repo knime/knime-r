@@ -23,13 +23,9 @@
 
 	<modules>
 		<module>org.knime.ext.r</module>
-		<module>org.knime.ext.r3.bin.win32.x86</module>
 		<module>org.knime.ext.r.bin</module>
 		<module>org.knime.ext.r.nodes</module>
 		<module>org.knime.ext.r.type</module>
-		<module>org.knime.features.ext.r</module>
-		<module>org.knime.features.ext.r.bin</module>
-		<module>org.knime.features.microsoft.r</module>
 		<module>org.knime.features.r</module>
 		<module>org.knime.microsoft.r</module>
 		<module>org.knime.r/js-src</module>

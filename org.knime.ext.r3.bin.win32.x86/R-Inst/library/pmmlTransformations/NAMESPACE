@@ -1,5 +1,0 @@
-exportPattern("^[[:alpha:]]+")
-#exportPattern(".")
-#import("XML")
-
-importFrom("stats","na.omit")
