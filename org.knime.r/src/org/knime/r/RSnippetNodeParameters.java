@@ -47,8 +47,13 @@ package org.knime.r;
 
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import org.knime.core.node.NodeSettingsWO;
+import org.knime.ext.r.bin.preferences.RPreferenceInitializer;
 import org.knime.node.parameters.NodeParameters;
+import org.knime.node.parameters.NodeParametersInput;
 import org.knime.node.parameters.Widget;
 import org.knime.node.parameters.layout.Layout;
 import org.knime.node.parameters.layout.Section;
@@ -63,6 +68,8 @@ import org.knime.node.parameters.updates.EffectPredicateProvider;
 import org.knime.node.parameters.updates.ParameterReference;
 import org.knime.node.parameters.updates.ValueReference;
 import org.knime.node.parameters.widget.choices.Label;
+import org.knime.node.parameters.widget.message.TextMessage;
+import org.knime.node.parameters.widget.message.TextMessage.MessageType;
 import org.knime.node.parameters.widget.number.NumberInputWidget;
 import org.knime.node.parameters.widget.number.NumberInputWidgetValidation.MinValidation.IsPositiveIntegerValidation;
 
@@ -83,6 +90,14 @@ class RSnippetNodeParameters implements NodeParameters {
     // internal version marker, no @Widget
     @Persist(configKey = "version")
     String m_version = RSnippet.VERSION_1_X;
+
+    // Status messages - shown before all settings panels to surface R configuration problems
+
+    @TextMessage(NoRFoundMessageProvider.class)
+    Void m_noRFoundMessage;
+
+    @TextMessage(NoLspFoundMessageProvider.class)
+    Void m_noLspFoundMessage;
 
     // sections
 
@@ -196,6 +211,91 @@ class RSnippetNodeParameters implements NodeParameters {
     @Persist(configKey = RSnippetSettings.R_HOME_VARIABLE)
     @Layout(RHomeSection.class)
     String m_condaVariableName = "";
+
+    // TextMessage providers
+
+    /**
+     * Shows an ERROR message when no R installation is configured in KNIME Preferences.
+     * R is required both for node execution (via Rserve) and for autocompletion (via languageserver).
+     */
+    static final class NoRFoundMessageProvider implements TextMessage.SimpleTextMessageProvider {
+
+        @Override
+        public boolean showMessage(final NodeParametersInput context) {
+            final String rscriptPath = RPreferenceInitializer.getRProvider().getRBinPath("Rscript");
+            return rscriptPath == null || rscriptPath.isBlank();
+        }
+
+        @Override
+        public String title() {
+            return "R is not configured";
+        }
+
+        @Override
+        public String description() {
+            return "No R installation was found. "
+                + "Install R (https://www.r-project.org) and set the R home path in "
+                + "KNIME Preferences \u2192 KNIME \u2192 R. "
+                + "Rserve is required for node execution; install it in R with: "
+                + "install.packages(\"Rserve\")";
+        }
+
+        @Override
+        public MessageType type() {
+            return MessageType.ERROR;
+        }
+    }
+
+    /**
+     * Shows an INFO message when R is configured but the {@code languageserver} package is not installed.
+     * The node still executes without the language server; only autocompletion and hover are disabled.
+     */
+    static final class NoLspFoundMessageProvider implements TextMessage.SimpleTextMessageProvider {
+
+        @Override
+        public boolean showMessage(final NodeParametersInput context) {
+            final String rscriptPath = RPreferenceInitializer.getRProvider().getRBinPath("Rscript");
+            if (rscriptPath == null || rscriptPath.isBlank()) {
+                return false; // the NoRFoundMessage already covers this case
+            }
+            try {
+                final Process check = new ProcessBuilder(rscriptPath, "--no-save", "--no-restore", "--slave",
+                    "-e", "if (!requireNamespace('languageserver', quietly=TRUE)) quit(status=1)")
+                    .redirectErrorStream(true)
+                    .start();
+                // Drain stdout to prevent the process from blocking on a full pipe buffer
+                check.getInputStream().transferTo(java.io.OutputStream.nullOutputStream());
+                final boolean timedOut = !check.waitFor(5, TimeUnit.SECONDS);
+                if (timedOut) {
+                    check.destroyForcibly();
+                    return false; // cannot determine — don't show a potentially misleading message
+                }
+                return check.exitValue() != 0;
+            } catch (IOException | InterruptedException e) {
+                if (e instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                }
+                return false;
+            }
+        }
+
+        @Override
+        public String title() {
+            return "Language server not installed";
+        }
+
+        @Override
+        public String description() {
+            return "The 'languageserver' R package is not installed. "
+                + "Autocompletion and hover support are disabled. "
+                + "To enable them, run in R: install.packages(\"languageserver\")";
+        }
+
+        @Override
+        public MessageType type() {
+            return MessageType.INFO;
+        }
+    }
 
     // KnimeInType enum
 
