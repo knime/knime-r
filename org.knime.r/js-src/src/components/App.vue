@@ -60,14 +60,25 @@ watch(
       .catch(() => {
         /* ignore */
       });
-    // Connect to the language server for live autocompletion, hover, and diagnostics.
+    // Connect to the language server for live autocompletion and hover.
     consoleHandler.writeln({ text: "Connecting to R language server…\n" });
     getScriptingService()
       .connectToLanguageServer()
       .then(() => {
         consoleHandler.writeln({
-          text: "R language server connected. Autocompletion, hover, and diagnostics are active.\n",
+          text:
+            "R language server connected. Hover is active.\n" +
+            "Note: autocompletion requires typing a partial identifier (e.g. 'pri') " +
+            "before pressing Ctrl+Space. The first request may take a few seconds while " +
+            "the R completion engine warms up.\n",
         });
+        // Pre-warm the callr subprocess: the R languageserver uses callr to spawn a
+        // background R process for completions. Without this, the first Ctrl+Space always
+        // returns empty while callr initializes. Triggering a dummy request now starts
+        // callr in the background so the first real Ctrl+Space is fast.
+        getScriptingService()
+          .sendToService("warmUpLanguageServer")
+          .catch(() => {/* ignore – warm-up is best-effort */});
       })
       .catch((e: Error) => {
         consoleHandler.writeln({
