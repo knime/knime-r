@@ -60,13 +60,16 @@ watch(
       .catch(() => {
         /* ignore */
       });
-    // Connect to the language server for live autocompletion, hover, and diagnostics.
+    // Connect to the language server for live autocompletion and hover.
     consoleHandler.writeln({ text: "Connecting to R language server…\n" });
     getScriptingService()
       .connectToLanguageServer()
       .then(() => {
         consoleHandler.writeln({
-          text: "R language server connected. Autocompletion, hover, and diagnostics are active.\n",
+          text:
+            "R language server connected. Hover and autocompletion are active.\n" +
+            "Note: autocompletion requires typing a partial identifier (e.g. 'pri') " +
+            "before pressing Ctrl+Space.\n",
         });
       })
       .catch((e: Error) => {
