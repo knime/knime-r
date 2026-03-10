@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import * as monaco from "monaco-editor";
 
 import { FunctionButton } from "@knime/components";
@@ -39,8 +39,12 @@ const toSettings = (commonSettings: GenericNodeSettings) =>
   );
 
 // Set the end of line sequence to LF to ensure consistent behavior across different platforms.
-const mainEditor = editor.useMainCodeEditorStore();
-mainEditor.value?.editorModel.setEOL(monaco.editor.EndOfLineSequence.LF);
+const mainEditorState = editor.useMainCodeEditorStore();
+watchEffect(() => {
+  mainEditorState.value?.editorModel?.setEOL(
+    monaco.editor.EndOfLineSequence.LF,
+  );
+});
 </script>
 
 <template>
