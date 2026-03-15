@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect } from "vue";
+import { ref, watch, watchEffect } from "vue";
 import * as monaco from "monaco-editor";
 
 import { FunctionButton } from "@knime/components";
@@ -13,6 +13,7 @@ import {
   consoleHandler,
   editor,
   getInitialData,
+  getScriptingService,
   initConsoleEventHandler,
   joinSettings,
   setConsoleHandler,
@@ -58,6 +59,47 @@ const rightPaneOptions = [
   { value: "settings", label: "Settings" },
   { value: "plot", label: "Plot" },
 ];
+
+// Connect to the R language server once the Monaco editor model is available.
+// watch() is used (not initR()) because the editor model only exists after the
+// Vue component tree is mounted — calling connectToLanguageServer() before that
+// would throw "Editor model has not yet been initialized".
+watch(
+  () => mainEditorState.value?.editorModel,
+  (editorModel) => {
+    if (typeof editorModel === "undefined") {
+      return;
+    }
+    getScriptingService()
+      .sendToService("getRInfo")
+      .then((info: string) => {
+        consoleHandler.writeln({ text: `Using ${info}\n` });
+      })
+      .catch(() => {
+        /* ignore */
+      });
+    consoleHandler.writeln({ text: "Connecting to R language server…\n" });
+    getScriptingService()
+      .connectToLanguageServer()
+      .then(() => {
+        consoleHandler.writeln({
+          text:
+            "R language server connected. Hover and autocompletion are active.\n" +
+            "Note: autocompletion requires typing a partial identifier (e.g. 'pri') " +
+            "before pressing Ctrl+Space.\n",
+        });
+      })
+      .catch((e: Error) => {
+        consoleHandler.writeln({
+          warning:
+            `R language server unavailable: ${e.message}\n` +
+            "Install the 'languageserver' package to enable live autocompletion:\n" +
+            "  install.packages('languageserver')\n",
+        });
+      });
+  },
+  { once: true },
+);
 </script>
 
 <template>
