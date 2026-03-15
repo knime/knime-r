@@ -41,11 +41,11 @@ vi.mock("@knime/ui-extension-service", () => ({
 // Initialize @knime/scripting-editor with mock data
 initMocked({
   scriptingService: {
-    sendToService: vi.fn(),
+    sendToService: vi.fn(() => Promise.resolve(undefined)),
     callRpcMethod: vi.fn(),
     getOutputPreviewTableInitialData: vi.fn(() => Promise.resolve(undefined)),
     registerEventHandler: vi.fn(),
-    connectToLanguageServer: vi.fn(),
+    connectToLanguageServer: vi.fn(() => Promise.resolve()),
     isKaiEnabled: vi.fn(),
     isLoggedIntoHub: vi.fn(),
     getAiDisclaimer: vi.fn(),
