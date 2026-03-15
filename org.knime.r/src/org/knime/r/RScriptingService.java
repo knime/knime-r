@@ -45,6 +45,10 @@
  */
 package org.knime.r;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,6 +58,7 @@ import org.knime.core.node.DefaultNodeProgressMonitor;
 import org.knime.core.node.ExecutionMonitor;
 import org.knime.core.node.NodeLogger;
 import org.knime.core.node.workflow.FlowVariable;
+import org.knime.core.util.FileUtil;
 import org.knime.core.util.ThreadUtils;
 import org.knime.core.webui.node.dialog.scripting.CodeGenerationRequest;
 import org.knime.core.webui.node.dialog.scripting.InputOutputModel;
@@ -170,6 +175,29 @@ class RScriptingService extends ScriptingService {
     }
 
     /**
+     * Returns an R script that redirects graphics output to a PNG file instead of opening a native window.
+     */
+    private static String buildPngSetupScript(final File plotFile) {
+        final String path = plotFile.getAbsolutePath().replace('\\', '/');
+        return "png(\"" + path + "\", width=800L, height=600L)\n";
+    }
+
+    /**
+     * Silently runs a short R command, discarding output. Used for best-effort cleanup (e.g. {@code dev.off()}).
+     */
+    private void executeRQuietly(final RController controller, final String rCode) {
+        try {
+            final ConsoleLikeRExecutor ex = new ConsoleLikeRExecutor(controller);
+            final ExecutionMonitor mon = newExec();
+            ex.setupOutputCapturing(mon);
+            ex.executeIgnoreResult(rCode, mon);
+            ex.finishOutputCapturing(mon);
+            ex.cleanup(mon);
+        } catch (Exception ignored) { // NOSONAR – best-effort cleanup
+        }
+    }
+
+    /**
      * Runs the given R script and emits console output events for stdout/stderr. Throws {@link RException} if R
      * reports an error.
      */
@@ -217,9 +245,20 @@ class RScriptingService extends ScriptingService {
                 return;
             }
 
+            // Create a temp PNG file so that plots are captured to disk instead of opening a native window.
+            File plotTempDir = null;
+            File plotFile = null;
+            try {
+                plotTempDir = FileUtil.createTempDir("r-scripting-plot-");
+                plotFile = new File(plotTempDir, "plot.png");
+            } catch (IOException ioEx) {
+                LOGGER.warn("Could not create temp dir for plot capture – plots may open as native windows.", ioEx);
+            }
+            final String scriptWithPlot = plotFile != null ? buildPngSetupScript(plotFile) + script : script;
+
             try {
                 addConsoleOutputEvent(new ConsoleText("Running script...\n", false));
-                executeScript(controller, script, newExec());
+                executeScript(controller, scriptWithPlot, newExec());
                 sendExecutionFinishedEvent(ExecutionStatus.SUCCESS, null);
             } catch (CanceledExecutionException | InterruptedException ex) {
                 if (ex instanceof InterruptedException) {
@@ -236,6 +275,19 @@ class RScriptingService extends ScriptingService {
                 }
             } finally {
                 m_expectCancel.set(false);
+                if (plotFile != null) {
+                    executeRQuietly(controller, "tryCatch(dev.off(), error=function(e){})");
+                    try {
+                        if (plotFile.exists() && plotFile.length() > 0) {
+                            final byte[] pngBytes = Files.readAllBytes(plotFile.toPath());
+                            sendEvent("r-plot", Base64.getEncoder().encodeToString(pngBytes));
+                        }
+                    } catch (IOException ioEx) {
+                        LOGGER.warn("Could not read plot PNG file: " + ioEx.getMessage());
+                    } finally {
+                        FileUtil.deleteRecursively(plotTempDir);
+                    }
+                }
             }
         }, "r-execution").start();
     }

@@ -46,4 +46,11 @@ export const initREventHandlers = (): void => {
       sessionStatus.lastExecutionStatus = info.status;
     },
   );
+
+  getScriptingService().registerEventHandler(
+    "r-plot",
+    (base64Png: string) => {
+      sessionStatus.latestPlotData = base64Png;
+    },
+  );
 };
