@@ -90,7 +90,10 @@ const rightPaneOptions = [
             name="rightPaneTabBar"
           />
           <div id="right-pane-content">
-            <div v-show="rightPaneActiveTab === 'variables'" class="tab-placeholder">
+            <div
+              v-show="rightPaneActiveTab === 'variables'"
+              class="tab-placeholder"
+            >
               <!-- Variables: reserved for future use -->
             </div>
             <NodeParametersPanel

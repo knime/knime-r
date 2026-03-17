@@ -21,7 +21,9 @@ export const rScriptingService = {
   /** Runs the selected lines (or current line) in the existing R session. */
   runSelectedLines: (): void => {
     const selectedLines = mainEditorState.value?.selectedLines.value ?? "";
-    getScriptingService().sendToService("runInExistingSession", [selectedLines]);
+    getScriptingService().sendToService("runInExistingSession", [
+      selectedLines,
+    ]);
     sessionStatus.status = "RUNNING_SELECTED";
   },
 
@@ -47,10 +49,7 @@ export const initREventHandlers = (): void => {
     },
   );
 
-  getScriptingService().registerEventHandler(
-    "r-plot",
-    (base64Png: string) => {
-      sessionStatus.latestPlotData = base64Png;
-    },
-  );
+  getScriptingService().registerEventHandler("r-plot", (base64Png: string) => {
+    sessionStatus.latestPlotData = base64Png;
+  });
 };
