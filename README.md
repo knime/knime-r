@@ -1,7 +1,7 @@
 # KNIME® R
 
 [![Jenkins](https://jenkins.knime.com/buildStatus/icon?job=knime-r%2Fmaster)](https://jenkins.knime.com/job/knime-r/job/master/)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=KNIME_knime-r&metric=alert_status&token=55129ac721eacd76417f57921368ed587ad8339d)](https://sonarcloud.io/summary/new_code?id=KNIME_knime-r)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=knime_knime-r&metric=alert_status&token=55129ac721eacd76417f57921368ed587ad8339d)](https://sonarcloud.io/summary/new_code?id=knime_knime-r)
 
 This repository is maintained by the [KNIME Team Rakete](mailto:team-rakete@knime.com).
 
