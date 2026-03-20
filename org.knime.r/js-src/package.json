@@ -11,7 +11,7 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "format": "prettier --cache --write .",
     "format:check": "prettier --cache --check .",
-    "lint": "run-p 'lint:* -- --fix'",
+    "lint": "run-p lint:* -- --fix",
     "lint:js": "eslint . --cache --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts",
     "lint:css": "stylelint --cache '**/*.{css,vue}'",
     "ci:lint-format": "run-p ci:lint:* format:check -c",

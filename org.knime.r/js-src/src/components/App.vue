@@ -4,6 +4,7 @@ import * as monaco from "monaco-editor";
 
 import { FunctionButton } from "@knime/components";
 import {
+  CompactTabBar,
   type ConsoleHandler,
   type GenericNodeSettings,
   InputOutputPane,
@@ -20,8 +21,11 @@ import { NodeParametersPanel } from "@knime/scripting-editor/parameters";
 import TrashIcon from "@knime/styles/img/icons/trash.svg";
 
 import REditorControls from "@/components/REditorControls.vue";
+import { useSessionStatusStore } from "@/store";
 
 const initialData = getInitialData();
+
+const sessionStore = useSessionStatusStore();
 
 const inputOutputItems = [
   ...initialData.inputObjects,
@@ -45,6 +49,15 @@ watchEffect(() => {
     monaco.editor.EndOfLineSequence.LF,
   );
 });
+
+// Right pane tabs
+type RightPaneTab = "variables" | "settings" | "plot";
+const rightPaneActiveTab = ref<RightPaneTab>("settings");
+const rightPaneOptions = [
+  { value: "variables", label: "Variables" },
+  { value: "settings", label: "Settings" },
+  { value: "plot", label: "Plot" },
+];
 </script>
 
 <template>
@@ -70,7 +83,37 @@ watchEffect(() => {
         <InputOutputPane :input-output-items="inputOutputItems" />
       </template>
       <template #right-pane>
-        <NodeParametersPanel ref="nodeParametersPanel" />
+        <div id="right-pane">
+          <CompactTabBar
+            v-model="rightPaneActiveTab"
+            :possible-values="rightPaneOptions"
+            name="rightPaneTabBar"
+          />
+          <div id="right-pane-content">
+            <div
+              v-show="rightPaneActiveTab === 'variables'"
+              class="tab-placeholder"
+            >
+              <!-- Variables: reserved for future use -->
+            </div>
+            <NodeParametersPanel
+              v-show="rightPaneActiveTab === 'settings'"
+              ref="nodeParametersPanel"
+            />
+            <div v-show="rightPaneActiveTab === 'plot'" class="plot-pane">
+              <img
+                v-if="sessionStore.latestPlotData"
+                :src="'data:image/png;base64,' + sessionStore.latestPlotData"
+                class="plot-image"
+                alt="R plot"
+              />
+              <div v-else class="plot-empty">
+                No plot yet. Run a script that calls <code>plot()</code>,
+                <code>ggplot()</code>, or any other graphics function.
+              </div>
+            </div>
+          </div>
+        </div>
       </template>
       <template #code-editor-controls>
         <REditorControls />
@@ -102,6 +145,22 @@ watchEffect(() => {
 </style>
 
 <style scoped>
+#right-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#right-pane-content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.tab-placeholder {
+  height: 100%;
+}
+
 .plot-pane {
   box-sizing: border-box;
   display: flex;
